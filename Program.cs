@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security.Permissions;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using Plus.Communication.Packets;
 using Plus.Core;
 using Plus.HabboHotel.Rooms.Chat.Commands;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Plus;
 
@@ -18,6 +13,8 @@ public static class Program
 {
     public static async Task Main(string[] args)
     {
+        Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
         var collection = new ServiceCollection();
         collection.Scan(scan => scan.FromAssemblies(typeof(Program).Assembly)
             .AddClasses()

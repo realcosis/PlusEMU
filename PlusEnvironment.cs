@@ -123,7 +123,7 @@ public class PlusEnvironment : IPlusEnvironment
             _connectionManager = new ConnectionHandling(int.Parse(GetConfig().Data["game.tcp.port"]), int.Parse(GetConfig().Data["game.tcp.conlimit"]),
                 int.Parse(GetConfig().Data["game.tcp.conperip"]), GetConfig().Data["game.tcp.enablenagles"].ToLower() == "true");
             _connectionManager.Init();
-            _game.Init();
+            await _game.Init();
             _game.StartGameLoop();
             var timeUsed = DateTime.Now - ServerStarted;
             Console.WriteLine();

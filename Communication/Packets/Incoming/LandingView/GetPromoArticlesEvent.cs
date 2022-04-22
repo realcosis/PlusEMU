@@ -1,13 +1,17 @@
 ﻿using Plus.Communication.Packets.Outgoing.LandingView;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.LandingView;
 
 namespace Plus.Communication.Packets.Incoming.LandingView;
 
 internal class GetPromoArticlesEvent : IPacketEvent
 {
-    public void Parse(GameClient session, ClientPacket packet)
+    private readonly ILandingViewManager _landingViewManager;
+
+    public GetPromoArticlesEvent(ILandingViewManager landingViewManager)
     {
-        var landingPromotions = PlusEnvironment.GetGame().GetLandingManager().GetPromotionItems();
-        session.SendPacket(new PromoArticlesComposer(landingPromotions));
+        _landingViewManager = landingViewManager;
     }
+
+    public void Parse(GameClient session, ClientPacket packet) => session.SendPacket(new PromoArticlesComposer(_landingViewManager.GetPromotionItems()));
 }

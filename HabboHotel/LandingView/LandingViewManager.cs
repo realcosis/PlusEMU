@@ -1,39 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
+using Dapper;
 using NLog;
+using Plus.Database;
 using Plus.HabboHotel.LandingView.Promotions;
 
 namespace Plus.HabboHotel.LandingView;
 
-public class LandingViewManager
+public class LandingViewManager : ILandingViewManager
 {
+    private readonly IDatabase _database;
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.LandingView.LandingViewManager");
 
-    private readonly Dictionary<int, Promotion> _promotionItems;
+    private Dictionary<int, Promotion> _promotionItems = new();
 
-    public LandingViewManager()
+    public LandingViewManager(IDatabase database)
     {
-        _promotionItems = new Dictionary<int, Promotion>();
+        _database = database;
     }
 
-    public void Init()
+    public async Task Reload()
     {
-        if (_promotionItems.Count > 0)
-            _promotionItems.Clear();
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-        {
-            dbClient.SetQuery("SELECT * FROM `server_landing` ORDER BY `id` DESC");
-            var getData = dbClient.GetTable();
-            if (getData != null)
-            {
-                foreach (DataRow row in getData.Rows)
-                {
-                    _promotionItems.Add(Convert.ToInt32(row[0]),
-                        new Promotion((int)row[0], row[1].ToString(), row[2].ToString(), row[3].ToString(), Convert.ToInt32(row[4]), row[5].ToString(), row[6].ToString()));
-                }
-            }
-        }
+        using var connection = _database.Connection();
+        _promotionItems = (await connection.QueryAsync<Promotion>("SELECT * FROM `server_landing` ORDER BY `id` DESC")).ToDictionary(promotion => promotion.Id);
         Log.Info("Landing View Manager -> LOADED");
     }
 

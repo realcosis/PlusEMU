@@ -1,4 +1,5 @@
-﻿using Plus.Communication.Packets;
+﻿using System.Threading.Tasks;
+using Plus.Communication.Packets;
 using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.Badges;
 using Plus.HabboHotel.Bots;
@@ -39,7 +40,7 @@ public interface IGame
     SubscriptionManager GetSubscriptionManager();
     QuestManager GetQuestManager();
     GroupManager GetGroupManager();
-    LandingViewManager GetLandingManager();
+    ILandingViewManager GetLandingManager();
     TelevisionManager GetTelevisionManager();
     ChatManager GetChatManager();
     GameDataManager GetGameDataManager();
@@ -47,5 +48,5 @@ public interface IGame
     CacheManager GetCacheManager();
     RewardManager GetRewardManager();
     BadgeManager GetBadgeManager();
-    void Init();
+    Task Init();
 }

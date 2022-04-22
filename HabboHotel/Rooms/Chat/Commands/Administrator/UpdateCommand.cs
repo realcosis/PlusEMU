@@ -67,7 +67,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_promotions' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetLandingManager().Init();
+                PlusEnvironment.GetGame().GetLandingManager().Reload();
                 session.SendWhisper("Landing view promotions successfully updated.");
                 break;
             }

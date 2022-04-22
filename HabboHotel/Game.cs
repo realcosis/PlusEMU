@@ -25,9 +25,13 @@ using Plus.HabboHotel.Talents;
 
 namespace Plus.HabboHotel;
 
+// Game services need to be implemented behind an interface.
+// Dependency inject the required services in the IPacketEvent
+// This class will be obsolete. Do not reference to Game().<Service> but inject it instead.
 public class Game : IGame
 {
     private readonly IPacketManager _packetManager;
+    private ILandingViewManager _landingViewManager; //TODO: Rename class
 
     private AchievementManager _achievementManager;
     private BadgeManager _badgeManager;
@@ -41,7 +45,6 @@ public class Game : IGame
     private ServerStatusUpdater _globalUpdater;
     private GroupManager _groupManager;
     private ItemDataManager _itemDataManager;
-    private LandingViewManager _landingViewManager; //TODO: Rename class
     private ModerationManager _moderationManager;
     private NavigatorManager _navigatorManager;
     private PermissionManager _permissionManager;
@@ -56,12 +59,13 @@ public class Game : IGame
     private bool _cycleEnded;
     private Task _gameCycle;
 
-    public Game(IPacketManager packetManager)
+    public Game(IPacketManager packetManager, ILandingViewManager landingViewManager)
     {
         _packetManager = packetManager;
+        _landingViewManager = landingViewManager;
     }
 
-    public void Init()
+    public async Task Init()
     {
         _clientManager = new GameClientManager();
         _moderationManager = new ModerationManager();
@@ -85,8 +89,7 @@ public class Game : IGame
         _achievementManager.Init();
         _talentTrackManager = new TalentTrackManager();
         _talentTrackManager.Init();
-        _landingViewManager = new LandingViewManager();
-        _landingViewManager.Init();
+        _landingViewManager.Reload();
         _gameDataManager = new GameDataManager();
         _gameDataManager.Init();
         _globalUpdater = new ServerStatusUpdater();
@@ -155,7 +158,7 @@ public class Game : IGame
 
     public GroupManager GetGroupManager() => _groupManager;
 
-    public LandingViewManager GetLandingManager() => _landingViewManager;
+    public ILandingViewManager GetLandingManager() => _landingViewManager;
 
     public TelevisionManager GetTelevisionManager() => _televisionManager;
 
