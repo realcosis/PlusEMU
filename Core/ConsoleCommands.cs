@@ -20,7 +20,6 @@ namespace Plus.Core
 
                 switch (parameters[0].ToLower())
                 {
-                    #region stop
                     case "stop":
                     case "shutdown":
                         {
@@ -28,9 +27,6 @@ namespace Plus.Core
                             PlusEnvironment.PerformShutDown();
                             break;
                         }
-                    #endregion
-
-                    #region alert
                     case "alert":
                         {
                             var notice = inputData.Substring(6);
@@ -40,8 +36,6 @@ namespace Plus.Core
                             Log.Info("Alert successfully sent.");
                             break;
                         }
-                    #endregion
-
                     default:
                         {
                             Log.Error(parameters[0].ToLower() + " is an unknown or unsupported command. Type help for more information");

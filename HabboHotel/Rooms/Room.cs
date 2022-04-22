@@ -459,8 +459,6 @@ namespace Plus.HabboHotel.Rooms
                 {
                     ExceptionLogger.LogException(e);
                 }
-
-                #region Status Updates
                 try
                 {
                     GetRoomUserManager().SerializeStatusUpdates();
@@ -469,9 +467,6 @@ namespace Plus.HabboHotel.Rooms
                 {
                     ExceptionLogger.LogException(e);
                 }
-                #endregion
-
-                #region Game Item Cycle
                 try
                 {
                     if (_gameItemHandler != null)
@@ -481,8 +476,6 @@ namespace Plus.HabboHotel.Rooms
                 {
                     ExceptionLogger.LogException(e);
                 }
-                #endregion
-
                 try { GetWired().OnCycle(); }
                 catch (Exception e)
                 {
@@ -579,7 +572,6 @@ namespace Plus.HabboHotel.Rooms
             session.SendPacket(new ItemsComposer(GetRoomItemHandler().GetWall.ToArray(), this));
         }
 
-        #region Tents
         public void AddTent(int tentId)
         {
             if (_tents.ContainsKey(tentId))
@@ -646,9 +638,7 @@ namespace Plus.HabboHotel.Rooms
                 user.GetClient().SendPacket(packet);
             }
         }
-        #endregion
 
-        #region Communication (Packets)
         public void SendPacket(IServerPacket packet, bool withRightsOnly = false)
         {
             if (packet == null)
@@ -727,7 +717,6 @@ namespace Plus.HabboHotel.Rooms
                 ExceptionLogger.LogException(e);
             }
         }
-        #endregion
 
         public void Dispose()
         {

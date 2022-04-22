@@ -410,8 +410,6 @@ namespace Plus.HabboHotel.Rooms
                     user.GetClient().SendPacket(packet);
                 }
             }
-
-            #region Pets/Bots responces
             if (shout)
             {
                 foreach (var user in _mRoom.GetRoomUserManager().GetUserList().ToList())
@@ -434,8 +432,6 @@ namespace Plus.HabboHotel.Rooms
                         user.BotAi.OnUserSay(this, message);
                 }
             }
-            #endregion
-
         }
 
         public void ClearMovement(bool update)

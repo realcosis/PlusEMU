@@ -100,7 +100,6 @@ namespace Plus.HabboHotel.GameClients
                     return false;
                 }
 
-                #region Ban Checking
                 //Let's have a quick search for a ban before we successfully authenticate..
                 if (!string.IsNullOrEmpty(MachineId))
                 {
@@ -125,8 +124,6 @@ namespace Plus.HabboHotel.GameClients
                         }
                     }
                 }
-                #endregion
-
                 if (userData.User == null) //Possible NPE
                 {
                     return false;

@@ -9,8 +9,6 @@ namespace Plus.HabboHotel.Users.Messenger
 {
     public class MessengerBuddy
     {
-        #region Fields
-
         public int UserId;
         public bool MAppearOffline;
         public bool MHideInroom;
@@ -21,10 +19,6 @@ namespace Plus.HabboHotel.Users.Messenger
         public GameClient Client;
         private Room _currentRoom;
         public string MUsername;
-
-        #endregion
-
-        #region Return values
 
         public int Id
         {
@@ -51,10 +45,6 @@ namespace Plus.HabboHotel.Users.Messenger
             set { _currentRoom = value; }
         }
 
-        #endregion
-
-        #region Constructor
-
         public MessengerBuddy(int userId, string pUsername, string pLook, string pMotto, int pLastOnline,
                                 bool pAppearOffline, bool pHideInroom)
         {
@@ -67,9 +57,6 @@ namespace Plus.HabboHotel.Users.Messenger
             MHideInroom = pHideInroom;
         }
 
-        #endregion
-
-        #region Methods
         public void UpdateUser(GameClient client)
         {
             this.Client = client;
@@ -101,7 +88,5 @@ namespace Plus.HabboHotel.Users.Messenger
             message.WriteBoolean(false); // Uses phone
             message.WriteShort(y);
         }
-
-        #endregion
     }
 }

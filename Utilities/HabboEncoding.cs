@@ -5,7 +5,6 @@ namespace Plus.Utilities
     public static class HabboEncoding
     {
         /* Encoding Functions */
-        #region Encoding/Cipher Methods
         /// <summary>
         /// Encodes the Int32 data given.
         /// </summary>
@@ -27,10 +26,8 @@ namespace Plus.Utilities
             var t = "";
             return t + (char)(v >> 8) + (char)v;
         }
-        #endregion
 
         /* Decoding Functions */
-        #region Decoding/DeCipher Methods
         /// <summary>
         /// Decodes the Encoded int32 data.
         /// </summary>
@@ -101,6 +98,5 @@ namespace Plus.Utilities
                 return false;
             }
         }
-        #endregion
     }
 }

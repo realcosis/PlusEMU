@@ -96,8 +96,6 @@ namespace Plus.Core.FigureData
             gender = gender.ToUpper();
 
             var rebuildFigure = string.Empty;
-
-            #region Check clothing, colors & Habbo Club
             var figureParts = figure.Split('.');
             foreach (var part in figureParts.ToList())
             {
@@ -111,7 +109,6 @@ namespace Plus.Core.FigureData
 
                     if (figureSet.Sets.TryGetValue(partId, out var set))
                     {
-                        #region Gender Check
                         if (set.Gender != gender && set.Gender != "U")
                         {
                             if (figureSet.Sets.Count(x => x.Value.Gender == gender || x.Value.Gender == "U") > 0)
@@ -124,9 +121,6 @@ namespace Plus.Core.FigureData
                                 colorId = GetRandomColor(figureSet.PalletId);
                             }
                         }
-                        #endregion
-
-                        #region Colors
                         if (set.Colorable)
                         {
                             //Couldn't think of a better way to split the colors, if I looped the parts I still have to remove Type-PartId, then loop color 1 & color 2. Meh
@@ -134,7 +128,6 @@ namespace Plus.Core.FigureData
                             var splitterCounter = part.Count(x => x == '-');
                             if (splitterCounter == 2 || splitterCounter == 3)
                             {
-                                #region First Color
                                 if (!string.IsNullOrEmpty(part.Split('-')[2]))
                                 {
                                     if (int.TryParse(part.Split('-')[2], out colorId))
@@ -159,12 +152,10 @@ namespace Plus.Core.FigureData
                                 }
                                 else
                                     colorId = 0;
-                                #endregion
                             }
 
                             if (splitterCounter == 3)
                             {
-                                #region Second Color
                                 if (!string.IsNullOrEmpty(part.Split('-')[3]))
                                 {
                                     if (int.TryParse(part.Split('-')[3], out secondColorId))
@@ -189,7 +180,6 @@ namespace Plus.Core.FigureData
                                 }
                                 else
                                     secondColorId = 0;
-                                #endregion
                             }
                         }
                         else
@@ -204,8 +194,6 @@ namespace Plus.Core.FigureData
                                 }
                             }
                         }
-                        #endregion
-
                         if (set.ClubLevel > 0 && !hasHabboClub)
                         {
                             partId = figureSet.Sets.FirstOrDefault(x => x.Value.Gender == gender || x.Value.Gender == "U" && x.Value.ClubLevel == 0).Value.Id;
@@ -222,9 +210,6 @@ namespace Plus.Core.FigureData
                     }
                 }
             }
-            #endregion
-
-            #region Check Required Clothing
             foreach (var requirement in _requirements)
             {
                 if (!rebuildFigure.Contains(requirement))
@@ -245,9 +230,6 @@ namespace Plus.Core.FigureData
                     }
                 }
             }
-            #endregion
-
-            #region Check Purcashable Clothing
             if (clothingParts != null)
             {
                 var purchasableParts = PlusEnvironment.GetGame().GetCatalog().GetClothingManager().GetClothingAllParts;
@@ -277,8 +259,6 @@ namespace Plus.Core.FigureData
                     }
                 }
             }
-            #endregion
-
             return rebuildFigure;
         }
 

@@ -91,22 +91,13 @@ namespace Plus.HabboHotel.Users.Process
                 _resetEvent.Reset();
 
                 // BEGIN CODE
-
-                #region Muted Checks
                 if (_player.TimeMuted > 0)
                     _player.TimeMuted -= 60;
-                #endregion
-
-                #region Console Checks
                 if (_player.MessengerSpamTime > 0)
                     _player.MessengerSpamTime -= 60;
                 if (_player.MessengerSpamTime <= 0)
                     _player.MessengerSpamCount = 0;
-                #endregion
-
                 _player.TimeAfk += 1;
-
-                #region Respect checking
                 if (_player.GetStats().RespectsTimestamp != DateTime.Today.ToString("MM/dd"))
                 {
                     _player.GetStats().RespectsTimestamp = DateTime.Today.ToString("MM/dd");
@@ -123,9 +114,6 @@ namespace Plus.HabboHotel.Users.Process
                         _player.GetClient().SendPacket(new UserObjectComposer(_player));
                     }
                 }
-                #endregion
-
-                #region Reset Scripting Warnings
                 if (_player.GiftPurchasingWarnings < 15)
                     _player.GiftPurchasingWarnings = 0;
 
@@ -134,9 +122,6 @@ namespace Plus.HabboHotel.Users.Process
 
                 if (_player.ClothingUpdateWarnings < 15)
                     _player.ClothingUpdateWarnings = 0;
-                #endregion
-
-
                 if (_player.GetClient() != null)
                     PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(_player.GetClient(), "ACH_AllTimeHotelPresence", 1);
 

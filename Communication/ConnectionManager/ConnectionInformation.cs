@@ -5,8 +5,6 @@ namespace Plus.Communication.ConnectionManager
 {
     public class ConnectionInformation : IDisposable
     {
-        #region declares
-
         /// <summary>
         ///     Is used when a connection state changes
         /// </summary>
@@ -53,10 +51,6 @@ namespace Plus.Communication.ConnectionManager
         /// </summary>
         public event ConnectionChange ConnectionChanged;
 
-        #endregion
-
-        #region constructor
-
         /// <summary>
         ///     Creates a new Connection witht he given information
         /// </summary>
@@ -99,10 +93,6 @@ namespace Plus.Communication.ConnectionManager
             }
         }
 
-        #endregion
-
-        #region getters
-
         /// <summary>
         ///     Returns the ip of the current connection
         /// </summary>
@@ -120,12 +110,6 @@ namespace Plus.Communication.ConnectionManager
         {
             return _connectionId;
         }
-
-        #endregion
-
-        #region methods
-
-        #region connection management
 
         /// <summary>
         ///     Disposes the current item
@@ -187,10 +171,6 @@ namespace Plus.Communication.ConnectionManager
             {
             }
         }
-
-        #endregion
-
-        #region data receiving
 
         /// <summary>
         ///     Receives a packet of data and processes it
@@ -257,10 +237,6 @@ namespace Plus.Communication.ConnectionManager
             }
         }
 
-        #endregion
-
-        #region data sending
-
         public void SendData(byte[] packet)
         {
             try
@@ -292,8 +268,5 @@ namespace Plus.Communication.ConnectionManager
                 Disconnect();
             }
         }
-        #endregion
-
-        #endregion
     }
 }

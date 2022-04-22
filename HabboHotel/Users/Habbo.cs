@@ -289,8 +289,6 @@ namespace Plus.HabboHotel.Users
 
             //TODO: Nope.
             InitPermissions();
-
-            #region Stats
             DataRow statRow = null;
             using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
@@ -339,7 +337,6 @@ namespace Plus.HabboHotel.Users
             Group g = null;
             if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(_habboStats.FavouriteGroupId, out g))
                 _habboStats.FavouriteGroupId = 0;
-            #endregion
         }
 
         public int Id

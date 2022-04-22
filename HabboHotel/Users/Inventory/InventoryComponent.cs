@@ -231,7 +231,6 @@ namespace Plus.HabboHotel.Users.Inventory
             _client.SendPacket(new FurniListNotificationComposer(id, 1));
         }
 
-        #region Pet Handling
         public ICollection<Pet> GetPets()
         {
             return _petsItems.Values;
@@ -263,9 +262,7 @@ namespace Plus.HabboHotel.Users.Inventory
                 return false;
             }
         }
-        #endregion
 
-        #region Bot Handling
         public ICollection<Bot> GetBots()
         {
             return _botItems.Values;
@@ -297,7 +294,6 @@ namespace Plus.HabboHotel.Users.Inventory
                 return false;
             }
         }
-        #endregion
 
         public bool TryAddItem(Item item)
         {

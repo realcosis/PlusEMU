@@ -28,7 +28,6 @@ namespace Plus.HabboHotel.Navigator
 
                 case NavigatorCategoryType.Query:
                     {
-                        #region Query
                         if (query.ToLower().StartsWith("owner:"))
                         {
                             if (query.Length > 0)
@@ -139,8 +138,6 @@ namespace Plus.HabboHotel.Navigator
                                 results = null;
                             }
                         }
-                        #endregion
-
                         break;
                     }
 

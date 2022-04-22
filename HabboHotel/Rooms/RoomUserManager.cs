@@ -1078,7 +1078,6 @@ namespace Plus.HabboHotel.Rooms
 
                     switch (item.GetBaseItem().InteractionType)
                     {
-                        #region Beds & Tents
                         case InteractionType.Bed:
                         case InteractionType.TentSmall:
                             {
@@ -1092,9 +1091,6 @@ namespace Plus.HabboHotel.Rooms
                                 user.UpdateNeeded = true;
                                 break;
                             }
-                        #endregion
-
-                        #region Banzai Gates
                         case InteractionType.Banzaigategreen:
                         case InteractionType.Banzaigateblue:
                         case InteractionType.Banzaigatered:
@@ -1138,9 +1134,6 @@ namespace Plus.HabboHotel.Rooms
                                 }
                                 break;
                             }
-                        #endregion
-
-                        #region Freeze Gates
                         case InteractionType.FreezeYellowGate:
                         case InteractionType.FreezeRedGate:
                         case InteractionType.FreezeGreenGate:
@@ -1183,22 +1176,12 @@ namespace Plus.HabboHotel.Rooms
                                 }
                                 break;
                             }
-                        #endregion
-
-                        #region Banzai Teles
                         case InteractionType.Banzaitele:
                             {
                                 if (user.Statusses.ContainsKey("mv"))
                                     _room.GetGameItemHandler().OnTeleportRoomUserEnter(user, item);
                                 break;
                             }
-                        #endregion
-
-                        #region Football Gate
-
-                        #endregion
-
-                        #region Effects
                         case InteractionType.Effect:
                             {
                                 if (user == null)
@@ -1219,9 +1202,6 @@ namespace Plus.HabboHotel.Rooms
                                 }
                                 break;
                             }
-                        #endregion
-
-                        #region Arrows
                         case InteractionType.Arrow:
                             {
                                 if (user.GoalX == item.GetX && user.GoalY == item.GetY)
@@ -1277,8 +1257,6 @@ namespace Plus.HabboHotel.Rooms
                                 }
                                 break;
                             }
-                            #endregion
-
                     }
                 }
 

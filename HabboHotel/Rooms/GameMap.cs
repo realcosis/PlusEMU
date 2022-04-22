@@ -1088,8 +1088,6 @@ namespace Plus.HabboHotel.Rooms
             }
             else
                 return _dynamicModel.SqFloorHeight[x, y];
-
-            #region Old
             /*
             if (mCoordinatedItems.ContainsKey(Points))
             {
@@ -1101,7 +1099,6 @@ namespace Plus.HabboHotel.Rooms
                 }
                 return SqAbsoluteHeight(X, Y, Items);
             }*/
-            #endregion
         }
 
         public double SqAbsoluteHeight(int x, int y, List<Item> itemsOnSquare)

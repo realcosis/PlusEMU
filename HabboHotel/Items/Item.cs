@@ -521,7 +521,6 @@ namespace Plus.HabboHotel.Items
 
                     switch (GetBaseItem().InteractionType)
                     {
-                        #region Group Gates
                         case InteractionType.GuildGate:
                             {
                                 if (ExtraData == "1")
@@ -538,9 +537,6 @@ namespace Plus.HabboHotel.Items
                                 }
                                 break;
                             }
-                        #endregion
-
-                        #region Item Effects
                         case InteractionType.Effect:
                             {
                                 if (ExtraData == "1")
@@ -557,9 +553,6 @@ namespace Plus.HabboHotel.Items
                                 }
                                 break;
                             }
-                        #endregion
-
-                        #region One way gates
                         case InteractionType.OneWayGate:
 
                             user = null;
@@ -601,9 +594,6 @@ namespace Plus.HabboHotel.Items
                             }
 
                             break;
-                        #endregion
-
-                        #region VIP Gate
                         case InteractionType.GateVip:
 
                             user = null;
@@ -660,9 +650,6 @@ namespace Plus.HabboHotel.Items
                             }
 
                             break;
-                        #endregion
-
-                        #region Hopper
                         case InteractionType.Hopper:
                             {
                                 user = null;
@@ -792,9 +779,6 @@ namespace Plus.HabboHotel.Items
                                 RequestUpdate(1, false);
                                 break;
                             }
-                        #endregion
-
-                        #region Teleports
                         case InteractionType.Teleport:
                             {
                                 user = null;
@@ -973,16 +957,10 @@ namespace Plus.HabboHotel.Items
                                 RequestUpdate(1, false);
                                 break;
                             }
-                        #endregion
-
-                        #region Bottle
                         case InteractionType.Bottle:
                             ExtraData = RandomNumber.GenerateNewRandom(0, 7).ToString();
                             UpdateState();
                             break;
-                        #endregion
-
-                        #region Dice
                         case InteractionType.Dice:
                             {
                                 var numbers = new string[] { "1", "2", "3", "4", "5", "6" };
@@ -991,16 +969,10 @@ namespace Plus.HabboHotel.Items
                                 UpdateState();
                             }
                             break;
-                        #endregion
-
-                        #region Habbo Wheel
                         case InteractionType.HabboWheel:
                             ExtraData = RandomNumber.GenerateRandom(1, 10).ToString();
                             UpdateState();
                             break;
-                        #endregion
-
-                        #region Love Shuffler
                         case InteractionType.LoveShuffler:
 
                             if (ExtraData == "0")
@@ -1015,9 +987,6 @@ namespace Plus.HabboHotel.Items
 
                             UpdateState(false, true);
                             break;
-                        #endregion
-
-                        #region Alert
                         case InteractionType.Alert:
                             if (ExtraData == "1")
                             {
@@ -1025,9 +994,6 @@ namespace Plus.HabboHotel.Items
                                 UpdateState(false, true);
                             }
                             break;
-                        #endregion
-
-                        #region Vending Machine
                         case InteractionType.VendingMachine:
 
                             if (ExtraData == "1")
@@ -1049,9 +1015,6 @@ namespace Plus.HabboHotel.Items
                                 UpdateState(false, true);
                             }
                             break;
-                        #endregion
-
-                        #region Scoreboard
                         case InteractionType.Scoreboard:
                             {
                                 if (string.IsNullOrEmpty(ExtraData))
@@ -1088,9 +1051,6 @@ namespace Plus.HabboHotel.Items
 
                                 break;
                             }
-                        #endregion
-
-                        #region Banzai Counter
                         case InteractionType.Banzaicounter:
                             {
                                 if (string.IsNullOrEmpty(ExtraData))
@@ -1134,18 +1094,12 @@ namespace Plus.HabboHotel.Items
 
                                 break;
                             }
-                        #endregion
-
-                        #region Banzai Tele
                         case InteractionType.Banzaitele:
                             {
                                 ExtraData = string.Empty;
                                 UpdateState();
                                 break;
                             }
-                        #endregion
-
-                        #region Banzai Floor
                         case InteractionType.Banzaifloor:
                             {
                                 if (Value == 3)
@@ -1200,9 +1154,6 @@ namespace Plus.HabboHotel.Items
                                 }
                                 break;
                             }
-                        #endregion
-
-                        #region Banzai Puck
                         case InteractionType.Banzaipuck:
                             {
                                 if (InteractionCount > 4)
@@ -1218,9 +1169,6 @@ namespace Plus.HabboHotel.Items
 
                                 break;
                             }
-                        #endregion
-
-                        #region Freeze Tile
                         case InteractionType.FreezeTile:
                             {
                                 if (InteractingUser > 0)
@@ -1233,9 +1181,6 @@ namespace Plus.HabboHotel.Items
                                 }
                                 break;
                             }
-                        #endregion
-
-                        #region Football Counter
                         case InteractionType.Counter:
                             {
                                 if (string.IsNullOrEmpty(ExtraData))
@@ -1278,9 +1223,6 @@ namespace Plus.HabboHotel.Items
 
                                 break;
                             }
-                        #endregion
-
-                        #region Freeze Timer
                         case InteractionType.Freezetimer:
                             {
                                 if (string.IsNullOrEmpty(ExtraData))
@@ -1323,18 +1265,12 @@ namespace Plus.HabboHotel.Items
 
                                 break;
                             }
-                        #endregion
-
-                        #region Pressure Pad
                         case InteractionType.PressurePad:
                             {
                                 ExtraData = "1";
                                 UpdateState();
                                 break;
                             }
-                        #endregion
-
-                        #region Wired
                         case InteractionType.WiredEffect:
                         case InteractionType.WiredTrigger:
                         case InteractionType.WiredCondition:
@@ -1346,15 +1282,10 @@ namespace Plus.HabboHotel.Items
                                 }
                             }
                             break;
-                        #endregion
-
-                        #region Cannon
                         case InteractionType.Cannon:
                             {
                                 if (ExtraData != "1")
                                     break;
-
-                                #region Target Calculation
                                 var targetStart = Coordinate;
                                 var targetSquares = new List<Point>();
                                 switch (Rotation)
@@ -1432,8 +1363,6 @@ namespace Plus.HabboHotel.Items
                                             break;
                                         }
                                 }
-                                #endregion
-
                                 if (targetSquares.Count > 0)
                                 {
                                     foreach (var square in targetSquares.ToList())
@@ -1466,7 +1395,6 @@ namespace Plus.HabboHotel.Items
                                 UpdateState(false, true);
                             }
                             break;
-                            #endregion
                     }
                 }
             }

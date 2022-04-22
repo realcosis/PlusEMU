@@ -70,9 +70,7 @@ namespace Plus.Communication.Packets.Incoming.Catalog
 
             var limitedEditionSells = 0;
             var limitedEditionStack = 0;
-
-            #region Create the extradata
-                switch (item.Data.InteractionType)
+            switch (item.Data.InteractionType)
             {
                 case InteractionType.None:
                     extraData = "";
@@ -81,9 +79,6 @@ namespace Plus.Communication.Packets.Incoming.Catalog
                 case InteractionType.GuildItem:
                 case InteractionType.GuildGate:
                     break;
-
-                #region Pet handling
-
                 case InteractionType.Pet:
                     try
                     {
@@ -110,9 +105,6 @@ namespace Plus.Communication.Packets.Incoming.Catalog
                     }
 
                     break;
-
-                #endregion
-
                 case InteractionType.Floor:
                 case InteractionType.Wallpaper:
                 case InteractionType.Landscape:
@@ -170,9 +162,6 @@ namespace Plus.Communication.Packets.Incoming.Catalog
                     extraData = "";
                     break;
             }
-            #endregion
-
-
             if (item.IsLimited)
             {
                 if (item.LimitedEditionStack <= item.LimitedEditionSells)

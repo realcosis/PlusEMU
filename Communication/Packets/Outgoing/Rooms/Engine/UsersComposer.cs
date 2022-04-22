@@ -178,7 +178,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
 
             switch (type)
             {
-                #region Dog Figures
                 default:
                 case 60:
                     {
@@ -196,9 +195,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "0 21 da9dbd 2 2 -1 0 3 -1 0";
                         }
                     }
-                #endregion
-
-                #region Cat Figures.
                 case 1:
                     {
                         var randomNumber = random.Next(1, 5);
@@ -217,9 +213,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "1 24 d5b35f 2 2 -1 0 3 -1 0";
                         }
                     }
-                #endregion
-
-                #region Terrier Figures
                 case 2:
                     {
                         var randomNumber = random.Next(1, 6);
@@ -240,9 +233,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "3 5 dddddd 2 2 -1 0 3 -1 0";
                         }
                     }
-                #endregion
-
-                #region Croco Figures
                 case 3:
                     {
                         var randomNumber = random.Next(1, 5);
@@ -261,9 +251,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "2 2 fcfad3 2 2 -1 0 3 -1 0";
                         }
                     }
-                #endregion
-
-                #region Bear Figures
                 case 4:
                     {
                         var randomNumber = random.Next(1, 4);
@@ -280,9 +267,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "4 0 ffffff 2 2 -1 0 3 -1 0";
                         }
                     }
-                #endregion
-
-                #region Pig Figures
                 case 5:
                     {
                         var randomNumber = random.Next(1, 7);
@@ -305,9 +289,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "5 8 ffffff 2 2 -1 0 3 -1 0";
                         }
                     }
-                #endregion
-
-                #region Lion Figures
                 case 6:
                     {
                         var randomNumber = random.Next(1, 11);
@@ -338,9 +319,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "6 2 ff9ae 2 2 -1 0 3 -1 0";
                         }
                     }
-                #endregion
-
-                #region Rhino Figures
                 case 7:
                     {
                         var randomNumber = random.Next(1, 7);
@@ -363,9 +341,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "7 0 cccccc 2 2 -1 0 3 -1 0";
                         }
                     }
-                #endregion
-
-                #region Spider Figures
                 case 8:
                     {
                         var randomNumber = random.Next(1, 13);
@@ -400,9 +375,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "8 7 ffffff 2 2 -1 0 3 -1 0";
                         }
                     }
-                #endregion
-
-                #region Turtle Figures
                 case 9:
                     {
                         var randomNumber = random.Next(1, 9);
@@ -429,9 +401,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "9 8 ffffff 2 2 -1 0 3 -1 0";
                         }
                     }
-                #endregion
-
-                #region Chick Figures
                 case 10:
                     {
                         var randomNumber = random.Next(1, 1);
@@ -442,9 +411,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "10 0 ffffff 2 2 -1 0 3 -1 0";
                         }
                     }
-                #endregion
-
-                #region Frog Figures
                 case 11:
                     {
                         var randomNumber = random.Next(1, 13);
@@ -479,9 +445,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "11 18 ffffff 2 2 -1 0 3 -1 0";
                         }
                     }
-                #endregion
-
-                #region Dragon Figures
                 case 12:
                     {
                         var randomNumber = random.Next(1, 6);
@@ -502,9 +465,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "12 5 ffffff 2 2 -1 0 3 -1 0";
                         }
                     }
-                #endregion
-
-                #region Monkey Figures
                 case 14:
                     {
                         var randomNumber = random.Next(1, 14);
@@ -541,9 +501,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "14 13 ffffff 2 2 -1 0 3 -1 0";
                         }
                     }
-                #endregion
-
-                #region Horse Figures
                 case 15:
                     {
                         var randomNumber = random.Next(1, 20);
@@ -592,9 +549,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "15 80 ffffff 2 2 -1 0 3 -1 0";
                         }
                     }
-                #endregion
-
-                #region Bunny Figures
                 case 17:
                     {
                         var randomNumber = random.Next(1, 8);
@@ -619,9 +573,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "20 0 ffffff";
                         }
                     }
-                #endregion
-
-                #region Pigeon Figures (White & Black)
                 case 21:
                     {
                         var randomNumber = random.Next(1, 3);
@@ -634,9 +585,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "22 0 ffffff";
                         }
                     }
-                #endregion
-
-                #region Demon Monkey Figures
                 case 23:
                     {
                         var randomNumber = random.Next(1, 3);
@@ -651,9 +599,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "23 3 ffffff";
                         }
                     }
-                #endregion
-
-                #region Gnome Figures
                 case 26:
                     {
                         var randomNumber = random.Next(1, 4);
@@ -670,7 +615,6 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                                 return "26 30 ffffff 5 0 -1 0 3 303 4 4 401 5 1 101 2 2 201 3";
                         }
                     }
-                #endregion
             }
         }
     }

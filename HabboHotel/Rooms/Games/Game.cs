@@ -165,7 +165,6 @@ namespace Plus.HabboHotel.Rooms.Games
             }
         }
 
-        #region Gates
         public void LockGates()
         {
             foreach (var item in _redTeamItems.Values.ToList())
@@ -243,7 +242,6 @@ namespace Plus.HabboHotel.Rooms.Games
                 _room.GetGameMap().GameMap[item.GetX, item.GetY] = 1;
             }
         }
-        #endregion
 
         public void StopGame()
         {

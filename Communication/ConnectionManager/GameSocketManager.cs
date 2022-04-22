@@ -11,8 +11,6 @@ namespace Plus.Communication.ConnectionManager
     {
         private static readonly ILogger Log = LogManager.GetLogger("Plus.Communication.ConnectionManager");
 
-        #region declares
-
         /// <summary>
         ///     This method is called if an connection event occurs
         /// </summary>
@@ -63,9 +61,6 @@ namespace Plus.Communication.ConnectionManager
         /// </summary>
         //private Dictionary<string, int> ipConnectionCount;
         private ConcurrentDictionary<string, int> _ipConnectionsCount;
-        #endregion
-
-        #region initializer
 
         /// <summary>
         ///     Initializes the connection instance
@@ -129,10 +124,6 @@ namespace Plus.Communication.ConnectionManager
             }
         }
 
-        #endregion
-
-        #region destructor
-
         /// <summary>
         ///     Destroys the current connection manager and disconnects all users
         /// </summary>
@@ -145,10 +136,6 @@ namespace Plus.Communication.ConnectionManager
             }
             _connectionListener = null;
         }
-
-        #endregion
-
-        #region connection request
 
         /// <summary>
         ///     Handels a new incoming data request from some computer from arround the world
@@ -202,10 +189,6 @@ namespace Plus.Communication.ConnectionManager
             }
         }
 
-        #endregion
-
-        #region connection disconnected
-
         /// <summary>
         ///     Reports a gameconnection as disconnected
         /// </summary>
@@ -216,10 +199,6 @@ namespace Plus.Communication.ConnectionManager
             ReportUserLogout(gameConnection.GetIp());
             //activeConnections.Remove(gameConnection.getConnectionID());
         }
-
-        #endregion
-
-        #region ip connection management
 
         /// <summary>
         ///     reports the user with an ip as "logged in"
@@ -267,7 +246,5 @@ namespace Plus.Communication.ConnectionManager
 
             return 0;
         }
-
-        #endregion
     }
 }

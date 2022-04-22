@@ -49,7 +49,6 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
 
             switch (actionId)
             {
-                #region Copy Looks (1)
                 case 1:
                     {
                         var userChangeComposer = new ServerPacket(ServerPacketHeader.UserChangeMessageComposer);
@@ -71,9 +70,6 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
                         //Room.SendMessage(new UserChangeComposer(BotUser.GetClient(), true));
                         break;
                     }
-                #endregion
-
-                #region Setup Speech (2)
                 case 2:
                     {
 
@@ -100,9 +96,6 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
                         roomBot.MixSentences = Convert.ToBoolean(mixChat);
                         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                         dbClient.RunQuery("DELETE FROM `bots_speech` WHERE `bot_id` = '" + bot.BotData.Id + "'");
-
-                        #region Save Data - TODO: MAKE METHODS FOR THIS.  
-
                         for (var i = 0; i <= speechData.Length - 1; i++)
                         {
                             dbClient.SetQuery("INSERT INTO `bots_speech` (`bot_id`, `text`) VALUES (@id, @data)");
@@ -117,9 +110,6 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
                             dbClient.AddParameter("MixChat", PlusEnvironment.BoolToEnum(Convert.ToBoolean(mixChat)));
                             dbClient.RunQuery();
                         }
-                        #endregion
-
-                        #region Handle Speech
                         roomBot.RandomSpeech.Clear();
 
                         dbClient.SetQuery("SELECT `text` FROM `bots_speech` WHERE `bot_id` = @id");
@@ -131,14 +121,8 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
                         {
                             roomBot.RandomSpeech.Add(new RandomSpeech(Convert.ToString(speech["text"]), botId));
                         }
-
-                        #endregion
-
                         break;
                     }
-                #endregion
-
-                #region Relax (3)
                 case 3:
                     {
                         if (bot.BotData.WalkingMode == "stand")
@@ -149,9 +133,6 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
                         dbClient.RunQuery("UPDATE `bots` SET `walk_mode` = '" + bot.BotData.WalkingMode + "' WHERE `id` = '" + bot.BotData.Id + "' LIMIT 1");
                         break;
                     }
-                #endregion
-
-                #region Dance (4)
                 case 4:
                     {
                         if (bot.BotData.DanceId > 0)
@@ -165,9 +146,6 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
                         room.SendPacket(new DanceComposer(bot, bot.BotData.DanceId));
                         break;
                     }
-                #endregion
-
-                #region Change Name (5)
                 case 5:
                     {
                         if (dataString.Length == 0)
@@ -197,7 +175,6 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
                         room.SendPacket(new UsersComposer(bot));
                         break;
                     }
-                #endregion
             }
         }
     }

@@ -53,7 +53,6 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
             //TODO: Make neat.
             switch (item.GetBaseItem().InteractionType)
             {
-                #region Interaction Types
                 case InteractionType.Moodlight:
                     {
                         var moodData = room.MoodlightData;
@@ -90,7 +89,6 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
                         room.AddTent(item.Id);
                         break;
                     }
-                #endregion
             }
 
             if (!item.IsWallItem)

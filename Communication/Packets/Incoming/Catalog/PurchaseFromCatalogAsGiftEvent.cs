@@ -116,9 +116,6 @@ namespace Plus.Communication.Packets.Incoming.Catalog
                     case InteractionType.None:
                         itemExtraData = "";
                         break;
-
-                    #region Pet handling
-
                     case InteractionType.Pet:
 
                         try
@@ -145,9 +142,6 @@ namespace Plus.Communication.Packets.Incoming.Catalog
                         }
 
                         break;
-
-                    #endregion
-
                     case InteractionType.Floor:
                     case InteractionType.Wallpaper:
                     case InteractionType.Landscape:

@@ -79,10 +79,6 @@ namespace Plus.HabboHotel.Rooms.AI.Types
             var pet = GetRoomUser();
             if (pet == null)
                 return;
-
-
-            #region Speech
-
             if (_speechTimer <= 0)
             {
                 if (pet.PetData.DbState != PetDatabaseUpdateState.NeedsInsert)
@@ -109,11 +105,6 @@ namespace Plus.HabboHotel.Rooms.AI.Types
             {
                 _speechTimer--;
             }
-
-            #endregion
-
-            #region Actions
-
             if (_actionTimer <= 0)
             {
                 try
@@ -139,11 +130,6 @@ namespace Plus.HabboHotel.Rooms.AI.Types
             {
                 _actionTimer--;
             }
-
-            #endregion
-
-            #region Energy
-
             if (_energyTimer <= 0)
             {
                 RemovePetStatus(); // Remove Status
@@ -156,11 +142,7 @@ namespace Plus.HabboHotel.Rooms.AI.Types
             {
                 _energyTimer--;
             }
-
-            #endregion
         }
-
-        #region Commands
 
         public override void OnUserSay(RoomUser user, string message)
         {
@@ -195,11 +177,6 @@ namespace Plus.HabboHotel.Rooms.AI.Types
                     switch (PlusEnvironment.GetGame().GetChatManager().GetPetCommands().TryInvoke(command))
                     {
                         // TODO - Level you can use the commands at...
-
-
-
-                        #region free
-
                         case 1:
                             RemovePetStatus();
 
@@ -211,11 +188,6 @@ namespace Plus.HabboHotel.Rooms.AI.Types
                             pet.PetData.Addexperience(10); // Give XP
 
                             break;
-
-                        #endregion
-
-                        #region here
-
                         case 2:
 
                             RemovePetStatus();
@@ -224,9 +196,6 @@ namespace Plus.HabboHotel.Rooms.AI.Types
                             var newY = user.Y;
 
                             _actionTimer = 30; // Reset ActionTimer
-
-                            #region Rotation
-
                             if (user.RotBody == 4)
                             {
                                 newY = user.Y + 1;
@@ -263,18 +232,10 @@ namespace Plus.HabboHotel.Rooms.AI.Types
                                 newX = user.X - 1;
                                 newY = user.Y + 1;
                             }
-
-                            #endregion
-
                             pet.PetData.Addexperience(10); // Give XP
 
                             pet.MoveTo(newX, newY);
                             break;
-
-                        #endregion
-
-                        #region sit
-
                         case 3:
                             // Remove Status
                             RemovePetStatus();
@@ -288,11 +249,6 @@ namespace Plus.HabboHotel.Rooms.AI.Types
                             _actionTimer = 25;
                             _energyTimer = 10;
                             break;
-
-                        #endregion
-
-                        #region lay
-
                         case 4:
                             // Remove Status
                             RemovePetStatus();
@@ -306,11 +262,6 @@ namespace Plus.HabboHotel.Rooms.AI.Types
                             _actionTimer = 30;
                             _energyTimer = 5;
                             break;
-
-                        #endregion
-
-                        #region dead
-
                         case 5:
                             // Remove Status
                             RemovePetStatus();
@@ -326,11 +277,6 @@ namespace Plus.HabboHotel.Rooms.AI.Types
                             _actionTimer = 30;
 
                             break;
-
-                        #endregion
-
-                        #region sleep
-
                         case 6:
                             // Remove Status
                             RemovePetStatus();
@@ -346,11 +292,6 @@ namespace Plus.HabboHotel.Rooms.AI.Types
                             _speechTimer = 30;
                             _actionTimer = 45;
                             break;
-
-                        #endregion
-
-                        #region jump
-
                         case 7:
                             // Remove Status
                             RemovePetStatus();
@@ -366,15 +307,9 @@ namespace Plus.HabboHotel.Rooms.AI.Types
                             _speechTimer = 10;
                             _actionTimer = 5;
                             break;
-
-                        #endregion
-
-                        #region breed
                         case 46:
 
                             break;
-                        #endregion
-
                         default:
                             var speech = PlusEnvironment.GetGame().GetChatManager().GetPetLocale().GetValue("pet.unknowncommand");
 
@@ -414,7 +349,5 @@ namespace Plus.HabboHotel.Rooms.AI.Types
             }
             //Pet = null;
         }
-
-        #endregion
     }
 }
