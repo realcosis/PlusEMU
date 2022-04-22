@@ -5,6 +5,8 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using Dapper;
 using MySqlConnector;
 using NLog;
 using Plus.Communication.ConnectionManager;
@@ -24,7 +26,12 @@ using Plus.Utilities;
 
 namespace Plus;
 
-public static class PlusEnvironment
+public interface IPlusEnvironment
+{
+    Task Start();
+}
+
+public class PlusEnvironment : IPlusEnvironment
 {
     public const string PrettyVersion = "Plus Emulator";
     public const string PrettyBuild = "3.4.3.0";
@@ -38,7 +45,7 @@ public static class PlusEnvironment
     private static ConnectionHandling _connectionManager;
     private static LanguageManager _languageManager;
     private static SettingsManager _settingsManager;
-    private static DatabaseManager _manager;
+    private static IDatabase _database;
     private static RconSocket _rcon;
     private static FigureDataManager _figureManager;
 
@@ -58,7 +65,13 @@ public static class PlusEnvironment
 
     public static string SwfRevision = "";
 
-    public static void Initialize()
+    public PlusEnvironment(ConfigurationData configurationData, IDatabase database)
+    {
+        _database = database;
+        _configuration = configurationData;
+    }
+
+    public async Task Start()
     {
         ServerStarted = DateTime.Now;
         Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -79,26 +92,7 @@ public static class PlusEnvironment
         CultureInfo = CultureInfo.CreateSpecificCulture("en-GB");
         try
         {
-            var projectSolutionPath = Directory.GetCurrentDirectory();
-            _configuration = new ConfigurationData(projectSolutionPath + "//Config//config.ini");
-            var connectionString = new MySqlConnectionStringBuilder
-            {
-                ConnectionTimeout = 10,
-                Database = GetConfig().Data["db.name"],
-                DefaultCommandTimeout = 30,
-                MaximumPoolSize = uint.Parse(GetConfig().Data["db.pool.maxsize"]),
-                MinimumPoolSize = uint.Parse(GetConfig().Data["db.pool.minsize"]),
-                Password = GetConfig().Data["db.password"],
-                Pooling = true,
-                Port = uint.Parse(GetConfig().Data["db.port"]),
-                Server = GetConfig().Data["db.hostname"],
-                UserID = GetConfig().Data["db.username"],
-                AllowZeroDateTime = true,
-                ConvertZeroDateTime = true,
-                SslMode = MySqlSslMode.None
-            };
-            _manager = new DatabaseManager(connectionString.ToString());
-            if (!_manager.IsConnected())
+            if (!_database.IsConnected())
             {
                 Log.Error("Failed to Connect to the specified MySQL server.");
                 Console.ReadKey(true);
@@ -108,13 +102,7 @@ public static class PlusEnvironment
             Log.Info("Connected to Database!");
 
             //Reset our statistics first.
-            using (var dbClient = GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.RunQuery("TRUNCATE `catalog_marketplace_data`");
-                dbClient.RunQuery("UPDATE `rooms` SET `users_now` = '0' WHERE `users_now` > '0';");
-                dbClient.RunQuery("UPDATE `users` SET `online` = '0' WHERE `online` = '1'");
-                dbClient.RunQuery("UPDATE `server_status` SET `users_online` = '0', `loaded_rooms` = '0'");
-            }
+            await ResetStatistics();
 
             //Get the configuration & Game set.
             _languageManager = new LanguageManager();
@@ -163,6 +151,15 @@ public static class PlusEnvironment
             Console.ReadKey();
             Environment.Exit(1);
         }
+    }
+
+    private async Task ResetStatistics()
+    {
+        using var connection = _database.Connection();
+        await connection.ExecuteAsync("TRUNCATE `catalog_marketplace_data`");
+        await connection.ExecuteAsync("UPDATE `rooms` SET `users_now` = '0' WHERE `users_now` > '0';");
+        await connection.ExecuteAsync("UPDATE `users` SET `online` = '0' WHERE `online` = '1'");
+        await connection.ExecuteAsync("UPDATE `server_status` SET `users_online` = '0', `loaded_rooms` = '0'");
     }
 
     public static bool EnumToBool(string @enum) => @enum == "1";
@@ -306,7 +303,7 @@ public static class PlusEnvironment
         GetGame().GetPacketManager().WaitForAllToComplete();
         GetGame().GetClientManager().CloseAll(); //Close all connections
         GetGame().GetRoomManager().Dispose(); //Stop the game loop.
-        using (var dbClient = _manager.GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.RunQuery("TRUNCATE `catalog_marketplace_data`");
             dbClient.RunQuery("UPDATE `users` SET `online` = '0', `auth_ticket` = NULL");
@@ -330,7 +327,7 @@ public static class PlusEnvironment
 
     public static FigureDataManager GetFigureManager() => _figureManager;
 
-    public static DatabaseManager GetDatabaseManager() => _manager;
+    public static IDatabase GetDatabaseManager() => _database;
 
     public static LanguageManager GetLanguageManager() => _languageManager;
 

@@ -405,14 +405,14 @@ public class Habbo
 
     public bool InRoom => CurrentRoomId >= 1 && CurrentRoom != null;
 
-    public Room CurrentRoom
+    public Room? CurrentRoom
     {
+        // TODO: Cache Room instead of fetching it from RoomManager
         get
         {
             if (CurrentRoomId <= 0)
                 return null;
-            Room room = null;
-            if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(CurrentRoomId, out room))
+            if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(CurrentRoomId, out var room))
                 return room;
             return null;
         }

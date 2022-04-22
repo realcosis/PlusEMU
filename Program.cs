@@ -1,8 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using NLog;
 using Plus.Core;
+using Plus.HabboHotel.Rooms.Chat.Commands;
 
 namespace Plus;
 
@@ -24,15 +31,29 @@ public static class Program
     private static extern IntPtr GetConsoleWindow();
 
     [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
+        var collection = new ServiceCollection();
+        collection.Scan(scan => scan.FromAssemblies(typeof(Program).Assembly)
+            .AddClasses()
+            .AsMatchingInterface()
+            .WithScopedLifetime());
+        collection.AddAssignableTo<IChatCommand>();
+
+        var projectSolutionPath = Directory.GetCurrentDirectory();
+        var configuration = new ConfigurationData(projectSolutionPath + "//Config//config.ini");
+        collection.AddSingleton(configuration);
+
+        var serviceProvider = collection.BuildServiceProvider();
+
         //XmlConfigurator.Configure();
         LogManager.LoadConfiguration("Config/nlog.config");
         Console.ForegroundColor = ConsoleColor.White;
         Console.CursorVisible = false;
         var currentDomain = AppDomain.CurrentDomain;
         currentDomain.UnhandledException += MyHandler;
-        PlusEnvironment.Initialize();
+        var environment = serviceProvider.GetRequiredService<IPlusEnvironment>();
+        await environment.Start();
         while (true)
         {
             if (Console.ReadKey(true).Key == ConsoleKey.Enter)
@@ -48,6 +69,11 @@ public static class Program
         }
     }
 
+
+    public static IServiceCollection AddAssignableTo<T>(this IServiceCollection services) =>
+        services.Scan(scan => scan.FromAssemblies(typeof(Program).Assembly)
+            .AddClasses(classes => classes.Where(t => t.IsAssignableTo(typeof(T)) && !t.IsAbstract && !t.IsInterface))
+            .As<T>().WithTransientLifetime());
     private static void MyHandler(object sender, UnhandledExceptionEventArgs args)
     {
         var e = (Exception)args.ExceptionObject;

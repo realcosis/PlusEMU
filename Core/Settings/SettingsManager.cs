@@ -4,7 +4,7 @@ using NLog;
 
 namespace Plus.Core.Settings;
 
-public class SettingsManager
+public class SettingsManager : ISettingsManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.Core.Settings.SettingsManager");
     private readonly Dictionary<string, string> _settings;

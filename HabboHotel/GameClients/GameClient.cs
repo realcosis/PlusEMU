@@ -206,7 +206,7 @@ public class GameClient
 
     public ConnectionInformation GetConnection() => _connection;
 
-    public Habbo? GetHabbo() => _habbo;
+    public Habbo GetHabbo() => _habbo!;
 
     public void Disconnect()
     {
