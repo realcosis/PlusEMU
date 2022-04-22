@@ -41,7 +41,7 @@ namespace Plus.Core.FigureData
                 _setTypes.Clear();
 
 
-            string projectSolutionPath = Path.GetDirectoryName(Path.GetDirectoryName(Directory.GetCurrentDirectory()));
+            string projectSolutionPath = Directory.GetCurrentDirectory();
 
             XmlDocument xDoc = new XmlDocument();
             xDoc.Load(projectSolutionPath + "//Config//figuredata.xml");

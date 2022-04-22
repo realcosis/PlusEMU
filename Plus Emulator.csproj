@@ -7,10 +7,11 @@
 		<OutputType>Exe</OutputType>
 		<RootNamespace>Plus</RootNamespace>
 		<AssemblyName>Plus Emulator</AssemblyName>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="MySql.Data" Version="8.0.28" />
+	  <PackageReference Include="MySqlConnector" Version="2.1.8" />
 	  <PackageReference Include="NLog" Version="4.7.15" />
 	</ItemGroup>
 
@@ -21,5 +22,17 @@
 	  <Reference Include="HabboEncryption">
 	    <HintPath>Resources\libs\HabboEncryption.dll</HintPath>
 	  </Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Config\config.ini">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Config\figuredata.xml">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Config\nlog.config">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 </Project>

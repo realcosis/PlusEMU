@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
+using NLog;
 using Plus.Core;
 
 namespace Plus
@@ -28,6 +29,7 @@ namespace Plus
         {
             //XmlConfigurator.Configure();
 
+            LogManager.LoadConfiguration("Config/nlog.config");
             Console.ForegroundColor = ConsoleColor.White;
             Console.CursorVisible = false;
             AppDomain currentDomain = AppDomain.CurrentDomain;

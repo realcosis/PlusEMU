@@ -4,7 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
-using MySql.Data.MySqlClient;
 using Plus.Core;
 
 using Plus.HabboHotel;
@@ -13,6 +12,7 @@ using Plus.HabboHotel.Users;
 using Plus.Utilities;
 using NLog;
 using System.Collections.Concurrent;
+using MySqlConnector;
 using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Communication.Encryption.Keys;
 using Plus.Communication.Encryption;
@@ -91,7 +91,7 @@ namespace Plus
 
             try
             {
-                string projectSolutionPath = Path.GetDirectoryName(Path.GetDirectoryName(Directory.GetCurrentDirectory()));
+                string projectSolutionPath = Directory.GetCurrentDirectory();
 
                 _configuration = new ConfigurationData(projectSolutionPath + "//Config//config.ini");
 
@@ -100,7 +100,6 @@ namespace Plus
                     ConnectionTimeout = 10,
                     Database = GetConfig().data["db.name"],
                     DefaultCommandTimeout = 30,
-                    Logging = false,
                     MaximumPoolSize = uint.Parse(GetConfig().data["db.pool.maxsize"]),
                     MinimumPoolSize = uint.Parse(GetConfig().data["db.pool.minsize"]),
                     Password = GetConfig().data["db.password"],
