@@ -20,14 +20,14 @@ namespace Plus.HabboHotel.Badges
 
         public void Init()
         {
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `badge_definitions`;");
-                DataTable data = dbClient.GetTable();
+                var data = dbClient.GetTable();
 
                 foreach (DataRow row in data.Rows)
                 {
-                    string code = Convert.ToString(row["code"]).ToUpper();
+                    var code = Convert.ToString(row["code"]).ToUpper();
 
                     if (!_badges.ContainsKey(code))
                         _badges.Add(code, new BadgeDefinition(code, Convert.ToString(row["required_right"])));

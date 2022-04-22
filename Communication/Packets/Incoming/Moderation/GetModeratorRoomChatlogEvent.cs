@@ -22,18 +22,18 @@ namespace Plus.Communication.Packets.Incoming.Moderation
                 return;
 
             packet.PopInt(); //junk
-            int roomId = packet.PopInt();
+            var roomId = packet.PopInt();
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(roomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(roomId, out var room))
             {
                 return;
             }
 
             PlusEnvironment.GetGame().GetChatManager().GetLogs().FlushAndSave();
 
-            List<ChatlogEntry> chats = new List<ChatlogEntry>();
+            var chats = new List<ChatlogEntry>();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `chatlogs` WHERE `room_id` = @id ORDER BY `id` DESC LIMIT 100");
                 dbClient.AddParameter("id", roomId);
@@ -43,7 +43,7 @@ namespace Plus.Communication.Packets.Incoming.Moderation
                 {
                     foreach (DataRow row in data.Rows)
                     {
-                        Habbo habbo = PlusEnvironment.GetHabboById(Convert.ToInt32(row["user_id"]));
+                        var habbo = PlusEnvironment.GetHabboById(Convert.ToInt32(row["user_id"]));
 
                         if (habbo != null)
                         {

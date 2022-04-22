@@ -10,7 +10,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Avatar
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
                 return;
 
-            RoomUser user = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null)
                 return;
 

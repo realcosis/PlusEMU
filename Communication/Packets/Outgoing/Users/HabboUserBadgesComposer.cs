@@ -13,7 +13,7 @@ namespace Plus.Communication.Packets.Outgoing.Users
             WriteInteger(habbo.Id);
             WriteInteger(habbo.GetBadgeComponent().EquippedCount);
 
-            foreach (Badge badge in habbo.GetBadgeComponent().GetBadges().Where(b => b.Slot > 0).ToList())
+            foreach (var badge in habbo.GetBadgeComponent().GetBadges().Where(b => b.Slot > 0).ToList())
             {
                 WriteInteger(badge.Slot);
                 WriteString(badge.Code);

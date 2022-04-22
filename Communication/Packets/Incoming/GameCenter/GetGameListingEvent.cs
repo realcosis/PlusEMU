@@ -9,7 +9,7 @@ namespace Plus.Communication.Packets.Incoming.GameCenter
     {
         public void Parse(HabboHotel.GameClients.GameClient session, ClientPacket packet)
         {
-            ICollection<GameData> games = PlusEnvironment.GetGame().GetGameDataManager().GameData;
+            var games = PlusEnvironment.GetGame().GetGameDataManager().GameData;
 
             session.SendPacket(new GameListComposer(games));
         }

@@ -23,7 +23,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
             session.GetHabbo().DisableForcedEffects = !session.GetHabbo().DisableForcedEffects;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `users` SET `disable_forced_effects` = @DisableForcedEffects WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
                 dbClient.AddParameter("DisableForcedEffects", (session.GetHabbo().DisableForcedEffects == true ? 1 : 0).ToString());

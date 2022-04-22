@@ -13,13 +13,13 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Action
             if (!session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
-            string username = packet.PopString();
+            var username = packet.PopString();
 
-            Habbo player = PlusEnvironment.GetHabboByUsername(username);
+            var player = PlusEnvironment.GetHabboByUsername(username);
             if (player == null)
                 return;
 
@@ -28,7 +28,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Action
 
             if (session.GetHabbo().GetIgnores().TryRemove(player.Id))
             {
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
                     dbClient.SetQuery("DELETE FROM `user_ignores` WHERE `user_id` = @uid AND `ignore_id` = @ignoreId");
                     dbClient.AddParameter("uid", session.GetHabbo().Id);

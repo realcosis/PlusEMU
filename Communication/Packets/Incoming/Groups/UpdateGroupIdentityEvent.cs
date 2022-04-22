@@ -9,17 +9,17 @@ namespace Plus.Communication.Packets.Incoming.Groups
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int groupId = packet.PopInt();
-            string name = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
-            string desc = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
+            var groupId = packet.PopInt();
+            var name = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
+            var desc = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
 
-            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out Group group))
+            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
                 return;
 
             if (group.CreatorId != session.GetHabbo().Id)
                 return;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `groups` SET `name`= @name, `desc` = @desc WHERE `id` = @groupId LIMIT 1");
                 dbClient.AddParameter("name", name);

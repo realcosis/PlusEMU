@@ -16,9 +16,9 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Action
             if (session == null || session.GetHabbo() == null)
                 return;
 
-            int userId = packet.PopInt();
+            var userId = packet.PopInt();
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
             if (!room.CheckRights(session, true))
@@ -32,12 +32,12 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Action
 
             room.UsersWithRights.Add(userId);
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("INSERT INTO `room_rights` (`room_id`,`user_id`) VALUES ('" + room.RoomId + "','" + userId + "')");
             }
 
-            RoomUser roomUser = room.GetRoomUserManager().GetRoomUserByHabbo(userId);
+            var roomUser = room.GetRoomUserManager().GetRoomUserByHabbo(userId);
             if (roomUser != null && !roomUser.IsBot)
             {
                 roomUser.SetStatus("flatctrl 1");
@@ -49,7 +49,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Action
             }
             else
             {
-                UserCache user =  PlusEnvironment.GetGame().GetCacheManager().GenerateUser(userId);
+                var user =  PlusEnvironment.GetGame().GetCacheManager().GenerateUser(userId);
                 if (user != null)
                     session.SendPacket(new FlatControllerAddedComposer(room.RoomId, user.Id, user.Username));
             }

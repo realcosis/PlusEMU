@@ -12,16 +12,16 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Avatar
             if (!session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null)
                 return;
 
             user.UnIdle();
 
-            int danceId = packet.PopInt();
+            var danceId = packet.PopInt();
             if (danceId < 0 || danceId > 4)
                 danceId = 0;
 

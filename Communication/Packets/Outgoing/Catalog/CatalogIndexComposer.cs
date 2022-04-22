@@ -11,14 +11,14 @@ namespace Plus.Communication.Packets.Outgoing.Catalog
         {
             WriteRootIndex(sesion, pages);
 
-            foreach (CatalogPage parent in pages)
+            foreach (var parent in pages)
             {
                 if (parent.ParentId != -1 || parent.MinimumRank > sesion.GetHabbo().Rank || (parent.MinimumVip > sesion.GetHabbo().VipRank && sesion.GetHabbo().Rank == 1))
                     continue;
 
                 WritePage(parent, CalcTreeSize(sesion, pages, parent.Id));
 
-                foreach (CatalogPage child in pages)
+                foreach (var child in pages)
                 {
                     if (child.ParentId != parent.Id || child.MinimumRank > sesion.GetHabbo().Rank || (child.MinimumVip > sesion.GetHabbo().VipRank && sesion.GetHabbo().Rank == 1))
                         continue;
@@ -28,7 +28,7 @@ namespace Plus.Communication.Packets.Outgoing.Catalog
                     else
                         WriteNodeIndex(child, CalcTreeSize(sesion, pages, child.Id));
                     
-                    foreach (CatalogPage subChild in pages)
+                    foreach (var subChild in pages)
                     {
                         if (subChild.ParentId != child.Id || subChild.MinimumRank > sesion.GetHabbo().Rank)
                             continue;
@@ -73,7 +73,7 @@ namespace Plus.Communication.Packets.Outgoing.Catalog
             WriteString(page.Caption);
 
             WriteInteger(page.ItemOffers.Count);
-            foreach (int i in page.ItemOffers.Keys)
+            foreach (var i in page.ItemOffers.Keys)
             {
                 WriteInteger(i);
             }
@@ -83,8 +83,8 @@ namespace Plus.Communication.Packets.Outgoing.Catalog
 
         public int CalcTreeSize(GameClient session, ICollection<CatalogPage> pages, int parentId)
         {
-            int i = 0;
-            foreach (CatalogPage page in pages)
+            var i = 0;
+            foreach (var page in pages)
             {
                 if (page.MinimumRank > session.GetHabbo().Rank || (page.MinimumVip > session.GetHabbo().VipRank && session.GetHabbo().Rank == 1) || page.ParentId != parentId)
                     continue;

@@ -32,7 +32,7 @@ namespace Plus
             LogManager.LoadConfiguration("Config/nlog.config");
             Console.ForegroundColor = ConsoleColor.White;
             Console.CursorVisible = false;
-            AppDomain currentDomain = AppDomain.CurrentDomain;
+            var currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += MyHandler;
 
             PlusEnvironment.Initialize();
@@ -42,11 +42,11 @@ namespace Plus
                 if (Console.ReadKey(true).Key == ConsoleKey.Enter)
                 {
                     Console.Write("plus> ");
-                    string input = Console.ReadLine();
+                    var input = Console.ReadLine();
 
                     if (input.Length > 0)
                     {
-                        string s = input.Split(' ')[0];
+                        var s = input.Split(' ')[0];
 
                         ConsoleCommands.InvokeCommand(s);
                     }

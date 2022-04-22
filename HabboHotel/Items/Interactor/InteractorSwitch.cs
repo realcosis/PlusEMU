@@ -21,21 +21,21 @@ namespace Plus.HabboHotel.Items.Interactor
             if (session == null)
                 return;
 
-            RoomUser user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null)
                 return;
 
             if (Gamemap.TilesTouching(item.GetX, item.GetY, user.X, user.Y))
             {
-                int modes = item.GetBaseItem().Modes - 1;
+                var modes = item.GetBaseItem().Modes - 1;
 
                 if (modes <= 0)
                     return;
 
                 PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.FurniSwitch);
 
-                int currentMode = 0;
-                int newMode = 0;
+                var currentMode = 0;
+                var newMode = 0;
 
                 if (!int.TryParse(item.ExtraData, out currentMode))
                 {

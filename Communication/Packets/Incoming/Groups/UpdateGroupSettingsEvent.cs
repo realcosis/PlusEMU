@@ -14,16 +14,16 @@ namespace Plus.Communication.Packets.Incoming.Groups
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int groupId = packet.PopInt();
+            var groupId = packet.PopInt();
 
-            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out Group group))
+            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
                 return;
 
             if (group.CreatorId != session.GetHabbo().Id)
                 return;
 
-            int type = packet.PopInt();
-            int furniOptions = packet.PopInt();
+            var type = packet.PopInt();
+            var furniOptions = packet.PopInt();
 
             switch (type)
             {
@@ -42,7 +42,7 @@ namespace Plus.Communication.Packets.Incoming.Groups
             {
                 if (group.GetRequests.Count > 0)
                 {
-                    foreach (int userId in group.GetRequests.ToList())
+                    foreach (var userId in group.GetRequests.ToList())
                     {
                         group.HandleRequest(userId, false);
                     }
@@ -51,7 +51,7 @@ namespace Plus.Communication.Packets.Incoming.Groups
                 }
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `groups` SET `state` = @GroupState, `admindeco` = @AdminDeco WHERE `id` = @groupId LIMIT 1");
                 dbClient.AddParameter("GroupState", (group.Type == GroupType.Open ? 0 : group.Type == GroupType.Locked ? 1 : 2).ToString());
@@ -62,10 +62,10 @@ namespace Plus.Communication.Packets.Incoming.Groups
 
             group.AdminOnlyDeco = furniOptions;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(group.RoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(group.RoomId, out var room))
                 return;
 
-            foreach (RoomUser user in room.GetRoomUserManager().GetRoomUsers().ToList())
+            foreach (var user in room.GetRoomUserManager().GetRoomUsers().ToList())
             {
                 if (room.OwnerId == user.UserId || group.IsAdmin(user.UserId) || !group.IsMember(user.UserId))
                     continue;

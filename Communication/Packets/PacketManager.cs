@@ -134,7 +134,7 @@ namespace Plus.Communication.Packets
             if (session == null)
                 return;
 
-            if (!_incomingPackets.TryGetValue(packet.Id, out IPacketEvent pak))
+            if (!_incomingPackets.TryGetValue(packet.Id, out var pak))
             {
                 if (System.Diagnostics.Debugger.IsAttached)
                     Log.Debug("Unhandled Packet: " + packet);
@@ -157,10 +157,10 @@ namespace Plus.Communication.Packets
 
         private void ExecutePacketAsync(GameClient session, ClientPacket packet, IPacketEvent pak)
         {
-            CancellationTokenSource cancelSource = new CancellationTokenSource();
-            CancellationToken token = cancelSource.Token;
+            var cancelSource = new CancellationTokenSource();
+            var token = cancelSource.Token;
 
-            Task t = _eventDispatcher.StartNew(() =>
+            var t = _eventDispatcher.StartNew(() =>
             {
                 pak.Parse(session, packet);
                 token.ThrowIfCancellationRequested();
@@ -177,7 +177,7 @@ namespace Plus.Communication.Packets
             }
             catch (AggregateException ex)
             {
-                foreach (Exception e in ex.Flatten().InnerExceptions)
+                foreach (var e in ex.Flatten().InnerExceptions)
                 {
                     if (_throwUserErrors)
                     {
@@ -196,7 +196,7 @@ namespace Plus.Communication.Packets
             }
             finally
             {
-                _runningTasks.TryRemove(t.Id, out Task _);
+                _runningTasks.TryRemove(t.Id, out var _);
 
                 cancelSource.Dispose();
 
@@ -206,7 +206,7 @@ namespace Plus.Communication.Packets
 
         public void WaitForAllToComplete()
         {
-            foreach (Task t in _runningTasks.Values.ToList())
+            foreach (var t in _runningTasks.Values.ToList())
             {
                 t.Wait();
             }

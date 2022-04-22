@@ -28,14 +28,14 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 return;
             }
 
-            GameClient target = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+            var target = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
             if (target == null)
             {
                 session.SendWhisper("Oops, couldn't find that user!");
                 return;
             }
 
-            string updateVal = @params[2];
+            var updateVal = @params[2];
             switch (updateVal.ToLower())
             {
                 case "coins":

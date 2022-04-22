@@ -19,7 +19,7 @@
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null)
                 return;
 

@@ -226,18 +226,18 @@ namespace Plus.HabboHotel.Rooms
 
         public void InitBots()
         {
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT `id`,`room_id`,`name`,`motto`,`look`,`x`,`y`,`z`,`rotation`,`gender`,`user_id`,`ai_type`,`walk_mode`,`automatic_chat`,`speaking_interval`,`mix_sentences`,`chat_bubble` FROM `bots` WHERE `room_id` = '" + RoomId + "' AND `ai_type` != 'pet'");
-            DataTable data = dbClient.GetTable();
+            var data = dbClient.GetTable();
             if (data == null)
                 return;
 
             foreach (DataRow bot in data.Rows)
             {
                 dbClient.SetQuery("SELECT `text` FROM `bots_speech` WHERE `bot_id` = '" + Convert.ToInt32(bot["id"]) + "'");
-                DataTable botSpeech = dbClient.GetTable();
+                var botSpeech = dbClient.GetTable();
 
-                List<RandomSpeech> speeches = new List<RandomSpeech>();
+                var speeches = new List<RandomSpeech>();
 
                 foreach (DataRow speech in botSpeech.Rows)
                 {
@@ -250,9 +250,9 @@ namespace Plus.HabboHotel.Rooms
 
         public void InitPets()
         {
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT `id`,`user_id`,`room_id`,`name`,`x`,`y`,`z` FROM `bots` WHERE `room_id` = '" + RoomId + "' AND `ai_type` = 'pet'");
-            DataTable data = dbClient.GetTable();
+            var data = dbClient.GetTable();
 
             if (data == null)
                 return;
@@ -260,11 +260,11 @@ namespace Plus.HabboHotel.Rooms
             foreach (DataRow row in data.Rows)
             {
                 dbClient.SetQuery("SELECT `type`,`race`,`color`,`experience`,`energy`,`nutrition`,`respect`,`createstamp`,`have_saddle`,`anyone_ride`,`hairdye`,`pethair`,`gnome_clothing` FROM `bots_petdata` WHERE `id` = '" + row[0] + "' LIMIT 1");
-                DataRow mRow = dbClient.GetRow();
+                var mRow = dbClient.GetRow();
                 if (mRow == null)
                     continue;
 
-                Pet pet = new Pet(Convert.ToInt32(row["id"]), Convert.ToInt32(row["user_id"]), Convert.ToInt32(row["room_id"]), Convert.ToString(row["name"]), Convert.ToInt32(mRow["type"]), Convert.ToString(mRow["race"]),
+                var pet = new Pet(Convert.ToInt32(row["id"]), Convert.ToInt32(row["user_id"]), Convert.ToInt32(row["room_id"]), Convert.ToString(row["name"]), Convert.ToInt32(mRow["type"]), Convert.ToString(mRow["race"]),
                     Convert.ToString(mRow["color"]), Convert.ToInt32(mRow["experience"]), Convert.ToInt32(mRow["energy"]), Convert.ToInt32(mRow["nutrition"]), Convert.ToInt32(mRow["respect"]), Convert.ToDouble(mRow["createstamp"]), Convert.ToInt32(row["x"]), Convert.ToInt32(row["y"]),
                     Convert.ToDouble(row["z"]), Convert.ToInt32(mRow["have_saddle"]), Convert.ToInt32(mRow["anyone_ride"]), Convert.ToInt32(mRow["hairdye"]), Convert.ToInt32(mRow["pethair"]), Convert.ToString(mRow["gnome_clothing"]));
 
@@ -302,7 +302,7 @@ namespace Plus.HabboHotel.Rooms
 
             DataTable data = null;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT room_rights.user_id FROM room_rights WHERE room_id = @roomid");
                 dbClient.AddParameter("roomid", Id);
@@ -323,7 +323,7 @@ namespace Plus.HabboHotel.Rooms
             _wordFilterList = new List<string>();
 
             DataTable data = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `room_filter` WHERE `room_id` = @roomid;");
                 dbClient.AddParameter("roomid", Id);
@@ -389,7 +389,7 @@ namespace Plus.HabboHotel.Rooms
         {
             Func<Item, bool> predicate = null;
             string key = null;
-            foreach (Item item in GetRoomItemHandler().GetFurniObjects(ball.GetX, ball.GetY).ToList())
+            foreach (var item in GetRoomItemHandler().GetFurniObjects(ball.GetX, ball.GetY).ToList())
             {
                 if (item.GetBaseItem().ItemName.StartsWith("fball_goal_"))
                 {
@@ -411,7 +411,7 @@ namespace Plus.HabboHotel.Rooms
                     predicate = p => p.GetBaseItem().ItemName == ("fball_score_" + key);
                 }
 
-                foreach (Item item2 in GetRoomItemHandler().GetFloor.Where<Item>(predicate).ToList())
+                foreach (var item2 in GetRoomItemHandler().GetFloor.Where<Item>(predicate).ToList())
                 {
                     if (item2.GetBaseItem().ItemName == ("fball_score_" + key))
                     {
@@ -501,7 +501,7 @@ namespace Plus.HabboHotel.Rooms
         {
             try
             {
-                foreach (RoomUser user in _roomUserManager.GetRoomUsers().ToList())
+                foreach (var user in _roomUserManager.GetRoomUsers().ToList())
                 {
                     if (user == null || user.GetClient() == null)
                         continue;
@@ -552,7 +552,7 @@ namespace Plus.HabboHotel.Rooms
             session.SendPacket(new HeightMapComposer(GetGameMap().Model.Heightmap));
             session.SendPacket(new FloorHeightMapComposer(GetGameMap().Model.GetRelativeHeightmap(), GetGameMap().StaticModel.WallHeight));
 
-            foreach (RoomUser user in _roomUserManager.GetUserList().ToList())
+            foreach (var user in _roomUserManager.GetUserList().ToList())
             {
                 if (user == null)
                     continue;
@@ -593,8 +593,8 @@ namespace Plus.HabboHotel.Rooms
             if (!_tents.ContainsKey(tentId))
                 return;
 
-            List<RoomUser> users = _tents[tentId];
-            foreach (RoomUser user in users.ToList())
+            var users = _tents[tentId];
+            foreach (var user in users.ToList())
             {
                 if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null)
                     continue;
@@ -638,7 +638,7 @@ namespace Plus.HabboHotel.Rooms
             if (!_tents.ContainsKey(tentId))
                 return;
 
-            foreach (RoomUser user in _tents[tentId].ToList())
+            foreach (var user in _tents[tentId].ToList())
             {
                 if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().GetIgnores().IgnoredUserIds().Contains(id) || user.GetClient().GetHabbo().TentId != tentId)
                     continue;
@@ -657,12 +657,12 @@ namespace Plus.HabboHotel.Rooms
             try
             {
 
-                List<RoomUser> users = _roomUserManager.GetUserList().ToList();
+                var users = _roomUserManager.GetUserList().ToList();
 
                 if (_roomUserManager == null || users == null)
                     return;
 
-                foreach (RoomUser user in users)
+                foreach (var user in users)
                 {
                     if (user == null || user.IsBot)
                         continue;
@@ -684,7 +684,7 @@ namespace Plus.HabboHotel.Rooms
 
         public void BroadcastPacket(byte[] packet)
         {
-            foreach (RoomUser user in _roomUserManager.GetUserList().ToList())
+            foreach (var user in _roomUserManager.GetUserList().ToList())
             {
                 if (user == null || user.IsBot)
                     continue;
@@ -703,17 +703,17 @@ namespace Plus.HabboHotel.Rooms
 
             try
             {
-                byte[] totalBytes = new byte[0];
-                int current = 0;
+                var totalBytes = new byte[0];
+                var current = 0;
 
-                foreach (ServerPacket packet in packets.ToList())
+                foreach (var packet in packets.ToList())
                 {
-                    byte[] toAdd = packet.GetBytes();
-                    int newLen = totalBytes.Length + toAdd.Length;
+                    var toAdd = packet.GetBytes();
+                    var newLen = totalBytes.Length + toAdd.Length;
 
                     Array.Resize(ref totalBytes, newLen);
 
-                    for (int i = 0; i < toAdd.Length; i++)
+                    for (var i = 0; i < toAdd.Length; i++)
                     {
                         totalBytes[current] = toAdd[i];
                         current++;

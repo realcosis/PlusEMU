@@ -25,7 +25,7 @@
                 return;
             }
 
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(@params[1]);
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(@params[1]);
             if (user == null)
                 return;
 

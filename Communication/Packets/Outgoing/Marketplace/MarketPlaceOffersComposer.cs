@@ -12,7 +12,7 @@ namespace Plus.Communication.Packets.Outgoing.Marketplace
             WriteInteger(dictionary.Count);
             if (dictionary.Count > 0)
             {
-                foreach (KeyValuePair<int, MarketOffer> pair in dictionary)
+                foreach (var pair in dictionary)
                 {
                     WriteInteger(pair.Value.OfferId);
                     WriteInteger(1);//State

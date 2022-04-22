@@ -10,7 +10,7 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.Bots
             : base(ServerPacketHeader.BotInventoryMessageComposer)
         {
             WriteInteger(bots.Count);
-            foreach (Bot bot in bots.ToList())
+            foreach (var bot in bots.ToList())
             {
                 WriteInteger(bot.Id);
                WriteString(bot.Name);

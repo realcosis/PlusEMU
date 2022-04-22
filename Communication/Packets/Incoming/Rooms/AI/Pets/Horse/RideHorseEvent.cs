@@ -13,17 +13,17 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
             if (!session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null)
                 return;
 
-            int petId = packet.PopInt();
-            bool type = packet.PopBoolean();
+            var petId = packet.PopInt();
+            var type = packet.PopBoolean();
 
-            if (!room.GetRoomUserManager().TryGetPet(petId, out RoomUser pet))
+            if (!room.GetRoomUserManager().TryGetPet(petId, out var pet))
                 return;
 
             if (pet.PetData == null)
@@ -40,7 +40,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
             {
                 if (pet.RidingHorse)
                 {
-                    string[] speech2 = PlusEnvironment.GetGame().GetChatManager().GetPetLocale().GetValue("pet.alreadymounted");
+                    var speech2 = PlusEnvironment.GetGame().GetChatManager().GetPetLocale().GetValue("pet.alreadymounted");
                     var randomSpeech2 = new Random();
                     pet.Chat(speech2[randomSpeech2.Next(0, speech2.Length - 1)]);
                 }
@@ -53,8 +53,8 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
                     if (pet.Statusses.Count > 0)
                         pet.Statusses.Clear();
 
-                    int newX2 = user.X;
-                    int newY2 = user.Y;
+                    var newX2 = user.X;
+                    var newY2 = user.Y;
                     room.SendPacket(room.GetRoomItemHandler().UpdateUserOnRoller(pet, new Point(newX2, newY2), 0, room.GetGameMap().SqAbsoluteHeight(newX2, newY2)));
                     room.SendPacket(room.GetRoomItemHandler().UpdateUserOnRoller(user, new Point(newX2, newY2), 0, room.GetGameMap().SqAbsoluteHeight(newX2, newY2) + 1));
 

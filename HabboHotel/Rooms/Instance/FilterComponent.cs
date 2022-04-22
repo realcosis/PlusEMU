@@ -21,7 +21,7 @@ namespace Plus.HabboHotel.Rooms.Instance
             if (_instance.WordFilterList.Contains(word))
                 return false;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("INSERT INTO `room_filter` (`room_id`,`word`) VALUES(@rid,@word);");
                 dbClient.AddParameter("rid", _instance.Id);
@@ -38,7 +38,7 @@ namespace Plus.HabboHotel.Rooms.Instance
             if (!_instance.WordFilterList.Contains(word))
                 return false;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("DELETE FROM `room_filter` WHERE `room_id` = @rid AND `word` = @word;");
                 dbClient.AddParameter("rid", _instance.Id);
@@ -52,7 +52,7 @@ namespace Plus.HabboHotel.Rooms.Instance
 
         public string CheckMessage(string message)
         {
-            foreach (string filter in _instance.WordFilterList)
+            foreach (var filter in _instance.WordFilterList)
             {
                 if (message.ToLower().Contains(filter) || message == filter)
                     message = Regex.Replace(message, filter, "Bobba", RegexOptions.IgnoreCase);

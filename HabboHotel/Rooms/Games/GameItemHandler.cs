@@ -29,9 +29,9 @@ namespace Plus.HabboHotel.Rooms.Games
 
         private void CyclePyramids()
         {
-            Random rnd = new Random();
+            var rnd = new Random();
 
-            foreach (Item item in _banzaiPyramids.Values.ToList())
+            foreach (var item in _banzaiPyramids.Values.ToList())
             {
                 if (item == null)
                     continue;
@@ -45,7 +45,7 @@ namespace Plus.HabboHotel.Rooms.Games
                 if (string.IsNullOrEmpty(item.ExtraData))
                     item.ExtraData = "0";
 
-                int randomNumber = rnd.Next(0, 30);
+                var randomNumber = rnd.Next(0, 30);
                 if (randomNumber == 15)
                 {
                     if (item.ExtraData == "0")
@@ -77,7 +77,7 @@ namespace Plus.HabboHotel.Rooms.Games
 
         public void RemovePyramid(int itemId)
         {
-            _banzaiPyramids.TryRemove(itemId, out Item item);
+            _banzaiPyramids.TryRemove(itemId, out var item);
         }
 
         public void AddTeleport(Item item, int itemId)
@@ -90,22 +90,22 @@ namespace Plus.HabboHotel.Rooms.Games
 
         public void RemoveTeleport(int itemId)
         {
-            _banzaiTeleports.TryRemove(itemId, out Item item);
+            _banzaiTeleports.TryRemove(itemId, out var item);
         }
 
         public void OnTeleportRoomUserEnter(RoomUser user, Item item)
         {
-            IEnumerable<Item> items = _banzaiTeleports.Values.Where(p => p.Id != item.Id);
+            var items = _banzaiTeleports.Values.Where(p => p.Id != item.Id);
 
-            int count = items.Count();
+            var count = items.Count();
 
-            int countId = _rnd.Next(0, count);
-            int countAmount = 0;
+            var countId = _rnd.Next(0, count);
+            var countAmount = 0;
 
             if (count == 0)
                 return;
 
-            foreach (Item i in items.ToList())
+            foreach (var i in items.ToList())
             {
                 if (i == null)
                     continue;

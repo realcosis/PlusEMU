@@ -13,13 +13,13 @@ namespace Plus.Communication.Packets.Outgoing.Talents
             WriteString(type);
             WriteInteger(levels.Count);
 
-            foreach (TalentTrackLevel level in levels.ToList())
+            foreach (var level in levels.ToList())
             {
                 WriteInteger(level.Level);//First level
                 WriteInteger(0);//Progress, 0 = nothing, 1 = started, 2 = done
 
                 WriteInteger(level.GetSubLevels().Count);
-                foreach (TalentTrackSubLevel sub in level.GetSubLevels())
+                foreach (var sub in level.GetSubLevels())
                 {
                     WriteInteger(0);//Achievement Id
                     WriteInteger(0);//Achievement level
@@ -30,13 +30,13 @@ namespace Plus.Communication.Packets.Outgoing.Talents
                 }
 
                 WriteInteger(level.Actions.Count);
-                foreach (string action in level.Actions.ToList())
+                foreach (var action in level.Actions.ToList())
                 {
                     WriteString(action);
                 }
 
                 WriteInteger(level.Gifts.Count);
-                foreach (string gift in level.Gifts.ToList())
+                foreach (var gift in level.Gifts.ToList())
                 {
                     WriteString(gift);
                     WriteInteger(0);

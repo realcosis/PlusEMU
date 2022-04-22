@@ -21,7 +21,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets
             if (!session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
             if (room.AllowPets == 0 && !room.CheckRights(session, true) || !room.CheckRights(session, true))
@@ -36,7 +36,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets
                 return;
             }
 
-            if (!session.GetHabbo().GetInventoryComponent().TryGetPet(packet.PopInt(), out Pet pet))
+            if (!session.GetHabbo().GetInventoryComponent().TryGetPet(packet.PopInt(), out var pet))
                 return;
 
             if (pet == null)
@@ -48,8 +48,8 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets
                 return;
             }
 
-            int x = packet.PopInt();
-            int y = packet.PopInt();
+            var x = packet.PopInt();
+            var y = packet.PopInt();
 
             if (!room.GetGameMap().CanWalk(x, y, false))
             {
@@ -57,7 +57,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets
                 return;
             }
 
-            if (room.GetRoomUserManager().TryGetPet(pet.PetId, out RoomUser oldPet))
+            if (room.GetRoomUserManager().TryGetPet(pet.PetId, out var oldPet))
             {
                 room.GetRoomUserManager().RemoveBot(oldPet.VirtualId, false);
             }
@@ -68,15 +68,15 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets
             pet.PlacedInRoom = true;
             pet.RoomId = room.RoomId;
 
-            List<RandomSpeech> rndSpeechList = new List<RandomSpeech>();
-            RoomBot roomBot = new RoomBot(pet.PetId, pet.RoomId, "pet", "freeroam", pet.Name, "", pet.Look, x, y, 0, 0, 0, 0, 0, 0, ref rndSpeechList, "", 0, pet.OwnerId, false, 0, false, 0);
+            var rndSpeechList = new List<RandomSpeech>();
+            var roomBot = new RoomBot(pet.PetId, pet.RoomId, "pet", "freeroam", pet.Name, "", pet.Look, x, y, 0, 0, 0, 0, 0, 0, ref rndSpeechList, "", 0, pet.OwnerId, false, 0, false, 0);
 
             room.GetRoomUserManager().DeployBot(roomBot, pet);
 
             pet.DbState = PetDatabaseUpdateState.NeedsUpdate;
             room.GetRoomUserManager().UpdatePets();
 
-            if (!session.GetHabbo().GetInventoryComponent().TryRemovePet(pet.PetId, out Pet toRemove))
+            if (!session.GetHabbo().GetInventoryComponent().TryRemovePet(pet.PetId, out var toRemove))
             {
                 Log.Error("Error whilst removing pet: " + toRemove.PetId);
                 return;

@@ -13,7 +13,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
             : base(ServerPacketHeader.UserUpdateMessageComposer)
         {
             WriteInteger(users.Count);
-            foreach (RoomUser user in users.ToList())
+            foreach (var user in users.ToList())
             {
                 WriteInteger(user.VirtualId);
                 WriteInteger(user.X);
@@ -22,10 +22,10 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 WriteInteger(user.RotHead);
                 WriteInteger(user.RotBody);
 
-                StringBuilder statusComposer = new StringBuilder();
+                var statusComposer = new StringBuilder();
                 statusComposer.Append("/");
 
-                foreach (KeyValuePair<string, string> status in user.Statusses.ToList())
+                foreach (var status in user.Statusses.ToList())
                 {
                     statusComposer.Append(status.Key);
 

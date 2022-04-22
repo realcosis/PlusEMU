@@ -11,15 +11,15 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.Achievements
             : base(ServerPacketHeader.AchievementsMessageComposer)
         {
             WriteInteger(achievements.Count);
-            foreach (Achievement achievement in achievements)
+            foreach (var achievement in achievements)
             {
-                UserAchievement userData = session.GetHabbo().GetAchievementData(achievement.GroupName);
-                int targetLevel = (userData != null ? userData.Level + 1 : 1);
-                int totalLevels = achievement.Levels.Count;
+                var userData = session.GetHabbo().GetAchievementData(achievement.GroupName);
+                var targetLevel = (userData != null ? userData.Level + 1 : 1);
+                var totalLevels = achievement.Levels.Count;
 
                 targetLevel = (targetLevel > totalLevels ? totalLevels : targetLevel);
 
-                AchievementLevel targetLevelData = achievement.Levels[targetLevel];
+                var targetLevelData = achievement.Levels[targetLevel];
                 WriteInteger(achievement.Id); // Unknown (ID?)
                 WriteInteger(targetLevel); // Target level
                WriteString(achievement.GroupName + targetLevel); // Target name/desc/badge

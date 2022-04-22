@@ -36,11 +36,11 @@ namespace Plus.HabboHotel.Rooms
         {
             try
             {
-                TimeSpan sinceLastTime = DateTime.Now - _cycleLastExecution;
+                var sinceLastTime = DateTime.Now - _cycleLastExecution;
                 if (sinceLastTime.TotalMilliseconds >= 500)
                 {
                     _cycleLastExecution = DateTime.Now;
-                    foreach (Room room in _rooms.Values.ToList())
+                    foreach (var room in _rooms.Values.ToList())
                     {
                         if (room.IsCrashed)
                             continue;
@@ -78,47 +78,42 @@ namespace Plus.HabboHotel.Rooms
         {
             if (_roomModels.Count > 0)
                 _roomModels.Clear();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("SELECT id,door_x,door_y,door_z,door_dir,heightmap,club_only,poolmap,`wall_height` FROM `room_models` WHERE `custom` = '0'");
+            var data = dbClient.GetTable();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            if (data == null)
+                return;
+
+            foreach (DataRow row in data.Rows)
             {
-                dbClient.SetQuery("SELECT id,door_x,door_y,door_z,door_dir,heightmap,club_only,poolmap,`wall_height` FROM `room_models` WHERE `custom` = '0'");
-                DataTable data = dbClient.GetTable();
+                var model = Convert.ToString(row["id"]);
 
-                if (data == null)
-                    return;
-
-                foreach (DataRow row in data.Rows)
-                {
-                    string model = Convert.ToString(row["id"]);
-
-                    _roomModels.Add(model, new RoomModel(model, Convert.ToInt32(row["door_x"]), Convert.ToInt32(row["door_y"]), (Double)row["door_z"], Convert.ToInt32(row["door_dir"]),
-                        Convert.ToString(row["heightmap"]), PlusEnvironment.EnumToBool(row["club_only"].ToString()), Convert.ToInt32(row["wall_height"]), false));
-                }
+                _roomModels.Add(model, new RoomModel(model, Convert.ToInt32(row["door_x"]), Convert.ToInt32(row["door_y"]), (Double)row["door_z"], Convert.ToInt32(row["door_dir"]),
+                    Convert.ToString(row["heightmap"]), PlusEnvironment.EnumToBool(row["club_only"].ToString()), Convert.ToInt32(row["wall_height"]), false));
             }
         }
 
         public bool LoadModel(string id)
         {
             DataRow row = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("SELECT id,door_x,door_y,door_z,door_dir,heightmap,club_only,poolmap,`wall_height` FROM `room_models` WHERE `custom` = '1' AND `id` = @modelId LIMIT 1");
+            dbClient.AddParameter("modelId", id);
+            row = dbClient.GetRow();
+
+            if (row == null)
+                return false;
+
+            var model = Convert.ToString(row["id"]);
+
+            if (!_roomModels.ContainsKey(model))
             {
-                dbClient.SetQuery("SELECT id,door_x,door_y,door_z,door_dir,heightmap,club_only,poolmap,`wall_height` FROM `room_models` WHERE `custom` = '1' AND `id` = @modelId LIMIT 1");
-                dbClient.AddParameter("modelId", id);
-                row = dbClient.GetRow();
-
-                if (row == null)
-                    return false;
-
-                string model = Convert.ToString(row["id"]);
-
-                if (!_roomModels.ContainsKey(model))
-                {
-                    _roomModels.Add(model, new RoomModel(model, Convert.ToInt32(row["door_x"]), Convert.ToInt32(row["door_y"]), Convert.ToDouble(row["door_z"]), Convert.ToInt32(row["door_dir"]),
-                      Convert.ToString(row["heightmap"]), PlusEnvironment.EnumToBool(row["club_only"].ToString()), Convert.ToInt32(row["wall_height"]), true));
-                }
-
-                return true;
+                _roomModels.Add(model, new RoomModel(model, Convert.ToInt32(row["door_x"]), Convert.ToInt32(row["door_y"]), Convert.ToDouble(row["door_z"]), Convert.ToInt32(row["door_dir"]),
+                    Convert.ToString(row["heightmap"]), PlusEnvironment.EnumToBool(row["club_only"].ToString()), Convert.ToInt32(row["wall_height"]), true));
             }
+
+            return true;
         }
 
         public void ReloadModel(string id)
@@ -144,7 +139,7 @@ namespace Plus.HabboHotel.Rooms
             // Try to load this model.
             if (LoadModel(id))
             {
-                if (TryGetModel(id, out RoomModel customModel))
+                if (TryGetModel(id, out var customModel))
                 {
                     model = customModel;
                     return true;
@@ -157,7 +152,7 @@ namespace Plus.HabboHotel.Rooms
 
         public void UnloadRoom(int roomId)
         {
-            if (_rooms.TryRemove(roomId, out Room room))
+            if (_rooms.TryRemove(roomId, out var room))
             {
                 room.Dispose();
             }
@@ -192,13 +187,13 @@ namespace Plus.HabboHotel.Rooms
                     return false;
                 }
 
-                if (!RoomFactory.TryGetData(roomId, out RoomData data))
+                if (!RoomFactory.TryGetData(roomId, out var data))
                 {
                     room = null;
                     return false;
                 }
 
-                Room myInstance = new Room(data);
+                var myInstance = new Room(data);
                 if (_rooms.TryAdd(roomId, myInstance))
                 {
                     room = myInstance;
@@ -285,9 +280,9 @@ namespace Plus.HabboHotel.Rooms
                 return null;
             }
 
-            int roomId = 0;
+            var roomId = 0;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("INSERT INTO `rooms` (`roomtype`,`caption`,`description`,`owner`,`model_name`,`category`,`users_max`,`trade_settings`) VALUES ('private',@caption,@description,@UserId,@model,@category,@usersmax,@tradesettings)");
                 dbClient.AddParameter("caption", name);
@@ -301,7 +296,7 @@ namespace Plus.HabboHotel.Rooms
                 roomId = Convert.ToInt32(dbClient.InsertQuery());
             }
 
-            RoomData data = new RoomData(roomId, name, model.Id, session.GetHabbo().Username, session.GetHabbo().Id, "", 0, "public", "open", 0, maxVisitors, category, description, string.Empty,
+            var data = new RoomData(roomId, name, model.Id, session.GetHabbo().Username, session.GetHabbo().Id, "", 0, "public", "open", 0, maxVisitors, category, description, string.Empty,
              floor, landscape, 1, 1, 0, 0, wallthick, floorthick, wallpaper, 1, 1, 1, 1, 1, 1, 1, 8, tradeSettings, true, true, true, true, true, true, true, 0, 0, true, model);
 
             return data;
@@ -314,9 +309,9 @@ namespace Plus.HabboHotel.Rooms
 
         public void Dispose()
         {
-            int length = _rooms.Count;
-            int i = 0;
-            foreach (Room room in _rooms.Values.ToList())
+            var length = _rooms.Count;
+            var i = 0;
+            foreach (var room in _rooms.Values.ToList())
             {
                 if (room == null)
                     continue;

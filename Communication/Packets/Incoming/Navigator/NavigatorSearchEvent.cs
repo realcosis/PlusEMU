@@ -8,14 +8,14 @@ namespace Plus.Communication.Packets.Incoming.Navigator
     {
         public void Parse(HabboHotel.GameClients.GameClient session, ClientPacket packet)
         {
-            string category = packet.PopString();
-            string search = packet.PopString();
+            var category = packet.PopString();
+            var search = packet.PopString();
 
             ICollection<SearchResultList> categories = new List<SearchResultList>();
 
             if (!string.IsNullOrEmpty(search))
             {
-                if (PlusEnvironment.GetGame().GetNavigator().TryGetSearchResultList(0, out SearchResultList queryResult))
+                if (PlusEnvironment.GetGame().GetNavigator().TryGetSearchResultList(0, out var queryResult))
                 {
                     categories.Add(queryResult);
                 }

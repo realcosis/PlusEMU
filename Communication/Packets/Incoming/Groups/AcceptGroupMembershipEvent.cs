@@ -9,10 +9,10 @@ namespace Plus.Communication.Packets.Incoming.Groups
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int groupId = packet.PopInt();
-            int userId = packet.PopInt();
+            var groupId = packet.PopInt();
+            var userId = packet.PopInt();
 
-            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out Group group))
+            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
                 return;
 
             if (session.GetHabbo().Id != group.CreatorId && !group.IsAdmin(session.GetHabbo().Id) && !session.GetHabbo().GetPermissions().HasRight("fuse_group_accept_any"))
@@ -21,7 +21,7 @@ namespace Plus.Communication.Packets.Incoming.Groups
             if (!group.HasRequest(userId))
                 return;
 
-            Habbo habbo = PlusEnvironment.GetHabboById(userId);
+            var habbo = PlusEnvironment.GetHabboById(userId);
             if (habbo == null)
             {
                 session.SendNotification("Oops, an error occurred whilst finding this user.");

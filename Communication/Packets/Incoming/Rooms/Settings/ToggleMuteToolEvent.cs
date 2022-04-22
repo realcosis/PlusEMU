@@ -14,14 +14,14 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Settings
             if (!session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null || !room.CheckRights(session, true))
                 return;
 
             room.RoomMuted = !room.RoomMuted;
 
-            List<RoomUser> roomUsers = room.GetRoomUserManager().GetRoomUsers();
-            foreach (RoomUser roomUser in roomUsers.ToList())
+            var roomUsers = room.GetRoomUserManager().GetRoomUsers();
+            foreach (var roomUser in roomUsers.ToList())
             {
                 if (roomUser == null || roomUser.GetClient() == null)
                     continue;

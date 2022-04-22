@@ -30,7 +30,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 return;
             }
 
-            Habbo habbo = PlusEnvironment.GetHabboByUsername(@params[1]);
+            var habbo = PlusEnvironment.GetHabboByUsername(@params[1]);
             if (habbo == null)
             {
                 session.SendWhisper("An error occoured whilst finding that user in the database.");
@@ -39,7 +39,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 
             if (Convert.ToDouble(@params[2]) == 0)
             {
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
                     dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '0' WHERE `user_id` = '" + habbo.Id + "' LIMIT 1");
                 }
@@ -63,8 +63,8 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 if (days > 365)
                     days = 365;
 
-                double length = (PlusEnvironment.GetUnixTimestamp() + (days * 86400));
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                var length = (PlusEnvironment.GetUnixTimestamp() + (days * 86400));
+                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
                     dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '" + length + "', `trading_locks_count` = `trading_locks_count` + '1' WHERE `user_id` = '" + habbo.Id + "' LIMIT 1");
                 }

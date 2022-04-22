@@ -28,16 +28,16 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            string botName = packet.PopString();
+            var unknown = packet.PopInt();
+            var botName = packet.PopString();
 
             if (SetItems.Count > 0)
                 SetItems.Clear();
 
-            int furniCount = packet.PopInt();
-            for (int i = 0; i < furniCount; i++)
+            var furniCount = packet.PopInt();
+            for (var i = 0; i < furniCount; i++)
             {
-                Item selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+                var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
                 if (selectedItem != null)
                     SetItems.TryAdd(selectedItem.Id, selectedItem);
             }
@@ -50,18 +50,18 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (@params == null || @params.Length == 0 || String.IsNullOrEmpty(StringData))
                 return false;
 
-            RoomUser user = Instance.GetRoomUserManager().GetBotByName(StringData);
+            var user = Instance.GetRoomUserManager().GetBotByName(StringData);
             if (user == null)
                 return false;
 
-            Random rand = new Random();
-            List<Item> items = SetItems.Values.ToList();
+            var rand = new Random();
+            var items = SetItems.Values.ToList();
             items = items.OrderBy(x => rand.Next()).ToList();
 
             if (items.Count == 0)
                 return false;
 
-            Item item = items.First();
+            var item = items.First();
             if (item == null)
                 return false;
 

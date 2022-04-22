@@ -12,11 +12,11 @@ namespace Plus.Communication.Packets.Incoming.Moderation
             if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
                 return;
 
-            int userId = packet.PopInt();
+            var userId = packet.PopInt();
 
             DataRow user;
             DataRow info;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `id`,`username`,`online`,`mail`,`ip_last`,`look`,`account_created`,`last_online` FROM `users` WHERE `id` = '" + userId + "' LIMIT 1");
                 user = dbClient.GetRow();

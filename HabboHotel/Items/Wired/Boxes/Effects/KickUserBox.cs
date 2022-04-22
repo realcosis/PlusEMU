@@ -38,8 +38,8 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (SetItems.Count > 0)
                 SetItems.Clear();
 
-            int unknown = packet.PopInt();
-            string message = packet.PopString();
+            var unknown = packet.PopInt();
+            var message = packet.PopString();
 
             StringData = message;
         }
@@ -49,7 +49,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (@params.Length != 1)
                 return false;
 
-            Habbo player = (Habbo)@params[0];
+            var player = (Habbo)@params[0];
             if (player == null)
                 return false;
 
@@ -58,7 +58,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
             if (!_toKick.Contains(player))
             {
-                RoomUser user = Instance.GetRoomUserManager().GetRoomUserByHabbo(player.Id);
+                var user = Instance.GetRoomUserManager().GetRoomUserByHabbo(player.Id);
                 if (user == null)
                     return false;
 
@@ -89,7 +89,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             {
                 while (_toKick.Count > 0)
                 {
-                    Habbo player = (Habbo)_toKick.Dequeue();
+                    var player = (Habbo)_toKick.Dequeue();
                     if (player == null || !player.InRoom || player.CurrentRoom != Instance)
                         continue;
 

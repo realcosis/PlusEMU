@@ -28,7 +28,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 return;
             }
 
-            foreach (GameClient client in PlusEnvironment.GetGame().GetClientManager().GetClients.ToList())
+            foreach (var client in PlusEnvironment.GetGame().GetClientManager().GetClients.ToList())
             {
                 if (client == null || client.GetHabbo() == null || client.GetHabbo().Username == session.GetHabbo().Username)
                     continue;

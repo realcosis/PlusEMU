@@ -65,7 +65,7 @@ namespace Plus.HabboHotel.Items
 
         public Item(int id, int roomId, int baseItem, string extraData, int x, int y, double z, int rot, int userid, int @group, int limitedNumber, int limitedStack, string wallCoord, Room room = null)
         {
-            if (PlusEnvironment.GetGame().GetItemManager().GetItem(baseItem, out ItemData data))
+            if (PlusEnvironment.GetGame().GetItemManager().GetItem(baseItem, out var data))
             {
                 this.Id = id;
                 this.RoomId = roomId;
@@ -228,7 +228,7 @@ namespace Plus.HabboHotel.Items
                     Coordinate
                 };
 
-                foreach (ThreeDCoord tile in _affectedPoints.Values)
+                foreach (var tile in _affectedPoints.Values)
                 {
                     toReturn.Add(new Point(tile.X, tile.Y));
                 }
@@ -254,11 +254,11 @@ namespace Plus.HabboHotel.Items
         {
             get
             {
-                double curHeight = 0.0;
+                var curHeight = 0.0;
 
                 if (GetBaseItem().AdjustableHeights.Count > 1)
                 {
-                    if (int.TryParse(ExtraData, out int num2) && (GetBaseItem().AdjustableHeights.Count) - 1 >= num2)
+                    if (int.TryParse(ExtraData, out var num2) && (GetBaseItem().AdjustableHeights.Count) - 1 >= num2)
                         curHeight = GetZ + GetBaseItem().AdjustableHeights[num2];
                 }
 
@@ -614,8 +614,8 @@ namespace Plus.HabboHotel.Items
                                 user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
                             }
 
-                            int newY = 0;
-                            int newX = 0;
+                            var newY = 0;
+                            var newX = 0;
 
                             if (user != null && user.X == GetX && user.Y == GetY)
                             {
@@ -667,9 +667,9 @@ namespace Plus.HabboHotel.Items
                             {
                                 user = null;
                                 user2 = null;
-                                bool showHopperEffect = false;
-                                bool keepDoorOpen = false;
-                                int pause = 0;
+                                var showHopperEffect = false;
+                                var keepDoorOpen = false;
+                                var pause = 0;
 
 
                                 // Do we have a primary user that wants to go somewhere?
@@ -687,8 +687,8 @@ namespace Plus.HabboHotel.Items
                                             user.AllowOverride = false;
                                             if (user.TeleDelay == 0)
                                             {
-                                                int roomHopId = ItemHopperFinder.GetAHopper(user.RoomId);
-                                                int nextHopperId = ItemHopperFinder.GetHopperId(roomHopId);
+                                                var roomHopId = ItemHopperFinder.GetAHopper(user.RoomId);
+                                                var nextHopperId = ItemHopperFinder.GetHopperId(roomHopId);
 
                                                 if (!user.IsBot && user != null && user.GetClient() != null &&
                                                     user.GetClient().GetHabbo() != null)
@@ -800,8 +800,8 @@ namespace Plus.HabboHotel.Items
                                 user = null;
                                 user2 = null;
 
-                                bool keepDoorOpen = false;
-                                bool showTeleEffect = false;
+                                var keepDoorOpen = false;
+                                var showTeleEffect = false;
 
                                 // Do we have a primary user that wants to go somewhere?
                                 if (InteractingUser > 0)
@@ -824,13 +824,13 @@ namespace Plus.HabboHotel.Items
                                                 if (true)
                                                 {
                                                     // Woop! No more delay.
-                                                    int teleId = ItemTeleporterFinder.GetLinkedTele(Id);
-                                                    int roomId = ItemTeleporterFinder.GetTeleRoomId(teleId, GetRoom());
+                                                    var teleId = ItemTeleporterFinder.GetLinkedTele(Id);
+                                                    var roomId = ItemTeleporterFinder.GetTeleRoomId(teleId, GetRoom());
 
                                                     // Do we need to tele to the same room or gtf to another?
                                                     if (roomId == this.RoomId)
                                                     {
-                                                        Item item = GetRoom().GetRoomItemHandler().GetItem(teleId);
+                                                        var item = GetRoom().GetRoomItemHandler().GetItem(teleId);
 
                                                         if (item == null)
                                                         {
@@ -985,7 +985,7 @@ namespace Plus.HabboHotel.Items
                         #region Dice
                         case InteractionType.Dice:
                             {
-                                string[] numbers = new string[] { "1", "2", "3", "4", "5", "6" };
+                                var numbers = new string[] { "1", "2", "3", "4", "5", "6" };
                                 if (ExtraData == "-1")
                                     ExtraData = RandomizeStrings(numbers)[0];
                                 UpdateState();
@@ -1038,7 +1038,7 @@ namespace Plus.HabboHotel.Items
                                 user.UnlockWalking();
                                 if (GetBaseItem().VendingIds.Count > 0)
                                 {
-                                    int randomDrink = GetBaseItem().VendingIds[RandomNumber.GenerateRandom(0, (GetBaseItem().VendingIds.Count - 1))];
+                                    var randomDrink = GetBaseItem().VendingIds[RandomNumber.GenerateRandom(0, (GetBaseItem().VendingIds.Count - 1))];
                                     user.CarryItem(randomDrink);
                                 }
 
@@ -1058,7 +1058,7 @@ namespace Plus.HabboHotel.Items
                                     break;
 
 
-                                int seconds = 0;
+                                var seconds = 0;
 
                                 try
                                 {
@@ -1096,7 +1096,7 @@ namespace Plus.HabboHotel.Items
                                 if (string.IsNullOrEmpty(ExtraData))
                                     break;
 
-                                int seconds = 0;
+                                var seconds = 0;
 
                                 try
                                 {
@@ -1241,7 +1241,7 @@ namespace Plus.HabboHotel.Items
                                 if (string.IsNullOrEmpty(ExtraData))
                                     break;
 
-                                int seconds = 0;
+                                var seconds = 0;
 
                                 try
                                 {
@@ -1286,7 +1286,7 @@ namespace Plus.HabboHotel.Items
                                 if (string.IsNullOrEmpty(ExtraData))
                                     break;
 
-                                int seconds = 0;
+                                var seconds = 0;
 
                                 try
                                 {
@@ -1355,8 +1355,8 @@ namespace Plus.HabboHotel.Items
                                     break;
 
                                 #region Target Calculation
-                                Point targetStart = Coordinate;
-                                List<Point> targetSquares = new List<Point>();
+                                var targetStart = Coordinate;
+                                var targetSquares = new List<Point>();
                                 switch (Rotation)
                                 {
                                     case 0:
@@ -1366,9 +1366,9 @@ namespace Plus.HabboHotel.Items
                                             if (!targetSquares.Contains(targetStart))
                                                 targetSquares.Add(targetStart);
 
-                                            for (int I = 1; I <= 3; I++)
+                                            for (var I = 1; I <= 3; I++)
                                             {
-                                                Point targetSquare = new Point(targetStart.X - I, targetStart.Y);
+                                                var targetSquare = new Point(targetStart.X - I, targetStart.Y);
 
                                                 if (!targetSquares.Contains(targetSquare))
                                                     targetSquares.Add(targetSquare);
@@ -1384,9 +1384,9 @@ namespace Plus.HabboHotel.Items
                                             if (!targetSquares.Contains(targetStart))
                                                 targetSquares.Add(targetStart);
 
-                                            for (int I = 1; I <= 3; I++)
+                                            for (var I = 1; I <= 3; I++)
                                             {
-                                                Point targetSquare = new Point(targetStart.X, targetStart.Y - I);
+                                                var targetSquare = new Point(targetStart.X, targetStart.Y - I);
 
                                                 if (!targetSquares.Contains(targetSquare))
                                                     targetSquares.Add(targetSquare);
@@ -1402,9 +1402,9 @@ namespace Plus.HabboHotel.Items
                                             if (!targetSquares.Contains(targetStart))
                                                 targetSquares.Add(targetStart);
 
-                                            for (int I = 1; I <= 3; I++)
+                                            for (var I = 1; I <= 3; I++)
                                             {
-                                                Point targetSquare = new Point(targetStart.X + I, targetStart.Y);
+                                                var targetSquare = new Point(targetStart.X + I, targetStart.Y);
 
                                                 if (!targetSquares.Contains(targetSquare))
                                                     targetSquares.Add(targetSquare);
@@ -1421,9 +1421,9 @@ namespace Plus.HabboHotel.Items
                                             if (!targetSquares.Contains(targetStart))
                                                 targetSquares.Add(targetStart);
 
-                                            for (int I = 1; I <= 3; I++)
+                                            for (var I = 1; I <= 3; I++)
                                             {
-                                                Point targetSquare = new Point(targetStart.X, targetStart.Y + I);
+                                                var targetSquare = new Point(targetStart.X, targetStart.Y + I);
 
                                                 if (!targetSquares.Contains(targetSquare))
                                                     targetSquares.Add(targetSquare);
@@ -1436,14 +1436,14 @@ namespace Plus.HabboHotel.Items
 
                                 if (targetSquares.Count > 0)
                                 {
-                                    foreach (Point square in targetSquares.ToList())
+                                    foreach (var square in targetSquares.ToList())
                                     {
-                                        List<RoomUser> affectedUsers = _room.GetGameMap().GetRoomUsers(square).ToList();
+                                        var affectedUsers = _room.GetGameMap().GetRoomUsers(square).ToList();
 
                                         if (affectedUsers == null || affectedUsers.Count == 0)
                                             continue;
 
-                                        foreach (RoomUser target in affectedUsers)
+                                        foreach (var target in affectedUsers)
                                         {
                                             if (target == null || target.IsBot || target.IsPet)
                                                 continue;
@@ -1478,10 +1478,10 @@ namespace Plus.HabboHotel.Items
 
         public static string[] RandomizeStrings(string[] arr)
         {
-            List<KeyValuePair<int, string>> list = new List<KeyValuePair<int, string>>();
+            var list = new List<KeyValuePair<int, string>>();
             // Add all strings from array
             // Add new random int each time
-            foreach (string s in arr)
+            foreach (var s in arr)
             {
                 list.Add(new KeyValuePair<int, string>(_random.Next(), s));
             }
@@ -1490,10 +1490,10 @@ namespace Plus.HabboHotel.Items
                          orderby item.Key
                          select item;
             // Allocate new string array
-            string[] result = new string[arr.Length];
+            var result = new string[arr.Length];
             // Copy values to array
-            int index = 0;
-            foreach (KeyValuePair<int, string> pair in sorted)
+            var index = 0;
+            foreach (var pair in sorted)
             {
                 result[index] = pair.Value;
                 index++;
@@ -1541,7 +1541,7 @@ namespace Plus.HabboHotel.Items
         {
             if (_data == null)
             {
-                if (PlusEnvironment.GetGame().GetItemManager().GetItem(BaseItem, out ItemData I))
+                if (PlusEnvironment.GetGame().GetItemManager().GetItem(BaseItem, out var I))
                     _data = I;
             }
 
@@ -1553,7 +1553,7 @@ namespace Plus.HabboHotel.Items
             if (_room != null)
                 return _room;
             
-            if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(RoomId, out Room room))
+            if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(RoomId, out var room))
                 return room;
 
             return null;

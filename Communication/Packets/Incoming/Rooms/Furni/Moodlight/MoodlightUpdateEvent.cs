@@ -11,22 +11,22 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.Moodlight
             if (!session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
             
             if (!room.CheckRights(session, true) || room.MoodlightData == null)
                 return;
 
-            Item item = room.GetRoomItemHandler().GetItem(room.MoodlightData.ItemId);
+            var item = room.GetRoomItemHandler().GetItem(room.MoodlightData.ItemId);
             if (item == null || item.GetBaseItem().InteractionType != InteractionType.Moodlight)
                 return;
 
-            int preset = packet.PopInt();
-            int backgroundMode = packet.PopInt();
-            string colorCode = packet.PopString();
-            int intensity = packet.PopInt();
+            var preset = packet.PopInt();
+            var backgroundMode = packet.PopInt();
+            var colorCode = packet.PopString();
+            var intensity = packet.PopInt();
 
-            bool backgroundOnly = backgroundMode >= 2;
+            var backgroundOnly = backgroundMode >= 2;
 
             room.MoodlightData.Enabled = true;
             room.MoodlightData.CurrentPreset = preset;

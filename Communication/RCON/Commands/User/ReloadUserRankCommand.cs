@@ -18,14 +18,14 @@ namespace Plus.Communication.Rcon.Commands.User
 
         public bool TryExecute(string[] parameters)
         {
-            if (!int.TryParse(parameters[0], out int userId))
+            if (!int.TryParse(parameters[0], out var userId))
                 return false;
 
-            GameClient client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
+            var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
             if (client == null || client.GetHabbo() == null)
                 return false;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `rank` FROM `users` WHERE `id` = @userId LIMIT 1");
                 dbClient.AddParameter("userId", userId);

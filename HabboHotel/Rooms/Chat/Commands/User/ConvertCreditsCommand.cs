@@ -26,12 +26,12 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            int totalValue = 0;
+            var totalValue = 0;
 
             try 
             {
                 DataTable table = null;           
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
                     dbClient.SetQuery("SELECT `id` FROM `items` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND (`room_id`=  '0' OR `room_id` = '')");
                     table = dbClient.GetTable();
@@ -44,14 +44,14 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                 }
                 if (table.Rows.Count > 0)
                 {
-                    using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                    using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                     foreach (DataRow row in table.Rows)
                     {
-                        Item item = session.GetHabbo().GetInventoryComponent().GetItem(Convert.ToInt32(row[0]));
+                        var item = session.GetHabbo().GetInventoryComponent().GetItem(Convert.ToInt32(row[0]));
                         if (item == null || item.RoomId > 0 || item.Data.InteractionType != InteractionType.Exchange)
                             continue;
                             
-                        int value = item.Data.BehaviourData;
+                        var value = item.Data.BehaviourData;
 
                         dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
 

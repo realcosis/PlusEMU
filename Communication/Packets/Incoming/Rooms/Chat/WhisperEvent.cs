@@ -18,7 +18,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Chat
             if (!session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
@@ -31,16 +31,16 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Chat
             if (PlusEnvironment.GetUnixTimestamp() < session.GetHabbo().FloodTime && session.GetHabbo().FloodTime != 0)
                 return;
 
-            string @params = packet.PopString();
-            string toUser = @params.Split(' ')[0];
-            string message = @params.Substring(toUser.Length + 1);
-            int colour = packet.PopInt();
+            var @params = packet.PopString();
+            var toUser = @params.Split(' ')[0];
+            var message = @params.Substring(toUser.Length + 1);
+            var colour = packet.PopInt();
 
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null)
                 return;
 
-            RoomUser user2 = room.GetRoomUserManager().GetRoomUserByHabbo(toUser);
+            var user2 = room.GetRoomUserManager().GetRoomUserByHabbo(toUser);
             if (user2 == null)
                 return;
 
@@ -53,14 +53,14 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Chat
             if (!session.GetHabbo().GetPermissions().HasRight("word_filter_override"))
                 message = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(message);
 
-            if (!PlusEnvironment.GetGame().GetChatManager().GetChatStyles().TryGetStyle(colour, out ChatStyle style) || style.RequiredRight.Length > 0 && !session.GetHabbo().GetPermissions().HasRight(style.RequiredRight))
+            if (!PlusEnvironment.GetGame().GetChatManager().GetChatStyles().TryGetStyle(colour, out var style) || style.RequiredRight.Length > 0 && !session.GetHabbo().GetPermissions().HasRight(style.RequiredRight))
                 colour = 0;
 
             user.LastBubble = session.GetHabbo().CustomBubbleId == 0 ? colour : session.GetHabbo().CustomBubbleId;
 
             if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
             {
-                if (user.IncrementAndCheckFlood(out int muteTime))
+                if (user.IncrementAndCheckFlood(out var muteTime))
                 {
                     session.SendPacket(new FloodControlComposer(muteTime));
                     return;
@@ -102,10 +102,10 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Chat
                 }
             }
  
-            List<RoomUser> toNotify = room.GetRoomUserManager().GetRoomUserByRank(2);
+            var toNotify = room.GetRoomUserManager().GetRoomUserByRank(2);
             if (toNotify.Count > 0)
             {
-                foreach (RoomUser notifiable in toNotify)
+                foreach (var notifiable in toNotify)
                 {
                     if (notifiable != null && notifiable.HabboId != user2.HabboId && notifiable.HabboId != user.HabboId)
                     {

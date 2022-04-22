@@ -24,7 +24,7 @@ namespace Plus.HabboHotel.Items.Interactor
             // Request 3 - Reset with UI/Wired/Double click
 
             // Find out what number we are on right now
-            if (!int.TryParse(item.ExtraData, out int oldValue))
+            if (!int.TryParse(item.ExtraData, out var oldValue))
             {
                 oldValue = 0;
             }

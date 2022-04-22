@@ -34,7 +34,7 @@ namespace Plus.HabboHotel.Users.Clothing
                 return false;
 
             DataTable getClothing = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `id`,`part_id`,`part` FROM `user_clothing` WHERE `user_id` = @id;");
                 dbClient.AddParameter("id", habbo.Id);
@@ -58,12 +58,12 @@ namespace Plus.HabboHotel.Users.Clothing
 
         public void AddClothing(string clothingName, List<int> partIds)
         {
-            foreach (int partId in partIds.ToList())
+            foreach (var partId in partIds.ToList())
             {
                 if (!_allClothing.ContainsKey(partId))
                 {
-                    int newId = 0;
-                    using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                    var newId = 0;
+                    using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                     {
                         dbClient.SetQuery("INSERT INTO `user_clothing` (`user_id`,`part_id`,`part`) VALUES (@UserId, @PartId, @Part)");
                         dbClient.AddParameter("UserId", _habbo.Id);

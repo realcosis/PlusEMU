@@ -23,7 +23,7 @@ namespace Plus.HabboHotel.Items.Data.Moodlight
 
             DataRow row = null;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT enabled,current_preset,preset_one,preset_two,preset_three FROM room_items_moodlight WHERE item_id = '" + itemId + "' LIMIT 1");
                 row = dbClient.GetRow();
@@ -31,7 +31,7 @@ namespace Plus.HabboHotel.Items.Data.Moodlight
 
             if (row == null)
             {
-                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                 dbClient.RunQuery("INSERT INTO `room_items_moodlight` (item_id,enabled,current_preset,preset_one,preset_two,preset_three) VALUES (" + itemId + ",0,1,'#000000,255,0','#000000,255,0','#000000,255,0')");
                 dbClient.SetQuery("SELECT enabled,current_preset,preset_one,preset_two,preset_three FROM room_items_moodlight WHERE item_id=" + itemId + " LIMIT 1");
                 row = dbClient.GetRow();
@@ -49,14 +49,14 @@ namespace Plus.HabboHotel.Items.Data.Moodlight
         public void Enable()
         {
             Enabled = true;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.RunQuery("UPDATE room_items_moodlight SET enabled = 1 WHERE item_id = '" + ItemId + "' LIMIT 1");
         }
 
         public void Disable()
         {
             Enabled = false;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.RunQuery("UPDATE room_items_moodlight SET enabled = 0 WHERE item_id = '" + ItemId + "' LIMIT 1");
         }
 
@@ -88,7 +88,7 @@ namespace Plus.HabboHotel.Items.Data.Moodlight
                     break;
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE room_items_moodlight SET preset_" + pr + " = '@color," + intensity + "," + PlusEnvironment.BoolToEnum(bgOnly) + "' WHERE item_id = '" + ItemId + "' LIMIT 1");
                 dbClient.AddParameter("color", color);
@@ -102,7 +102,7 @@ namespace Plus.HabboHotel.Items.Data.Moodlight
 
         public static MoodlightPreset GeneratePreset(string data)
         {
-            String[] bits = data.Split(',');
+            var bits = data.Split(',');
 
             if (!IsValidColor(bits[0]))
             {
@@ -156,7 +156,7 @@ namespace Plus.HabboHotel.Items.Data.Moodlight
 
         public string GenerateExtraData()
         {
-            MoodlightPreset preset = GetPreset(CurrentPreset);
+            var preset = GetPreset(CurrentPreset);
             var sb = new StringBuilder();
 
             sb.Append(Enabled == true ? 2 : 1);

@@ -21,7 +21,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            RoomUser roomUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var roomUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (roomUser == null)
                 return;
 
@@ -55,7 +55,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
                 return;
             }
 
-            int targetPetId = GetPetIdByString(@params[1].ToString());
+            var targetPetId = GetPetIdByString(@params[1].ToString());
             if (targetPetId == 0)
             {
                 session.SendWhisper("Oops, couldn't find a pet by that name!");

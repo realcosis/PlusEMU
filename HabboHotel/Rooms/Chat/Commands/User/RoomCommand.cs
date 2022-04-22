@@ -37,12 +37,12 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                 return;
             }
 
-            string option = @params[1];
+            var option = @params[1];
             switch (option)
             {
                 case "list":
                 {
-                    StringBuilder list = new StringBuilder("");
+                    var list = new StringBuilder("");
                     list.AppendLine("Room Command List");
                     list.AppendLine("-------------------------");
                     list.AppendLine("Pet Morphs: " + (room.PetMorphsAllowed == true ? "enabled" : "disabled"));
@@ -59,7 +59,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                 case "push":
                     {
                         room.PushEnabled = !room.PushEnabled;
-                        using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                         {
                             dbClient.SetQuery("UPDATE `rooms` SET `push_enabled` = @PushEnabled WHERE `id` = '" + room.Id +"' LIMIT 1");
                             dbClient.AddParameter("PushEnabled", PlusEnvironment.BoolToEnum(room.PushEnabled));
@@ -73,7 +73,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                 case "spush":
                     {
                         room.SuperPushEnabled = !room.SuperPushEnabled;
-                        using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                         {
                             dbClient.SetQuery("UPDATE `rooms` SET `spush_enabled` = @PushEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
                             dbClient.AddParameter("PushEnabled", PlusEnvironment.BoolToEnum(room.SuperPushEnabled));
@@ -87,7 +87,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                 case "spull":
                     {
                         room.SuperPullEnabled = !room.SuperPullEnabled;
-                        using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                         {
                             dbClient.SetQuery("UPDATE `rooms` SET `spull_enabled` = @PullEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
                             dbClient.AddParameter("PullEnabled", PlusEnvironment.BoolToEnum(room.SuperPullEnabled));
@@ -101,7 +101,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                 case "pull":
                     {
                         room.PullEnabled = !room.PullEnabled;
-                        using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                         {
                             dbClient.SetQuery("UPDATE `rooms` SET `pull_enabled` = @PullEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
                             dbClient.AddParameter("PullEnabled", PlusEnvironment.BoolToEnum(room.PullEnabled));
@@ -116,7 +116,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                 case "enables":
                     {
                         room.EnablesEnabled = !room.EnablesEnabled;
-                        using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                         {
                             dbClient.SetQuery("UPDATE `rooms` SET `enables_enabled` = @EnablesEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
                             dbClient.AddParameter("EnablesEnabled", PlusEnvironment.BoolToEnum(room.EnablesEnabled));
@@ -130,7 +130,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                 case "respect":
                     {
                         room.RespectNotificationsEnabled = !room.RespectNotificationsEnabled;
-                        using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                         {
                             dbClient.SetQuery("UPDATE `rooms` SET `respect_notifications_enabled` = @RespectNotificationsEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
                             dbClient.AddParameter("RespectNotificationsEnabled", PlusEnvironment.BoolToEnum(room.RespectNotificationsEnabled));
@@ -145,7 +145,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                 case "morphs":
                     {
                         room.PetMorphsAllowed = !room.PetMorphsAllowed;
-                        using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                         {
                             dbClient.SetQuery("UPDATE `rooms` SET `pet_morphs_allowed` = @PetMorphsAllowed WHERE `id` = '" + room.Id + "' LIMIT 1");
                             dbClient.AddParameter("PetMorphsAllowed", PlusEnvironment.BoolToEnum(room.PetMorphsAllowed));
@@ -156,7 +156,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                         
                         if (!room.PetMorphsAllowed)
                         {
-                            foreach (RoomUser user in room.GetRoomUserManager().GetRoomUsers())
+                            foreach (var user in room.GetRoomUserManager().GetRoomUsers())
                             {
                                 if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null)
                                     continue;

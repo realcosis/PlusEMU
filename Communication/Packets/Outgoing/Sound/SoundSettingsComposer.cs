@@ -7,7 +7,7 @@ namespace Plus.Communication.Packets.Outgoing.Sound
         public SoundSettingsComposer(IEnumerable<int> volumes, bool chatPreference, bool invitesStatus, bool focusPreference, int friendBarState)
             : base(ServerPacketHeader.SoundSettingsMessageComposer)
         {
-            foreach (int volume in volumes)
+            foreach (var volume in volumes)
             {
                 WriteInteger(volume);
             }

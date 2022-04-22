@@ -10,9 +10,9 @@ namespace Plus.Communication.Packets.Outgoing.Avatar
             : base(ServerPacketHeader.WardrobeMessageComposer)
         {
             WriteInteger(1);
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT `slot_id`,`look`,`gender` FROM `user_wardrobe` WHERE `user_id` = '" + userId + "'");
-            DataTable wardrobeData = dbClient.GetTable();
+            var wardrobeData = dbClient.GetTable();
 
             if (wardrobeData == null)
                 WriteInteger(0);

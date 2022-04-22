@@ -22,8 +22,8 @@ namespace Plus.Communication.Encryption
         {
             try
             {
-                byte[] m = Encoding.Default.GetBytes(message);
-                byte[] c = _rsa.Sign(m);
+                var m = Encoding.Default.GetBytes(message);
+                var c = _rsa.Sign(m);
 
                 return Converter.BytesToHexString(c);
             }
@@ -35,19 +35,19 @@ namespace Plus.Communication.Encryption
 
         public static string GetRsaDiffieHellmanPrimeKey()
         {
-            string key = _diffieHellman.Prime.ToString(10);
+            var key = _diffieHellman.Prime.ToString(10);
             return GetRsaStringEncrypted(key);
         }
 
         public static string GetRsaDiffieHellmanGeneratorKey()
         {
-            string key = _diffieHellman.Generator.ToString(10);
+            var key = _diffieHellman.Generator.ToString(10);
             return GetRsaStringEncrypted(key);
         }
 
         public static string GetRsaDiffieHellmanPublicKey()
         {
-            string key = _diffieHellman.PublicKey.ToString(10);
+            var key = _diffieHellman.PublicKey.ToString(10);
             return GetRsaStringEncrypted(key);
         }
 
@@ -55,9 +55,9 @@ namespace Plus.Communication.Encryption
         {
             try
             {
-                byte[] cbytes = Converter.HexStringToBytes(publicKey);
-                byte[] publicKeyBytes = _rsa.Verify(cbytes);
-                string publicKeyString = Encoding.Default.GetString(publicKeyBytes);
+                var cbytes = Converter.HexStringToBytes(publicKey);
+                var publicKeyBytes = _rsa.Verify(cbytes);
+                var publicKeyString = Encoding.Default.GetString(publicKeyBytes);
                 return _diffieHellman.CalculateSharedKey(new BigInteger(publicKeyString, 10));
             }
             catch

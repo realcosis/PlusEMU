@@ -10,13 +10,13 @@ namespace Plus.Communication.Packets.Incoming.Moderation
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().GetPermissions().HasRight("mod_mute"))
                 return;
 
-            int userId = packet.PopInt();
+            var userId = packet.PopInt();
             packet.PopString(); //message
             double length = packet.PopInt() * 60;
             packet.PopString(); //unk1
             packet.PopString(); //unk2
 
-            Habbo habbo = PlusEnvironment.GetHabboById(userId);
+            var habbo = PlusEnvironment.GetHabboById(userId);
             if (habbo == null)
             {
                 session.SendWhisper("An error occoured whilst finding that user in the database.");
@@ -29,7 +29,7 @@ namespace Plus.Communication.Packets.Incoming.Moderation
                 return;
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE `users` SET `time_muted` = '" + length + "' WHERE `id` = '" + habbo.Id + "' LIMIT 1");
             }

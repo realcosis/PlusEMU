@@ -15,7 +15,7 @@ namespace Plus.Communication.Rcon
         public RconSocket(string host, int port, IEnumerable<string> allowedConnections)
         {
             _allowedConnections = new List<string>();
-            foreach (string ipAddress in allowedConnections)
+            foreach (var ipAddress in allowedConnections)
             {
                 _allowedConnections.Add(ipAddress);
             }
@@ -39,9 +39,9 @@ namespace Plus.Communication.Rcon
         {
             try
             {
-                Socket socket = ((Socket)iAr.AsyncState).EndAccept(iAr);
+                var socket = ((Socket)iAr.AsyncState).EndAccept(iAr);
 
-                string ip = socket.RemoteEndPoint.ToString().Split(':')[0];
+                var ip = socket.RemoteEndPoint.ToString().Split(':')[0];
                 if (_allowedConnections.Contains(ip))
                 {
                     new RconConnection(socket);

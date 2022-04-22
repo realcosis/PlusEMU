@@ -11,10 +11,10 @@ namespace Plus.Communication.Packets.Incoming.Inventory.Furni
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            IEnumerable<Item> items = session.GetHabbo().GetInventoryComponent().GetWallAndFloor;
+            var items = session.GetHabbo().GetInventoryComponent().GetWallAndFloor;
 
-            int page = 0;
-            int pages = ((items.Count() - 1) / 700) + 1;
+            var page = 0;
+            var pages = ((items.Count() - 1) / 700) + 1;
 
             if (!items.Any())
             {

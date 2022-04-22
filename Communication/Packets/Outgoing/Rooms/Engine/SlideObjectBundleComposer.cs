@@ -5,7 +5,7 @@
         public SlideObjectBundleComposer(int fromX, int fromY, double fromZ, int toX, int toY, double toZ, int rollerId, int avatarId, int itemId)
             : base(ServerPacketHeader.SlideObjectBundleMessageComposer)
         {
-            bool isItem = itemId > 0;
+            var isItem = itemId > 0;
 
             WriteInteger(fromX);
             WriteInteger(fromY);

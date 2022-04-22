@@ -27,7 +27,7 @@ namespace Plus.HabboHotel.Items.Interactor
                 return;
             }
 
-            int oldValue = 0;
+            var oldValue = 0;
 
             if (!int.TryParse(item.ExtraData, out oldValue))
             {
@@ -52,7 +52,7 @@ namespace Plus.HabboHotel.Items.Interactor
 
         public void OnWiredTrigger(Item item)
         {
-            int oldValue = 0;
+            var oldValue = 0;
 
             if (!int.TryParse(item.ExtraData, out oldValue))
             {

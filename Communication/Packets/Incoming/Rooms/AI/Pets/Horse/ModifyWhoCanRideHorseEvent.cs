@@ -13,17 +13,17 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
             if (!session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
-            int petId = packet.PopInt();
+            var petId = packet.PopInt();
            
-            if (!room.GetRoomUserManager().TryGetPet(petId, out RoomUser pet))
+            if (!room.GetRoomUserManager().TryGetPet(petId, out var pet))
                 return;
 
             pet.PetData.AnyoneCanRide = pet.PetData.AnyoneCanRide == 1 ? 0 : 1;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE `bots_petdata` SET `anyone_ride` = '" + pet.PetData.AnyoneCanRide + "' WHERE `id` = '" + petId + "' LIMIT 1");
             }

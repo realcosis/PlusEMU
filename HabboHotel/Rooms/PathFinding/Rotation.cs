@@ -4,7 +4,7 @@
     {
         public static int Calculate(int x1, int y1, int x2, int y2)
         {
-            int rotation = 0;
+            var rotation = 0;
 
             if (x1 > x2 && y1 > y2)
                 rotation = 7;
@@ -35,7 +35,7 @@
 
         public static int Calculate(int x1, int y1, int x2, int y2, bool moonwalk)
         {
-            int rot = Calculate(x1, y1, x2, y2);
+            var rot = Calculate(x1, y1, x2, y2);
 
             if (!moonwalk)
                 return rot;

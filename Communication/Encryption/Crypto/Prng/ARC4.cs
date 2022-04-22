@@ -41,7 +41,7 @@
 
         private void Swap(int a, int b)
         {
-            byte t = _bytes[a];
+            var t = _bytes[a];
             _bytes[a] = _bytes[b];
             _bytes[b] = t;
         }
@@ -56,7 +56,7 @@
 
         public void Encrypt(ref byte[] src)
         {
-            for (int k = 0; k < src.Length; k++)
+            for (var k = 0; k < src.Length; k++)
             {
                 src[k] ^= Next();
             }

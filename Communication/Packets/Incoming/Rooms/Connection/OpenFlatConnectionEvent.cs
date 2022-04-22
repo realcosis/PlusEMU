@@ -9,8 +9,8 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Connection
             if (session == null || session.GetHabbo() == null)
                 return;
 
-            int roomId = packet.PopInt();
-            string password = packet.PopString();
+            var roomId = packet.PopInt();
+            var password = packet.PopString();
         
             session.GetHabbo().PrepareRoom(roomId, password);
         }

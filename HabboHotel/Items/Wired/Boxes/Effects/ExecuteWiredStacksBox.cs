@@ -32,16 +32,16 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            string unknown2 = packet.PopString();
+            var unknown = packet.PopInt();
+            var unknown2 = packet.PopString();
 
             if (SetItems.Count > 0)
                 SetItems.Clear();
 
-            int furniCount = packet.PopInt();
-            for (int i = 0; i < furniCount; i++)
+            var furniCount = packet.PopInt();
+            for (var i = 0; i < furniCount; i++)
             {
-                Item selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+                var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
                 if (selectedItem != null)
                     SetItems.TryAdd(selectedItem.Id, selectedItem);
             }
@@ -52,11 +52,11 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (@params.Length != 1)
                 return false;
 
-            Habbo player = (Habbo)@params[0];
+            var player = (Habbo)@params[0];
             if (player == null)
                 return false;
 
-            foreach (Item item in SetItems.Values.ToList())
+            foreach (var item in SetItems.Values.ToList())
             {
                 if (item == null || !Instance.GetRoomItemHandler().GetFloor.Contains(item) || !item.IsWired)
                     continue;
@@ -68,10 +68,10 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
                         continue;
                     else
                     {
-                       ICollection<IWiredItem> effects = Instance.GetWired().GetEffects(wiredItem);
+                       var effects = Instance.GetWired().GetEffects(wiredItem);
                        if (effects.Count > 0)
                        {
-                           foreach (IWiredItem effectItem in effects.ToList())
+                           foreach (var effectItem in effects.ToList())
                            {
                                if (SetItems.ContainsKey(effectItem.Item.Id) && effectItem.Item.Id != item.Id)
                                    continue;

@@ -9,11 +9,11 @@ namespace Plus.Communication.Packets.Incoming.Messenger
             if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
                 return;
 
-            int userId = packet.PopInt();
+            var userId = packet.PopInt();
             if (userId == 0 || userId == session.GetHabbo().Id)
                 return;
 
-            string message = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
+            var message = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
             if (string.IsNullOrWhiteSpace(message))
                 return;
 

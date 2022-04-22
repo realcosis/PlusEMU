@@ -16,7 +16,7 @@ namespace Plus.Core
 
             try
             {
-                string[] parameters = inputData.Split(' ');
+                var parameters = inputData.Split(' ');
 
                 switch (parameters[0].ToLower())
                 {
@@ -33,7 +33,7 @@ namespace Plus.Core
                     #region alert
                     case "alert":
                         {
-                            string notice = inputData.Substring(6);
+                            var notice = inputData.Substring(6);
 
                             PlusEnvironment.GetGame().GetClientManager().SendPacket(new BroadcastMessageAlertComposer(PlusEnvironment.GetLanguageManager().TryGetValue("server.console.alert") + "\n\n" + notice));
 

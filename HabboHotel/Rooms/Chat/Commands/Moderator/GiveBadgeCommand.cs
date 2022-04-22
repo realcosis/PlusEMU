@@ -27,7 +27,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 return;
             }
 
-            GameClient targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+            var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
             if (targetClient != null)
             {
                 if (!targetClient.GetHabbo().GetBadgeComponent().HasBadge(@params[2]))

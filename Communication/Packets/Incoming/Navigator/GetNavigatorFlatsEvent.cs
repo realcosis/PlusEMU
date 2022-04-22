@@ -9,7 +9,7 @@ namespace Plus.Communication.Packets.Incoming.Navigator
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            ICollection<SearchResultList> categories = PlusEnvironment.GetGame().GetNavigator().GetEventCategories();
+            var categories = PlusEnvironment.GetGame().GetNavigator().GetEventCategories();
 
             session.SendPacket(new NavigatorFlatCatsComposer(categories));
         }

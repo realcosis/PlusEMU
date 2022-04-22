@@ -16,15 +16,15 @@ namespace Plus.Communication.Packets.Incoming.Messenger
             if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
                 return;
 
-            string query = StringCharFilter.Escape(packet.PopString().Replace("%", ""));
+            var query = StringCharFilter.Escape(packet.PopString().Replace("%", ""));
             if (query.Length < 1 || query.Length > 100)
                 return;
 
-            List<SearchResult> friends = new List<SearchResult>();
-            List<SearchResult> othersUsers = new List<SearchResult>();
+            var friends = new List<SearchResult>();
+            var othersUsers = new List<SearchResult>();
 
-            List<SearchResult> results = SearchResultFactory.GetSearchResult(query);
-            foreach (SearchResult result in results.ToList())
+            var results = SearchResultFactory.GetSearchResult(query);
+            foreach (var result in results.ToList())
             {
                 if (session.GetHabbo().GetMessenger().FriendshipExists(result.UserId))
                     friends.Add(result);

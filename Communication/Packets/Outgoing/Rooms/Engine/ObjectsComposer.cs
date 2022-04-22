@@ -16,7 +16,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
            WriteString(room.OwnerName);
 
             WriteInteger(objects.Length);
-            foreach (Item item in objects)
+            foreach (var item in objects)
             {
                 WriteFloorItem(item, Convert.ToInt32(item.UserId));
             }

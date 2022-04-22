@@ -16,20 +16,20 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
             if (!session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
             if (!room.CheckRights(session, true))
                 return;
 
-            Item item = session.GetHabbo().GetInventoryComponent().GetItem(packet.PopInt());
+            var item = session.GetHabbo().GetInventoryComponent().GetItem(packet.PopInt());
             if (item == null)
                 return;
 
             if (item.GetBaseItem() == null)
                 return;
 
-            string decorationKey = string.Empty;
+            var decorationKey = string.Empty;
             switch (item.GetBaseItem().InteractionType)
             {
                 case InteractionType.Floor:
@@ -68,7 +68,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
                     break;
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `rooms` SET `" + decorationKey + "` = @extradata WHERE `id` = '" + room.RoomId + "' LIMIT 1");
                 dbClient.AddParameter("extradata", item.ExtraData);

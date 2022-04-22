@@ -14,16 +14,16 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.YouTubeTelevisions
             if (!session.GetHabbo().InRoom)
                 return;
 
-            int itemId = packet.PopInt();
-            ICollection<TelevisionItem> videos = PlusEnvironment.GetGame().GetTelevisionManager().TelevisionList;
+            var itemId = packet.PopInt();
+            var videos = PlusEnvironment.GetGame().GetTelevisionManager().TelevisionList;
             if (videos.Count == 0)
             {
                 session.SendNotification("Oh, it looks like the hotel manager haven't added any videos for you to watch! :(");
                 return;
             }
 
-            Dictionary<int, TelevisionItem> dict = PlusEnvironment.GetGame().GetTelevisionManager().Televisions;
-            foreach (TelevisionItem value in RandomValues(dict).Take(1))
+            var dict = PlusEnvironment.GetGame().GetTelevisionManager().Televisions;
+            foreach (var value in RandomValues(dict).Take(1))
             {
                 session.SendPacket(new GetYouTubeVideoComposer(itemId, value.YouTubeId));
             }
@@ -33,9 +33,9 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.YouTubeTelevisions
 
         private static IEnumerable<TValue> RandomValues<TKey, TValue>(IDictionary<TKey, TValue> dict)
         {
-            Random rand = new Random();
-            List<TValue> values = dict.Values.ToList();
-            int size = dict.Count;
+            var rand = new Random();
+            var values = dict.Values.ToList();
+            var size = dict.Count;
             while (true)
             {
                 yield return values[rand.Next(size)];

@@ -14,14 +14,14 @@ namespace Plus.Communication.Packets.Incoming.Groups
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            string name = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
-            string description = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
-            int roomId = packet.PopInt();
-            int mainColour = packet.PopInt();
-            int secondaryColour = packet.PopInt();
+            var name = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
+            var description = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
+            var roomId = packet.PopInt();
+            var mainColour = packet.PopInt();
+            var secondaryColour = packet.PopInt();
             packet.PopInt(); //unknown
 
-            int groupCost = Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("catalog.group.purchase.cost"));
+            var groupCost = Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("catalog.group.purchase.cost"));
 
             if (session.GetHabbo().Credits < groupCost)
             {
@@ -32,20 +32,20 @@ namespace Plus.Communication.Packets.Incoming.Groups
             session.GetHabbo().Credits -= groupCost;
             session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
 
-            if (!RoomFactory.TryGetData(roomId, out RoomData room))
+            if (!RoomFactory.TryGetData(roomId, out var room))
                 return;
 
             if (room == null || room.OwnerId != session.GetHabbo().Id || room.Group != null)
                 return;
 
-            string badge = string.Empty;
+            var badge = string.Empty;
 
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
                 badge += BadgePartUtility.WorkBadgeParts(i == 0, packet.PopInt().ToString(), packet.PopInt().ToString(), packet.PopInt().ToString());
             }
 
-            if (!PlusEnvironment.GetGame().GetGroupManager().TryCreateGroup(session.GetHabbo(), name, description, roomId, badge, mainColour, secondaryColour, out Group group))
+            if (!PlusEnvironment.GetGame().GetGroupManager().TryCreateGroup(session.GetHabbo(), name, description, roomId, badge, mainColour, secondaryColour, out var group))
             {
                 session.SendNotification("An error occured whilst trying to create this group.\n\nTry again. If you get this message more than once, report it at the link below.\r\rhttp://boonboards.com");
                 return;

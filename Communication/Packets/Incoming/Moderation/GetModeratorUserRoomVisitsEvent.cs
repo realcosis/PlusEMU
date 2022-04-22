@@ -16,23 +16,23 @@ namespace Plus.Communication.Packets.Incoming.Moderation
             if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
                 return;
 
-            int userId = packet.PopInt();
-            GameClient target = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
+            var userId = packet.PopInt();
+            var target = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
             if (target == null)
                 return;
 
-            Dictionary<double, RoomData> visits = new Dictionary<double, RoomData>();
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            var visits = new Dictionary<double, RoomData>();
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `room_id`, `entry_timestamp` FROM `user_roomvisits` WHERE `user_id` = @id ORDER BY `entry_timestamp` DESC LIMIT 50");
                 dbClient.AddParameter("id", userId);
-                DataTable table = dbClient.GetTable();
+                var table = dbClient.GetTable();
 
                 if (table != null)
                 {
                     foreach (DataRow row in table.Rows)
                     {
-                        if (!RoomFactory.TryGetData(Convert.ToInt32(row["room_id"]), out RoomData data))
+                        if (!RoomFactory.TryGetData(Convert.ToInt32(row["room_id"]), out var data))
                             continue;
 
                         if (!visits.ContainsKey(Convert.ToDouble(row["entry_timestamp"])))

@@ -10,7 +10,7 @@ namespace Plus.Communication.Packets.Outgoing.Navigator
             : base(ServerPacketHeader.UserFlatCatsMessageComposer)
         {
             WriteInteger(categories.Count);
-            foreach (SearchResultList category in categories)
+            foreach (var category in categories)
             {
                 WriteInteger(category.Id);
                 WriteString(category.PublicName);

@@ -24,7 +24,7 @@ namespace Plus.HabboHotel.Items.Televisions
                 Televisions.Clear();
 
             DataTable getData = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor()) 
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor()) 
             {
                 dbClient.SetQuery("SELECT * FROM `items_youtube` ORDER BY `id` DESC");
                 getData = dbClient.GetTable();

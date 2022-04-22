@@ -21,10 +21,10 @@ namespace Plus.HabboHotel.Subscriptions
             if (_subscriptions.Count > 0)
                 _subscriptions.Clear();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `subscriptions`;");
-                DataTable getSubscriptions = dbClient.GetTable();
+                var getSubscriptions = dbClient.GetTable();
 
                 if (getSubscriptions != null)
                 {

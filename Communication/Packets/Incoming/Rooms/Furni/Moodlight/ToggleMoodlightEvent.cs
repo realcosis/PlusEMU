@@ -11,13 +11,13 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.Moodlight
             if (!session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
             
             if (!room.CheckRights(session, true) || room.MoodlightData == null)
                 return;
 
-            Item item = room.GetRoomItemHandler().GetItem(room.MoodlightData.ItemId);
+            var item = room.GetRoomItemHandler().GetItem(room.MoodlightData.ItemId);
             if (item == null || item.GetBaseItem().InteractionType != InteractionType.Moodlight)
                 return;
 

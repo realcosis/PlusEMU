@@ -28,7 +28,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Pets.Commands
             _commandDatabase.Clear();
 
             DataTable table = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `bots_pet_commands`");
                 table = dbClient.GetTable();
@@ -45,11 +45,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Pets.Commands
 
             foreach (var pair in _commandRegister)
             {
-                int commandId = pair.Key;
-                string commandStringedId = pair.Value;
-                string[] commandInput = _commandDatabase[commandStringedId + ".input"].Split(',');
+                var commandId = pair.Key;
+                var commandStringedId = pair.Value;
+                var commandInput = _commandDatabase[commandStringedId + ".input"].Split(',');
 
-                foreach (string command in commandInput)
+                foreach (var command in commandInput)
                 {
                     _petCommands.Add(command, new PetCommand(commandId, command));
                 }

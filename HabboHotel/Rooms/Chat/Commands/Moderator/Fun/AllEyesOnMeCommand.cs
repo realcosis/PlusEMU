@@ -23,12 +23,12 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            RoomUser thisUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var thisUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (thisUser == null)
                 return;
 
-            List<RoomUser> users = room.GetRoomUserManager().GetRoomUsers();
-            foreach (RoomUser u in users.ToList())
+            var users = room.GetRoomUserManager().GetRoomUsers();
+            foreach (var u in users.ToList())
             {
                 if (u == null || session.GetHabbo().Id == u.UserId)
                     continue;

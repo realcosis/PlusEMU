@@ -15,7 +15,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
 
             WriteInteger(objects.Length);
 
-            foreach (Item item in objects)
+            foreach (var item in objects)
             {
                 WriteWallItem(item, room.OwnerId);
             }

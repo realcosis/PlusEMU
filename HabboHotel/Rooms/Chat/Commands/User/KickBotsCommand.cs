@@ -33,7 +33,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                 return;
             }
 
-            foreach (RoomUser user in room.GetRoomUserManager().GetUserList().ToList())
+            foreach (var user in room.GetRoomUserManager().GetUserList().ToList())
             {
                 if (user == null || user.IsPet || !user.IsBot)
                     continue;
@@ -42,7 +42,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                 if (!room.GetRoomUserManager().TryGetBot(user.BotData.Id, out botUser))
                     return;
 
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
                     dbClient.SetQuery("UPDATE `bots` SET `room_id` = '0' WHERE `id` = @id LIMIT 1");
                     dbClient.AddParameter("id", user.BotData.Id);

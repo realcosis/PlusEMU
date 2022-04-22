@@ -19,24 +19,24 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
             if (!session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
-            int botId = packet.PopInt();
-            int actionId = packet.PopInt();
-            string dataString = packet.PopString();
+            var botId = packet.PopInt();
+            var actionId = packet.PopInt();
+            var dataString = packet.PopString();
 
             if (actionId < 1 || actionId > 5)
                 return;
 
-            if (!room.GetRoomUserManager().TryGetBot(botId, out RoomUser bot))
+            if (!room.GetRoomUserManager().TryGetBot(botId, out var bot))
                 return;
 
             if (bot.BotData.OwnerId != session.GetHabbo().Id && !session.GetHabbo().GetPermissions().HasRight("bot_edit_any_override"))
                 return;
 
-            RoomBot roomBot = bot.BotData;
+            var roomBot = bot.BotData;
             if (roomBot == null)
                 return;
 
@@ -52,7 +52,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
                 #region Copy Looks (1)
                 case 1:
                     {
-                        ServerPacket userChangeComposer = new ServerPacket(ServerPacketHeader.UserChangeMessageComposer);
+                        var userChangeComposer = new ServerPacket(ServerPacketHeader.UserChangeMessageComposer);
                         userChangeComposer.WriteInteger(bot.VirtualId);
                         userChangeComposer.WriteString(session.GetHabbo().Look);
                         userChangeComposer.WriteString(session.GetHabbo().Gender);
@@ -63,7 +63,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
                         //Change the defaults
                         bot.BotData.Look = session.GetHabbo().Look;
                         bot.BotData.Gender = session.GetHabbo().Gender;
-                        using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                         dbClient.SetQuery("UPDATE `bots` SET `look` = @look, `gender` = '" + session.GetHabbo().Gender + "' WHERE `id` = '" + bot.BotData.Id + "' LIMIT 1");
                         dbClient.AddParameter("look", session.GetHabbo().Look);
                         dbClient.RunQuery();
@@ -77,20 +77,20 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
                 case 2:
                     {
 
-                        string[] configData = dataString.Split(new[]
+                        var configData = dataString.Split(new[]
                         {
                             ";#;"
                         }, StringSplitOptions.None);
 
-                        string[] speechData = configData[0].Split(new[]
+                        var speechData = configData[0].Split(new[]
                         {
                             '\r',
                             '\n'
                         }, StringSplitOptions.RemoveEmptyEntries);
 
-                        string automaticChat = Convert.ToString(configData[1]);
-                        string speakingInterval = Convert.ToString(configData[2]);
-                        string mixChat = Convert.ToString(configData[3]);
+                        var automaticChat = Convert.ToString(configData[1]);
+                        var speakingInterval = Convert.ToString(configData[2]);
+                        var mixChat = Convert.ToString(configData[3]);
 
                         if (String.IsNullOrEmpty(speakingInterval) || Convert.ToInt32(speakingInterval) <= 0 || Convert.ToInt32(speakingInterval) < 7)
                             speakingInterval = "7";
@@ -98,12 +98,12 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
                         roomBot.AutomaticChat = Convert.ToBoolean(automaticChat);
                         roomBot.SpeakingInterval = Convert.ToInt32(speakingInterval);
                         roomBot.MixSentences = Convert.ToBoolean(mixChat);
-                        using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                         dbClient.RunQuery("DELETE FROM `bots_speech` WHERE `bot_id` = '" + bot.BotData.Id + "'");
 
                         #region Save Data - TODO: MAKE METHODS FOR THIS.  
 
-                        for (int i = 0; i <= speechData.Length - 1; i++)
+                        for (var i = 0; i <= speechData.Length - 1; i++)
                         {
                             dbClient.SetQuery("INSERT INTO `bots_speech` (`bot_id`, `text`) VALUES (@id, @data)");
                             dbClient.AddParameter("id", botId);
@@ -125,7 +125,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
                         dbClient.SetQuery("SELECT `text` FROM `bots_speech` WHERE `bot_id` = @id");
                         dbClient.AddParameter("id", botId);
 
-                        DataTable botSpeech = dbClient.GetTable();
+                        var botSpeech = dbClient.GetTable();
 
                         foreach (DataRow speech in botSpeech.Rows)
                         {
@@ -145,7 +145,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
                             bot.BotData.WalkingMode = "freeroam";
                         else
                             bot.BotData.WalkingMode = "stand";
-                        using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                         dbClient.RunQuery("UPDATE `bots` SET `walk_mode` = '" + bot.BotData.WalkingMode + "' WHERE `id` = '" + bot.BotData.Id + "' LIMIT 1");
                         break;
                     }
@@ -158,7 +158,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
                             bot.BotData.DanceId = 0;
                         else
                         {
-                            Random randomDance = new Random();
+                            var randomDance = new Random();
                             bot.BotData.DanceId = randomDance.Next(1, 4);
                         }
 
@@ -188,7 +188,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
                         }
 
                         bot.BotData.Name = dataString;                      
-                        using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                         {
                             dbClient.SetQuery("UPDATE `bots` SET `name` = @name WHERE `id` = '" + bot.BotData.Id + "' LIMIT 1");
                             dbClient.AddParameter("name", dataString);

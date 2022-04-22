@@ -17,7 +17,7 @@ namespace Plus.HabboHotel.Rooms.AI.Responses
             AiType = BotUtility.GetAiFromString(botAi);
            
             this.Keywords = new List<string>();
-            foreach (string keyword in keywords.Split(','))
+            foreach (var keyword in keywords.Split(','))
             {
                 this.Keywords.Add(keyword.ToLower());
             }
@@ -28,7 +28,7 @@ namespace Plus.HabboHotel.Rooms.AI.Responses
             BeverageIds = new List<int>(); 
             if (responseBeverages.Contains(","))
             {
-                foreach (string vendingId in responseBeverages.Split(','))
+                foreach (var vendingId in responseBeverages.Split(','))
                 {
                     try
                     {
@@ -46,7 +46,7 @@ namespace Plus.HabboHotel.Rooms.AI.Responses
 
         public bool KeywordMatched(string message)
         { 
-            foreach (string keyword in Keywords)
+            foreach (var keyword in Keywords)
             {
                 if (message.ToLower().Contains(keyword.ToLower()))
                     return true;

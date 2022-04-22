@@ -8,7 +8,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Settings
             : base(ServerPacketHeader.GetRoomFilterListMessageComposer)
         {
             WriteInteger(instance.WordFilterList.Count);
-            foreach (string word in instance.WordFilterList)
+            foreach (var word in instance.WordFilterList)
             {
                WriteString(word);
             }

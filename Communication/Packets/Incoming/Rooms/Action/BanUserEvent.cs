@@ -8,18 +8,18 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Action
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
             if (((room.WhoCanBan == 0 && !room.CheckRights(session, true) && room.Group == null) || (room.WhoCanBan == 1 && !room.CheckRights(session)) && room.Group == null) || (room.Group != null && !room.CheckRights(session, false, true)))
                 return;
 
-            int userId = packet.PopInt();
+            var userId = packet.PopInt();
             packet.PopInt(); //roomId
-            string r = packet.PopString();
+            var r = packet.PopString();
 
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(Convert.ToInt32(userId));
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(Convert.ToInt32(userId));
             if (user == null || user.IsBot)
                 return;
 

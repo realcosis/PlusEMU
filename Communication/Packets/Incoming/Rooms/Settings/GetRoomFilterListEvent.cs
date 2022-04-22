@@ -11,7 +11,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Settings
             if (!session.GetHabbo().InRoom)
                 return;
 
-            Room instance = session.GetHabbo().CurrentRoom;
+            var instance = session.GetHabbo().CurrentRoom;
             if (instance == null)
                 return;
 

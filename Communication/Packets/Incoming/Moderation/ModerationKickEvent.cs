@@ -10,10 +10,10 @@ namespace Plus.Communication.Packets.Incoming.Moderation
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().GetPermissions().HasRight("mod_kick"))
                 return;
 
-            int userId = packet.PopInt();
+            var userId = packet.PopInt();
             packet.PopString(); //message
 
-            GameClient client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
+            var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
             if (client == null || client.GetHabbo() == null || client.GetHabbo().CurrentRoomId < 1 || client.GetHabbo().Id == session.GetHabbo().Id)
                 return;
 
@@ -23,7 +23,7 @@ namespace Plus.Communication.Packets.Incoming.Moderation
                 return;
             }
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
             room.GetRoomUserManager().RemoveUserFromRoom(client, true);

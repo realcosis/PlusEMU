@@ -23,9 +23,9 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 
         public void Execute(GameClient session, Room room, string[] @params)
         {
-            TimeSpan uptime = DateTime.Now - PlusEnvironment.ServerStarted;
-            int onlineUsers = PlusEnvironment.GetGame().GetClientManager().Count;
-            int roomCount = PlusEnvironment.GetGame().GetRoomManager().Count;
+            var uptime = DateTime.Now - PlusEnvironment.ServerStarted;
+            var onlineUsers = PlusEnvironment.GetGame().GetClientManager().Count;
+            var roomCount = PlusEnvironment.GetGame().GetRoomManager().Count;
 
             session.SendPacket(new RoomNotificationComposer("Powered by PlusEmulator",
                  "<b>Credits</b>:\n" +

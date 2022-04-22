@@ -33,7 +33,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
             room.GetRoomItemHandler().RemoveItems(session);
             room.GetGameMap().GenerateMaps();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `items` SET `room_id` = '0' WHERE `room_id` = @RoomId AND `user_id` = @UserId");
                 dbClient.AddParameter("RoomId", room.Id);
@@ -41,7 +41,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                 dbClient.RunQuery();
             }
 
-            List<Item> items = room.GetRoomItemHandler().GetWallAndFloor.ToList();
+            var items = room.GetRoomItemHandler().GetWallAndFloor.ToList();
             if (items.Count > 0)
                 session.SendWhisper("There are still more items in this room, manually remove them or use :ejectall to eject them!");
 

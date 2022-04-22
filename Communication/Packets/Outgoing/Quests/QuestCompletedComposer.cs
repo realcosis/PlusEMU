@@ -8,9 +8,9 @@ namespace Plus.Communication.Packets.Outgoing.Quests
         public QuestCompletedComposer(GameClient session, Quest quest)
             : base(ServerPacketHeader.QuestCompletedMessageComposer)
         {
-            int amountInCat = PlusEnvironment.GetGame().GetQuestManager().GetAmountOfQuestsInCategory(quest.Category);
-            int number = quest == null ? amountInCat : quest.Number;
-            int userProgress = quest == null ? 0 : session.GetHabbo().GetQuestProgress(quest.Id);
+            var amountInCat = PlusEnvironment.GetGame().GetQuestManager().GetAmountOfQuestsInCategory(quest.Category);
+            var number = quest == null ? amountInCat : quest.Number;
+            var userProgress = quest == null ? 0 : session.GetHabbo().GetQuestProgress(quest.Id);
 
            WriteString(quest.Category);
             WriteInteger(number); // Quest progress in this cat

@@ -54,19 +54,19 @@ namespace Plus.Utilities.Enclosure
             {
                 _currentlyChecking = _newEntries.Dequeue();
 
-                List<Point> pointList = GetConnectedItems(_currentlyChecking);
+                var pointList = GetConnectedItems(_currentlyChecking);
                 if (pointList == null)
                     return null;
 
                 if (pointList.Count > 1)
                 {
-                    IEnumerable<LinkedList<AStarSolver<GameField>.PathNode>> routeList = HandleListOfConnectedPoints(  pointList);
+                    var routeList = HandleListOfConnectedPoints(  pointList);
 
                     foreach (var nodeList in routeList)
                     {
                         if (nodeList.Count >= 4)
                         {
-                            PointField field = FindClosed(nodeList);
+                            var field = FindClosed(nodeList);
                             if (field != null)
                             {
                                 returnList.Add(field);
@@ -85,12 +85,12 @@ namespace Plus.Utilities.Enclosure
         {
             var returnList = new PointField(_currentlyChecking.Value);
 
-            int minX = int.MaxValue;
-            int maxX = int.MinValue;
-            int minY = int.MaxValue;
-            int maxY = int.MinValue;
+            var minX = int.MaxValue;
+            var maxX = int.MinValue;
+            var minY = int.MaxValue;
+            var maxY = int.MinValue;
 
-            foreach (AStarSolver<GameField>.PathNode node in nodeList)
+            foreach (var node in nodeList)
             {
                 if (node.X < minX)
                     minX = node.X;
@@ -105,8 +105,8 @@ namespace Plus.Utilities.Enclosure
                     maxY = node.Y;
             }
 
-            int middleX = Convert.ToInt32(Math.Ceiling(((maxX - minX) / 2f)) + minX);
-            int middleY = Convert.ToInt32(Math.Ceiling(((maxY - minY) / 2f)) + minY);
+            var middleX = Convert.ToInt32(Math.Ceiling(((maxX - minX) / 2f)) + minX);
+            var middleY = Convert.ToInt32(Math.Ceiling(((maxY - minY) / 2f)) + minY);
             //Console.WriteLine("Middle: x:[{0}]  y:[{1}]", middleX, middleY);
 
             var toFill = new List<Point>();
@@ -114,9 +114,9 @@ namespace Plus.Utilities.Enclosure
             toFill.Add(new Point(middleX, middleY));
             while (toFill.Count > 0)
             {
-                Point current = toFill[0];
-                int x = current.X;
-                int y = current.Y;
+                var current = toFill[0];
+                var x = current.X;
+                var y = current.Y;
 
                 if (x < minX)
                     return null; //OOB
@@ -164,13 +164,13 @@ namespace Plus.Utilities.Enclosure
         private IEnumerable<LinkedList<AStarSolver<GameField>.PathNode>> HandleListOfConnectedPoints(List<Point> pointList)
         {
             var returnList = new List<LinkedList<AStarSolver<GameField>.PathNode>>();
-            int amount = 0;
-            foreach (Point begin in pointList)
+            var amount = 0;
+            foreach (var begin in pointList)
             {
                 amount++;
                 if (amount == pointList.Count / 2 + 1)
                     return returnList;
-                foreach (Point end in pointList)
+                foreach (var end in pointList)
                 {
                     if (begin == end)
                         continue;
@@ -190,8 +190,8 @@ namespace Plus.Utilities.Enclosure
                 return null;
 
             var connectedItems = new List<Point>();
-            int x = update.X;
-            int y = update.Y;
+            var x = update.X;
+            var y = update.Y;
             if (_diagonal)
             {
                 if (this[y - 1, x - 1] && _currentField[y - 1, x - 1] == update.Value)

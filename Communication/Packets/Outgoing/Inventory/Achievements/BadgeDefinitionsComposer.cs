@@ -10,11 +10,11 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.Achievements
         {
             WriteInteger(achievements.Count);
 
-            foreach (Achievement achievement in achievements.Values)
+            foreach (var achievement in achievements.Values)
             {
                WriteString(achievement.GroupName.Replace("ACH_", ""));
                 WriteInteger(achievement.Levels.Count);
-                foreach (AchievementLevel level in achievement.Levels.Values)
+                foreach (var level in achievement.Levels.Values)
                 {
                     WriteInteger(level.Level);
                     WriteInteger(level.Requirement);

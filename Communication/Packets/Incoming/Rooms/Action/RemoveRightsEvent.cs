@@ -14,19 +14,19 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Action
             if (!session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
             if (!room.CheckRights(session, true))
                 return;
 
-            int amount = packet.PopInt();
-            for (int i = 0; (i < amount && i <= 100); i++)
+            var amount = packet.PopInt();
+            for (var i = 0; (i < amount && i <= 100); i++)
             {
-                int userId = packet.PopInt();
+                var userId = packet.PopInt();
                 if (userId > 0 && room.UsersWithRights.Contains(userId))
                 {
-                    RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(userId);
+                    var user = room.GetRoomUserManager().GetRoomUserByHabbo(userId);
                     if (user != null && !user.IsBot)
                     {
                         user.RemoveStatus("flatctrl 1");
@@ -36,7 +36,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Action
                         user.GetClient().SendPacket(new YouAreControllerComposer(0));
                     }
 
-                    using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                    using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                     {
                         dbClient.SetQuery("DELETE FROM `room_rights` WHERE `user_id` = @uid AND `room_id` = @rid LIMIT 1");
                         dbClient.AddParameter("uid", userId);

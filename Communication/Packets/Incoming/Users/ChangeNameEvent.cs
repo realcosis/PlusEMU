@@ -19,16 +19,16 @@ namespace Plus.Communication.Packets.Incoming.Users
             if (session == null || session.GetHabbo() == null)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Username);
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Username);
             if (user == null)
                 return;
 
-            string newName = packet.PopString();
-            string oldName = session.GetHabbo().Username;
+            var newName = packet.PopString();
+            var oldName = session.GetHabbo().Username;
 
             if (newName == oldName)
             {
@@ -44,14 +44,14 @@ namespace Plus.Communication.Packets.Incoming.Users
             }
 
             bool inUse;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT COUNT(0) FROM `users` WHERE `username` = @name LIMIT 1");
                 dbClient.AddParameter("name", newName);
                 inUse = dbClient.GetInteger() == 1;
             }
 
-            char[] letters = newName.ToLower().ToCharArray();
+            var letters = newName.ToLower().ToCharArray();
             const string allowedCharacters = "abcdefghijklmnopqrstuvwxyz.,_-;:?!1234567890";
 
             if (letters.Any(chr => !allowedCharacters.Contains(chr)))
@@ -89,7 +89,7 @@ namespace Plus.Communication.Packets.Incoming.Users
             session.SendPacket(new UpdateUsernameComposer(newName));
             room.SendPacket(new UserNameChangeComposer(room.Id, user.VirtualId, newName));
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("INSERT INTO `logs_client_namechange` (`user_id`,`new_name`,`old_name`,`timestamp`) VALUES ('" + session.GetHabbo().Id + "', @name, '" + oldName + "', '" + PlusEnvironment.GetUnixTimestamp() + "')");
                 dbClient.AddParameter("name", newName);
@@ -97,7 +97,7 @@ namespace Plus.Communication.Packets.Incoming.Users
             }
 
 
-            foreach (Room ownRooms in PlusEnvironment.GetGame().GetRoomManager().GetRooms().ToList())
+            foreach (var ownRooms in PlusEnvironment.GetGame().GetRoomManager().GetRooms().ToList())
             {
                 if (ownRooms == null || ownRooms.OwnerId != session.GetHabbo().Id || ownRooms.OwnerName == newName)
                     continue;

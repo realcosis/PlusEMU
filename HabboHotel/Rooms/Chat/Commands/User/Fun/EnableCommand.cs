@@ -33,7 +33,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
                 return;
             }
 
-            RoomUser thisUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Username);
+            var thisUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Username);
             if (thisUser == null)
                 return;
 
@@ -47,7 +47,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
             else if (thisUser.IsLying)
                 return;
 
-            int effectId = 0;
+            var effectId = 0;
             if (!int.TryParse(@params[1], out effectId))
                 return;
 

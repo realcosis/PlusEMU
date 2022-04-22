@@ -34,7 +34,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 return;
             }
 
-            Habbo habbo = PlusEnvironment.GetHabboByUsername(@params[1]);
+            var habbo = PlusEnvironment.GetHabboByUsername(@params[1]);
             if (habbo == null)
             {
                 session.SendWhisper("An error occoured whilst finding that user in the database.");
@@ -47,11 +47,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 return;
             }
 
-            String ipAddress = String.Empty;
-            Double expire = PlusEnvironment.GetUnixTimestamp() + 78892200;
-            string username = habbo.Username;
+            var ipAddress = String.Empty;
+            var expire = PlusEnvironment.GetUnixTimestamp() + 78892200;
+            var username = habbo.Username;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE `user_info` SET `bans` = `bans` + '1' WHERE `user_id` = '" + habbo.Id + "' LIMIT 1");
 
@@ -72,7 +72,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
             if (!string.IsNullOrEmpty(habbo.MachineId))
                 PlusEnvironment.GetGame().GetModerationManager().BanUser(session.GetHabbo().Username, ModerationBanType.Machine, habbo.MachineId, reason, expire);
 
-            GameClient targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(username);
+            var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(username);
             if (targetClient != null)
                 targetClient.Disconnect();
             session.SendWhisper("Success, you have machine, IP and account banned the user '" + username + "' for '" + reason + "'!");

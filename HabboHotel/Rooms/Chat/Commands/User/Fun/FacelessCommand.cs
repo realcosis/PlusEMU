@@ -24,13 +24,13 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
     
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null || user.GetClient() == null)
                 return;
 
             string[] headParts;
-            string[] figureParts = session.GetHabbo().Look.Split('.');
-            foreach (string part in figureParts)
+            var figureParts = session.GetHabbo().Look.Split('.');
+            foreach (var part in figureParts)
             {
                 if (part.StartsWith("hd"))
                 {
@@ -47,7 +47,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
 
             session.GetHabbo().Look = PlusEnvironment.GetFigureManager().ProcessFigure(session.GetHabbo().Look, session.GetHabbo().Gender, session.GetHabbo().GetClothing().GetClothingParts, true);
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE `users` SET `look` = '" + session.GetHabbo().Look + "' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
             }

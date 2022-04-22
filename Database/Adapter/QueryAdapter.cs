@@ -25,13 +25,11 @@ namespace Plus.Database.Adapter
 
         public bool FindsResult()
         {
-            bool hasRows = false;
+            var hasRows = false;
             try
             {
-                using (MySqlDataReader reader = Command.ExecuteReader())
-                {
-                    hasRows = reader.HasRows;
-                }
+                using var reader = Command.ExecuteReader();
+                hasRows = reader.HasRows;
             }
             catch (Exception exception)
             {
@@ -43,10 +41,10 @@ namespace Plus.Database.Adapter
 
         public int GetInteger()
         {
-            int result = 0;
+            var result = 0;
             try
             {
-                object obj2 = Command.ExecuteScalar();
+                var obj2 = Command.ExecuteScalar();
                 if (obj2 != null)
                 {
                     int.TryParse(obj2.ToString(), out result);
@@ -66,8 +64,8 @@ namespace Plus.Database.Adapter
             DataRow row = null;
             try
             {
-                DataSet dataSet = new DataSet();
-                using (MySqlDataAdapter adapter = new MySqlDataAdapter(Command))
+                var dataSet = new DataSet();
+                using (var adapter = new MySqlDataAdapter(Command))
                 {
                     adapter.Fill(dataSet);
                 }
@@ -86,10 +84,10 @@ namespace Plus.Database.Adapter
 
         public string GetString()
         {
-            string str = string.Empty;
+            var str = string.Empty;
             try
             {
-                object obj2 = Command.ExecuteScalar();
+                var obj2 = Command.ExecuteScalar();
                 if (obj2 != null)
                 {
                     str = obj2.ToString();
@@ -111,10 +109,8 @@ namespace Plus.Database.Adapter
 
             try
             {
-                using (MySqlDataAdapter adapter = new MySqlDataAdapter(Command))
-                {
-                    adapter.Fill(dataTable);
-                }
+                using var adapter = new MySqlDataAdapter(Command);
+                adapter.Fill(dataTable);
             }
             catch (Exception exception)
             {
@@ -144,7 +140,7 @@ namespace Plus.Database.Adapter
             if (!DbEnabled)
                 return 0;
 
-            long lastInsertedId = 0L;
+            var lastInsertedId = 0L;
             try
             {
                 Command.ExecuteScalar();

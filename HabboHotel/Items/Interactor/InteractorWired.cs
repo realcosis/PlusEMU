@@ -38,12 +38,12 @@ namespace Plus.HabboHotel.Items.Interactor
                 return;
             if (item.GetRoom().GetWired().IsTrigger(item))
             {
-                List<int> blockedItems = WiredBoxTypeUtility.ContainsBlockedEffect(box, item.GetRoom().GetWired().GetEffects(box));
+                var blockedItems = WiredBoxTypeUtility.ContainsBlockedEffect(box, item.GetRoom().GetWired().GetEffects(box));
                 session.SendPacket(new WiredTriggeRconfigComposer(box, blockedItems));
             }
             else if (item.GetRoom().GetWired().IsEffect(item))
             {
-                List<int> blockedItems = WiredBoxTypeUtility.ContainsBlockedTrigger(box, item.GetRoom().GetWired().GetTriggers(box));
+                var blockedItems = WiredBoxTypeUtility.ContainsBlockedTrigger(box, item.GetRoom().GetWired().GetTriggers(box));
                 session.SendPacket(new WiredEffectConfigComposer(box, blockedItems));
             }
             else if (item.GetRoom().GetWired().IsCondition(item))

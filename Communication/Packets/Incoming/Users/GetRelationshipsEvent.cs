@@ -11,7 +11,7 @@ namespace Plus.Communication.Packets.Incoming.Users
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            Habbo habbo = PlusEnvironment.GetHabboById(packet.PopInt());
+            var habbo = PlusEnvironment.GetHabboById(packet.PopInt());
             if (habbo == null)
                 return;
 

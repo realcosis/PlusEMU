@@ -9,23 +9,23 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
             if (!room.CheckRights(session))
                 return;
 
-            int itemId = packet.PopInt();
-            string wallPositionData = packet.PopString();
+            var itemId = packet.PopInt();
+            var wallPositionData = packet.PopString();
 
-            Item item = room.GetRoomItemHandler().GetItem(itemId);
+            var item = room.GetRoomItemHandler().GetItem(itemId);
 
             if (item == null)
                 return;
 
             try
             {
-                string wallPos = room.GetRoomItemHandler().WallPositionCheck(":" + wallPositionData.Split(':')[1]);
+                var wallPos = room.GetRoomItemHandler().WallPositionCheck(":" + wallPositionData.Split(':')[1]);
                 item.WallCoord = wallPos;
             }
             catch { return; }

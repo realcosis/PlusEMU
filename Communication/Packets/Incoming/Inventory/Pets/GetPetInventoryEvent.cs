@@ -13,7 +13,7 @@ namespace Plus.Communication.Packets.Incoming.Inventory.Pets
             if (session.GetHabbo().GetInventoryComponent() == null)
                 return;
 
-            ICollection<Pet> pets = session.GetHabbo().GetInventoryComponent().GetPets();
+            var pets = session.GetHabbo().GetInventoryComponent().GetPets();
             session.SendPacket(new PetInventoryComposer(pets));
         }
     }

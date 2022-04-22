@@ -54,11 +54,11 @@ namespace Plus.HabboHotel.Rooms.Games.Teams
             {
                 case "banzai":
                     {
-                        Room room = user.GetClient().GetHabbo().CurrentRoom;
+                        var room = user.GetClient().GetHabbo().CurrentRoom;
                         if (room == null)
                             return;
 
-                        foreach (Item item in room.GetRoomItemHandler().GetFloor.ToList())
+                        foreach (var item in room.GetRoomItemHandler().GetFloor.ToList())
                         {
                             if (item == null)
                                 continue;
@@ -69,7 +69,7 @@ namespace Plus.HabboHotel.Rooms.Games.Teams
                                 item.UpdateState();
                                 if (BlueTeam.Count == 5)
                                 {
-                                    foreach (RoomUser sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
+                                    foreach (var sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
                                     {
                                         sser.SqState = 0;
                                     }
@@ -83,7 +83,7 @@ namespace Plus.HabboHotel.Rooms.Games.Teams
                                 item.UpdateState();
                                 if (RedTeam.Count == 5)
                                 {
-                                    foreach (RoomUser sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
+                                    foreach (var sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
                                     {
                                         sser.SqState = 0;
                                     }
@@ -97,7 +97,7 @@ namespace Plus.HabboHotel.Rooms.Games.Teams
                                 item.UpdateState();
                                 if (GreenTeam.Count == 5)
                                 {
-                                    foreach (RoomUser sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
+                                    foreach (var sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
                                         sser.SqState = 0;
 
                                     room.GetGameMap().GameMap[item.GetX, item.GetY] = 0;
@@ -109,7 +109,7 @@ namespace Plus.HabboHotel.Rooms.Games.Teams
                                 item.UpdateState();
                                 if (YellowTeam.Count == 5)
                                 {
-                                    foreach (RoomUser sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
+                                    foreach (var sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
                                         sser.SqState = 0;
 
                                     room.GetGameMap().GameMap[item.GetX, item.GetY] = 0;
@@ -121,11 +121,11 @@ namespace Plus.HabboHotel.Rooms.Games.Teams
 
                 case "freeze":
                     {
-                        Room room = user.GetClient().GetHabbo().CurrentRoom;
+                        var room = user.GetClient().GetHabbo().CurrentRoom;
                         if (room == null)
                             return;
 
-                        foreach (Item item in room.GetRoomItemHandler().GetFloor.ToList())
+                        foreach (var item in room.GetRoomItemHandler().GetFloor.ToList())
                         {
                             if (item == null)
                                 continue;
@@ -172,11 +172,11 @@ namespace Plus.HabboHotel.Rooms.Games.Teams
             {
                 case "banzai":
                     {
-                        Room room = user.GetClient().GetHabbo().CurrentRoom;
+                        var room = user.GetClient().GetHabbo().CurrentRoom;
                         if (room == null)
                             return;
 
-                        foreach (Item item in room.GetRoomItemHandler().GetFloor.ToList())
+                        foreach (var item in room.GetRoomItemHandler().GetFloor.ToList())
                         {
                             if (item == null)
                                 continue;
@@ -187,7 +187,7 @@ namespace Plus.HabboHotel.Rooms.Games.Teams
                                 item.UpdateState();
                                 if (room.GetGameMap().GameMap[item.GetX, item.GetY] == 0)
                                 {
-                                    foreach (RoomUser sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
+                                    foreach (var sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
                                         sser.SqState = 1;
 
                                     room.GetGameMap().GameMap[item.GetX, item.GetY] = 1;
@@ -199,7 +199,7 @@ namespace Plus.HabboHotel.Rooms.Games.Teams
                                 item.UpdateState();
                                 if (room.GetGameMap().GameMap[item.GetX, item.GetY] == 0)
                                 {
-                                    foreach (RoomUser sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
+                                    foreach (var sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
                                         sser.SqState = 1;
 
 
@@ -212,7 +212,7 @@ namespace Plus.HabboHotel.Rooms.Games.Teams
                                 item.UpdateState();
                                 if (room.GetGameMap().GameMap[item.GetX, item.GetY] == 0)
                                 {
-                                    foreach (RoomUser sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
+                                    foreach (var sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
 
                                         sser.SqState = 1;
 
@@ -226,7 +226,7 @@ namespace Plus.HabboHotel.Rooms.Games.Teams
                                 item.UpdateState();
                                 if (room.GetGameMap().GameMap[item.GetX, item.GetY] == 0)
                                 {
-                                    foreach (RoomUser sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
+                                    foreach (var sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
                                         sser.SqState = 1;
 
 
@@ -238,11 +238,11 @@ namespace Plus.HabboHotel.Rooms.Games.Teams
                     }
                 case "freeze":
                     {
-                        Room room = user.GetClient().GetHabbo().CurrentRoom;
+                        var room = user.GetClient().GetHabbo().CurrentRoom;
                         if (room == null)
                             return;
 
-                        foreach (Item item in room.GetRoomItemHandler().GetFloor.ToList())
+                        foreach (var item in room.GetRoomItemHandler().GetFloor.ToList())
                         {
                             if (item == null)
                                 continue;

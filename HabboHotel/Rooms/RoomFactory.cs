@@ -10,23 +10,23 @@ namespace Plus.HabboHotel.Rooms
     {
         public static List<RoomData> GetRoomsDataByOwnerSortByName(int ownerId)
         {
-            List<RoomData> data = new List<RoomData>();
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            var data = new List<RoomData>();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT `username`, `rooms`.* FROM `users` INNER JOIN `rooms` ON `owner` = `users`.`id` WHERE `users`.`id` = @ownerid ORDER BY `caption`;");
             dbClient.AddParameter("ownerid", ownerId);
-            DataTable rooms = dbClient.GetTable();
+            var rooms = dbClient.GetTable();
 
             if (rooms != null)
             {
                 foreach (DataRow row in rooms.Rows)
                 {
-                    if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(Convert.ToInt32(row["id"]), out Room room))
+                    if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(Convert.ToInt32(row["id"]), out var room))
                     {
                         data.Add(room);
                     }
                     else
                     {
-                        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetModel(Convert.ToString(row["model_name"]), out RoomModel model))
+                        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetModel(Convert.ToString(row["model_name"]), out var model))
                         {
                             continue;
                         }
@@ -48,17 +48,17 @@ namespace Plus.HabboHotel.Rooms
 
         public static bool TryGetData(int roomId, out RoomData data)
         {
-            if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(roomId, out Room room))
+            if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(roomId, out var room))
             {
                 data = room;
                 return true;
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `rooms`.*, `users`.`username` FROM `rooms` INNER JOIN `users` ON `users`.`id` = `rooms`.`owner` WHERE `rooms`.`id` = @id LIMIT 1");
                 dbClient.AddParameter("id", roomId);
-                DataRow row = dbClient.GetRow();
+                var row = dbClient.GetRow();
 
                 if (row != null)
                 {
@@ -70,7 +70,7 @@ namespace Plus.HabboHotel.Rooms
                     }
 
                     // TODO: Revise this?
-                    string username = (!String.IsNullOrEmpty(Convert.ToString(row["username"])) ? Convert.ToString(row["username"]) : "Habboon");
+                    var username = (!String.IsNullOrEmpty(Convert.ToString(row["username"])) ? Convert.ToString(row["username"]) : "Habboon");
 
                     data = new RoomData(Convert.ToInt32(row["id"]), Convert.ToString(row["caption"]), Convert.ToString(row["model_name"]), username, Convert.ToInt32(row["owner"]),
                         Convert.ToString(row["password"]), Convert.ToInt32(row["score"]), Convert.ToString(row["roomtype"]), Convert.ToString(row["state"]), Convert.ToInt32(row["users_now"]),

@@ -9,7 +9,7 @@ namespace Plus.Communication.Packets.Incoming.LandingView
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            ICollection<Promotion> landingPromotions = PlusEnvironment.GetGame().GetLandingManager().GetPromotionItems();
+            var landingPromotions = PlusEnvironment.GetGame().GetLandingManager().GetPromotionItems();
 
             session.SendPacket(new PromoArticlesComposer(landingPromotions));
         }

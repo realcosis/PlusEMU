@@ -17,7 +17,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired
             WriteInteger(15);
           
             WriteInteger(box.SetItems.Count);
-            foreach (Item item in box.SetItems.Values.ToList())
+            foreach (var item in box.SetItems.Values.ToList())
             {
                 WriteInteger(item.Id);
             }
@@ -85,14 +85,14 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired
 
             if (box is IWiredCycle && box.Type != WiredBoxType.EffectKickUser && box.Type != WiredBoxType.EffectMatchPosition && box.Type != WiredBoxType.EffectMoveAndRotate && box.Type != WiredBoxType.EffectSetRollerSpeed)
             {
-                IWiredCycle cycle = (IWiredCycle)box;
+                var cycle = (IWiredCycle)box;
                 WriteInteger(WiredBoxTypeUtility.GetWiredId(box.Type));
                 WriteInteger(0);
                 WriteInteger(cycle.Delay);
             }
             else if (box.Type == WiredBoxType.EffectMatchPosition || box.Type == WiredBoxType.EffectMoveAndRotate)
             {
-                IWiredCycle cycle = (IWiredCycle)box;
+                var cycle = (IWiredCycle)box;
                 WriteInteger(0);
                 WriteInteger(WiredBoxTypeUtility.GetWiredId(box.Type));
                 WriteInteger(cycle.Delay);
@@ -107,7 +107,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired
             WriteInteger(blockedItems.Count()); // Incompatable items loop
             if (blockedItems.Count() > 0)
             {
-                foreach (int itemId in blockedItems.ToList())
+                foreach (var itemId in blockedItems.ToList())
                     WriteInteger(itemId);
             }
         }

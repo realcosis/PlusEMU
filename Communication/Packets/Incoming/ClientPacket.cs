@@ -49,7 +49,7 @@ namespace Plus.Communication.Packets.Incoming
 
             var data = new byte[bytes];
 
-            for (int i = 0; i < bytes; i++)
+            for (var i = 0; i < bytes; i++)
                 data[i] = _body[_pointer++];
 
             return data;
@@ -72,7 +72,7 @@ namespace Plus.Communication.Packets.Incoming
 
         public byte[] ReadFixedValue()
         {
-            int len = HabboEncoding.DecodeInt16(ReadBytes(2));
+            var len = HabboEncoding.DecodeInt16(ReadBytes(2));
             return ReadBytes(len);
         }
 
@@ -93,9 +93,9 @@ namespace Plus.Communication.Packets.Incoming
                 return 0;
             }
 
-            byte[] data = PlainReadBytes(4);
+            var data = PlainReadBytes(4);
 
-            int i = HabboEncoding.DecodeInt32(data);
+            var i = HabboEncoding.DecodeInt32(data);
 
             _pointer += 4;
 

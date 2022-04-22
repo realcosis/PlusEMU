@@ -48,8 +48,8 @@ namespace Plus.HabboHotel.Users.Inventory
             if (_botItems.Count > 0)
                 _botItems.Clear();
 
-            List<Item> items = ItemLoader.GetItemsForUser(_userId);
-            foreach (Item item in items.ToList())
+            var items = ItemLoader.GetItemsForUser(_userId);
+            foreach (var item in items.ToList())
             {
                 if (item.IsFloorItem)
                 {
@@ -65,8 +65,8 @@ namespace Plus.HabboHotel.Users.Inventory
                     continue;
             }
 
-            List<Pet> pets = PetLoader.GetPetsForUser(Convert.ToInt32(_userId));
-            foreach (Pet pet in pets)
+            var pets = PetLoader.GetPetsForUser(Convert.ToInt32(_userId));
+            foreach (var pet in pets)
             {
                 if (!_petsItems.TryAdd(pet.PetId, pet))
                 {
@@ -74,8 +74,8 @@ namespace Plus.HabboHotel.Users.Inventory
                 }
             }
 
-            List<Bot> bots = BotLoader.GetBotsForUser(Convert.ToInt32(_userId));
-            foreach (Bot bot in bots)
+            var bots = BotLoader.GetBotsForUser(Convert.ToInt32(_userId));
+            foreach (var bot in bots)
             {
                 if (!_botItems.TryAdd(bot.Id, bot))
                 {
@@ -88,7 +88,7 @@ namespace Plus.HabboHotel.Users.Inventory
         {
             UpdateItems(true);
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("DELETE FROM items WHERE room_id='0' AND user_id = " + _userId); //Do join 
             }
@@ -150,12 +150,12 @@ namespace Plus.HabboHotel.Users.Inventory
             {
                 if (fromRoom)
                 {
-                    using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                    using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                     dbClient.RunQuery("UPDATE `items` SET `room_id` = '0', `user_id` = '" + _userId + "' WHERE `id` = '" + id + "' LIMIT 1");
                 }
                 else
                 {
-                    using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                    using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                     if (id > 0)
                         dbClient.RunQuery("INSERT INTO `items` (`id`,`base_item`, `user_id`, `limited_number`, `limited_stack`) VALUES ('" + id + "', '" + baseItem + "', '" + _userId + "', '" + limitedNumber + "', '" + limitedStack + "')");
                     else
@@ -178,7 +178,7 @@ namespace Plus.HabboHotel.Users.Inventory
                 }
             }
 
-            Item itemToAdd = new Item(id, 0, baseItem, extraData, 0, 0, 0, 0, _userId, group, limitedNumber, limitedStack, string.Empty);
+            var itemToAdd = new Item(id, 0, baseItem, extraData, 0, 0, 0, 0, _userId, group, limitedNumber, limitedStack, string.Empty);
  
             if (UserHoldsItem(id))
                 RemoveItem(id);
@@ -210,12 +210,12 @@ namespace Plus.HabboHotel.Users.Inventory
 
             if (_floorItems.ContainsKey(id))
             {
-                _floorItems.TryRemove(id, out Item _);
+                _floorItems.TryRemove(id, out var _);
             }
 
             if (_wallItems.ContainsKey(id))
             {
-                _wallItems.TryRemove(id, out Item _);
+                _wallItems.TryRemove(id, out var _);
             }
 
             GetClient().SendPacket(new FurniListRemoveComposer(id));

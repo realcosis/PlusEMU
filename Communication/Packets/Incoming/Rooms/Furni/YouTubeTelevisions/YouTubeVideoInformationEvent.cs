@@ -9,10 +9,10 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.YouTubeTelevisions
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int itemId = packet.PopInt();
-            string videoId = packet.PopString();
+            var itemId = packet.PopInt();
+            var videoId = packet.PopString();
 
-            foreach (TelevisionItem tele in PlusEnvironment.GetGame().GetTelevisionManager().TelevisionList.ToList())
+            foreach (var tele in PlusEnvironment.GetGame().GetTelevisionManager().TelevisionList.ToList())
             {
                 if (tele.YouTubeId != videoId)
                     continue;

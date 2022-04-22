@@ -22,10 +22,10 @@ namespace Plus.Core.Settings
             if (_settings.Count > 0)
                 _settings.Clear();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `server_settings`");
-                DataTable table = dbClient.GetTable();
+                var table = dbClient.GetTable();
 
                 if (table != null)
                 {

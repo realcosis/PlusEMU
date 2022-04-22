@@ -29,7 +29,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 return;
             }
 
-            Habbo habbo = PlusEnvironment.GetHabboByUsername(@params[1]);
+            var habbo = PlusEnvironment.GetHabboByUsername(@params[1]);
             if (habbo == null)
             {
                 session.SendWhisper("An error occoured whilst finding that user in the database.");
@@ -48,7 +48,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 if (time > 600 && !session.GetHabbo().GetPermissions().HasRight("mod_mute_limit_override"))
                     time = 600;
 
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
                     dbClient.RunQuery("UPDATE `users` SET `time_muted` = '" + time + "' WHERE `id` = '" + habbo.Id + "' LIMIT 1");
                 }

@@ -14,7 +14,7 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.Furni
             WriteInteger(page);//Page?
 
             WriteInteger(items.Count);
-            foreach (Item item in items)
+            foreach (var item in items)
             {
                 WriteItem(item);
             }

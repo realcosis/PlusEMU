@@ -7,13 +7,13 @@ namespace Plus.Communication.Packets.Incoming.Navigator
     {
         public void Parse(HabboHotel.GameClients.GameClient session, ClientPacket packet)
         {
-            int roomId = packet.PopInt();
+            var roomId = packet.PopInt();
 
-            if (!RoomFactory.TryGetData(roomId, out RoomData data))
+            if (!RoomFactory.TryGetData(roomId, out var data))
                 return;
             
-            bool enter = packet.PopInt() == 1;
-            bool forward = packet.PopInt() == 1;
+            var enter = packet.PopInt() == 1;
+            var forward = packet.PopInt() == 1;
 
             session.SendPacket(new GetGuestRoomResultComposer(session, data, enter, forward));
         }

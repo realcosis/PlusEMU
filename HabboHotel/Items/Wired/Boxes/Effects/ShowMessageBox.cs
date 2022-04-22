@@ -32,8 +32,8 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            string message = packet.PopString();
+            var unknown = packet.PopInt();
+            var message = packet.PopString();
 
             StringData = message;
         }
@@ -43,15 +43,15 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (@params == null || @params.Length == 0)
                 return false;
 
-            Habbo player = (Habbo)@params[0];
+            var player = (Habbo)@params[0];
             if (player == null || player.GetClient() == null || string.IsNullOrWhiteSpace(StringData))
                 return false;
 
-            RoomUser user = player.CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(player.Username);
+            var user = player.CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(player.Username);
             if (user == null)
                 return false;
 
-            string message = StringData;
+            var message = StringData;
 
             if (StringData.Contains("%USERNAME%"))
                 message = message.Replace("%USERNAME%", player.Username);

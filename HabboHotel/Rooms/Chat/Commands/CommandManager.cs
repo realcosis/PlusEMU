@@ -59,7 +59,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands
 
             if (message == _prefix + "commands")
             {
-                StringBuilder list = new StringBuilder();
+                var list = new StringBuilder();
                 list.Append("This is the list of commands you have available:\n");
                 foreach (var cmdList in _commands.ToList())
                 {
@@ -76,7 +76,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands
             }
 
             message = message.Substring(1);
-            string[] split = message.Split(' ');
+            var split = message.Split(' ');
 
             if (split.Length == 0)
                 return false;
@@ -248,7 +248,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands
         public static string MergeParams(string[] @params, int start)
         {
             var merged = new StringBuilder();
-            for (int i = start; i < @params.Length; i++)
+            for (var i = start; i < @params.Length; i++)
             {
                 if (i > start)
                     merged.Append(" ");
@@ -260,7 +260,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands
 
         public void LogCommand(int userId, string data, string machineId)
         {
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("INSERT INTO `logs_client_staff` (`user_id`,`data_string`,`machine_id`, `timestamp`) VALUES (@UserId,@Data,@MachineId,@Timestamp)");
             dbClient.AddParameter("UserId", userId);
             dbClient.AddParameter("Data", data);

@@ -11,12 +11,12 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Settings
             if (!session.GetHabbo().InRoom)
                 return;
 
-            Room instance = session.GetHabbo().CurrentRoom;
+            var instance = session.GetHabbo().CurrentRoom;
             if (instance == null || !instance.CheckRights(session, true))
                 return;
 
-            int userId = packet.PopInt();
-            int roomId = packet.PopInt();
+            var userId = packet.PopInt();
+            var roomId = packet.PopInt();
 
             if (instance.GetBans().IsBanned(userId))
             {

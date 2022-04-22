@@ -21,7 +21,7 @@ namespace Plus.HabboHotel.Users.Navigator.SavedSearches
                 _savedSearches.Clear();
 
             DataTable getSearches = null;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT `id`,`filter`,`search_code` FROM `user_saved_searches` WHERE `user_id` = @UserId");
             dbClient.AddParameter("UserId", habbo.Id);
             getSearches = dbClient.GetTable();

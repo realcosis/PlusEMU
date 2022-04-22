@@ -33,9 +33,9 @@ namespace Plus.Communication.Rcon.Commands
             if (data.Length == 0 || string.IsNullOrEmpty(data))
                 return false;
 
-            string cmd = data.Split(Convert.ToChar(1))[0];
+            var cmd = data.Split(Convert.ToChar(1))[0];
 
-            if (_commands.TryGetValue(cmd.ToLower(), out IRconCommand command))
+            if (_commands.TryGetValue(cmd.ToLower(), out var command))
             {
                 string[] parameters = null;
                 if (data.Split(Convert.ToChar(1))[1] != null)

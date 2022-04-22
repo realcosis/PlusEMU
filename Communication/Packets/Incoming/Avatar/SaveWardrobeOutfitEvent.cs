@@ -8,12 +8,12 @@ namespace Plus.Communication.Packets.Incoming.Avatar
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int slotId = packet.PopInt();
-            string look = packet.PopString();
-            string gender = packet.PopString();
+            var slotId = packet.PopInt();
+            var look = packet.PopString();
+            var gender = packet.PopString();
 
             look = PlusEnvironment.GetFigureManager().ProcessFigure(look, gender, session.GetHabbo().GetClothing().GetClothingParts, true);
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT null FROM `user_wardrobe` WHERE `user_id` = @id AND `slot_id` = @slot");
             dbClient.AddParameter("id", session.GetHabbo().Id);
             dbClient.AddParameter("slot", slotId);

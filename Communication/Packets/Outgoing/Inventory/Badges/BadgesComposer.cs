@@ -11,10 +11,10 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.Badges
         public BadgesComposer(GameClient session)
             : base(ServerPacketHeader.BadgesMessageComposer)
         {
-            List<Badge> equippedBadges = new List<Badge>();
+            var equippedBadges = new List<Badge>();
 
             WriteInteger(session.GetHabbo().GetBadgeComponent().Count);
-            foreach (Badge badge in session.GetHabbo().GetBadgeComponent().GetBadges().ToList())
+            foreach (var badge in session.GetHabbo().GetBadgeComponent().GetBadges().ToList())
             {
                 WriteInteger(1);
                 WriteString(badge.Code);
@@ -24,7 +24,7 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.Badges
             }
 
             WriteInteger(equippedBadges.Count);
-            foreach (Badge badge in equippedBadges)
+            foreach (var badge in equippedBadges)
             {
                 WriteInteger(badge.Slot);
                 WriteString(badge.Code);

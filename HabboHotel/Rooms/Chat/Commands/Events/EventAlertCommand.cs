@@ -44,7 +44,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Events
                     }
                     else
                     {
-                        TimeSpan timeSpan = DateTime.Now - PlusEnvironment.LastEvent;
+                        var timeSpan = DateTime.Now - PlusEnvironment.LastEvent;
                         if (timeSpan.Hours >= 1)
                         {
                             PlusEnvironment.GetGame().GetClientManager().SendPacket(new BroadcastMessageAlertComposer(":follow " + session.GetHabbo().Username + " for events! win prizes!\r\n- " + session.GetHabbo().Username, ""), "");
@@ -52,7 +52,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Events
                         }
                         else
                         {
-                            int num = checked(60 - timeSpan.Minutes);
+                            var num = checked(60 - timeSpan.Minutes);
                             session.SendWhisper("Event Cooldown! " + num + " minutes left until another event can be hosted.", 0);
                         }
                     }

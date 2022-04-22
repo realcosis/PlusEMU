@@ -25,25 +25,22 @@ namespace Plus.HabboHotel.Bots
         {
             if (_responses.Count > 0)
                 _responses.Clear();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("SELECT `bot_ai`,`chat_keywords`,`response_text`,`response_mode`,`response_beverage` FROM `bots_responses`");
+            var data = dbClient.GetTable();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            if (data != null)
             {
-                dbClient.SetQuery("SELECT `bot_ai`,`chat_keywords`,`response_text`,`response_mode`,`response_beverage` FROM `bots_responses`");
-                DataTable data = dbClient.GetTable();
-
-                if (data != null)
+                foreach (DataRow row in data.Rows)
                 {
-                    foreach (DataRow row in data.Rows)
-                    {
-                        _responses.Add(new BotResponse(Convert.ToString(row["bot_ai"]), Convert.ToString(row["chat_keywords"]), Convert.ToString(row["response_text"]), row["response_mode"].ToString(), Convert.ToString(row["response_beverage"])));
-                    }
+                    _responses.Add(new BotResponse(Convert.ToString(row["bot_ai"]), Convert.ToString(row["chat_keywords"]), Convert.ToString(row["response_text"]), row["response_mode"].ToString(), Convert.ToString(row["response_beverage"])));
                 }
             }
         }
 
         public BotResponse GetResponse(BotAiType type, string message)
         {
-            foreach (BotResponse response in _responses.Where(x => x.AiType == type).ToList())
+            foreach (var response in _responses.Where(x => x.AiType == type).ToList())
             {
                 if (response.KeywordMatched(message))
                 {

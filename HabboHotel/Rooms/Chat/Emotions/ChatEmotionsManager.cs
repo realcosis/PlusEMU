@@ -52,7 +52,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Emotions
         /// <returns></returns>
         public int GetEmotionsForText(string text)
         {
-            foreach (KeyValuePair<string, ChatEmotions> kvp in _emotions)
+            foreach (var kvp in _emotions)
             {
                 if (text.ToLower().Contains(kvp.Key.ToLower()))
                 {

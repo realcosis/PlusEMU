@@ -35,7 +35,7 @@ namespace Plus.HabboHotel.Cache
                 if (TryGetUser(id, out user))
                     return user;
 
-            GameClient client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(id);
+            var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(id);
             if (client != null)
                 if (client.GetHabbo() != null)
                 {
@@ -43,21 +43,17 @@ namespace Plus.HabboHotel.Cache
                     _usersCached.TryAdd(id, user);
                     return user;
                 }
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("SELECT `username`, `motto`, `look` FROM users WHERE id = @id LIMIT 1");
+            dbClient.AddParameter("id", id);
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            var dRow = dbClient.GetRow();
+
+            if (dRow != null)
             {
-                dbClient.SetQuery("SELECT `username`, `motto`, `look` FROM users WHERE id = @id LIMIT 1");
-                dbClient.AddParameter("id", id);
-
-                DataRow dRow = dbClient.GetRow();
-
-                if (dRow != null)
-                {
-                    user = new UserCache(id, dRow["username"].ToString(), dRow["motto"].ToString(), dRow["look"].ToString());
-                    _usersCached.TryAdd(id, user);
-                }
+                user = new UserCache(id, dRow["username"].ToString(), dRow["motto"].ToString(), dRow["look"].ToString());
+                _usersCached.TryAdd(id, user);
             }
-
             return user;
         }
 

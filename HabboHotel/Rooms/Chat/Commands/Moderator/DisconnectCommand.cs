@@ -27,7 +27,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 return;
             }
 
-            GameClient targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+            var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
             if (targetClient == null)
             {
                 session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");

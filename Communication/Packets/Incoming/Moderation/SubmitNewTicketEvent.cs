@@ -19,7 +19,7 @@ namespace Plus.Communication.Packets.Incoming.Moderation
             // Run a quick check to see if we have any existing tickets.
             if (PlusEnvironment.GetGame().GetModerationManager().UserHasTickets(session.GetHabbo().Id))
             {
-                ModerationTicket pendingTicket = PlusEnvironment.GetGame().GetModerationManager().GetTicketBySenderId(session.GetHabbo().Id);
+                var pendingTicket = PlusEnvironment.GetGame().GetModerationManager().GetTicketBySenderId(session.GetHabbo().Id);
                 if (pendingTicket != null)
                 {
                     session.SendPacket(new CallForHelpPendingCallsComposer(pendingTicket));
@@ -27,32 +27,32 @@ namespace Plus.Communication.Packets.Incoming.Moderation
                 }
             }
 
-            List<string> chats = new List<string>();
+            var chats = new List<string>();
 
-            string message = StringCharFilter.Escape(packet.PopString().Trim());
-            int category = packet.PopInt();
-            int reportedUserId = packet.PopInt();
-            int type = packet.PopInt();// Unsure on what this actually is.
+            var message = StringCharFilter.Escape(packet.PopString().Trim());
+            var category = packet.PopInt();
+            var reportedUserId = packet.PopInt();
+            var type = packet.PopInt();// Unsure on what this actually is.
 
-            Habbo reportedUser = PlusEnvironment.GetHabboById(reportedUserId);
+            var reportedUser = PlusEnvironment.GetHabboById(reportedUserId);
             if (reportedUser == null)
             {
                 // User doesn't exist.
                 return;
             }
 
-            int messagecount = packet.PopInt();
-            for (int i = 0; i < messagecount; i++)
+            var messagecount = packet.PopInt();
+            for (var i = 0; i < messagecount; i++)
             {
                 packet.PopInt();
                 chats.Add(packet.PopString());
             }
 
-            ModerationTicket ticket = new ModerationTicket(1, type, category, UnixTimestamp.GetNow(), 1, session.GetHabbo(), reportedUser, message, session.GetHabbo().CurrentRoom, chats);
+            var ticket = new ModerationTicket(1, type, category, UnixTimestamp.GetNow(), 1, session.GetHabbo(), reportedUser, message, session.GetHabbo().CurrentRoom, chats);
             if (!PlusEnvironment.GetGame().GetModerationManager().TryAddTicket(ticket))
                 return;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 // TODO: Come back to this.
                 /*dbClient.SetQuery("INSERT INTO `moderation_tickets` (`score`,`type`,`status`,`sender_id`,`reported_id`,`moderator_id`,`message`,`room_id`,`room_name`,`timestamp`) VALUES (1, '" + Category + "', 'open', '" + Session.GetHabbo().Id + "', '" + ReportedUserId + "', '0', @message, '0', '', '" + PlusEnvironment.GetUnixTimestamp() + "')");

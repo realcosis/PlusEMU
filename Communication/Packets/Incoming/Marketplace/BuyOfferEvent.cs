@@ -20,10 +20,10 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int offerId = packet.PopInt();
+            var offerId = packet.PopInt();
 
             DataRow row;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `state`,`timestamp`,`total_price`,`extra_data`,`item_id`,`furni_id`,`user_id`,`limited_number`,`limited_stack` FROM `catalog_marketplace_offers` WHERE `offer_id` = @OfferId LIMIT 1");
                 dbClient.AddParameter("OfferId", offerId);
@@ -50,7 +50,7 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
                 return;
             }
 
-            if (!PlusEnvironment.GetGame().GetItemManager().GetItem(Convert.ToInt32(row["item_id"]), out ItemData item))
+            if (!PlusEnvironment.GetGame().GetItemManager().GetItem(Convert.ToInt32(row["item_id"]), out var item))
             {
                 session.SendNotification("Item isn't in the hotel anymore.");
                 ReloadOffers(session);
@@ -74,7 +74,7 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
                 session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
 
 
-                Item giveItem = ItemFactory.CreateSingleItem(item, session.GetHabbo(), Convert.ToString(row["extra_data"]), Convert.ToString(row["extra_data"]), Convert.ToInt32(row["furni_id"]), Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]));
+                var giveItem = ItemFactory.CreateSingleItem(item, session.GetHabbo(), Convert.ToString(row["extra_data"]), Convert.ToString(row["extra_data"]), Convert.ToInt32(row["furni_id"]), Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]));
                 if (giveItem != null)
                 {
                     session.GetHabbo().GetInventoryComponent().TryAddItem(giveItem);
@@ -84,7 +84,7 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
                     session.SendPacket(new FurniListAddComposer(giveItem));
                     session.SendPacket(new FurniListUpdateComposer());
                 }
-                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                 dbClient.RunQuery("UPDATE `catalog_marketplace_offers` SET `state` = '2' WHERE `offer_id` = '" + offerId + "' LIMIT 1");
 
                 int id;
@@ -99,8 +99,8 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
 
                 if (PlusEnvironment.GetGame().GetCatalog().GetMarketplace().MarketAverages.ContainsKey(item.SpriteId) && PlusEnvironment.GetGame().GetCatalog().GetMarketplace().MarketCounts.ContainsKey(item.SpriteId))
                 {
-                    int num3 = PlusEnvironment.GetGame().GetCatalog().GetMarketplace().MarketCounts[item.SpriteId];
-                    int num4 = (PlusEnvironment.GetGame().GetCatalog().GetMarketplace().MarketAverages[item.SpriteId] += Convert.ToInt32(row["total_price"]));
+                    var num3 = PlusEnvironment.GetGame().GetCatalog().GetMarketplace().MarketCounts[item.SpriteId];
+                    var num4 = (PlusEnvironment.GetGame().GetCatalog().GetMarketplace().MarketAverages[item.SpriteId] += Convert.ToInt32(row["total_price"]));
 
                     PlusEnvironment.GetGame().GetCatalog().GetMarketplace().MarketAverages.Remove(item.SpriteId);
                     PlusEnvironment.GetGame().GetCatalog().GetMarketplace().MarketAverages.Add(item.SpriteId, num4);
@@ -123,14 +123,14 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
 
         private void ReloadOffers(GameClient session)
         {
-            int minCost = -1;
-            int maxCost = -1;
-            string searchQuery = "";
-            int filterMode = 1;
+            var minCost = -1;
+            var maxCost = -1;
+            var searchQuery = "";
+            var filterMode = 1;
 
 
             DataTable table = null;
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             string str;
             builder.Append("WHERE `state` = '1' AND `timestamp` >= " + PlusEnvironment.GetGame().GetCatalog().GetMarketplace().FormatTimestampString());
             if (minCost >= 0)
@@ -152,7 +152,7 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
                     break;
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
 
                 dbClient.SetQuery("SELECT `offer_id`,`item_type`,`sprite_id`,`total_price`,`limited_number`,`limited_stack` FROM `catalog_marketplace_offers` " + builder.ToString() + " " + str + " LIMIT 500");
@@ -172,17 +172,17 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
                 {
                     if (!PlusEnvironment.GetGame().GetCatalog().GetMarketplace().MarketItemKeys.Contains(Convert.ToInt32(row["offer_id"])))
                     {
-                        MarketOffer item = new MarketOffer(Convert.ToInt32(row["offer_id"]), Convert.ToInt32(row["sprite_id"]), Convert.ToInt32(row["total_price"]), int.Parse(row["item_type"].ToString()), Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]));
+                        var item = new MarketOffer(Convert.ToInt32(row["offer_id"]), Convert.ToInt32(row["sprite_id"]), Convert.ToInt32(row["total_price"]), int.Parse(row["item_type"].ToString()), Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]));
                         PlusEnvironment.GetGame().GetCatalog().GetMarketplace().MarketItemKeys.Add(Convert.ToInt32(row["offer_id"]));
                         PlusEnvironment.GetGame().GetCatalog().GetMarketplace().MarketItems.Add(item);
                     }
                 }
             }
 
-            Dictionary<int, MarketOffer> dictionary = new Dictionary<int, MarketOffer>();
-            Dictionary<int, int> dictionary2 = new Dictionary<int, int>();
+            var dictionary = new Dictionary<int, MarketOffer>();
+            var dictionary2 = new Dictionary<int, int>();
 
-            foreach (MarketOffer item in PlusEnvironment.GetGame().GetCatalog().GetMarketplace().MarketItems)
+            foreach (var item in PlusEnvironment.GetGame().GetCatalog().GetMarketplace().MarketItems)
             {
                 if (dictionary.ContainsKey(item.SpriteId))
                 {
@@ -192,7 +192,7 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
                         dictionary.Add(item.SpriteId, item);
                     }
 
-                    int num = dictionary2[item.SpriteId];
+                    var num = dictionary2[item.SpriteId];
                     dictionary2.Remove(item.SpriteId);
                     dictionary2.Add(item.SpriteId, num + 1);
                 }

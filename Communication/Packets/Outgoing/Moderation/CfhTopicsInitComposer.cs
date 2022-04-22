@@ -11,11 +11,11 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
         {
 
             WriteInteger(userActionPresets.Count);
-            foreach (KeyValuePair<string, List<ModerationPresetActions>> cat in userActionPresets.ToList())
+            foreach (var cat in userActionPresets.ToList())
             {
                 WriteString(cat.Key);
                 WriteInteger(cat.Value.Count);
-                foreach (ModerationPresetActions preset in cat.Value.ToList())
+                foreach (var preset in cat.Value.ToList())
                 {
                     WriteString(preset.Caption);
                     WriteInteger(preset.Id);

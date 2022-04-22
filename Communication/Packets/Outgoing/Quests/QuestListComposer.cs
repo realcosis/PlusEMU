@@ -37,9 +37,9 @@ namespace Plus.Communication.Packets.Outgoing.Quests
             if (message == null || session == null)
                 return;
 
-            int amountInCat = PlusEnvironment.GetGame().GetQuestManager().GetAmountOfQuestsInCategory(category);
-            int number = quest == null ? amountInCat : quest.Number - 1;
-            int userProgress = quest == null ? 0 : session.GetHabbo().GetQuestProgress(quest.Id);
+            var amountInCat = PlusEnvironment.GetGame().GetQuestManager().GetAmountOfQuestsInCategory(category);
+            var number = quest == null ? amountInCat : quest.Number - 1;
+            var userProgress = quest == null ? 0 : session.GetHabbo().GetQuestProgress(quest.Id);
 
             if (quest != null && quest.IsCompleted(userProgress))
                 number++;

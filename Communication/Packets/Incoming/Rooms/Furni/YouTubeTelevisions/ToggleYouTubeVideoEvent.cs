@@ -7,8 +7,8 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.YouTubeTelevisions
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int itemId = packet.PopInt();//Item Id
-            string videoId = packet.PopString(); //Video ID
+            var itemId = packet.PopInt();//Item Id
+            var videoId = packet.PopString(); //Video ID
 
             session.SendPacket(new GetYouTubeVideoComposer(itemId, videoId));
         }

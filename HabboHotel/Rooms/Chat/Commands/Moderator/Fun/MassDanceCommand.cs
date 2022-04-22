@@ -30,17 +30,17 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
                 return;
             }
 
-            int danceId = Convert.ToInt32(@params[1]);
+            var danceId = Convert.ToInt32(@params[1]);
             if (danceId < 0 || danceId > 4)
             {
                 session.SendWhisper("Please enter a dance ID. (1-4)");
                 return;
             }
 
-            List<RoomUser> users = room.GetRoomUserManager().GetRoomUsers();
+            var users = room.GetRoomUserManager().GetRoomUsers();
             if (users.Count > 0)
             {
-                foreach (RoomUser u in users.ToList())
+                foreach (var u in users.ToList())
                 {
                     if (u == null)
                         continue;

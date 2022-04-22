@@ -41,12 +41,12 @@ namespace Plus.Core.FigureData
                 _setTypes.Clear();
 
 
-            string projectSolutionPath = Directory.GetCurrentDirectory();
+            var projectSolutionPath = Directory.GetCurrentDirectory();
 
-            XmlDocument xDoc = new XmlDocument();
+            var xDoc = new XmlDocument();
             xDoc.Load(projectSolutionPath + "//Config//figuredata.xml");
 
-            XmlNodeList colors = xDoc.GetElementsByTagName("colors");
+            var colors = xDoc.GetElementsByTagName("colors");
             foreach (XmlNode node in colors)
             {
                 foreach (XmlNode child in node.ChildNodes)
@@ -60,7 +60,7 @@ namespace Plus.Core.FigureData
                 }
             }
 
-            XmlNodeList sets = xDoc.GetElementsByTagName("sets");
+            var sets = xDoc.GetElementsByTagName("sets");
             foreach (XmlNode node in sets)
             {
                 foreach (XmlNode child in node.ChildNodes)
@@ -95,21 +95,21 @@ namespace Plus.Core.FigureData
             figure = figure.ToLower();
             gender = gender.ToUpper();
 
-            string rebuildFigure = string.Empty;
+            var rebuildFigure = string.Empty;
 
             #region Check clothing, colors & Habbo Club
-            string[] figureParts = figure.Split('.');
-            foreach (string part in figureParts.ToList())
+            var figureParts = figure.Split('.');
+            foreach (var part in figureParts.ToList())
             {
-                string type = part.Split('-')[0];
+                var type = part.Split('-')[0];
 
-                if (_setTypes.TryGetValue(type, out FigureSet figureSet))
+                if (_setTypes.TryGetValue(type, out var figureSet))
                 {
-                    int partId = Convert.ToInt32(part.Split('-')[1]);
-                    int colorId = 0;
-                    int secondColorId = 0;
+                    var partId = Convert.ToInt32(part.Split('-')[1]);
+                    var colorId = 0;
+                    var secondColorId = 0;
 
-                    if (figureSet.Sets.TryGetValue(partId, out Set set))
+                    if (figureSet.Sets.TryGetValue(partId, out var set))
                     {
                         #region Gender Check
                         if (set.Gender != gender && set.Gender != "U")
@@ -131,7 +131,7 @@ namespace Plus.Core.FigureData
                         {
                             //Couldn't think of a better way to split the colors, if I looped the parts I still have to remove Type-PartId, then loop color 1 & color 2. Meh
 
-                            int splitterCounter = part.Count(x => x == '-');
+                            var splitterCounter = part.Count(x => x == '-');
                             if (splitterCounter == 2 || splitterCounter == 3)
                             {
                                 #region First Color
@@ -141,7 +141,7 @@ namespace Plus.Core.FigureData
                                     {
                                         colorId = Convert.ToInt32(part.Split('-')[2]);
 
-                                        Palette palette = GetPalette(colorId);
+                                        var palette = GetPalette(colorId);
                                         if (palette != null && colorId != 0)
                                         {
                                             if (figureSet.PalletId != palette.Id)
@@ -171,7 +171,7 @@ namespace Plus.Core.FigureData
                                     {
                                         secondColorId = Convert.ToInt32(part.Split('-')[3]);
 
-                                        Palette palette = GetPalette(secondColorId);
+                                        var palette = GetPalette(secondColorId);
                                         if (palette != null && secondColorId != 0)
                                         {
                                             if (figureSet.PalletId != palette.Id)
@@ -194,7 +194,7 @@ namespace Plus.Core.FigureData
                         }
                         else
                         {
-                            string[] ignore = new string[] { "ca", "wa" };
+                            var ignore = new string[] { "ca", "wa" };
 
                             if (ignore.Contains(type))
                             {
@@ -225,20 +225,20 @@ namespace Plus.Core.FigureData
             #endregion
 
             #region Check Required Clothing
-            foreach (string requirement in _requirements)
+            foreach (var requirement in _requirements)
             {
                 if (!rebuildFigure.Contains(requirement))
                 {
                     if (requirement == "ch" && gender == "M")
                         continue;
 
-                    if (_setTypes.TryGetValue(requirement, out FigureSet figureSet))
+                    if (_setTypes.TryGetValue(requirement, out var figureSet))
                     {
-                        Set set = figureSet.Sets.FirstOrDefault(x => x.Value.Gender == gender || x.Value.Gender == "U").Value;
+                        var set = figureSet.Sets.FirstOrDefault(x => x.Value.Gender == gender || x.Value.Gender == "U").Value;
                         if (set != null)
                         {
-                            int partId = figureSet.Sets.FirstOrDefault(x => x.Value.Gender == gender || x.Value.Gender == "U").Value.Id;
-                            int colorId = GetRandomColor(figureSet.PalletId);
+                            var partId = figureSet.Sets.FirstOrDefault(x => x.Value.Gender == gender || x.Value.Gender == "U").Value.Id;
+                            var colorId = GetRandomColor(figureSet.PalletId);
 
                             rebuildFigure = rebuildFigure + requirement + "-" + partId + "-" + colorId + ".";
                         }
@@ -250,25 +250,25 @@ namespace Plus.Core.FigureData
             #region Check Purcashable Clothing
             if (clothingParts != null)
             {
-                ICollection<ClothingItem> purchasableParts = PlusEnvironment.GetGame().GetCatalog().GetClothingManager().GetClothingAllParts;
+                var purchasableParts = PlusEnvironment.GetGame().GetCatalog().GetClothingManager().GetClothingAllParts;
 
                 figureParts = rebuildFigure.TrimEnd('.').Split('.');
-                foreach (string part in figureParts.ToList())
+                foreach (var part in figureParts.ToList())
                 {
-                    int partId = Convert.ToInt32(part.Split('-')[1]);
+                    var partId = Convert.ToInt32(part.Split('-')[1]);
                     if (purchasableParts.Count(x => x.PartIds.Contains(partId)) > 0)
                     {
                         if (clothingParts.Count(x => x.PartId == partId)== 0)
                         {
-                            string type = part.Split('-')[0];
+                            var type = part.Split('-')[0];
 
-                            if (_setTypes.TryGetValue(type, out FigureSet figureSet))
+                            if (_setTypes.TryGetValue(type, out var figureSet))
                             {
-                                Set set = figureSet.Sets.FirstOrDefault(x => x.Value.Gender == gender || x.Value.Gender == "U").Value;
+                                var set = figureSet.Sets.FirstOrDefault(x => x.Value.Gender == gender || x.Value.Gender == "U").Value;
                                 if (set != null)
                                 {
                                     partId = figureSet.Sets.FirstOrDefault(x => x.Value.Gender == gender || x.Value.Gender == "U").Value.Id;
-                                    int colorId = GetRandomColor(figureSet.PalletId);
+                                    var colorId = GetRandomColor(figureSet.PalletId);
 
                                     rebuildFigure = rebuildFigure + type + "-" + partId + "-" + colorId + ".";
                                 }

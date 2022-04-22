@@ -32,16 +32,16 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            string unknown2 = packet.PopString();
+            var unknown = packet.PopInt();
+            var unknown2 = packet.PopString();
 
             if (SetItems.Count > 0)
                 SetItems.Clear();
 
-            int furniCount = packet.PopInt();
-            for (int i = 0; i < furniCount; i++)
+            var furniCount = packet.PopInt();
+            for (var i = 0; i < furniCount; i++)
             {
-                Item selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+                var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
                 if (selectedItem != null)
                     SetItems.TryAdd(selectedItem.Id, selectedItem);
             }
@@ -49,13 +49,13 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
 
         public bool Execute(params object[] @params)
         {
-            foreach (Item item in SetItems.Values.ToList())
+            foreach (var item in SetItems.Values.ToList())
             {
                 if (item == null || !Instance.GetRoomItemHandler().GetFloor.Contains(item))
                     continue;
 
-                bool noFurni = false;
-                List<Item> items = Instance.GetGameMap().GetAllRoomItemForSquare(item.GetX, item.GetY);
+                var noFurni = false;
+                var items = Instance.GetGameMap().GetAllRoomItemForSquare(item.GetX, item.GetY);
                 if (items.Count == 0)
                     noFurni = true;
 

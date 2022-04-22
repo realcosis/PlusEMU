@@ -10,7 +10,7 @@ namespace Plus.Communication.Packets.Outgoing.Catalog
             : base(ServerPacketHeader.GroupFurniConfigMessageComposer)
         {
             WriteInteger(groups.Count);
-            foreach (Group group in groups)
+            foreach (var group in groups)
             {
                 WriteInteger(group.Id);
                 WriteString(group.Name);

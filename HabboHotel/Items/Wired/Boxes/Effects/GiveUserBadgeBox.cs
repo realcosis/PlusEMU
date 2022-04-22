@@ -33,8 +33,8 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            string badge = packet.PopString();
+            var unknown = packet.PopInt();
+            var badge = packet.PopString();
 
             StringData = badge;
         }
@@ -44,15 +44,15 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (@params == null || @params.Length == 0)
                 return false;
 
-            Habbo owner = PlusEnvironment.GetHabboById(Item.UserId);
+            var owner = PlusEnvironment.GetHabboById(Item.UserId);
             if (owner == null || !owner.GetPermissions().HasRight("room_item_wired_rewards"))
                 return false;
 
-            Habbo player = (Habbo)@params[0];
+            var player = (Habbo)@params[0];
             if (player == null || player.GetClient() == null)
                 return false;
 
-            RoomUser user = player.CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(player.Username);
+            var user = player.CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(player.Username);
             if (user == null)
                 return false;
 

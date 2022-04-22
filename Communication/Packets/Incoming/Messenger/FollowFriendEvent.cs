@@ -12,11 +12,11 @@ namespace Plus.Communication.Packets.Incoming.Messenger
             if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
                 return;
 
-            int buddyId = packet.PopInt();
+            var buddyId = packet.PopInt();
             if (buddyId == 0 || buddyId == session.GetHabbo().Id)
                 return;
 
-            GameClient client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(buddyId);
+            var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(buddyId);
             if (client == null || client.GetHabbo() == null)
                 return;
 

@@ -6,8 +6,8 @@ namespace Plus.Communication.Packets.Incoming.Misc
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            string gordanPath = packet.PopString();
-            string externalVariables = packet.PopString();
+            var gordanPath = packet.PopString();
+            var externalVariables = packet.PopString();
         }
     }
 }

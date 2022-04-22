@@ -8,7 +8,7 @@
             WriteBoolean(true);
             WriteInteger(1);
             WriteInteger(10);
-            for (int i = 3372; i < 3382;)
+            for (var i = 3372; i < 3382;)
             {
                 WriteInteger(i);
                 i++;
@@ -34,7 +34,7 @@
             WriteInteger(9);
             WriteInteger(10);
             WriteInteger(7);
-            for (int i = 187; i < 194;)
+            for (var i = 187; i < 194;)
             {
                 WriteInteger(i);
                 i++;

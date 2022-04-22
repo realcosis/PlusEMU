@@ -38,7 +38,7 @@ namespace Plus.HabboHotel.Rooms
 
                 Heightmap = heightmap.ToLower();
 
-                string[] tmpHeightmap = heightmap.Split(Convert.ToChar(13));
+                var tmpHeightmap = heightmap.Split(Convert.ToChar(13));
 
                 MapSizeX = tmpHeightmap[0].Length;
                 MapSizeY = tmpHeightmap.Length;
@@ -48,14 +48,14 @@ namespace Plus.HabboHotel.Rooms
                 SqFloorHeight = new short[MapSizeX, MapSizeY];
                 SqSeatRot = new byte[MapSizeX, MapSizeY];
 
-                for (int y = 0; y < MapSizeY; y++)
+                for (var y = 0; y < MapSizeY; y++)
                 {
-                    string line = tmpHeightmap[y];
+                    var line = tmpHeightmap[y];
                     line = line.Replace("\r", "");
                     line = line.Replace("\n", "");
 
-                    int x = 0;
-                    foreach (char square in line)
+                    var x = 0;
+                    foreach (var square in line)
                     {
                         if (square == 'x')
                         {

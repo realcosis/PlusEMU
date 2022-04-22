@@ -67,7 +67,7 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
 
             if (ExitTeleports.Count > 0)
             {
-                foreach (Item exitTile in ExitTeleports.Values.ToList())
+                foreach (var exitTile in ExitTeleports.Values.ToList())
                 {
                     if (exitTile.ExtraData == "0" || String.IsNullOrEmpty(exitTile.ExtraData))
                         exitTile.ExtraData = "1";
@@ -89,7 +89,7 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
 
             if (ExitTeleports.Count > 0)
             {
-                foreach (Item exitTile in ExitTeleports.Values.ToList())
+                foreach (var exitTile in ExitTeleports.Values.ToList())
                 {
                     if (exitTile.ExtraData == "1" || String.IsNullOrEmpty(exitTile.ExtraData))
                         exitTile.ExtraData = "0";
@@ -98,8 +98,8 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
                 }
             }
 
-            Team winners = _room.GetGameManager().GetWinningTeam();
-            foreach (RoomUser user in _room.GetRoomUserManager().GetUserList().ToList())
+            var winners = _room.GetGameManager().GetWinningTeam();
+            foreach (var user in _room.GetRoomUserManager().GetUserList().ToList())
             {
                 user.FreezeLives = 0;
                 if (user.Team == winners)
@@ -111,10 +111,10 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
 
                 if (ExitTeleports.Count > 0)
                 {
-                    Item tile = _freezeTiles.Values.Where(x => x.GetX == user.X && x.GetY == user.Y).FirstOrDefault();
+                    var tile = _freezeTiles.Values.Where(x => x.GetX == user.X && x.GetY == user.Y).FirstOrDefault();
                     if (tile != null)
                     {
-                        Item exitTle = GetRandomExitTile();
+                        var exitTle = GetRandomExitTile();
 
                         if (exitTle != null)
                         {
@@ -160,7 +160,7 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
 
         public void ResetGame()
         {
-            foreach (Item item in _freezeTiles.Values.ToList())
+            foreach (var item in _freezeTiles.Values.ToList())
             {
                 if (!string.IsNullOrEmpty(item.ExtraData))
                 {
@@ -171,7 +171,7 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
                 }
             }
 
-            foreach (Item item in _freezeBlocks.Values)
+            foreach (var item in _freezeBlocks.Values)
             {
                 if (!string.IsNullOrEmpty(item.ExtraData))
                 {
@@ -187,7 +187,7 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
             if (!_gameStarted || user.Team == Team.None)
                 return;
 
-            foreach (Item item in _freezeTiles.Values.ToList())
+            foreach (var item in _freezeTiles.Values.ToList())
             {
                 if (user.GoalX == item.GetX && user.GoalY == item.GetY && user.FreezeInteracting)
                 {
@@ -214,7 +214,7 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
                 }
             }
 
-            foreach (Item item in _freezeBlocks.Values.ToList())
+            foreach (var item in _freezeBlocks.Values.ToList())
             {
                 if (user.GoalX == item.GetX && user.GoalY == item.GetY)
                 {
@@ -230,7 +230,7 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
         {
             _room.GetGameManager().Reset();
 
-            foreach (RoomUser user in _room.GetRoomUserManager().GetUserList().ToList())
+            foreach (var user in _room.GetRoomUserManager().GetUserList().ToList())
             {
                 if (user.IsBot || user.Team == Team.None || user.GetClient() == null)
                     continue;
@@ -288,7 +288,7 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
 
         private void HandleBanzaiFreezeItems(List<Item> items)
         {
-            foreach (Item item in items.ToList())
+            foreach (var item in items.ToList())
             {
                 switch (item.GetBaseItem().InteractionType)
                 {
@@ -318,7 +318,7 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
             if (!string.IsNullOrEmpty(item.ExtraData))
                 return;
 
-            int next = _random.Next(1, 14);
+            var next = _random.Next(1, 14);
 
             switch (next)
             {
@@ -434,7 +434,7 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
             if (_room == null)
                 return;
 
-            RoomUser user = _room.GetGameMap().GetRoomUsers(point).FirstOrDefault();
+            var user = _room.GetGameMap().GetRoomUsers(point).FirstOrDefault();
             if (user != null)
             {
                 if (user.IsWalking && user.SetX != point.X && user.SetY != point.Y)
@@ -459,7 +459,7 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
 
                 user.ApplyEffect(-1);
                 _room.GetGameManager().AddPointToTeam(user.Team, -10);
-                TeamManager t = _room.GetTeamManagerForFreeze();
+                var t = _room.GetTeamManagerForFreeze();
                 t.OnUserLeave(user);
                 user.Team = Team.None;
                 if (_exitTeleports.Count > 0)
@@ -494,11 +494,11 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
         {
             var totalItems = new List<Item>();
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 var point = new Point(x + i, y);
 
-                List<Item> items = GetItemsForSquare(point);
+                var items = GetItemsForSquare(point);
                 if (!SquareGotFreezeTile(items))
                     break;
 
@@ -509,11 +509,11 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
                     break;
             }
 
-            for (int i = 1; i < length; i++)
+            for (var i = 1; i < length; i++)
             {
                 var point = new Point(x, y + i);
 
-                List<Item> items = GetItemsForSquare(point);
+                var items = GetItemsForSquare(point);
                 if (!SquareGotFreezeTile(items))
                     break;
 
@@ -524,10 +524,10 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
                     break;
             }
 
-            for (int i = 1; i < length; i++)
+            for (var i = 1; i < length; i++)
             {
                 var point = new Point(x - i, y);
-                List<Item> items = GetItemsForSquare(point);
+                var items = GetItemsForSquare(point);
                 if (!SquareGotFreezeTile(items))
                     break;
 
@@ -538,10 +538,10 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
                     break;
             }
 
-            for (int i = 1; i < length; i++)
+            for (var i = 1; i < length; i++)
             {
                 var point = new Point(x, y - i);
-                List<Item> items = GetItemsForSquare(point);
+                var items = GetItemsForSquare(point);
                 if (!SquareGotFreezeTile(items))
                     break;
 
@@ -559,11 +559,11 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
         {
             var totalItems = new List<Item>();
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 var point = new Point(x + i, y + i);
 
-                List<Item> items = GetItemsForSquare(point);
+                var items = GetItemsForSquare(point);
                 if (!SquareGotFreezeTile(items))
                     break;
 
@@ -574,10 +574,10 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
                     break;
             }
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 var point = new Point(x - i, y - i);
-                List<Item> items = GetItemsForSquare(point);
+                var items = GetItemsForSquare(point);
                 if (!SquareGotFreezeTile(items))
                     break;
 
@@ -588,10 +588,10 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
                     break;
             }
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 var point = new Point(x - i, y + i);
-                List<Item> items = GetItemsForSquare(point);
+                var items = GetItemsForSquare(point);
                 if (!SquareGotFreezeTile(items))
                     break;
 
@@ -602,10 +602,10 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
                     break;
             }
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 var point = new Point(x + i, y - i);
-                List<Item> items = GetItemsForSquare(point);
+                var items = GetItemsForSquare(point);
                 if (!SquareGotFreezeTile(items))
                     break;
 
@@ -626,7 +626,7 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
 
         private static bool SquareGotFreezeTile(List<Item> items)
         {
-            foreach (Item item in items)
+            foreach (var item in items)
             {
                 if (item.GetBaseItem().InteractionType == InteractionType.FreezeTile)
                     return true;
@@ -637,7 +637,7 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
 
         private static bool SquareGotFreezeBlock(List<Item> items)
         {
-            foreach (Item item in items)
+            foreach (var item in items)
             {
                 if (item.GetBaseItem().InteractionType == InteractionType.FreezeTileBlock)
                     return true;

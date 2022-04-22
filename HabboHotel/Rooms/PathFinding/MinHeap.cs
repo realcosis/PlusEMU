@@ -42,9 +42,9 @@ namespace Plus.HabboHotel.Rooms.PathFinding
                 DoubleArray();
             }
             _array[_count - 1] = item;
-            int position = _count - 1;
+            var position = _count - 1;
 
-            int parentPosition = ((position - 1) >> 1);
+            var parentPosition = ((position - 1) >> 1);
 
             while (position > 0 && _array[parentPosition].CompareTo(_array[position]) > 0)
             {
@@ -90,8 +90,8 @@ namespace Plus.HabboHotel.Rooms.PathFinding
         {
             do
             {
-                int left = ((position << 1) + 1);
-                int right = left + 1;
+                var left = ((position << 1) + 1);
+                var right = left + 1;
                 int minPosition;
 
                 if (left < _count && _array[left].CompareTo(_array[position]) < 0)

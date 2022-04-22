@@ -18,21 +18,21 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Chat
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null)
                 return;
 
-            string message = StringCharFilter.Escape(packet.PopString());
+            var message = StringCharFilter.Escape(packet.PopString());
             if (message.Length > 100)
                 message = message.Substring(0, 100);
 
-            int colour = packet.PopInt();
+            var colour = packet.PopInt();
 
-            if (!PlusEnvironment.GetGame().GetChatManager().GetChatStyles().TryGetStyle(colour, out ChatStyle style) || style.RequiredRight.Length > 0 && !session.GetHabbo().GetPermissions().HasRight(style.RequiredRight))
+            if (!PlusEnvironment.GetGame().GetChatManager().GetChatStyles().TryGetStyle(colour, out var style) || style.RequiredRight.Length > 0 && !session.GetHabbo().GetPermissions().HasRight(style.RequiredRight))
                 colour = 0;
 
             user.UnIdle();
@@ -56,7 +56,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Chat
 
             if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
             {
-                if (user.IncrementAndCheckFlood(out int muteTime))
+                if (user.IncrementAndCheckFlood(out var muteTime))
                 {
                     session.SendPacket(new FloodControlComposer(muteTime));
                     return;

@@ -27,16 +27,16 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            string unknown2 = packet.PopString();
+            var unknown = packet.PopInt();
+            var unknown2 = packet.PopString();
 
             if (SetItems.Count > 0)
                 SetItems.Clear();
 
-            int furniCount = packet.PopInt();
-            for (int i = 0; i < furniCount; i++)
+            var furniCount = packet.PopInt();
+            for (var i = 0; i < furniCount; i++)
             {
-                Item selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+                var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
                 if (selectedItem != null)
                     SetItems.TryAdd(selectedItem.Id, selectedItem);
             }
@@ -47,19 +47,19 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
             if (@params.Length == 0)
                 return false;
 
-            Habbo player = (Habbo)@params[0];
+            var player = (Habbo)@params[0];
             if (player == null)
                 return false;
 
             if (player.CurrentRoom == null)
                 return false;
 
-            RoomUser user = player.CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(player.Username);
+            var user = player.CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(player.Username);
             if (user == null)
                 return false;
 
-            List<Item> itemsOnSquare = Instance.GetGameMap().GetAllRoomItemForSquare(user.X, user.Y);
-            foreach (Item item in itemsOnSquare.ToList())
+            var itemsOnSquare = Instance.GetGameMap().GetAllRoomItemForSquare(user.X, user.Y);
+            foreach (var item in itemsOnSquare.ToList())
             {
                 if (SetItems.ContainsKey(item.Id))
                     return false;

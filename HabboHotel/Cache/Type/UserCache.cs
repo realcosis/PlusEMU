@@ -19,7 +19,7 @@ namespace Plus.HabboHotel.Cache.Type
         }
         public bool IsExpired()
         {
-            TimeSpan cacheTime = DateTime.Now - AddedTime;
+            var cacheTime = DateTime.Now - AddedTime;
             return cacheTime.TotalMinutes >= 30;
         }
     }

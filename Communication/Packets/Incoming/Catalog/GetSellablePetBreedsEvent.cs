@@ -8,13 +8,13 @@ namespace Plus.Communication.Packets.Incoming.Catalog
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            string type = packet.PopString();
+            var type = packet.PopString();
 
-            ItemData item = PlusEnvironment.GetGame().GetItemManager().GetItemByName(type);
+            var item = PlusEnvironment.GetGame().GetItemManager().GetItemByName(type);
             if (item == null)
                 return;
 
-            int petId = item.BehaviourData;
+            var petId = item.BehaviourData;
 
             session.SendPacket(new SellablePetBreedsComposer(type, petId, PlusEnvironment.GetGame().GetCatalog().GetPetRaceManager().GetRacesForRaceId(petId)));
         }

@@ -27,8 +27,8 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            string botConfiguration = packet.PopString();
+            var unknown = packet.PopInt();
+            var botConfiguration = packet.PopString();
 
             if (SetItems.Count > 0)
                 SetItems.Clear();
@@ -45,19 +45,19 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
                 return false;
 
 
-            string[] stuff = StringData.Split('\t');
+            var stuff = StringData.Split('\t');
             if (stuff.Length != 2)
                 return false;//This is important, incase a cunt scripts.
 
-            string username = stuff[0];
+            var username = stuff[0];
 
-            RoomUser user = Instance.GetRoomUserManager().GetBotByName(username);
+            var user = Instance.GetRoomUserManager().GetBotByName(username);
             if (user == null)
                 return false;      
             
-            string figure = stuff[1];
+            var figure = stuff[1];
 
-            ServerPacket userChangeComposer = new ServerPacket(ServerPacketHeader.UserChangeMessageComposer);
+            var userChangeComposer = new ServerPacket(ServerPacketHeader.UserChangeMessageComposer);
             userChangeComposer.WriteInteger(user.VirtualId);
             userChangeComposer.WriteString(figure);
             userChangeComposer.WriteString("M");
@@ -67,7 +67,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
             user.BotData.Look = figure;
             user.BotData.Gender = "M";
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("UPDATE `bots` SET `look` = @look, `gender` = @gender WHERE `id` = '" + user.BotData.Id + "' LIMIT 1");
             dbClient.AddParameter("look", user.BotData.Look);
             dbClient.AddParameter("gender", user.BotData.Gender);

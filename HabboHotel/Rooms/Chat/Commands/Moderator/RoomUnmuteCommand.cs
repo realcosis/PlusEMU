@@ -29,10 +29,10 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 
             room.RoomMuted = false;
 
-            List<RoomUser> roomUsers = room.GetRoomUserManager().GetRoomUsers();
+            var roomUsers = room.GetRoomUserManager().GetRoomUsers();
             if (roomUsers.Count > 0)
             {
-                foreach (RoomUser user in roomUsers)
+                foreach (var user in roomUsers)
                 {
                     if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().Username == session.GetHabbo().Username)
                         continue;

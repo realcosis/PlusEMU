@@ -31,7 +31,7 @@ namespace Plus.HabboHotel.Rooms.AI
 
         public RoomBot GetBotData()
         {
-            RoomUser user = GetRoomUser();
+            var user = GetRoomUser();
             if (user == null)
                 return null;
 

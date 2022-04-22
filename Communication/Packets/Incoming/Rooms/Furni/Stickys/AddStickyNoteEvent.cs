@@ -10,27 +10,27 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.Stickys
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int itemId = packet.PopInt();
-            string locationData = packet.PopString();
+            var itemId = packet.PopInt();
+            var locationData = packet.PopString();
 
             if (!session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
             if (!room.CheckRights(session))
                 return;
 
-            Item item = session.GetHabbo().GetInventoryComponent().GetItem(itemId);
+            var item = session.GetHabbo().GetInventoryComponent().GetItem(itemId);
             if (item == null)
                 return;
 
             try
             {
-                string wallPossition = WallPositionCheck(":" + locationData.Split(':')[1]);
+                var wallPossition = WallPositionCheck(":" + locationData.Split(':')[1]);
 
-                Item roomItem = new Item(item.Id, room.RoomId, item.BaseItem, item.ExtraData, 0, 0, 0, 0, session.GetHabbo().Id, item.GroupId, 0, 0, wallPossition, room);
+                var roomItem = new Item(item.Id, room.RoomId, item.BaseItem, item.ExtraData, 0, 0, 0, 0, session.GetHabbo().Id, item.GroupId, 0, 0, wallPossition, room);
                 if (room.GetRoomItemHandler().SetWallItem(session, roomItem))
                     session.GetHabbo().GetInventoryComponent().RemoveItem(itemId);
             }
@@ -54,19 +54,19 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.Stickys
                     return null;
                 }
 
-                string[] posD = wallPosition.Split(' ');
+                var posD = wallPosition.Split(' ');
                 if (posD[2] != "l" && posD[2] != "r")
                     return null;
 
-                string[] widD = posD[0].Substring(3).Split(',');
-                int widthX = int.Parse(widD[0]);
-                int widthY = int.Parse(widD[1]);
+                var widD = posD[0].Substring(3).Split(',');
+                var widthX = int.Parse(widD[0]);
+                var widthY = int.Parse(widD[1]);
                 if (widthX < 0 || widthY < 0 || widthX > 200 || widthY > 200)
                     return null;
 
-                string[] lenD = posD[1].Substring(2).Split(',');
-                int lengthX = int.Parse(lenD[0]);
-                int lengthY = int.Parse(lenD[1]);
+                var lenD = posD[1].Substring(2).Split(',');
+                var lengthX = int.Parse(lenD[0]);
+                var lengthY = int.Parse(lenD[1]);
                 if (lengthX < 0 || lengthY < 0 || lengthX > 200 || lengthY > 200)
                     return null;
                 return ":w=" + widthX + "," + widthY + " " + "l=" + lengthX + "," + lengthY + " " + posD[2];

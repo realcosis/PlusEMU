@@ -11,10 +11,10 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int creditsOwed = 0;
+            var creditsOwed = 0;
 
             DataTable table;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `asking_price` FROM `catalog_marketplace_offers` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND `state` = '2'");
                table = dbClient.GetTable();
@@ -32,7 +32,7 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
                     session.GetHabbo().Credits += creditsOwed;
                     session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
                 }
-                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                 dbClient.RunQuery("DELETE FROM `catalog_marketplace_offers` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND `state` = '2'");
             }
         }

@@ -15,7 +15,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired
             WriteInteger(5);
 
             WriteInteger(box.SetItems.Count);
-            foreach (Item item in box.SetItems.Values.ToList())
+            foreach (var item in box.SetItems.Values.ToList())
             {
                 WriteInteger(item.Id);
             }
@@ -34,7 +34,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired
             WriteInteger(blockedItems.Count());
             if (blockedItems.Count() > 0)
             {
-                foreach (int itemId in blockedItems.ToList())
+                foreach (var itemId in blockedItems.ToList())
                 {
                     WriteInteger(itemId);
                 }

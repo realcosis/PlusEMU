@@ -42,9 +42,9 @@ namespace Plus.HabboHotel.Rooms
             SqFloorHeight = new short[MapSizeX, MapSizeY];
             SqSeatRot = new byte[MapSizeX, MapSizeY];
 
-            for (int y = 0; y < MapSizeY; y++)
+            for (var y = 0; y < MapSizeY; y++)
             {
-                for (int x = 0; x < MapSizeX; x++)
+                for (var x = 0; x < MapSizeX; x++)
                 {
                     if (x > (_staticModel.MapSizeX - 1) || y > (_staticModel.MapSizeY - 1))
                     {
@@ -61,9 +61,9 @@ namespace Plus.HabboHotel.Rooms
 
             var floorMap = new StringBuilder();
 
-            for (int y = 0; y < MapSizeY; y++)
+            for (var y = 0; y < MapSizeY; y++)
             {
-                for (int x = 0; x < MapSizeX; x++)
+                for (var x = 0; x < MapSizeX; x++)
                 {
                     if (x == DoorX && y == DoorY)
                     {
@@ -78,7 +78,7 @@ namespace Plus.HabboHotel.Rooms
                     }
 
                     double height = SqFloorHeight[x, y];
-                    string val = height > 9 ? ((char)(87 + height)).ToString() : height.ToString();
+                    var val = height > 9 ? ((char)(87 + height)).ToString() : height.ToString();
                     floorMap.Append(val);
 
                 }
@@ -94,9 +94,9 @@ namespace Plus.HabboHotel.Rooms
             var newSqFloorHeight = new short[MapSizeX + 1, MapSizeY + 1];
             var newSqSeatRot = new byte[MapSizeX + 1, MapSizeY + 1];
 
-            for (int y = 0; y < MapSizeY; y++)
+            for (var y = 0; y < MapSizeY; y++)
             {
-                for (int x = 0; x < MapSizeX; x++)
+                for (var x = 0; x < MapSizeX; x++)
                 {
                     if (x > (_staticModel.MapSizeX - 1) || y > (_staticModel.MapSizeY - 1))
                     {

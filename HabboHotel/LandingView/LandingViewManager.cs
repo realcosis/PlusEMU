@@ -23,10 +23,10 @@ namespace Plus.HabboHotel.LandingView
             if (_promotionItems.Count > 0)
                 _promotionItems.Clear();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `server_landing` ORDER BY `id` DESC");
-                DataTable getData = dbClient.GetTable();
+                var getData = dbClient.GetTable();
 
                 if (getData != null)
                 {

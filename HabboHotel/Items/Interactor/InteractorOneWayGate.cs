@@ -11,7 +11,7 @@ namespace Plus.HabboHotel.Items.Interactor
 
             if (item.InteractingUser != 0)
             {
-                RoomUser user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);
+                var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);
 
                 if (user != null)
                 {
@@ -29,7 +29,7 @@ namespace Plus.HabboHotel.Items.Interactor
 
             if (item.InteractingUser != 0)
             {
-                RoomUser user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);
+                var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);
 
                 if (user != null)
                 {
@@ -46,7 +46,7 @@ namespace Plus.HabboHotel.Items.Interactor
             if (session == null)
                 return;
             
-            RoomUser user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
 
             if (item.InteractingUser2 != user.UserId)
                 item.InteractingUser2 = user.UserId;

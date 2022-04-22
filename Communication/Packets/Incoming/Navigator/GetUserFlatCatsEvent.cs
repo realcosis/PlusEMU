@@ -12,7 +12,7 @@ namespace Plus.Communication.Packets.Incoming.Navigator
             if (session == null)
                 return;
 
-            ICollection<SearchResultList> categories = PlusEnvironment.GetGame().GetNavigator().GetFlatCategories();
+            var categories = PlusEnvironment.GetGame().GetNavigator().GetFlatCategories();
 
             session.SendPacket(new UserFlatCatsComposer(categories, session.GetHabbo().Rank));
         }

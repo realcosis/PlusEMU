@@ -6,7 +6,7 @@ namespace Plus.Communication.Packets.Incoming.Handshake
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            string build = packet.PopString();
+            var build = packet.PopString();
 
             if (PlusEnvironment.SwfRevision != build)
                 PlusEnvironment.SwfRevision = build;

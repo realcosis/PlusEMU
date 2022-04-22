@@ -8,7 +8,7 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
         public ModeratorUserInfoComposer(DataRow user, DataRow info)
             : base(ServerPacketHeader.ModeratorUserInfoMessageComposer)
         {
-            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Convert.ToDouble(info["trading_locked"]));
+            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Convert.ToDouble(info["trading_locked"]));
 
 
             WriteInteger(user != null ? Convert.ToInt32(user["id"]) : 0);

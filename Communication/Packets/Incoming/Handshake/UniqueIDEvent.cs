@@ -8,7 +8,7 @@ namespace Plus.Communication.Packets.Incoming.Handshake
         public void Parse(GameClient session, ClientPacket packet)
         {
             packet.PopString();
-            string machineId = packet.PopString();
+            var machineId = packet.PopString();
 
             session.MachineId = machineId;
 

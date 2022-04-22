@@ -12,9 +12,9 @@ namespace Plus.HabboHotel.Items
     {
         public static int GetLinkedTele(int teleId)
         {
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT `tele_two_id` FROM `room_items_tele_links` WHERE `tele_one_id` = '" + teleId + "' LIMIT 1");
-            DataRow row = dbClient.GetRow();
+            var row = dbClient.GetRow();
 
             if (row == null)
             {
@@ -28,9 +28,9 @@ namespace Plus.HabboHotel.Items
         {
             if (pRoom.GetRoomItemHandler().GetItem(teleId) != null)
                 return pRoom.RoomId;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT `room_id` FROM `items` WHERE `id` = " + teleId + " LIMIT 1");
-            DataRow row = dbClient.GetRow();
+            var row = dbClient.GetRow();
 
             if (row == null)
             {
@@ -42,7 +42,7 @@ namespace Plus.HabboHotel.Items
 
         public static bool IsTeleLinked(int teleId, Room pRoom)
         {
-            int linkId = GetLinkedTele(teleId);
+            var linkId = GetLinkedTele(teleId);
 
             if (linkId == 0)
             {
@@ -50,11 +50,11 @@ namespace Plus.HabboHotel.Items
             }
 
 
-            Item item = pRoom.GetRoomItemHandler().GetItem(linkId);
+            var item = pRoom.GetRoomItemHandler().GetItem(linkId);
             if (item != null && item.GetBaseItem().InteractionType == InteractionType.Teleport)
                 return true;
 
-            int roomId = GetTeleRoomId(linkId, pRoom);
+            var roomId = GetTeleRoomId(linkId, pRoom);
 
             if (roomId == 0)
             {

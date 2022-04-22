@@ -28,8 +28,8 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            int team = packet.PopInt();
+            var unknown = packet.PopInt();
+            var team = packet.PopInt();
 
             StringData = team.ToString();
         }
@@ -39,17 +39,17 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (@params.Length == 0 || Instance == null || String.IsNullOrEmpty(StringData))
                 return false;
 
-            Habbo player = (Habbo)@params[0];
+            var player = (Habbo)@params[0];
             if (player == null)
                 return false;
 
-            RoomUser user = Instance.GetRoomUserManager().GetRoomUserByHabbo(player.Id);
+            var user = Instance.GetRoomUserManager().GetRoomUserByHabbo(player.Id);
             if (user == null)
                 return false;
 
-            Team toJoin = (int.Parse(StringData) == 1 ? Rooms.Games.Teams.Team.Red : int.Parse(StringData) == 2 ? Rooms.Games.Teams.Team.Green : int.Parse(StringData) == 3 ? Rooms.Games.Teams.Team.Blue : int.Parse(StringData) == 4 ? Rooms.Games.Teams.Team.Yellow : Rooms.Games.Teams.Team.None);
+            var toJoin = (int.Parse(StringData) == 1 ? Rooms.Games.Teams.Team.Red : int.Parse(StringData) == 2 ? Rooms.Games.Teams.Team.Green : int.Parse(StringData) == 3 ? Rooms.Games.Teams.Team.Blue : int.Parse(StringData) == 4 ? Rooms.Games.Teams.Team.Yellow : Rooms.Games.Teams.Team.None);
 
-            TeamManager team = Instance.GetTeamManagerForFreeze();
+            var team = Instance.GetTeamManagerForFreeze();
             if (team != null)
             {
                 if (team.CanEnterOnTeam(toJoin))

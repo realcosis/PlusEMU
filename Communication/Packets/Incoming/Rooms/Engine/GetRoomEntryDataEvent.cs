@@ -14,7 +14,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
             if (session == null || session.GetHabbo() == null)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
@@ -35,7 +35,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
             session.SendPacket(new RoomEntryInfoComposer(room.RoomId, room.CheckRights(session, true)));
             session.SendPacket(new RoomVisualizationSettingsComposer(room.WallThickness, room.FloorThickness, PlusEnvironment.EnumToBool(room.Hidewall.ToString())));
 
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Username);
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Username);
             if (user != null && session.GetHabbo().PetId == 0)
             {
                 room.SendPacket(new UserChangeComposer(user, false));

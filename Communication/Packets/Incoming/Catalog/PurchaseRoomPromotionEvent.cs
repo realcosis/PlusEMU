@@ -16,13 +16,13 @@ namespace Plus.Communication.Packets.Incoming.Catalog
 
             packet.PopInt(); //pageId
             packet.PopInt(); //itemId
-            int roomId = packet.PopInt();
-            string name = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
+            var roomId = packet.PopInt();
+            var name = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
             packet.PopBoolean(); //junk
-            string desc = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
-            int categoryId = packet.PopInt();
+            var desc = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
+            var categoryId = packet.PopInt();
 
-            if (!RoomFactory.TryGetData(roomId, out RoomData data))
+            if (!RoomFactory.TryGetData(roomId, out var data))
                 return;
 
             if (data.OwnerId != session.GetHabbo().Id)
@@ -37,7 +37,7 @@ namespace Plus.Communication.Packets.Incoming.Catalog
                 data.Promotion.TimestampExpires += 7200;
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("REPLACE INTO `room_promotions` (`room_id`,`title`,`description`,`timestamp_start`,`timestamp_expire`,`category_id`) VALUES (@room_id, @title, @description, @start, @expires, @CategoryId)");
                 dbClient.AddParameter("room_id", roomId);

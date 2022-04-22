@@ -24,8 +24,8 @@ namespace Plus.Communication.Packets.Outgoing.Messenger
             WriteInteger(1);//Updates Count
             WriteInteger(0);//Update
 
-            Relationship relationship = session.GetHabbo().Relationships.FirstOrDefault(x => x.Value.UserId == Convert.ToInt32(buddy.UserId)).Value;
-            int y = relationship == null ? 0 : relationship.Type;
+            var relationship = session.GetHabbo().Relationships.FirstOrDefault(x => x.Value.UserId == Convert.ToInt32(buddy.UserId)).Value;
+            var y = relationship == null ? 0 : relationship.Type;
 
             WriteInteger(buddy.UserId);
            WriteString(buddy.MUsername);

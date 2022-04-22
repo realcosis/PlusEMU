@@ -26,8 +26,8 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            int unknown2 = packet.PopInt();
+            var unknown = packet.PopInt();
+            var unknown2 = packet.PopInt();
 
             StringData = unknown2.ToString();
         }
@@ -40,7 +40,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
             if (String.IsNullOrEmpty(StringData))
                 return false;
 
-            Habbo player = (Habbo)@params[0];
+            var player = (Habbo)@params[0];
             if (player == null)
                 return false;
 

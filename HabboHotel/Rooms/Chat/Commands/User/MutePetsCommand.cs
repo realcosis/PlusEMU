@@ -23,7 +23,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
             session.GetHabbo().AllowPetSpeech = !session.GetHabbo().AllowPetSpeech;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE `users` SET `pets_muted` = '" + ((session.GetHabbo().AllowPetSpeech) ? 1 : 0) + "' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
             }

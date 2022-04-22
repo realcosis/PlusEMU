@@ -28,8 +28,8 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            string badgeCode = packet.PopString();
+            var unknown = packet.PopInt();
+            var badgeCode = packet.PopString();
 
             StringData = badgeCode;
         }
@@ -42,14 +42,14 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
             if (String.IsNullOrEmpty(StringData))
                 return false;
 
-            Habbo player = (Habbo)@params[0];
+            var player = (Habbo)@params[0];
             if (player == null)
                 return false;
 
             if (!player.GetBadgeComponent().GetBadges().Contains(player.GetBadgeComponent().GetBadge(StringData)))
                 return true;
 
-            foreach (Badge badge in player.GetBadgeComponent().GetBadges().ToList())
+            foreach (var badge in player.GetBadgeComponent().GetBadges().ToList())
             {
                 if (badge.Slot <= 0)
                     continue;

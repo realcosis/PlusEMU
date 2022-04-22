@@ -16,7 +16,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Settings
             WriteInteger(((room.Model.MapSizeX * room.Model.MapSizeY) > 100) ? 50 : 25);
 
             WriteInteger(room.Tags.Count);
-            foreach (string tag in room.Tags.ToArray())
+            foreach (var tag in room.Tags.ToArray())
             {
                 WriteString(tag);
             }

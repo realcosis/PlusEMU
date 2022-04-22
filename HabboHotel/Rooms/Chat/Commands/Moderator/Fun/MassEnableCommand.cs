@@ -28,7 +28,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
                 return;
             }
 
-            int enableId = 0;
+            var enableId = 0;
             if (int.TryParse(@params[1], out enableId))
             {
                 if (enableId == 102 || enableId == 178)
@@ -43,10 +43,10 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
                     return;
                 }
 
-                List<RoomUser> users = room.GetRoomUserManager().GetRoomUsers();
+                var users = room.GetRoomUserManager().GetRoomUsers();
                 if (users.Count > 0)
                 {
-                    foreach (RoomUser u in users.ToList())
+                    foreach (var u in users.ToList())
                     {
                         if (u == null || u.RidingHorse)
                             continue;

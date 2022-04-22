@@ -86,7 +86,7 @@ namespace Plus.HabboHotel.Items
                     {
                         packet.WriteInteger(item.ExtraData.Split(Convert.ToChar(9)).Length / 2);
 
-                        for (int i = 0; i <= item.ExtraData.Split(Convert.ToChar(9)).Length - 1; i++)
+                        for (var i = 0; i <= item.ExtraData.Split(Convert.ToChar(9)).Length - 1; i++)
                         {
                             packet.WriteString(item.ExtraData.Split(Convert.ToChar(9))[i]);
                         }
@@ -99,7 +99,7 @@ namespace Plus.HabboHotel.Items
 
                 case InteractionType.Gift:
                     {
-                        string[] extraData = item.ExtraData.Split(Convert.ToChar(5));
+                        var extraData = item.ExtraData.Split(Convert.ToChar(5));
                         if (extraData.Length != 7)
                         {
                             packet.WriteInteger(0);
@@ -108,9 +108,9 @@ namespace Plus.HabboHotel.Items
                         }
                         else
                         {
-                            int style = int.Parse(extraData[6]) * 1000 + int.Parse(extraData[6]);
+                            var style = int.Parse(extraData[6]) * 1000 + int.Parse(extraData[6]);
 
-                            UserCache purchaser = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(Convert.ToInt32(extraData[2]));
+                            var purchaser = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(Convert.ToInt32(extraData[2]));
                             if (purchaser == null)
                             {
                                 packet.WriteInteger(0);
@@ -145,7 +145,7 @@ namespace Plus.HabboHotel.Items
                     packet.WriteInteger(3);
                     if (item.ExtraData.Contains(Convert.ToChar(5).ToString()))
                     {
-                        string[] stuff = item.ExtraData.Split(Convert.ToChar(5));
+                        var stuff = item.ExtraData.Split(Convert.ToChar(5));
                         packet.WriteString("GENDER");
                         packet.WriteString(stuff[0]);
                         packet.WriteString("FIGURE");
@@ -191,7 +191,7 @@ namespace Plus.HabboHotel.Items
                     packet.WriteInteger(2);
                     packet.WriteInteger(4);
 
-                    string[] badgeData = item.ExtraData.Split(Convert.ToChar(9));
+                    var badgeData = item.ExtraData.Split(Convert.ToChar(9));
                     if (item.ExtraData.Contains(Convert.ToChar(9).ToString()))
                     {
                         packet.WriteString("0");//No idea
@@ -222,7 +222,7 @@ namespace Plus.HabboHotel.Items
                     if (item.ExtraData.Contains(Convert.ToChar(5).ToString()))
                     {
                         var eData = item.ExtraData.Split((char)5);
-                        int I = 0;
+                        var I = 0;
                         packet.WriteInteger(0);
                         packet.WriteInteger(2);
                         packet.WriteInteger(eData.Length);

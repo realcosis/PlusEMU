@@ -38,7 +38,7 @@ namespace Plus.Communication.Encryption.KeyExchange
         {
             PublicKey = 0;
 
-            Random rand = new Random();
+            var rand = new Random();
             while (PublicKey == 0)
             {
                 if (!ignoreBaseKeys)
@@ -47,13 +47,13 @@ namespace Plus.Communication.Encryption.KeyExchange
                     Generator = BigInteger.genPseudoPrime(Bitlength, 10, rand);
                 }
 
-                byte[] bytes = new byte[Bitlength / 8];
+                var bytes = new byte[Bitlength / 8];
                 Randomizer.NextBytes(bytes);
                 _privateKey = new BigInteger(bytes);
 
                 if (Generator > Prime)
                 {
-                    BigInteger temp = Prime;
+                    var temp = Prime;
                     Prime = Generator;
                     Generator = temp;
                 }

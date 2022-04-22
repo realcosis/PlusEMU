@@ -56,16 +56,16 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (SetItems.Count > 0)
                 SetItems.Clear();
 
-            int unknown = packet.PopInt();
-            int movement = packet.PopInt();
-            int rotation = packet.PopInt();
+            var unknown = packet.PopInt();
+            var movement = packet.PopInt();
+            var rotation = packet.PopInt();
 
-            string unknown1 = packet.PopString();
+            var unknown1 = packet.PopString();
 
-            int furniCount = packet.PopInt();
-            for (int i = 0; i < furniCount; i++)
+            var furniCount = packet.PopInt();
+            for (var i = 0; i < furniCount; i++)
             {
-                Item selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+                var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
 
                 if (selectedItem != null && !Instance.GetWired().OtherBoxHasItem(this, selectedItem.Id))
                     SetItems.TryAdd(selectedItem.Id, selectedItem);
@@ -96,10 +96,10 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (Instance == null || !_requested || _next == 0)
                 return false;
 
-            long now = PlusEnvironment.Now();
+            var now = PlusEnvironment.Now();
             if (_next < now)
             {
-                foreach (Item item in SetItems.Values.ToList())
+                foreach (var item in SetItems.Values.ToList())
                 {
                     if (item == null)
                         continue;
@@ -113,8 +113,8 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
                         SetItems.TryRemove(item.Id, out toRemove);
    
 
-                    Point point = HandleMovement(Convert.ToInt32(StringData.Split(';')[0]),new Point(item.GetX, item.GetY));
-                    int newRot = HandleRotation(Convert.ToInt32(StringData.Split(';')[1]), item.Rotation);
+                    var point = HandleMovement(Convert.ToInt32(StringData.Split(';')[0]),new Point(item.GetX, item.GetY));
+                    var newRot = HandleRotation(Convert.ToInt32(StringData.Split(';')[1]), item.Rotation);
 
                     Instance.GetWired().OnUserFurniCollision(Instance, item);
 
@@ -123,11 +123,11 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
                     if (Instance.GetGameMap().CanRollItemHere(point.X, point.Y) && !Instance.GetGameMap().SquareHasUsers(point.X, point.Y))
                     {
-                        double newZ = Instance.GetGameMap().GetHeightForSquareFromData(point);
-                        bool canBePlaced = true;
+                        var newZ = Instance.GetGameMap().GetHeightForSquareFromData(point);
+                        var canBePlaced = true;
 
-                        List<Item> coordinatedItems = Instance.GetGameMap().GetCoordinatedItems(point);
-                        foreach (Item coordinatedItem in coordinatedItems.ToList())
+                        var coordinatedItems = Instance.GetGameMap().GetCoordinatedItems(point);
+                        foreach (var coordinatedItem in coordinatedItems.ToList())
                         {
                             if (coordinatedItem == null || coordinatedItem.Id == item.Id)
                                 continue;
@@ -217,7 +217,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         private Point HandleMovement(int mode, Point position)
         {
-            Point newPos = new Point();
+            var newPos = new Point();
             switch (mode)
             {
                 case 0:

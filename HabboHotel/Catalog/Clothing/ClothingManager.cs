@@ -20,7 +20,7 @@ namespace Plus.HabboHotel.Catalog.Clothing
                 _clothing.Clear();
 
             DataTable data = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `id`,`clothing_name`,`clothing_parts` FROM `catalog_clothing`");
                 data = dbClient.GetTable();

@@ -26,7 +26,7 @@
             }
 
 
-            if (!int.TryParse(@params[1], out int roomId))
+            if (!int.TryParse(@params[1], out var roomId))
                 session.SendWhisper("You must enter a valid room ID");
             else
             {

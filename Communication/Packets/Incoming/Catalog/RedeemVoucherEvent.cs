@@ -14,9 +14,9 @@ namespace Plus.Communication.Packets.Incoming.Catalog
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            string code = packet.PopString().Replace("\r", "");
+            var code = packet.PopString().Replace("\r", "");
 
-            if (!PlusEnvironment.GetGame().GetCatalog().GetVoucherManager().TryGetVoucher(code, out Voucher voucher))
+            if (!PlusEnvironment.GetGame().GetCatalog().GetVoucherManager().TryGetVoucher(code, out var voucher))
             {
                 session.SendPacket(new VoucherRedeemErrorComposer(0));
                 return;
@@ -29,7 +29,7 @@ namespace Plus.Communication.Packets.Incoming.Catalog
             }
 
             DataRow row;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `user_vouchers` WHERE `user_id` = @userId AND `voucher` = @Voucher LIMIT 1");
                 dbClient.AddParameter("userId", session.GetHabbo().Id);
@@ -44,7 +44,7 @@ namespace Plus.Communication.Packets.Incoming.Catalog
             }
             else
             {
-                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                 dbClient.SetQuery("INSERT INTO `user_vouchers` (`user_id`,`voucher`) VALUES (@userId, @Voucher)");
                 dbClient.AddParameter("userId", session.GetHabbo().Id);
                 dbClient.AddParameter("Voucher", code);

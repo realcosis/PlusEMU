@@ -12,9 +12,9 @@ namespace Plus.Communication.Packets.Incoming.Moderation
                 return;
 
             packet.PopInt();//Junk
-            int ticketId = packet.PopInt();
+            var ticketId = packet.PopInt();
 
-            if (!PlusEnvironment.GetGame().GetModerationManager().TryGetTicket(ticketId, out ModerationTicket ticket))
+            if (!PlusEnvironment.GetGame().GetModerationManager().TryGetTicket(ticketId, out var ticket))
                 return;
 
             ticket.Moderator = session.GetHabbo();

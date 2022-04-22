@@ -8,7 +8,7 @@ namespace Plus.Communication.Packets.Incoming.Navigator
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            Room instance = PlusEnvironment.GetGame().GetRoomManager().TryGetRandomLoadedRoom();
+            var instance = PlusEnvironment.GetGame().GetRoomManager().TryGetRandomLoadedRoom();
 
             if (instance != null)
                 session.SendPacket(new RoomForwardComposer(instance.Id));

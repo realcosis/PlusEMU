@@ -7,7 +7,7 @@ namespace Plus.Communication.Packets.Incoming.Users
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int userId = packet.PopInt();
+            var userId = packet.PopInt();
 
             session.SendPacket(new UserTagsComposer(userId));
         }

@@ -8,11 +8,11 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
             : base(ServerPacketHeader.HeightMapMessageComposer)
         {
             map = map.Replace("\n", "");
-            string[] split = map.Split('\r');
+            var split = map.Split('\r');
             WriteInteger(split[0].Length);
             WriteInteger((split.Length - 1) * split[0].Length);
-            int x = 0;
-            int y = 0;
+            var x = 0;
+            var y = 0;
             for (y = 0; y < split.Length - 1; y++)
             {
                 for (x = 0; x < split[0].Length; x++)
@@ -29,7 +29,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                         WriteShort(-1);
                     else
                     {
-                        int height = 0;
+                        var height = 0;
                         if (int.TryParse(pos.ToString(), out height))
                         {
                             height = height * 256;

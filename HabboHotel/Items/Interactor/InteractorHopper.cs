@@ -11,7 +11,7 @@ namespace Plus.HabboHotel.Items.Interactor
         public void OnPlace(GameClient session, Item item)
         {
             item.GetRoom().GetRoomItemHandler().HopperCount++;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("INSERT INTO items_hopper (hopper_id, room_id) VALUES (@hopperid, @roomid);");
                 dbClient.AddParameter("hopperid", item.Id);
@@ -21,7 +21,7 @@ namespace Plus.HabboHotel.Items.Interactor
 
             if (item.InteractingUser != 0)
             {
-                RoomUser user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);
+                var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);
 
                 if (user != null)
                 {
@@ -37,7 +37,7 @@ namespace Plus.HabboHotel.Items.Interactor
         public void OnRemove(GameClient session, Item item)
         {
             item.GetRoom().GetRoomItemHandler().HopperCount--;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("DELETE FROM items_hopper WHERE item_id=@hid OR room_id=" + item.GetRoom().RoomId +
                                   " LIMIT 1");
@@ -47,7 +47,7 @@ namespace Plus.HabboHotel.Items.Interactor
 
             if (item.InteractingUser != 0)
             {
-                RoomUser user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);
+                var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);
 
                 if (user != null)
                 {
@@ -62,7 +62,7 @@ namespace Plus.HabboHotel.Items.Interactor
         {
             if (item == null || item.GetRoom() == null || session == null || session.GetHabbo() == null)
                 return;
-            RoomUser user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
 
             if (user == null)
             {

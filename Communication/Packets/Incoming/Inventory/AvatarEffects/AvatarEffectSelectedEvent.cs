@@ -7,18 +7,18 @@ namespace Plus.Communication.Packets.Incoming.Inventory.AvatarEffects
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int effectId = packet.PopInt();
+            var effectId = packet.PopInt();
             if (effectId < 0)
                 effectId = 0;
 
             if (!session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null)
                 return;
 

@@ -49,7 +49,7 @@ namespace Plus.HabboHotel.GameClients
         {
             _packetParser.SetConnection(_connection);
             _packetParser.OnNewPacket += Parser_onNewPacket;
-            byte[] data = (_connection.Parser as InitialPacketParser).CurrentData;
+            var data = (_connection.Parser as InitialPacketParser).CurrentData;
             _connection.Parser.Dispose();
             _connection.Parser = _packetParser;
             _connection.Parser.HandlePacketData(data);
@@ -93,7 +93,7 @@ namespace Plus.HabboHotel.GameClients
         {
             try
             {
-                UserData userData = UserDataFactory.GetUserData(authTicket, out byte errorCode);
+                var userData = UserDataFactory.GetUserData(authTicket, out var errorCode);
                 if (errorCode == 1 || errorCode == 2)
                 {
                     Disconnect();
@@ -160,7 +160,7 @@ namespace Plus.HabboHotel.GameClients
                     {
                         if (_habbo.MachineId != MachineId)
                         {
-                            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                             dbClient.SetQuery("UPDATE `users` SET `machine_id` = @MachineId WHERE `id` = @id LIMIT 1");
                             dbClient.AddParameter("MachineId", MachineId);
                             dbClient.AddParameter("id", _habbo.Id);
@@ -170,14 +170,14 @@ namespace Plus.HabboHotel.GameClients
                         _habbo.MachineId = MachineId;
                     }
 
-                    if (PlusEnvironment.GetGame().GetPermissionManager().TryGetGroup(_habbo.Rank, out PermissionGroup group))
+                    if (PlusEnvironment.GetGame().GetPermissionManager().TryGetGroup(_habbo.Rank, out var group))
                     {
                         if (!String.IsNullOrEmpty(group.Badge))
                             if (!_habbo.GetBadgeComponent().HasBadge(group.Badge))
                                 _habbo.GetBadgeComponent().GiveBadge(group.Badge, true, this);
                     }
 
-                    if (PlusEnvironment.GetGame().GetSubscriptionManager().TryGetSubscriptionData(_habbo.VipRank, out SubscriptionData subData))
+                    if (PlusEnvironment.GetGame().GetSubscriptionManager().TryGetSubscriptionData(_habbo.VipRank, out var subData))
                     {
                         if (!String.IsNullOrEmpty(subData.Badge))
                         {
@@ -219,7 +219,7 @@ namespace Plus.HabboHotel.GameClients
             if (GetHabbo() == null || GetHabbo().CurrentRoom == null)
                 return;
 
-            RoomUser user = GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(GetHabbo().Username);
+            var user = GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(GetHabbo().Username);
             if (user == null)
                 return;
 
@@ -257,7 +257,7 @@ namespace Plus.HabboHotel.GameClients
             {
                 if (GetHabbo() != null)
                 {
-                    using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                    using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                     {
                         dbClient.RunQuery(GetHabbo().GetQueryString);
                     }

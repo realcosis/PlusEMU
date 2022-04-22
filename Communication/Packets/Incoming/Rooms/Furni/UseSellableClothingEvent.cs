@@ -18,13 +18,13 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
-            int itemId = packet.PopInt();
+            var itemId = packet.PopInt();
 
-            Item item = room.GetRoomItemHandler().GetItem(itemId);
+            var item = room.GetRoomItemHandler().GetItem(itemId);
             if (item == null)
                 return;
 
@@ -46,14 +46,14 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni
                 return;
             }
 
-            if (!PlusEnvironment.GetGame().GetCatalog().GetClothingManager().TryGetClothing(item.Data.BehaviourData, out ClothingItem clothing))
+            if (!PlusEnvironment.GetGame().GetCatalog().GetClothingManager().TryGetClothing(item.Data.BehaviourData, out var clothing))
             {
                 session.SendNotification("Oops, we couldn't find this clothing part!");
                 return;
             }
 
             //Quickly delete it from the database.
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("DELETE FROM `items` WHERE `id` = @ItemId LIMIT 1");
                 dbClient.AddParameter("ItemId", item.Id);

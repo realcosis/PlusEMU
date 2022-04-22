@@ -8,9 +8,9 @@ namespace Plus.Communication.Packets.Incoming.Groups
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int groupId = packet.PopInt();
+            var groupId = packet.PopInt();
 
-            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out Group group))
+            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
                 return;
 
             if (group.CreatorId != session.GetHabbo().Id && !session.GetHabbo().GetPermissions().HasRight("group_management_override"))

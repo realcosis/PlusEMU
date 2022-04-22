@@ -21,9 +21,9 @@ namespace Plus.HabboHotel.Rewards
 
         public void Init()
         {
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT * FROM `server_rewards` WHERE enabled = '1'");
-            DataTable dTable = dbClient.GetTable();
+            var dTable = dbClient.GetTable();
             if (dTable != null)
             {
                 foreach (DataRow dRow in dTable.Rows)
@@ -38,8 +38,8 @@ namespace Plus.HabboHotel.Rewards
             {
                 foreach (DataRow dRow in dTable.Rows)
                 {
-                    int id = (int)dRow["user_id"];
-                    int rewardId = (int)dRow["reward_id"];
+                    var id = (int)dRow["user_id"];
+                    var rewardId = (int)dRow["reward_id"];
 
                     if (!_rewardLogs.ContainsKey(id))
                         _rewardLogs.TryAdd(id, new List<int>());
@@ -68,7 +68,7 @@ namespace Plus.HabboHotel.Rewards
 
             if (!_rewardLogs[id].Contains(rewardId))
                 _rewardLogs[id].Add(rewardId);
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("INSERT INTO `server_reward_logs` VALUES ('', @userId, @rewardId)");
             dbClient.AddParameter("userId", id);
             dbClient.AddParameter("rewardId", rewardId);
@@ -80,10 +80,10 @@ namespace Plus.HabboHotel.Rewards
             if (session == null || session.GetHabbo() == null)
                 return;
 
-            foreach (KeyValuePair<int, Reward> entry in _rewards)
+            foreach (var entry in _rewards)
             {
-                int id = entry.Key;
-                Reward reward = entry.Value;
+                var id = entry.Key;
+                var reward = entry.Value;
 
                 if (HasReward(session.GetHabbo().Id, id))
                     continue;

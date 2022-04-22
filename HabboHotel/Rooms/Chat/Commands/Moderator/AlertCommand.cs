@@ -27,7 +27,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 return;
             }
 
-            GameClient targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+            var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
             if (targetClient == null)
             {
                 session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");
@@ -46,7 +46,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 return;
             }
 
-            string message = CommandManager.MergeParams(@params, 2);
+            var message = CommandManager.MergeParams(@params, 2);
 
             targetClient.SendNotification(session.GetHabbo().Username + " alerted you with the following message:\n\n" + message);
             session.SendWhisper("Alert successfully sent to " + targetClient.GetHabbo().Username);

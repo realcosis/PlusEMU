@@ -84,7 +84,7 @@ namespace Plus.HabboHotel.Users.Messenger
             if(session != null && session.GetHabbo() != null && session.GetHabbo().Relationships != null)
                 relationship = session.GetHabbo().Relationships.FirstOrDefault(x => x.Value.UserId == Convert.ToInt32(UserId)).Value;
 
-            int y = relationship == null ? 0 : relationship.Type;
+            var y = relationship == null ? 0 : relationship.Type;
 
             message.WriteInteger(UserId);
             message.WriteString(MUsername);

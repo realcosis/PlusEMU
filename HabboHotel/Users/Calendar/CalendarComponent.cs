@@ -37,7 +37,7 @@ namespace Plus.HabboHotel.Users.Calendar
                 _openedBoxes.Clear();
 
             DataTable getData = null;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT * FROM `user_xmas15_calendar` WHERE `user_id` = @id;");
             dbClient.AddParameter("id", player.Id);
             getData = dbClient.GetTable();

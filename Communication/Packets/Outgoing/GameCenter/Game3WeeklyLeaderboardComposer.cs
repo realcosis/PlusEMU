@@ -18,10 +18,10 @@ namespace Plus.Communication.Packets.Outgoing.GameCenter
             WriteInteger(1581);
 
             //Used to generate the ranking numbers.
-            int num = 0;
+            var num = 0;
 
             WriteInteger(habbos.Count);//Count
-            foreach (Habbo habbo in habbos.ToList())
+            foreach (var habbo in habbos.ToList())
             {
                 num++;
                 WriteInteger(habbo.Id);//Id

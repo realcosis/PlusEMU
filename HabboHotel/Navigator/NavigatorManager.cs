@@ -40,7 +40,7 @@ namespace Plus.HabboHotel.Navigator
                 _featuredRooms.Clear();
 
             DataTable table = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `navigator_categories` ORDER BY `id` ASC");
                 table = dbClient.GetTable();
@@ -58,7 +58,7 @@ namespace Plus.HabboHotel.Navigator
                 }
            
                 dbClient.SetQuery("SELECT `room_id`,`caption`,`description`,`image_url`,`enabled` FROM `navigator_publics` ORDER BY `order_num` ASC");
-                DataTable getPublics = dbClient.GetTable();
+                var getPublics = dbClient.GetTable();
 
                 if (getPublics != null)
                 {
@@ -78,7 +78,7 @@ namespace Plus.HabboHotel.Navigator
 
         public List<SearchResultList> GetCategorysForSearch(string category)
         {
-            IEnumerable<SearchResultList> categorys =
+            var categorys =
                 (from cat in _searchResultLists
                  where cat.Value.Category == category
                  orderby cat.Value.OrderId ascending
@@ -88,7 +88,7 @@ namespace Plus.HabboHotel.Navigator
 
         public ICollection<SearchResultList> GetResultByIdentifier(string category)
         {
-            IEnumerable<SearchResultList> categorys =
+            var categorys =
                 (from cat in _searchResultLists
                  where cat.Value.CategoryIdentifier == category
                  orderby cat.Value.OrderId ascending
@@ -98,7 +98,7 @@ namespace Plus.HabboHotel.Navigator
 
         public ICollection<SearchResultList> GetFlatCategories()
         {
-            IEnumerable<SearchResultList> categorys =
+            var categorys =
                 (from cat in _searchResultLists
                  where cat.Value.CategoryType == NavigatorCategoryType.Category
                  orderby cat.Value.OrderId ascending
@@ -108,7 +108,7 @@ namespace Plus.HabboHotel.Navigator
 
         public ICollection<SearchResultList> GetEventCategories()
         {
-            IEnumerable<SearchResultList> categorys =
+            var categorys =
                 (from cat in _searchResultLists
                  where cat.Value.CategoryType == NavigatorCategoryType.PromotionCategory
                  orderby cat.Value.OrderId ascending

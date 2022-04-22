@@ -27,7 +27,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 return;
             }
 
-            string message = CommandManager.MergeParams(@params, 1);
+            var message = CommandManager.MergeParams(@params, 1);
             PlusEnvironment.GetGame().GetClientManager().SendPacket(new BroadcastMessageAlertComposer(message + "\r\n" + "- " + session.GetHabbo().Username));
                             
             return;

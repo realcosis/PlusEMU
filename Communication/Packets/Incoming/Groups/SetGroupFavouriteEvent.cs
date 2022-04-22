@@ -14,15 +14,15 @@ namespace Plus.Communication.Packets.Incoming.Groups
             if (session == null)
                 return;
 
-            int groupId = packet.PopInt();
+            var groupId = packet.PopInt();
             if (groupId == 0)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out Group group))
+            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
                 return;
 
             session.GetHabbo().GetStats().FavouriteGroupId = group.Id;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `user_stats` SET `groupid` = @groupId WHERE `id` = @userId LIMIT 1");
                 dbClient.AddParameter("groupId", session.GetHabbo().GetStats().FavouriteGroupId);
@@ -35,7 +35,7 @@ namespace Plus.Communication.Packets.Incoming.Groups
                 session.GetHabbo().CurrentRoom.SendPacket(new RefreshFavouriteGroupComposer(session.GetHabbo().Id));
                 session.GetHabbo().CurrentRoom.SendPacket(new HabboGroupBadgesComposer(group));
 
-                RoomUser user = session.GetHabbo().CurrentRoom.GetRoomUserManager()
+                var user = session.GetHabbo().CurrentRoom.GetRoomUserManager()
                     .GetRoomUserByHabbo(session.GetHabbo().Id);
                 if (user != null)
                     session.GetHabbo().CurrentRoom.SendPacket(new UpdateFavouriteGroupComposer(group, user.VirtualId));

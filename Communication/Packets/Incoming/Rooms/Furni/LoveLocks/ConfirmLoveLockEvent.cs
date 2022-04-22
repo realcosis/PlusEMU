@@ -11,23 +11,23 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.LoveLocks
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int pId = packet.PopInt();
-            bool isConfirmed = packet.PopBoolean();
+            var pId = packet.PopInt();
+            var isConfirmed = packet.PopBoolean();
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
-            Item item = room.GetRoomItemHandler().GetItem(pId);
+            var item = room.GetRoomItemHandler().GetItem(pId);
 
             if (item == null || item.GetBaseItem() == null || item.GetBaseItem().InteractionType != InteractionType.Lovelock)
                 return;
 
-            int userOneId = item.InteractingUser;
-            int userTwoId = item.InteractingUser2;
+            var userOneId = item.InteractingUser;
+            var userTwoId = item.InteractingUser2;
 
-            RoomUser userOne = room.GetRoomUserManager().GetRoomUserByHabbo(userOneId);
-            RoomUser userTwo = room.GetRoomUserManager().GetRoomUserByHabbo(userTwoId);
+            var userOne = room.GetRoomUserManager().GetRoomUserByHabbo(userOneId);
+            var userTwo = room.GetRoomUserManager().GetRoomUserByHabbo(userTwoId);
 
             if(userOne == null && userTwo == null)
             {
@@ -116,7 +116,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.LoveLocks
 
             item.UpdateState(true, true);
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `items` SET `extra_data` = @extraData WHERE `id` = @ID LIMIT 1");
                 dbClient.AddParameter("extraData", item.ExtraData);

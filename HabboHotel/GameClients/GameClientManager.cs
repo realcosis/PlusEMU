@@ -76,27 +76,24 @@ namespace Plus.HabboHotel.GameClients
 
         public string GetNameById(int id)
         {
-            GameClient client = GetClientByUserId(id);
+            var client = GetClientByUserId(id);
 
             if (client != null)
                 return client.GetHabbo().Username;
 
             string username;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("SELECT username FROM users WHERE id = @id LIMIT 1");
-                dbClient.AddParameter("id", id);
-                username = dbClient.GetString();
-            }
-
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("SELECT username FROM users WHERE id = @id LIMIT 1");
+            dbClient.AddParameter("id", id);
+            username = dbClient.GetString();
             return username;
         }
 
         public IEnumerable<GameClient> GetClientsById(Dictionary<int, MessengerBuddy>.KeyCollection users)
         {
-            foreach (int id in users)
+            foreach (var id in users)
             {
-                GameClient client = GetClientByUserId(id);
+                var client = GetClientByUserId(id);
                 if (client != null)
                     yield return client;
             }
@@ -104,7 +101,7 @@ namespace Plus.HabboHotel.GameClients
 
         public void StaffAlert(ServerPacket message, int exclude = 0)
         {
-            foreach (GameClient client in GetClients.ToList())
+            foreach (var client in GetClients.ToList())
             {
                 if (client == null || client.GetHabbo() == null)
                     continue;
@@ -118,7 +115,7 @@ namespace Plus.HabboHotel.GameClients
 
         public void ModAlert(string message)
         {
-            foreach (GameClient client in GetClients.ToList())
+            foreach (var client in GetClients.ToList())
             {
                 if (client == null || client.GetHabbo() == null)
                     continue;
@@ -136,20 +133,20 @@ namespace Plus.HabboHotel.GameClients
             if (reporter == null || target == null || reporter.GetHabbo() == null || target.GetHabbo() == null)
                 return;
 
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.Append("New report submitted!\r\r");
             builder.Append("Reporter: " + reporter.GetHabbo().Username + "\r");
             builder.Append("Reported User: " + target.GetHabbo().Username + "\r\r");
             builder.Append(target.GetHabbo().Username + "s last 10 messages:\r\r");
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `message` FROM `chatlogs` WHERE `user_id` = '" + target.GetHabbo().Id + "' ORDER BY `id` DESC LIMIT 10");
-                DataTable logs = dbClient.GetTable();
+                var logs = dbClient.GetTable();
 
                 if (logs != null)
                 {
-                    int number = 11;
+                    var number = 11;
                     foreach (DataRow log in logs.Rows)
                     {
                         number -= 1;
@@ -158,7 +155,7 @@ namespace Plus.HabboHotel.GameClients
                 }
             }
 
-            foreach (GameClient client in GetClients.ToList())
+            foreach (var client in GetClients.ToList())
             {
                 if (client == null || client.GetHabbo() == null)
                     continue;
@@ -171,7 +168,7 @@ namespace Plus.HabboHotel.GameClients
 
         public void SendPacket(ServerPacket packet, string fuse = "")
         {
-            foreach (GameClient client in _clients.Values.ToList())
+            foreach (var client in _clients.Values.ToList())
             {
                 if (client == null || client.GetHabbo() == null)
                     continue;
@@ -188,7 +185,7 @@ namespace Plus.HabboHotel.GameClients
 
         public void CreateAndStartClient(int clientId, ConnectionInformation connection)
         {
-            GameClient client = new GameClient(clientId, connection);
+            var client = new GameClient(clientId, connection);
             if (_clients.TryAdd(client.ConnectionId, client))
                 client.StartConnection();
             else
@@ -197,7 +194,7 @@ namespace Plus.HabboHotel.GameClients
 
         public void DisposeConnection(int clientId)
         {
-            if (!TryGetClient(clientId, out GameClient client))
+            if (!TryGetClient(clientId, out var client))
                 return;
 
             if (client != null)
@@ -208,7 +205,7 @@ namespace Plus.HabboHotel.GameClients
 
         public void LogClonesOut(int userId)
         {
-            GameClient client = GetClientByUserId(userId);
+            var client = GetClientByUserId(userId);
             if (client != null)
                 client.Disconnect();
         }
@@ -234,7 +231,7 @@ namespace Plus.HabboHotel.GameClients
 
         public void CloseAll()
         {
-            foreach (GameClient client in GetClients.ToList())
+            foreach (var client in GetClients.ToList())
             {
                 if (client == null)
                     continue;
@@ -243,7 +240,7 @@ namespace Plus.HabboHotel.GameClients
                 {
                     try
                     {
-                        using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                         {
                             dbClient.RunQuery(client.GetHabbo().GetQueryString);
                         }
@@ -260,7 +257,7 @@ namespace Plus.HabboHotel.GameClients
             Log.Info("Closing server connections...");
             try
             {
-                foreach (GameClient client in GetClients.ToList())
+                foreach (var client in GetClients.ToList())
                 {
                     if (client == null || client.GetConnection() == null)
                         continue;
@@ -295,9 +292,9 @@ namespace Plus.HabboHotel.GameClients
 
                 try
                 {
-                    List<GameClient> toPing = new List<GameClient>();
+                    var toPing = new List<GameClient>();
 
-                    foreach (GameClient client in _clients.Values.ToList())
+                    foreach (var client in _clients.Values.ToList())
                     {
                         if (client.PingCount < 6)
                         {
@@ -314,9 +311,9 @@ namespace Plus.HabboHotel.GameClients
                         }
                     }
 
-                    DateTime start = DateTime.Now;
+                    var start = DateTime.Now;
 
-                    foreach (GameClient client in toPing.ToList())
+                    foreach (var client in toPing.ToList())
                     {
                         try
                         {

@@ -10,13 +10,13 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects
             : base(ServerPacketHeader.FigureSetIdsMessageComposer)
         {
             WriteInteger(clothingParts.Count);
-            foreach (ClothingParts part in clothingParts.ToList())
+            foreach (var part in clothingParts.ToList())
             {
                 WriteInteger(part.PartId);
             }
 
             WriteInteger(clothingParts.Count);
-            foreach (ClothingParts part in clothingParts.ToList())
+            foreach (var part in clothingParts.ToList())
             {
                WriteString(part.Part);
             }

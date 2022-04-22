@@ -17,7 +17,7 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
            WriteString(data.Description);
            
             WriteInteger(data.Tags.Count);
-            foreach (string tag in data.Tags)
+            foreach (var tag in data.Tags)
             {
                WriteString(tag);
             }

@@ -21,9 +21,9 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
             WriteInteger(room.Id);
 
             WriteShort(chats.Count);
-            foreach (ChatlogEntry entry in chats)
+            foreach (var entry in chats)
             {
-                string username = "Unknown";
+                var username = "Unknown";
                 if (entry.PlayerNullable() != null)
                 {
                     username = entry.PlayerNullable().Username;

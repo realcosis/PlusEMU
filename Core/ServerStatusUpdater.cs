@@ -30,25 +30,22 @@ namespace Plus.Core
 
         private void UpdateOnlineUsers()
         {
-            TimeSpan uptime = DateTime.Now - PlusEnvironment.ServerStarted;
+            var uptime = DateTime.Now - PlusEnvironment.ServerStarted;
 
-            int usersOnline = PlusEnvironment.GetGame().GetClientManager().Count;
-            int roomCount = PlusEnvironment.GetGame().GetRoomManager().Count;
+            var usersOnline = PlusEnvironment.GetGame().GetClientManager().Count;
+            var roomCount = PlusEnvironment.GetGame().GetRoomManager().Count;
 
             Console.Title = "Plus Emulator - " + usersOnline + " users online - " + roomCount + " rooms loaded - " + uptime.Days + " day(s) " + uptime.Hours + " hour(s) uptime";
-
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("UPDATE `server_status` SET `users_online` = @users, `loaded_rooms` = @loadedRooms LIMIT 1;");
-                dbClient.AddParameter("users", usersOnline);
-                dbClient.AddParameter("loadedRooms", roomCount);
-                dbClient.RunQuery();
-            }
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("UPDATE `server_status` SET `users_online` = @users, `loaded_rooms` = @loadedRooms LIMIT 1;");
+            dbClient.AddParameter("users", usersOnline);
+            dbClient.AddParameter("loadedRooms", roomCount);
+            dbClient.RunQuery();
         }
 
         public void Dispose()
         {
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE `server_status` SET `users_online` = '0', `loaded_rooms` = '0'");
             }

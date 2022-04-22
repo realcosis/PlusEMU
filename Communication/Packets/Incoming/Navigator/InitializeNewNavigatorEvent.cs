@@ -9,7 +9,7 @@ namespace Plus.Communication.Packets.Incoming.Navigator
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            ICollection<TopLevelItem> topLevelItems = PlusEnvironment.GetGame().GetNavigator().GetTopLevelItems();
+            var topLevelItems = PlusEnvironment.GetGame().GetNavigator().GetTopLevelItems();
 
             session.SendPacket(new NavigatorMetaDataParserComposer(topLevelItems));
             session.SendPacket(new NavigatorLiftedRoomsComposer());

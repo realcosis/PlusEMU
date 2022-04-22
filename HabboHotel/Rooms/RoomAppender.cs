@@ -21,12 +21,12 @@ namespace Plus.HabboHotel.Rooms
             packet.WriteInteger(data.Category);
 
             packet.WriteInteger(data.Tags.Count);
-            foreach (string tag in data.Tags)
+            foreach (var tag in data.Tags)
             {
                 packet.WriteString(tag);
             }
 
-            int roomType = 0;
+            var roomType = 0;
             if (data.Group != null)
                 roomType += 2;
             if (data.Promotion != null)
@@ -36,7 +36,7 @@ namespace Plus.HabboHotel.Rooms
             if (data.AllowPets == 1)
                 roomType += 16;
             
-            if (PlusEnvironment.GetGame().GetNavigator().TryGetFeaturedRoom(data.Id, out FeaturedRoom item))
+            if (PlusEnvironment.GetGame().GetNavigator().TryGetFeaturedRoom(data.Id, out var item))
             {
                 roomType += 1;
             }

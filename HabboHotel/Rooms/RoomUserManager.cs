@@ -52,14 +52,14 @@ namespace Plus.HabboHotel.Rooms
 
         public RoomUser DeployBot(RoomBot bot, Pet pet)
         {
-            RoomUser user = new RoomUser(0, _room.RoomId, _primaryPrivateUserId++, _room);
+            var user = new RoomUser(0, _room.RoomId, _primaryPrivateUserId++, _room);
             bot.VirtualId = _primaryPrivateUserId;
 
-            int personalId = _secondaryPrivateUserId++;
+            var personalId = _secondaryPrivateUserId++;
             user.InternalRoomId = personalId;
             _users.TryAdd(personalId, user);
 
-            DynamicRoomModel model = _room.GetGameMap().Model;
+            var model = _room.GetGameMap().Model;
 
             if ((bot.X > 0 && bot.Y > 0) && bot.X < model.MapSizeX && bot.Y < model.MapSizeY)
             {
@@ -114,19 +114,19 @@ namespace Plus.HabboHotel.Rooms
 
         public void RemoveBot(int virtualId, bool kicked)
         {
-            RoomUser user = GetRoomUserByVirtualId(virtualId);
+            var user = GetRoomUserByVirtualId(virtualId);
             if (user == null || !user.IsBot)
                 return;
 
             if (user.IsPet)
             {
 
-                _pets.TryRemove(user.PetData.PetId, out RoomUser pet);
+                _pets.TryRemove(user.PetData.PetId, out var pet);
                 _petCount--;
             }
             else
             {
-                _bots.TryRemove(user.BotData.Id, out RoomUser bot);
+                _bots.TryRemove(user.BotData.Id, out var bot);
             }
 
             user.BotAi.OnSelfLeaveRoom(kicked);
@@ -134,7 +134,7 @@ namespace Plus.HabboHotel.Rooms
             _room.SendPacket(new UserRemoveComposer(user.VirtualId));
 
             if (_users != null)
-                _users.TryRemove(user.InternalRoomId, out RoomUser toRemove);
+                _users.TryRemove(user.InternalRoomId, out var toRemove);
 
             OnRemove(user);
         }
@@ -155,7 +155,7 @@ namespace Plus.HabboHotel.Rooms
             if (session.GetHabbo().CurrentRoom == null)
                 return false;
             
-            RoomUser user = new RoomUser(session.GetHabbo().Id, _room.RoomId, _primaryPrivateUserId++, _room);
+            var user = new RoomUser(session.GetHabbo().Id, _room.RoomId, _primaryPrivateUserId++, _room);
 
             if (user == null || user.GetClient() == null)
                 return false;
@@ -164,7 +164,7 @@ namespace Plus.HabboHotel.Rooms
 
             session.GetHabbo().TentId = 0;
 
-            int personalId = _secondaryPrivateUserId++;
+            var personalId = _secondaryPrivateUserId++;
             user.InternalRoomId = personalId;
 
 
@@ -172,7 +172,7 @@ namespace Plus.HabboHotel.Rooms
             if (!_users.TryAdd(personalId, user))
                 return false;
 
-            DynamicRoomModel model = _room.GetGameMap().Model;
+            var model = _room.GetGameMap().Model;
             if (model == null)
                 return false;
 
@@ -183,7 +183,7 @@ namespace Plus.HabboHotel.Rooms
             {
                 if (!model.DoorIsValid())
                 {
-                    Point square = _room.GetGameMap().GetRandomWalkableSquare();
+                    var square = _room.GetGameMap().GetRandomWalkableSquare();
                     model.DoorX = square.X;
                     model.DoorY = square.Y;
                     model.DoorZ = _room.GetGameMap().GetHeightForSquareFromData(square);
@@ -257,7 +257,7 @@ namespace Plus.HabboHotel.Rooms
             if (session.GetHabbo().GetPermissions().HasRight("mod_tool") && !session.GetHabbo().DisableForcedEffects)
                 session.GetHabbo().Effects().ApplyEffect(102);
 
-            foreach (RoomUser bot in _bots.Values.ToList())
+            foreach (var bot in _bots.Values.ToList())
             {
                 if (bot == null || bot.BotAi == null)
                     continue;
@@ -286,13 +286,13 @@ namespace Plus.HabboHotel.Rooms
                 if (session.GetHabbo().TentId > 0)
                     session.GetHabbo().TentId = 0;
 
-                RoomUser user = GetRoomUserByHabbo(session.GetHabbo().Id);
+                var user = GetRoomUserByHabbo(session.GetHabbo().Id);
                 if (user != null)
                 {
                     if (user.RidingHorse)
                     {
                         user.RidingHorse = false;
-                        RoomUser userRiding = GetRoomUserByVirtualId(user.HorseId);
+                        var userRiding = GetRoomUserByVirtualId(user.HorseId);
                         if (userRiding != null)
                         {
                             userRiding.RidingHorse = false;
@@ -302,7 +302,7 @@ namespace Plus.HabboHotel.Rooms
 
                     if (user.Team != Team.None)
                     {
-                        TeamManager team = _room.GetTeamManagerForFreeze();
+                        var team = _room.GetTeamManagerForFreeze();
                         if (team != null)
                         {
                             team.OnUserLeave(user);
@@ -335,7 +335,7 @@ namespace Plus.HabboHotel.Rooms
                     if (session.GetHabbo().GetMessenger() != null)
                         session.GetHabbo().GetMessenger().OnStatusChanged(true);
 
-                    using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                    using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                     {
                         dbClient.RunQuery("UPDATE user_roomvisits SET exit_timestamp = '" + PlusEnvironment.GetUnixTimestamp() + "' WHERE room_id = '" + _room.RoomId + "' AND user_id = '" + session.GetHabbo().Id + "' ORDER BY exit_timestamp DESC LIMIT 1");
                         dbClient.RunQuery("UPDATE `rooms` SET `users_now` = '" + _room.UsersNow + "' WHERE `id` = '" + _room.RoomId + "' LIMIT 1");
@@ -356,15 +356,15 @@ namespace Plus.HabboHotel.Rooms
             try
             {
 
-                GameClient session = user.GetClient();
+                var session = user.GetClient();
                 if (session == null)
                     return;
 
-                List<RoomUser> bots = new List<RoomUser>();
+                var bots = new List<RoomUser>();
 
                 try
                 {
-                    foreach (RoomUser roomUser in GetUserList().ToList())
+                    foreach (var roomUser in GetUserList().ToList())
                     {
                         if (roomUser == null)
                             continue;
@@ -378,8 +378,8 @@ namespace Plus.HabboHotel.Rooms
                 }
                 catch { }
 
-                List<RoomUser> petsToRemove = new List<RoomUser>();
-                foreach (RoomUser bot in bots.ToList())
+                var petsToRemove = new List<RoomUser>();
+                foreach (var bot in bots.ToList())
                 {
                     if (bot == null || bot.BotAi == null)
                         continue;
@@ -393,7 +393,7 @@ namespace Plus.HabboHotel.Rooms
                     }
                 }
 
-                foreach (RoomUser toRemove in petsToRemove.ToList())
+                foreach (var toRemove in petsToRemove.ToList())
                 {
                     if (toRemove == null)
                         continue;
@@ -450,10 +450,10 @@ namespace Plus.HabboHotel.Rooms
 
         public RoomUser GetBotByName(string name)
         {
-            bool foundBot = _bots.Count(x => x.Value.BotData != null && x.Value.BotData.Name.ToLower() == name.ToLower()) > 0;
+            var foundBot = _bots.Count(x => x.Value.BotData != null && x.Value.BotData.Name.ToLower() == name.ToLower()) > 0;
             if (foundBot)
             {
-                int id = _bots.FirstOrDefault(x => x.Value.BotData != null && x.Value.BotData.Name.ToLower() == name.ToLower()).Value.BotData.Id;
+                var id = _bots.FirstOrDefault(x => x.Value.BotData != null && x.Value.BotData.Name.ToLower() == name.ToLower()).Value.BotData.Id;
 
                 return _bots[id];
             }
@@ -465,11 +465,8 @@ namespace Plus.HabboHotel.Rooms
         {
             UserCount = count;
             _room.UsersNow = count;
-            
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.RunQuery("UPDATE `rooms` SET `users_now` = '" + count + "' WHERE `id` = '" + _room.RoomId + "' LIMIT 1");
-            }
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.RunQuery("UPDATE `rooms` SET `users_now` = '" + count + "' WHERE `id` = '" + _room.RoomId + "' LIMIT 1");
         }
 
         public RoomUser GetRoomUserByVirtualId(int virtualId)
@@ -482,7 +479,7 @@ namespace Plus.HabboHotel.Rooms
 
         public RoomUser GetRoomUserByHabbo(int id)
         {
-            RoomUser user = GetUserList().Where(x => x != null && x.GetClient() != null && x.GetClient().GetHabbo() != null && x.GetClient().GetHabbo().Id == id).FirstOrDefault();
+            var user = GetUserList().Where(x => x != null && x.GetClient() != null && x.GetClient().GetHabbo() != null && x.GetClient().GetHabbo().Id == id).FirstOrDefault();
 
             if (user != null)
                 return user;
@@ -492,7 +489,7 @@ namespace Plus.HabboHotel.Rooms
 
         public List<RoomUser> GetRoomUsers()
         {
-            List<RoomUser> list = new List<RoomUser>();
+            var list = new List<RoomUser>();
 
             list = GetUserList().Where(x => (!x.IsBot)).ToList();
 
@@ -502,7 +499,7 @@ namespace Plus.HabboHotel.Rooms
         public List<RoomUser> GetRoomUserByRank(int minRank)
         {
             var returnList = new List<RoomUser>();
-            foreach (RoomUser user in GetUserList().ToList())
+            foreach (var user in GetUserList().ToList())
             {
                 if (user == null)
                     continue;
@@ -516,7 +513,7 @@ namespace Plus.HabboHotel.Rooms
 
         public RoomUser GetRoomUserByHabbo(string pName)
         {
-            RoomUser user = GetUserList().FirstOrDefault(x => x != null && x.GetClient() != null && x.GetClient().GetHabbo() != null && x.GetClient().GetHabbo().Username.Equals(pName, StringComparison.OrdinalIgnoreCase));
+            var user = GetUserList().FirstOrDefault(x => x != null && x.GetClient() != null && x.GetClient().GetHabbo() != null && x.GetClient().GetHabbo().Username.Equals(pName, StringComparison.OrdinalIgnoreCase));
             if (user != null)
                 return user;
 
@@ -525,59 +522,55 @@ namespace Plus.HabboHotel.Rooms
 
         public void UpdatePets()
         {
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            foreach (var pet in GetPets().ToList())
             {
-                foreach (Pet pet in GetPets().ToList())
+                if (pet == null)
+                    continue;
+
+                if (pet.DbState == PetDatabaseUpdateState.NeedsInsert)
                 {
-                    if (pet == null)
-                        continue;
+                    dbClient.SetQuery("INSERT INTO `bots` (`id`,`user_id`,`room_id`,`name`,`x`,`y`,`z`) VALUES ('" + pet.PetId + "','" + pet.OwnerId + "','" + pet.RoomId + "',@name,'0','0','0')");
+                    dbClient.AddParameter("name", pet.Name);
+                    dbClient.RunQuery();
 
-                    if (pet.DbState == PetDatabaseUpdateState.NeedsInsert)
-                    {
-                        dbClient.SetQuery("INSERT INTO `bots` (`id`,`user_id`,`room_id`,`name`,`x`,`y`,`z`) VALUES ('" + pet.PetId + "','" + pet.OwnerId + "','" + pet.RoomId + "',@name,'0','0','0')");
-                        dbClient.AddParameter("name", pet.Name);
-                        dbClient.RunQuery();
-
-                        dbClient.SetQuery("INSERT INTO `bots_petdata` (`type`,`race`,`color`,`experience`,`energy`,`createstamp`,`nutrition`,`respect`) VALUES ('" + pet.Type + "',@race,@color,'0','100','" + pet.CreationStamp + "','0','0')");
-                        dbClient.AddParameter(pet.PetId + "race", pet.Race);
-                        dbClient.AddParameter(pet.PetId + "color", pet.Color);
-                        dbClient.RunQuery();
-                    }
-                    else if (pet.DbState == PetDatabaseUpdateState.NeedsUpdate)
-                    {
-                        //Surely this can be *99 better? // TODO
-                        RoomUser user = GetRoomUserByVirtualId(pet.VirtualId);
-
-                        dbClient.RunQuery("UPDATE `bots` SET room_id = " + pet.RoomId + ", x = " + (user != null ? user.X : 0) + ", Y = " + (user != null ? user.Y : 0) + ", Z = " + (user != null ? user.Z : 0) + " WHERE `id` = '" + pet.PetId + "' LIMIT 1");
-                        dbClient.RunQuery("UPDATE `bots_petdata` SET `experience` = '" + pet.Experience + "', `energy` = '" + pet.Energy + "', `nutrition` = '" + pet.Nutrition + "', `respect` = '" + pet.Respect + "' WHERE `id` = '" + pet.PetId + "' LIMIT 1");
-                    }
-
-                    pet.DbState = PetDatabaseUpdateState.Updated;
+                    dbClient.SetQuery("INSERT INTO `bots_petdata` (`type`,`race`,`color`,`experience`,`energy`,`createstamp`,`nutrition`,`respect`) VALUES ('" + pet.Type + "',@race,@color,'0','100','" + pet.CreationStamp + "','0','0')");
+                    dbClient.AddParameter(pet.PetId + "race", pet.Race);
+                    dbClient.AddParameter(pet.PetId + "color", pet.Color);
+                    dbClient.RunQuery();
                 }
+                else if (pet.DbState == PetDatabaseUpdateState.NeedsUpdate)
+                {
+                    //Surely this can be *99 better? // TODO
+                    var user = GetRoomUserByVirtualId(pet.VirtualId);
+
+                    dbClient.RunQuery("UPDATE `bots` SET room_id = " + pet.RoomId + ", x = " + (user != null ? user.X : 0) + ", Y = " + (user != null ? user.Y : 0) + ", Z = " + (user != null ? user.Z : 0) + " WHERE `id` = '" + pet.PetId + "' LIMIT 1");
+                    dbClient.RunQuery("UPDATE `bots_petdata` SET `experience` = '" + pet.Experience + "', `energy` = '" + pet.Energy + "', `nutrition` = '" + pet.Nutrition + "', `respect` = '" + pet.Respect + "' WHERE `id` = '" + pet.PetId + "' LIMIT 1");
+                }
+
+                pet.DbState = PetDatabaseUpdateState.Updated;
             }
         }
 
         private void UpdateBots()
         {
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            foreach (var user in GetRoomUsers().ToList())
             {
-                foreach (RoomUser user in GetRoomUsers().ToList())
-                {
-                    if (user == null || !user.IsBot)
-                        continue;
+                if (user == null || !user.IsBot)
+                    continue;
 
-                    if (user.IsBot)
-                    {
-                        dbClient.SetQuery("UPDATE bots SET x=@x, y=@y, z=@z, name=@name, look=@look, rotation=@rotation WHERE id=@id LIMIT 1;");
-                        dbClient.AddParameter("name", user.BotData.Name);
-                        dbClient.AddParameter("look", user.BotData.Look);
-                        dbClient.AddParameter("rotation", user.BotData.Rot);
-                        dbClient.AddParameter("x", user.X);
-                        dbClient.AddParameter("y", user.Y);
-                        dbClient.AddParameter("z", user.Z);
-                        dbClient.AddParameter("id", user.BotData.BotId);
-                        dbClient.RunQuery();
-                    }
+                if (user.IsBot)
+                {
+                    dbClient.SetQuery("UPDATE bots SET x=@x, y=@y, z=@z, name=@name, look=@look, rotation=@rotation WHERE id=@id LIMIT 1;");
+                    dbClient.AddParameter("name", user.BotData.Name);
+                    dbClient.AddParameter("look", user.BotData.Look);
+                    dbClient.AddParameter("rotation", user.BotData.Rot);
+                    dbClient.AddParameter("x", user.X);
+                    dbClient.AddParameter("y", user.Y);
+                    dbClient.AddParameter("z", user.Z);
+                    dbClient.AddParameter("id", user.BotData.BotId);
+                    dbClient.RunQuery();
                 }
             }
         }
@@ -585,8 +578,8 @@ namespace Plus.HabboHotel.Rooms
 
         public List<Pet> GetPets()
         {
-            List<Pet> pets = new List<Pet>();
-            foreach (RoomUser user in _pets.Values.ToList())
+            var pets = new List<Pet>();
+            foreach (var user in _pets.Values.ToList())
             {
                 if (user == null || !user.IsPet)
                     continue;
@@ -599,13 +592,13 @@ namespace Plus.HabboHotel.Rooms
 
         public void SerializeStatusUpdates()
         {
-            List<RoomUser> users = new List<RoomUser>();
-            ICollection<RoomUser> roomUsers = GetUserList();
+            var users = new List<RoomUser>();
+            var roomUsers = GetUserList();
 
             if (roomUsers == null)
                 return;
 
-            foreach (RoomUser user in roomUsers.ToList())
+            foreach (var user in roomUsers.ToList())
             {
                 if (user == null || !user.UpdateNeeded || users.Contains(user))
                     continue;
@@ -620,7 +613,7 @@ namespace Plus.HabboHotel.Rooms
 
         public void UpdateUserStatusses()
         {
-            foreach (RoomUser user in GetUserList().ToList())
+            foreach (var user in GetUserList().ToList())
             {
                 if (user == null)
                     continue;
@@ -646,14 +639,14 @@ namespace Plus.HabboHotel.Rooms
 
         public void OnCycle()
         {
-            int userCounter = 0;
+            var userCounter = 0;
 
             try
             {
 
-                List<RoomUser> toRemove = new List<RoomUser>();
+                var toRemove = new List<RoomUser>();
 
-                foreach (RoomUser user in GetUserList().ToList())
+                foreach (var user in GetUserList().ToList())
                 {
                     if (user == null)
                         continue;
@@ -672,7 +665,7 @@ namespace Plus.HabboHotel.Rooms
                         continue;
                     }
 
-                    bool updated = false;
+                    var updated = false;
                     user.IdleTime++;
                     user.HandleSpamTicks();
                     if (!user.IsBot && !user.IsAsleep && user.IdleTime >= 600)
@@ -691,7 +684,7 @@ namespace Plus.HabboHotel.Rooms
                     if (_room.GotFreeze())
                         _room.GetFreeze().CycleUser(user);
 
-                    bool invalidStep = false;
+                    var invalidStep = false;
 
                     if (user.IsRolling)
                     {
@@ -711,8 +704,8 @@ namespace Plus.HabboHotel.Rooms
                             if (!user.RidingHorse)
                                 _room.GetGameMap().UpdateUserMovement(new Point(user.Coordinate.X, user.Coordinate.Y), new Point(user.SetX, user.SetY), user);
 
-                            List<Item> coordinatedItems = _room.GetGameMap().GetCoordinatedItems(new Point(user.X, user.Y));
-                            foreach (Item item in coordinatedItems.ToList())
+                            var coordinatedItems = _room.GetGameMap().GetCoordinatedItems(new Point(user.X, user.Y));
+                            foreach (var item in coordinatedItems.ToList())
                             {
                                 item.UserWalksOffFurni(user);
                             }
@@ -732,7 +725,7 @@ namespace Plus.HabboHotel.Rooms
 
                             if (!user.IsBot && user.RidingHorse)
                             {
-                                RoomUser horse = GetRoomUserByVirtualId(user.HorseId);
+                                var horse = GetRoomUserByVirtualId(user.HorseId);
                                 if (horse != null)
                                 {
                                     horse.X = user.SetX;
@@ -746,8 +739,8 @@ namespace Plus.HabboHotel.Rooms
                                 continue;
                             }
 
-                            List<Item> items = _room.GetGameMap().GetCoordinatedItems(new Point(user.X, user.Y));
-                            foreach (Item item in items.ToList())
+                            var items = _room.GetGameMap().GetCoordinatedItems(new Point(user.X, user.Y));
+                            foreach (var item in items.ToList())
                             {
                                 item.UserWalksOnFurni(user);
                             }
@@ -794,7 +787,7 @@ namespace Plus.HabboHotel.Rooms
                             {
                                 if (user.CarryItemId > 0)
                                 {
-                                    RoomUser target = _room.GetRoomUserManager().GetRoomUserByHabbo(user.BotData.TargetUser);
+                                    var target = _room.GetRoomUserManager().GetRoomUserByHabbo(user.BotData.TargetUser);
 
                                     if (target != null && Gamemap.TilesTouching(user.X, user.Y, target.X, target.Y))
                                     {
@@ -810,7 +803,7 @@ namespace Plus.HabboHotel.Rooms
 
                             if (user.RidingHorse && user.IsPet == false && !user.IsBot)
                             {
-                                RoomUser mascotaVinculada = GetRoomUserByVirtualId(user.HorseId);
+                                var mascotaVinculada = GetRoomUserByVirtualId(user.HorseId);
                                 if (mascotaVinculada != null)
                                 {
                                     mascotaVinculada.IsWalking = false;
@@ -821,31 +814,31 @@ namespace Plus.HabboHotel.Rooms
                         }
                         else
                         {
-                            Vector2D nextStep = user.Path[(user.Path.Count - user.PathStep) - 1];
+                            var nextStep = user.Path[(user.Path.Count - user.PathStep) - 1];
                             user.PathStep++;
 
                             if (user.FastWalking && user.PathStep < user.Path.Count)
                             {
-                                int s2 = (user.Path.Count - user.PathStep) - 1;
+                                var s2 = (user.Path.Count - user.PathStep) - 1;
                                 nextStep = user.Path[s2];
                                 user.PathStep++;
                             }
 
                             if (user.SuperFastWalking && user.PathStep < user.Path.Count)
                             {
-                                int s2 = (user.Path.Count - user.PathStep) - 1;
+                                var s2 = (user.Path.Count - user.PathStep) - 1;
                                 nextStep = user.Path[s2];
                                 user.PathStep++;
                                 user.PathStep++;
                             }
 
-                            int nextX = nextStep.X;
-                            int nextY = nextStep.Y;
+                            var nextX = nextStep.X;
+                            var nextY = nextStep.Y;
                             user.RemoveStatus("mv");
 
                             if (_room.GetGameMap().IsValidStep2(user, new Vector2D(user.X, user.Y), new Vector2D(nextX, nextY), (user.GoalX == nextX && user.GoalY == nextY), user.AllowOverride))
                             {
-                                double nextZ = _room.GetGameMap().SqAbsoluteHeight(nextX, nextY);
+                                var nextZ = _room.GetGameMap().SqAbsoluteHeight(nextX, nextY);
 
                                 if (!user.IsBot)
                                 {
@@ -886,7 +879,7 @@ namespace Plus.HabboHotel.Rooms
 
                                 if (!user.IsBot && user.RidingHorse && user.IsPet == false)
                                 {
-                                    RoomUser horse = GetRoomUserByVirtualId(user.HorseId);
+                                    var horse = GetRoomUserByVirtualId(user.HorseId);
                                     if (horse != null)
                                         horse.SetStatus("mv", nextX + "," + nextY + "," + TextHandling.GetString(nextZ));
 
@@ -899,7 +892,7 @@ namespace Plus.HabboHotel.Rooms
                                     user.SetStatus("mv", nextX + "," + nextY + "," + TextHandling.GetString(nextZ));
 
 
-                                int newRot = Rotation.Calculate(user.X, user.Y, nextX, nextY, user.MoonwalkEnabled);
+                                var newRot = Rotation.Calculate(user.X, user.Y, nextX, nextY, user.MoonwalkEnabled);
 
                                 user.RotBody = newRot;
                                 user.RotHead = newRot;
@@ -914,7 +907,7 @@ namespace Plus.HabboHotel.Rooms
 
                                 if (user.RidingHorse && user.IsPet == false && !user.IsBot)
                                 {
-                                    RoomUser horse = GetRoomUserByVirtualId(user.HorseId);
+                                    var horse = GetRoomUserByVirtualId(user.HorseId);
                                     if (horse != null)
                                     {
                                         horse.RotBody = newRot;
@@ -932,7 +925,7 @@ namespace Plus.HabboHotel.Rooms
 
                                 if (_room.RoomBlockingEnabled == 0)
                                 {
-                                    RoomUser users = _room.GetRoomUserManager().GetUserForSquare(nextX, nextY);
+                                    var users = _room.GetRoomUserManager().GetUserForSquare(nextX, nextY);
                                     if (users != null)
                                         _room.GetGameMap().GameMap[nextX, nextY] = 0;
                                 }
@@ -952,7 +945,7 @@ namespace Plus.HabboHotel.Rooms
 
                             if (user.RidingHorse)
                             {
-                                RoomUser horse = GetRoomUserByVirtualId(user.HorseId);
+                                var horse = GetRoomUserByVirtualId(user.HorseId);
                                 if (horse != null)
                                 {
                                     horse.RemoveStatus("mv");
@@ -976,9 +969,9 @@ namespace Plus.HabboHotel.Rooms
                     }
                 }
 
-                foreach (RoomUser userToRemove in toRemove.ToList())
+                foreach (var userToRemove in toRemove.ToList())
                 {
-                    GameClient client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userToRemove.HabboId);
+                    var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userToRemove.HabboId);
                     if (client != null)
                     {
                         RemoveUserFromRoom(client, true, false);
@@ -1003,7 +996,7 @@ namespace Plus.HabboHotel.Rooms
 
             try
             {
-                bool isBot = user.IsBot;
+                var isBot = user.IsBot;
                 if (isBot)
                     cyclegameitems = false;
 
@@ -1028,7 +1021,7 @@ namespace Plus.HabboHotel.Rooms
                     return;
 
                 double newZ;
-                List<Item> itemsOnSquare = _room.GetGameMap().GetAllRoomItemForSquare(user.X, user.Y);
+                var itemsOnSquare = _room.GetGameMap().GetAllRoomItemForSquare(user.X, user.Y);
                 if (itemsOnSquare != null || itemsOnSquare.Count != 0)
                 {
                     if (user.RidingHorse && user.IsPet == false)
@@ -1047,7 +1040,7 @@ namespace Plus.HabboHotel.Rooms
                     user.UpdateNeeded = true;
                 }
 
-                DynamicRoomModel model = _room.GetGameMap().Model;
+                var model = _room.GetGameMap().Model;
                 if (model.SqState[user.X, user.Y] == SquareState.Seat)
                 {
                     if (!user.Statusses.ContainsKey("sit"))
@@ -1064,7 +1057,7 @@ namespace Plus.HabboHotel.Rooms
                     user.LastItem = null;
 
 
-                foreach (Item item in itemsOnSquare.ToList())
+                foreach (var item in itemsOnSquare.ToList())
                 {
                     if (item == null)
                         continue;
@@ -1109,8 +1102,8 @@ namespace Plus.HabboHotel.Rooms
                             {
                                 if (cyclegameitems)
                                 {
-                                    int effectId = Convert.ToInt32(item.Team + 32);
-                                    TeamManager t = user.GetClient().GetHabbo().CurrentRoom.GetTeamManagerForBanzai();
+                                    var effectId = Convert.ToInt32(item.Team + 32);
+                                    var t = user.GetClient().GetHabbo().CurrentRoom.GetTeamManagerForBanzai();
 
                                     if (user.Team == Team.None)
                                     {
@@ -1155,8 +1148,8 @@ namespace Plus.HabboHotel.Rooms
                             {
                                 if (cyclegameitems)
                                 {
-                                    int effectId = Convert.ToInt32(item.Team + 39);
-                                    TeamManager t = user.GetClient().GetHabbo().CurrentRoom.GetTeamManagerForFreeze();
+                                    var effectId = Convert.ToInt32(item.Team + 39);
+                                    var t = user.GetClient().GetHabbo().CurrentRoom.GetTeamManagerForFreeze();
 
                                     if (user.Team == Team.None)
                                     {
@@ -1245,12 +1238,12 @@ namespace Plus.HabboHotel.Rooms
                                         user.UnlockWalking();
                                     else
                                     {
-                                        int linkedTele = ItemTeleporterFinder.GetLinkedTele(item.Id);
-                                        int teleRoomId = ItemTeleporterFinder.GetTeleRoomId(linkedTele, room);
+                                        var linkedTele = ItemTeleporterFinder.GetLinkedTele(item.Id);
+                                        var teleRoomId = ItemTeleporterFinder.GetTeleRoomId(linkedTele, room);
 
                                         if (teleRoomId == room.RoomId)
                                         {
-                                            Item targetItem = room.GetRoomItemHandler().GetItem(linkedTele);
+                                            var targetItem = room.GetRoomItemHandler().GetItem(linkedTele);
                                             if (targetItem == null)
                                             {
                                                 if (user.GetClient() != null)
@@ -1320,13 +1313,13 @@ namespace Plus.HabboHotel.Rooms
 
             try
             {
-                byte newCurrentUserItemEffect = _room.GetGameMap().EffectMap[x, y];
+                var newCurrentUserItemEffect = _room.GetGameMap().EffectMap[x, y];
                 if (newCurrentUserItemEffect > 0)
                 {
                     if (user.GetClient().GetHabbo().Effects().CurrentEffect == 0)
                         user.CurrentItemEffect = ItemEffectType.None;
 
-                    ItemEffectType type = ByteToItemEffectEnum.Parse(newCurrentUserItemEffect);
+                    var type = ByteToItemEffectEnum.Parse(newCurrentUserItemEffect);
                     if (type != user.CurrentItemEffect)
                     {
                         switch (type)
@@ -1399,7 +1392,7 @@ namespace Plus.HabboHotel.Rooms
             UpdateBots();
 
             _room.UsersNow = 0;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE `rooms` SET `users_now` = '0' WHERE `id` = '" + _room.Id + "' LIMIT 1");
             }

@@ -33,7 +33,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Avatar
 
             session.GetHabbo().LastMottoUpdateTime = DateTime.Now;
 
-            string newMotto = StringCharFilter.Escape(packet.PopString().Trim());
+            var newMotto = StringCharFilter.Escape(packet.PopString().Trim());
 
             if (newMotto.Length > 38)
                 newMotto = newMotto.Substring(0, 38);
@@ -46,7 +46,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Avatar
 
             session.GetHabbo().Motto = newMotto;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `users` SET `motto` = @motto WHERE `id` = @userId LIMIT 1");
                 dbClient.AddParameter("userId", session.GetHabbo().Id);
@@ -59,11 +59,11 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Avatar
 
             if (session.GetHabbo().InRoom)
             {
-                Room room = session.GetHabbo().CurrentRoom;
+                var room = session.GetHabbo().CurrentRoom;
                 if (room == null)
                     return;
 
-                RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+                var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
                 if (user == null || user.GetClient() == null)
                     return;
 

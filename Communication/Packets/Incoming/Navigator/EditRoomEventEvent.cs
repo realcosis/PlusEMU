@@ -11,11 +11,11 @@ namespace Plus.Communication.Packets.Incoming.Navigator
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int roomId = packet.PopInt();
-            string name = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
-            string desc = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
+            var roomId = packet.PopInt();
+            var name = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
+            var desc = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
 
-            if (!RoomFactory.TryGetData(roomId, out RoomData data))
+            if (!RoomFactory.TryGetData(roomId, out var data))
                 return;
 
             if (data.OwnerId != session.GetHabbo().Id)
@@ -27,7 +27,7 @@ namespace Plus.Communication.Packets.Incoming.Navigator
                 return;
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `room_promotions` SET `title` = @title, `description` = @desc WHERE `room_id` = " + roomId + " LIMIT 1");
                 dbClient.AddParameter("title", name);

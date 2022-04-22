@@ -29,17 +29,17 @@ namespace Plus.HabboHotel.Rooms.Instance
 
         public void OnCycle()
         {
-            DateTime start = DateTime.Now;
-            foreach (KeyValuePair<int, IWiredItem> item in _wiredItems.ToList())
+            var start = DateTime.Now;
+            foreach (var item in _wiredItems.ToList())
             {
-                Item selectedItem = _room.GetRoomItemHandler().GetItem(item.Value.Item.Id);
+                var selectedItem = _room.GetRoomItemHandler().GetItem(item.Value.Item.Id);
 
                 if (selectedItem == null)
                     TryRemove(item.Key);
 
                 if (item.Value is IWiredCycle)
                 {
-                    IWiredCycle cycle = (IWiredCycle)item.Value;
+                    var cycle = (IWiredCycle)item.Value;
 
                     if (cycle.TickCount <= 0)
                     {
@@ -51,7 +51,7 @@ namespace Plus.HabboHotel.Rooms.Instance
                     }
                 }
             }
-            TimeSpan span = (DateTime.Now - start);
+            var span = (DateTime.Now - start);
             if (span.Milliseconds > 400)
             {
                 //log.Warn("<Room " + _room.Id + "> Wired took " + Span.TotalMilliseconds + "ms to execute - Rooms lagging behind");
@@ -60,10 +60,10 @@ namespace Plus.HabboHotel.Rooms.Instance
 
         public IWiredItem LoadWiredBox(Item item)
         {
-            IWiredItem newBox = GenerateNewBox(item);
+            var newBox = GenerateNewBox(item);
 
             DataRow row = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM wired_items WHERE id=@id LIMIT 1");
                 dbClient.AddParameter("id", item.Id);
@@ -91,21 +91,21 @@ namespace Plus.HabboHotel.Rooms.Instance
 
                     if (newBox is IWiredCycle)
                     {
-                        IWiredCycle box = (IWiredCycle)newBox;
+                        var box = (IWiredCycle)newBox;
                         box.Delay = Convert.ToInt32(row["delay"]);
                     }
 
-                    foreach (string str in Convert.ToString(row["items"]).Split(';'))
+                    foreach (var str in Convert.ToString(row["items"]).Split(';'))
                     {
-                        int id = 0;
-                        string sId = "0";
+                        var id = 0;
+                        var sId = "0";
 
                         if (str.Contains(':'))
                             sId = str.Split(':')[0];
 
                         if (int.TryParse(str, out id) || int.TryParse(sId, out id))
                         {
-                            Item selectedItem = _room.GetRoomItemHandler().GetItem(Convert.ToInt32(id));
+                            var selectedItem = _room.GetRoomItemHandler().GetItem(Convert.ToInt32(id));
                             if (selectedItem == null)
                                 continue;
 
@@ -288,7 +288,7 @@ namespace Plus.HabboHotel.Rooms.Instance
 
             if (items != null && items.Count > 0)
             {
-                foreach (IWiredItem item in items)
+                foreach (var item in items)
                 {
                     if (item.Type != WiredBoxType.EffectMoveAndRotate && item.Type != WiredBoxType.EffectMoveFurniFromNearestUser && item.Type != WiredBoxType.EffectMoveFurniToNearestUser)
                         continue;
@@ -309,13 +309,13 @@ namespace Plus.HabboHotel.Rooms.Instance
 
         public bool TriggerEvent(WiredBoxType type, params object[] @params)
         {
-            bool finished = false;
+            var finished = false;
             try
             {
                 if (type == WiredBoxType.TriggerUserSays)
                 {
-                    List<IWiredItem> ranBoxes = new List<IWiredItem>();
-                    foreach (IWiredItem box in _wiredItems.Values.ToList())
+                    var ranBoxes = new List<IWiredItem>();
+                    foreach (var box in _wiredItems.Values.ToList())
                     {
                         if (box == null)
                             continue;
@@ -327,8 +327,8 @@ namespace Plus.HabboHotel.Rooms.Instance
                         }
                     }
 
-                    string message = Convert.ToString(@params[1]);
-                    foreach (IWiredItem box in ranBoxes.ToList())
+                    var message = Convert.ToString(@params[1]);
+                    foreach (var box in ranBoxes.ToList())
                     {
                         if (box == null)
                             continue;
@@ -342,7 +342,7 @@ namespace Plus.HabboHotel.Rooms.Instance
                 }
                 else
                 {
-                    foreach (IWiredItem box in _wiredItems.Values.ToList())
+                    foreach (var box in _wiredItems.Values.ToList())
                     {
                         if (box == null)
                             continue;
@@ -365,8 +365,8 @@ namespace Plus.HabboHotel.Rooms.Instance
 
         public ICollection<IWiredItem> GetTriggers(IWiredItem item)
         {
-            List<IWiredItem> items = new List<IWiredItem>();
-            foreach (IWiredItem I in _wiredItems.Values)
+            var items = new List<IWiredItem>();
+            foreach (var I in _wiredItems.Values)
             {
                 if (IsTrigger(I.Item) && I.Item.GetX == item.Item.GetX && I.Item.GetY == item.Item.GetY)
                 {
@@ -379,9 +379,9 @@ namespace Plus.HabboHotel.Rooms.Instance
 
         public ICollection<IWiredItem> GetEffects(IWiredItem item)
         {
-            List<IWiredItem> items = new List<IWiredItem>();
+            var items = new List<IWiredItem>();
 
-            foreach (IWiredItem I in _wiredItems.Values)
+            foreach (var I in _wiredItems.Values)
             {
                 if (IsEffect(I.Item) && I.Item.GetX == item.Item.GetX && I.Item.GetY == item.Item.GetY)
                 {
@@ -402,14 +402,14 @@ namespace Plus.HabboHotel.Rooms.Instance
             if (room == null || item == null)
                 return false;
 
-            foreach (Point point in item.GetSides())
+            foreach (var point in item.GetSides())
             {
                 if (room.GetGameMap().SquareHasUsers(point.X, point.Y))
                 {
-                    List<RoomUser> users = room.GetGameMap().GetRoomUsers(point);
+                    var users = room.GetGameMap().GetRoomUsers(point);
                     if (users != null && users.Count > 0)
                     {
-                        foreach (RoomUser user in users.ToList())
+                        foreach (var user in users.ToList())
                         {
                             if (user == null)
                                 continue;
@@ -429,9 +429,9 @@ namespace Plus.HabboHotel.Rooms.Instance
 
         public ICollection<IWiredItem> GetConditions(IWiredItem item)
         {
-            List<IWiredItem> items = new List<IWiredItem>();
+            var items = new List<IWiredItem>();
 
-            foreach (IWiredItem I in _wiredItems.Values)
+            foreach (var I in _wiredItems.Values)
             {
                 if (IsCondition(I.Item) && I.Item.GetX == item.Item.GetX && I.Item.GetY == item.Item.GetY)
                 {
@@ -454,16 +454,16 @@ namespace Plus.HabboHotel.Rooms.Instance
 
         public void SaveBox(IWiredItem item)
         {
-            string items = "";
+            var items = "";
             IWiredCycle cycle = null;
             if (item is IWiredCycle)
             {
                 cycle = (IWiredCycle)item;
             }
 
-            foreach (Item I in item.SetItems.Values)
+            foreach (var I in item.SetItems.Values)
             {
-                Item selectedItem = _room.GetRoomItemHandler().GetItem(Convert.ToInt32(I.Id));
+                var selectedItem = _room.GetRoomItemHandler().GetItem(Convert.ToInt32(I.Id));
                 if (selectedItem == null)
                     continue;
 
@@ -475,7 +475,7 @@ namespace Plus.HabboHotel.Rooms.Instance
 
             if (item.Type == WiredBoxType.EffectMatchPosition || item.Type == WiredBoxType.ConditionMatchStateAndPosition || item.Type == WiredBoxType.ConditionDontMatchStateAndPosition)
                 item.ItemsData = items;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("REPLACE INTO `wired_items` VALUES (@id, @items, @delay, @string, @bool)");
             dbClient.AddParameter("id", item.Item.Id);
             dbClient.AddParameter("items", items);

@@ -82,7 +82,7 @@ namespace Plus.HabboHotel.Users.Effects
         {
             get
             {
-                double tl = (_activated ? _duration - TimeUsed : _duration);
+                var tl = (_activated ? _duration - TimeUsed : _duration);
 
                 if (tl < 0)
                 {
@@ -106,8 +106,8 @@ namespace Plus.HabboHotel.Users.Effects
         /// </summary>
         public bool Activate()
         {
-            double tsNow = UnixTimestamp.GetNow();
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            var tsNow = UnixTimestamp.GetNow();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("UPDATE `user_effects` SET `is_activated` = '1', `activated_stamp` = @ts WHERE `id` = @id");
             dbClient.AddParameter("ts", tsNow);
             dbClient.AddParameter("id", Id);
@@ -125,7 +125,7 @@ namespace Plus.HabboHotel.Users.Effects
             _activated = false;
             _timestampActivated = 0;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 if (_quantity < 1)
                 {
@@ -149,7 +149,7 @@ namespace Plus.HabboHotel.Users.Effects
         public void AddToQuantity()
         {
             _quantity++;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("UPDATE `user_effects` SET `quantity` = @qt WHERE `id` = @id");
             dbClient.AddParameter("qt", Quantity);
             dbClient.AddParameter("id", Id);

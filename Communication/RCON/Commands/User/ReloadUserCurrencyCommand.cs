@@ -19,10 +19,10 @@ namespace Plus.Communication.Rcon.Commands.User
 
         public bool TryExecute(string[] parameters)
         {
-            if (!int.TryParse(parameters[0], out int userId))
+            if (!int.TryParse(parameters[0], out var userId))
                 return false;
 
-            GameClient client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
+            var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
             if (client == null || client.GetHabbo() == null)
                 return false;
 
@@ -30,7 +30,7 @@ namespace Plus.Communication.Rcon.Commands.User
             if (string.IsNullOrEmpty(Convert.ToString(parameters[1])))
                 return false;
 
-            string currency = Convert.ToString(parameters[1]);
+            var currency = Convert.ToString(parameters[1]);
 
             switch (currency)
             {
@@ -41,7 +41,7 @@ namespace Plus.Communication.Rcon.Commands.User
                 case "credits":
                     {
                         int credits;
-                        using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                         {
                             dbClient.SetQuery("SELECT `credits` FROM `users` WHERE `id` = @id LIMIT 1");
                             dbClient.AddParameter("id", userId);
@@ -57,7 +57,7 @@ namespace Plus.Communication.Rcon.Commands.User
                 case "duckets":
                     {
                         int duckets;
-                        using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                         {
                             dbClient.SetQuery("SELECT `activity_points` FROM `users` WHERE `id` = @id LIMIT 1");
                             dbClient.AddParameter("id", userId);
@@ -72,7 +72,7 @@ namespace Plus.Communication.Rcon.Commands.User
                 case "diamonds":
                     {
                         int diamonds;
-                        using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                         {
                             dbClient.SetQuery("SELECT `vip_points` FROM `users` WHERE `id` = @id LIMIT 1");
                             dbClient.AddParameter("id", userId);
@@ -87,7 +87,7 @@ namespace Plus.Communication.Rcon.Commands.User
                 case "gotw":
                     {
                         int gotw;
-                        using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                         {
                             dbClient.SetQuery("SELECT `gotw_points` FROM `users` WHERE `id` = @id LIMIT 1");
                             dbClient.AddParameter("id", userId);

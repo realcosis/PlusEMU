@@ -26,7 +26,7 @@ namespace Plus.HabboHotel.Users.UserData
             DataTable dRelations = null;
             DataRow userInfo = null;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `id`,`username`,`rank`,`motto`,`look`,`gender`,`last_online`,`credits`,`activity_points`,`home_room`,`block_newfriends`,`hide_online`,`hide_inroom`,`vip`,`account_created`,`vip_points`,`machine_id`,`volume`,`chat_preference`,`focus_preference`, `pets_muted`,`bots_muted`,`advertising_report_blocked`,`last_change`,`gotw_points`,`ignore_invites`,`time_muted`,`allow_gifts`,`friend_bar_state`,`disable_forced_effects`,`allow_mimic`,`rank_vip` FROM `users` WHERE `auth_ticket` = @sso LIMIT 1");
                 dbClient.AddParameter("sso", sessionTicket);
@@ -91,34 +91,34 @@ namespace Plus.HabboHotel.Users.UserData
                 dbClient.RunQuery("UPDATE `users` SET `online` = '1', `auth_ticket` = '' WHERE `id` = '" + userId + "' LIMIT 1");
             }
 
-            ConcurrentDictionary<string, UserAchievement> achievements = new ConcurrentDictionary<string, UserAchievement>();
+            var achievements = new ConcurrentDictionary<string, UserAchievement>();
             foreach (DataRow dRow in dAchievements.Rows)
             {
                 achievements.TryAdd(Convert.ToString(dRow["group"]), new UserAchievement(Convert.ToString(dRow["group"]), Convert.ToInt32(dRow["level"]), Convert.ToInt32(dRow["progress"])));
             }
 
-            List<int> favouritedRooms = new List<int>();
+            var favouritedRooms = new List<int>();
             foreach (DataRow dRow in dFavouriteRooms.Rows)
             {
                 favouritedRooms.Add(Convert.ToInt32(dRow["room_id"]));
             }
 
-            List<Badge> badges = new List<Badge>();
+            var badges = new List<Badge>();
             foreach (DataRow dRow in dBadges.Rows)
             {
                 badges.Add(new Badge(Convert.ToString(dRow["badge_id"]), Convert.ToInt32(dRow["badge_slot"])));
             }
 
-            Dictionary<int, MessengerBuddy> friends = new Dictionary<int, MessengerBuddy>();
+            var friends = new Dictionary<int, MessengerBuddy>();
             foreach (DataRow dRow in dFriends.Rows)
             {
-                int friendId = Convert.ToInt32(dRow["id"]);
-                string friendName = Convert.ToString(dRow["username"]);
-                string friendLook = Convert.ToString(dRow["look"]);
-                string friendMotto = Convert.ToString(dRow["motto"]);
-                int friendLastOnline = Convert.ToInt32(dRow["last_online"]);
-                bool friendHideOnline = PlusEnvironment.EnumToBool(dRow["hide_online"].ToString());
-                bool friendHideRoom = PlusEnvironment.EnumToBool(dRow["hide_inroom"].ToString());
+                var friendId = Convert.ToInt32(dRow["id"]);
+                var friendName = Convert.ToString(dRow["username"]);
+                var friendLook = Convert.ToString(dRow["look"]);
+                var friendMotto = Convert.ToString(dRow["motto"]);
+                var friendLastOnline = Convert.ToInt32(dRow["last_online"]);
+                var friendHideOnline = PlusEnvironment.EnumToBool(dRow["hide_online"].ToString());
+                var friendHideRoom = PlusEnvironment.EnumToBool(dRow["hide_inroom"].ToString());
 
                 if (friendId == userId)
                     continue;
@@ -127,13 +127,13 @@ namespace Plus.HabboHotel.Users.UserData
                     friends.Add(friendId, new MessengerBuddy(friendId, friendName, friendLook, friendMotto, friendLastOnline, friendHideOnline, friendHideRoom));
             }
 
-            Dictionary<int, MessengerRequest> requests = new Dictionary<int, MessengerRequest>();
+            var requests = new Dictionary<int, MessengerRequest>();
             foreach (DataRow dRow in dRequests.Rows)
             {
-                int receiverId = Convert.ToInt32(dRow["from_id"]);
-                int senderId = Convert.ToInt32(dRow["to_id"]);
+                var receiverId = Convert.ToInt32(dRow["from_id"]);
+                var senderId = Convert.ToInt32(dRow["to_id"]);
 
-                string requestUsername = Convert.ToString(dRow["username"]);
+                var requestUsername = Convert.ToString(dRow["username"]);
 
                 if (receiverId != userId)
                 {
@@ -147,10 +147,10 @@ namespace Plus.HabboHotel.Users.UserData
                 }
             }
 
-            Dictionary<int, int> quests = new Dictionary<int, int>();
+            var quests = new Dictionary<int, int>();
             foreach (DataRow dRow in dQuests.Rows)
             {
-                int questId = Convert.ToInt32(dRow["quest_id"]);
+                var questId = Convert.ToInt32(dRow["quest_id"]);
 
                 if (quests.ContainsKey(questId))
                     quests.Remove(questId);
@@ -158,14 +158,14 @@ namespace Plus.HabboHotel.Users.UserData
                 quests.Add(questId, Convert.ToInt32(dRow["progress"]));
             }
 
-            Dictionary<int, Relationship> relationships = new Dictionary<int, Relationship>();
+            var relationships = new Dictionary<int, Relationship>();
             foreach (DataRow row in dRelations.Rows)
             {
                 if (friends.ContainsKey(Convert.ToInt32(row[2])))
                     relationships.Add(Convert.ToInt32(row[2]), new Relationship(Convert.ToInt32(row[0]), Convert.ToInt32(row[2]), Convert.ToInt32(row[3].ToString())));
             }
 
-            Habbo user = HabboFactory.GenerateHabbo(dUserInfo, userInfo);
+            var user = HabboFactory.GenerateHabbo(dUserInfo, userInfo);
 
             dUserInfo = null;
             dAchievements = null;
@@ -186,7 +186,7 @@ namespace Plus.HabboHotel.Users.UserData
             DataTable dRelations = null;
             DataTable dGroups = null;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `id`,`username`,`rank`,`motto`,`look`,`gender`,`last_online`,`credits`,`activity_points`,`home_room`,`block_newfriends`,`hide_online`,`hide_inroom`,`vip`,`account_created`,`vip_points`,`machine_id`,`volume`,`chat_preference`, `focus_preference`, `pets_muted`,`bots_muted`,`advertising_report_blocked`,`last_change`,`gotw_points`,`ignore_invites`,`time_muted`,`allow_gifts`,`friend_bar_state`,`disable_forced_effects`,`allow_mimic`,`rank_vip` FROM `users` WHERE `id` = @id LIMIT 1");
                 dbClient.AddParameter("id", userId);
@@ -220,14 +220,14 @@ namespace Plus.HabboHotel.Users.UserData
                 dRelations = dbClient.GetTable();
             }
 
-            ConcurrentDictionary<string, UserAchievement> achievements = new ConcurrentDictionary<string, UserAchievement>();
-            List<int> favouritedRooms = new List<int>();
-            List<Badge> badges = new List<Badge>();
-            Dictionary<int, MessengerBuddy> friends = new Dictionary<int, MessengerBuddy>();
-            Dictionary<int, MessengerRequest> friendRequests = new Dictionary<int, MessengerRequest>();
-            Dictionary<int, int> quests = new Dictionary<int, int>();
+            var achievements = new ConcurrentDictionary<string, UserAchievement>();
+            var favouritedRooms = new List<int>();
+            var badges = new List<Badge>();
+            var friends = new Dictionary<int, MessengerBuddy>();
+            var friendRequests = new Dictionary<int, MessengerRequest>();
+            var quests = new Dictionary<int, int>();
 
-            Dictionary<int, Relationship> relationships = new Dictionary<int, Relationship>();
+            var relationships = new Dictionary<int, Relationship>();
             foreach (DataRow row in dRelations.Rows)
             {
                 if (!relationships.ContainsKey(Convert.ToInt32(row["id"])))
@@ -236,7 +236,7 @@ namespace Plus.HabboHotel.Users.UserData
                 }
             }
 
-            Habbo user = HabboFactory.GenerateHabbo(dUserInfo, userInfo);
+            var user = HabboFactory.GenerateHabbo(dUserInfo, userInfo);
             return new UserData(userId, achievements, favouritedRooms, badges, friends, friendRequests, quests, user, relationships);
         }
     }

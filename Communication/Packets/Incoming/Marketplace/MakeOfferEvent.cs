@@ -11,11 +11,11 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int sellingPrice = packet.PopInt();
+            var sellingPrice = packet.PopInt();
             packet.PopInt(); //comission
-            int itemId = packet.PopInt();
+            var itemId = packet.PopInt();
 
-            Item item = session.GetHabbo().GetInventoryComponent().GetItem(itemId);
+            var item = session.GetHabbo().GetInventoryComponent().GetItem(itemId);
             if (item == null)
             {
                 session.SendPacket(new MarketplaceMakeOfferResultComposer(0));
@@ -34,13 +34,13 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
                 return;
             }
 
-            int comission = PlusEnvironment.GetGame().GetCatalog().GetMarketplace().CalculateComissionPrice(sellingPrice);
-            int totalPrice = sellingPrice + comission;
-            int itemType = 1;
+            var comission = PlusEnvironment.GetGame().GetCatalog().GetMarketplace().CalculateComissionPrice(sellingPrice);
+            var totalPrice = sellingPrice + comission;
+            var itemType = 1;
             if (item.GetBaseItem().Type == 'i')
                 itemType++;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("INSERT INTO `catalog_marketplace_offers` (`furni_id`,`item_id`,`user_id`,`asking_price`,`total_price`,`public_name`,`sprite_id`,`item_type`,`timestamp`,`extra_data`,`limited_number`,`limited_stack`) VALUES ('" + itemId + "','" + item.BaseItem + "','" + session.GetHabbo().Id + "','" + sellingPrice + "','" + totalPrice + "',@public_name,'" + item.GetBaseItem().SpriteId + "','" + itemType + "','" + PlusEnvironment.GetUnixTimestamp() + "',@extra_data, '" + item.LimitedNo + "', '" + item.LimitedTot + "')");
                 dbClient.AddParameter("public_name", item.GetBaseItem().PublicName);

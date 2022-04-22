@@ -31,12 +31,12 @@ namespace Plus.Core
                         continue;
                     }
 
-                    int delimiterIndex = line.IndexOf('=');
+                    var delimiterIndex = line.IndexOf('=');
 
                     if (delimiterIndex != -1)
                     {
-                        string key = line.Substring(0, delimiterIndex);
-                        string val = line.Substring(delimiterIndex + 1);
+                        var key = line.Substring(0, delimiterIndex);
+                        var val = line.Substring(delimiterIndex + 1);
 
                         Data.Add(key, val);
                     }

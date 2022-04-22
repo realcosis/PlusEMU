@@ -17,7 +17,7 @@ namespace Plus.Communication.Packets.Incoming.Messenger
             session.GetHabbo().GetMessenger().OnStatusChanged(false);
 
             ICollection<MessengerBuddy> friends = new List<MessengerBuddy>();
-            foreach (MessengerBuddy buddy in session.GetHabbo().GetMessenger().GetFriends().ToList())
+            foreach (var buddy in session.GetHabbo().GetMessenger().GetFriends().ToList())
             {
                 if (buddy == null || buddy.IsOnline)
                     continue;
@@ -27,14 +27,14 @@ namespace Plus.Communication.Packets.Incoming.Messenger
 
             session.SendPacket(new MessengerInitComposer());
 
-            int page = 0;
+            var page = 0;
             if (!friends.Any())
             {
                 session.SendPacket(new BuddyListComposer(friends, session.GetHabbo(), 1, 0));
             }
             else
             {
-                int pages = (friends.Count() - 1) / 500 + 1;
+                var pages = (friends.Count() - 1) / 500 + 1;
                 foreach (ICollection<MessengerBuddy> batch in friends.Chunk(500))
                 {
                     session.SendPacket(new BuddyListComposer(batch.ToList(), session.GetHabbo(), pages, page));

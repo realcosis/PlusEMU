@@ -10,9 +10,9 @@ namespace Plus.Communication.Packets.Incoming.Talents
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            string type = packet.PopString();
+            var type = packet.PopString();
 
-            ICollection<TalentTrackLevel> levels = PlusEnvironment.GetGame().GetTalentTrackManager().GetLevels();
+            var levels = PlusEnvironment.GetGame().GetTalentTrackManager().GetLevels();
 
             session.SendPacket(new TalentTrackComposer(levels, type));
         }

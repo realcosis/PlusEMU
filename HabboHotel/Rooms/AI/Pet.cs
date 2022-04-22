@@ -121,7 +121,7 @@ namespace Plus.HabboHotel.Rooms.AI
             if (maxE <= 4)
                 maxE = 15;
 
-            int r = PlusEnvironment.GetRandomNumber(4, maxE);
+            var r = PlusEnvironment.GetRandomNumber(4, maxE);
 
             if (!add)
             {
@@ -149,7 +149,7 @@ namespace Plus.HabboHotel.Rooms.AI
                 if (!IsInRoom)
                     return null;
 
-                if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(RoomId, out Room room))
+                if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(RoomId, out var room))
                     return room;
                 else
                     return null;
@@ -166,7 +166,7 @@ namespace Plus.HabboHotel.Rooms.AI
         {
             get
             {
-                for (int level = 0; level < ExperienceLevels.Length; ++level)
+                for (var level = 0; level < ExperienceLevels.Length; ++level)
                 {
                     if (Experience < ExperienceLevels[level])
                         return level + 1;

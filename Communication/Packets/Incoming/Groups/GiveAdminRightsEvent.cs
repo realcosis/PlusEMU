@@ -11,16 +11,16 @@ namespace Plus.Communication.Packets.Incoming.Groups
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int groupId = packet.PopInt();
-            int userId = packet.PopInt();
+            var groupId = packet.PopInt();
+            var userId = packet.PopInt();
 
-            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out Group group))
+            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
                 return;
 
             if (session.GetHabbo().Id != group.CreatorId || !group.IsMember(userId))
                 return;
 
-            Habbo habbo = PlusEnvironment.GetHabboById(userId);
+            var habbo = PlusEnvironment.GetHabboById(userId);
             if (habbo == null)
             {
                 session.SendNotification("Oops, an error occurred whilst finding this user.");
@@ -29,9 +29,9 @@ namespace Plus.Communication.Packets.Incoming.Groups
 
             group.MakeAdmin(userId);
 
-            if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(group.RoomId, out Room room))
+            if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(group.RoomId, out var room))
             {
-                RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(userId);
+                var user = room.GetRoomUserManager().GetRoomUserByHabbo(userId);
                 if (user != null)
                 {
                     if (!user.Statusses.ContainsKey("flatctrl 3"))

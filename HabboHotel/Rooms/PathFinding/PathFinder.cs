@@ -28,7 +28,7 @@ namespace Plus.HabboHotel.Rooms.PathFinding
         {
             var path = new List<Vector2D>();
 
-            PathFinderNode nodes = FindPathReversed(user, diag, map, start, end);
+            var nodes = FindPathReversed(user, diag, map, start, end);
 
             if (nodes != null)
             {
@@ -69,10 +69,10 @@ namespace Plus.HabboHotel.Rooms.PathFinding
                 current = openList.ExtractFirst();
                 current.InClosed = true;
 
-                for (int i = 0; diag ? i < DiagMovePoints.Length : i < NoDiagMovePoints.Length; i++)
+                for (var i = 0; diag ? i < DiagMovePoints.Length : i < NoDiagMovePoints.Length; i++)
                 {
                     tmp = current.Position + (diag ? DiagMovePoints[i] : NoDiagMovePoints[i]);
-                    bool isFinalMove = (tmp.X == end.X && tmp.Y == end.Y);
+                    var isFinalMove = (tmp.X == end.X && tmp.Y == end.Y);
 
                     if (map.IsValidStep(new Vector2D(current.Position.X, current.Position.Y), tmp, isFinalMove, user.AllowOverride))
                     {

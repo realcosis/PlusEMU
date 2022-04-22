@@ -9,16 +9,16 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Action
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
             if (!room.CheckRights(session))
                 return;
 
-            string name = packet.PopString();
-            bool accepted = packet.PopBoolean();
+            var name = packet.PopString();
+            var accepted = packet.PopBoolean();
 
-            GameClient client = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(name);
+            var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(name);
             if (client == null)
                 return;
 

@@ -45,7 +45,7 @@ namespace Plus.Communication.Encryption.Crypto.RSA
         {
             this.e = e;
 
-            int qs = b >> 1;
+            var qs = b >> 1;
 
             while (true)
             {
@@ -71,12 +71,12 @@ namespace Plus.Communication.Encryption.Crypto.RSA
 
                 if (P < Q)
                 {
-                    BigInteger t = P;
+                    var t = P;
                     P = Q;
                     Q = t;
                 }
 
-                BigInteger phi = (P - 1) * (Q - 1);
+                var phi = (P - 1) * (Q - 1);
                 if (phi.gcd(this.e) == 1)
                 {
                     N = P * Q;
@@ -146,16 +146,16 @@ namespace Plus.Communication.Encryption.Crypto.RSA
         {
             try
             {
-                int bl = GetBlockSize();
+                var bl = GetBlockSize();
 
-                byte[] paddedBytes = Pkcs1Pad(src, bl, type);
-                BigInteger m = new BigInteger(paddedBytes);
+                var paddedBytes = Pkcs1Pad(src, bl, type);
+                var m = new BigInteger(paddedBytes);
                 if (m == 0)
                 {
                     return null;
                 }
 
-                BigInteger c = method(m);
+                var c = method(m);
                 if (c == 0)
                 {
                     return null;
@@ -173,16 +173,16 @@ namespace Plus.Communication.Encryption.Crypto.RSA
         {
             try
             {
-                BigInteger c = new BigInteger(src);
-                BigInteger m = method(c);
+                var c = new BigInteger(src);
+                var m = method(c);
                 if (m == 0)
                 {
                     return null;
                 }
 
-                int bl = GetBlockSize();
+                var bl = GetBlockSize();
 
-                byte[] bytes = Pkcs1Unpad(m.getBytes(), bl, type);
+                var bytes = Pkcs1Unpad(m.getBytes(), bl, type);
 
                 return bytes;
             }
@@ -194,9 +194,9 @@ namespace Plus.Communication.Encryption.Crypto.RSA
 
         private byte[] Pkcs1Pad(byte[] src, int n, Pkcs1PadType type)
         {
-            byte[] bytes = new byte[n];
+            var bytes = new byte[n];
 
-            int i = src.Length - 1;
+            var i = src.Length - 1;
             while (i >= 0 && n > 11)
             {
                 bytes[--n] = src[i--];
@@ -221,7 +221,7 @@ namespace Plus.Communication.Encryption.Crypto.RSA
 
         private byte[] Pkcs1Unpad(byte[] src, int n, Pkcs1PadType type)
         {
-            int i = 0;
+            var i = 0;
             while (i < src.Length && src[i] == 0)
             {
                 ++i;
@@ -243,8 +243,8 @@ namespace Plus.Communication.Encryption.Crypto.RSA
                 }
             }
 
-            byte[] bytes = new byte[src.Length - i - 1];
-            for (int p = 0; ++i < src.Length; p++)
+            var bytes = new byte[src.Length - i - 1];
+            for (var p = 0; ++i < src.Length; p++)
             {
                 bytes[p] = src[i];
             }

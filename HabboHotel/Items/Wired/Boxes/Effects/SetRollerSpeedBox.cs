@@ -30,8 +30,8 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (SetItems.Count > 0)
                 SetItems.Clear();
 
-            int unknown = packet.PopInt();
-            string message = packet.PopString();
+            var unknown = packet.PopInt();
+            var message = packet.PopString();
 
             StringData = message;
 

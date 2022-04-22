@@ -36,7 +36,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                 return;
             }
             
-            if (!int.TryParse(@params[1], out int price))
+            if (!int.TryParse(@params[1], out var price))
             {
                 session.SendWhisper("Oops, you've entered an invalid integer.");
                 return;
@@ -48,7 +48,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                 return;
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `rooms` SET `sale_price` = @SalePrice WHERE `id` = @Id LIMIT 1");
                 dbClient.AddParameter("SalePrice", price);
@@ -58,7 +58,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 
             session.SendNotification("Your room is now up for sale. The the current room visitors have been alerted, any item that belongs to you in this room will be transferred to the new owner once purchased. Other items shall be ejected.");
 
-            foreach (RoomUser user in room.GetRoomUserManager().GetRoomUsers())
+            foreach (var user in room.GetRoomUserManager().GetRoomUsers())
             {
                 if (user == null || user.GetClient() == null)
                     continue;

@@ -27,13 +27,13 @@ namespace Plus.Communication.Rcon
         {
             try
             {
-                if (!int.TryParse(_socket.EndReceive(iAr).ToString(), out int bytes))
+                if (!int.TryParse(_socket.EndReceive(iAr).ToString(), out var bytes))
                 {
                     Dispose();
                     return;
                 }
 
-                string data = Encoding.Default.GetString(_buffer, 0, bytes);
+                var data = Encoding.Default.GetString(_buffer, 0, bytes);
                 if (!PlusEnvironment.GetRconSocket().GetCommands().Parse(data))
                 {
                     Log.Error("Failed to execute a MUS command. Raw data: " + data);

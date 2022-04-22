@@ -15,17 +15,17 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
             if (!session.GetHabbo().InRoom)
                 return;
             
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
-            int itemId = packet.PopInt();
-            Item item = room.GetRoomItemHandler().GetItem(itemId);
+            var itemId = packet.PopInt();
+            var item = room.GetRoomItemHandler().GetItem(itemId);
             if (item == null)
                 return;
 
-            int petId = packet.PopInt();
+            var petId = packet.PopInt();
             
-            if (!room.GetRoomUserManager().TryGetPet(petId, out RoomUser petUser))
+            if (!room.GetRoomUserManager().TryGetPet(petId, out var petUser))
                 return;
 
             if (petUser.PetData == null || petUser.PetData.OwnerId != session.GetHabbo().Id)
@@ -34,7 +34,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
             if (item.Data.InteractionType == InteractionType.HorseSaddle1)
             {
                 petUser.PetData.Saddle = 9;
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
                     dbClient.RunQuery("UPDATE `bots_petdata` SET `have_saddle` = '9' WHERE `id` = '" + petUser.PetData.PetId + "' LIMIT 1");
                     dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
@@ -46,7 +46,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
             else if (item.Data.InteractionType == InteractionType.HorseSaddle2)
             {
                 petUser.PetData.Saddle = 10;
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
                     dbClient.RunQuery("UPDATE `bots_petdata` SET `have_saddle` = '10' WHERE `id` = '" + petUser.PetData.PetId + "' LIMIT 1");
                     dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
@@ -57,13 +57,13 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
             }
             else if (item.Data.InteractionType == InteractionType.HorseHairstyle)
             {
-                int parse = 100;
-                string hairType = item.GetBaseItem().ItemName.Split('_')[2];
+                var parse = 100;
+                var hairType = item.GetBaseItem().ItemName.Split('_')[2];
 
                 parse = parse + int.Parse(hairType);
 
                 petUser.PetData.PetHair = parse;
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
                     dbClient.RunQuery("UPDATE `bots_petdata` SET `pethair` = '" + petUser.PetData.PetHair + "' WHERE `id` = '" + petUser.PetData.PetId + "' LIMIT 1");
                     dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
@@ -74,13 +74,13 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
             }
             else if (item.Data.InteractionType == InteractionType.HorseHairDye)
             {
-                int hairDye = 48;
-                string hairType = item.GetBaseItem().ItemName.Split('_')[2];
+                var hairDye = 48;
+                var hairType = item.GetBaseItem().ItemName.Split('_')[2];
             
                 hairDye = hairDye + int.Parse(hairType);
                 petUser.PetData.HairDye = hairDye;
 
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
                     dbClient.RunQuery("UPDATE `bots_petdata` SET `hairdye` = '" + petUser.PetData.HairDye + "' WHERE `id` = '" + petUser.PetData.PetId + "' LIMIT 1");
                     dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
@@ -91,9 +91,9 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
             }
             else if (item.Data.InteractionType == InteractionType.HorseBodyDye)
             {
-                string race = item.GetBaseItem().ItemName.Split('_')[2];
-                int parse = int.Parse(race);
-                int raceLast = 2 + (parse * 4) - 4;
+                var race = item.GetBaseItem().ItemName.Split('_')[2];
+                var parse = int.Parse(race);
+                var raceLast = 2 + (parse * 4) - 4;
                 if (parse == 13)
                     raceLast = 61;
                 else if (parse == 14)
@@ -104,7 +104,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
                     raceLast = 73;
                 petUser.PetData.Race = raceLast.ToString();
 
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
                     dbClient.RunQuery("UPDATE `bots_petdata` SET `race` = '" + petUser.PetData.Race + "' WHERE `id` = '" + petUser.PetData.PetId + "' LIMIT 1");
                     dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");

@@ -18,7 +18,7 @@ namespace Plus.Communication.Packets.Outgoing.Groups
             WriteInteger(members.Count);
             if (membersCount > 0)
             {
-                foreach (UserCache data in members)
+                foreach (var data in members)
                 {
                     WriteInteger(@group.CreatorId == data.Id ? 0 : @group.IsAdmin(data.Id) ? 1 : @group.IsMember(data.Id) ? 2 : 3);
                     WriteInteger(data.Id);

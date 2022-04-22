@@ -24,19 +24,19 @@ namespace Plus.HabboHotel.Catalog
             if (roomId != 0)
             {
                 DataTable data = null;
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
                     dbClient.SetQuery("SELECT `items`.base_item, COALESCE(`items_groups`.`group_id`, 0) AS `group_id` FROM `items` LEFT OUTER JOIN `items_groups` ON `items`.`id` = `items_groups`.`id` WHERE `items`.`room_id` = @rid;");
                     dbClient.AddParameter("rid", roomId);
                     data = dbClient.GetTable();
                 }
 
-                Dictionary<int, int> roomItems = new Dictionary<int, int>();
+                var roomItems = new Dictionary<int, int>();
                 if (data != null)
                 {
                     foreach (DataRow dRow in data.Rows)
                     {
-                        int itemId = Convert.ToInt32(dRow["base_item"]);
+                        var itemId = Convert.ToInt32(dRow["base_item"]);
                         if (roomItems.ContainsKey(itemId))
                             roomItems[itemId]++;
                         else
@@ -55,14 +55,14 @@ namespace Plus.HabboHotel.Catalog
                 }
             }
 
-            string[] splitItems = items.Split(';');
-            foreach (string split in splitItems)
+            var splitItems = items.Split(';');
+            foreach (var split in splitItems)
             {
-                string[] item = split.Split('*');
-                if (!int.TryParse(item[0], out int itemId) || !int.TryParse(item[1], out int amount))
+                var item = split.Split('*');
+                if (!int.TryParse(item[0], out var itemId) || !int.TryParse(item[1], out var amount))
                     continue;
 
-                if (!itemDataManager.GetItem(itemId, out ItemData data))
+                if (!itemDataManager.GetItem(itemId, out var data))
                     continue;
 
                 ItemDataList.Add(new CatalogItem(0, itemId, data, string.Empty, 0, 0, 0, 0, amount, 0, 0, false, "", "", 0));

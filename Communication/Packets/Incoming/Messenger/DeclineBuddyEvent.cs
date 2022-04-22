@@ -7,12 +7,12 @@
             if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
                 return;
 
-            bool declineAll = packet.PopBoolean();
+            var declineAll = packet.PopBoolean();
             packet.PopInt(); //amount
          
             if (!declineAll)
             {
-                int requestId = packet.PopInt();
+                var requestId = packet.PopInt();
                 session.GetHabbo().GetMessenger().HandleRequest(requestId);
             }
             else

@@ -9,13 +9,13 @@ namespace Plus.Communication.Packets.Incoming.Quests
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int questId = packet.PopInt();
+            var questId = packet.PopInt();
 
-            Quest quest = PlusEnvironment.GetGame().GetQuestManager().GetQuest(questId);
+            var quest = PlusEnvironment.GetGame().GetQuestManager().GetQuest(questId);
             if (quest == null)
                 return;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("REPLACE INTO `user_quests` (`user_id`,`quest_id`) VALUES ('" + session.GetHabbo().Id + "', '" + quest.Id + "')");
                 dbClient.RunQuery("UPDATE `user_stats` SET `quest_id` = '" + quest.Id + "' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");

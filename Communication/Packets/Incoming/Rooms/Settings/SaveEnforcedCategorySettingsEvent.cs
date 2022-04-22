@@ -8,19 +8,19 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Settings
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(packet.PopInt(), out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(packet.PopInt(), out var room))
                 return;
 
             if (!room.CheckRights(session, true))
                 return;
 
-            int categoryId = packet.PopInt();
-            int tradeSettings = packet.PopInt();
+            var categoryId = packet.PopInt();
+            var tradeSettings = packet.PopInt();
 
             if (tradeSettings < 0 || tradeSettings > 2)
                 tradeSettings = 0;
 
-            if (!PlusEnvironment.GetGame().GetNavigator().TryGetSearchResultList(categoryId, out SearchResultList searchResultList))
+            if (!PlusEnvironment.GetGame().GetNavigator().TryGetSearchResultList(categoryId, out var searchResultList))
             {
                 categoryId = 36;
             }

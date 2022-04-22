@@ -12,7 +12,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.YouTubeTelevisions
         {
             WriteInteger(itemId);
             WriteInteger(videos.Count);
-            foreach (TelevisionItem video in videos.ToList())
+            foreach (var video in videos.ToList())
             {
                WriteString(video.YouTubeId);
                WriteString(video.Title);//Title

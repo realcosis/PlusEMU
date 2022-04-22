@@ -13,20 +13,20 @@ namespace Plus.Communication.Packets.Incoming.Users
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int userId = packet.PopInt();
+            var userId = packet.PopInt();
             packet.PopBoolean(); //IsMe?
 
-            Habbo targetData = PlusEnvironment.GetHabboById(userId);
+            var targetData = PlusEnvironment.GetHabboById(userId);
             if (targetData == null)
             {
                 session.SendNotification("An error occured whilst finding that user's profile.");
                 return;
             }
             
-            List<Group> groups = PlusEnvironment.GetGame().GetGroupManager().GetGroupsForUser(targetData.Id);
+            var groups = PlusEnvironment.GetGame().GetGroupManager().GetGroupsForUser(targetData.Id);
             
             int friendCount;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT COUNT(0) FROM `messenger_friendships` WHERE (`user_one_id` = @userid OR `user_two_id` = @userid)");
                 dbClient.AddParameter("userid", userId);

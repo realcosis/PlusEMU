@@ -50,7 +50,7 @@ namespace Plus.HabboHotel.Rooms.Games.Football
 
         public void RemoveBall(int itemId)
         {
-            _balls.TryRemove(itemId, out Item item);
+            _balls.TryRemove(itemId, out var item);
         }
 
         public void OnUserWalk(RoomUser user)
@@ -58,12 +58,12 @@ namespace Plus.HabboHotel.Rooms.Games.Football
             if (user == null)
                 return;
 
-            foreach (Item item in _balls.Values.ToList())
+            foreach (var item in _balls.Values.ToList())
             {
-                int newX = 0;
-                int newY = 0;
-                int differenceX = user.X - item.GetX;
-                int differenceY = user.Y - item.GetY;
+                var newX = 0;
+                var newY = 0;
+                var differenceX = user.X - item.GetX;
+                var differenceY = user.Y - item.GetY;
 
                 if (differenceX == 0 && differenceY == 0)
                 {
@@ -270,7 +270,7 @@ namespace Plus.HabboHotel.Rooms.Games.Football
             if (!_room.GetGameMap().ItemCanBePlaced(newX, newY))
                 return;
 
-            Point oldRoomCoord = item.Coordinate;
+            var oldRoomCoord = item.Coordinate;
             if (oldRoomCoord.X == newX && oldRoomCoord.Y == newY)
                 return;
 

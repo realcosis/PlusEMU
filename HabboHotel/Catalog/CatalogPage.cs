@@ -35,13 +35,13 @@ namespace Plus.HabboHotel.Catalog
             _visible = visible.ToLower() == "1" ? true : false;
             _template = template;
 
-            foreach (string str in pageStrings1.Split('|'))
+            foreach (var str in pageStrings1.Split('|'))
             {
                 if (_pageStrings1 == null) { _pageStrings1 = new List<string>(); }
                 _pageStrings1.Add(str);
             }
 
-            foreach (string str in pageStrings2.Split('|'))
+            foreach (var str in pageStrings2.Split('|'))
             {
                 if (_pageStrings2 == null) { _pageStrings2 = new List<string>(); }
                 _pageStrings2.Add(str);
@@ -50,11 +50,11 @@ namespace Plus.HabboHotel.Catalog
             _items = items;
 
             _itemOffers = new Dictionary<int, CatalogItem>();
-            foreach (int i in flatOffers.Keys)
+            foreach (var i in flatOffers.Keys)
             {
                 if (flatOffers[i] == id)
                 {
-                    foreach (CatalogItem item in _items.Values)
+                    foreach (var item in _items.Values)
                     {
                         if (item.OfferId == i)
                         {

@@ -8,7 +8,7 @@ namespace Plus.Communication.Packets.Outgoing.Users
             : base(ServerPacketHeader.IgnoredUsersMessageComposer)
         {
             WriteInteger(ignoredUsers.Count);
-            foreach (string username in ignoredUsers)
+            foreach (var username in ignoredUsers)
             {
                 WriteString(username);
             }

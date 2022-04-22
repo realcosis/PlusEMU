@@ -13,9 +13,9 @@ namespace Plus.Communication.Packets.Outgoing.Users
         {
             WriteInteger(habbo.Id);
             WriteInteger(habbo.Relationships.Count); // Count
-            foreach (Relationship relationship in habbo.Relationships.Values)
+            foreach (var relationship in habbo.Relationships.Values)
             {
-                UserCache relation = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(relationship.UserId);
+                var relation = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(relationship.UserId);
                 if (relation == null)
                 {
                     WriteInteger(0);

@@ -12,9 +12,9 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Settings
             WriteInteger(instance.Id);
 
             WriteInteger(instance.UsersWithRights.Count);
-            foreach (int id in instance.UsersWithRights.ToList())
+            foreach (var id in instance.UsersWithRights.ToList())
             {
-                UserCache data = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
+                var data = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
                 if (data == null)
                 {
                     WriteInteger(0);

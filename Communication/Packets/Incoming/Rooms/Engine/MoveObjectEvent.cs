@@ -14,11 +14,11 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
             if (!session.GetHabbo().InRoom)
                 return;
 
-            int itemId = packet.PopInt();
+            var itemId = packet.PopInt();
             if (itemId == 0)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
             Item item;
@@ -47,9 +47,9 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
             if (item == null)
                 return;
 
-            int x = packet.PopInt();
-            int y = packet.PopInt();
-            int rotation = packet.PopInt();
+            var x = packet.PopInt();
+            var y = packet.PopInt();
+            var rotation = packet.PopInt();
 
             if (x != item.GetX || y != item.GetY)
                 PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.FurniMove);

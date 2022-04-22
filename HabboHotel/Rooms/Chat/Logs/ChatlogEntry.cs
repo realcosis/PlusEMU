@@ -52,7 +52,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Logs
         {
             if (_playerReference.IsAlive)
             {
-                Habbo playerObj = (Habbo)_playerReference.Target;
+                var playerObj = (Habbo)_playerReference.Target;
 
                 return playerObj;
             }
@@ -64,7 +64,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Logs
         {
             if (_roomReference.IsAlive)
             {
-                Room roomObj = (Room)_roomReference.Target;
+                var roomObj = (Room)_roomReference.Target;
                 if (roomObj.MDisposed)
                     return null;
                 return roomObj;

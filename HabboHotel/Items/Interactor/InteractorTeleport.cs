@@ -11,7 +11,7 @@ namespace Plus.HabboHotel.Items.Interactor
 
             if (item.InteractingUser != 0)
             {
-                RoomUser user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);
+                var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);
 
                 if (user != null)
                 {
@@ -25,7 +25,7 @@ namespace Plus.HabboHotel.Items.Interactor
 
             if (item.InteractingUser2 != 0)
             {
-                RoomUser user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser2);
+                var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser2);
 
                 if (user != null)
                 {
@@ -44,7 +44,7 @@ namespace Plus.HabboHotel.Items.Interactor
 
             if (item.InteractingUser != 0)
             {
-                RoomUser user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);
+                var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);
 
                 if (user != null)
                 {
@@ -56,7 +56,7 @@ namespace Plus.HabboHotel.Items.Interactor
 
             if (item.InteractingUser2 != 0)
             {
-                RoomUser user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser2);
+                var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser2);
 
                 if (user != null)
                 {
@@ -72,7 +72,7 @@ namespace Plus.HabboHotel.Items.Interactor
             if (item == null || item.GetRoom() == null || session == null || session.GetHabbo() == null)
                 return;
 
-            RoomUser user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null)
                 return;
 

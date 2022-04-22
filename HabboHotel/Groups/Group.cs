@@ -54,17 +54,17 @@ namespace Plus.HabboHotel.Groups
 
         public void InitMembers()
         {
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT `user_id`, `rank` FROM `group_memberships` WHERE `group_id` = @id");
             dbClient.AddParameter("id", Id);
-            DataTable members = dbClient.GetTable();
+            var members = dbClient.GetTable();
 
             if (members != null)
             {
                 foreach (DataRow row in members.Rows)
                 {
-                    int userId = Convert.ToInt32(row["user_id"]);
-                    bool isAdmin = Convert.ToInt32(row["rank"]) != 0;
+                    var userId = Convert.ToInt32(row["user_id"]);
+                    var isAdmin = Convert.ToInt32(row["rank"]) != 0;
 
                     if (isAdmin)
                     {
@@ -81,13 +81,13 @@ namespace Plus.HabboHotel.Groups
 
             dbClient.SetQuery("SELECT `user_id` FROM `group_requests` WHERE `group_id` = @id");
             dbClient.AddParameter("id", Id);
-            DataTable requests = dbClient.GetTable();
+            var requests = dbClient.GetTable();
 
             if (requests != null)
             {
                 foreach (DataRow row in requests.Rows)
                 {
-                    int userId = Convert.ToInt32(row["user_id"]);
+                    var userId = Convert.ToInt32(row["user_id"]);
 
                     if (_members.Contains(userId) || _administrators.Contains(userId))
                     {
@@ -120,7 +120,7 @@ namespace Plus.HabboHotel.Groups
         {
             get
             {
-                List<int> members = new List<int>(_administrators.ToList());
+                var members = new List<int>(_administrators.ToList());
                 members.AddRange(_members.ToList());
 
                 return members;
@@ -157,7 +157,7 @@ namespace Plus.HabboHotel.Groups
             if (_members.Contains(id))
                 _members.Remove(id);
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE group_memberships SET `rank` = '1' WHERE `user_id` = @uid AND `group_id` = @gid LIMIT 1");
                 dbClient.AddParameter("gid", Id);
@@ -174,7 +174,7 @@ namespace Plus.HabboHotel.Groups
             if (!_administrators.Contains(userId))
                 return;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE group_memberships SET `rank` = '0' WHERE user_id = @uid AND group_id = @gid");
                 dbClient.AddParameter("gid", Id);
@@ -190,7 +190,7 @@ namespace Plus.HabboHotel.Groups
         {
             if (IsMember(id) || Type == GroupType.Locked && _requests.Contains(id))
                 return;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             if (IsAdmin(id))
             {
                 dbClient.SetQuery("UPDATE `group_memberships` SET `rank` = '0' WHERE user_id = @uid AND group_id = @gid");
@@ -227,7 +227,7 @@ namespace Plus.HabboHotel.Groups
             }
             else
                 return;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("DELETE FROM group_memberships WHERE user_id=@uid AND group_id=@gid LIMIT 1");
             dbClient.AddParameter("gid", Id);
             dbClient.AddParameter("uid", id);
@@ -236,7 +236,7 @@ namespace Plus.HabboHotel.Groups
 
         public void HandleRequest(int id, bool accepted)
         {
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 if (accepted)
                 {
@@ -262,7 +262,7 @@ namespace Plus.HabboHotel.Groups
         {
             if (_room == null)
             {
-                if (!RoomFactory.TryGetData(RoomId, out RoomData data))
+                if (!RoomFactory.TryGetData(RoomId, out var data))
                     return null;
 
                 _room = data;

@@ -11,11 +11,11 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Chat
             if (!session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Username);
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Username);
             if (user == null)
                 return;
 

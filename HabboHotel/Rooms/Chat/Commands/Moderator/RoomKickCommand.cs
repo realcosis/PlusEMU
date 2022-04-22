@@ -27,8 +27,8 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 return;
             }
 
-            string message = CommandManager.MergeParams(@params, 1);
-            foreach (RoomUser roomUser in room.GetRoomUserManager().GetUserList().ToList())
+            var message = CommandManager.MergeParams(@params, 1);
+            foreach (var roomUser in room.GetRoomUserManager().GetUserList().ToList())
             {
                 if (roomUser == null || roomUser.IsBot || roomUser.GetClient() == null || roomUser.GetClient().GetHabbo() == null || roomUser.GetClient().GetHabbo().GetPermissions().HasRight("mod_tool") || roomUser.GetClient().GetHabbo().Id == session.GetHabbo().Id)
                     continue;

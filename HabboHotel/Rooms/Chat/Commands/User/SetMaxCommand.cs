@@ -48,7 +48,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                     session.SendWhisper("visitor amount set to " + maxAmount + ".");
 
                 room.UsersMax = maxAmount;
-                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                 dbClient.RunQuery("UPDATE `rooms` SET `users_max` = " + maxAmount + " WHERE `id` = '" + room.Id + "' LIMIT 1");
             }
             else

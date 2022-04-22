@@ -22,10 +22,10 @@ namespace Plus.Core.Language
             if (_values.Count > 0)
                 _values.Clear();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `server_locale`");
-                DataTable table = dbClient.GetTable();
+                var table = dbClient.GetTable();
 
                 if (table != null)
                 {

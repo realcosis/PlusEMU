@@ -43,7 +43,7 @@ namespace Plus.Communication.Packets.Outgoing
         {
             if (isInt)
             {
-                for (int i = (b.Length - 1); i > -1; i--)
+                for (var i = (b.Length - 1); i > -1; i--)
                 {
                     _body.Add(b[i]);
                 }
@@ -56,7 +56,7 @@ namespace Plus.Communication.Packets.Outgoing
 
         public void WriteDouble(double d) // d
         {
-            string raw = Math.Round(d, 1).ToString(CultureInfo.CurrentCulture);
+            var raw = Math.Round(d, 1).ToString(CultureInfo.CurrentCulture);
 
             if (raw.Length == 1)
             {

@@ -9,12 +9,12 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.Trading
         public TradingUpdateComposer(Trade trade)
             : base(ServerPacketHeader.TradingUpdateMessageComposer)
         {
-            foreach (TradeUser user in trade.Users.ToList())
+            foreach (var user in trade.Users.ToList())
             {
                 WriteInteger(user.RoomUser.UserId);
                 WriteInteger(user.OfferedItems.Count);
 
-                foreach (Item item in user.OfferedItems.Values)
+                foreach (var item in user.OfferedItems.Values)
                 {
                     WriteInteger(item.Id);
                     WriteString(item.GetBaseItem().Type.ToString().ToLower());

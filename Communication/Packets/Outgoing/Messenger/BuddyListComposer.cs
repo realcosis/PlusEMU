@@ -17,9 +17,9 @@ namespace Plus.Communication.Packets.Outgoing.Messenger
             WriteInteger(page);// Page
 
             WriteInteger(friends.Count);
-            foreach (MessengerBuddy friend in friends.ToList())
+            foreach (var friend in friends.ToList())
             {
-                Relationship relationship = player.Relationships.FirstOrDefault(x => x.Value.UserId == Convert.ToInt32(friend.UserId)).Value;
+                var relationship = player.Relationships.FirstOrDefault(x => x.Value.UserId == Convert.ToInt32(friend.UserId)).Value;
 
                 WriteInteger(friend.Id);
                 WriteString(friend.MUsername);

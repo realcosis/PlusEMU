@@ -62,10 +62,10 @@ namespace Plus.HabboHotel.Catalog
             if (_promotions.Count > 0)
                 _promotions.Clear();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `id`,`item_id`,`catalog_name`,`cost_credits`,`cost_pixels`,`cost_diamonds`,`amount`,`page_id`,`limited_sells`,`limited_stack`,`offer_active`,`extradata`,`badge`,`offer_id` FROM `catalog_items`");
-                DataTable catalogueItems = dbClient.GetTable();
+                var catalogueItems = dbClient.GetTable();
 
                 if (catalogueItems != null)
                 {
@@ -74,12 +74,12 @@ namespace Plus.HabboHotel.Catalog
                         if (Convert.ToInt32(row["amount"]) <= 0)
                             continue;
 
-                        int itemId = Convert.ToInt32(row["id"]);
-                        int pageId = Convert.ToInt32(row["page_id"]);
-                        int baseId = Convert.ToInt32(row["item_id"]);
-                        int offerId = Convert.ToInt32(row["offer_id"]);
+                        var itemId = Convert.ToInt32(row["id"]);
+                        var pageId = Convert.ToInt32(row["page_id"]);
+                        var baseId = Convert.ToInt32(row["item_id"]);
+                        var offerId = Convert.ToInt32(row["offer_id"]);
                         
-                        if (!itemDataManager.GetItem(baseId, out ItemData data))
+                        if (!itemDataManager.GetItem(baseId, out var data))
                         {
                             Log.Error("Couldn't load Catalog Item " + itemId + ", no furniture record found.");
                             continue;
@@ -99,18 +99,18 @@ namespace Plus.HabboHotel.Catalog
                 }
 
                 dbClient.SetQuery("SELECT `id`, `items`, `name`, `room_id` FROM `catalog_deals`");
-                DataTable getDeals = dbClient.GetTable();
+                var getDeals = dbClient.GetTable();
 
                 if (getDeals != null)
                 {
                     foreach (DataRow row in getDeals.Rows)
                     {
-                        int id = Convert.ToInt32(row["id"]);
-                        string items = Convert.ToString(row["items"]);
-                        string name = Convert.ToString(row["name"]);
-                        int roomId = Convert.ToInt32(row["room_id"]);
+                        var id = Convert.ToInt32(row["id"]);
+                        var items = Convert.ToString(row["items"]);
+                        var name = Convert.ToString(row["name"]);
+                        var roomId = Convert.ToInt32(row["room_id"]);
 
-                        CatalogDeal deal = new CatalogDeal(id, items, name, roomId, itemDataManager);
+                        var deal = new CatalogDeal(id, items, name, roomId, itemDataManager);
 
                         if (!_deals.ContainsKey(id))
                             _deals.Add(deal.Id, deal);
@@ -119,7 +119,7 @@ namespace Plus.HabboHotel.Catalog
 
 
                 dbClient.SetQuery("SELECT `id`,`parent_id`,`caption`,`page_link`,`visible`,`enabled`,`min_rank`,`min_vip`,`icon_image`,`page_layout`,`page_strings_1`,`page_strings_2` FROM `catalog_pages` ORDER BY `order_num`");
-                DataTable catalogPages = dbClient.GetTable();
+                var catalogPages = dbClient.GetTable();
 
                 if (catalogPages != null)
                 {
@@ -133,7 +133,7 @@ namespace Plus.HabboHotel.Catalog
                 }
 
                 dbClient.SetQuery("SELECT `id`,`name`,`figure`,`motto`,`gender`,`ai_type` FROM `catalog_bot_presets`");
-                DataTable bots = dbClient.GetTable();
+                var bots = dbClient.GetTable();
 
                 if (bots != null)
                 {
@@ -144,7 +144,7 @@ namespace Plus.HabboHotel.Catalog
                 }
 
                 dbClient.SetQuery("SELECT * FROM `catalog_promotions`");
-                DataTable getPromotions = dbClient.GetTable();
+                var getPromotions = dbClient.GetTable();
 
                 if (getPromotions != null)
                 {

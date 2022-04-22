@@ -15,12 +15,12 @@ namespace Plus.Communication.Packets.Incoming.Moderation
             if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(packet.PopInt(), out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(packet.PopInt(), out var room))
                 return;
 
-            bool setLock = packet.PopInt() == 1;
-            bool setName = packet.PopInt() == 1;
-            bool kickAll = packet.PopInt() == 1;
+            var setLock = packet.PopInt() == 1;
+            var setName = packet.PopInt() == 1;
+            var kickAll = packet.PopInt() == 1;
 
             if (setName)
             {
@@ -37,7 +37,7 @@ namespace Plus.Communication.Packets.Incoming.Moderation
             if (room.HasActivePromotion)
                 room.EndPromotion();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 if (setName && setLock)
                     dbClient.RunQuery("UPDATE `rooms` SET `caption` = 'Inappropriate to Hotel Management', `description` = 'Inappropriate to Hotel Management', `tags` = '', `state` = '1' WHERE `id` = '" + room.RoomId + "' LIMIT 1");
@@ -52,7 +52,7 @@ namespace Plus.Communication.Packets.Incoming.Moderation
 
             if (kickAll)
             {
-                foreach (RoomUser roomUser in room.GetRoomUserManager().GetUserList().ToList())
+                foreach (var roomUser in room.GetRoomUserManager().GetUserList().ToList())
                 {
                     if (roomUser == null || roomUser.IsBot)
                         continue;

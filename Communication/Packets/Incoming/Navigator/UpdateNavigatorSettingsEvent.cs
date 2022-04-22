@@ -8,11 +8,11 @@ namespace Plus.Communication.Packets.Incoming.Navigator
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int roomId = packet.PopInt();
+            var roomId = packet.PopInt();
             if (roomId == 0)
                 return;
 
-            if (!RoomFactory.TryGetData(roomId, out RoomData _))
+            if (!RoomFactory.TryGetData(roomId, out var _))
                 return;
 
             session.GetHabbo().HomeRoom = roomId;

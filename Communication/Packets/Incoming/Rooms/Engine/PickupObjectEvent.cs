@@ -15,21 +15,21 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
             if (!session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
             packet.PopInt(); //unknown
-            int itemId = packet.PopInt();
+            var itemId = packet.PopInt();
 
-            Item item = room.GetRoomItemHandler().GetItem(itemId);
+            var item = room.GetRoomItemHandler().GetItem(itemId);
             if (item == null)
                 return;
 
             if (item.GetBaseItem().InteractionType == InteractionType.Postit)
                 return;
 
-            bool itemRights = false;
+            var itemRights = false;
             if (item.UserId == session.GetHabbo().Id || room.CheckRights(session, false))
                 itemRights = true;
             else if (room.Group != null && room.CheckRights(session, false, true))//Room has a group, this user has group rights.
@@ -44,12 +44,12 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
 
                 if (item.GetBaseItem().InteractionType == InteractionType.Moodlight)
                 {
-                    using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                    using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                     dbClient.RunQuery("DELETE FROM `room_items_moodlight` WHERE `item_id` = '" + item.Id + "' LIMIT 1");
                 }
                 else if (item.GetBaseItem().InteractionType == InteractionType.Toner)
                 {
-                    using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                    using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                     dbClient.RunQuery("DELETE FROM `room_items_toner` WHERE `id` = '" + item.Id + "' LIMIT 1");
                 }
 
@@ -69,7 +69,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
                 }
                 else//Item is being ejected.
                 {
-                    GameClient targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(item.UserId);
+                    var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(item.UserId);
                     if (targetClient != null && targetClient.GetHabbo() != null)//Again, do we have an active client?
                     {
                         room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
@@ -79,7 +79,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
                     else//No, query time.
                     {
                         room.GetRoomItemHandler().RemoveFurniture(null, item.Id);
-                        using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                         dbClient.RunQuery("UPDATE `items` SET `room_id` = '0' WHERE `id` = '" + item.Id + "' LIMIT 1");
                     }
                 }

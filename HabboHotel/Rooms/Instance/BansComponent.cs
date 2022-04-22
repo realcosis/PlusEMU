@@ -33,7 +33,7 @@ namespace Plus.HabboHotel.Rooms.Instance
             _bans = new ConcurrentDictionary<int, double>();
 
             DataTable getBans = null;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT `user_id`, `expire` FROM `room_bans` WHERE `room_id` = " + _instance.Id + " AND `expire` > UNIX_TIMESTAMP();");
             getBans = dbClient.GetTable();
 
@@ -51,11 +51,11 @@ namespace Plus.HabboHotel.Rooms.Instance
             if (avatar == null || _instance.CheckRights(avatar.GetClient(), true) || IsBanned(avatar.UserId))
                 return;
 
-            double banTime = UnixTimestamp.GetNow() + time;
+            var banTime = UnixTimestamp.GetNow() + time;
             if (!_bans.TryAdd(avatar.UserId, banTime))
                 _bans[avatar.UserId] = banTime;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("REPLACE INTO `room_bans` (`user_id`,`room_id`,`expire`) VALUES (@uid, @rid, @expire);");
                 dbClient.AddParameter("rid", _instance.Id);
@@ -72,12 +72,12 @@ namespace Plus.HabboHotel.Rooms.Instance
             if (!_bans.ContainsKey(userId))
                 return false;
 
-            double banTime = _bans[userId] - UnixTimestamp.GetNow();
+            var banTime = _bans[userId] - UnixTimestamp.GetNow();
             if (banTime <= 0)
             {
                 double time;
                 _bans.TryRemove(userId, out time);
-                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                 dbClient.SetQuery("DELETE FROM `room_bans` WHERE `room_id` = @rid AND `user_id` = @uid;");
                 dbClient.AddParameter("rid", _instance.Id);
                 dbClient.AddParameter("uid", userId);
@@ -93,9 +93,9 @@ namespace Plus.HabboHotel.Rooms.Instance
             if (!_bans.ContainsKey(userId))
                 return false;
 
-            if (_bans.TryRemove(userId, out double time))
+            if (_bans.TryRemove(userId, out var time))
             {
-                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                 dbClient.SetQuery("DELETE FROM `room_bans` WHERE `room_id` = @rid AND `user_id` = @uid;");
                 dbClient.AddParameter("rid", _instance.Id);
                 dbClient.AddParameter("uid", userId);
@@ -109,8 +109,8 @@ namespace Plus.HabboHotel.Rooms.Instance
         public List<int> BannedUsers()
         {
             DataTable getBans = null;
-            List<int> bans = new List<int>();
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            var bans = new List<int>();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT `user_id` FROM `room_bans` WHERE `room_id` = '" + _instance.Id + "' AND `expire` > UNIX_TIMESTAMP();");
             getBans = dbClient.GetTable();
 

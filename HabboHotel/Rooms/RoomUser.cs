@@ -285,7 +285,7 @@ namespace Plus.HabboHotel.Rooms
 
             if (IsPet)
             {
-                foreach (RoomUser user in GetRoom().GetRoomUserManager().GetUserList().ToList())
+                foreach (var user in GetRoom().GetRoomUserManager().GetUserList().ToList())
                 {
                     if (user == null || user.IsBot)
                         continue;
@@ -299,7 +299,7 @@ namespace Plus.HabboHotel.Rooms
             }
             else
             {
-                foreach (RoomUser user in GetRoom().GetRoomUserManager().GetUserList().ToList())
+                foreach (var user in GetRoom().GetRoomUserManager().GetUserList().ToList())
                 {
                     if (user == null || user.IsBot)
                         continue;
@@ -381,11 +381,11 @@ namespace Plus.HabboHotel.Rooms
 
                 packet = new WhisperComposer(VirtualId, "[Tent Chat] " + message, 0, colour);
 
-                List<RoomUser> toNotify = _mRoom.GetRoomUserManager().GetRoomUserByRank(2);
+                var toNotify = _mRoom.GetRoomUserManager().GetRoomUserByRank(2);
 
                 if (toNotify.Count > 0)
                 {
-                    foreach (RoomUser user in toNotify)
+                    foreach (var user in toNotify)
                     {
                         if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null ||
                             user.GetClient().GetHabbo().TentId == GetClient().GetHabbo().TentId)
@@ -399,7 +399,7 @@ namespace Plus.HabboHotel.Rooms
             }
             else
             {
-                foreach (RoomUser user in _mRoom.GetRoomUserManager().GetRoomUsers().ToList())
+                foreach (var user in _mRoom.GetRoomUserManager().GetRoomUsers().ToList())
                 {
                     if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().GetIgnores().IgnoredUserIds().Contains(_mClient.GetHabbo().Id))
                         continue;
@@ -414,7 +414,7 @@ namespace Plus.HabboHotel.Rooms
             #region Pets/Bots responces
             if (shout)
             {
-                foreach (RoomUser user in _mRoom.GetRoomUserManager().GetUserList().ToList())
+                foreach (var user in _mRoom.GetRoomUserManager().GetUserList().ToList())
                 {
                     if (!user.IsBot)
                         continue;
@@ -425,7 +425,7 @@ namespace Plus.HabboHotel.Rooms
             }
             else
             {
-                foreach (RoomUser user in _mRoom.GetRoomUserManager().GetUserList().ToList())
+                foreach (var user in _mRoom.GetRoomUserManager().GetUserList().ToList())
                 {
                     if (!user.IsBot)
                         continue;
@@ -522,7 +522,7 @@ namespace Plus.HabboHotel.Rooms
                 return;
             }
 
-            int diff = RotBody - rotation;
+            var diff = RotBody - rotation;
 
             RotHead = RotBody;
 

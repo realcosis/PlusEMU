@@ -15,7 +15,7 @@ namespace Plus.Communication.Packets.Outgoing.Navigator.New
             WriteString(data); //Text?
 
             WriteInteger(searchResultLists.Count); //Count
-            foreach (SearchResultList searchResult in searchResultLists.ToList())
+            foreach (var searchResult in searchResultLists.ToList())
             {
                 WriteString(searchResult.CategoryIdentifier);
                 WriteString(searchResult.PublicName);

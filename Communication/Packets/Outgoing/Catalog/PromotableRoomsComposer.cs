@@ -10,7 +10,7 @@ namespace Plus.Communication.Packets.Outgoing.Catalog
             WriteBoolean(true);
             WriteInteger(rooms.Count);//Count
 
-            foreach (RoomData data in rooms)
+            foreach (var data in rooms)
             {
                 WriteInteger(data.Id);
                WriteString(data.Name);

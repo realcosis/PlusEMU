@@ -10,18 +10,18 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Action
             if (!session.GetHabbo().InRoom)
                 return;
 
-            int userId = packet.PopInt();
+            var userId = packet.PopInt();
             packet.PopInt(); //roomId
-            int time = packet.PopInt();
+            var time = packet.PopInt();
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
             if (((room.WhoCanMute == 0 && !room.CheckRights(session, true) && room.Group == null) || (room.WhoCanMute == 1 && !room.CheckRights(session)) && room.Group == null) || (room.Group != null && !room.CheckRights(session, false, true)))
                 return;
 
-            RoomUser target = room.GetRoomUserManager().GetRoomUserByHabbo(PlusEnvironment.GetUsernameById(userId));
+            var target = room.GetRoomUserManager().GetRoomUserByHabbo(PlusEnvironment.GetUsernameById(userId));
             if (target == null)
                 return;
             else if (target.GetClient().GetHabbo().GetPermissions().HasRight("mod_tool"))

@@ -29,14 +29,14 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 return;
             }
 
-            GameClient targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+            var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
             if (targetClient == null || targetClient.GetHabbo() == null)
             {
                 session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");
                 return;
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE `users` SET `time_muted` = '0' WHERE `id` = '" + targetClient.GetHabbo().Id + "' LIMIT 1");
             }

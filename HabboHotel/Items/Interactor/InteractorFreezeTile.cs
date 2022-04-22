@@ -19,7 +19,7 @@ namespace Plus.HabboHotel.Items.Interactor
             if (session == null || !session.GetHabbo().InRoom || item == null || item.InteractingUser > 0)
                 return;
 
-            RoomUser user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null)
                 return;
 

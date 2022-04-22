@@ -21,7 +21,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null)
                 return;
 
@@ -31,7 +31,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator
                 return;
             }
 
-            int bubble = 0;
+            var bubble = 0;
             if (!int.TryParse(@params[1].ToString(), out bubble))
             {
                 session.SendWhisper("Please enter a valid number.");

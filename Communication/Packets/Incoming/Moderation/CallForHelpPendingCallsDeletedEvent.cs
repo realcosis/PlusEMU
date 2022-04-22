@@ -13,7 +13,7 @@ namespace Plus.Communication.Packets.Incoming.Moderation
             
             if (PlusEnvironment.GetGame().GetModerationManager().UserHasTickets(session.GetHabbo().Id))
             {
-                ModerationTicket pendingTicket = PlusEnvironment.GetGame().GetModerationManager().GetTicketBySenderId(session.GetHabbo().Id);
+                var pendingTicket = PlusEnvironment.GetGame().GetModerationManager().GetTicketBySenderId(session.GetHabbo().Id);
                 if (pendingTicket != null)
                 {
                     pendingTicket.Answered = true;

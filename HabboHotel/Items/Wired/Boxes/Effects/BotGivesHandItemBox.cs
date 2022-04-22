@@ -25,9 +25,9 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            int drinkId = packet.PopInt();
-            string botName = packet.PopString();
+            var unknown = packet.PopInt();
+            var drinkId = packet.PopInt();
+            var botName = packet.PopString();
 
             if (SetItems.Count > 0)
                 SetItems.Clear();
@@ -43,17 +43,17 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (String.IsNullOrEmpty(StringData))
                 return false;
 
-            Habbo player = (Habbo)@params[0];
+            var player = (Habbo)@params[0];
 
             if(player == null)
                 return false;
 
-            RoomUser actor = Instance.GetRoomUserManager().GetRoomUserByHabbo(player.Id);
+            var actor = Instance.GetRoomUserManager().GetRoomUserByHabbo(player.Id);
 
             if(actor == null)
                 return false;
 
-            RoomUser user = Instance.GetRoomUserManager().GetBotByName(StringData.Split(';')[0]);
+            var user = Instance.GetRoomUserManager().GetBotByName(StringData.Split(';')[0]);
 
             if (user == null)
                 return false;
@@ -63,7 +63,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
                 if (!Instance.GetGameMap().CanWalk(actor.SquareBehind.X, actor.SquareBehind.Y, false))
                     return false;
 
-                string[] data = StringData.Split(';');
+                var data = StringData.Split(';');
 
                 int drinkId;
 

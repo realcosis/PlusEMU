@@ -31,9 +31,9 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (SetItems.Count > 0)
                 SetItems.Clear();
 
-            int unknown = packet.PopInt();
-            int time = packet.PopInt();
-            string message = packet.PopString();
+            var unknown = packet.PopInt();
+            var time = packet.PopInt();
+            var message = packet.PopString();
 
             StringData = time + ";" + message;
         }
@@ -43,11 +43,11 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (@params.Length != 1)
                 return false;
 
-            Habbo player = (Habbo)@params[0];
+            var player = (Habbo)@params[0];
             if (player == null)
                 return false;
 
-            RoomUser user = Instance.GetRoomUserManager().GetRoomUserByHabbo(player.Id);
+            var user = Instance.GetRoomUserManager().GetRoomUserByHabbo(player.Id);
             if (user == null)
                 return false;
 
@@ -57,8 +57,8 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
                 return false;
             }
 
-            int time = (StringData != null ? int.Parse(StringData.Split(';')[0]) : 0);
-            string message = (StringData != null ? (StringData.Split(';')[1]) : "No message!");
+            var time = (StringData != null ? int.Parse(StringData.Split(';')[0]) : 0);
+            var message = (StringData != null ? (StringData.Split(';')[1]) : "No message!");
 
             if (time > 0)
             {

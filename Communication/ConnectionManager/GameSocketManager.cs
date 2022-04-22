@@ -162,16 +162,16 @@ namespace Plus.Communication.ConnectionManager
                 {
                     try
                     {
-                        Socket replyFromComputer = ((Socket)iAr.AsyncState).EndAccept(iAr);
+                        var replyFromComputer = ((Socket)iAr.AsyncState).EndAccept(iAr);
                         replyFromComputer.NoDelay = _disableNagleAlgorithm;
 
-                        string ip = replyFromComputer.RemoteEndPoint.ToString().Split(':')[0];
+                        var ip = replyFromComputer.RemoteEndPoint.ToString().Split(':')[0];
 
-                        int connectionCount = GetAmountOfConnectionFromIp(ip);
+                        var connectionCount = GetAmountOfConnectionFromIp(ip);
                         if (connectionCount < _maxIpConnectionCount)
                         {
                             _acceptedConnections++;
-                            ConnectionInformation c = new ConnectionInformation(_acceptedConnections, replyFromComputer, _parser.Clone() as IDataParser, ip);
+                            var c = new ConnectionInformation(_acceptedConnections, replyFromComputer, _parser.Clone() as IDataParser, ip);
                             ReportUserLogin(ip);
                             c.ConnectionChanged += OnConnectionChanged;
 
@@ -248,7 +248,7 @@ namespace Plus.Communication.ConnectionManager
         {
             if (_ipConnectionsCount.ContainsKey(ip))
             {
-                _ipConnectionsCount.TryRemove(ip, out int _);
+                _ipConnectionsCount.TryRemove(ip, out var _);
             }
             _ipConnectionsCount.TryAdd(ip, amount);
         }

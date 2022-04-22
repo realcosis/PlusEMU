@@ -47,7 +47,7 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai
 
         public void RemoveTile(int itemId)
         {
-            _banzaiTiles.TryRemove(itemId, out Item item);
+            _banzaiTiles.TryRemove(itemId, out var item);
         }
 
         public void AddPuck(Item item)
@@ -58,7 +58,7 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai
 
         public void RemovePuck(int itemId)
         {
-            _pucks.TryRemove(itemId, out Item item);
+            _pucks.TryRemove(itemId, out var item);
         }
 
         public void OnUserWalk(RoomUser user)
@@ -66,12 +66,12 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai
             if (user == null)
                 return;
 
-            foreach (Item item in _pucks.Values.ToList())
+            foreach (var item in _pucks.Values.ToList())
             {
-                int newX = 0;
-                int newY = 0;
-                int differenceX = user.X - item.GetX;
-                int differenceY = user.Y - item.GetY;
+                var newX = 0;
+                var newY = 0;
+                var differenceX = user.X - item.GetX;
+                var differenceY = user.Y - item.GetY;
 
                 if (differenceX == 0 && differenceY == 0)
                 {
@@ -202,12 +202,12 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai
             _field = new GameField(_floorMap, true);
             _timestarted = PlusEnvironment.GetUnixTimestamp();
             _room.GetGameManager().LockGates();
-            for (int i = 1; i < 5; i++)
+            for (var i = 1; i < 5; i++)
             {
                 _room.GetGameManager().Points[i] = 0;
             }
 
-            foreach (Item tile in _banzaiTiles.Values)
+            foreach (var tile in _banzaiTiles.Values)
             {
                 tile.ExtraData = "1";
                 tile.Value = 0;
@@ -220,7 +220,7 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai
 
             _room.GetWired().TriggerEvent(WiredBoxType.TriggerGameStarts, null);
 
-            foreach (RoomUser user in _room.GetRoomUserManager().GetRoomUsers())
+            foreach (var user in _room.GetRoomUserManager().GetRoomUsers())
             {
                 user.LockedTilesCount = 0;
             }
@@ -228,9 +228,9 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai
 
         public void ResetTiles()
         {
-            foreach (Item item in _room.GetRoomItemHandler().GetFloor.ToList())
+            foreach (var item in _room.GetRoomItemHandler().GetFloor.ToList())
             {
-                InteractionType type = item.GetBaseItem().InteractionType;
+                var type = item.GetBaseItem().InteractionType;
 
                 switch (type)
                 {
@@ -256,9 +256,9 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai
             if (!triggeredByUser)
                 _room.GetWired().TriggerEvent(WiredBoxType.TriggerGameEnds, null);
 
-            Team winners = _room.GetGameManager().GetWinningTeam();
+            var winners = _room.GetGameManager().GetWinningTeam();
             _room.GetGameManager().UnlockGates();
-            foreach (Item tile in _banzaiTiles.Values)
+            foreach (var tile in _banzaiTiles.Values)
             {
                 if (tile.Team == winners)
                 {
@@ -275,7 +275,7 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai
 
             if (winners != Team.None)
             {
-                foreach (RoomUser user in _room.GetRoomUserManager().GetRoomUsers().ToList())
+                foreach (var user in _room.GetRoomUserManager().GetRoomUsers().ToList())
                 {
                     if (user.Team != Team.None)
                     {
@@ -332,7 +332,7 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai
             if (!_room.GetGameMap().ItemCanBePlaced(newX, newY))
                 return;
 
-            Point oldRoomCoord = item.Coordinate;
+            var oldRoomCoord = item.Coordinate;
 
 
             if (oldRoomCoord.X == newX && oldRoomCoord.Y == newY)
@@ -351,7 +351,7 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai
             if (mover == null || mover.GetHabbo() == null)
                 return;
 
-            RoomUser user = mover.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(mover.GetHabbo().Id);
+            var user = mover.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(mover.GetHabbo().Id);
             if (_banzaiStarted)
             {
                 HandleBanzaiTiles(new Point(newX, newY), team, user);
@@ -371,12 +371,12 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai
                         user.LockedTilesCount++;
                         _room.GetGameManager().AddPointToTeam(item.Team, 1);
                         _field.UpdateLocation(item.GetX, item.GetY, (byte)team);
-                        List<PointField> gfield = _field.DoUpdate();
+                        var gfield = _field.DoUpdate();
                         Team t;
-                        foreach (PointField gameField in gfield)
+                        foreach (var gameField in gfield)
                         {
                             t = (Team)gameField.ForValue;
-                            foreach (Point p in gameField.GetPoints())
+                            foreach (var p in gameField.GetPoints())
                             {
                                 HandleMaxBanzaiTiles(new Point(p.X, p.Y), t);
                                 _floorMap[p.Y, p.X] = gameField.ForValue;
@@ -395,7 +395,7 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai
             }
 
 
-            int newColor = item.Value + (Convert.ToInt32(item.Team) * 3) - 1;
+            var newColor = item.Value + (Convert.ToInt32(item.Team) * 3) - 1;
             item.ExtraData = newColor.ToString();
         }
 
@@ -404,9 +404,9 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai
             if (team == Team.None)
                 return;
 
-            List<Item> items = _room.GetGameMap().GetCoordinatedItems(coord);
-            int i = 0;
-            foreach (Item item in _banzaiTiles.Values.ToList())
+            var items = _room.GetGameMap().GetCoordinatedItems(coord);
+            var i = 0;
+            foreach (var item in _banzaiTiles.Values.ToList())
             {
                 if (item == null)
                     continue;
@@ -443,9 +443,9 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai
             if (team == Team.None)
                 return;
 
-            List<Item> items = _room.GetGameMap().GetCoordinatedItems(coord);
+            var items = _room.GetGameMap().GetCoordinatedItems(coord);
 
-            foreach (Item item in _banzaiTiles.Values.ToList())
+            foreach (var item in _banzaiTiles.Values.ToList())
             {
                 if (item == null)
                     continue;
@@ -470,7 +470,7 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai
                 item.Team = team;
             }
 
-            int newColor = item.Value + (Convert.ToInt32(item.Team) * 3) - 1;
+            var newColor = item.Value + (Convert.ToInt32(item.Team) * 3) - 1;
             item.ExtraData = newColor.ToString();
         }
 

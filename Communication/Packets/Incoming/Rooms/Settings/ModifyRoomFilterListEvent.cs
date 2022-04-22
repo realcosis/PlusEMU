@@ -10,7 +10,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Settings
             if (!session.GetHabbo().InRoom)
                 return;
 
-            Room instance = session.GetHabbo().CurrentRoom;
+            var instance = session.GetHabbo().CurrentRoom;
             if (instance == null)
                 return;
 
@@ -18,8 +18,8 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Settings
                 return;
 
             packet.PopInt(); //roomId
-            bool added = packet.PopBoolean();
-            string word = packet.PopString();
+            var added = packet.PopBoolean();
+            var word = packet.PopString();
 
             if (added)
                 instance.GetFilter().AddFilter(word);

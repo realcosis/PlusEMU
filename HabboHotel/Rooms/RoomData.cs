@@ -85,7 +85,7 @@ namespace Plus.HabboHotel.Rooms
             Description = description;
 
             Tags = new List<string>();
-            foreach (string tag in tags.ToString().Split(','))
+            foreach (var tag in tags.ToString().Split(','))
             {
                 Tags.Add(tag);
             }
@@ -191,7 +191,7 @@ namespace Plus.HabboHotel.Rooms
         public void LoadPromotions()
         {
             DataRow getPromotion = null;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT * FROM `room_promotions` WHERE `room_id` = " + Id + " LIMIT 1;");
             getPromotion = dbClient.GetRow();
 

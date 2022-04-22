@@ -16,7 +16,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni
             if (!session.GetHabbo().InRoom)
                 return;
             
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
             if (!room.CheckRights(session, true))
@@ -28,7 +28,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni
                 return;
             }
 
-            Item exchange = room.GetRoomItemHandler().GetItem(packet.PopInt());
+            var exchange = room.GetRoomItemHandler().GetItem(packet.PopInt());
             if (exchange == null)
                 return;
 
@@ -36,7 +36,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni
                 return;
 
 
-            int value = exchange.Data.BehaviourData;
+            var value = exchange.Data.BehaviourData;
 
             if (value > 0)
             {
@@ -44,7 +44,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni
                 session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("DELETE FROM `items` WHERE `id` = @exchangeId LIMIT 1");
                 dbClient.AddParameter("exchangeId", exchange.Id);

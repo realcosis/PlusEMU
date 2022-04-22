@@ -12,9 +12,9 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Settings
             WriteInteger(instance.Id);
 
             WriteInteger(instance.GetBans().BannedUsers().Count);//Count
-            foreach (int id in instance.GetBans().BannedUsers().ToList())
+            foreach (var id in instance.GetBans().BannedUsers().ToList())
             {
-                UserCache data = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
+                var data = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
 
                 if (data == null)
                 {

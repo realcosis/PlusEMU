@@ -13,7 +13,7 @@ namespace Plus.Communication.Packets.Incoming.Inventory.Bots
             if (session.GetHabbo().GetInventoryComponent() == null)
                 return;
 
-            ICollection<Bot> bots = session.GetHabbo().GetInventoryComponent().GetBots();
+            var bots = session.GetHabbo().GetInventoryComponent().GetBots();
             session.SendPacket(new BotInventoryComposer(bots));
         }
     }

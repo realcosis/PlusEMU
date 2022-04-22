@@ -11,9 +11,9 @@ namespace Plus.Communication.Packets.Outgoing.Messenger
             : base(ServerPacketHeader.HabboSearchResultMessageComposer)
         {
             WriteInteger(friends.Count);
-            foreach (SearchResult friend in friends.ToList())
+            foreach (var friend in friends.ToList())
             {
-                bool online = (PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(friend.UserId) != null);
+                var online = (PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(friend.UserId) != null);
 
                 WriteInteger(friend.UserId);
                WriteString(friend.Username);
@@ -27,9 +27,9 @@ namespace Plus.Communication.Packets.Outgoing.Messenger
             }
 
             WriteInteger(otherUsers.Count);
-            foreach (SearchResult otherUser in otherUsers.ToList())
+            foreach (var otherUser in otherUsers.ToList())
             {
-                bool online = (PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(otherUser.UserId) != null);
+                var online = (PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(otherUser.UserId) != null);
 
                 WriteInteger(otherUser.UserId);
                WriteString(otherUser.Username);

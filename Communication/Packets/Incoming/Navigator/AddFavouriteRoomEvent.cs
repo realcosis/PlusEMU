@@ -13,9 +13,9 @@ namespace Plus.Communication.Packets.Incoming.Navigator
             if (session == null)
                 return;
 
-            int roomId = packet.PopInt();
+            var roomId = packet.PopInt();
 
-            if (!RoomFactory.TryGetData(roomId, out RoomData data))
+            if (!RoomFactory.TryGetData(roomId, out var data))
                 return;
 
             if (data == null || session.GetHabbo().FavoriteRooms.Count >= 30 || session.GetHabbo().FavoriteRooms.Contains(roomId))
@@ -26,7 +26,7 @@ namespace Plus.Communication.Packets.Incoming.Navigator
 
             session.GetHabbo().FavoriteRooms.Add(roomId);
             session.SendPacket(new UpdateFavouriteRoomComposer(roomId, true));
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.RunQuery("INSERT INTO user_favorites (user_id,room_id) VALUES (" + session.GetHabbo().Id + "," + roomId + ")");
         }
     }

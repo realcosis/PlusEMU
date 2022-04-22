@@ -17,13 +17,13 @@ namespace Plus.Communication.Packets.Incoming.Groups
             if (session == null || session.GetHabbo() == null)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(packet.PopInt(), out Group group))
+            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(packet.PopInt(), out var group))
                 return;
 
             if (group.IsMember(session.GetHabbo().Id) || group.IsAdmin(session.GetHabbo().Id) || (group.HasRequest(session.GetHabbo().Id) && group.Type == GroupType.Private))
                 return;
 
-            List<Group> groups = PlusEnvironment.GetGame().GetGroupManager().GetGroupsForUser(session.GetHabbo().Id);
+            var groups = PlusEnvironment.GetGame().GetGroupManager().GetGroupsForUser(session.GetHabbo().Id);
             if (groups.Count >= 1500)
             {
                 session.SendPacket(new BroadcastMessageAlertComposer("Oops, it appears that you've hit the group membership limit! You can only join upto 1,500 groups."));
@@ -34,8 +34,8 @@ namespace Plus.Communication.Packets.Incoming.Groups
 
             if (group.Type == GroupType.Locked)
             {
-                List<GameClient> groupAdmins = (from client in PlusEnvironment.GetGame().GetClientManager().GetClients.ToList() where client != null && client.GetHabbo() != null && @group.IsAdmin(client.GetHabbo().Id) select client).ToList();
-                foreach (GameClient client in groupAdmins)
+                var groupAdmins = (from client in PlusEnvironment.GetGame().GetClientManager().GetClients.ToList() where client != null && client.GetHabbo() != null && @group.IsAdmin(client.GetHabbo().Id) select client).ToList();
+                foreach (var client in groupAdmins)
                 {
                     client.SendPacket(new GroupMembershipRequestedComposer(group.Id, session.GetHabbo(), 3));
                 }

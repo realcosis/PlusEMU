@@ -14,17 +14,17 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
-            int itemId = packet.PopInt();
-            Item item = room.GetRoomItemHandler().GetItem(itemId);
+            var itemId = packet.PopInt();
+            var item = room.GetRoomItemHandler().GetItem(itemId);
             if (item == null)
                 return;
 
-            bool hasRights = room.CheckRights(session, false, true);
+            var hasRights = room.CheckRights(session, false, true);
 
-            int request = packet.PopInt();
+            var request = packet.PopInt();
 
             item.Interactor.OnTrigger(session, item, request, hasRights);
             item.GetRoom().GetWired().TriggerEvent(WiredBoxType.TriggerStateChanges, session.GetHabbo(), item);

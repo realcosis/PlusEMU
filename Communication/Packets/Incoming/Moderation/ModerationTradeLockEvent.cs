@@ -11,15 +11,15 @@ namespace Plus.Communication.Packets.Incoming.Moderation
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().GetPermissions().HasRight("mod_trade_lock"))
                 return;
 
-            int userId = packet.PopInt();
-            string message = packet.PopString();
-            double days = packet.PopInt() / 1440.0;
+            var userId = packet.PopInt();
+            var message = packet.PopString();
+            var days = packet.PopInt() / 1440.0;
             packet.PopString(); //unk1
             packet.PopString(); //unk2
 
-            double length = PlusEnvironment.GetUnixTimestamp() + days * 86400;
+            var length = PlusEnvironment.GetUnixTimestamp() + days * 86400;
 
-            Habbo habbo = PlusEnvironment.GetHabboById(userId);
+            var habbo = PlusEnvironment.GetHabboById(userId);
             if (habbo == null)
             {
                 session.SendWhisper("An error occoured whilst finding that user in the database.");
@@ -38,7 +38,7 @@ namespace Plus.Communication.Packets.Incoming.Moderation
             if (days > 365)
                 days = 365;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '" + length + "', `trading_locks_count` = `trading_locks_count` + '1' WHERE `user_id` = '" + habbo.Id + "' LIMIT 1");
             }

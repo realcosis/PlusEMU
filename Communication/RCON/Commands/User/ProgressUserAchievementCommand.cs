@@ -17,10 +17,10 @@ namespace Plus.Communication.Rcon.Commands.User
 
         public bool TryExecute(string[] parameters)
         {
-            if (!int.TryParse(parameters[0], out int userId))
+            if (!int.TryParse(parameters[0], out var userId))
                 return false;
 
-            GameClient client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
+            var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
             if (client == null || client.GetHabbo() == null)
                 return false;
         
@@ -28,10 +28,10 @@ namespace Plus.Communication.Rcon.Commands.User
             if (string.IsNullOrEmpty(Convert.ToString(parameters[1])))
                 return false;
 
-            string achievement = Convert.ToString(parameters[1]);
+            var achievement = Convert.ToString(parameters[1]);
 
             // Validate the progress
-            if (!int.TryParse(parameters[2], out int progress))
+            if (!int.TryParse(parameters[2], out var progress))
                 return false;
 
             PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(client, achievement, progress);

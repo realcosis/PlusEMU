@@ -10,8 +10,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Moodlight
             WriteInteger(moodlightData.Presets.Count);
             WriteInteger(moodlightData.CurrentPreset);
 
-            int i = 1;
-            foreach (MoodlightPreset preset in moodlightData.Presets)
+            var i = 1;
+            foreach (var preset in moodlightData.Presets)
             {
                 WriteInteger(i);
                 WriteInteger(preset.BackgroundOnly ? 2 : 1);

@@ -10,11 +10,11 @@ namespace Plus.Communication.Packets.Incoming.Users
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            List<string> ignoredUsers = new List<string>();
+            var ignoredUsers = new List<string>();
 
-            foreach (int userId in new List<int>(session.GetHabbo().GetIgnores().IgnoredUserIds()))
+            foreach (var userId in new List<int>(session.GetHabbo().GetIgnores().IgnoredUserIds()))
             {
-                Habbo player = PlusEnvironment.GetHabboById(userId);
+                var player = PlusEnvironment.GetHabboById(userId);
                 if (player != null)
                 {
                     if (!ignoredUsers.Contains(player.Username))

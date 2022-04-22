@@ -8,17 +8,17 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
-            Item item = room.GetRoomItemHandler().GetItem(packet.PopInt());
+            var item = room.GetRoomItemHandler().GetItem(packet.PopInt());
             if (item == null)
                 return;
 
-            bool hasRights = room.CheckRights(session, false, true);
+            var hasRights = room.CheckRights(session, false, true);
 
-            int request = packet.PopInt();
+            var request = packet.PopInt();
 
             item.Interactor.OnTrigger(session, item, request, hasRights);
         }

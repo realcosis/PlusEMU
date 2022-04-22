@@ -13,7 +13,7 @@ namespace Plus.Communication.Packets.Outgoing.Groups
             WriteInteger(Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("catalog.group.purchase.cost")));//Price
 
             WriteInteger(rooms.Count);//Room count that the user has.
-            foreach (RoomData room in rooms)
+            foreach (var room in rooms)
             {
                 WriteInteger(room.Id);//Room Id
                 WriteString(room.Name);//Room Name

@@ -185,9 +185,9 @@ namespace Plus.HabboHotel.Users
             _lastOnline = lastOnline;
             _accountCreated = createDate;
             _clientVolume = new List<int>();
-            foreach (string str in clientVolume.Split(','))
+            foreach (var str in clientVolume.Split(','))
             {
-                int val = 0;
+                var val = 0;
                 if (int.TryParse(str, out val))
                     _clientVolume.Add(int.Parse(str));
                 else
@@ -234,7 +234,7 @@ namespace Plus.HabboHotel.Users
             if (_tradingLockExpiry > 0 && PlusEnvironment.GetUnixTimestamp() > TradingLockExpiry)
             {
                 _tradingLockExpiry = 0;
-                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                 dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '0' WHERE `user_id` = '" + id + "' LIMIT 1");
             }
 
@@ -292,7 +292,7 @@ namespace Plus.HabboHotel.Users
 
             #region Stats
             DataRow statRow = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `id`,`roomvisits`,`onlinetime`,`respect`,`respectgiven`,`giftsgiven`,`giftsreceived`,`dailyrespectpoints`,`dailypetrespectpoints`,`achievementscore`,`quest_id`,`quest_progress`,`groupid`,`tickets_answered`,`respectstimestamp`,`forum_posts` FROM `user_stats` WHERE `id` = @user_id LIMIT 1");
                 dbClient.AddParameter("user_id", id);
@@ -317,7 +317,7 @@ namespace Plus.HabboHotel.Users
                         _habboStats.RespectsTimestamp = DateTime.Today.ToString("MM/dd");
                         SubscriptionData subData = null;
 
-                        int dailyRespects = 10;
+                        var dailyRespects = 10;
 
                         if (_permissions.HasRight("mod_tool"))
                             dailyRespects = 20;
@@ -875,7 +875,7 @@ namespace Plus.HabboHotel.Users
 
         public bool CacheExpired()
         {
-            TimeSpan span = DateTime.Now - _timeCached;
+            var span = DateTime.Now - _timeCached;
             return (span.TotalMinutes >= 30);
         }
 
@@ -941,7 +941,7 @@ namespace Plus.HabboHotel.Users
             Achievements = data.Achievements;
 
             FavoriteRooms = new ArrayList();
-            foreach (int id in data.FavouritedRooms)
+            foreach (var id in data.FavouritedRooms)
             {
                 FavoriteRooms.Add(id);
             }
@@ -994,7 +994,7 @@ namespace Plus.HabboHotel.Users
             if (!_habboSaved)
             {
                 _habboSaved = true;
-                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                 dbClient.RunQuery("UPDATE `users` SET `online` = '0', `last_online` = '" + PlusEnvironment.GetUnixTimestamp() + "', `activity_points` = '" + Duckets + "', `credits` = '" + Credits + "', `vip_points` = '" + Diamonds + "', `home_room` = '" + HomeRoom + "', `gotw_points` = '" + GotwPoints + "', `time_muted` = '" + TimeMuted + "',`friend_bar_state` = '" + FriendBarStateUtility.GetInt(_friendbarState) + "' WHERE id = '" + Id + "' LIMIT 1;UPDATE `user_stats` SET `roomvisits` = '" + _habboStats.RoomVisits + "', `onlineTime` = '" + (PlusEnvironment.GetUnixTimestamp() - SessionStart + _habboStats.OnlineTime) + "', `respect` = '" + _habboStats.Respect + "', `respectGiven` = '" + _habboStats.RespectGiven + "', `giftsGiven` = '" + _habboStats.GiftsGiven + "', `giftsReceived` = '" + _habboStats.GiftsReceived + "', `dailyRespectPoints` = '" + _habboStats.DailyRespectPoints + "', `dailyPetRespectPoints` = '" + _habboStats.DailyPetRespectPoints + "', `AchievementScore` = '" + _habboStats.AchievementPoints + "', `quest_id` = '" + _habboStats.QuestId + "', `quest_progress` = '" + _habboStats.QuestProgress + "', `groupid` = '" + _habboStats.FavouriteGroupId + "',`forum_posts` = '" + _habboStats.ForumPosts +"' WHERE `id` = '" + Id + "' LIMIT 1;");
 
                 if (GetPermissions().HasRight("mod_tickets"))
@@ -1042,8 +1042,8 @@ namespace Plus.HabboHotel.Users
 
                 if (_creditsTickUpdate <= 0)
                 {
-                    int creditUpdate = Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("user.currency_scheduler.credit_reward"));
-                    int ducketUpdate = Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("user.currency_scheduler.ducket_reward"));
+                    var creditUpdate = Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("user.currency_scheduler.credit_reward"));
+                    var ducketUpdate = Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("user.currency_scheduler.ducket_reward"));
 
                     SubscriptionData subData = null;
                     if (PlusEnvironment.GetGame().GetSubscriptionManager().TryGetSubscriptionData(_vipRank, out subData))
@@ -1104,7 +1104,7 @@ namespace Plus.HabboHotel.Users
 
         public int GetQuestProgress(int p)
         {
-            int progress = 0;
+            var progress = 0;
             Quests.TryGetValue(p, out progress);
             return progress;
         }
@@ -1127,7 +1127,7 @@ namespace Plus.HabboHotel.Users
 
         public void SaveKey(string key, string value)
         {
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("UPDATE `users` SET " + key + " = @value WHERE `id` = '" + Id + "' LIMIT 1;");
             dbClient.AddParameter("value", value);
             dbClient.RunQuery();
@@ -1235,7 +1235,7 @@ namespace Plus.HabboHotel.Users
             GetClient().SendPacket(new RoomPropertyComposer("landscape", room.Landscape));
             GetClient().SendPacket(new RoomRatingComposer(room.Score, !(GetClient().GetHabbo().RatedRooms.Contains(room.RoomId) || room.OwnerId == GetClient().GetHabbo().Id)));
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("INSERT INTO user_roomvisits (user_id,room_id,entry_timestamp,exit_timestamp,hour,minute) VALUES ('" + GetClient().GetHabbo().Id + "','" + GetClient().GetHabbo().CurrentRoomId + "','" + PlusEnvironment.GetUnixTimestamp() + "','0','" + DateTime.Now.Hour + "','" + DateTime.Now.Minute + "');");// +
             }

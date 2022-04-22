@@ -21,7 +21,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            RoomUser thisUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var thisUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (thisUser == null)
                 return;
 
@@ -29,8 +29,8 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
                 session.SendWhisper("You must enter a username and the message you wish to force them to say.");
             else
             {
-                string message = CommandManager.MergeParams(@params, 2);
-                RoomUser targetUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(@params[1]);
+                var message = CommandManager.MergeParams(@params, 2);
+                var targetUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(@params[1]);
                 if (targetUser != null)
                 {
                     if (targetUser.GetClient() != null && targetUser.GetClient().GetHabbo() != null)

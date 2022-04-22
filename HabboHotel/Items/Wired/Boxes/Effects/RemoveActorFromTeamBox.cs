@@ -27,7 +27,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
+            var unknown = packet.PopInt();
         }
 
         public bool Execute(params object[] @params)
@@ -35,17 +35,17 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (@params.Length == 0 || Instance == null)
                 return false;
 
-            Habbo player = (Habbo)@params[0];
+            var player = (Habbo)@params[0];
             if (player == null)
                 return false;
 
-            RoomUser user = Instance.GetRoomUserManager().GetRoomUserByHabbo(player.Id);
+            var user = Instance.GetRoomUserManager().GetRoomUserByHabbo(player.Id);
             if (user == null)
                 return false;
 
             if (user.Team != Team.None)
             {
-                TeamManager team = Instance.GetTeamManagerForFreeze();
+                var team = Instance.GetTeamManagerForFreeze();
                 if (team != null)
                 {
                     team.OnUserLeave(user);

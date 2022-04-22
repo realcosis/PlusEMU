@@ -46,7 +46,7 @@ namespace Plus.HabboHotel.Rooms.AI.Types
             if (Gamemap.TileDistance(GetRoomUser().X, GetRoomUser().Y, user.X, user.Y) > 8)
                 return;
 
-            BotResponse response = PlusEnvironment.GetGame().GetBotManager().GetResponse(GetBotData().AiType, message);
+            var response = PlusEnvironment.GetGame().GetBotManager().GetResponse(GetBotData().AiType, message);
             if (response == null)
                 return;
 
@@ -79,7 +79,7 @@ namespace Plus.HabboHotel.Rooms.AI.Types
             if (Gamemap.TileDistance(GetRoomUser().X, GetRoomUser().Y, user.X, user.Y) > 8)
                 return;
 
-            BotResponse response = PlusEnvironment.GetGame().GetBotManager().GetResponse(GetBotData().AiType, message);
+            var response = PlusEnvironment.GetGame().GetBotManager().GetResponse(GetBotData().AiType, message);
             if (response == null)
                 return;
 
@@ -116,9 +116,9 @@ namespace Plus.HabboHotel.Rooms.AI.Types
                     if (GetBotData().AutomaticChat == false)
                         return;
 
-                    RandomSpeech speech = GetBotData().GetRandomSpeech();
+                    var speech = GetBotData().GetRandomSpeech();
 
-                    string @string = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(speech.Message);
+                    var @string = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(speech.Message);
                     if (@string.Contains("<img src") || @string.Contains("<font ") || @string.Contains("</font>") || @string.Contains("</a>") || @string.Contains("<i>"))
                         @string = "I really shouldn't be using HTML within bot speeches.";
                     GetRoomUser().Chat(@string, GetBotData().ChatBubble);
@@ -151,7 +151,7 @@ namespace Plus.HabboHotel.Rooms.AI.Types
                         }
                         else if (GetBotData().ForcedUserTargetMovement > 0)
                         {
-                            RoomUser target = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(GetBotData().ForcedUserTargetMovement);
+                            var target = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(GetBotData().ForcedUserTargetMovement);
                             if (target == null)
                             {
                                 GetBotData().ForcedUserTargetMovement = 0;

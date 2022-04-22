@@ -21,14 +21,14 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            int itemId = 0;
+            var itemId = 0;
             if (!int.TryParse(Convert.ToString(@params[1]), out itemId))
             {
                 session.SendWhisper("Please enter a valid integer.");
                 return;
             }
 
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null)
                 return;
 

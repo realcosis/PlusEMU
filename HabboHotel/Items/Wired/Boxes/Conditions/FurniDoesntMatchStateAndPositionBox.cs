@@ -35,16 +35,16 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
             if (SetItems.Count > 0)
                 SetItems.Clear();
 
-            int unknown = packet.PopInt();
-            int state = packet.PopInt();
-            int direction = packet.PopInt();
-            int placement = packet.PopInt();
-            string unknown2 = packet.PopString();
+            var unknown = packet.PopInt();
+            var state = packet.PopInt();
+            var direction = packet.PopInt();
+            var placement = packet.PopInt();
+            var unknown2 = packet.PopString();
 
-            int furniCount = packet.PopInt();
-            for (int i = 0; i < furniCount; i++)
+            var furniCount = packet.PopInt();
+            for (var i = 0; i < furniCount; i++)
             {
-                Item selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+                var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
                 if (selectedItem != null)
                     SetItems.TryAdd(selectedItem.Id, selectedItem);
             }
@@ -60,22 +60,22 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
             if (String.IsNullOrEmpty(StringData) || StringData == "0;0;0" || SetItems.Count == 0)
                 return false;
 
-            foreach (Item item in SetItems.Values.ToList())
+            foreach (var item in SetItems.Values.ToList())
             {
                 if (!Instance.GetRoomItemHandler().GetFloor.Contains(item))
                     continue;
 
-                foreach (String I in ItemsData.Split(';'))
+                foreach (var I in ItemsData.Split(';'))
                 {
                     if (String.IsNullOrEmpty(I))
                         continue;
 
-                    Item ii = Instance.GetRoomItemHandler().GetItem(Convert.ToInt32(I.Split(':')[0]));
+                    var ii = Instance.GetRoomItemHandler().GetItem(Convert.ToInt32(I.Split(':')[0]));
                     if (ii == null)
                         continue;
 
-                    string[] partsString = I.Split(':');
-                    string[] part = partsString[1].Split(',');
+                    var partsString = I.Split(':');
+                    var part = partsString[1].Split(',');
 
                     if (int.Parse(StringData.Split(';')[0]) == 1)//State
                     {

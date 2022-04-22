@@ -44,23 +44,23 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (SetItems.Count > 0)
                 SetItems.Clear();
 
-            int unknown = packet.PopInt();
-            int state = packet.PopInt();
-            int direction = packet.PopInt();
-            int placement = packet.PopInt();
-            string unknown2 = packet.PopString();
+            var unknown = packet.PopInt();
+            var state = packet.PopInt();
+            var direction = packet.PopInt();
+            var placement = packet.PopInt();
+            var unknown2 = packet.PopString();
 
-            int furniCount = packet.PopInt();
-            for (int i = 0; i < furniCount; i++)
+            var furniCount = packet.PopInt();
+            for (var i = 0; i < furniCount; i++)
             {
-                Item selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+                var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
                 if (selectedItem != null)
                     SetItems.TryAdd(selectedItem.Id, selectedItem);
             }
 
             StringData = state + ";" + direction + ";" + placement;
 
-            int delay = packet.PopInt();
+            var delay = packet.PopInt();
             this.Delay = delay;
         }
 
@@ -79,22 +79,22 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (!_requested || String.IsNullOrEmpty(StringData) || StringData == "0;0;0" || SetItems.Count == 0)
                 return false;
 
-            foreach (Item item in SetItems.Values.ToList())
+            foreach (var item in SetItems.Values.ToList())
             {
                 if (Instance.GetRoomItemHandler().GetFloor == null && !Instance.GetRoomItemHandler().GetFloor.Contains(item))
                     continue;
 
-                foreach (string I in ItemsData.Split(';'))
+                foreach (var I in ItemsData.Split(';'))
                 {
                     if (string.IsNullOrEmpty(I))
                         continue;
 
-                    int itemId = Convert.ToInt32(I.Split(':')[0]);
-                    Item ii = Instance.GetRoomItemHandler().GetItem(Convert.ToInt32(itemId));
+                    var itemId = Convert.ToInt32(I.Split(':')[0]);
+                    var ii = Instance.GetRoomItemHandler().GetItem(Convert.ToInt32(itemId));
                     if (ii == null)
                         continue;
 
-                    string[] partsString = I.Split(':');
+                    var partsString = I.Split(':');
                     try
                     {
                         if (string.IsNullOrEmpty(partsString[0]) || string.IsNullOrEmpty(partsString[1]))
@@ -102,7 +102,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
                     }
                     catch { continue; }
 
-                    string[] part = partsString[1].Split(',');
+                    var part = partsString[1].Split(',');
 
                     try
                     {

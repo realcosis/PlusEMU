@@ -7,7 +7,7 @@ namespace Plus.Communication.Packets.Incoming.Catalog
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            string petName = packet.PopString();
+            var petName = packet.PopString();
 
             if (petName.Length < 2)
             {

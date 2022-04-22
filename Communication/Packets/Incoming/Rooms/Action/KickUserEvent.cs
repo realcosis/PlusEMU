@@ -7,7 +7,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Action
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
@@ -17,8 +17,8 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Action
             if (room.Group != null && !room.CheckRights(session, false, true))
                 return;
 
-            int userId = packet.PopInt();
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(userId);
+            var userId = packet.PopInt();
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(userId);
             if (user == null || user.IsBot)
                 return;
 

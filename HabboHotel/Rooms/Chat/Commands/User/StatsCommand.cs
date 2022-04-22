@@ -22,12 +22,12 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            double minutes = session.GetHabbo().GetStats().OnlineTime / 60;
-            double hours = minutes / 60;
-            int onlineTime = Convert.ToInt32(hours);
-            string s = onlineTime == 1 ? "" : "s";
+            var minutes = session.GetHabbo().GetStats().OnlineTime / 60;
+            var hours = minutes / 60;
+            var onlineTime = Convert.ToInt32(hours);
+            var s = onlineTime == 1 ? "" : "s";
 
-            StringBuilder habboInfo = new StringBuilder();
+            var habboInfo = new StringBuilder();
             habboInfo.Append("Your account stats:\r\r");
 
             habboInfo.Append("Currency Info:\r");

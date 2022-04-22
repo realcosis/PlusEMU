@@ -19,7 +19,7 @@ namespace Plus.HabboHotel.Users.Badges
             _player = player;
             _badges = new Dictionary<string, Badge>();
 
-            foreach (Badge badge in data.Badges)
+            foreach (var badge in data.Badges)
             {
                 BadgeDefinition badgeDefinition = null;
                 if (!PlusEnvironment.GetGame().GetBadgeManager().TryGetBadge(badge.Code, out badgeDefinition) || badgeDefinition.RequiredRight.Length > 0 && !player.GetPermissions().HasRight(badgeDefinition.RequiredRight))
@@ -39,9 +39,9 @@ namespace Plus.HabboHotel.Users.Badges
         {
             get
             {
-                int i = 0;
+                var i = 0;
 
-                foreach (Badge badge in _badges.Values)
+                foreach (var badge in _badges.Values)
                 {
                     if (badge.Slot <= 0)
                     {
@@ -89,7 +89,7 @@ namespace Plus.HabboHotel.Users.Badges
 
             if (inDatabase)
             {
-                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                 dbClient.SetQuery("REPLACE INTO `user_badges` (`user_id`,`badge_id`,`badge_slot`) VALUES ('" + _player.Id + "', @badge, '" + 0 + "')");
                 dbClient.AddParameter("badge", code);
                 dbClient.RunQuery();
@@ -106,7 +106,7 @@ namespace Plus.HabboHotel.Users.Badges
 
         public void ResetSlots()
         {
-            foreach (Badge badge in _badges.Values)
+            foreach (var badge in _badges.Values)
             {
                 badge.Slot = 0;
             }
@@ -119,7 +119,7 @@ namespace Plus.HabboHotel.Users.Badges
                 return;
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("DELETE FROM user_badges WHERE badge_id = @badge AND user_id = " + _player.Id + " LIMIT 1");
                 dbClient.AddParameter("badge", badge);

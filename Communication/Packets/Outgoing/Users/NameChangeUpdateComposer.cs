@@ -11,7 +11,7 @@ namespace Plus.Communication.Packets.Outgoing.Users
             WriteString(name);
 
             WriteInteger(tags.Count);
-            foreach (string tag in tags)
+            foreach (var tag in tags)
             {
                 WriteString(name + tag);
             }

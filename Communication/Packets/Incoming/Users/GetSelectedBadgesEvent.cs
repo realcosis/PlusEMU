@@ -8,8 +8,8 @@ namespace Plus.Communication.Packets.Incoming.Users
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int userId = packet.PopInt();
-            Habbo habbo = PlusEnvironment.GetHabboById(userId);
+            var userId = packet.PopInt();
+            var habbo = PlusEnvironment.GetHabboById(userId);
             if (habbo == null)
                 return;
 

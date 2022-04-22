@@ -30,9 +30,9 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Triggers
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            int ownerOnly = packet.PopInt();
-            string message = packet.PopString();
+            var unknown = packet.PopInt();
+            var ownerOnly = packet.PopInt();
+            var message = packet.PopString();
 
             BoolData = ownerOnly == 1;
             StringData = message;
@@ -40,25 +40,25 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Triggers
 
         public bool Execute(params object[] @params)
         {
-            Habbo player = (Habbo)@params[0];
+            var player = (Habbo)@params[0];
             if (player == null || player.CurrentRoom == null || !player.InRoom)
                 return false;
 
-            RoomUser user = player.CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(player.Username);
+            var user = player.CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(player.Username);
             if (user == null)
                 return false;
 
-            string message = Convert.ToString(@params[1]);
+            var message = Convert.ToString(@params[1]);
             if ((BoolData && Instance.OwnerId != player.Id) || player == null || string.IsNullOrWhiteSpace(message) || string.IsNullOrWhiteSpace(StringData))
                 return false;
 
             if (message.Contains(" " + StringData) || message.Contains(StringData + " ") || message == StringData)
             {
                 player.WiredInteraction = true;
-                ICollection<IWiredItem> effects = Instance.GetWired().GetEffects(this);
-                ICollection<IWiredItem> conditions = Instance.GetWired().GetConditions(this);
+                var effects = Instance.GetWired().GetEffects(this);
+                var conditions = Instance.GetWired().GetConditions(this);
 
-                foreach (IWiredItem condition in conditions.ToList())
+                foreach (var condition in conditions.ToList())
                 {
                     if (!condition.Execute(player))
                         return false;
@@ -68,16 +68,16 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Triggers
 
                 player.GetClient().SendPacket(new WhisperComposer(user.VirtualId, message, 0, 0));
                 //Check the ICollection to find the random addon effect.
-                bool hasRandomEffectAddon = effects.Count(x => x.Type == WiredBoxType.AddonRandomEffect) > 0;
+                var hasRandomEffectAddon = effects.Count(x => x.Type == WiredBoxType.AddonRandomEffect) > 0;
                 if (hasRandomEffectAddon)
                 {
                     //Okay, so we have a random addon effect, now lets get the IWiredItem and attempt to execute it.
-                    IWiredItem randomBox = effects.FirstOrDefault(x => x.Type == WiredBoxType.AddonRandomEffect);
+                    var randomBox = effects.FirstOrDefault(x => x.Type == WiredBoxType.AddonRandomEffect);
                     if (!randomBox.Execute())
                         return false;
 
                     //Success! Let's get our selected box and continue.
-                    IWiredItem selectedBox = Instance.GetWired().GetRandomEffect(effects.ToList());
+                    var selectedBox = Instance.GetWired().GetRandomEffect(effects.ToList());
                     if (!selectedBox.Execute())
                         return false;
 
@@ -90,7 +90,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Triggers
                 }
                 else
                 {
-                    foreach (IWiredItem effect in effects.ToList())
+                    foreach (var effect in effects.ToList())
                     {
                         if (!effect.Execute(player))
                             return false;

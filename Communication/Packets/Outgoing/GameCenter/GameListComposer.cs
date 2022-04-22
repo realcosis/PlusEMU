@@ -10,7 +10,7 @@ namespace Plus.Communication.Packets.Outgoing.GameCenter
             : base(ServerPacketHeader.GameListMessageComposer)
         {
             WriteInteger(PlusEnvironment.GetGame().GetGameDataManager().GetCount());//Game count
-            foreach (GameData game in games)
+            foreach (var game in games)
             {
                 WriteInteger(game.Id);
                WriteString(game.Name);

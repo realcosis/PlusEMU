@@ -19,19 +19,19 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets
             if (session.GetHabbo() == null || session.GetHabbo().GetInventoryComponent() == null)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
-            int petId = packet.PopInt();
+            var petId = packet.PopInt();
 
-            if (!room.GetRoomUserManager().TryGetPet(petId, out RoomUser pet))
+            if (!room.GetRoomUserManager().TryGetPet(petId, out var pet))
             {
                 //Check kick rights, just because it seems most appropriate.
                 if ((!room.CheckRights(session) && room.WhoCanKick != 2 && room.Group == null) || (room.Group != null && !room.CheckRights(session, false, true)))
                     return;
 
                 //Okay so, we've established we have no pets in this room by this virtual Id, let us check out users, maybe they're creeping as a pet?!
-                RoomUser targetUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(petId);
+                var targetUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(petId);
                 if (targetUser == null)
                     return;
 
@@ -58,7 +58,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets
 
             if (pet.RidingHorse)
             {
-                RoomUser userRiding = room.GetRoomUserManager().GetRoomUserByVirtualId(pet.HorseId);
+                var userRiding = room.GetRoomUserManager().GetRoomUserByVirtualId(pet.HorseId);
                 if (userRiding != null)
                 {
                     userRiding.RidingHorse = false;
@@ -69,17 +69,17 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets
                     pet.RidingHorse = false;
             }
 
-            Pet data = pet.PetData;
+            var data = pet.PetData;
             if (data != null)
             {
-                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                 dbClient.RunQuery("UPDATE `bots` SET `room_id` = '0', `x` = '0', `Y` = '0', `Z` = '0' WHERE `id` = '" + data.PetId + "' LIMIT 1");
                 dbClient.RunQuery("UPDATE `bots_petdata` SET `experience` = '" + data.Experience + "', `energy` = '" + data.Energy + "', `nutrition` = '" + data.Nutrition + "', `respect` = '" + data.Respect + "' WHERE `id` = '" + data.PetId + "' LIMIT 1");
             }
 
             if (data.OwnerId != session.GetHabbo().Id)
             {
-                GameClient target = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(data.OwnerId);
+                var target = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(data.OwnerId);
                 if (target != null)
                 {
                     if (target.GetHabbo().GetInventoryComponent().TryAddPet(pet.PetData))

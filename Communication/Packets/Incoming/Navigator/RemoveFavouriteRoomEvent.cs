@@ -9,11 +9,11 @@ namespace Plus.Communication.Packets.Incoming.Navigator
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int id = packet.PopInt();
+            var id = packet.PopInt();
 
             session.GetHabbo().FavoriteRooms.Remove(id);
             session.SendPacket(new UpdateFavouriteRoomComposer(id, false));
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.RunQuery("DELETE FROM user_favorites WHERE user_id = " + session.GetHabbo().Id + " AND room_id = " + id + " LIMIT 1");
         }
     }

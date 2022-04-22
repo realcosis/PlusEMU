@@ -13,12 +13,12 @@ namespace Plus.Communication.Packets.Outgoing.GameCenter
         {
             WriteInteger(gameId);
             WriteInteger(achievements.Count);
-            foreach (Achievement ach in achievements.ToList())
+            foreach (var ach in achievements.ToList())
             {
-                UserAchievement userData = session.GetHabbo().GetAchievementData(ach.GroupName);
-                int targetLevel = (userData != null ? userData.Level + 1 : 1);
+                var userData = session.GetHabbo().GetAchievementData(ach.GroupName);
+                var targetLevel = (userData != null ? userData.Level + 1 : 1);
            
-                AchievementLevel targetLevelData = ach.Levels[targetLevel];
+                var targetLevelData = ach.Levels[targetLevel];
 
                 WriteInteger(ach.Id); // ach id
                 WriteInteger(targetLevel); // target level

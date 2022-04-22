@@ -13,15 +13,15 @@ namespace Plus.Communication.Packets.Incoming.Messenger
             if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
                 return;
 
-            int amount = packet.PopInt();
+            var amount = packet.PopInt();
             if (amount > 100)
                 amount = 100;
             else if (amount < 0)
                 return;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-            for (int i = 0; i < amount; i++)
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            for (var i = 0; i < amount; i++)
             {
-                int id = packet.PopInt();
+                var id = packet.PopInt();
 
                 if (session.GetHabbo().Relationships.Count(x => x.Value.UserId == id) > 0)
                 {
@@ -34,7 +34,7 @@ namespace Plus.Communication.Packets.Incoming.Messenger
                 if (session.GetHabbo().Relationships.ContainsKey(id))
                     session.GetHabbo().Relationships.Remove(id);
 
-                GameClient target = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(id);
+                var target = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(id);
                 if (target != null)
                 {
                     if (target.GetHabbo().Relationships.ContainsKey(session.GetHabbo().Id))

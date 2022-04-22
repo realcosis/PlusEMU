@@ -15,13 +15,13 @@ namespace Plus.Communication.Packets.Outgoing.Catalog
             WriteString(page.Template);
 
             WriteInteger(page.PageStrings1.Count);
-            foreach (string s in page.PageStrings1)
+            foreach (var s in page.PageStrings1)
             {
                 WriteString(s);
             }
 
             WriteInteger(page.PageStrings2.Count);
-            foreach (string s in page.PageStrings2)
+            foreach (var s in page.PageStrings2)
             {
                 WriteString(s);
             }
@@ -29,7 +29,7 @@ namespace Plus.Communication.Packets.Outgoing.Catalog
             if (!page.Template.Equals("frontpage") && !page.Template.Equals("club_buy"))
             {
                 WriteInteger(page.Items.Count);
-                foreach (CatalogItem item in page.Items.Values)
+                foreach (var item in page.Items.Values)
                 {
                     WriteInteger(item.Id);
                     WriteString(item.Name);
@@ -60,7 +60,7 @@ namespace Plus.Communication.Packets.Outgoing.Catalog
                         {
                             WriteInteger(deal.ItemDataList.Count);
                             
-                            foreach (CatalogItem dealItem in deal.ItemDataList.ToList())
+                            foreach (var dealItem in deal.ItemDataList.ToList())
                             {
                                 WriteString(dealItem.Data.Type.ToString());
                                 WriteInteger(dealItem.Data.SpriteId);
@@ -127,7 +127,7 @@ namespace Plus.Communication.Packets.Outgoing.Catalog
             WriteBoolean(false);
 
             WriteInteger(PlusEnvironment.GetGame().GetCatalog().GetPromotions().ToList().Count);//Count
-            foreach (CatalogPromotion promotion in PlusEnvironment.GetGame().GetCatalog().GetPromotions().ToList())
+            foreach (var promotion in PlusEnvironment.GetGame().GetCatalog().GetPromotions().ToList())
             {
                 WriteInteger(promotion.Id);
                 WriteString(promotion.Title);

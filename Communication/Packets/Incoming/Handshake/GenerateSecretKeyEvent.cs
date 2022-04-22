@@ -9,9 +9,9 @@ namespace Plus.Communication.Packets.Incoming.Handshake
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            string cipherPublickey = packet.PopString();
+            var cipherPublickey = packet.PopString();
            
-            BigInteger sharedKey = HabboEncryptionV2.CalculateDiffieHellmanSharedKey(cipherPublickey);
+            var sharedKey = HabboEncryptionV2.CalculateDiffieHellmanSharedKey(cipherPublickey);
             if (sharedKey != 0)
             {
                 session.Rc4Client = new Arc4(sharedKey.getBytes());

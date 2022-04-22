@@ -39,7 +39,7 @@ namespace Plus.Utilities
 
         public static int GenerateRandom(int min, int max)
         {
-            Random inst = _localRandom;
+            var inst = _localRandom;
 
             max++;
 

@@ -10,9 +10,9 @@ namespace Plus.Communication.Packets.Outgoing.Marketplace
         public MarketPlaceOwnOffersComposer(int userId)
             : base(ServerPacketHeader.MarketPlaceOwnOffersMessageComposer)
         {
-            int i = 0;
+            var i = 0;
             DataTable table = null;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT timestamp, state, offer_id, item_type, sprite_id, total_price, limited_number, limited_stack FROM catalog_marketplace_offers WHERE user_id = '" + userId + "'");
             table = dbClient.GetTable();
 
@@ -25,8 +25,8 @@ namespace Plus.Communication.Packets.Outgoing.Marketplace
                 WriteInteger(table.Rows.Count);
                 foreach (DataRow row in table.Rows)
                 {
-                    int num2 = Convert.ToInt32(Math.Floor((double)(((((double)row["timestamp"]) + 172800.0) - PlusEnvironment.GetUnixTimestamp()) / 60.0)));
-                    int num3 = int.Parse(row["state"].ToString());
+                    var num2 = Convert.ToInt32(Math.Floor((double)(((((double)row["timestamp"]) + 172800.0) - PlusEnvironment.GetUnixTimestamp()) / 60.0)));
+                    var num3 = int.Parse(row["state"].ToString());
                     if ((num2 <= 0) && (num3 != 2))
                     {
                         num3 = 3;

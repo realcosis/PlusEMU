@@ -11,20 +11,20 @@ namespace Plus.Communication.Packets.Incoming.Inventory.Trading
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int userId = packet.PopInt();
+            var userId = packet.PopInt();
 
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
-            RoomUser roomUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var roomUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (roomUser == null)
                 return;
 
-            RoomUser targetUser = room.GetRoomUserManager().GetRoomUserByVirtualId(userId);
+            var targetUser = room.GetRoomUserManager().GetRoomUserByVirtualId(userId);
             if (targetUser == null)
                 return;
 
@@ -38,7 +38,7 @@ namespace Plus.Communication.Packets.Incoming.Inventory.Trading
 
                 session.GetHabbo().TradingLockExpiry = 0;
                 session.SendNotification("Your trading ban has now expired.");
-                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                 dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '0' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
             }
 
@@ -81,7 +81,7 @@ namespace Plus.Communication.Packets.Incoming.Inventory.Trading
                 return;
             }
 
-            if (!room.GetTrading().StartTrade(roomUser, targetUser, out Trade trade))
+            if (!room.GetTrading().StartTrade(roomUser, targetUser, out var trade))
             {
                 session.SendNotification("An error occured trying to start this trade");
                 return;

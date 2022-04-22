@@ -7,7 +7,7 @@ namespace Plus.Communication.Packets.Incoming.Quests
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int usersOnline = PlusEnvironment.GetGame().GetClientManager().Count;
+            var usersOnline = PlusEnvironment.GetGame().GetClientManager().Count;
 
             session.SendPacket(new ConcurrentUsersGoalProgressComposer(usersOnline));
         }

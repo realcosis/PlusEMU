@@ -15,15 +15,15 @@ namespace Plus.Communication.Packets.Incoming.Rooms.FloorPlan
             if (!session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
-            DynamicRoomModel model = room.GetGameMap().Model;
+            var model = room.GetGameMap().Model;
             if (model == null)
                 return;
 
-            ICollection<Item> floorItems = room.GetRoomItemHandler().GetFloor;
+            var floorItems = room.GetRoomItemHandler().GetFloor;
 
             session.SendPacket(new FloorPlanFloorMapComposer(floorItems));
             session.SendPacket(new FloorPlanSendDoorComposer(model.DoorX, model.DoorY, model.DoorOrientation));

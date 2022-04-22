@@ -10,17 +10,17 @@ namespace Plus.Communication.Packets.Incoming.Messenger
             if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
                 return;
 
-            int amount = packet.PopInt();
+            var amount = packet.PopInt();
             if (amount > 50)
                 amount = 50;
             else if (amount < 0)
                 return;
 
-            for (int i = 0; i < amount; i++)
+            for (var i = 0; i < amount; i++)
             {
-                int requestId = packet.PopInt();
+                var requestId = packet.PopInt();
 
-                if (!session.GetHabbo().GetMessenger().TryGetRequest(requestId, out MessengerRequest request))
+                if (!session.GetHabbo().GetMessenger().TryGetRequest(requestId, out var request))
                     continue;
 
                 if (request.To != session.GetHabbo().Id)

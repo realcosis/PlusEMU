@@ -26,10 +26,10 @@ namespace Plus.HabboHotel.Items
             if (Items.Count > 0)
                 Items.Clear();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `furniture`");
-                DataTable itemData = dbClient.GetTable();
+                var itemData = dbClient.GetTable();
 
                 if (itemData != null)
                 {
@@ -37,30 +37,30 @@ namespace Plus.HabboHotel.Items
                     {
                         try
                         {
-                            int id = Convert.ToInt32(row["id"]);
-                            int spriteId = Convert.ToInt32(row["sprite_id"]);
-                            string itemName = Convert.ToString(row["item_name"]);
-                            string publicName = Convert.ToString(row["public_name"]);
-                            string type = row["type"].ToString();
-                            int width = Convert.ToInt32(row["width"]);
-                            int length = Convert.ToInt32(row["length"]);
-                            double height = Convert.ToDouble(row["stack_height"]);
-                            bool allowStack = PlusEnvironment.EnumToBool(row["can_stack"].ToString());
-                            bool allowWalk = PlusEnvironment.EnumToBool(row["is_walkable"].ToString());
-                            bool allowSit = PlusEnvironment.EnumToBool(row["can_sit"].ToString());
-                            bool allowRecycle = PlusEnvironment.EnumToBool(row["allow_recycle"].ToString());
-                            bool allowTrade = PlusEnvironment.EnumToBool(row["allow_trade"].ToString());
-                            bool allowMarketplace = Convert.ToInt32(row["allow_marketplace_sell"]) == 1;
-                            bool allowGift = Convert.ToInt32(row["allow_gift"]) == 1;
-                            bool allowInventoryStack = PlusEnvironment.EnumToBool(row["allow_inventory_stack"].ToString());
-                            InteractionType interactionType = InteractionTypes.GetTypeFromString(Convert.ToString(row["interaction_type"]));
-                            int behaviourData = Convert.ToInt32(row["behaviour_data"]);
-                            int cycleCount = Convert.ToInt32(row["interaction_modes_count"]);
-                            string vendingIds = Convert.ToString(row["vending_ids"]);
-                            string heightAdjustable = Convert.ToString(row["height_adjustable"]);
-                            int effectId = Convert.ToInt32(row["effect_id"]);
-                            bool isRare = PlusEnvironment.EnumToBool(row["is_rare"].ToString());
-                            bool extraRot = PlusEnvironment.EnumToBool(row["extra_rot"].ToString());
+                            var id = Convert.ToInt32(row["id"]);
+                            var spriteId = Convert.ToInt32(row["sprite_id"]);
+                            var itemName = Convert.ToString(row["item_name"]);
+                            var publicName = Convert.ToString(row["public_name"]);
+                            var type = row["type"].ToString();
+                            var width = Convert.ToInt32(row["width"]);
+                            var length = Convert.ToInt32(row["length"]);
+                            var height = Convert.ToDouble(row["stack_height"]);
+                            var allowStack = PlusEnvironment.EnumToBool(row["can_stack"].ToString());
+                            var allowWalk = PlusEnvironment.EnumToBool(row["is_walkable"].ToString());
+                            var allowSit = PlusEnvironment.EnumToBool(row["can_sit"].ToString());
+                            var allowRecycle = PlusEnvironment.EnumToBool(row["allow_recycle"].ToString());
+                            var allowTrade = PlusEnvironment.EnumToBool(row["allow_trade"].ToString());
+                            var allowMarketplace = Convert.ToInt32(row["allow_marketplace_sell"]) == 1;
+                            var allowGift = Convert.ToInt32(row["allow_gift"]) == 1;
+                            var allowInventoryStack = PlusEnvironment.EnumToBool(row["allow_inventory_stack"].ToString());
+                            var interactionType = InteractionTypes.GetTypeFromString(Convert.ToString(row["interaction_type"]));
+                            var behaviourData = Convert.ToInt32(row["behaviour_data"]);
+                            var cycleCount = Convert.ToInt32(row["interaction_modes_count"]);
+                            var vendingIds = Convert.ToString(row["vending_ids"]);
+                            var heightAdjustable = Convert.ToString(row["height_adjustable"]);
+                            var effectId = Convert.ToInt32(row["effect_id"]);
+                            var isRare = PlusEnvironment.EnumToBool(row["is_rare"].ToString());
+                            var extraRot = PlusEnvironment.EnumToBool(row["extra_rot"].ToString());
 
                             if (!Gifts.ContainsKey(spriteId))
                                 Gifts.Add(spriteId, new ItemData(id, spriteId, itemName, publicName, type, width, length, height, allowStack, allowWalk, allowSit, allowRecycle, allowTrade, allowMarketplace, allowGift, allowInventoryStack, interactionType, behaviourData, cycleCount, vendingIds, heightAdjustable, effectId, isRare, extraRot));
@@ -92,7 +92,7 @@ namespace Plus.HabboHotel.Items
         {
             foreach (var entry in Items)
             {
-                ItemData item = entry.Value;
+                var item = entry.Value;
                 if (item.ItemName == name)
                     return item;
             }

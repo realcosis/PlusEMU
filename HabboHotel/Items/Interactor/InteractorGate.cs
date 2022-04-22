@@ -16,7 +16,7 @@ namespace Plus.HabboHotel.Items.Interactor
 
         public void OnTrigger(GameClient session, Item item, int request, bool hasRights)
         {
-            int modes = item.GetBaseItem().Modes - 1;
+            var modes = item.GetBaseItem().Modes - 1;
 
             if (!hasRights)
             {
@@ -27,8 +27,8 @@ namespace Plus.HabboHotel.Items.Interactor
                 item.UpdateState(false, true);
             }
 
-            int currentMode = 0;
-            int newMode = 0;
+            var currentMode = 0;
+            var newMode = 0;
 
             if (!int.TryParse(item.ExtraData, out currentMode))
             {
@@ -65,15 +65,15 @@ namespace Plus.HabboHotel.Items.Interactor
 
         public void OnWiredTrigger(Item item)
         {
-            int modes = item.GetBaseItem().Modes - 1;
+            var modes = item.GetBaseItem().Modes - 1;
 
             if (modes <= 0)
             {
                 item.UpdateState(false, true);
             }
 
-            int currentMode = 0;
-            int newMode = 0;
+            var currentMode = 0;
+            var newMode = 0;
 
             if (!int.TryParse(item.ExtraData, out currentMode))
             {

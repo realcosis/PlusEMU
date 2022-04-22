@@ -15,17 +15,17 @@ namespace Plus.Communication.Packets.Incoming.Groups
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int groupId = packet.PopInt();
-            int mainColour = packet.PopInt();
-            int secondaryColour = packet.PopInt();
+            var groupId = packet.PopInt();
+            var mainColour = packet.PopInt();
+            var secondaryColour = packet.PopInt();
 
-            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out Group group))
+            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
                 return;
 
             if (group.CreatorId != session.GetHabbo().Id)
                 return;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `groups` SET `colour1` = @colour1, `colour2` = @colour2 WHERE `id` = @groupId LIMIT 1");
                 dbClient.AddParameter("colour1", mainColour);
@@ -40,7 +40,7 @@ namespace Plus.Communication.Packets.Incoming.Groups
             session.SendPacket(new GroupInfoComposer(group, session));
             if (session.GetHabbo().CurrentRoom != null)
             {
-                foreach (Item item in session.GetHabbo().CurrentRoom.GetRoomItemHandler().GetFloor.ToList())
+                foreach (var item in session.GetHabbo().CurrentRoom.GetRoomItemHandler().GetFloor.ToList())
                 {
                     if (item == null || item.GetBaseItem() == null)
                         continue;

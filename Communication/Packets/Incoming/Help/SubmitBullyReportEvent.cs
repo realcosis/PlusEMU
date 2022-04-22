@@ -12,7 +12,7 @@ namespace Plus.Communication.Packets.Incoming.Help
             if (session == null)
                 return;
 
-            int userId = packet.PopInt();
+            var userId = packet.PopInt();
             if (userId == session.GetHabbo().Id)//Hax
                 return;
 
@@ -22,7 +22,7 @@ namespace Plus.Communication.Packets.Incoming.Help
                 return;
             }
 
-            GameClient client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(Convert.ToInt32(userId));
+            var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(Convert.ToInt32(userId));
             if (client == null)
             {
                 session.SendPacket(new SubmitBullyReportComposer(0));//Just say it's sent, the user isn't found.

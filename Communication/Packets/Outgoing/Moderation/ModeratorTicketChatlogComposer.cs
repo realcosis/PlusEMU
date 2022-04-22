@@ -24,7 +24,7 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
             WriteInteger(roomData.Id);
 
             WriteShort(ticket.ReportedChats.Count);
-            foreach (string chat in ticket.ReportedChats)
+            foreach (var chat in ticket.ReportedChats)
             {
                 WriteString(UnixTimestamp.FromUnixTimestamp(timestamp).ToShortTimeString());
                 WriteInteger(ticket.Id);

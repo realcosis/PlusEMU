@@ -11,7 +11,7 @@ namespace Plus.Communication.Packets.Outgoing.Users
         public ProfileInformationComposer(Habbo habbo, GameClient session, List<Group> groups, int friendCount)
             : base(ServerPacketHeader.ProfileInformationMessageComposer)
         {
-            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(habbo.AccountCreated);
+            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(habbo.AccountCreated);
 
             WriteInteger(habbo.Id);
             WriteString(habbo.Username);
@@ -25,7 +25,7 @@ namespace Plus.Communication.Packets.Outgoing.Users
             WriteBoolean((PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(habbo.Id)) != null);
 
             WriteInteger(groups.Count);
-            foreach (Group group in groups)
+            foreach (var group in groups)
             {
                 WriteInteger(group.Id);
                 WriteString(group.Name);

@@ -13,7 +13,7 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.Pets
             WriteInteger(1);
             WriteInteger(1);
             WriteInteger(pets.Count);
-            foreach (Pet pet in pets.ToList())
+            foreach (var pet in pets.ToList())
             {
                 WriteInteger(pet.PetId);
                WriteString(pet.Name);

@@ -12,7 +12,7 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
             : base(ServerPacketHeader.ModeratorInitMessageComposer)
         {
             WriteInteger(tickets.Count);
-            foreach (ModerationTicket ticket in tickets)
+            foreach (var ticket in tickets)
             {
                 WriteInteger(ticket.Id); // Id
                 WriteInteger(ticket.GetStatus(Id)); // Tab ID
@@ -33,7 +33,7 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
             }
 
             WriteInteger(userPresets.Count);
-            foreach (string pre in userPresets)
+            foreach (var pre in userPresets)
             {
                 WriteString(pre);
             }
@@ -72,7 +72,7 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
             WriteBoolean(true); // Love you, Tom
 
             WriteInteger(roomPresets.Count);
-            foreach (string pre in roomPresets)
+            foreach (var pre in roomPresets)
             {
                 WriteString(pre);
             }

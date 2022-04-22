@@ -11,7 +11,7 @@ namespace Plus.Communication.Packets.Outgoing.LandingView
             : base(ServerPacketHeader.PromoArticlesMessageComposer)
         {
             WriteInteger(landingPromotions.Count);//Count
-            foreach (Promotion promotion in landingPromotions.ToList())
+            foreach (var promotion in landingPromotions.ToList())
             {
                 WriteInteger(promotion.Id); //ID
                 WriteString(promotion.Title); //Title

@@ -8,9 +8,9 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Settings
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int roomId = packet.PopInt();
+            var roomId = packet.PopInt();
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryLoadRoom(roomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryLoadRoom(roomId, out var room))
                 return;
 
             if (!room.CheckRights(session, true))

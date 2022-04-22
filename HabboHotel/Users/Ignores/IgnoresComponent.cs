@@ -19,10 +19,10 @@ namespace Plus.HabboHotel.Users.Ignores
         {
             if (_ignoredUsers.Count > 0)
                 return false;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT * FROM `user_ignores` WHERE `user_id` = @uid;");
             dbClient.AddParameter("uid", player.Id);
-            DataTable getIgnores = dbClient.GetTable();
+            var getIgnores = dbClient.GetTable();
 
             if (getIgnores != null)
             {

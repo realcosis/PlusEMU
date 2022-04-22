@@ -15,7 +15,7 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
             WriteString(data.Username);
             WriteInteger(visits.Count);
 
-            foreach (KeyValuePair<double, RoomData> visit in visits)
+            foreach (var visit in visits)
             {
                 WriteInteger(visit.Value.Id);
                 WriteString(visit.Value.Name);

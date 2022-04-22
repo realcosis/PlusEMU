@@ -34,10 +34,10 @@ namespace Plus.HabboHotel.Permissions
             _permissionGroups.Clear();
             _permissionGroupRights.Clear();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `permissions`");
-                DataTable getPermissions = dbClient.GetTable();
+                var getPermissions = dbClient.GetTable();
 
                 if (getPermissions != null)
                 {
@@ -48,10 +48,10 @@ namespace Plus.HabboHotel.Permissions
                 }
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `permissions_commands`");
-                DataTable getCommands = dbClient.GetTable();
+                var getCommands = dbClient.GetTable();
 
                 if (getCommands != null)
                 {
@@ -62,10 +62,10 @@ namespace Plus.HabboHotel.Permissions
                 }
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `permissions_groups`");
-                DataTable getPermissionGroups = dbClient.GetTable();
+                var getPermissionGroups = dbClient.GetTable();
 
                 if (getPermissionGroups != null)
                 {
@@ -76,17 +76,17 @@ namespace Plus.HabboHotel.Permissions
                 }
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `permissions_rights`");
-                DataTable getPermissionRights = dbClient.GetTable();
+                var getPermissionRights = dbClient.GetTable();
 
                 if (getPermissionRights != null)
                 {
                     foreach (DataRow row in getPermissionRights.Rows)
                     {
-                        int groupId = Convert.ToInt32(row["group_id"]);
-                        int permissionId = Convert.ToInt32(row["permission_id"]);
+                        var groupId = Convert.ToInt32(row["group_id"]);
+                        var permissionId = Convert.ToInt32(row["permission_id"]);
 
                         if (!_permissionGroups.ContainsKey(groupId))
                         {
@@ -106,7 +106,7 @@ namespace Plus.HabboHotel.Permissions
                         }
                         else
                         {
-                            List<string> rightsSet = new List<string>()
+                            var rightsSet = new List<string>()
                                 {
                                     permission.PermissionName
                                 };
@@ -118,17 +118,17 @@ namespace Plus.HabboHotel.Permissions
                 }
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `permissions_subscriptions`");
-                DataTable getPermissionSubscriptions = dbClient.GetTable();
+                var getPermissionSubscriptions = dbClient.GetTable();
 
                 if (getPermissionSubscriptions != null)
                 {
                     foreach (DataRow row in getPermissionSubscriptions.Rows)
                     {
-                        int permissionId = Convert.ToInt32(row["permission_id"]);
-                        int subscriptionId = Convert.ToInt32(row["subscription_id"]);
+                        var permissionId = Convert.ToInt32(row["permission_id"]);
+                        var subscriptionId = Convert.ToInt32(row["subscription_id"]);
 
                         Permission permission = null;
                         if (!_permissions.TryGetValue(permissionId, out permission))
@@ -140,7 +140,7 @@ namespace Plus.HabboHotel.Permissions
                         }
                         else
                         {
-                            List<string> rightsSet = new List<string>()
+                            var rightsSet = new List<string>()
                                 {
                                     permission.PermissionName
                                 };
@@ -164,7 +164,7 @@ namespace Plus.HabboHotel.Permissions
 
         public List<string> GetPermissionsForPlayer(Habbo player)
         {
-            List<string> permissionSet = new List<string>();
+            var permissionSet = new List<string>();
 
             List<string> permRights = null;
             if (_permissionGroupRights.TryGetValue(player.Rank, out permRights))

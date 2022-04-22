@@ -13,17 +13,17 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
                 return;
 
-            int itemId = packet.PopInt();
-            int groupId = packet.PopInt();
+            var itemId = packet.PopInt();
+            var groupId = packet.PopInt();
 
-            Item item = session.GetHabbo().CurrentRoom.GetRoomItemHandler().GetItem(itemId);
+            var item = session.GetHabbo().CurrentRoom.GetRoomItemHandler().GetItem(itemId);
             if (item == null)
                 return;
 
             if (item.Data.InteractionType != InteractionType.GuildGate)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out Group group))
+            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
                 return;
 
             session.SendPacket(new GroupFurniSettingsComposer(group, itemId, session.GetHabbo().Id));

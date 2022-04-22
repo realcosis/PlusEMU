@@ -49,8 +49,8 @@ namespace Plus.HabboHotel.Items.Interactor
                             return;
                     }
 
-                    RoomUser userOne = item.GetRoom().GetRoomUserManager().GetUserForSquare(pointOne.X, pointOne.Y);
-                    RoomUser userTwo = item.GetRoom().GetRoomUserManager().GetUserForSquare(pointTwo.X, pointTwo.Y);
+                    var userOne = item.GetRoom().GetRoomUserManager().GetUserForSquare(pointOne.X, pointOne.Y);
+                    var userTwo = item.GetRoom().GetRoomUserManager().GetUserForSquare(pointTwo.X, pointTwo.Y);
 
                     if(userOne == null || userTwo == null)
                         session.SendNotification("We couldn't find a valid user to lock this love lock with.");

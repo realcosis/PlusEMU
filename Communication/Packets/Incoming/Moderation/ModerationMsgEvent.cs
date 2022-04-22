@@ -9,10 +9,10 @@ namespace Plus.Communication.Packets.Incoming.Moderation
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().GetPermissions().HasRight("mod_alert"))
                 return;
 
-            int userId = packet.PopInt();
-            string message = packet.PopString();
+            var userId = packet.PopInt();
+            var message = packet.PopString();
 
-            GameClient client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
+            var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
             if (client == null)
                 return;
 

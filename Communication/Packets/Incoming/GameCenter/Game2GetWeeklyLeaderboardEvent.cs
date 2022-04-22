@@ -6,7 +6,7 @@ namespace Plus.Communication.Packets.Incoming.GameCenter
     {
         public void Parse(HabboHotel.GameClients.GameClient session, ClientPacket packet)
         {
-            int gameId = packet.PopInt();
+            var gameId = packet.PopInt();
 
             GameData gameData = null;
             if (PlusEnvironment.GetGame().GetGameDataManager().TryGetGame(gameId, out gameData))

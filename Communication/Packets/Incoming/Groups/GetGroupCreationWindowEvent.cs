@@ -14,7 +14,7 @@ namespace Plus.Communication.Packets.Incoming.Groups
             if (session == null)
                 return;
 
-            List<RoomData> rooms = RoomFactory.GetRoomsDataByOwnerSortByName(session.GetHabbo().Id).Where(x => x.Group == null).ToList();
+            var rooms = RoomFactory.GetRoomsDataByOwnerSortByName(session.GetHabbo().Id).Where(x => x.Group == null).ToList();
 
             session.SendPacket(new GroupCreationWindowComposer(rooms));
         }

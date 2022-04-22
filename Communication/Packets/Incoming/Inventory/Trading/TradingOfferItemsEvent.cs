@@ -16,16 +16,16 @@ namespace Plus.Communication.Packets.Incoming.Inventory.Trading
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
-            RoomUser roomUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var roomUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (roomUser == null)
                 return;
 
-            int amount = packet.PopInt();
-            int itemId = packet.PopInt();
+            var amount = packet.PopInt();
+            var itemId = packet.PopInt();
 
             if (!roomUser.IsTrading)
             {
@@ -33,26 +33,26 @@ namespace Plus.Communication.Packets.Incoming.Inventory.Trading
                 return;
             }
 
-            if (!room.GetTrading().TryGetTrade(roomUser.TradeId, out Trade trade))
+            if (!room.GetTrading().TryGetTrade(roomUser.TradeId, out var trade))
             {
                 session.SendPacket(new TradingClosedComposer(session.GetHabbo().Id));
                 return;
             }
 
-            Item item = session.GetHabbo().GetInventoryComponent().GetItem(itemId);
+            var item = session.GetHabbo().GetInventoryComponent().GetItem(itemId);
             if (item == null)
                 return;
 
             if (!trade.CanChange)
                 return;
 
-            TradeUser tradeUser = trade.Users[0];
+            var tradeUser = trade.Users[0];
 
             if (tradeUser.RoomUser != roomUser)
                 tradeUser = trade.Users[1];
 
-            List<Item> allItems = session.GetHabbo().GetInventoryComponent().GetItems.Where(x => x.Data.Id == item.Data.Id).Take(amount).ToList();
-            foreach (Item I in allItems)
+            var allItems = session.GetHabbo().GetInventoryComponent().GetItems.Where(x => x.Data.Id == item.Data.Id).Take(amount).ToList();
+            foreach (var I in allItems)
             {
                 if (tradeUser.OfferedItems.ContainsKey(I.Id))
                     return;

@@ -19,8 +19,8 @@ namespace Plus.HabboHotel.Catalog.Marketplace
 
         public int AvgPriceForSprite(int spriteId)
         {
-            int num = 0;
-            int num2 = 0;
+            var num = 0;
+            var num2 = 0;
             if (MarketAverages.ContainsKey(spriteId) && MarketCounts.ContainsKey(spriteId))
             {
                 if (MarketCounts[spriteId] > 0)
@@ -30,7 +30,7 @@ namespace Plus.HabboHotel.Catalog.Marketplace
                 return 0;
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `avgprice` FROM `catalog_marketplace_data` WHERE `sprite` = '" + spriteId + "' LIMIT 1");
                 num = dbClient.GetInteger();
@@ -60,9 +60,9 @@ namespace Plus.HabboHotel.Catalog.Marketplace
 
         public int OfferCountForSprite(int spriteId)
         {
-            Dictionary<int, MarketOffer> dictionary = new Dictionary<int, MarketOffer>();
-            Dictionary<int, int> dictionary2 = new Dictionary<int, int>();
-            foreach (MarketOffer item in MarketItems)
+            var dictionary = new Dictionary<int, MarketOffer>();
+            var dictionary2 = new Dictionary<int, int>();
+            foreach (var item in MarketItems)
             {
                 if (dictionary.ContainsKey(item.SpriteId))
                 {
@@ -72,7 +72,7 @@ namespace Plus.HabboHotel.Catalog.Marketplace
                         dictionary.Add(item.SpriteId, item);
                     }
 
-                    int num = dictionary2[item.SpriteId];
+                    var num = dictionary2[item.SpriteId];
                     dictionary2.Remove(item.SpriteId);
                     dictionary2.Add(item.SpriteId, num + 1);
                 }

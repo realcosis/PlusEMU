@@ -11,7 +11,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
             if (!room.CheckRights(session, true))
@@ -20,20 +20,20 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni
             if (room.TonerData == null)
                 return;
 
-            Item item = room.GetRoomItemHandler().GetItem(room.TonerData.ItemId);
+            var item = room.GetRoomItemHandler().GetItem(room.TonerData.ItemId);
 
             if (item == null || item.GetBaseItem().InteractionType != InteractionType.Toner)
                 return;
 
             packet.PopInt(); //id
-            int int1 = packet.PopInt();
-            int int2 = packet.PopInt();
-            int int3 = packet.PopInt();
+            var int1 = packet.PopInt();
+            var int2 = packet.PopInt();
+            var int3 = packet.PopInt();
 
             if (int1 > 255 || int2 > 255 || int3 > 255)
                 return;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `room_items_toner` SET `enabled` = '1', `data1` = @data1, `data2` = @data2, `data3` = @data3 WHERE `id` = @itemId LIMIT 1");
                 dbClient.AddParameter("itemId", item.Id);

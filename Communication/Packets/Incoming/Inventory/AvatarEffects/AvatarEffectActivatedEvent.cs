@@ -8,9 +8,9 @@ namespace Plus.Communication.Packets.Incoming.Inventory.AvatarEffects
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int effectId = packet.PopInt();
+            var effectId = packet.PopInt();
 
-            AvatarEffect effect = session.GetHabbo().Effects().GetEffectNullable(effectId, false, true);
+            var effect = session.GetHabbo().Effects().GetEffectNullable(effectId, false, true);
 
             if (effect == null || session.GetHabbo().Effects().HasEffect(effectId, true))
             {

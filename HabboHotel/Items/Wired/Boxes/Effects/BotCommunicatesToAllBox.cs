@@ -25,9 +25,9 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            int chatMode = packet.PopInt();
-            string chatConfig = packet.PopString();
+            var unknown = packet.PopInt();
+            var chatMode = packet.PopInt();
+            var chatConfig = packet.PopString();
 
             if (SetItems.Count > 0)
                 SetItems.Clear();
@@ -43,7 +43,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (String.IsNullOrEmpty(StringData))
                 return false;
 
-            RoomUser user = Instance.GetRoomUserManager().GetBotByName(StringData);
+            var user = Instance.GetRoomUserManager().GetBotByName(StringData);
             if (user == null)
                 return false;
 

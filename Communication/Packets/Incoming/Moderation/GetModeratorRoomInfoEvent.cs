@@ -11,12 +11,12 @@ namespace Plus.Communication.Packets.Incoming.Moderation
             if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
                 return;
 
-            int roomId = packet.PopInt();
+            var roomId = packet.PopInt();
 
-            if (!RoomFactory.TryGetData(roomId, out RoomData data))
+            if (!RoomFactory.TryGetData(roomId, out var data))
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(roomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(roomId, out var room))
                 return;
 
             session.SendPacket(new ModeratorRoomInfoComposer(data, room.GetRoomUserManager().GetRoomUserByHabbo(data.OwnerName) != null));

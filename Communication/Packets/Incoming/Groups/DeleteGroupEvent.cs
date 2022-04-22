@@ -11,7 +11,7 @@ namespace Plus.Communication.Packets.Incoming.Groups
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(packet.PopInt(), out Group group))
+            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(packet.PopInt(), out var group))
             {
                 session.SendNotification("Oops, we couldn't find that group!");
                 return;
@@ -29,10 +29,10 @@ namespace Plus.Communication.Packets.Incoming.Groups
                 return;
             }
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(group.RoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(group.RoomId, out var room))
                 return;
             
-            if (!RoomFactory.TryGetData(group.RoomId, out RoomData _))
+            if (!RoomFactory.TryGetData(group.RoomId, out var _))
                 return;
 
             room.Group = null;
@@ -41,7 +41,7 @@ namespace Plus.Communication.Packets.Incoming.Groups
             PlusEnvironment.GetGame().GetGroupManager().DeleteGroup(group.Id);
 
             //Now the :S stuff.
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("DELETE FROM `groups` WHERE `id` = '" + group.Id + "'");
                 dbClient.RunQuery("DELETE FROM `group_memberships` WHERE `group_id` = '" + group.Id + "'");

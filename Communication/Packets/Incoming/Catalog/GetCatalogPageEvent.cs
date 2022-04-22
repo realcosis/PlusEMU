@@ -8,11 +8,11 @@ namespace Plus.Communication.Packets.Incoming.Catalog
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int pageId = packet.PopInt();
+            var pageId = packet.PopInt();
             packet.PopInt();
-            string cataMode = packet.PopString();
+            var cataMode = packet.PopString();
 
-            if (!PlusEnvironment.GetGame().GetCatalog().TryGetPage(pageId, out CatalogPage page))
+            if (!PlusEnvironment.GetGame().GetCatalog().TryGetPage(pageId, out var page))
                 return;
 
             if (!page.Enabled || !page.Visible || page.MinimumRank > session.GetHabbo().Rank || (page.MinimumVip > session.GetHabbo().VipRank && session.GetHabbo().Rank == 1))

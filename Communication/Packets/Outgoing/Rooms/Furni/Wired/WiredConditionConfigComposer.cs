@@ -14,7 +14,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired
             WriteInteger(5);
 
             WriteInteger(box.SetItems.Count);
-            foreach (Item item in box.SetItems.Values.ToList())
+            foreach (var item in box.SetItems.Values.ToList())
             {
                 WriteInteger(item.Id);
             }

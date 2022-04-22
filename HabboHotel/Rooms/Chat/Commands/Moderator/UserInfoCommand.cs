@@ -35,9 +35,9 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 
             DataRow userData = null;
             DataRow userInfo = null;
-            string username = @params[1];
+            var username = @params[1];
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `id`,`username`,`mail`,`rank`,`motto`,`credits`,`activity_points`,`vip_points`,`gotw_points`,`online`,`rank_vip` FROM users WHERE `username` = @Username LIMIT 1");
                 dbClient.AddParameter("Username", username);
@@ -50,7 +50,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 return;
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `user_info` WHERE `user_id` = '" + Convert.ToInt32(userData["id"]) + "' LIMIT 1");
                 userInfo = dbClient.GetRow();
@@ -63,11 +63,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
                 }
             }
 
-            GameClient targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(username);
+            var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(username);
 
-            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Convert.ToDouble(userInfo["trading_locked"]));
+            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Convert.ToDouble(userInfo["trading_locked"]));
 
-            StringBuilder habboInfo = new StringBuilder();
+            var habboInfo = new StringBuilder();
             habboInfo.Append(Convert.ToString(userData["username"]) + "'s account:\r\r");
             habboInfo.Append("Generic Info:\r");
             habboInfo.Append("ID: " + Convert.ToInt32(userData["id"]) + "\r");

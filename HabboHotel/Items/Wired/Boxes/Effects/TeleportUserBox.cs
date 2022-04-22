@@ -37,16 +37,16 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            string unknown2 = packet.PopString();
+            var unknown = packet.PopInt();
+            var unknown2 = packet.PopString();
 
             if (SetItems.Count > 0)
                 SetItems.Clear();
 
-            int furniCount = packet.PopInt();
-            for (int i = 0; i < furniCount; i++)
+            var furniCount = packet.PopInt();
+            for (var i = 0; i < furniCount; i++)
             {
-                Item selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+                var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
                 if (selectedItem != null)
                     SetItems.TryAdd(selectedItem.Id, selectedItem);
             }
@@ -65,7 +65,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
             while (_queue.Count > 0)
             {
-                Habbo player = (Habbo)_queue.Dequeue();
+                var player = (Habbo)_queue.Dequeue();
                 if (player == null || player.CurrentRoom != Instance)
                     continue;
 
@@ -81,7 +81,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (@params == null || @params.Length == 0)
                 return false;
 
-            Habbo player = (Habbo)@params[0];
+            var player = (Habbo)@params[0];
 
             if (player == null)
                 return false;
@@ -98,25 +98,25 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (player == null)
                 return;
 
-            Room room = player.CurrentRoom;
+            var room = player.CurrentRoom;
             if (room == null)
                 return;
 
-            RoomUser user = player.CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(player.Username);
+            var user = player.CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(player.Username);
             if (user == null)
                 return;
 
             if (player.IsTeleporting || player.IsHopping || player.TeleporterId != 0)
                 return;
 
-            Random rand = new Random();
-            List<Item> items = SetItems.Values.ToList();
+            var rand = new Random();
+            var items = SetItems.Values.ToList();
             items = items.OrderBy(x => rand.Next()).ToList();
 
             if (items.Count == 0)
                 return;
 
-            Item item = items.First();
+            var item = items.First();
             if (item == null)
                 return;
 

@@ -18,10 +18,10 @@ namespace Plus.Communication.Rcon.Commands.User
 
         public bool TryExecute(string[] parameters)
         {
-            if (!int.TryParse(parameters[0], out int userId))
+            if (!int.TryParse(parameters[0], out var userId))
                 return false;
 
-            GameClient client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
+            var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
             if (client == null || client.GetHabbo() == null)
                 return false;
 
@@ -29,7 +29,7 @@ namespace Plus.Communication.Rcon.Commands.User
             if (string.IsNullOrEmpty(Convert.ToString(parameters[1])))
                 return false;
 
-            string message = Convert.ToString(parameters[1]);
+            var message = Convert.ToString(parameters[1]);
 
             client.SendPacket(new BroadcastMessageAlertComposer(message));
             return true;

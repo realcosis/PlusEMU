@@ -14,18 +14,18 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
             if (!session.GetHabbo().InRoom)
                 return;
 
-            int botId = packet.PopInt();
-            int actionId = packet.PopInt();
+            var botId = packet.PopInt();
+            var actionId = packet.PopInt();
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
-            if (!room.GetRoomUserManager().TryGetBot(botId, out RoomUser botUser))
+            if (!room.GetRoomUserManager().TryGetBot(botId, out var botUser))
                 return;
 
-            string botSpeech = "";
-            foreach (RandomSpeech speech in botUser.BotData.RandomSpeech.ToList())
+            var botSpeech = "";
+            foreach (var speech in botUser.BotData.RandomSpeech.ToList())
             {
                 botSpeech += (speech.Message + "\n");
             }

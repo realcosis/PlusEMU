@@ -91,7 +91,7 @@ namespace Plus
 
             try
             {
-                string projectSolutionPath = Directory.GetCurrentDirectory();
+                var projectSolutionPath = Directory.GetCurrentDirectory();
 
                 _configuration = new ConfigurationData(projectSolutionPath + "//Config//config.ini");
 
@@ -125,7 +125,7 @@ namespace Plus
                 Log.Info("Connected to Database!");
 
                 //Reset our statistics first.
-                using (IQueryAdapter dbClient = GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = GetDatabaseManager().GetQueryReactor())
                 {
                     dbClient.RunQuery("TRUNCATE `catalog_marketplace_data`");
                     dbClient.RunQuery("UPDATE `rooms` SET `users_now` = '0' WHERE `users_now` > '0';");
@@ -156,7 +156,7 @@ namespace Plus
                 _game = new Game();
                 _game.StartGameLoop();
 
-                TimeSpan timeUsed = DateTime.Now - ServerStarted;
+                var timeUsed = DateTime.Now - ServerStarted;
 
                 Console.WriteLine();
 
@@ -208,20 +208,20 @@ namespace Plus
 
         public static double GetUnixTimestamp()
         {
-            TimeSpan ts = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
+            var ts = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
             return ts.TotalSeconds;
         }
 
         public static long Now()
         {
-            TimeSpan ts = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
-            double unixTime = ts.TotalMilliseconds;
+            var ts = (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0));
+            var unixTime = ts.TotalMilliseconds;
             return (long)unixTime;
         }
 
         public static string FilterFigure(string figure)
         {
-            foreach (char character in figure)
+            foreach (var character in figure)
             {
                 if (!IsValid(character))
                     return "sh-3338-93.ea-1406-62.hr-831-49.ha-3331-92.hd-180-7.ch-3334-93-1408.lg-3337-92.ca-1813-62";
@@ -243,7 +243,7 @@ namespace Plus
                 return false;
             }
 
-            for (int i = 0; i < inputStr.Length; i++)
+            for (var i = 0; i < inputStr.Length; i++)
             {
                 if (!IsValid(inputStr[i]))
                 {
@@ -256,17 +256,17 @@ namespace Plus
 
         public static string GetUsernameById(int userId)
         {
-            string name = "Unknown User";
+            var name = "Unknown User";
 
-            GameClient client = GetGame().GetClientManager().GetClientByUserId(userId);
+            var client = GetGame().GetClientManager().GetClientByUserId(userId);
             if (client != null && client.GetHabbo() != null)
                 return client.GetHabbo().Username;
 
-            UserCache user = GetGame().GetCacheManager().GenerateUser(userId);
+            var user = GetGame().GetCacheManager().GenerateUser(userId);
             if (user != null)
                 return user.Username;
 
-            using (IQueryAdapter dbClient = GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `username` FROM `users` WHERE `id` = @id LIMIT 1");
                 dbClient.AddParameter("id", userId);
@@ -283,10 +283,10 @@ namespace Plus
         {
             try
             {
-                GameClient client = GetGame().GetClientManager().GetClientByUserId(userId);
+                var client = GetGame().GetClientManager().GetClientByUserId(userId);
                 if (client != null)
                 {
-                    Habbo user = client.GetHabbo();
+                    var user = client.GetHabbo();
                     if (user != null && user.Id > 0)
                     {
                         if (_usersCached.ContainsKey(userId))
@@ -302,10 +302,10 @@ namespace Plus
                             return _usersCached[userId];
                         else
                         {
-                            UserData data = UserDataFactory.GetUserData(userId);
+                            var data = UserDataFactory.GetUserData(userId);
                             if (data != null)
                             {
-                                Habbo generated = data.User;
+                                var generated = data.User;
                                 if (generated != null)
                                 {
                                     generated.InitInformation(data);
@@ -329,14 +329,12 @@ namespace Plus
         {
             try
             {
-                using (IQueryAdapter dbClient = GetDatabaseManager().GetQueryReactor())
-                {
-                    dbClient.SetQuery("SELECT `id` FROM `users` WHERE `username` = @user LIMIT 1");
-                    dbClient.AddParameter("user", userName);
-                    int id = dbClient.GetInteger();
-                    if (id > 0)
-                        return GetHabboById(Convert.ToInt32(id));
-                }
+                using var dbClient = GetDatabaseManager().GetQueryReactor();
+                dbClient.SetQuery("SELECT `id` FROM `users` WHERE `username` = @user LIMIT 1");
+                dbClient.AddParameter("user", userName);
+                var id = dbClient.GetInteger();
+                if (id > 0)
+                    return GetHabboById(Convert.ToInt32(id));
                 return null;
             }
             catch { return null; }
@@ -359,7 +357,7 @@ namespace Plus
             GetGame().GetClientManager().CloseAll();//Close all connections
             GetGame().GetRoomManager().Dispose();//Stop the game loop.
 
-            using (IQueryAdapter dbClient = _manager.GetQueryReactor())
+            using (var dbClient = _manager.GetQueryReactor())
             {
                 dbClient.RunQuery("TRUNCATE `catalog_marketplace_data`");
                 dbClient.RunQuery("UPDATE `users` SET `online` = '0', `auth_ticket` = NULL");

@@ -15,17 +15,17 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni
             if (!session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
             if (!room.CheckRights(session, false, true) && !session.GetHabbo().GetPermissions().HasRight("room_item_use_any_stack_tile"))
                 return;
 
-            int itemId = packet.PopInt();
-            int decimalHeight = packet.PopInt();
+            var itemId = packet.PopInt();
+            var decimalHeight = packet.PopInt();
 
-            Item item = room.GetRoomItemHandler().GetItem(itemId);
+            var item = room.GetRoomItemHandler().GetItem(itemId);
             if (item == null)
                 return;
 

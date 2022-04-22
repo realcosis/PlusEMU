@@ -21,13 +21,13 @@ namespace Plus.HabboHotel.Talents
             this.Type = type;
             this.Level = level;
 
-            foreach (string str in dataActions.Split('|'))
+            foreach (var str in dataActions.Split('|'))
             {
                 if (_dataActions == null) { _dataActions = new List<string>(); }
                 _dataActions.Add(str);
             }
 
-            foreach (string str in dataGifts.Split('|'))
+            foreach (var str in dataGifts.Split('|'))
             {
                 if (_dataGifts == null) { _dataGifts = new List<string>(); }
                 _dataGifts.Add(str);
@@ -53,7 +53,7 @@ namespace Plus.HabboHotel.Talents
         public void Init()
         {
             DataTable getTable = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `sub_level`,`badge_code`,`required_progress` FROM `talents_sub_levels` WHERE `talent_level` = @TalentLevel");
                 dbClient.AddParameter("TalentLevel", Level);

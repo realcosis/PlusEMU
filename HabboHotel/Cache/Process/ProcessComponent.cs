@@ -72,10 +72,10 @@ namespace Plus.HabboHotel.Cache.Process
                 _resetEvent.Reset();
 
                 // BEGIN CODE
-                List<UserCache> cacheList = PlusEnvironment.GetGame().GetCacheManager().GetUserCache().ToList();
+                var cacheList = PlusEnvironment.GetGame().GetCacheManager().GetUserCache().ToList();
                 if (cacheList.Count > 0)
                 {
-                    foreach (UserCache cache in cacheList)
+                    foreach (var cache in cacheList)
                     {
                         try
                         {
@@ -92,10 +92,10 @@ namespace Plus.HabboHotel.Cache.Process
                     }
                 }
 
-                List<Habbo> cachedUsers = PlusEnvironment.GetUsersCached().ToList();
+                var cachedUsers = PlusEnvironment.GetUsersCached().ToList();
                 if (cachedUsers.Count > 0)
                 {
-                    foreach (Habbo data in cachedUsers)
+                    foreach (var data in cachedUsers)
                     {
                         try
                         {

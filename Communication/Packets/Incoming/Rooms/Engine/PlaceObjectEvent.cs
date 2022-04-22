@@ -17,16 +17,16 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
-            string rawData = packet.PopString();
+            var rawData = packet.PopString();
             var data = rawData.Split(' ');
 
-            if (!int.TryParse(data[0], out int itemId))
+            if (!int.TryParse(data[0], out var itemId))
                 return;
 
-            bool hasRights = room.CheckRights(session, false, true);
+            var hasRights = room.CheckRights(session, false, true);
 
             if (!hasRights)
             {
@@ -34,7 +34,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
                 return;
             }
 
-            Item item = session.GetHabbo().GetInventoryComponent().GetItem(itemId);
+            var item = session.GetHabbo().GetInventoryComponent().GetItem(itemId);
             if (item == null)
                 return;
 
@@ -56,7 +56,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
                 #region Interaction Types
                 case InteractionType.Moodlight:
                     {
-                        MoodlightData moodData = room.MoodlightData;
+                        var moodData = room.MoodlightData;
                         if (moodData != null && room.GetRoomItemHandler().GetItem(moodData.ItemId) != null)
                         {
                             session.SendNotification("You can only have one background moodlight per room!");
@@ -66,7 +66,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
                     }
                 case InteractionType.Toner:
                     {
-                        TonerData tonerData = room.TonerData;
+                        var tonerData = room.TonerData;
                         if (tonerData != null && room.GetRoomItemHandler().GetItem(tonerData.ItemId) != null)
                         {
                             session.SendNotification("You can only have one background toner per room!");
@@ -98,11 +98,11 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
                 if (data.Length < 4)
                     return;
 
-                if (!int.TryParse(data[1], out int x)) { return; }
-                if (!int.TryParse(data[2], out int y)) { return; }
-                if (!int.TryParse(data[3], out int rotation)) { return; }
+                if (!int.TryParse(data[1], out var x)) { return; }
+                if (!int.TryParse(data[2], out var y)) { return; }
+                if (!int.TryParse(data[3], out var rotation)) { return; }
 
-                Item roomItem = new Item(item.Id, room.RoomId, item.BaseItem, item.ExtraData, x, y, 0, rotation, session.GetHabbo().Id, item.GroupId, item.LimitedNo, item.LimitedTot, string.Empty, room);
+                var roomItem = new Item(item.Id, room.RoomId, item.BaseItem, item.ExtraData, x, y, 0, rotation, session.GetHabbo().Id, item.GroupId, item.LimitedNo, item.LimitedTot, string.Empty, room);
                 if (room.GetRoomItemHandler().SetFloorItem(session, roomItem, x, y, rotation, true, false, true))
                 {
                     session.GetHabbo().GetInventoryComponent().RemoveItem(itemId);
@@ -123,18 +123,18 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
             }
             else if (item.IsWallItem)
             {
-                string[] correctedData = new string[data.Length - 1];
+                var correctedData = new string[data.Length - 1];
 
-                for (int i = 1; i < data.Length; i++)
+                for (var i = 1; i < data.Length; i++)
                 {
                     correctedData[i - 1] = data[i];
                 }
 
-                if (TrySetWallItem( correctedData, out string wallPos))
+                if (TrySetWallItem( correctedData, out var wallPos))
                 {
                     try
                     {
-                        Item roomItem = new Item(item.Id, room.RoomId, item.BaseItem, item.ExtraData, 0, 0, 0, 0, session.GetHabbo().Id, item.GroupId, item.LimitedNo, item.LimitedTot, wallPos, room);
+                        var roomItem = new Item(item.Id, room.RoomId, item.BaseItem, item.ExtraData, 0, 0, 0, 0, session.GetHabbo().Id, item.GroupId, item.LimitedNo, item.LimitedTot, wallPos, room);
 
                         if (room.GetRoomItemHandler().SetWallItem(session, roomItem))
                         {
@@ -163,8 +163,8 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
                 return false;
             }
 
-            string wBit = data[0].Substring(3, data[0].Length - 3);
-            string lBit = data[1].Substring(2, data[1].Length - 2);
+            var wBit = data[0].Substring(3, data[0].Length - 3);
+            var lBit = data[1].Substring(2, data[1].Length - 2);
 
             if (!wBit.Contains(",") || !lBit.Contains(","))
             {
@@ -172,10 +172,10 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
                 return false;
             }
 
-            int.TryParse(wBit.Split(',')[0], out int w1);
-            int.TryParse(wBit.Split(',')[1], out int w2);
-            int.TryParse(lBit.Split(',')[0], out int l1);
-            int.TryParse(lBit.Split(',')[1], out int l2);
+            int.TryParse(wBit.Split(',')[0], out var w1);
+            int.TryParse(wBit.Split(',')[1], out var w2);
+            int.TryParse(lBit.Split(',')[0], out var l1);
+            int.TryParse(lBit.Split(',')[1], out var l2);
             //
             //if (!Habbo.HasFuse("super_admin") && (w1 < 0 || w2 < 0 || l1 < 0 || l2 < 0 || w1 > 200 || w2 > 200 || l1 > 200 || l2 > 200))
             //{
@@ -185,7 +185,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
 
 
 
-            string wallPos = ":w=" + w1 + "," + w2 + " l=" + l1 + "," + l2 + " " + data[2];
+            var wallPos = ":w=" + w1 + "," + w2 + " l=" + l1 + "," + l2 + " " + data[2];
 
             position = WallPositionCheck(wallPos);
 
@@ -206,19 +206,19 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
                     return null;
                 }
 
-                string[] posD = wallPosition.Split(' ');
+                var posD = wallPosition.Split(' ');
                 if (posD[2] != "l" && posD[2] != "r")
                     return null;
 
-                string[] widD = posD[0].Substring(3).Split(',');
-                int widthX = int.Parse(widD[0]);
-                int widthY = int.Parse(widD[1]);
+                var widD = posD[0].Substring(3).Split(',');
+                var widthX = int.Parse(widD[0]);
+                var widthY = int.Parse(widD[1]);
                 if (widthX < -1000 || widthY < -1 || widthX > 700 || widthY > 700)
                     return null;
 
-                string[] lenD = posD[1].Substring(2).Split(',');
-                int lengthX = int.Parse(lenD[0]);
-                int lengthY = int.Parse(lenD[1]);
+                var lenD = posD[1].Substring(2).Split(',');
+                var lengthX = int.Parse(lenD[0]);
+                var lengthY = int.Parse(lenD[1]);
                 if (lengthX < -1 || lengthY < -1000 || lengthX > 700 || lengthY > 700)
                     return null;
 

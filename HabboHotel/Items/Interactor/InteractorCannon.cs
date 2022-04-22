@@ -17,11 +17,11 @@ namespace Plus.HabboHotel.Items.Interactor
             if (session == null || session.GetHabbo() == null || item == null)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if(room == null)
                 return;
 
-            RoomUser actor = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var actor = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (actor == null)
                 return;
 

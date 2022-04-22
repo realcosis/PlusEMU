@@ -12,14 +12,14 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Action
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;            
 
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null)
                 return;
 
-            RoomUser targetUser = room.GetRoomUserManager().GetRoomUserByHabbo(packet.PopInt());
+            var targetUser = room.GetRoomUserManager().GetRoomUserByHabbo(packet.PopInt());
             if (targetUser == null)
                 return;
 

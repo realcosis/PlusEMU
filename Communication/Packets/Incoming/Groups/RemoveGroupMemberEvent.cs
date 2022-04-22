@@ -15,10 +15,10 @@ namespace Plus.Communication.Packets.Incoming.Groups
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int groupId = packet.PopInt();
-            int userId = packet.PopInt();
+            var groupId = packet.PopInt();
+            var userId = packet.PopInt();
 
-            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out Group group))
+            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
                 return;
 
             if (userId == session.GetHabbo().Id)
@@ -31,10 +31,10 @@ namespace Plus.Communication.Packets.Incoming.Groups
                     if (group.IsAdmin(userId))
                         group.TakeAdmin(userId);
 
-                    if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(group.RoomId, out Room room))
+                    if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(group.RoomId, out var room))
                         return;
 
-                    RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+                    var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
                     if (user != null)
                     {
                         user.RemoveStatus("flatctrl 1");
@@ -45,7 +45,7 @@ namespace Plus.Communication.Packets.Incoming.Groups
                     }
                 }
 
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
                     dbClient.SetQuery(
                         "DELETE FROM `group_memberships` WHERE `group_id` = @GroupId AND `user_id` = @UserId");
@@ -58,7 +58,7 @@ namespace Plus.Communication.Packets.Incoming.Groups
                 if (session.GetHabbo().GetStats().FavouriteGroupId == groupId)
                 {
                     session.GetHabbo().GetStats().FavouriteGroupId = 0;
-                    using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                    using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                     {
                         dbClient.SetQuery("UPDATE `user_stats` SET `groupid` = '0' WHERE `id` = @userId LIMIT 1");
                         dbClient.AddParameter("userId", userId);
@@ -67,10 +67,10 @@ namespace Plus.Communication.Packets.Incoming.Groups
 
                     if (group.AdminOnlyDeco == 0)
                     {
-                        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(group.RoomId, out Room room))
+                        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(group.RoomId, out var room))
                             return;
 
-                        RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+                        var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
                         if (user != null)
                         {
                             user.RemoveStatus("flatctrl 1");
@@ -83,7 +83,7 @@ namespace Plus.Communication.Packets.Incoming.Groups
 
                     if (session.GetHabbo().InRoom && session.GetHabbo().CurrentRoom != null)
                     {
-                        RoomUser user = session.GetHabbo().CurrentRoom.GetRoomUserManager()
+                        var user = session.GetHabbo().CurrentRoom.GetRoomUserManager()
                             .GetRoomUserByHabbo(session.GetHabbo().Id);
                         if (user != null)
                             session.GetHabbo().CurrentRoom
@@ -116,11 +116,11 @@ namespace Plus.Communication.Packets.Incoming.Groups
                 if (group.IsMember(userId))
                     group.DeleteMember(userId);
 
-                List<UserCache> members = new List<UserCache>();
-                List<int> memberIds = group.GetAllMembers;
-                foreach (int id in memberIds.ToList())
+                var members = new List<UserCache>();
+                var memberIds = group.GetAllMembers;
+                foreach (var id in memberIds.ToList())
                 {
-                    UserCache groupMember = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
+                    var groupMember = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
                     if (groupMember == null)
                         continue;
 
@@ -129,8 +129,8 @@ namespace Plus.Communication.Packets.Incoming.Groups
                 }
 
 
-                int finishIndex = 14 < members.Count ? 14 : members.Count;
-                int membersCount = members.Count;
+                var finishIndex = 14 < members.Count ? 14 : members.Count;
+                var membersCount = members.Count;
 
                 session.SendPacket(new GroupMembersComposer(group, members.Take(finishIndex).ToList(), membersCount, 1,
                     (group.CreatorId == session.GetHabbo().Id || group.IsAdmin(session.GetHabbo().Id)), 0, ""));

@@ -32,26 +32,26 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Triggers
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            string unknown2 = packet.PopString();
+            var unknown = packet.PopInt();
+            var unknown2 = packet.PopString();
         }
 
         public bool Execute(params object[] @params)
         {
             Instance.GetWired().OnEvent(this.Item);
 
-            Habbo player = (Habbo)@params[0];
+            var player = (Habbo)@params[0];
             if (player == null)
                 return false;
 
-            Item item = (Item)@params[1];
+            var item = (Item)@params[1];
             if (item == null)
                 return false;
 
-            ICollection<IWiredItem> effects = Instance.GetWired().GetEffects(this);
-            ICollection<IWiredItem> conditions = Instance.GetWired().GetConditions(this);
+            var effects = Instance.GetWired().GetEffects(this);
+            var conditions = Instance.GetWired().GetConditions(this);
 
-            foreach (IWiredItem condition in conditions.ToList())
+            foreach (var condition in conditions.ToList())
             {
                 if (!condition.Execute(player))
                     return false;
@@ -61,16 +61,16 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Triggers
             }
 
             //Check the ICollection to find the random addon effect.
-            bool hasRandomEffectAddon = effects.Count(x => x.Type == WiredBoxType.AddonRandomEffect) > 0;
+            var hasRandomEffectAddon = effects.Count(x => x.Type == WiredBoxType.AddonRandomEffect) > 0;
             if (hasRandomEffectAddon)
             {
                 //Okay, so we have a random addon effect, now lets get the IWiredItem and attempt to execute it.
-                IWiredItem randomBox = effects.FirstOrDefault(x => x.Type == WiredBoxType.AddonRandomEffect);
+                var randomBox = effects.FirstOrDefault(x => x.Type == WiredBoxType.AddonRandomEffect);
                 if (!randomBox.Execute())
                     return false;
 
                 //Success! Let's get our selected box and continue.
-                IWiredItem selectedBox = Instance.GetWired().GetRandomEffect(effects.ToList());
+                var selectedBox = Instance.GetWired().GetRandomEffect(effects.ToList());
                 if (!selectedBox.Execute())
                     return false;
 
@@ -83,7 +83,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Triggers
             }
             else
             {
-                foreach (IWiredItem effect in effects.ToList())
+                foreach (var effect in effects.ToList())
                 {
                     if (!effect.Execute(player))
                         return false;

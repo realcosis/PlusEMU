@@ -9,19 +9,19 @@ namespace Plus.Communication.Packets.Incoming.LandingView
         {
             try
             {
-                string parseCampaings = packet.PopString();
+                var parseCampaings = packet.PopString();
                 if (parseCampaings.Contains("gamesmaker"))
                     return;
 
-                string campaingName = "";
-                string[] parser = parseCampaings.Split(';');
+                var campaingName = "";
+                var parser = parseCampaings.Split(';');
 
                 foreach (var value in parser)
                 {
                     if (string.IsNullOrEmpty(value) || value.EndsWith(","))
                         continue;
 
-                    string[] data = value.Split(',');
+                    var data = value.Split(',');
                     campaingName = data[1];
                 }
 

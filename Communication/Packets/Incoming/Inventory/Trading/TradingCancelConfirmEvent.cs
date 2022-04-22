@@ -11,15 +11,15 @@ namespace Plus.Communication.Packets.Incoming.Inventory.Trading
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
-            RoomUser roomUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var roomUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (roomUser == null)
                 return;
 
-            if (!room.GetTrading().TryGetTrade(roomUser.TradeId, out Trade trade))
+            if (!room.GetTrading().TryGetTrade(roomUser.TradeId, out var trade))
                 return;
 
             trade.EndTrade(session.GetHabbo().Id);

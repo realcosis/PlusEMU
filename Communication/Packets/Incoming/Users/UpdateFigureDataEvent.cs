@@ -19,8 +19,8 @@ namespace Plus.Communication.Packets.Incoming.Users
             if (session == null || session.GetHabbo() == null)
                 return;
 
-            string gender = packet.PopString().ToUpper();
-            string look = PlusEnvironment.GetFigureManager().ProcessFigure(packet.PopString(), gender, session.GetHabbo().GetClothing().GetClothingParts, true);
+            var gender = packet.PopString().ToUpper();
+            var look = PlusEnvironment.GetFigureManager().ProcessFigure(packet.PopString(), gender, session.GetHabbo().GetClothing().GetClothingParts, true);
 
             if (look == session.GetHabbo().Look)
                 return;
@@ -50,7 +50,7 @@ namespace Plus.Communication.Packets.Incoming.Users
             session.GetHabbo().Look = PlusEnvironment.FilterFigure(look);
             session.GetHabbo().Gender = gender.ToLower();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `users` SET `look` = @look, `gender` = @gender WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
                 dbClient.AddParameter("look", look);
@@ -65,7 +65,7 @@ namespace Plus.Communication.Packets.Incoming.Users
 
             if (session.GetHabbo().InRoom)
             {
-                RoomUser roomUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+                var roomUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
                 if (roomUser != null)
                 {
                     session.SendPacket(new UserChangeComposer(roomUser, true));

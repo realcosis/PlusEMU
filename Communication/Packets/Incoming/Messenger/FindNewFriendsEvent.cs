@@ -9,7 +9,7 @@ namespace Plus.Communication.Packets.Incoming.Messenger
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            Room instance = PlusEnvironment.GetGame().GetRoomManager().TryGetRandomLoadedRoom();
+            var instance = PlusEnvironment.GetGame().GetRoomManager().TryGetRandomLoadedRoom();
 
             if (instance != null)
             {

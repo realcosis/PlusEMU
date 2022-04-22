@@ -13,7 +13,7 @@ namespace Plus.Utilities
         /// <returns>Encoded data.</returns>
         public static string EncodeInt32(int v)
         {
-            string t = "";
+            var t = "";
             return t + (char)(v >> 0x18) + (char)(v >> 0x10) + (char)(v >> 8) + (char)v;
         }
 
@@ -24,7 +24,7 @@ namespace Plus.Utilities
         /// <returns>Encoded data.</returns>
         public static string EncodeInt16(int v)
         {
-            string t = "";
+            var t = "";
             return t + (char)(v >> 8) + (char)v;
         }
         #endregion
@@ -92,7 +92,7 @@ namespace Plus.Utilities
         {
             try
             {
-                int i = Convert.ToInt32(Convert.ToChar(v.Substring(0, 1)));
+                var i = Convert.ToInt32(Convert.ToChar(v.Substring(0, 1)));
                 return i == 1;
             }
             catch (Exception e)

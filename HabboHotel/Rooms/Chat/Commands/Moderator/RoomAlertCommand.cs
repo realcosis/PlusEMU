@@ -31,8 +31,8 @@
                 return;
             }
 
-            string message = CommandManager.MergeParams(@params, 1);
-            foreach (RoomUser roomUser in room.GetRoomUserManager().GetRoomUsers())
+            var message = CommandManager.MergeParams(@params, 1);
+            foreach (var roomUser in room.GetRoomUserManager().GetRoomUsers())
             {
                 if (roomUser == null || roomUser.GetClient() == null || session.GetHabbo().Id == roomUser.UserId)
                     continue;

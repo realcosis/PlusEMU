@@ -12,24 +12,24 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
             if (!room.CheckRights(session, true) || !session.GetHabbo().GetPermissions().HasRight("room_item_save_branding_items"))
                 return;
 
-            int itemId = packet.PopInt();
-            Item item = room.GetRoomItemHandler().GetItem(itemId);
+            var itemId = packet.PopInt();
+            var item = room.GetRoomItemHandler().GetItem(itemId);
             if (item == null)
                 return;
 
             if (item.Data.InteractionType == InteractionType.Background)
             {
-                int data = packet.PopInt();
-                string brandData = "state" + Convert.ToChar(9) + "0";
+                var data = packet.PopInt();
+                var brandData = "state" + Convert.ToChar(9) + "0";
 
-                for (int i = 1; i <= data; i++)
+                for (var i = 1; i <= data; i++)
                 {
                     brandData = brandData + Convert.ToChar(9) + packet.PopString();
                 }

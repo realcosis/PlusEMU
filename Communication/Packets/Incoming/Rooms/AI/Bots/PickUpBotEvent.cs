@@ -15,15 +15,15 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
             if (!session.GetHabbo().InRoom)
                 return;
 
-            int botId = packet.PopInt();
+            var botId = packet.PopInt();
             if (botId == 0)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
-            if (!room.GetRoomUserManager().TryGetBot(botId, out RoomUser botUser))
+            if (!room.GetRoomUserManager().TryGetBot(botId, out var botUser))
                 return;
 
             if (session.GetHabbo().Id != botUser.BotData.OwnerId && !session.GetHabbo().GetPermissions().HasRight("bot_place_any_override"))
@@ -32,7 +32,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
                 return;
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `bots` SET `room_id` = '0' WHERE `id` = @id LIMIT 1");
                 dbClient.AddParameter("id", botId);

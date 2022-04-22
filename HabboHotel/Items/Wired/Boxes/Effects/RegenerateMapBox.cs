@@ -30,8 +30,8 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            string unknown2 = packet.PopString();
+            var unknown = packet.PopInt();
+            var unknown2 = packet.PopString();
         }
 
         public bool Execute(params object[] @params)
@@ -39,7 +39,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (Instance == null)
                 return false;
 
-            TimeSpan timeSinceRegen = DateTime.Now - Instance.LastRegeneration;
+            var timeSinceRegen = DateTime.Now - Instance.LastRegeneration;
 
             if (timeSinceRegen.TotalMinutes > 1)
             {

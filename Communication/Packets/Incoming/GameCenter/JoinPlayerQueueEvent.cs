@@ -12,12 +12,12 @@ namespace Plus.Communication.Packets.Incoming.GameCenter
             if (session == null || session.GetHabbo() == null)
                 return;
 
-            int gameId = packet.PopInt();
+            var gameId = packet.PopInt();
 
             GameData gameData = null;
             if (PlusEnvironment.GetGame().GetGameDataManager().TryGetGame(gameId, out gameData))
             {
-                string ssoTicket = "HABBOON-Fastfood-" + GenerateSso(32) + "-" + session.GetHabbo().Id;
+                var ssoTicket = "HABBOON-Fastfood-" + GenerateSso(32) + "-" + session.GetHabbo().Id;
 
                 session.SendPacket(new JoinQueueComposer(gameData.Id));
                 session.SendPacket(new LoadGameComposer(gameData, ssoTicket));
@@ -26,10 +26,10 @@ namespace Plus.Communication.Packets.Incoming.GameCenter
 
         private string GenerateSso(int length)
         {
-            Random random = new Random();
-            string characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-            StringBuilder result = new StringBuilder(length);
-            for (int i = 0; i < length; i++)
+            var random = new Random();
+            var characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            var result = new StringBuilder(length);
+            for (var i = 0; i < length; i++)
             {
                 result.Append(characters[random.Next(characters.Length)]);
             }

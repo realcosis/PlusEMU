@@ -16,19 +16,19 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.Wired
             if (!session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null || !room.CheckRights(session, false, true))
                 return;
 
-            int itemId = packet.PopInt();
+            var itemId = packet.PopInt();
 
             session.SendPacket(new HideWiredConfigComposer());
 
-            Item selectedItem = room.GetRoomItemHandler().GetItem(itemId);
+            var selectedItem = room.GetRoomItemHandler().GetItem(itemId);
             if (selectedItem == null)
                 return;
 
-            if (!session.GetHabbo().CurrentRoom.GetWired().TryGet(itemId, out IWiredItem box))
+            if (!session.GetHabbo().CurrentRoom.GetWired().TryGet(itemId, out var box))
                 return;
 
             if (box.Type == WiredBoxType.EffectGiveUserBadge && !session.GetHabbo().GetPermissions().HasRight("room_item_wired_rewards"))

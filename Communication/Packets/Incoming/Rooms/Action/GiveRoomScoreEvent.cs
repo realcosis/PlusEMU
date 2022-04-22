@@ -14,13 +14,13 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Action
             if (!session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
             if (session.GetHabbo().RatedRooms.Contains(room.RoomId) || room.CheckRights(session, true))
                 return;
 
-            int rating = packet.PopInt();
+            var rating = packet.PopInt();
             switch (rating)
             {
                 case -1:
@@ -33,7 +33,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Action
                     return;
             }
           
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE rooms SET score = '" + room.Score + "' WHERE id = '" + room.RoomId + "' LIMIT 1");
             }

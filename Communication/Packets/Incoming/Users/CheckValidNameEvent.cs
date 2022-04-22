@@ -14,16 +14,16 @@ namespace Plus.Communication.Packets.Incoming.Users
         public void Parse(GameClient session, ClientPacket packet)
         {
             bool inUse;
-            string name = packet.PopString();
+            var name = packet.PopString();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT COUNT(0) FROM `users` WHERE `username` = @name LIMIT 1");
                 dbClient.AddParameter("name", name);
                 inUse = dbClient.GetInteger() == 1;
             }
 
-            char[] letters = name.ToLower().ToCharArray();
+            var letters = name.ToLower().ToCharArray();
             const string allowedCharacters = "abcdefghijklmnopqrstuvwxyz.,_-;:?!1234567890";
 
             if (letters.Any(chr => !allowedCharacters.Contains(chr)))
@@ -65,7 +65,7 @@ namespace Plus.Communication.Packets.Incoming.Users
             if (inUse)
             {
                 ICollection<string> suggestions = new List<string>();
-                for (int i = 100; i < 103; i++)
+                for (var i = 100; i < 103; i++)
                 {
                     suggestions.Add(i.ToString());
                 }

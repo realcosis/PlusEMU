@@ -37,9 +37,9 @@ namespace Plus.HabboHotel.Rooms.Instance
 
         public void Cleanup()
         {
-            foreach (Trade trade in _activeTrades.Values)
+            foreach (var trade in _activeTrades.Values)
             {
-                foreach (TradeUser user in trade.Users)
+                foreach (var user in trade.Users)
                 {
                     if (user == null || user.RoomUser == null)
                         continue;

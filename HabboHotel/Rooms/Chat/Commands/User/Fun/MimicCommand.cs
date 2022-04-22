@@ -30,7 +30,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
                 return;
             }
 
-            GameClient targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+            var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
             if (targetClient == null)
             {
                 session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");
@@ -43,7 +43,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
                 return;
             }
 
-            RoomUser targetUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(targetClient.GetHabbo().Id);
+            var targetUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(targetClient.GetHabbo().Id);
             if (targetUser == null)
             {
                 session.SendWhisper("An error occoured whilst finding that user, maybe they're not online or in this room.");
@@ -53,7 +53,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
             session.GetHabbo().Gender = targetUser.GetClient().GetHabbo().Gender;
             session.GetHabbo().Look = targetUser.GetClient().GetHabbo().Look;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `users` SET `gender` = @gender, `look` = @look WHERE `id` = @id LIMIT 1");
                 dbClient.AddParameter("gender", session.GetHabbo().Gender);
@@ -62,7 +62,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
                 dbClient.RunQuery();
             }
 
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user != null)
             {
                 session.SendPacket(new AvatarAspectUpdateComposer(session.GetHabbo().Look, session.GetHabbo().Gender));

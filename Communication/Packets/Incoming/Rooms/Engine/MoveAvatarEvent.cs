@@ -13,23 +13,23 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
             if (!session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return;
 
-            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null || !user.CanWalk)
                 return;
 
-            int moveX = packet.PopInt();
-            int moveY = packet.PopInt();
+            var moveX = packet.PopInt();
+            var moveY = packet.PopInt();
 
             if (moveX == user.X && moveY == user.Y)
                 return;
 
             if (user.RidingHorse)
             {
-                RoomUser horse = room.GetRoomUserManager().GetRoomUserByVirtualId(user.HorseId);
+                var horse = room.GetRoomUserManager().GetRoomUserByVirtualId(user.HorseId);
                 if (horse != null)
                     horse.MoveTo(moveX, moveY);
             }

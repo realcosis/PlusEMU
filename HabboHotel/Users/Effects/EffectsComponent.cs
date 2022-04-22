@@ -31,11 +31,11 @@ namespace Plus.HabboHotel.Users.Effects
             if (_effects.Count > 0)
                 return false;
             
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `user_effects` WHERE `user_id` = @id;");
                 dbClient.AddParameter("id", habbo.Id);
-                DataTable getEffects = dbClient.GetTable();
+                var getEffects = dbClient.GetTable();
 
                 if (getEffects != null)
                 {
@@ -80,7 +80,7 @@ namespace Plus.HabboHotel.Users.Effects
         /// <returns></returns>
         public AvatarEffect GetEffectNullable(int spriteId, bool activatedOnly = false, bool unactivatedOnly = false)
         {
-            foreach (AvatarEffect effect in _effects.Values.ToList())
+            foreach (var effect in _effects.Values.ToList())
             {
                 if (!effect.HasExpired && effect.SpriteId == spriteId && (!activatedOnly || effect.Activated) && (!unactivatedOnly || !effect.Activated))
                 {
@@ -96,7 +96,7 @@ namespace Plus.HabboHotel.Users.Effects
         /// <param name="habbo"></param>
         public void CheckEffectExpiry(Habbo habbo)
         {
-            foreach (AvatarEffect effect in _effects.Values.ToList())
+            foreach (var effect in _effects.Values.ToList())
             {
                 if (effect.HasExpired)
                 {
@@ -110,7 +110,7 @@ namespace Plus.HabboHotel.Users.Effects
             if (_habbo == null || _habbo.CurrentRoom == null)
                 return;
 
-            RoomUser user = _habbo.CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(_habbo.Id);
+            var user = _habbo.CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(_habbo.Id);
             if (user == null)
                 return;
 

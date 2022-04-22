@@ -25,9 +25,9 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            int countOne = packet.PopInt();
-            int countTwo = packet.PopInt();
+            var unknown = packet.PopInt();
+            var countOne = packet.PopInt();
+            var countTwo = packet.PopInt();
 
             StringData = countOne + ";" + countTwo;
         }
@@ -40,8 +40,8 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
             if (String.IsNullOrEmpty(StringData))
                 return false;
 
-            int countOne = StringData != null ? int.Parse(StringData.Split(';')[0]) : 1;
-            int countTwo = StringData != null ? int.Parse(StringData.Split(';')[1]) : 50;
+            var countOne = StringData != null ? int.Parse(StringData.Split(';')[0]) : 1;
+            var countTwo = StringData != null ? int.Parse(StringData.Split(';')[1]) : 50;
 
             if (Instance.UserCount >= countOne && Instance.UserCount <= countTwo)
                 return false;

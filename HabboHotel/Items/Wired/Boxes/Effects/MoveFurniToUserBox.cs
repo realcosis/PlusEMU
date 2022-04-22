@@ -52,22 +52,22 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            string unknown2 = packet.PopString();
+            var unknown = packet.PopInt();
+            var unknown2 = packet.PopString();
 
             if (SetItems.Count > 0)
                 SetItems.Clear();
 
-            int furniCount = packet.PopInt();
-            for (int i = 0; i < furniCount; i++)
+            var furniCount = packet.PopInt();
+            for (var i = 0; i < furniCount; i++)
             {
-                Item selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+                var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
 
                 if (selectedItem != null && !Instance.GetWired().OtherBoxHasItem(this, selectedItem.Id))
                     SetItems.TryAdd(selectedItem.Id, selectedItem);
             }
 
-            int delay = packet.PopInt();
+            var delay = packet.PopInt();
             this.Delay = delay;
         }
 
@@ -93,10 +93,10 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (Instance == null || !_requested || _next == 0)
                 return false;
 
-            long now = PlusEnvironment.Now();
+            var now = PlusEnvironment.Now();
             if (_next < now)
             {
-                foreach (Item item in SetItems.Values.ToList())
+                foreach (var item in SetItems.Values.ToList())
                 {
                     if (item == null)
                         continue;
@@ -109,7 +109,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
                     if (Instance.GetWired().OtherBoxHasItem(this, item.Id))
                         SetItems.TryRemove(item.Id, out toRemove);
 
-                    Point point = Instance.GetGameMap().GetChaseMovement(item);
+                    var point = Instance.GetGameMap().GetChaseMovement(item);
 
                     Instance.GetWired().OnUserFurniCollision(Instance, item);
 
@@ -118,11 +118,11 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
                     if (Instance.GetGameMap().CanRollItemHere(point.X, point.Y) && !Instance.GetGameMap().SquareHasUsers(point.X, point.Y))
                     {    
-                        Double newZ = item.GetZ;
-                        bool canBePlaced = true;
+                        var newZ = item.GetZ;
+                        var canBePlaced = true;
 
-                        List<Item> coordinatedItems = Instance.GetGameMap().GetCoordinatedItems(point);
-                        foreach (Item coordinateItem in coordinatedItems.ToList())
+                        var coordinatedItems = Instance.GetGameMap().GetCoordinatedItems(point);
+                        foreach (var coordinateItem in coordinatedItems.ToList())
                         {
                             if (coordinateItem == null || coordinateItem.Id == item.Id)
                                 continue;

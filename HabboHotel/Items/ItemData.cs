@@ -59,7 +59,7 @@ namespace Plus.HabboHotel.Items
             this.VendingIds = new List<int>();
             if (vendingIds.Contains(","))
             {
-                foreach (string vendingId in vendingIds.Split(','))
+                foreach (var vendingId in vendingIds.Split(','))
                 {
                     try
                     {
@@ -78,7 +78,7 @@ namespace Plus.HabboHotel.Items
             this.AdjustableHeights = new List<double>();
             if (adjustableHeights.Contains(","))
             {
-                foreach (string h in adjustableHeights.Split(','))
+                foreach (var h in adjustableHeights.Split(','))
                 {
                     this.AdjustableHeights.Add(double.Parse(h));
                 }
@@ -88,7 +88,7 @@ namespace Plus.HabboHotel.Items
 
             this.EffectId = effectId;
 
-            int wiredId = 0;
+            var wiredId = 0;
             if (this.InteractionType == InteractionType.WiredCondition || this.InteractionType == InteractionType.WiredTrigger || this.InteractionType == InteractionType.WiredEffect)
                 wiredId = BehaviourData;
 

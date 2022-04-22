@@ -26,9 +26,9 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public void HandleSave(ClientPacket packet)
         {
-            int unknown = packet.PopInt();
-            int followMode = packet.PopInt();//1 = follow, 0 = don't.
-            string botConfiguration = packet.PopString();
+            var unknown = packet.PopInt();
+            var followMode = packet.PopInt();//1 = follow, 0 = don't.
+            var botConfiguration = packet.PopString();
        
             if (SetItems.Count > 0)
                 SetItems.Clear();
@@ -44,25 +44,25 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (String.IsNullOrEmpty(StringData))
                 return false;
 
-            Habbo player = (Habbo)@params[0];
+            var player = (Habbo)@params[0];
             if (player == null)
                 return false;
 
-            RoomUser human = Instance.GetRoomUserManager().GetRoomUserByHabbo(player.Id);
+            var human = Instance.GetRoomUserManager().GetRoomUserByHabbo(player.Id);
             if (human == null)
                 return false;
 
-            string[] stuff = StringData.Split(';');
+            var stuff = StringData.Split(';');
             if (stuff.Length != 2)
                 return false;//This is important, incase a cunt scripts.
 
-            string username = stuff[1];
+            var username = stuff[1];
 
-            RoomUser user = Instance.GetRoomUserManager().GetBotByName(username);
+            var user = Instance.GetRoomUserManager().GetBotByName(username);
             if (user == null)
                 return false;
 
-            int followMode = 0;
+            var followMode = 0;
             if (!int.TryParse(stuff[0], out followMode))
                 return false;
 

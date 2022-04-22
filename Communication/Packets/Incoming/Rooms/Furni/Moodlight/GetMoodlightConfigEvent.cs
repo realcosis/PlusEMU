@@ -15,7 +15,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.Moodlight
             if (!session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
             if (!room.CheckRights(session, true))
@@ -23,7 +23,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.Moodlight
 
             if (room.MoodlightData == null)
             {
-                foreach (Item item in room.GetRoomItemHandler().GetWall.ToList())
+                foreach (var item in room.GetRoomItemHandler().GetWall.ToList())
                 {
                     if (item.GetBaseItem().InteractionType == InteractionType.Moodlight)
                         room.MoodlightData = new MoodlightData(item.Id);

@@ -11,11 +11,11 @@ namespace Plus.Communication.Packets.Incoming.Moderation
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().GetPermissions().HasRight("mod_tool"))
                 return;
 
-            int amount = packet.PopInt();
+            var amount = packet.PopInt();
 
-            for (int i = 0; i < amount; i++)
+            for (var i = 0; i < amount; i++)
             {
-                if (!PlusEnvironment.GetGame().GetModerationManager().TryGetTicket(packet.PopInt(), out ModerationTicket ticket))
+                if (!PlusEnvironment.GetGame().GetModerationManager().TryGetTicket(packet.PopInt(), out var ticket))
                     continue;
 
                 ticket.Moderator = null;

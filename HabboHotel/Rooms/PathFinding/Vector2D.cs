@@ -20,8 +20,8 @@
 
         public int GetDistanceSquared(Vector2D point)
         {
-            int dx = X - point.X;
-            int dy = Y - point.Y;
+            var dx = X - point.X;
+            var dy = Y - point.Y;
             return (dx * dx) + (dy * dy);
         }
 

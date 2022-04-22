@@ -19,14 +19,14 @@ namespace Plus.Communication.Packets.Incoming.Catalog
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int pageId = packet.PopInt();
-            int itemId = packet.PopInt();
-            string data = packet.PopString();
-            string giftUser = StringCharFilter.Escape(packet.PopString());
-            string giftMessage = StringCharFilter.Escape(packet.PopString().Replace(Convert.ToChar(5), ' '));
-            int spriteId = packet.PopInt();
-            int ribbon = packet.PopInt();
-            int colour = packet.PopInt();
+            var pageId = packet.PopInt();
+            var itemId = packet.PopInt();
+            var data = packet.PopString();
+            var giftUser = StringCharFilter.Escape(packet.PopString());
+            var giftMessage = StringCharFilter.Escape(packet.PopString().Replace(Convert.ToChar(5), ' '));
+            var spriteId = packet.PopInt();
+            var ribbon = packet.PopInt();
+            var colour = packet.PopInt();
             packet.PopBoolean();
 
             if (PlusEnvironment.GetSettingsManager().TryGetValue("room.item.gifts.enabled") != "1")
@@ -35,13 +35,13 @@ namespace Plus.Communication.Packets.Incoming.Catalog
                 return;
             }
 
-            if (!PlusEnvironment.GetGame().GetCatalog().TryGetPage(pageId, out CatalogPage page))
+            if (!PlusEnvironment.GetGame().GetCatalog().TryGetPage(pageId, out var page))
                 return;
 
             if ( !page.Enabled || !page.Visible || page.MinimumRank > session.GetHabbo().Rank || page.MinimumVip > session.GetHabbo().VipRank && session.GetHabbo().Rank == 1)
                 return;
 
-            if (!page.Items.TryGetValue(itemId, out CatalogItem item))
+            if (!page.Items.TryGetValue(itemId, out var item))
             {
                 if (page.ItemOffers.ContainsKey(itemId))
                 {
@@ -56,7 +56,7 @@ namespace Plus.Communication.Packets.Incoming.Catalog
             if (!ItemUtility.CanGiftItem(item))
                 return;
 
-            if (!PlusEnvironment.GetGame().GetItemManager().GetGift(spriteId, out ItemData presentData) || presentData.InteractionType != InteractionType.Gift)
+            if (!PlusEnvironment.GetGame().GetItemManager().GetGift(spriteId, out var presentData) || presentData.InteractionType != InteractionType.Gift)
                 return;
 
             if (session.GetHabbo().Credits < item.CostCredits)
@@ -71,7 +71,7 @@ namespace Plus.Communication.Packets.Incoming.Catalog
                 return;
             }
 
-            Habbo habbo = PlusEnvironment.GetHabboByUsername(giftUser);
+            var habbo = PlusEnvironment.GetHabboByUsername(giftUser);
             if (habbo == null)
             {
                 session.SendPacket(new GiftWrappingErrorComposer());
@@ -98,10 +98,10 @@ namespace Plus.Communication.Packets.Incoming.Catalog
                 return;
 
 
-            string ed = giftUser + Convert.ToChar(5) + giftMessage + Convert.ToChar(5) + session.GetHabbo().Id + Convert.ToChar(5) + item.Data.Id + Convert.ToChar(5) + spriteId + Convert.ToChar(5) + ribbon + Convert.ToChar(5) + colour;
+            var ed = giftUser + Convert.ToChar(5) + giftMessage + Convert.ToChar(5) + session.GetHabbo().Id + Convert.ToChar(5) + item.Data.Id + Convert.ToChar(5) + spriteId + Convert.ToChar(5) + ribbon + Convert.ToChar(5) + colour;
 
             int newItemId;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 //Insert the dummy item.
                 dbClient.SetQuery("INSERT INTO `items` (`base_item`,`user_id`,`extra_data`) VALUES (@baseId, @habboId, @extra_data)");
@@ -123,10 +123,10 @@ namespace Plus.Communication.Packets.Incoming.Catalog
 
                         try
                         {
-                            string[] bits = data.Split('\n');
-                            string petName = bits[0];
-                            string race = bits[1];
-                            string color = bits[2];
+                            var bits = data.Split('\n');
+                            var petName = bits[0];
+                            var race = bits[1];
+                            var color = bits[2];
 
                             if (PetUtility.CheckPetName(petName))
                                 return;
@@ -210,10 +210,10 @@ namespace Plus.Communication.Packets.Incoming.Catalog
             }
 
 
-            Item giveItem = ItemFactory.CreateGiftItem(presentData, habbo, ed, ed, newItemId);
+            var giveItem = ItemFactory.CreateGiftItem(presentData, habbo, ed, ed, newItemId);
             if (giveItem != null)
             {
-                GameClient receiver = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(habbo.Id);
+                var receiver = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(habbo.Id);
                 if (receiver != null)
                 {
                     receiver.GetHabbo().GetInventoryComponent().TryAddItem(giveItem);

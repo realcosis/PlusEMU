@@ -24,7 +24,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Filter
                 _filteredWords.Clear();
 
             DataTable data = null;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT * FROM `wordfilter`");
             data = dbClient.GetTable();
 
@@ -39,7 +39,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Filter
 
         public string CheckMessage(string message)
         {
-            foreach (WordFilter filter in _filteredWords.ToList())
+            foreach (var filter in _filteredWords.ToList())
             {
                 if (message.ToLower().Contains(filter.Word) && filter.IsStrict || message == filter.Word)
                 {
@@ -47,10 +47,10 @@ namespace Plus.HabboHotel.Rooms.Chat.Filter
                 }
                 else if (message.ToLower().Contains(filter.Word) && !filter.IsStrict || message == filter.Word)
                 {
-                    string[] words = message.Split(' ');
+                    var words = message.Split(' ');
 
                     message = "";
-                    foreach (string word in words.ToList())
+                    foreach (var word in words.ToList())
                     {
                         if (word.ToLower() == filter.Word)
                             message += filter.Replacement + " ";
@@ -67,7 +67,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Filter
         {
             message = message.Replace(" ", "").Replace(".", "").Replace("_", "").ToLower();
 
-            foreach (WordFilter filter in _filteredWords.ToList())
+            foreach (var filter in _filteredWords.ToList())
             {
                 if (!filter.IsBannable)
                     continue;
@@ -80,7 +80,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Filter
 
         public bool IsFiltered(string message)
         {
-            foreach (WordFilter filter in _filteredWords.ToList())
+            foreach (var filter in _filteredWords.ToList())
             {
                 if (message.Contains(filter.Word))
                     return true;

@@ -10,7 +10,7 @@ namespace Plus.Communication.Packets.Outgoing.Users
             : base(ServerPacketHeader.HabboGroupBadgesMessageComposer)
         {
             WriteInteger(badges.Count);
-            foreach (KeyValuePair<int, string> badge in badges)
+            foreach (var badge in badges)
             {
                 WriteInteger(badge.Key);
                 WriteString(badge.Value);

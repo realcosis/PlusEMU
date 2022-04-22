@@ -32,18 +32,18 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
         public void HandleSave(ClientPacket packet)
         {
             SetItems.Clear();
-            int unknown = packet.PopInt();
-            string unknown2 = packet.PopString();
+            var unknown = packet.PopInt();
+            var unknown2 = packet.PopString();
 
-            int furniCount = packet.PopInt();
-            for (int i = 0; i < furniCount; i++)
+            var furniCount = packet.PopInt();
+            for (var i = 0; i < furniCount; i++)
             {
-                Item selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+                var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
                 if (selectedItem != null)
                     SetItems.TryAdd(selectedItem.Id, selectedItem);
             }
 
-            int delay = packet.PopInt();
+            var delay = packet.PopInt();
             this.Delay = delay;
         }
 
@@ -63,10 +63,10 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (SetItems.Count == 0 || !_requested)
                 return false;
 
-            long now = PlusEnvironment.Now();
+            var now = PlusEnvironment.Now();
             if (_next < now)
             {
-                foreach (Item item in SetItems.Values.ToList())
+                foreach (var item in SetItems.Values.ToList())
                 {
                     if (item == null)
                         continue;

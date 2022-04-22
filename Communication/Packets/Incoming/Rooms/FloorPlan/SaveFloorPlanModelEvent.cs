@@ -17,7 +17,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.FloorPlan
             if (!session.GetHabbo().InRoom)
                 return;
 
-            Room room = session.GetHabbo().CurrentRoom;
+            var room = session.GetHabbo().CurrentRoom;
             if (room == null || session.GetHabbo().CurrentRoomId != room.Id || !room.CheckRights(session, true))
                 return;
 
@@ -27,7 +27,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.FloorPlan
                 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', '\r'
             };
 
-            string map = packet.PopString().ToLower().TrimEnd();
+            var map = packet.PopString().ToLower().TrimEnd();
 
             if (map.Length > 4159) //4096 + New Lines = 4159
             {
@@ -43,8 +43,8 @@ namespace Plus.Communication.Packets.Incoming.Rooms.FloorPlan
 
             var modelData = map.Split('\r');
 
-            int sizeY = modelData.Length;
-            int sizeX = modelData[0].Length;
+            var sizeY = modelData.Length;
+            var sizeX = modelData[0].Length;
 
             if (sizeY > 64 || sizeX > 64)
             {
@@ -52,8 +52,8 @@ namespace Plus.Communication.Packets.Incoming.Rooms.FloorPlan
                 return;
             }
 
-            int lastLineLength = 0;
-            bool isValid = true;
+            var lastLineLength = 0;
+            var isValid = true;
 
             foreach (var data in modelData)
             {
@@ -75,14 +75,14 @@ namespace Plus.Communication.Packets.Incoming.Rooms.FloorPlan
                 return;
             }
 
-            int doorX = packet.PopInt();
-            int doorY = packet.PopInt();
-            int doorDirection = packet.PopInt();
-            int wallThick = packet.PopInt();
-            int floorThick = packet.PopInt();
-            int wallHeight = packet.PopInt();
+            var doorX = packet.PopInt();
+            var doorY = packet.PopInt();
+            var doorDirection = packet.PopInt();
+            var wallThick = packet.PopInt();
+            var floorThick = packet.PopInt();
+            var wallHeight = packet.PopInt();
 
-            int doorZ = 0;
+            var doorZ = 0;
 
             try
             {
@@ -111,15 +111,15 @@ namespace Plus.Communication.Packets.Incoming.Rooms.FloorPlan
             if (wallHeight > 15)
                 wallHeight = 15;
 
-            string modelName = "model_bc_" + room.Id;
+            var modelName = "model_bc_" + room.Id;
 
             map += '\r' + new string('x', sizeX);
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `room_models` WHERE `id` = @model AND `custom` = '1' LIMIT 1");
                 dbClient.AddParameter("model", "model_bc_" + room.Id);
-                DataRow row = dbClient.GetRow();
+                var row = dbClient.GetRow();
 
                 if (row == null)//The row is still null, let's insert instead.
                 {
@@ -158,13 +158,13 @@ namespace Plus.Communication.Packets.Incoming.Rooms.FloorPlan
             room.WallThickness = wallThick;
             room.FloorThickness = floorThick;
 
-            List<RoomUser> usersToReturn = room.GetRoomUserManager().GetRoomUsers().ToList();
+            var usersToReturn = room.GetRoomUserManager().GetRoomUsers().ToList();
 
             PlusEnvironment.GetGame().GetRoomManager().ReloadModel(modelName);
             PlusEnvironment.GetGame().GetRoomManager().UnloadRoom(room.Id);
 
 
-            foreach (RoomUser user in usersToReturn)
+            foreach (var user in usersToReturn)
             {
                 if (user == null || user.GetClient() == null)
                     continue;

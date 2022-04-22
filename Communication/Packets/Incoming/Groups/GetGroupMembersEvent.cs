@@ -12,24 +12,24 @@ namespace Plus.Communication.Packets.Incoming.Groups
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int groupId = packet.PopInt();
-            int page = packet.PopInt();
-            string searchVal = packet.PopString();
-            int requestType = packet.PopInt();
+            var groupId = packet.PopInt();
+            var page = packet.PopInt();
+            var searchVal = packet.PopString();
+            var requestType = packet.PopInt();
 
-            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out Group group))
+            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
                 return;
 
-            List<UserCache> members = new List<UserCache>();
+            var members = new List<UserCache>();
 
             switch (requestType)
             {
                 case 0:
                     {
-                        List<int> memberIds = group.GetAllMembers;
-                        foreach (int id in memberIds.ToList())
+                        var memberIds = group.GetAllMembers;
+                        foreach (var id in memberIds.ToList())
                         {
-                            UserCache groupMember = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
+                            var groupMember = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
                             if (groupMember == null)
                                 continue;
 
@@ -41,10 +41,10 @@ namespace Plus.Communication.Packets.Incoming.Groups
 
                 case 1:
                     {
-                        List<int> adminIds = group.GetAdministrators;
-                        foreach (int id in adminIds.ToList())
+                        var adminIds = group.GetAdministrators;
+                        foreach (var id in adminIds.ToList())
                         {
-                            UserCache groupMember = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
+                            var groupMember = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
                             if (groupMember == null)
                                 continue;
 
@@ -56,10 +56,10 @@ namespace Plus.Communication.Packets.Incoming.Groups
 
                 case 2:
                     {
-                        List<int> requestIds = group.GetRequests;
-                        foreach (int id in requestIds.ToList())
+                        var requestIds = group.GetRequests;
+                        foreach (var id in requestIds.ToList())
                         {
-                            UserCache groupMember = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
+                            var groupMember = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
                             if (groupMember == null)
                                 continue;
 
@@ -73,8 +73,8 @@ namespace Plus.Communication.Packets.Incoming.Groups
             if (!string.IsNullOrEmpty(searchVal))
                 members = members.Where(x => x.Username.StartsWith(searchVal)).ToList();
 
-            int startIndex = ((page - 1) * 14 + 14);
-            int finishIndex = members.Count;
+            var startIndex = ((page - 1) * 14 + 14);
+            var finishIndex = members.Count;
 
             session.SendPacket(new GroupMembersComposer(group, members.Skip(startIndex).Take(finishIndex - startIndex).ToList(), members.Count, page, (group.CreatorId == session.GetHabbo().Id || group.IsAdmin(session.GetHabbo().Id)), requestType, searchVal));
         }

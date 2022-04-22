@@ -15,15 +15,15 @@ namespace Plus.HabboHotel.Catalog.Pets
         {
             if (_races.Count > 0)
                 _races.Clear();
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT * FROM `catalog_pet_races`");
-            DataTable data = dbClient.GetTable();
+            var data = dbClient.GetTable();
 
             if (data != null)
             {
                 foreach (DataRow row in data.Rows)
                 {
-                    PetRace race = new PetRace(Convert.ToInt32(row["raceid"]), Convert.ToInt32(row["color1"]), Convert.ToInt32(row["color2"]), (Convert.ToString(row["has1color"]) == "1"), (Convert.ToString(row["has2color"]) == "1"));
+                    var race = new PetRace(Convert.ToInt32(row["raceid"]), Convert.ToInt32(row["color1"]), Convert.ToInt32(row["color2"]), (Convert.ToString(row["has1color"]) == "1"), (Convert.ToString(row["has2color"]) == "1"));
                     if (!_races.Contains(race))
                         _races.Add(race);
                 }

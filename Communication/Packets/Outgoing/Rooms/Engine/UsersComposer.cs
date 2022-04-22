@@ -15,7 +15,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
             : base(ServerPacketHeader.UsersMessageComposer)
         {
             WriteInteger(users.Count);
-            foreach (RoomUser user in users.ToList())
+            foreach (var user in users.ToList())
             {
                 WriteUser(user);
             }
@@ -32,7 +32,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
         {
             if (!user.IsPet && !user.IsBot)
             {
-                Habbo habbo = user.GetClient().GetHabbo();
+                var habbo = user.GetClient().GetHabbo();
 
                 Group @group = null;
                 if (habbo != null)
@@ -174,7 +174,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
 
         public string PetFigureForType(int type)
         {
-            Random random = new Random();
+            var random = new Random();
 
             switch (type)
             {
@@ -182,7 +182,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 default:
                 case 60:
                     {
-                        int randomNumber = random.Next(1, 4);
+                        var randomNumber = random.Next(1, 4);
                         switch (randomNumber)
                         {
                             default:
@@ -201,7 +201,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Cat Figures.
                 case 1:
                     {
-                        int randomNumber = random.Next(1, 5);
+                        var randomNumber = random.Next(1, 5);
                         switch (randomNumber)
                         {
                             default:
@@ -222,7 +222,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Terrier Figures
                 case 2:
                     {
-                        int randomNumber = random.Next(1, 6);
+                        var randomNumber = random.Next(1, 6);
                         switch (randomNumber)
                         {
                             default:
@@ -245,7 +245,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Croco Figures
                 case 3:
                     {
-                        int randomNumber = random.Next(1, 5);
+                        var randomNumber = random.Next(1, 5);
                         switch (randomNumber)
                         {
                             default:
@@ -266,7 +266,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Bear Figures
                 case 4:
                     {
-                        int randomNumber = random.Next(1, 4);
+                        var randomNumber = random.Next(1, 4);
                         switch (randomNumber)
                         {
                             default:
@@ -285,7 +285,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Pig Figures
                 case 5:
                     {
-                        int randomNumber = random.Next(1, 7);
+                        var randomNumber = random.Next(1, 7);
                         switch (randomNumber)
                         {
                             default:
@@ -310,7 +310,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Lion Figures
                 case 6:
                     {
-                        int randomNumber = random.Next(1, 11);
+                        var randomNumber = random.Next(1, 11);
                         switch (randomNumber)
                         {
                             default:
@@ -343,7 +343,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Rhino Figures
                 case 7:
                     {
-                        int randomNumber = random.Next(1, 7);
+                        var randomNumber = random.Next(1, 7);
                         switch (randomNumber)
                         {
                             default:
@@ -368,7 +368,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Spider Figures
                 case 8:
                     {
-                        int randomNumber = random.Next(1, 13);
+                        var randomNumber = random.Next(1, 13);
                         switch (randomNumber)
                         {
                             default:
@@ -405,7 +405,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Turtle Figures
                 case 9:
                     {
-                        int randomNumber = random.Next(1, 9);
+                        var randomNumber = random.Next(1, 9);
                         switch (randomNumber)
                         {
                             default:
@@ -434,7 +434,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Chick Figures
                 case 10:
                     {
-                        int randomNumber = random.Next(1, 1);
+                        var randomNumber = random.Next(1, 1);
                         switch (randomNumber)
                         {
                             default:
@@ -447,7 +447,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Frog Figures
                 case 11:
                     {
-                        int randomNumber = random.Next(1, 13);
+                        var randomNumber = random.Next(1, 13);
                         switch (randomNumber)
                         {
                             default:
@@ -484,7 +484,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Dragon Figures
                 case 12:
                     {
-                        int randomNumber = random.Next(1, 6);
+                        var randomNumber = random.Next(1, 6);
                         switch (randomNumber)
                         {
                             default:
@@ -507,7 +507,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Monkey Figures
                 case 14:
                     {
-                        int randomNumber = random.Next(1, 14);
+                        var randomNumber = random.Next(1, 14);
                         switch (randomNumber)
                         {
                             default:
@@ -546,7 +546,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Horse Figures
                 case 15:
                     {
-                        int randomNumber = random.Next(1, 20);
+                        var randomNumber = random.Next(1, 20);
                         switch (randomNumber)
                         {
                             default:
@@ -597,7 +597,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Bunny Figures
                 case 17:
                     {
-                        int randomNumber = random.Next(1, 8);
+                        var randomNumber = random.Next(1, 8);
                         switch (randomNumber)
                         {
                             default:
@@ -624,7 +624,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Pigeon Figures (White & Black)
                 case 21:
                     {
-                        int randomNumber = random.Next(1, 3);
+                        var randomNumber = random.Next(1, 3);
                         switch (randomNumber)
                         {
                             default:
@@ -639,7 +639,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Demon Monkey Figures
                 case 23:
                     {
-                        int randomNumber = random.Next(1, 3);
+                        var randomNumber = random.Next(1, 3);
                         switch (randomNumber)
                         {
                             default:
@@ -656,7 +656,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Gnome Figures
                 case 26:
                     {
-                        int randomNumber = random.Next(1, 4);
+                        var randomNumber = random.Next(1, 4);
                         switch (randomNumber)
                         {
                             default:

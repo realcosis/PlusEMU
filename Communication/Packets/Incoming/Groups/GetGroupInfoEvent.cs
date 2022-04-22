@@ -8,10 +8,10 @@ namespace Plus.Communication.Packets.Incoming.Groups
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int groupId = packet.PopInt();
-            bool newWindow = packet.PopBoolean();
+            var groupId = packet.PopInt();
+            var newWindow = packet.PopBoolean();
 
-            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out Group group))
+            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
                 return;
 
             session.SendPacket(new GroupInfoComposer(group, session, newWindow));     

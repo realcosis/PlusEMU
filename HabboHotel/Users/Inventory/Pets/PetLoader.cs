@@ -10,10 +10,10 @@ namespace Plus.HabboHotel.Users.Inventory.Pets
     {
         public static List<Pet> GetPetsForUser(int userId)
         {
-            List<Pet> pets = new List<Pet>();
+            var pets = new List<Pet>();
 
             DataTable data = null;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("SELECT `id`,`user_id`,`room_id`,`name`,`x`,`y`,`z` FROM `bots` WHERE `user_id` = '" + userId + "' AND `room_id` = '0' AND `ai_type` = 'pet'");
             data = dbClient.GetTable();
 
@@ -22,7 +22,7 @@ namespace Plus.HabboHotel.Users.Inventory.Pets
                 foreach (DataRow row in data.Rows)
                 {
                     dbClient.SetQuery("SELECT `type`,`race`,`color`,`experience`,`energy`,`nutrition`,`respect`,`createstamp`,`have_saddle`,`anyone_ride`,`hairdye`,`pethair`,`gnome_clothing` FROM `bots_petdata` WHERE `id` = '" + Convert.ToInt32(row["id"]) + "' LIMIT 1");
-                    DataRow mRow = dbClient.GetRow();
+                    var mRow = dbClient.GetRow();
 
                     if (mRow != null)
                     {

@@ -17,8 +17,8 @@ namespace Plus.Communication.Packets.Incoming.Users
             if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
                 return;
 
-            int user = packet.PopInt();
-            int type = packet.PopInt();
+            var user = packet.PopInt();
+            var type = packet.PopInt();
 
             if (!session.GetHabbo().GetMessenger().FriendshipExists(user))
             {
@@ -37,7 +37,7 @@ namespace Plus.Communication.Packets.Incoming.Users
                 session.SendPacket(new BroadcastMessageAlertComposer("Sorry, you're limited to a total of 2000 relationships."));
                 return;
             }
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             if (type == 0)
             {
                 dbClient.SetQuery("SELECT `id` FROM `user_relationships` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND `target` = @target LIMIT 1");
@@ -54,7 +54,7 @@ namespace Plus.Communication.Packets.Incoming.Users
             {
                 dbClient.SetQuery("SELECT `id` FROM `user_relationships` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND `target` = @target LIMIT 1");
                 dbClient.AddParameter("target", user);
-                int id = dbClient.GetInteger();
+                var id = dbClient.GetInteger();
 
                 if (id > 0)
                 {
@@ -69,21 +69,21 @@ namespace Plus.Communication.Packets.Incoming.Users
                 dbClient.SetQuery("INSERT INTO `user_relationships` (`user_id`,`target`,`type`) VALUES ('" + session.GetHabbo().Id + "', @target, @type)");
                 dbClient.AddParameter("target", user);
                 dbClient.AddParameter("type", type);
-                int newId = Convert.ToInt32(dbClient.InsertQuery());
+                var newId = Convert.ToInt32(dbClient.InsertQuery());
 
                 if (!session.GetHabbo().Relationships.ContainsKey(user))
                     session.GetHabbo().Relationships.Add(user, new Relationship(newId, user, type));
             }
 
-            GameClient client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(user);
+            var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(user);
             if (client != null)
                 session.GetHabbo().GetMessenger().UpdateFriend(user, client, true);
             else
             {
-                Habbo habbo = PlusEnvironment.GetHabboById(user);
+                var habbo = PlusEnvironment.GetHabboById(user);
                 if (habbo != null)
                 {
-                    if (session.GetHabbo().GetMessenger().TryGetFriend(user, out MessengerBuddy buddy))
+                    if (session.GetHabbo().GetMessenger().TryGetFriend(user, out var buddy))
                         session.SendPacket(new FriendListUpdateComposer(session, buddy));
                 }
             }

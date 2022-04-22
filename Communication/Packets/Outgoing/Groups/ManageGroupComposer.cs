@@ -22,16 +22,16 @@ namespace Plus.Communication.Packets.Outgoing.Groups
 
             WriteInteger(5);
             
-            for (int x = 0; x < badgeParts.Length; x++)
+            for (var x = 0; x < badgeParts.Length; x++)
             {
-                string symbol = badgeParts[x];
+                var symbol = badgeParts[x];
 
                 WriteInteger((symbol.Length >= 6) ? int.Parse(symbol.Substring(0, 3)) : int.Parse(symbol.Substring(0, 2)));
                 WriteInteger((symbol.Length >= 6) ? int.Parse(symbol.Substring(3, 2)) : int.Parse(symbol.Substring(2, 2)));
                 WriteInteger(symbol.Length < 5 ? 0 : symbol.Length >= 6 ? int.Parse(symbol.Substring(5, 1)) : int.Parse(symbol.Substring(4, 1)));
             }
 
-            int i = 0;
+            var i = 0;
             while (i < (5 - badgeParts.Length))
             {
                 WriteInteger(0);

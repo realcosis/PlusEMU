@@ -16,14 +16,14 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
     {
         public void Parse(GameClient session, ClientPacket packet)
         {
-            int minCost = packet.PopInt();
-            int maxCost = packet.PopInt();
-            string searchQuery = packet.PopString();
-            int filterMode = packet.PopInt();
+            var minCost = packet.PopInt();
+            var maxCost = packet.PopInt();
+            var searchQuery = packet.PopString();
+            var filterMode = packet.PopInt();
 
 
             DataTable table;
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             string str;
             builder.Append("WHERE `state` = '1' AND `timestamp` >= " + PlusEnvironment.GetGame().GetCatalog().GetMarketplace().FormatTimestampString());
             if (minCost >= 0)
@@ -44,7 +44,7 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
                     break;
             }
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
 
                 dbClient.SetQuery("SELECT `offer_id`, `item_type`, `sprite_id`, `total_price`, `limited_number`,`limited_stack` FROM `catalog_marketplace_offers` " + builder + " " + str + " LIMIT 500");
@@ -70,10 +70,10 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
                 }
             }
 
-            Dictionary<int, MarketOffer> dictionary = new Dictionary<int, MarketOffer>();
-            Dictionary<int, int> dictionary2 = new Dictionary<int, int>();
+            var dictionary = new Dictionary<int, MarketOffer>();
+            var dictionary2 = new Dictionary<int, int>();
 
-            foreach (MarketOffer item in PlusEnvironment.GetGame().GetCatalog().GetMarketplace().MarketItems)
+            foreach (var item in PlusEnvironment.GetGame().GetCatalog().GetMarketplace().MarketItems)
             {
                 if (dictionary.ContainsKey(item.SpriteId))
                 {
@@ -92,7 +92,7 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
                             dictionary.Add(item.SpriteId, item);
                         }
 
-                        int num = dictionary2[item.SpriteId];
+                        var num = dictionary2[item.SpriteId];
                         dictionary2.Remove(item.SpriteId);
                         dictionary2.Add(item.SpriteId, num + 1);
                     }

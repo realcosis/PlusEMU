@@ -27,9 +27,9 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator
                 return;
             }
 
-            string url = @params[1];
+            var url = @params[1];
 
-            string message = CommandManager.MergeParams(@params, 2);
+            var message = CommandManager.MergeParams(@params, 2);
             PlusEnvironment.GetGame().GetClientManager().SendPacket(new RoomNotificationComposer("Habboon Hotel Alert!", message + "\r\n" + "- " + session.GetHabbo().Username, "", url, url));
             return;
         }

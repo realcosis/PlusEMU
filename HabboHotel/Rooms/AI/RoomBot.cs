@@ -104,7 +104,7 @@ namespace Plus.HabboHotel.Rooms.AI
         public void LoadRandomSpeech(List<RandomSpeech> speeches)
         {
             RandomSpeech = new List<RandomSpeech>();
-            foreach (RandomSpeech speech in speeches)
+            foreach (var speech in speeches)
             {
                 if (speech.BotId == BotId)
                     RandomSpeech.Add(speech);

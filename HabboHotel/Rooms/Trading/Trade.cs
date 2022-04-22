@@ -38,7 +38,7 @@ namespace Plus.HabboHotel.Rooms.Trading
 
         public void SendPacket(ServerPacket packet)
         {
-            foreach (TradeUser user in Users)
+            foreach (var user in Users)
             {
                 if (user == null || user.RoomUser == null || user.RoomUser.GetClient() == null)
                     continue;
@@ -49,7 +49,7 @@ namespace Plus.HabboHotel.Rooms.Trading
 
         public void RemoveAccepted()
         {
-            foreach (TradeUser user in Users)
+            foreach (var user in Users)
             {
                 if (user == null)
                     continue;
@@ -62,7 +62,7 @@ namespace Plus.HabboHotel.Rooms.Trading
         {
             get
             {
-                foreach (TradeUser user in Users)
+                foreach (var user in Users)
                 {
                     if (user == null)
                         continue;
@@ -79,7 +79,7 @@ namespace Plus.HabboHotel.Rooms.Trading
 
         public void EndTrade(int userId)
         {
-            foreach (TradeUser tradeUser in Users)
+            foreach (var tradeUser in Users)
             {
                 if (tradeUser == null || tradeUser.RoomUser == null)
                     continue;
@@ -93,7 +93,7 @@ namespace Plus.HabboHotel.Rooms.Trading
 
         public void Finish()
         {
-            foreach (TradeUser tradeUser in Users)
+            foreach (var tradeUser in Users)
             {
                 if (tradeUser == null)
                     continue;
@@ -109,7 +109,7 @@ namespace Plus.HabboHotel.Rooms.Trading
 
         public void RemoveTrade(int userId)
         {
-            TradeUser tradeUser = Users[0];
+            var tradeUser = Users[0];
 
             if (tradeUser.RoomUser.UserId != userId)
             {
@@ -125,14 +125,14 @@ namespace Plus.HabboHotel.Rooms.Trading
 
         public void ProcessItems()
         {
-            List<Item> userOne = Users[0].OfferedItems.Values.ToList();
-            List<Item> userTwo = Users[1].OfferedItems.Values.ToList();
+            var userOne = Users[0].OfferedItems.Values.ToList();
+            var userTwo = Users[1].OfferedItems.Values.ToList();
 
-            RoomUser roomUserOne = Users[0].RoomUser;
-            RoomUser roomUserTwo = Users[1].RoomUser;
+            var roomUserOne = Users[0].RoomUser;
+            var roomUserTwo = Users[1].RoomUser;
 
-            string logUserOne = "";
-            string logUserTwo = "";
+            var logUserOne = "";
+            var logUserTwo = "";
 
             if (roomUserOne == null || roomUserOne.GetClient() == null || roomUserOne.GetClient().GetHabbo() == null || roomUserOne.GetClient().GetHabbo().GetInventoryComponent() == null)
                 return;
@@ -140,9 +140,9 @@ namespace Plus.HabboHotel.Rooms.Trading
             if (roomUserTwo == null || roomUserTwo.GetClient() == null || roomUserTwo.GetClient().GetHabbo() == null || roomUserTwo.GetClient().GetHabbo().GetInventoryComponent() == null)
                 return;
 
-            foreach (Item item in userOne)
+            foreach (var item in userOne)
             {
-                Item I = roomUserOne.GetClient().GetHabbo().GetInventoryComponent().GetItem(item.Id);
+                var I = roomUserOne.GetClient().GetHabbo().GetInventoryComponent().GetItem(item.Id);
 
                 if (I == null)
                 {
@@ -151,9 +151,9 @@ namespace Plus.HabboHotel.Rooms.Trading
                 }
             }
 
-            foreach (Item item in userTwo)
+            foreach (var item in userTwo)
             {
-                Item I = roomUserTwo.GetClient().GetHabbo().GetInventoryComponent().GetItem(item.Id);
+                var I = roomUserTwo.GetClient().GetHabbo().GetInventoryComponent().GetItem(item.Id);
 
                 if (I == null)
                 {
@@ -161,8 +161,8 @@ namespace Plus.HabboHotel.Rooms.Trading
                     return;
                 }
             }
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-            foreach (Item item in userOne)
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            foreach (var item in userOne)
             {
                 logUserOne += item.Id + ";";
                 roomUserOne.GetClient().GetHabbo().GetInventoryComponent().RemoveItem(item.Id);
@@ -190,7 +190,7 @@ namespace Plus.HabboHotel.Rooms.Trading
                 }
             }
 
-            foreach (Item item in userTwo)
+            foreach (var item in userTwo)
             {
                 logUserTwo += item.Id + ";";
                 roomUserTwo.GetClient().GetHabbo().GetInventoryComponent().RemoveItem(item.Id);

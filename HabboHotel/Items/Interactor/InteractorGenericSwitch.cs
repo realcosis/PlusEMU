@@ -16,7 +16,7 @@ namespace Plus.HabboHotel.Items.Interactor
 
         public void OnTrigger(GameClient session, Item item, int request, bool hasRights)
         {
-            int modes = item.GetBaseItem().Modes - 1;
+            var modes = item.GetBaseItem().Modes - 1;
 
             if (session == null || !hasRights || modes <= 0)
             {
@@ -25,8 +25,8 @@ namespace Plus.HabboHotel.Items.Interactor
 
             PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.FurniSwitch);
 
-            int currentMode = 0;
-            int newMode = 0;
+            var currentMode = 0;
+            var newMode = 0;
 
             if (!int.TryParse(item.ExtraData, out currentMode))
             {
@@ -51,15 +51,15 @@ namespace Plus.HabboHotel.Items.Interactor
 
         public void OnWiredTrigger(Item item)
         {
-            int modes = item.GetBaseItem().Modes - 1;
+            var modes = item.GetBaseItem().Modes - 1;
 
             if (modes == 0)
             {
                 return;
             }
 
-            int currentMode = 0;
-            int newMode = 0;
+            var currentMode = 0;
+            var newMode = 0;
 
             if (string.IsNullOrEmpty(item.ExtraData))
                 item.ExtraData = "0";

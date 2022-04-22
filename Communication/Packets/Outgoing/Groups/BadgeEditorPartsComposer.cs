@@ -11,7 +11,7 @@ namespace Plus.Communication.Packets.Outgoing.Groups
           : base(ServerPacketHeader.BadgeEditorPartsMessageComposer)
         {
             WriteInteger(bases.Count);
-            foreach (GroupBadgeParts part in bases)
+            foreach (var part in bases)
             {
                 WriteInteger(part.Id);
                 WriteString(part.AssetOne);
@@ -19,7 +19,7 @@ namespace Plus.Communication.Packets.Outgoing.Groups
             }
 
             WriteInteger(symbols.Count);
-            foreach (GroupBadgeParts part in symbols)
+            foreach (var part in symbols)
             {
                 WriteInteger(part.Id);
                 WriteString(part.AssetOne);
@@ -27,21 +27,21 @@ namespace Plus.Communication.Packets.Outgoing.Groups
             }
 
             WriteInteger(baseColours.Count);
-            foreach (GroupColours colour in baseColours)
+            foreach (var colour in baseColours)
             {
                 WriteInteger(colour.Id);
                 WriteString(colour.Colour);
             }
 
             WriteInteger(symbolColours.Count);
-            foreach (GroupColours colour in symbolColours)
+            foreach (var colour in symbolColours)
             {
                 WriteInteger(colour.Id);
                 WriteString(colour.Colour);
             }
 
             WriteInteger(backgroundColours.Count);
-            foreach (GroupColours colour in backgroundColours)
+            foreach (var colour in backgroundColours)
             {
                 WriteInteger(colour.Id);
                 WriteString(colour.Colour);

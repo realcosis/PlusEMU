@@ -19,31 +19,31 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
             if (!session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
-            if (!room.GetRoomUserManager().TryGetPet(packet.PopInt(), out RoomUser petUser))
+            if (!room.GetRoomUserManager().TryGetPet(packet.PopInt(), out var petUser))
                 return;
 
             if (petUser.PetData == null || petUser.PetData.OwnerId != session.GetHabbo().Id)
                 return;
 
             //Fetch the furniture Id for the pets current saddle.
-            int saddleId = ItemUtility.GetSaddleId(petUser.PetData.Saddle);
+            var saddleId = ItemUtility.GetSaddleId(petUser.PetData.Saddle);
 
             //Remove the saddle from the pet.
             petUser.PetData.Saddle = 0;
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE `bots_petdata` SET `have_saddle` = '0' WHERE `id` = '" + petUser.PetData.PetId + "' LIMIT 1");
             }
 
             //Give the saddle back to the user.
-            if (!PlusEnvironment.GetGame().GetItemManager().GetItem(saddleId, out ItemData itemData))
+            if (!PlusEnvironment.GetGame().GetItemManager().GetItem(saddleId, out var itemData))
                 return;
 
-            Item item = ItemFactory.CreateSingleItemNullable(itemData, session.GetHabbo(), "", "");
+            var item = ItemFactory.CreateSingleItemNullable(itemData, session.GetHabbo(), "", "");
             if (item != null)
             {
                 session.GetHabbo().GetInventoryComponent().TryAddItem(item);

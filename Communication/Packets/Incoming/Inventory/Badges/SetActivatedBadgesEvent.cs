@@ -13,17 +13,17 @@ namespace Plus.Communication.Packets.Incoming.Inventory.Badges
         {
             session.GetHabbo().GetBadgeComponent().ResetSlots();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `user_badges` SET `badge_slot` = '0' WHERE `user_id` = @userId");
                 dbClient.AddParameter("userId", session.GetHabbo().Id);
                 dbClient.RunQuery();
             }
 
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
-                int slot = packet.PopInt();
-                string badge = packet.PopString();
+                var slot = packet.PopInt();
+                var badge = packet.PopString();
 
                 if (badge.Length == 0)
                     continue;
@@ -32,7 +32,7 @@ namespace Plus.Communication.Packets.Incoming.Inventory.Badges
                     return;
 
                 session.GetHabbo().GetBadgeComponent().GetBadge(badge).Slot = slot;
-                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                 dbClient.SetQuery("UPDATE `user_badges` SET `badge_slot` = @slot WHERE `badge_id` = @badge AND `user_id` = @userId LIMIT 1");
                 dbClient.AddParameter("slot", slot);
                 dbClient.AddParameter("badge", badge);
@@ -43,7 +43,7 @@ namespace Plus.Communication.Packets.Incoming.Inventory.Badges
             PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.ProfileBadge);
 
 
-            if (session.GetHabbo().InRoom && PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (session.GetHabbo().InRoom && PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 room.SendPacket(new HabboUserBadgesComposer(session.GetHabbo()));
             else
                 session.SendPacket(new HabboUserBadgesComposer(session.GetHabbo()));

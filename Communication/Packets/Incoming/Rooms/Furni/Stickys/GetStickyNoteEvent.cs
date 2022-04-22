@@ -12,10 +12,10 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.Stickys
             if (!session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
-            Item item = room.GetRoomItemHandler().GetItem(packet.PopInt());
+            var item = room.GetRoomItemHandler().GetItem(packet.PopInt());
             if (item == null || item.GetBaseItem().InteractionType != InteractionType.Postit)
                 return;
 

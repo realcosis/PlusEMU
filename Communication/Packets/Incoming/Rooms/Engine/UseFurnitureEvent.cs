@@ -18,15 +18,15 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
             if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
                 return;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out Room room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
                 return;
 
-            int itemId = packet.PopInt();
-            Item item = room.GetRoomItemHandler().GetItem(itemId);
+            var itemId = packet.PopInt();
+            var item = room.GetRoomItemHandler().GetItem(itemId);
             if (item == null)
                 return;
 
-            bool hasRights = room.CheckRights(session, false, true);
+            var hasRights = room.CheckRights(session, false, true);
 
             if (item.GetBaseItem().InteractionType == InteractionType.Banzaitele)
                 return;
@@ -41,7 +41,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
                 room.SendPacket(new ObjectUpdateComposer(item, room.OwnerId));
 
                 item.UpdateState();
-                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                 dbClient.RunQuery("UPDATE `room_items_toner` SET `enabled` = '" + room.TonerData.Enabled + "' LIMIT 1");
                 return;
             }
@@ -51,10 +51,10 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
                 session.SendPacket(new GnomeBoxComposer(item.Id));
             }
 
-            bool toggle = true;
+            var toggle = true;
             if (item.GetBaseItem().InteractionType == InteractionType.WfFloorSwitch1 || item.GetBaseItem().InteractionType == InteractionType.WfFloorSwitch2)
             {
-                RoomUser user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+                var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
                 if (user == null)
                     return;
 
@@ -64,7 +64,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
                 }
             }
 
-            int request = packet.PopInt();
+            var request = packet.PopInt();
 
             item.Interactor.OnTrigger(session, item, request, hasRights);
 

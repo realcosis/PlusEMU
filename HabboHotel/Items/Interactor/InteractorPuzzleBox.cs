@@ -21,7 +21,7 @@ namespace Plus.HabboHotel.Items.Interactor
         {
             if (session == null)
                 return;
-            RoomUser user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null)
             {
                 return;
@@ -35,7 +35,7 @@ namespace Plus.HabboHotel.Items.Interactor
                     user.MoveTo(item.GetX + 1, item.GetY);
                     return;
                 }
-                Room room = item.GetRoom();
+                var room = item.GetRoom();
                 var newPoint = new Point(0, 0);
                 if (user.RotBody == 4)
                 {
@@ -61,7 +61,7 @@ namespace Plus.HabboHotel.Items.Interactor
                     room.GetGameMap().ItemCanBePlaced(newPoint.X, newPoint.Y) &&
                     room.GetGameMap().CanRollItemHere(newPoint.X, newPoint.Y))
                 {
-                    double newZ = item.GetRoom().GetGameMap().SqAbsoluteHeight(newPoint.X, newPoint.Y);
+                    var newZ = item.GetRoom().GetGameMap().SqAbsoluteHeight(newPoint.X, newPoint.Y);
 
                     /*var mMessage = new ServerMessage();
                     mMessage.Init(Outgoing.ObjectOnRoller); // Cf

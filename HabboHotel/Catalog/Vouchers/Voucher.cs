@@ -22,7 +22,7 @@ namespace Plus.HabboHotel.Catalog.Vouchers
         public void UpdateUses()
         {
             CurrentUses += 1;
-            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.RunQuery("UPDATE `catalog_vouchers` SET `current_uses` = `current_uses` + '1' WHERE `voucher` = '" + _code + "' LIMIT 1");
         }
 

@@ -8,7 +8,7 @@ namespace Plus.Communication.Packets.Outgoing.Navigator
             : base(ServerPacketHeader.PopularRoomTagsResultMessageComposer)
         {
             WriteInteger(tags.Count);
-            foreach (KeyValuePair<string, int> tag in tags)
+            foreach (var tag in tags)
             {
                 WriteString(tag.Key);
                 WriteInteger(tag.Value);
