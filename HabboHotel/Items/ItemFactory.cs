@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 using Plus.HabboHotel.Users;
 
-using Plus.Database.Interfaces;
-
 namespace Plus.HabboHotel.Items
 {
     public static class ItemFactory

@@ -24,7 +24,6 @@ using Plus.Communication.Packets.Outgoing.Navigator;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Communication.Packets.Outgoing.Rooms.Session;
 using Plus.Communication.Packets.Outgoing.Handshake;
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.Rooms.Chat.Commands;
 using Plus.HabboHotel.Users.Permissions;
 using Plus.HabboHotel.Subscriptions;

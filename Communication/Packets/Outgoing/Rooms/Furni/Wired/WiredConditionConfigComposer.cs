@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Items.Wired;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired

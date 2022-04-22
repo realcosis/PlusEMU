@@ -3,7 +3,6 @@ using System.Collections.Concurrent;
 
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
-using Plus.HabboHotel.Rooms.Games.Teams;
 using Plus.Communication.Packets.Incoming;
 
 namespace Plus.HabboHotel.Items.Wired.Boxes.Effects

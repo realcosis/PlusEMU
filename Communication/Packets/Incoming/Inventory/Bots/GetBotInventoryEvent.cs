@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-
-using Plus.HabboHotel.Users.Inventory.Bots;
-using Plus.Communication.Packets.Outgoing.Inventory.Bots;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Bots;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Inventory.Bots

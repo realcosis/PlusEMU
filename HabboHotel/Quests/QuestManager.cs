@@ -7,8 +7,6 @@ using Plus.HabboHotel.GameClients;
 using Plus.Communication.Packets.Incoming;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Communication.Packets.Outgoing.Quests;
-
-using Plus.Database.Interfaces;
 using NLog;
 
 namespace Plus.HabboHotel.Quests

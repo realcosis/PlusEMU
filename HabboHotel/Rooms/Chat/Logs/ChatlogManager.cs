@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using System.Collections.Generic;
-using Plus.Database.Interfaces;
 
 namespace Plus.HabboHotel.Rooms.Chat.Logs
 {

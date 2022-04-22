@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.GameClients;
 using Plus.Communication.Packets.Outgoing.Moderation;
-using Plus.Database.Interfaces;
 
 namespace Plus.Communication.Packets.Incoming.Moderation
 {

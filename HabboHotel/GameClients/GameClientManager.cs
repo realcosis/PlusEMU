@@ -11,7 +11,6 @@ using Plus.Communication.Packets.Outgoing;
 using NLog;
 using System.Data;
 using Plus.Communication.Packets.Outgoing.Notifications;
-using Plus.Database.Interfaces;
 using System.Collections;
 using Plus.Communication.Packets.Outgoing.Handshake;
 using System.Diagnostics;

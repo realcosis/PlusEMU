@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Collections.Generic;
-using Plus.Database.Interfaces;
 
 namespace Plus.HabboHotel.Catalog.Clothing
 {

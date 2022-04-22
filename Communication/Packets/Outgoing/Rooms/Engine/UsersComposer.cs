@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Plus.HabboHotel.Rooms;
-using Plus.HabboHotel.Users;
 using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Rooms.AI;
 

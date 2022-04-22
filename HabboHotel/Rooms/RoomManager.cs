@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Plus.Core;
 using Plus.HabboHotel.GameClients;
 using System.Collections.Concurrent;
-using Plus.Database.Interfaces;
 using NLog;
 
 namespace Plus.HabboHotel.Rooms

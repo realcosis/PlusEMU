@@ -2,9 +2,7 @@
 using System.Drawing;
 
 using Plus.HabboHotel.GameClients;
-using Plus.HabboHotel.Rooms.AI.Speech;
 using Plus.Communication.Packets.Outgoing.Rooms.Chat;
-using Plus.HabboHotel.Rooms.AI.Responses;
 using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.AI.Types

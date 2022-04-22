@@ -1,5 +1,4 @@
-﻿using Plus.HabboHotel.Rooms;
-using System;
+﻿using System;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Avatar

@@ -1,14 +1,10 @@
 ﻿using System;
-using Plus.HabboHotel.Rooms;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
 using System.Data;
 using Plus.Communication.Packets.Outgoing;
-using Plus.HabboHotel.Rooms.AI;
 using Plus.HabboHotel.Rooms.AI.Speech;
-
-using Plus.Database.Interfaces;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots
 {

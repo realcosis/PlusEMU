@@ -3,7 +3,6 @@ using System.Data;
 
 using Plus.HabboHotel.Items;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
-using Plus.Database.Interfaces;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 {

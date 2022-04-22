@@ -9,7 +9,6 @@ using Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 using Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun;
 using Plus.HabboHotel.Rooms.Chat.Commands.Administrator;
 using Plus.Communication.Packets.Outgoing.Notifications;
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.Rooms.Chat.Commands.Events;
 using Plus.HabboHotel.Items.Wired;
 

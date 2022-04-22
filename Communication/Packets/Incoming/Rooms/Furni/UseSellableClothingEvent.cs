@@ -1,12 +1,6 @@
 ﻿using Plus.HabboHotel.Items;
-using Plus.HabboHotel.Rooms;
-using Plus.HabboHotel.Catalog.Clothing;
-
-
-
 using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
 using Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni

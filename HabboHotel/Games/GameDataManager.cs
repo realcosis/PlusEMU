@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Data;
 using System.Collections.Generic;
-
-using Plus.Database.Interfaces;
 using NLog;
 
 namespace Plus.HabboHotel.Games

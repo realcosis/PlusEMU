@@ -3,7 +3,6 @@ using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Items.Data.Toner;
 
 using Plus.Communication.Packets.Outgoing;
-using Plus.HabboHotel.Cache.Type;
 
 namespace Plus.HabboHotel.Items
 {

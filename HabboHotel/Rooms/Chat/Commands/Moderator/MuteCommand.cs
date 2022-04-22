@@ -1,8 +1,4 @@
-﻿using Plus.Database.Interfaces;
-using Plus.HabboHotel.Users;
-
-
-namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
+﻿namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 {
     class MuteCommand : IChatCommand
     {

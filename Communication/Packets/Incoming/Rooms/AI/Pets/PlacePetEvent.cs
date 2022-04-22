@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 
 using Plus.HabboHotel.Rooms.AI;
-using Plus.HabboHotel.Rooms;
 using Plus.Communication.Packets.Outgoing.Inventory.Pets;
 
 using Plus.HabboHotel.Rooms.AI.Speech;

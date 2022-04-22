@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Data;
-
 using Plus.HabboHotel.Rooms;
-
-using Plus.Database.Interfaces;
 
 
 namespace Plus.HabboHotel.Items

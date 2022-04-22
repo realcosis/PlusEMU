@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using Plus.HabboHotel.GameClients;
-using Plus.HabboHotel.Rooms;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.HabboHotel.Rooms.PathFinding;
 

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Collections.Generic;
-using Plus.Database.Interfaces;
-
 using NLog;
 
 namespace Plus.HabboHotel.Items.Televisions

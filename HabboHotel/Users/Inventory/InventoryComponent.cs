@@ -10,8 +10,6 @@ using Plus.HabboHotel.Users.Inventory.Pets;
 using Plus.HabboHotel.Users.Inventory.Bots;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 
-using Plus.Database.Interfaces;
-
 namespace Plus.HabboHotel.Users.Inventory
 {
     public class InventoryComponent

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Plus.Database.Interfaces;
-
 using NLog;
 
 namespace Plus.HabboHotel.Navigator

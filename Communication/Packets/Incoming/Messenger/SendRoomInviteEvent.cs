@@ -3,7 +3,6 @@
 using Plus.Utilities;
 using Plus.HabboHotel.GameClients;
 using Plus.Communication.Packets.Outgoing.Messenger;
-using Plus.Database.Interfaces;
 
 
 namespace Plus.Communication.Packets.Incoming.Messenger

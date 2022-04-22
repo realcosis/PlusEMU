@@ -7,7 +7,6 @@ using System.Threading;
 using Plus.Core;
 
 using Plus.HabboHotel;
-using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users;
 using Plus.Utilities;
 using NLog;
@@ -16,10 +15,7 @@ using MySqlConnector;
 using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Communication.Encryption.Keys;
 using Plus.Communication.Encryption;
-
-using Plus.Database.Interfaces;
 using Plus.Database;
-using Plus.HabboHotel.Cache.Type;
 using Plus.HabboHotel.Users.UserData;
 using Plus.Communication.Rcon;
 using Plus.Communication.ConnectionManager;

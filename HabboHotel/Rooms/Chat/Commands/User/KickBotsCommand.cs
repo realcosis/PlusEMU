@@ -3,8 +3,6 @@ using System.Linq;
 using Plus.HabboHotel.Users.Inventory.Bots;
 using Plus.Communication.Packets.Outgoing.Inventory.Bots;
 
-using Plus.Database.Interfaces;
-
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 {

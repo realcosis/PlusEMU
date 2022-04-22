@@ -3,8 +3,6 @@
 using Plus.HabboHotel.GameClients;
 using Plus.Communication.Packets.Outgoing.Inventory.Badges;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
-
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.Badges;
 
 namespace Plus.HabboHotel.Users.Badges

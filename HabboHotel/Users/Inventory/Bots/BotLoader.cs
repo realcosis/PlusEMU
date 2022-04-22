@@ -2,8 +2,6 @@
 using System.Data;
 using System.Collections.Generic;
 
-using Plus.Database.Interfaces;
-
 
 namespace Plus.HabboHotel.Users.Inventory.Bots
 {

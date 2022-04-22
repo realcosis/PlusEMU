@@ -1,5 +1,4 @@
-﻿using Plus.HabboHotel.Users;
-using Plus.Communication.Packets.Outgoing.Users;
+﻿using Plus.Communication.Packets.Outgoing.Users;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Users

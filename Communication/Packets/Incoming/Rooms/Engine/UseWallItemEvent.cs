@@ -1,7 +1,5 @@
 ﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
-using Plus.HabboHotel.Rooms;
-using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Items.Wired;
 
 

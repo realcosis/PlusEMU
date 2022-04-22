@@ -1,8 +1,4 @@
-﻿using Plus.Database.Interfaces;
-
-
-
-namespace Plus.HabboHotel.Rooms.Chat.Commands.User
+﻿namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 {
     class DisableGiftsCommand : IChatCommand
     {

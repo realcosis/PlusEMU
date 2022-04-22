@@ -1,5 +1,4 @@
 ﻿using Plus.Communication.Packets.Outgoing;
-using Plus.HabboHotel.Navigator;
 
 namespace Plus.HabboHotel.Rooms
 {

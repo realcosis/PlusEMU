@@ -1,7 +1,4 @@
-﻿using Plus.Database.Interfaces;
-
-
-namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
+﻿namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 {
     class DisableForcedFxCommand : IChatCommand
     {

@@ -1,5 +1,4 @@
-﻿using Plus.HabboHotel.Rooms;
-using Plus.Communication.Packets.Outgoing.Rooms.AI.Pets;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.AI.Pets;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets

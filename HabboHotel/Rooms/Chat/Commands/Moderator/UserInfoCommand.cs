@@ -3,8 +3,6 @@ using System.Text;
 using System.Data;
 using Plus.HabboHotel.GameClients;
 
-using Plus.Database.Interfaces;
-
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 {

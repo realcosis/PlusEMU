@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Linq;
-using System.Drawing;
 using Plus.Core;
 using Plus.HabboHotel.GameClients;
 using Plus.Utilities;
-using System.Collections.Generic;
 using Plus.HabboHotel.Rooms.PathFinding;
 
 namespace Plus.HabboHotel.Rooms.AI.Types

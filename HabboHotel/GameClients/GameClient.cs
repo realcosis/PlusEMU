@@ -1,7 +1,6 @@
 ﻿using System;
 using Plus.Core;
 using Plus.Communication.Packets.Incoming;
-using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 using Plus.Communication.Interfaces;
 using Plus.Communication.Packets.Outgoing.Sound;
@@ -15,10 +14,6 @@ using Plus.Communication.Packets.Outgoing.Inventory.Achievements;
 using Plus.Communication.Encryption.Crypto.Prng;
 using Plus.HabboHotel.Users.Messenger.FriendBar;
 using Plus.Communication.Packets.Outgoing.BuildersClub;
-
-using Plus.Database.Interfaces;
-using Plus.HabboHotel.Subscriptions;
-using Plus.HabboHotel.Permissions;
 using Plus.Communication.Packets.Outgoing.Notifications;
 using Plus.Communication.ConnectionManager;
 using Plus.HabboHotel.Users.UserData;

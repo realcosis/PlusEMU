@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Linq;
-using System.Collections;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -29,7 +28,6 @@ using Plus.HabboHotel.Rooms.Games.Football;
 using Plus.HabboHotel.Rooms.Games.Banzai;
 using Plus.HabboHotel.Rooms.Games.Teams;
 using Plus.HabboHotel.Rooms.AI.Speech;
-using Plus.Database.Interfaces;
 
 namespace Plus.HabboHotel.Rooms
 {

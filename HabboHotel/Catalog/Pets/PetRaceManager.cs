@@ -3,8 +3,6 @@ using System.Data;
 using System.Linq;
 using System.Collections.Generic;
 
-using Plus.Database.Interfaces;
-
 namespace Plus.HabboHotel.Catalog.Pets
 {
     public class PetRaceManager

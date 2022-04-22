@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
+﻿namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 {
     class RoomUnmuteCommand : IChatCommand
     {

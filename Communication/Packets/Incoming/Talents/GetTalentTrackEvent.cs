@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-
-using Plus.HabboHotel.Talents;
-using Plus.Communication.Packets.Outgoing.Talents;
+﻿using Plus.Communication.Packets.Outgoing.Talents;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Talents

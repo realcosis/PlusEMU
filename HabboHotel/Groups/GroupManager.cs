@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using Plus.HabboHotel.Users;
 using System.Collections.Concurrent;
-
-using Plus.Database.Interfaces;
 using NLog;
 
 namespace Plus.HabboHotel.Groups

@@ -1,5 +1,4 @@
 ﻿using Plus.HabboHotel.Rooms;
-using Plus.HabboHotel.Moderation;
 using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.HabboHotel.GameClients;
 

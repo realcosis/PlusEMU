@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using System.Collections.Generic;
-
 using NLog;
 using Plus.HabboHotel.Users;
 using Plus.Core;
-using Plus.HabboHotel.Cache.Type;
 
 namespace Plus.HabboHotel.Cache.Process
 {

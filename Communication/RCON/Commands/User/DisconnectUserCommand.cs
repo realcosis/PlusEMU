@@ -1,6 +1,4 @@
-﻿using Plus.HabboHotel.GameClients;
-
-namespace Plus.Communication.Rcon.Commands.User
+﻿namespace Plus.Communication.Rcon.Commands.User
 {
     class DisconnectUserCommand : IRconCommand
     {

@@ -1,6 +1,5 @@
 ﻿using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.HabboHotel.GameClients;
-using Plus.HabboHotel.Moderation;
 
 namespace Plus.Communication.Packets.Incoming.Moderation
 {

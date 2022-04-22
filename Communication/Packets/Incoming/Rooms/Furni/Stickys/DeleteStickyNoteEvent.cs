@@ -1,6 +1,4 @@
-﻿using Plus.Database.Interfaces;
-using Plus.HabboHotel.GameClients;
-using Plus.HabboHotel.Rooms;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni.Stickys

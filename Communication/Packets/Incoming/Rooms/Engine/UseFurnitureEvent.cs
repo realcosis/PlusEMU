@@ -4,8 +4,6 @@ using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Items.Wired;
 using Plus.Communication.Packets.Outgoing.Rooms.Furni;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
-
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.GameClients;
 
 

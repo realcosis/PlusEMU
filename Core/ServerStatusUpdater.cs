@@ -2,7 +2,6 @@
 using System.Threading;
 
 using NLog;
-using Plus.Database.Interfaces;
 
 namespace Plus.Core
 {

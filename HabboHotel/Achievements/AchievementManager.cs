@@ -6,8 +6,6 @@ using Plus.HabboHotel.GameClients;
 
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Communication.Packets.Outgoing.Inventory.Achievements;
-
-using Plus.Database.Interfaces;
 using NLog;
 
 namespace Plus.HabboHotel.Achievements

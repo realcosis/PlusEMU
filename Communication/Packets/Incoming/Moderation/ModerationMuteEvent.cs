@@ -1,7 +1,4 @@
-﻿using Plus.Database.Interfaces;
-using Plus.HabboHotel.Users;
-
-namespace Plus.Communication.Packets.Incoming.Moderation
+﻿namespace Plus.Communication.Packets.Incoming.Moderation
 {
     class ModerationMuteEvent : IPacketEvent
     {

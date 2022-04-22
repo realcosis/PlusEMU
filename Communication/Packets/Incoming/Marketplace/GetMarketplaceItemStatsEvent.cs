@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using Plus.Communication.Packets.Outgoing.Marketplace;
-using Plus.Database.Interfaces;
 
 namespace Plus.Communication.Packets.Incoming.Marketplace
 {

@@ -3,8 +3,6 @@
 
 using Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
 
-using Plus.Database.Interfaces;
-
 namespace Plus.HabboHotel.Users.Effects
 {
     public sealed class AvatarEffect

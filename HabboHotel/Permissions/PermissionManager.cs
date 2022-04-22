@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using NLog;
-using Plus.Database.Interfaces;
 using System.Data;
 using Plus.HabboHotel.Users;
 

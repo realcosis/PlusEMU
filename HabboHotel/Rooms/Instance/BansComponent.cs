@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 
 using Plus.Utilities;
-using Plus.Database.Interfaces;
 
 namespace Plus.HabboHotel.Rooms.Instance
 {

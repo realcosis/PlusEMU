@@ -1,6 +1,5 @@
 ﻿using System;
 using Plus.HabboHotel.GameClients;
-using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Quests;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Action

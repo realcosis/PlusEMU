@@ -1,5 +1,4 @@
 ﻿using NLog;
-using Plus.Database.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data;

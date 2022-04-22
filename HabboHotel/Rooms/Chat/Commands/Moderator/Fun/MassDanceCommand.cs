@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.GameClients;
 
 

@@ -1,6 +1,4 @@
-﻿using Plus.HabboHotel.Quests;
-using Plus.Database.Interfaces;
-using Plus.Communication.Packets.Outgoing.Quests;
+﻿using Plus.Communication.Packets.Outgoing.Quests;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Quests

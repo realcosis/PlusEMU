@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Linq;
 using Plus.Core;
 using Plus.HabboHotel.Items;
-using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Rooms.Games.Teams;
 using System.Collections.Concurrent;
 using Plus.HabboHotel.Rooms.PathFinding;

@@ -1,7 +1,5 @@
-﻿using Plus.HabboHotel.Items;
-using Plus.HabboHotel.Catalog.Utilities;
+﻿using Plus.HabboHotel.Catalog.Utilities;
 using Plus.Communication.Packets.Outgoing.Marketplace;
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.GameClients;
 
 

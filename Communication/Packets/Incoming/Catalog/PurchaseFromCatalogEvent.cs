@@ -3,23 +3,17 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 using Plus.Core;
-using Plus.HabboHotel.Catalog;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Users.Effects;
-using Plus.HabboHotel.Users.Inventory.Bots;
-
-using Plus.HabboHotel.Rooms.AI;
 using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.Communication.Packets.Outgoing.Inventory.Bots;
 using Plus.Communication.Packets.Outgoing.Inventory.Pets;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
-using Plus.Database.Interfaces;
 using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.HabboHotel.Catalog.Utilities;
-using Plus.HabboHotel.Badges;
 
 namespace Plus.Communication.Packets.Incoming.Catalog
 {

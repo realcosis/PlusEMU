@@ -1,5 +1,4 @@
 ﻿using Plus.HabboHotel.GameClients;
-using Plus.Database.Interfaces;
 
 namespace Plus.Communication.Packets.Incoming.Users
 {

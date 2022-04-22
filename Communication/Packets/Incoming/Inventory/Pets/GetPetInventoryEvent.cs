@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-
-using Plus.HabboHotel.Rooms.AI;
-using Plus.Communication.Packets.Outgoing.Inventory.Pets;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Pets;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Inventory.Pets

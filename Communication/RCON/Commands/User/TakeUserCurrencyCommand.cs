@@ -1,6 +1,4 @@
 ﻿using System;
-using Plus.HabboHotel.GameClients;
-using Plus.Database.Interfaces;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 
 namespace Plus.Communication.Rcon.Commands.User

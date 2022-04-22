@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Drawing;
 using System.Collections.Concurrent;
 using Plus.HabboHotel.Items;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;

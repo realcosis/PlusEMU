@@ -7,8 +7,6 @@ using System.Collections.Concurrent;
 
 using Plus.HabboHotel.Users.Clothing.Parts;
 
-using Plus.Database.Interfaces;
-
 namespace Plus.HabboHotel.Users.Clothing
 {
      public sealed class ClothingComponent

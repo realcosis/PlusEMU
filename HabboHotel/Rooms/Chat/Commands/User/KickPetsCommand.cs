@@ -1,9 +1,7 @@
 ﻿using System.Linq;
 using System.Drawing;
-using Plus.HabboHotel.Rooms.AI;
 using Plus.HabboHotel.GameClients;
 using Plus.Communication.Packets.Outgoing.Inventory.Pets;
-using Plus.Database.Interfaces;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 {

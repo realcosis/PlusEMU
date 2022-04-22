@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using Plus.HabboHotel.Rooms;
-
 using Plus.Communication.Packets.Outgoing.Rooms.AI.Pets;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse

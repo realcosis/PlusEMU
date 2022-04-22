@@ -1,7 +1,4 @@
-﻿using Plus.Database.Interfaces;
-
-
-namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator
+﻿namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator
 {
     class DeleteGroupCommand : IChatCommand
     {

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Plus.Database.Interfaces;
-
 namespace Plus.HabboHotel.Catalog.Marketplace
 {
     public class MarketplaceManager

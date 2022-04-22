@@ -6,8 +6,6 @@ using System.Collections.Concurrent;
 
 using NLog;
 
-using Plus.Database.Interfaces;
-
 namespace Plus.HabboHotel.Moderation
 {
     public sealed class ModerationManager

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 using NLog;
-using Plus.Database.Interfaces;
 
 namespace Plus.Core.Language
 {

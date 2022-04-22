@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Collections.Generic;
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.LandingView.Promotions;
 using NLog;
 

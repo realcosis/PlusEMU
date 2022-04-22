@@ -4,7 +4,6 @@ using System.Collections.Concurrent;
 using Plus.HabboHotel.Rooms;
 using Plus.Communication.Packets.Incoming;
 using Plus.Communication.Packets.Outgoing;
-using Plus.Database.Interfaces;
 
 namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 {

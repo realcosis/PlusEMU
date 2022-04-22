@@ -1,10 +1,7 @@
 ﻿using NLog;
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.Cache.Process;
-using Plus.HabboHotel.GameClients;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data;
 using Plus.HabboHotel.Cache.Type;
 
 namespace Plus.HabboHotel.Cache

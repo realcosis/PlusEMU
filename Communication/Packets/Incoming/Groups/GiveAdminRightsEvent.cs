@@ -1,7 +1,4 @@
-﻿using Plus.HabboHotel.Users;
-using Plus.HabboHotel.Rooms;
-using Plus.HabboHotel.Groups;
-using Plus.Communication.Packets.Outgoing.Groups;
+﻿using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.Communication.Packets.Outgoing.Rooms.Permissions;
 using Plus.HabboHotel.GameClients;
 

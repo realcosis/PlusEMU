@@ -4,7 +4,6 @@ using System.Data;
 using System.Collections.Generic;
 
 using NLog;
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.Rooms.AI.Responses;
 using Plus.HabboHotel.Rooms.AI;
 

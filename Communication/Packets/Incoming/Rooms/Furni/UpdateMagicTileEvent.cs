@@ -1,7 +1,4 @@
 ﻿using System;
-using Plus.HabboHotel.Rooms;
-using Plus.HabboHotel.Items;
-
 using Plus.Communication.Packets.Outgoing.Rooms.Furni;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.HabboHotel.GameClients;

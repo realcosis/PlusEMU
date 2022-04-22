@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using System.Collections.Generic;
-
 using Plus.HabboHotel.Groups;
 
 using Plus.Communication.Packets.Outgoing.Groups;

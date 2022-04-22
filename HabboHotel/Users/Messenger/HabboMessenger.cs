@@ -9,8 +9,6 @@ using Plus.HabboHotel.Quests;
 using Plus.Communication.Packets.Outgoing.Messenger;
 using Plus.Communication.Packets.Outgoing;
 using Plus.Utilities;
-using Plus.Database.Interfaces;
-using Plus.HabboHotel.Cache.Type;
 
 namespace Plus.HabboHotel.Users.Messenger
 {

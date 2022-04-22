@@ -17,7 +17,6 @@ using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing;
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.Rooms.PathFinding;
 
 namespace Plus.HabboHotel.Rooms

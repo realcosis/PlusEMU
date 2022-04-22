@@ -2,11 +2,7 @@
 using System.Data;
 using System.Linq;
 using System.Collections.Generic;
-
-using Plus.HabboHotel.Rooms;
-using Plus.HabboHotel.Users.Inventory.Bots;
 using Plus.Communication.Packets.Outgoing.Inventory.Bots;
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.Rooms.AI.Speech;
 using Plus.HabboHotel.Rooms.AI;
 

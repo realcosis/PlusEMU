@@ -1,7 +1,4 @@
-﻿using Plus.HabboHotel.Rooms;
-using Plus.HabboHotel.Users;
-using Plus.Communication.Packets.Outgoing.Rooms.Action;
-using Plus.Database.Interfaces;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Action;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Action

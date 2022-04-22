@@ -1,5 +1,4 @@
 ﻿using Plus.HabboHotel.Quests;
-using Plus.HabboHotel.Rooms;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.HabboHotel.GameClients;
 

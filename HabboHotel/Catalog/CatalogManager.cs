@@ -10,8 +10,6 @@ using Plus.HabboHotel.Catalog.Vouchers;
 using Plus.HabboHotel.Catalog.Marketplace;
 using Plus.HabboHotel.Catalog.Clothing;
 
-using Plus.Database.Interfaces;
-
 namespace Plus.HabboHotel.Catalog
 {
     public class CatalogManager

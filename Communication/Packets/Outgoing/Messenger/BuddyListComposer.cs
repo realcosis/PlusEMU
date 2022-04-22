@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 using Plus.HabboHotel.Users;
 using Plus.HabboHotel.Users.Messenger;
-using Plus.HabboHotel.Users.Relationships;
 
 namespace Plus.Communication.Packets.Outgoing.Messenger
 {

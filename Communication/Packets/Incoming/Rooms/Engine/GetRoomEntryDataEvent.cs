@@ -1,5 +1,4 @@
-﻿using Plus.HabboHotel.Rooms;
-using Plus.HabboHotel.Items.Wired;
+﻿using Plus.HabboHotel.Items.Wired;
 
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Communication.Packets.Outgoing.Rooms.Chat;

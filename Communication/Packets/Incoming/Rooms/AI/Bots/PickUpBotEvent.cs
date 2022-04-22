@@ -1,9 +1,6 @@
 ﻿using System;
-using Plus.HabboHotel.Rooms;
-
 using Plus.HabboHotel.Users.Inventory.Bots;
 using Plus.Communication.Packets.Outgoing.Inventory.Bots;
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots

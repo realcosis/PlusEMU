@@ -6,8 +6,6 @@ using Plus.HabboHotel.Catalog.Vouchers;
 using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 
-using Plus.Database.Interfaces;
-
 namespace Plus.Communication.Packets.Incoming.Catalog
 {
     public class RedeemVoucherEvent : IPacketEvent

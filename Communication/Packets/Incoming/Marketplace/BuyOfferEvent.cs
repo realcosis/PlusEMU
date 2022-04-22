@@ -11,8 +11,6 @@ using Plus.Communication.Packets.Outgoing.Marketplace;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 
-using Plus.Database.Interfaces;
-
 
 namespace Plus.Communication.Packets.Incoming.Marketplace
 {

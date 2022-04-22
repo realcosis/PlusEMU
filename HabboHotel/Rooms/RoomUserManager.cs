@@ -16,8 +16,6 @@ using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Communication.Packets.Outgoing.Rooms.Permissions;
 using Plus.Communication.Packets.Outgoing.Handshake;
 using Plus.HabboHotel.Rooms.Games.Teams;
-
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.Rooms.PathFinding;
 
 namespace Plus.HabboHotel.Rooms

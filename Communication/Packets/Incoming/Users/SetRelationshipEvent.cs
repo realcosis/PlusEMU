@@ -1,11 +1,7 @@
 ﻿using System;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Relationships;
-
-using Plus.HabboHotel.Users;
 using Plus.Communication.Packets.Outgoing.Messenger;
-using Plus.HabboHotel.Users.Messenger;
-using Plus.Database.Interfaces;
 using Plus.Communication.Packets.Outgoing.Moderation;
 
 namespace Plus.Communication.Packets.Incoming.Users

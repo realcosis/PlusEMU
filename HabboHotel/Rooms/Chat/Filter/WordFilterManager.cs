@@ -5,8 +5,6 @@ using System.Collections.Generic;
 
 using System.Text.RegularExpressions;
 
-using Plus.Database.Interfaces;
-
 namespace Plus.HabboHotel.Rooms.Chat.Filter
 {
     public sealed class WordFilterManager

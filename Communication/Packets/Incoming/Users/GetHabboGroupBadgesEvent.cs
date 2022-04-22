@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Plus.HabboHotel.Rooms;
-using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.GameClients;
 using Plus.Communication.Packets.Outgoing.Users;
 

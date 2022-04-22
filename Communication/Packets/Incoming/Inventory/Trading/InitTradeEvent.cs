@@ -1,8 +1,4 @@
-﻿using Plus.HabboHotel.Rooms;
-using Plus.HabboHotel.Rooms.Trading;
-using Plus.Communication.Packets.Outgoing.Inventory.Trading;
-
-using Plus.Database.Interfaces;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Trading;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Inventory.Trading

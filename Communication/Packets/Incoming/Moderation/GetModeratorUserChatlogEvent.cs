@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Data;
 using System.Collections.Generic;
-
-using Plus.HabboHotel.Users;
 using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.HabboHotel.Rooms.Chat.Logs;
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.GameClients;
 using Plus.Utilities;
 using Plus.HabboHotel.Rooms;

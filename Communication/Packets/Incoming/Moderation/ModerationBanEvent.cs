@@ -1,6 +1,4 @@
-﻿using Plus.Database.Interfaces;
-using Plus.HabboHotel.Users;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
 
 namespace Plus.Communication.Packets.Incoming.Moderation

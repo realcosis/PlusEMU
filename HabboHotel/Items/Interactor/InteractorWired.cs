@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items.Wired;
 using Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired;
 

@@ -3,7 +3,6 @@ using System.Data;
 using System.Collections.Generic;
 
 using Plus.HabboHotel.Items;
-using Plus.Database.Interfaces;
 
 namespace Plus.HabboHotel.Catalog
 {

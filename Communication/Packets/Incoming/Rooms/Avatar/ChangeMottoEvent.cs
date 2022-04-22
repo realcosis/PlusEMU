@@ -1,11 +1,8 @@
 ﻿using System;
 using Plus.Utilities;
-using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Quests;
 using Plus.HabboHotel.GameClients;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
-
-using Plus.Database.Interfaces;
 
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Avatar

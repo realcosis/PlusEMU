@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Linq;
-
-using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Quests;
 
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
-using Plus.Database.Interfaces;
 using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.HabboHotel.GameClients;

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using NLog;
 using Plus.Core.FigureData.Types;
 using System.Xml;
-using Plus.HabboHotel.Catalog.Clothing;
 using Plus.HabboHotel.Users.Clothing.Parts;
 using System.IO;
 

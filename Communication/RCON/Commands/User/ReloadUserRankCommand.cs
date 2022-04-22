@@ -1,6 +1,4 @@
 ﻿using Plus.Communication.Packets.Outgoing.Moderation;
-using Plus.Database.Interfaces;
-using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Rcon.Commands.User
 {

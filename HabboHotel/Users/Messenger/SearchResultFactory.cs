@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using Plus.Database.Interfaces;
 
 namespace Plus.HabboHotel.Users.Messenger
 {

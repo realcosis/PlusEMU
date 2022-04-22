@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.HabboHotel.Groups

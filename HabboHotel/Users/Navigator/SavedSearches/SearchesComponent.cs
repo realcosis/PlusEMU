@@ -2,7 +2,6 @@
 using System.Data;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using Plus.Database.Interfaces;
 
 namespace Plus.HabboHotel.Users.Navigator.SavedSearches
 {

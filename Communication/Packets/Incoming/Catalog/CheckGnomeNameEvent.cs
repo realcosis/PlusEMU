@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-
-using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Rooms.AI;
 using Plus.HabboHotel.Rooms.AI.Speech;
 using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
-
-using Plus.Database.Interfaces;
 using Plus.HabboHotel.Catalog.Utilities;
 using Plus.HabboHotel.GameClients;
 

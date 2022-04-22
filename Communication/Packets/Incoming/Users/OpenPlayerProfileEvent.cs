@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-
-using Plus.HabboHotel.Users;
-using Plus.HabboHotel.Groups;
-using Plus.Communication.Packets.Outgoing.Users;
-using Plus.Database.Interfaces;
+﻿using Plus.Communication.Packets.Outgoing.Users;
 using Plus.HabboHotel.GameClients;
 
 
