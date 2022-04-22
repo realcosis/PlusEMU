@@ -10,12 +10,13 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
     {
         public Room Instance { get; set; }
         public Item Item { get; set; }
-        public WiredBoxType Type { get { return WiredBoxType.EffectToggleFurniState; } }
+        public WiredBoxType Type => WiredBoxType.EffectToggleFurniState;
         public ConcurrentDictionary<int, Item> SetItems { get; set; }
         public int TickCount { get; set; }
         public string StringData { get; set; }
         public bool BoolData { get; set; }
-        public int Delay { get { return _delay; } set { _delay = value; TickCount = value; } }
+        public int Delay { get => _delay;
+            set { _delay = value; TickCount = value; } }
         public string ItemsData { get; set; }
 
         private long _next;

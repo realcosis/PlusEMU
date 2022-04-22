@@ -8,20 +8,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 {
     class UserInfoCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_user_info"; }
-        }
+        public string PermissionRequired => "command_user_info";
 
-        public string Parameters
-        {
-            get { return "%username%"; }
-        }
+        public string Parameters => "%username%";
 
-        public string Description
-        {
-            get { return "View another users profile information."; }
-        }
+        public string Description => "View another users profile information.";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

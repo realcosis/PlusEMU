@@ -5,20 +5,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
 {
     class SummonCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_summon"; }
-        }
+        public string PermissionRequired => "command_summon";
 
-        public string Parameters
-        {
-            get { return "%username%"; }
-        }
+        public string Parameters => "%username%";
 
-        public string Description
-        {
-            get { return "Bring another user to your current room."; }
-        }
+        public string Description => "Bring another user to your current room.";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

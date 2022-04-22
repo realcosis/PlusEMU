@@ -8,7 +8,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes
     {
         public Room Instance { get; set; }
         public Item Item { get; set; }
-        public WiredBoxType Type { get { return WiredBoxType.AddonRandomEffect; } }
+        public WiredBoxType Type => WiredBoxType.AddonRandomEffect;
         public ConcurrentDictionary<int, Item> SetItems { get; set; }
         public string StringData { get; set; }
         public bool BoolData { get; set; }

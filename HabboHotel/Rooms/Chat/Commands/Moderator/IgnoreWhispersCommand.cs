@@ -2,20 +2,11 @@
 {
     class IgnoreWhispersCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_ignore_whispers"; }
-        }
+        public string PermissionRequired => "command_ignore_whispers";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Allows you to ignore all of the whispers in the room, except from your own."; }
-        }
+        public string Description => "Allows you to ignore all of the whispers in the room, except from your own.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

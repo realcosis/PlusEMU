@@ -5,20 +5,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
 {
     class FacelessCommand :IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_faceless"; }
-        }
+        public string PermissionRequired => "command_faceless";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Allows you to go faceless!"; }
-        }
+        public string Description => "Allows you to go faceless!";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

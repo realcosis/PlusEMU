@@ -5,20 +5,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 {
     class UnmuteCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_unmute"; }
-        }
+        public string PermissionRequired => "command_unmute";
 
-        public string Parameters
-        {
-            get { return "%username%"; }
-        }
+        public string Parameters => "%username%";
 
-        public string Description
-        {
-            get { return "Unmute a currently muted user."; }
-        }
+        public string Description => "Unmute a currently muted user.";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
 {
     class UnFreezeCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_unfreeze"; }
-        }
+        public string PermissionRequired => "command_unfreeze";
 
-        public string Parameters
-        {
-            get { return "%username%"; }
-        }
+        public string Parameters => "%username%";
 
-        public string Description
-        {
-            get { return "Allow another user to walk again."; }
-        }
+        public string Description => "Allow another user to walk again.";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

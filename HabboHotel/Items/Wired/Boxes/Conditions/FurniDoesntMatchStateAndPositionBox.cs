@@ -13,7 +13,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
 
         public Item Item { get; set; }
 
-        public WiredBoxType Type { get { return WiredBoxType.ConditionDontMatchStateAndPosition; } }
+        public WiredBoxType Type => WiredBoxType.ConditionDontMatchStateAndPosition;
 
         public ConcurrentDictionary<int, Item> SetItems { get; set; }
 

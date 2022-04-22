@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator
 {
     class BubbleCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_bubble"; }
-        }
+        public string PermissionRequired => "command_bubble";
 
-        public string Parameters
-        {
-            get { return "%id%"; }
-        }
+        public string Parameters => "%id%";
 
-        public string Description
-        {
-            get { return "Use a custom bubble to chat with."; }
-        }
+        public string Description => "Use a custom bubble to chat with.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

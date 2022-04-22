@@ -8,20 +8,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 {
     class IpBanCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_ip_ban"; }
-        }
+        public string PermissionRequired => "command_ip_ban";
 
-        public string Parameters
-        {
-            get { return "%username%"; }
-        }
+        public string Parameters => "%username%";
 
-        public string Description
-        {
-            get { return "IP and account ban another user."; }
-        }
+        public string Description => "IP and account ban another user.";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

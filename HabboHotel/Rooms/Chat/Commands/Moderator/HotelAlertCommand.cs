@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 {
     class HotelAlertCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_hotel_alert"; }
-        }
+        public string PermissionRequired => "command_hotel_alert";
 
-        public string Parameters
-        {
-            get { return "%message%"; }
-        }
+        public string Parameters => "%message%";
 
-        public string Description
-        {
-            get { return "Send a message to the entire hotel."; }
-        }
+        public string Description => "Send a message to the entire hotel.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

@@ -2,20 +2,11 @@
 {
     class UnloadCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_unload"; }
-        }
+        public string PermissionRequired => "command_unload";
 
-        public string Parameters
-        {
-            get { return "%id%"; }
-        }
+        public string Parameters => "%id%";
 
-        public string Description
-        {
-            get { return "Unload the current room."; }
-        }
+        public string Description => "Unload the current room.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

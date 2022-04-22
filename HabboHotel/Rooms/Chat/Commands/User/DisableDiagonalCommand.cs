@@ -2,20 +2,11 @@
 {
     class DisableDiagonalCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_disable_diagonal"; }
-        }
+        public string PermissionRequired => "command_disable_diagonal";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Want to disable diagonal walking in your room? Type this command!"; }
-        }
+        public string Description => "Want to disable diagonal walking in your room? Type this command!";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

@@ -60,8 +60,8 @@ namespace Plus.HabboHotel.Rooms
 
         public RoomModel Model
         {
-            get { return _model; }
-            set { _model = value; }
+            get => _model;
+            set => _model = value;
         }
 
         public RoomData(int id, string caption, string modelName, string ownerName, int ownerId, string password, int score, string type, string access, int usersNow, int usersMax, int category, string description,
@@ -128,14 +128,14 @@ namespace Plus.HabboHotel.Rooms
 
         public RoomPromotion Promotion
         {
-            get { return _promotion; }
-            set { _promotion = value; }
+            get => _promotion;
+            set => _promotion = value;
         }
 
         public Group Group
         {
-            get { return _group; }
-            set { _group = value; }
+            get => _group;
+            set => _group = value;
         }
 
         public RoomData(RoomData data)
@@ -201,10 +201,7 @@ namespace Plus.HabboHotel.Rooms
             }
         }
 
-        public bool HasActivePromotion
-        {
-            get { return Promotion != null; }
-        }
+        public bool HasActivePromotion => Promotion != null;
 
         public void EndPromotion()
         {

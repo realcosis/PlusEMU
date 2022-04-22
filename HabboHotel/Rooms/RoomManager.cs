@@ -68,10 +68,7 @@ namespace Plus.HabboHotel.Rooms
             }
         }
 
-        public int Count
-        {
-            get { return _rooms.Count; }
-        }
+        public int Count => _rooms.Count;
 
         public void LoadModels()
         {

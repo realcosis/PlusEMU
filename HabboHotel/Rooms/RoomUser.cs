@@ -142,20 +142,11 @@ namespace Plus.HabboHotel.Rooms
         }
 
 
-        public Point Coordinate
-        {
-            get { return new Point(X, Y); }
-        }
+        public Point Coordinate => new Point(X, Y);
 
-        public bool IsPet
-        {
-            get { return (IsBot && BotData.IsPet); }
-        }
+        public bool IsPet => (IsBot && BotData.IsPet);
 
-        public int CurrentEffect
-        {
-            get { return GetClient().GetHabbo().Effects().CurrentEffect; }
-        }
+        public int CurrentEffect => GetClient().GetHabbo().Effects().CurrentEffect;
 
 
         public bool IsDancing
@@ -173,29 +164,25 @@ namespace Plus.HabboHotel.Rooms
 
         public bool IsTrading
         {
-            get { return _trading; }
-            set { _trading = value; }
+            get => _trading;
+            set => _trading = value;
         }
 
         public int TradePartner
         {
-            get { return _tradePartner; }
-            set { _tradePartner = value; }
+            get => _tradePartner;
+            set => _tradePartner = value;
         }
 
         public int TradeId
         {
-            get { return _tradeId; }
-            set { _tradeId = value; }
+            get => _tradeId;
+            set => _tradeId = value;
         }
 
 
-        public Dictionary<string, string> Statusses
-        {
-            get { return _statusses; }
-            //set { this._statusses = value; }
-        }
-
+        public Dictionary<string, string> Statusses => _statusses;
+        //set { this._statusses = value; }
 
         public bool NeedsAutokick
         {

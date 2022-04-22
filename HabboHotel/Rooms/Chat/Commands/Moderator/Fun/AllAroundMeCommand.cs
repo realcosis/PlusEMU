@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
 {
     class AllAroundMeCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_allaroundme"; }
-        }
+        public string PermissionRequired => "command_allaroundme";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Need some attention? Pull all of the users to you."; }
-        }
+        public string Description => "Need some attention? Pull all of the users to you.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

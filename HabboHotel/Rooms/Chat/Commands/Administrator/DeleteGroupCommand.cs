@@ -2,20 +2,11 @@
 {
     class DeleteGroupCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_delete_group"; }
-        }
+        public string PermissionRequired => "command_delete_group";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Delete a group from the database and cache."; }
-        }
+        public string Description => "Delete a group from the database and cache.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

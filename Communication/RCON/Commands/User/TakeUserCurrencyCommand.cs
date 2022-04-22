@@ -5,15 +5,9 @@ namespace Plus.Communication.Rcon.Commands.User
 {
     class TakeUserCurrencyCommand : IRconCommand
     {
-        public string Description
-        {
-            get { return "This command is used to take a specified amount of a specified currency from a user."; }
-        }
+        public string Description => "This command is used to take a specified amount of a specified currency from a user.";
 
-        public string Parameters
-        {
-            get { return "%userId% %currency% %amount%"; }
-        }
+        public string Parameters => "%userId% %currency% %amount%";
 
         public bool TryExecute(string[] parameters)
         {

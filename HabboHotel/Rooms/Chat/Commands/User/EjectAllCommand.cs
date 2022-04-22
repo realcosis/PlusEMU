@@ -5,20 +5,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 {
     class EjectAllCommand :IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_ejectall"; }
-        }
+        public string PermissionRequired => "command_ejectall";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Removes all of the items from the room."; }
-        }
+        public string Description => "Removes all of the items from the room.";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

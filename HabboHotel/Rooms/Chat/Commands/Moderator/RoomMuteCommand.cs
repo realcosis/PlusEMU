@@ -2,20 +2,11 @@
 {
     class RoomMuteCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_roommute"; }
-        }
+        public string PermissionRequired => "command_roommute";
 
-        public string Parameters
-        {
-            get { return "%message%"; }
-        }
+        public string Parameters => "%message%";
 
-        public string Description
-        {
-            get { return "Mute the room with a reason."; }
-        }
+        public string Description => "Mute the room with a reason.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

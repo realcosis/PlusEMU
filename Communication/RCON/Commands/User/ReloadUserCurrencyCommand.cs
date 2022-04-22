@@ -5,15 +5,9 @@ namespace Plus.Communication.Rcon.Commands.User
 {
     class ReloadUserCurrencyCommand : IRconCommand
     {
-        public string Description
-        {
-            get { return "This command is used to update the users currency from the database."; }
-        }
+        public string Description => "This command is used to update the users currency from the database.";
 
-        public string Parameters
-        {
-            get { return "%userId% %currency%"; }
-        }
+        public string Parameters => "%userId% %currency%";
 
         public bool TryExecute(string[] parameters)
         {

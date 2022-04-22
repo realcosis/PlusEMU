@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
 {
     class FollowCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_follow"; }
-        }
+        public string PermissionRequired => "command_follow";
 
-        public string Parameters
-        {
-            get { return "%username%"; }
-        }
+        public string Parameters => "%username%";
 
-        public string Description
-        {
-            get { return "Want to visit a specific user? Use this command!"; }
-        }
+        public string Description => "Want to visit a specific user? Use this command!";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

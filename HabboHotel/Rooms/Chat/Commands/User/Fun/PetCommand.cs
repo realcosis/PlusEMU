@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
 {
     class PetCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_pet"; }
-        }
+        public string PermissionRequired => "command_pet";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Allows you to transform into a pet.."; }
-        }
+        public string Description => "Allows you to transform into a pet..";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

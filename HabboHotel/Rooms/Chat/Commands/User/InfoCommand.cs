@@ -6,20 +6,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 {
     class InfoCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_info"; }
-        }
+        public string PermissionRequired => "command_info";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Displays generic information that everybody loves to see."; }
-        }
+        public string Description => "Displays generic information that everybody loves to see.";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

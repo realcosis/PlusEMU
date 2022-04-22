@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 {
     class SellRoomCommand : IChatCommand
     {
-        public string Description
-        {
-            get { return "Allows the user to sell their own room."; }
-        }
+        public string Description => "Allows the user to sell their own room.";
 
-        public string Parameters
-        {
-            get { return "%price%"; }
-        }
+        public string Parameters => "%price%";
 
-        public string PermissionRequired
-        {
-            get { return "command_sell_room"; }
-        }
+        public string PermissionRequired => "command_sell_room";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

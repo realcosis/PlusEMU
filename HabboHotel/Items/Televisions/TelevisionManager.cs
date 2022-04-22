@@ -41,13 +41,7 @@ namespace Plus.HabboHotel.Items.Televisions
         }
 
 
-        public ICollection<TelevisionItem> TelevisionList
-        {
-            get
-            {
-                return Televisions.Values;
-            }
-        }
+        public ICollection<TelevisionItem> TelevisionList => Televisions.Values;
 
         public bool TryGet(int itemId, out TelevisionItem televisionItem)
         {

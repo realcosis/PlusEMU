@@ -31,15 +31,9 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze
             _freezeBlocks = new ConcurrentDictionary<int, Item>();
         }
 
-        public bool GameIsStarted
-        {
-            get { return _gameStarted; }
-        }
+        public bool GameIsStarted => _gameStarted;
 
-        public ConcurrentDictionary<int, Item> ExitTeleports
-        {
-            get { return _exitTeleports; }
-        }
+        public ConcurrentDictionary<int, Item> ExitTeleports => _exitTeleports;
 
         public void AddExitTile(Item item)
         {

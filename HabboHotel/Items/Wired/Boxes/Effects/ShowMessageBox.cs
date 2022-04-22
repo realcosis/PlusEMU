@@ -13,7 +13,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public Item Item { get; set; }
 
-        public WiredBoxType Type { get { return WiredBoxType.EffectShowMessage; } }
+        public WiredBoxType Type => WiredBoxType.EffectShowMessage;
 
         public ConcurrentDictionary<int, Item> SetItems { get; set; }
 

@@ -6,20 +6,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
 {
     class SuperPushCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_super_push"; }
-        }
+        public string PermissionRequired => "command_super_push";
 
-        public string Parameters
-        {
-            get { return "%target%"; }
-        }
+        public string Parameters => "%target%";
 
-        public string Description
-        {
-            get { return "Superpush another user. (Pushes them 3 squares away)"; }
-        }
+        public string Description => "Superpush another user. (Pushes them 3 squares away)";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

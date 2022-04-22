@@ -171,36 +171,33 @@ namespace Plus.HabboHotel.Items
 
         public ItemData Data
         {
-            get { return _data; }
-            set { _data = value; }
+            get => _data;
+            set => _data = value;
         }
 
-        public Dictionary<int, ThreeDCoord> GetAffectedTiles
-        {
-            get { return _affectedPoints; }
-        }
+        public Dictionary<int, ThreeDCoord> GetAffectedTiles => _affectedPoints;
 
         public int GetX
         {
-            get { return _coordX; }
-            set { _coordX = value; }
+            get => _coordX;
+            set => _coordX = value;
         }
 
         public int GetY
         {
-            get { return _coordY; }
-            set { _coordY = value; }
+            get => _coordY;
+            set => _coordY = value;
         }
 
         public double GetZ
         {
-            get { return _coordZ; }
-            set { _coordZ = value; }
+            get => _coordZ;
+            set => _coordZ = value;
         }
 
         public bool UpdateNeeded
         {
-            get { return _updateNeeded; }
+            get => _updateNeeded;
             set
             {
                 if (value && GetRoom() != null)
@@ -209,15 +206,9 @@ namespace Plus.HabboHotel.Items
             }
         }
 
-        public bool IsRoller
-        {
-            get { return _mIsRoller; }
-        }
+        public bool IsRoller => _mIsRoller;
 
-        public Point Coordinate
-        {
-            get { return new Point(GetX, GetY); }
-        }
+        public Point Coordinate => new Point(GetX, GetY);
 
         public List<Point> GetCoords
         {
@@ -269,15 +260,9 @@ namespace Plus.HabboHotel.Items
             }
         }
 
-        public bool IsWallItem
-        {
-            get { return _mIsWallItem; }
-        }
+        public bool IsWallItem => _mIsWallItem;
 
-        public bool IsFloorItem
-        {
-            get { return _mIsFloorItem; }
-        }
+        public bool IsFloorItem => _mIsFloorItem;
 
         public Point SquareInFront
         {

@@ -2,20 +2,11 @@
 {
     class EmptyItems : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_empty_items"; }
-        }
+        public string PermissionRequired => "command_empty_items";
 
-        public string Parameters
-        {
-            get { return "%yes%"; }
-        }
+        public string Parameters => "%yes%";
 
-        public string Description
-        {
-            get { return "Is your inventory full? You can remove all items by typing this command."; }
-        }
+        public string Description => "Is your inventory full? You can remove all items by typing this command.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

@@ -1314,25 +1314,13 @@ namespace Plus.HabboHotel.Rooms
             return Math.Abs(x1 - x2) + Math.Abs(y1 - y2);
         }
 
-        public DynamicRoomModel Model
-        {
-            get { return _dynamicModel; }
-        }
+        public DynamicRoomModel Model => _dynamicModel;
 
-        public RoomModel StaticModel
-        {
-            get { return _model; }
-        }
+        public RoomModel StaticModel => _model;
 
-        public byte[,] EffectMap
-        {
-            get { return _userItemEffect; }
-        }
+        public byte[,] EffectMap => _userItemEffect;
 
-        public byte[,] GameMap
-        {
-            get { return _gameMap; }
-        }
+        public byte[,] GameMap => _gameMap;
 
         public void Dispose()
         {

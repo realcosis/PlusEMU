@@ -9,20 +9,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
     class BanCommand : IChatCommand
     {
 
-        public string PermissionRequired
-        {
-            get { return "command_ban"; }
-        }
+        public string PermissionRequired => "command_ban";
 
-        public string Parameters
-        {
-            get { return "%username% %length% %reason% "; }
-        }
+        public string Parameters => "%username% %length% %reason% ";
 
-        public string Description
-        {
-            get { return "Remove a toxic player from the hotel for a fixed amount of time."; ; }
-        }
+        public string Description => "Remove a toxic player from the hotel for a fixed amount of time.";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

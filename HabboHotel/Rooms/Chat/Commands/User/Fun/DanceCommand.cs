@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
 {
     class DanceCommand :IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_dance"; }
-        }
+        public string PermissionRequired => "command_dance";
 
-        public string Parameters
-        {
-            get { return "%DanceId%"; }
-        }
+        public string Parameters => "%DanceId%";
 
-        public string Description
-        {
-            get { return "Too lazy to dance the proper way? Do it like this!"; }
-        }
+        public string Description => "Too lazy to dance the proper way? Do it like this!";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

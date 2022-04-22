@@ -2,20 +2,11 @@
 {
     class MuteCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_mute"; }
-        }
+        public string PermissionRequired => "command_mute";
 
-        public string Parameters
-        {
-            get { return "%username% %time%"; }
-        }
+        public string Parameters => "%username% %time%";
 
-        public string Description
-        {
-            get { return "Mute another user for a certain amount of time."; }
-        }
+        public string Description => "Mute another user for a certain amount of time.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

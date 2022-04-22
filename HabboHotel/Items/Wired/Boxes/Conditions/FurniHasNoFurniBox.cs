@@ -12,7 +12,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
 
         public Item Item { get; set; }
 
-        public WiredBoxType Type { get { return WiredBoxType.ConditionFurniHasNoFurni; } }
+        public WiredBoxType Type => WiredBoxType.ConditionFurniHasNoFurni;
 
         public ConcurrentDictionary<int, Item> SetItems { get; set; }
 

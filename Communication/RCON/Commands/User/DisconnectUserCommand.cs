@@ -2,15 +2,9 @@
 {
     class DisconnectUserCommand : IRconCommand
     {
-        public string Description
-        {
-            get { return "This command is used to Disconnect a user."; }
-        }
+        public string Description => "This command is used to Disconnect a user.";
 
-        public string Parameters
-        {
-            get { return "%userId%"; }
-        }
+        public string Parameters => "%userId%";
 
         public bool TryExecute(string[] parameters)
         {

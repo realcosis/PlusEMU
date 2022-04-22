@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
 {
     class MakeSayCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_makesay"; }
-        }
+        public string PermissionRequired => "command_makesay";
 
-        public string Parameters
-        {
-            get { return "%username% %message%"; }
-        }
+        public string Parameters => "%username% %message%";
 
-        public string Description
-        {
-            get { return "Forces the specified user to say the specified message."; }
-        }
+        public string Description => "Forces the specified user to say the specified message.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

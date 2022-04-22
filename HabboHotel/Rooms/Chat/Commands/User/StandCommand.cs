@@ -2,20 +2,11 @@
 {
     class StandCommand :IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_stand"; }
-        }
+        public string PermissionRequired => "command_stand";
 
-        public string Parameters
-        {
-            get { return ""; ; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Allows you to stand up if not stood already."; }
-        }
+        public string Description => "Allows you to stand up if not stood already.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

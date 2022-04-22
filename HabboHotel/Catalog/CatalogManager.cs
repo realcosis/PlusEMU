@@ -165,10 +165,7 @@ namespace Plus.HabboHotel.Catalog
             return _botPresets.TryGetValue(itemId, out bot);
         }
 
-        public Dictionary<int, int> ItemOffers
-        {
-            get { return _itemOffers; }
-        }
+        public Dictionary<int, int> ItemOffers => _itemOffers;
 
         public bool TryGetPage(int pageId, out CatalogPage page)
         {

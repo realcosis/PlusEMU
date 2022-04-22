@@ -2,20 +2,11 @@
 {
     class SetMaxCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_setmax"; }
-        }
+        public string PermissionRequired => "command_setmax";
 
-        public string Parameters
-        {
-            get { return "%value%"; }
-        }
+        public string Parameters => "%value%";
 
-        public string Description
-        {
-            get { return "Set the visitor limit to the room."; }
-        }
+        public string Description => "Set the visitor limit to the room.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

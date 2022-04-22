@@ -124,10 +124,7 @@ namespace Plus.HabboHotel.Rooms.Instance
             return bans;
         }
 
-        public int Count
-        {
-            get { return _bans.Count; }
-        }
+        public int Count => _bans.Count;
 
         public void Cleanup()
         {

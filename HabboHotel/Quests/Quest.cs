@@ -29,10 +29,7 @@
             HasEnded = (timeLock >= Utilities.UnixTimestamp.GetNow() && timeLock > 0) ? true : false;
         }
 
-        public string ActionName
-        {
-            get { return QuestTypeUtillity.GetString(GoalType); }
-        }
+        public string ActionName => QuestTypeUtillity.GetString(GoalType);
 
         public bool IsCompleted(int progress)
         {

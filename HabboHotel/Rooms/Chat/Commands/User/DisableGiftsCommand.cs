@@ -2,20 +2,11 @@
 {
     class DisableGiftsCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_disable_gifts"; }
-        }
+        public string PermissionRequired => "command_disable_gifts";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Allows you to disable the ability to receive gifts or to enable the ability to receive gifts."; }
-        }
+        public string Description => "Allows you to disable the ability to receive gifts or to enable the ability to receive gifts.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

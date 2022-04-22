@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
 {
     class EnableCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_enable"; }
-        }
+        public string PermissionRequired => "command_enable";
 
-        public string Parameters
-        {
-            get { return "%EffectId%"; }
-        }
+        public string Parameters => "%EffectId%";
 
-        public string Description
-        {
-            get { return "Gives you the ability to set an effect on your user!"; }
-        }
+        public string Description => "Gives you the ability to set an effect on your user!";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

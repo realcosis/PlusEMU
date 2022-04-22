@@ -2,20 +2,11 @@
 {
     class SitCommand :IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_sit"; }
-        }
+        public string PermissionRequired => "command_sit";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Allows you to sit down in your current spot."; }
-        }
+        public string Description => "Allows you to sit down in your current spot.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

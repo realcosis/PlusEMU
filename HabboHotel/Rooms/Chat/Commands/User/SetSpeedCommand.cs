@@ -2,20 +2,11 @@
 {
     class SetSpeedCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_setspeed"; }
-        }
+        public string PermissionRequired => "command_setspeed";
 
-        public string Parameters
-        {
-            get { return "%value%"; }
-        }
+        public string Parameters => "%value%";
 
-        public string Description
-        {
-            get { return "Set the speed of the rollers in the current room."; }
-        }
+        public string Description => "Set the speed of the rollers in the current room.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

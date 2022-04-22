@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 {
     class DisconnectCommand :IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_disconnect"; }
-        }
+        public string PermissionRequired => "command_disconnect";
 
-        public string Parameters
-        {
-            get { return "%username%"; }
-        }
+        public string Parameters => "%username%";
 
-        public string Description
-        {
-            get { return "Disconnects another user from the hotel."; }
-        }
+        public string Description => "Disconnects another user from the hotel.";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

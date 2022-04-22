@@ -5,20 +5,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 {
     class RoomCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_room"; }
-        }
+        public string PermissionRequired => "command_room";
 
-        public string Parameters
-        {
-            get { return "push/pull/enables/respect"; }
-        }
+        public string Parameters => "push/pull/enables/respect";
 
-        public string Description
-        {
-            get { return "Gives you the ability to enable or disable basic room commands."; }
-        }
+        public string Description => "Gives you the ability to enable or disable basic room commands.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

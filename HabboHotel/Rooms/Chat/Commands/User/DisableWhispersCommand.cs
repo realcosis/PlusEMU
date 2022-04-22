@@ -2,20 +2,11 @@
 {
     class DisableWhispersCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_disable_whispers"; }
-        }
+        public string PermissionRequired => "command_disable_whispers";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Allows you to enable or disable the ability to receive whispers."; }
-        }
+        public string Description => "Allows you to enable or disable the ability to receive whispers.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

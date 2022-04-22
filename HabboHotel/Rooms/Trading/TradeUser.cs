@@ -17,21 +17,18 @@ namespace Plus.HabboHotel.Rooms.Trading
             _offeredItems = new Dictionary<int, Item>();
         }
 
-        public RoomUser RoomUser
-        {
-            get { return _user; }
-        }
+        public RoomUser RoomUser => _user;
 
         public bool HasAccepted
         {
-            get { return _accepted; }
-            set { _accepted = value; }
+            get => _accepted;
+            set => _accepted = value;
         }
 
         public Dictionary<int, Item> OfferedItems
         {
-            get { return _offeredItems; }
-            set { _offeredItems = value; }
+            get => _offeredItems;
+            set => _offeredItems = value;
         }
     }
 }

@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
 {
     class MassEnableCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_massenable"; }
-        }
+        public string PermissionRequired => "command_massenable";
 
-        public string Parameters
-        {
-            get { return "%EffectId%"; }
-        }
+        public string Parameters => "%EffectId%";
 
-        public string Description
-        {
-            get { return "Give every user in the room a specific enable ID."; }
-        }
+        public string Description => "Give every user in the room a specific enable ID.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

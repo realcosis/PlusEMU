@@ -71,8 +71,8 @@ namespace Plus.HabboHotel.Rooms
 
         public bool GotRollers
         {
-            get { return _mGotRollers; }
-            set { _mGotRollers = value; }
+            get => _mGotRollers;
+            set => _mGotRollers = value;
         }
 
         public void QueueRoomItemUpdate(Item item)
@@ -862,29 +862,11 @@ namespace Plus.HabboHotel.Rooms
             return items;
         }
 
-        public ICollection<Item> GetFloor
-        {
-            get
-            {
-                return _floorItems.Values;
-            }
-        }
+        public ICollection<Item> GetFloor => _floorItems.Values;
 
-        public ICollection<Item> GetWall
-        {
-            get
-            {
-                return _wallItems.Values;
-            }
-        }
+        public ICollection<Item> GetWall => _wallItems.Values;
 
-        public IEnumerable<Item> GetWallAndFloor
-        {
-            get
-            {
-                return _floorItems.Values.Concat(_wallItems.Values);
-            }
-        }
+        public IEnumerable<Item> GetWallAndFloor => _floorItems.Values.Concat(_wallItems.Values);
 
 
         public bool CheckPosItem(Item item, int newX, int newY, int newRot)

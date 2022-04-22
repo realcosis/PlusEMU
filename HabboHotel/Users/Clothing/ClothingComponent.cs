@@ -80,10 +80,7 @@ namespace Plus.HabboHotel.Users.Clothing
             return _allClothing.TryGetValue(partId, out clothingPart);
         }
 
-        public ICollection<ClothingParts> GetClothingParts
-        {
-            get { return _allClothing.Values; }
-        }
+        public ICollection<ClothingParts> GetClothingParts => _allClothing.Values;
 
         /// <summary>
         /// Disposes the ClothingComponent.

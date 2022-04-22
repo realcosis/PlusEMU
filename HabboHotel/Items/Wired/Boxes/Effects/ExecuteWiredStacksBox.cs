@@ -12,7 +12,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public Item Item { get; set; }
 
-        public WiredBoxType Type { get { return WiredBoxType.EffectExecuteWiredStacks; } }
+        public WiredBoxType Type => WiredBoxType.EffectExecuteWiredStacks;
 
         public ConcurrentDictionary<int, Item> SetItems { get; set; }
 

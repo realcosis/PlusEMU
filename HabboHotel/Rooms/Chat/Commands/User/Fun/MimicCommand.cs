@@ -6,20 +6,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
 {
     class MimicCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_mimic"; }
-        }
+        public string PermissionRequired => "command_mimic";
 
-        public string Parameters
-        {
-            get { return "%username%"; }
-        }
+        public string Parameters => "%username%";
 
-        public string Description
-        {
-            get { return "Liking someone elses swag? Copy it!"; }
-        }
+        public string Description => "Liking someone elses swag? Copy it!";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

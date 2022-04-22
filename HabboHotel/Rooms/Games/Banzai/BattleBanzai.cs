@@ -33,10 +33,7 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai
             _banzaiTiles = new ConcurrentDictionary<int, Item>();
         }
 
-        public bool IsBanzaiActive
-        {
-            get { return _banzaiStarted; }
-        }
+        public bool IsBanzaiActive => _banzaiStarted;
 
         public void AddTile(Item item, int itemId)
         {

@@ -6,20 +6,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator
 {
     class UpdateCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_update"; }
-        }
+        public string PermissionRequired => "command_update";
 
-        public string Parameters
-        {
-            get { return "%variable%"; }
-        }
+        public string Parameters => "%variable%";
 
-        public string Description
-        {
-            get { return "Reload a specific part of the hotel."; }
-        }
+        public string Description => "Reload a specific part of the hotel.";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

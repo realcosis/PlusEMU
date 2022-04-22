@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
 {
     class FreezeCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_freeze"; }
-        }
+        public string PermissionRequired => "command_freeze";
 
-        public string Parameters
-        {
-            get { return "%username%"; }
-        }
+        public string Parameters => "%username%";
 
-        public string Description
-        {
-            get { return "Prevent another user from walking."; }
-        }
+        public string Description => "Prevent another user from walking.";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

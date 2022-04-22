@@ -5,20 +5,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 {
     class FlagMeCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_flagme"; }
-        }
+        public string PermissionRequired => "command_flagme";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Gives you the option to change your username."; }
-        }
+        public string Description => "Gives you the option to change your username.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

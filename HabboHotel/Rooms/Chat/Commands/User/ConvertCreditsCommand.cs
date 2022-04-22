@@ -8,20 +8,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 {
     class ConvertCreditsCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_convert_credits"; }
-        }
+        public string PermissionRequired => "command_convert_credits";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Convert your exchangeable furniture into actual credits."; }
-        }
+        public string Description => "Convert your exchangeable furniture into actual credits.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

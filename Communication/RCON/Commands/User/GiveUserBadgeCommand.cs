@@ -5,15 +5,9 @@ namespace Plus.Communication.Rcon.Commands.User
 {
     class GiveUserBadgeCommand : IRconCommand
     {
-        public string Description
-        {
-            get { return "This command is used to give a user a badge."; }
-        }
+        public string Description => "This command is used to give a user a badge.";
 
-        public string Parameters
-        {
-            get { return "%userId% %badgeId%"; }
-        }
+        public string Parameters => "%userId% %badgeId%";
 
         public bool TryExecute(string[] parameters)
         {

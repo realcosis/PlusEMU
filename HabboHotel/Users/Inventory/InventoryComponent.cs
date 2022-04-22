@@ -134,13 +134,7 @@ namespace Plus.HabboHotel.Users.Inventory
             return _wallItems.ContainsKey(id) ? _wallItems[id] : null;
         }
 
-        public IEnumerable<Item> GetItems
-        {
-            get
-            {
-                return _floorItems.Values.Concat(_wallItems.Values);
-            }
-        }
+        public IEnumerable<Item> GetItems => _floorItems.Values.Concat(_wallItems.Values);
 
         public Item AddNewItem(int id, int baseItem, string extraData, int group, bool toInsert, bool fromRoom, int limitedNumber, int limitedStack)
         {
@@ -329,12 +323,6 @@ namespace Plus.HabboHotel.Users.Inventory
             return _wallItems.Values;
         }
 
-        public IEnumerable<Item> GetWallAndFloor
-        {
-            get
-            {
-                return _floorItems.Values.Concat(_wallItems.Values);
-            }
-        }
+        public IEnumerable<Item> GetWallAndFloor => _floorItems.Values.Concat(_wallItems.Values);
     }
 }

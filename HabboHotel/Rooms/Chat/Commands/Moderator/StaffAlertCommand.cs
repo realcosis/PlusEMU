@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 {
     class StaffAlertCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_staff_alert"; }
-        }
+        public string PermissionRequired => "command_staff_alert";
 
-        public string Parameters
-        {
-            get { return "%message%"; }
-        }
+        public string Parameters => "%message%";
 
-        public string Description
-        {
-            get { return "Sends a message typed by you to the current online staff members."; }
-        }
+        public string Description => "Sends a message typed by you to the current online staff members.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

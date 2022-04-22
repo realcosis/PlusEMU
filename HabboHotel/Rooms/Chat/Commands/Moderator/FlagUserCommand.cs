@@ -5,20 +5,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 {
     class FlagUserCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_flaguser"; }
-        }
+        public string PermissionRequired => "command_flaguser";
 
-        public string Parameters
-        {
-            get { return "%username%"; }
-        }
+        public string Parameters => "%username%";
 
-        public string Description
-        {
-            get { return "Forces the specified user to change their name."; }
-        }
+        public string Description => "Forces the specified user to change their name.";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

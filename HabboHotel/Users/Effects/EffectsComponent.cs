@@ -119,15 +119,12 @@ namespace Plus.HabboHotel.Users.Effects
             _habbo.CurrentRoom.SendPacket(new AvatarEffectComposer(user.VirtualId, effectId));
         }
 
-        public ICollection<AvatarEffect> GetAllEffects
-        {
-            get { return _effects.Values; }
-        }
+        public ICollection<AvatarEffect> GetAllEffects => _effects.Values;
 
         public int CurrentEffect
         {
-            get { return _currentEffect; }
-            set { _currentEffect = value; }
+            get => _currentEffect;
+            set => _currentEffect = value;
         }
 
         /// <summary>

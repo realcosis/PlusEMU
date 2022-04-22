@@ -2,20 +2,11 @@
 {
     class ForceSitCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_forcesit"; }
-        }
+        public string PermissionRequired => "command_forcesit";
 
-        public string Parameters
-        {
-            get { return "%username%"; }
-        }
+        public string Parameters => "%username%";
 
-        public string Description
-        {
-            get { return "Force another to user sit."; }
-        }
+        public string Description => "Force another to user sit.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

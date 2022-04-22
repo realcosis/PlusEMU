@@ -2,20 +2,11 @@
 {
     class GotoCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_goto"; }
-        }
+        public string PermissionRequired => "command_goto";
 
-        public string Parameters
-        {
-            get { return "%room_id%"; }
-        }
+        public string Parameters => "%room_id%";
 
-        public string Description
-        {
-            get { return ""; }
-        }
+        public string Description => "";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

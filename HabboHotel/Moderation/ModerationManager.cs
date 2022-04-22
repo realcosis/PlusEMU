@@ -241,20 +241,11 @@ namespace Plus.HabboHotel.Moderation
             }
         }
 
-        public ICollection<string> UserMessagePresets
-        {
-            get { return _userPresets; }
-        }
+        public ICollection<string> UserMessagePresets => _userPresets;
 
-        public ICollection<string> RoomMessagePresets
-        {
-            get { return _roomPresets; }
-        }
+        public ICollection<string> RoomMessagePresets => _roomPresets;
 
-        public ICollection<ModerationTicket> GetTickets
-        {
-            get { return _modTickets.Values; }
-        }
+        public ICollection<ModerationTicket> GetTickets => _modTickets.Values;
 
         public Dictionary<string, List<ModerationPresetActions>> UserActionPresets
         {

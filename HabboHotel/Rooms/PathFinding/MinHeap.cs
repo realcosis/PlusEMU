@@ -11,10 +11,7 @@ namespace Plus.HabboHotel.Rooms.PathFinding
         private T[] _array;
         private T[] _tempArray;
 
-        public int Count
-        {
-            get { return _count; }
-        }
+        public int Count => _count;
 
         public MinHeap() : this(16) { }
 

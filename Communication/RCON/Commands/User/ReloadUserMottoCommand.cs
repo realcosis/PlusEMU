@@ -4,15 +4,9 @@ namespace Plus.Communication.Rcon.Commands.User
 {
     class ReloadUserMottoCommand : IRconCommand
     {
-        public string Description
-        {
-            get { return "This command is used to reload the users motto from the database."; }
-        }
+        public string Description => "This command is used to reload the users motto from the database.";
 
-        public string Parameters
-        {
-           get { return "%userId%"; }
-        }
+        public string Parameters => "%userId%";
 
         public bool TryExecute(string[] parameters)
         {

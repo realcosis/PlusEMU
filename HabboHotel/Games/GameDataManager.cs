@@ -50,12 +50,6 @@ namespace Plus.HabboHotel.Games
             return _games.Values.Count(x => x.Enabled);
         }
     
-        public ICollection<GameData> GameData
-        {
-            get
-            {
-                return _games.Values;
-            }
-        }
+        public ICollection<GameData> GameData => _games.Values;
     }
 }

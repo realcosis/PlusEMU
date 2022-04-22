@@ -5,20 +5,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 {
     class PickAllCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_pickall"; }
-        }
+        public string PermissionRequired => "command_pickall";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Picks up all of the furniture from your room."; }
-        }
+        public string Description => "Picks up all of the furniture from your room.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

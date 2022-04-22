@@ -2,20 +2,11 @@
 {
     class CoordsCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_coords"; }
-        }
+        public string PermissionRequired => "command_coords";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Used to get your current position within the room."; }
-        }
+        public string Description => "Used to get your current position within the room.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

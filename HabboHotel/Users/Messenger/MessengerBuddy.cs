@@ -20,33 +20,22 @@ namespace Plus.HabboHotel.Users.Messenger
         private Room _currentRoom;
         public string MUsername;
 
-        public int Id
-        {
-            get { return UserId; }
-        }
+        public int Id => UserId;
 
-        public bool IsOnline
-        {
-            get
-            {
-                return (Client != null && Client.GetHabbo() != null && Client.GetHabbo().GetMessenger() != null &&
-                        !Client.GetHabbo().GetMessenger().AppearOffline);
-            }
-        }
+        public bool IsOnline =>
+            (Client != null && Client.GetHabbo() != null && Client.GetHabbo().GetMessenger() != null &&
+             !Client.GetHabbo().GetMessenger().AppearOffline);
 
-        public bool InRoom
-        {
-            get { return (_currentRoom != null); }
-        }
+        public bool InRoom => (_currentRoom != null);
 
         public Room CurrentRoom
         {
-            get { return _currentRoom; }
-            set { _currentRoom = value; }
+            get => _currentRoom;
+            set => _currentRoom = value;
         }
 
         public MessengerBuddy(int userId, string pUsername, string pLook, string pMotto, int pLastOnline,
-                                bool pAppearOffline, bool pHideInroom)
+            bool pAppearOffline, bool pHideInroom)
         {
             this.UserId = userId;
             MUsername = pUsername;
@@ -67,12 +56,9 @@ namespace Plus.HabboHotel.Users.Messenger
         public void Serialize(ServerPacket message, GameClient session)
         {
             Relationship relationship = null;
-
-            if(session != null && session.GetHabbo() != null && session.GetHabbo().Relationships != null)
+            if (session.GetHabbo() != null && session.GetHabbo().Relationships != null)
                 relationship = session.GetHabbo().Relationships.FirstOrDefault(x => x.Value.UserId == Convert.ToInt32(UserId)).Value;
-
             var y = relationship == null ? 0 : relationship.Type;
-
             message.WriteInteger(UserId);
             message.WriteString(MUsername);
             message.WriteInteger(1);

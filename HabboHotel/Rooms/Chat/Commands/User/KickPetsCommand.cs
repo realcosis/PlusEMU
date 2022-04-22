@@ -7,20 +7,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 {
     class KickPetsCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_kickpets"; }
-        }
+        public string PermissionRequired => "command_kickpets";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Kick all of the pets from the room."; }
-        }
+        public string Description => "Kick all of the pets from the room.";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

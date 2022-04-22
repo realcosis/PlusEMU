@@ -5,20 +5,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
 {
     class AllEyesOnMeCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_alleyesonme"; }
-        }
+        public string PermissionRequired => "command_alleyesonme";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Want some attention? Make everyone face you!"; }
-        }
+        public string Description => "Want some attention? Make everyone face you!";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

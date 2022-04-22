@@ -16,10 +16,7 @@ namespace Plus.Communication.Packets.Incoming
 
         public int Id { get; private set; }
 
-        public int RemainingLength
-        {
-            get { return _body.Length - _pointer; }
-        }
+        public int RemainingLength => _body.Length - _pointer;
 
         public void Init(int messageId, byte[] body)
         {

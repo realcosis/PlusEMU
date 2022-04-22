@@ -1352,10 +1352,7 @@ namespace Plus.HabboHotel.Rooms
             }
         }
 
-        public int PetCount
-        {
-            get { return _petCount; }
-        }
+        public int PetCount => _petCount;
 
         public ICollection<RoomUser> GetUserList()
         {

@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 {
     class KickCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_kick"; }
-        }
+        public string PermissionRequired => "command_kick";
 
-        public string Parameters
-        {
-            get { return "%username% %reason%"; }
-        }
+        public string Parameters => "%username% %reason%";
 
-        public string Description
-        {
-            get { return "Kick a user from a room and send them a reason."; }
-        }
+        public string Description => "Kick a user from a room and send them a reason.";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

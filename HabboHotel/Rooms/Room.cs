@@ -109,24 +109,15 @@ namespace Plus.HabboHotel.Rooms
 
         public List<string> WordFilterList
         {
-            get { return _wordFilterList; }
-            set { _wordFilterList = value; }
+            get => _wordFilterList;
+            set => _wordFilterList = value;
         }
 
-        public int UserCount
-        {
-            get { return _roomUserManager.GetRoomUsers().Count; }
-        }
+        public int UserCount => _roomUserManager.GetRoomUsers().Count;
 
-        public int RoomId
-        {
-            get { return Id; }
-        }
+        public int RoomId => Id;
 
-        public bool CanTradeInRoom
-        {
-            get { return true; }
-        }
+        public bool CanTradeInRoom => true;
 
         public Gamemap GetGameMap()
         {

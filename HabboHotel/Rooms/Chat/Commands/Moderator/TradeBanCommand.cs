@@ -5,20 +5,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 {
     class TradeBanCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_trade_ban"; }
-        }
+        public string PermissionRequired => "command_trade_ban";
 
-        public string Parameters
-        {
-            get { return "%target% %length%"; }
-        }
+        public string Parameters => "%target% %length%";
 
-        public string Description
-        {
-            get { return "Trade ban another user."; }
-        }
+        public string Description => "Trade ban another user.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

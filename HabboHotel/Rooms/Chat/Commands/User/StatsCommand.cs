@@ -5,20 +5,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 {
     class StatsCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_stats"; }
-        }
+        public string PermissionRequired => "command_stats";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "View your current statistics."; }
-        }
+        public string Description => "View your current statistics.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

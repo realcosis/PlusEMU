@@ -5,27 +5,12 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Events
 {
     internal class EventAlertCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get
-            {
-                return "command_event_alert";
-            }
-        }
-        public string Parameters
-        {
-            get
-            {
-                return "";
-            }
-        }
-        public string Description
-        {
-            get
-            {
-                return "Send a hotel alert for your event!";
-            }
-        }
+        public string PermissionRequired => "command_event_alert";
+
+        public string Parameters => "";
+
+        public string Description => "Send a hotel alert for your event!";
+
         public void Execute(GameClient session, Room room, string[] @params)
         {
             if (session != null)

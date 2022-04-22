@@ -2,20 +2,11 @@
 {
     class DisableForcedFxCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_forced_effects"; }
-        }
+        public string PermissionRequired => "command_forced_effects";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Gives you the ability to ignore or allow forced effects."; }
-        }
+        public string Description => "Gives you the ability to ignore or allow forced effects.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

@@ -6,20 +6,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
 {
     class MassDanceCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_massdance"; }
-        }
+        public string PermissionRequired => "command_massdance";
 
-        public string Parameters
-        {
-            get { return "%DanceId%"; }
-        }
+        public string Parameters => "%DanceId%";
 
-        public string Description
-        {
-            get { return "Force everyone in the room to dance to a dance of your choice."; }
-        }
+        public string Description => "Force everyone in the room to dance to a dance of your choice.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

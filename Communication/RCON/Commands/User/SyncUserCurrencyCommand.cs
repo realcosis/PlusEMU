@@ -4,15 +4,9 @@ namespace Plus.Communication.Rcon.Commands.User
 {
     class SyncUserCurrencyCommand : IRconCommand
     {
-        public string Description
-        {
-            get { return "This command is used to sync a users specified currency to the database."; }
-        }
+        public string Description => "This command is used to sync a users specified currency to the database.";
 
-        public string Parameters
-        {
-            get { return "%userId% %currency%"; }
-        }
+        public string Parameters => "%userId% %currency%";
 
         public bool TryExecute(string[] parameters)
         {

@@ -24,10 +24,7 @@ namespace Plus.HabboHotel.Rooms.Games.Football
             _gameStarted = false;
         }
 
-        public bool GameIsStarted
-        {
-            get { return _gameStarted; }
-        }
+        public bool GameIsStarted => _gameStarted;
 
         public void StopGame(bool triggeredByUser = false)
         {

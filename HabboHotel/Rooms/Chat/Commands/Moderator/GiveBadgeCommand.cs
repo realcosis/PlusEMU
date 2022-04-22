@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
 {
     class GiveBadgeCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_give_badge"; }
-        }
+        public string PermissionRequired => "command_give_badge";
 
-        public string Parameters
-        {
-            get { return "%username% %badge%"; }
-        }
+        public string Parameters => "%username% %badge%";
 
-        public string Description
-        {
-            get { return "Give a badge to another user."; }
-        }
+        public string Description => "Give a badge to another user.";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

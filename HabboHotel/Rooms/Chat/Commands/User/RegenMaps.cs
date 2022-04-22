@@ -2,20 +2,11 @@
 {
     class RegenMaps : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_regen_maps"; }
-        }
+        public string PermissionRequired => "command_regen_maps";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Is the game map of your room broken? Fix it with this command!"; }
-        }
+        public string Description => "Is the game map of your room broken? Fix it with this command!";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

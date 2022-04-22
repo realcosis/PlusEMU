@@ -95,10 +95,7 @@ namespace Plus.HabboHotel.Rooms.AI
             TargetUser = 0;
         }
 
-        public bool IsPet
-        {
-            get { return (AiType == BotAiType.Pet); }
-        }
+        public bool IsPet => (AiType == BotAiType.Pet);
 
         public void LoadRandomSpeech(List<RandomSpeech> speeches)
         {
@@ -137,8 +134,8 @@ namespace Plus.HabboHotel.Rooms.AI
 
         public int ChatBubble
         {
-            get { return _chatBubble; }
-            set { _chatBubble = value; }
+            get => _chatBubble;
+            set => _chatBubble = value;
         }
     }
 }

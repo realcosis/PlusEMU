@@ -2,20 +2,11 @@
 {
     class DndCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_dnd"; }
-        }
+        public string PermissionRequired => "command_dnd";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Allows you to chose the option to enable or disable console messages."; }
-        }
+        public string Description => "Allows you to chose the option to enable or disable console messages.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

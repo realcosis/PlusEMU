@@ -4,20 +4,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator
 {
     class CarryCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_carry"; }
-        }
+        public string PermissionRequired => "command_carry";
 
-        public string Parameters
-        {
-            get { return "%ItemId%"; }
-        }
+        public string Parameters => "%ItemId%";
 
-        public string Description
-        {
-            get { return "Allows you to carry a hand item"; }
-        }
+        public string Description => "Allows you to carry a hand item";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

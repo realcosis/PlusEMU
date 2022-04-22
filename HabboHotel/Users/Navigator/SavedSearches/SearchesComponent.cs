@@ -35,10 +35,7 @@ namespace Plus.HabboHotel.Users.Navigator.SavedSearches
             return true;
         }
 
-        public ICollection<SavedSearch> Searches
-        {
-            get { return _savedSearches.Values; }
-        }
+        public ICollection<SavedSearch> Searches => _savedSearches.Values;
 
         public bool TryAdd(int id, SavedSearch search)
         {

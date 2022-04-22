@@ -2,15 +2,9 @@
 {
     class ReloadUserVipRankCommand : IRconCommand
     {
-        public string Description
-        {
-            get { return "This command is used to reload a users VIP rank and permissions."; }
-        }
+        public string Description => "This command is used to reload a users VIP rank and permissions.";
 
-        public string Parameters
-        {
-            get { return "%userId%"; }
-        }
+        public string Parameters => "%userId%";
 
         public bool TryExecute(string[] parameters)
         {

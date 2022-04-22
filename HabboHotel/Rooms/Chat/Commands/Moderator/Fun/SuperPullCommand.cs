@@ -5,20 +5,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
 {
     class SuperPullCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_super_pull"; }
-        }
+        public string PermissionRequired => "command_super_pull";
 
-        public string Parameters
-        {
-            get { return "%username%"; }
-        }
+        public string Parameters => "%username%";
 
-        public string Description
-        {
-            get { return "Pull another user to you, with no limits!"; }
-        }
+        public string Description => "Pull another user to you, with no limits!";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {

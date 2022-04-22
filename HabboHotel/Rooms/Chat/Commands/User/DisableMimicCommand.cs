@@ -2,20 +2,11 @@
 {
     class DisableMimicCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_disable_mimic"; }
-        }
+        public string PermissionRequired => "command_disable_mimic";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Allows you to disable the ability to be mimiced or to enable the ability to be mimiced."; }
-        }
+        public string Description => "Allows you to disable the ability to be mimiced or to enable the ability to be mimiced.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

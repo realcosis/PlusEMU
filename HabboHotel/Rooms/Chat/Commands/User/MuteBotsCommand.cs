@@ -2,20 +2,11 @@
 {
     class MuteBotsCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_mute_bots"; }
-        }
+        public string PermissionRequired => "command_mute_bots";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Ignore bot chat or enable it again."; }
-        }
+        public string Description => "Ignore bot chat or enable it again.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

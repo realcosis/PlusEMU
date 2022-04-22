@@ -2,20 +2,11 @@
 {
     class LayCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_lay"; }
-        }
+        public string PermissionRequired => "command_lay";
 
-        public string Parameters
-        {
-            get { return ""; }
-        }
+        public string Parameters => "";
 
-        public string Description
-        {
-            get { return "Allows you to lay down in the room, without needing a bed."; }
-        }
+        public string Description => "Allows you to lay down in the room, without needing a bed.";
 
         public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {

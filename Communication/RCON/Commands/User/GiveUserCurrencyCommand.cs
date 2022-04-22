@@ -5,15 +5,9 @@ namespace Plus.Communication.Rcon.Commands.User
 {
     class GiveUserCurrencyCommand : IRconCommand
     {
-        public string Description
-        {
-            get { return "This command is used to give a user a specified amount of a specified currency."; }
-        }
+        public string Description => "This command is used to give a user a specified amount of a specified currency.";
 
-        public string Parameters
-        {
-            get { return "%userId% %currency% %amount%"; }
-        }
+        public string Parameters => "%userId% %currency% %amount%";
 
         public bool TryExecute(string[] parameters)
         {

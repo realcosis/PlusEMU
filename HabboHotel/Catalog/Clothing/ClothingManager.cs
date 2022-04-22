@@ -39,9 +39,6 @@ namespace Plus.HabboHotel.Catalog.Clothing
             return _clothing.TryGetValue(itemId, out clothing);
         }
 
-        public ICollection<ClothingItem> GetClothingAllParts
-        {
-            get { return _clothing.Values; }
-        }
+        public ICollection<ClothingItem> GetClothingAllParts => _clothing.Values;
     }
 }

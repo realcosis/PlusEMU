@@ -14,7 +14,7 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public Item Item { get; set; }
 
-        public WiredBoxType Type { get { return WiredBoxType.EffectGiveUserBadge; } }
+        public WiredBoxType Type => WiredBoxType.EffectGiveUserBadge;
 
         public ConcurrentDictionary<int, Item> SetItems { get; set; }
 

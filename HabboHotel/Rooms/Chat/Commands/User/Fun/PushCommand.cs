@@ -6,20 +6,11 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun
 {
     class PushCommand : IChatCommand
     {
-        public string PermissionRequired
-        {
-            get { return "command_push"; }
-        }
+        public string PermissionRequired => "command_push";
 
-        public string Parameters
-        {
-            get { return "%target%"; }
-        }
+        public string Parameters => "%target%";
 
-        public string Description
-        {
-            get { return "Push another user."; }
-        }
+        public string Description => "Push another user.";
 
         public void Execute(GameClient session, Room room, string[] @params)
         {
