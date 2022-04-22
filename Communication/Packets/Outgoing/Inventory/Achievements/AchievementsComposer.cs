@@ -29,7 +29,7 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.Achievements
                 WriteInteger(targetLevelData.RewardPixels);
 
                 WriteInteger(0); // Type of reward
-                WriteInteger(userData != null ? userData.Progress : 0); // Current progress
+                WriteInteger(userData?.Progress ?? 0); // Current progress
                 
                 WriteBoolean(userData != null ? (userData.Level >= totalLevels) : false);// Set 100% completed(??)
                WriteString(achievement.Category); // Category

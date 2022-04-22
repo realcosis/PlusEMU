@@ -10,8 +10,8 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
               : base(ServerPacketHeader.ModeratorTicketChatlogMessageComposer)
         {
             WriteInteger(ticket.Id);
-            WriteInteger(ticket.Sender != null ? ticket.Sender.Id : 0);
-            WriteInteger(ticket.Reported != null ? ticket.Reported.Id : 0);
+            WriteInteger(ticket.Sender?.Id ?? 0);
+            WriteInteger(ticket.Reported?.Id ?? 0);
             WriteInteger(roomData.Id);
 
             WriteByte(1);

@@ -35,7 +35,7 @@ namespace Plus.Communication.Packets.Incoming.Moderation
                 return;
             }
 
-            message = message != null ? message : "No reason specified.";
+            message = message ?? "No reason specified.";
 
             using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {

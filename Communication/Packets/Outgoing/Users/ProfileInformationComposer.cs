@@ -34,7 +34,7 @@ namespace Plus.Communication.Packets.Outgoing.Users
                 WriteString(PlusEnvironment.GetGame().GetGroupManager().GetColourCode(group.Colour2, false));
                 WriteBoolean(habbo.GetStats().FavouriteGroupId == group.Id); // todo favs
                 WriteInteger(0);//what the fuck
-                WriteBoolean(group != null ? group.ForumEnabled : true);//HabboTalk
+                WriteBoolean(@group?.ForumEnabled ?? true);//HabboTalk
             }
 
             WriteInteger(Convert.ToInt32(PlusEnvironment.GetUnixTimestamp() - habbo.LastOnline)); // Last online

@@ -32,18 +32,18 @@ namespace Plus.Communication.Packets.Outgoing.Navigator
             {
                 WriteInteger(62);
 
-                WriteInteger(data.Group == null ? 0 : data.Group.Id);
+                WriteInteger(data.Group?.Id ?? 0);
                 WriteString(data.Group == null ? "" : data.Group.Name);
                 WriteString(data.Group == null ? "" : data.Group.Badge);
 
                 WriteString(data.Promotion != null ? data.Promotion.Name : "");
                 WriteString(data.Promotion != null ? data.Promotion.Description : "");
-                WriteInteger(data.Promotion != null ? data.Promotion.MinutesLeft : 0);
+                WriteInteger(data.Promotion?.MinutesLeft ?? 0);
             }
             else if (data.Group != null && data.Promotion == null)
             {
                 WriteInteger(58);
-                WriteInteger(data.Group == null ? 0 : data.Group.Id);
+                WriteInteger(data.Group?.Id ?? 0);
                 WriteString(data.Group == null ? "" : data.Group.Name);
                 WriteString(data.Group == null ? "" : data.Group.Badge);
             }
@@ -52,7 +52,7 @@ namespace Plus.Communication.Packets.Outgoing.Navigator
                 WriteInteger(60);
                 WriteString(data.Promotion != null ? data.Promotion.Name : "");
                 WriteString(data.Promotion != null ? data.Promotion.Description : "");
-                WriteInteger(data.Promotion != null ? data.Promotion.MinutesLeft : 0);
+                WriteInteger(data.Promotion?.MinutesLeft ?? 0);
             }
             else
             {

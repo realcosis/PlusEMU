@@ -33,7 +33,7 @@ namespace Plus.Communication.Packets.Outgoing.Messenger
                 WriteBoolean(true);
                 WriteBoolean(false);
                 WriteBoolean(false);//Pocket Habbo user.
-                WriteShort(relationship == null ? 0 : relationship.Type);
+                WriteShort(relationship?.Type ?? 0);
             }
         }
     }

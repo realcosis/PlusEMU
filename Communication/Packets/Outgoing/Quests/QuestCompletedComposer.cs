@@ -9,22 +9,22 @@ namespace Plus.Communication.Packets.Outgoing.Quests
             : base(ServerPacketHeader.QuestCompletedMessageComposer)
         {
             var amountInCat = PlusEnvironment.GetGame().GetQuestManager().GetAmountOfQuestsInCategory(quest.Category);
-            var number = quest == null ? amountInCat : quest.Number;
+            var number = quest?.Number ?? amountInCat;
             var userProgress = quest == null ? 0 : session.GetHabbo().GetQuestProgress(quest.Id);
 
            WriteString(quest.Category);
             WriteInteger(number); // Quest progress in this cat
             WriteInteger((quest.Name.Contains("xmas2012")) ? 1 : amountInCat); // Total quests in this cat
-            WriteInteger(quest == null ? 3 : quest.RewardType); // Reward type (1 = Snowflakes, 2 = Love hearts, 3 = Pixels, 4 = Seashells, everything else is pixels
-            WriteInteger(quest == null ? 0 : quest.Id); // Quest id
+            WriteInteger(quest?.RewardType ?? 3); // Reward type (1 = Snowflakes, 2 = Love hearts, 3 = Pixels, 4 = Seashells, everything else is pixels
+            WriteInteger(quest?.Id ?? 0); // Quest id
             WriteBoolean(quest == null ? false : session.GetHabbo().GetStats().QuestId == quest.Id); // Quest started
            WriteString(quest == null ? string.Empty : quest.ActionName);
            WriteString(quest == null ? string.Empty : quest.DataBit);
-            WriteInteger(quest == null ? 0 : quest.Reward);
+            WriteInteger(quest?.Reward ?? 0);
            WriteString(quest == null ? string.Empty : quest.Name);
             WriteInteger(userProgress); // Current progress
-            WriteInteger(quest == null ? 0 : quest.GoalData); // Target progress
-            WriteInteger(quest == null ? 0 : quest.TimeUnlock); // "Next quest available countdown" in seconds
+            WriteInteger(quest?.GoalData ?? 0); // Target progress
+            WriteInteger(quest?.TimeUnlock ?? 0); // "Next quest available countdown" in seconds
            WriteString("");
            WriteString("");
             WriteBoolean(true); // ?

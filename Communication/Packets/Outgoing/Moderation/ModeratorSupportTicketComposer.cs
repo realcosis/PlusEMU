@@ -17,15 +17,15 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
             WriteInteger(Convert.ToInt32((DateTime.Now - UnixTimestamp.FromUnixTimestamp(ticket.Timestamp)).TotalMilliseconds)); // This should fix the overflow?
             WriteInteger(ticket.Priority); // Priority
             WriteInteger(0);//??
-            WriteInteger(ticket.Sender == null ? 0 : ticket.Sender.Id); // Sender ID
+            WriteInteger(ticket.Sender?.Id ?? 0); // Sender ID
                                                                              //base.WriteInteger(1);
             WriteString(ticket.Sender == null ? string.Empty : ticket.Sender.Username); // Sender Name
-            WriteInteger(ticket.Reported == null ? 0 : ticket.Reported.Id); // Reported ID
+            WriteInteger(ticket.Reported?.Id ?? 0); // Reported ID
             WriteString(ticket.Reported == null ? string.Empty : ticket.Reported.Username); // Reported Name
-            WriteInteger(ticket.Moderator == null ? 0 : ticket.Moderator.Id); // Moderator ID
+            WriteInteger(ticket.Moderator?.Id ?? 0); // Moderator ID
             WriteString(ticket.Moderator == null ? string.Empty : ticket.Moderator.Username); // Mod Name
             WriteString(ticket.Issue); // Issue
-            WriteInteger(ticket.Room == null ? 0 : ticket.Room.Id); // Room Id
+            WriteInteger(ticket.Room?.Id ?? 0); // Room Id
             WriteInteger(0);
             {
                 // push String

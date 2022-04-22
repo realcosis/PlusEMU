@@ -542,7 +542,7 @@ namespace Plus.HabboHotel.Rooms
                     //Surely this can be *99 better? // TODO
                     var user = GetRoomUserByVirtualId(pet.VirtualId);
 
-                    dbClient.RunQuery("UPDATE `bots` SET room_id = " + pet.RoomId + ", x = " + (user != null ? user.X : 0) + ", Y = " + (user != null ? user.Y : 0) + ", Z = " + (user != null ? user.Z : 0) + " WHERE `id` = '" + pet.PetId + "' LIMIT 1");
+                    dbClient.RunQuery("UPDATE `bots` SET room_id = " + pet.RoomId + ", x = " + (user?.X ?? 0) + ", Y = " + (user?.Y ?? 0) + ", Z = " + (user?.Z ?? 0) + " WHERE `id` = '" + pet.PetId + "' LIMIT 1");
                     dbClient.RunQuery("UPDATE `bots_petdata` SET `experience` = '" + pet.Experience + "', `energy` = '" + pet.Energy + "', `nutrition` = '" + pet.Nutrition + "', `respect` = '" + pet.Respect + "' WHERE `id` = '" + pet.PetId + "' LIMIT 1");
                 }
 

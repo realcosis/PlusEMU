@@ -14,7 +14,7 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.Achievements
             WriteInteger(targetLevelData.Requirement); // Reward in Pixels
             WriteInteger(targetLevelData.RewardPixels); // Reward Ach Score
             WriteInteger(0); // ?
-            WriteInteger(userData != null ? userData.Progress : 0); // Current progress
+            WriteInteger(userData?.Progress ?? 0); // Current progress
             WriteBoolean(userData != null ? (userData.Level >= totalLevels) : false); // Set 100% completed(??)
            WriteString(achievement.Category); // Category
            WriteString(string.Empty);

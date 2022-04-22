@@ -27,7 +27,7 @@ namespace Plus.Communication.Packets.Outgoing.GameCenter
                 WriteInteger(targetLevelData.Requirement); // requirement
                 WriteInteger(targetLevelData.RewardPixels); // pixels
                 WriteInteger(0); // ach score
-                WriteInteger(userData != null ? userData.Progress : 0); // Current progress
+                WriteInteger(userData?.Progress ?? 0); // Current progress
                 WriteBoolean(userData != null ? (userData.Level >= ach.Levels.Count) : false); // Set 100% completed(??)
                WriteString(ach.Category);
                WriteString("basejump");

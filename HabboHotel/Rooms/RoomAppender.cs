@@ -49,7 +49,7 @@ namespace Plus.HabboHotel.Rooms
 
             if (data.Group != null)
             {
-                packet.WriteInteger(data.Group == null ? 0 : data.Group.Id);
+                packet.WriteInteger(data.Group?.Id ?? 0);
                 packet.WriteString(data.Group == null ? "" : data.Group.Name);
                 packet.WriteString(data.Group == null ? "" : data.Group.Badge);
             }
@@ -58,7 +58,7 @@ namespace Plus.HabboHotel.Rooms
             {
                 packet.WriteString(promotion != null ? promotion.Name : "");
                 packet.WriteString(promotion != null ? promotion.Description : "");
-                packet.WriteInteger(promotion != null ? promotion.MinutesLeft : 0);
+                packet.WriteInteger(promotion?.MinutesLeft ?? 0);
             }
         }
     }

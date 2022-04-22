@@ -30,7 +30,7 @@ namespace Plus.Communication.Packets.Outgoing.Groups
             WriteBoolean(@group.AdminOnlyDeco == 0); // Any user can place furni in home room
             WriteInteger(@group.CreatorId == session.GetHabbo().Id ? @group.RequestCount : @group.IsAdmin(session.GetHabbo().Id) ? @group.RequestCount : @group.IsMember(session.GetHabbo().Id) ? 0 : 0); // Pending users
             //base.WriteInteger(0);//what the fuck
-            WriteBoolean(@group != null ? @group.ForumEnabled : true);//HabboTalk.
+            WriteBoolean(@group?.ForumEnabled ?? true);//HabboTalk.
         }
     }
 }
