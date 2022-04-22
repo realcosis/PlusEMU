@@ -22,6 +22,7 @@ public static class Program
             .WithSingletonLifetime());
         collection.AddAssignableTo<IChatCommand>();
         collection.AddAssignableTo<IPacketEvent>();
+        collection.AddAssignableTo<IStartable>();
 
         var projectSolutionPath = Directory.GetCurrentDirectory();
         var configuration = new ConfigurationData(projectSolutionPath + "//Config//config.ini");

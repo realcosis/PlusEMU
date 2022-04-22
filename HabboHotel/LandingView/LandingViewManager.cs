@@ -5,12 +5,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using NLog;
+using Plus.Core;
 using Plus.Database;
 using Plus.HabboHotel.LandingView.Promotions;
 
 namespace Plus.HabboHotel.LandingView;
 
-public class LandingViewManager : ILandingViewManager
+public class LandingViewManager : ILandingViewManager, IStartable
 {
     private readonly IDatabase _database;
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.LandingView.LandingViewManager");
@@ -30,4 +31,5 @@ public class LandingViewManager : ILandingViewManager
     }
 
     public ICollection<Promotion> GetPromotionItems() => _promotionItems.Values;
+    public Task Start() => Reload();
 }

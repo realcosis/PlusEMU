@@ -65,8 +65,15 @@ public class PlusEnvironment : IPlusEnvironment
     private static readonly ConcurrentDictionary<int, Habbo> _usersCached = new();
 
     public static string SwfRevision = "";
+    private readonly IEnumerable<IStartable> _startableTasks;
 
-    public PlusEnvironment(ConfigurationData configurationData, IDatabase database, ILanguageManager languageManager, ISettingsManager settingsManager, IFigureDataManager figureDataManager, IGame game)
+    public PlusEnvironment(ConfigurationData configurationData,
+        IDatabase database,
+        ILanguageManager languageManager,
+        ISettingsManager settingsManager,
+        IFigureDataManager figureDataManager,
+        IGame game,
+        IEnumerable<IStartable> startableTasks)
     {
         _database = database;
         _configuration = configurationData;
@@ -74,6 +81,7 @@ public class PlusEnvironment : IPlusEnvironment
         _settingsManager = settingsManager;
         _figureManager = figureDataManager;
         _game = game;
+        _startableTasks = startableTasks;
     }
 
     public async Task<bool> Start()
@@ -123,6 +131,11 @@ public class PlusEnvironment : IPlusEnvironment
             _connectionManager = new ConnectionHandling(int.Parse(GetConfig().Data["game.tcp.port"]), int.Parse(GetConfig().Data["game.tcp.conlimit"]),
                 int.Parse(GetConfig().Data["game.tcp.conperip"]), GetConfig().Data["game.tcp.enablenagles"].ToLower() == "true");
             _connectionManager.Init();
+
+            // Allow services to self initialize
+            foreach (var task in _startableTasks)
+                await task.Start();
+
             await _game.Init();
             _game.StartGameLoop();
             var timeUsed = DateTime.Now - ServerStarted;

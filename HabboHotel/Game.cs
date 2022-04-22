@@ -65,7 +65,7 @@ public class Game : IGame
         _landingViewManager = landingViewManager;
     }
 
-    public async Task Init()
+    public Task Init()
     {
         _clientManager = new GameClientManager();
         _moderationManager = new ModerationManager();
@@ -89,7 +89,6 @@ public class Game : IGame
         _achievementManager.Init();
         _talentTrackManager = new TalentTrackManager();
         _talentTrackManager.Init();
-        _landingViewManager.Reload();
         _gameDataManager = new GameDataManager();
         _gameDataManager.Init();
         _globalUpdater = new ServerStatusUpdater();
@@ -105,6 +104,7 @@ public class Game : IGame
         _permissionManager.Init();
         _subscriptionManager = new SubscriptionManager();
         _subscriptionManager.Init();
+        return Task.CompletedTask;
     }
 
     public void StartGameLoop()
