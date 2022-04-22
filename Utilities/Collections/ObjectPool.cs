@@ -22,14 +22,14 @@ namespace Plus.Utilities.Collections
 
         public T GetObject()
         {
-            T Item;
-            if (_objects.TryTake(out Item)) { return Item; }
+            T item;
+            if (_objects.TryTake(out item)) { return item; }
             return _objectGenerator();
         }
 
-        public void PutObject(T Item)
+        public void PutObject(T item)
         {
-            _objects.Add(Item);
+            _objects.Add(item);
         }
     }
 }

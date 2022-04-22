@@ -4,22 +4,22 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
 {
     class ModeratorRoomInfoComposer : ServerPacket
     {
-        public ModeratorRoomInfoComposer(RoomData Data, bool OwnerInRoom)
+        public ModeratorRoomInfoComposer(RoomData data, bool ownerInRoom)
             : base(ServerPacketHeader.ModeratorRoomInfoMessageComposer)
         {
-            WriteInteger(Data.Id);
-            WriteInteger(Data.UsersNow);
-            WriteBoolean(OwnerInRoom); // owner in room
-            WriteInteger(Data.OwnerId);
-           WriteString(Data.OwnerName);
-            WriteBoolean(Data != null);
-           WriteString(Data.Name);
-           WriteString(Data.Description);
+            WriteInteger(data.Id);
+            WriteInteger(data.UsersNow);
+            WriteBoolean(ownerInRoom); // owner in room
+            WriteInteger(data.OwnerId);
+           WriteString(data.OwnerName);
+            WriteBoolean(data != null);
+           WriteString(data.Name);
+           WriteString(data.Description);
            
-            WriteInteger(Data.Tags.Count);
-            foreach (string Tag in Data.Tags)
+            WriteInteger(data.Tags.Count);
+            foreach (string tag in data.Tags)
             {
-               WriteString(Tag);
+               WriteString(tag);
             }
 
             WriteBoolean(false);

@@ -14,7 +14,7 @@ namespace Plus.HabboHotel.Rooms.AI
         public int AnyoneCanRide;
         public string Color;
         public double CreationStamp;
-        public PetDatabaseUpdateState DBState;
+        public PetDatabaseUpdateState DbState;
 
         public int Energy;
         public int HairDye;
@@ -31,36 +31,36 @@ namespace Plus.HabboHotel.Rooms.AI
         public int X;
         public int Y;
         public double Z;
-        public int experience;
+        public int Experience;
 
-        public int[] experienceLevels = new[] { 100, 200, 400, 600, 1000, 1300, 1800, 2400, 3200, 4300, 7200, 8500, 10100, 13300, 17500, 23000, 51900, 75000, 128000, 150000 };
+        public int[] ExperienceLevels = new[] { 100, 200, 400, 600, 1000, 1300, 1800, 2400, 3200, 4300, 7200, 8500, 10100, 13300, 17500, 23000, 51900, 75000, 128000, 150000 };
 
         public string GnomeClothing;
 
-        public Pet(int PetId, int OwnerId, int RoomId, string Name, int Type, string Race, string Color, int experience, int Energy, int Nutrition, int Respect, double CreationStamp, int X, int Y, double Z, int Saddle, int Anyonecanride, int Dye, int PetHer, string GnomeClothing)
+        public Pet(int petId, int ownerId, int roomId, string name, int type, string race, string color, int experience, int energy, int nutrition, int respect, double creationStamp, int x, int y, double z, int saddle, int anyonecanride, int dye, int petHer, string gnomeClothing)
         {
-            this.PetId = PetId;
-            this.OwnerId = OwnerId;
-            this.RoomId = RoomId;
-            this.Name = Name;
-            this.Type = Type;
-            this.Race = Race;
-            this.Color = Color;
-            this.experience = experience;
-            this.Energy = Energy;
-            this.Nutrition = Nutrition;
-            this.Respect = Respect;
-            this.CreationStamp = CreationStamp;
-            this.X = X;
-            this.Y = Y;
-            this.Z = Z;
+            this.PetId = petId;
+            this.OwnerId = ownerId;
+            this.RoomId = roomId;
+            this.Name = name;
+            this.Type = type;
+            this.Race = race;
+            this.Color = color;
+            this.Experience = experience;
+            this.Energy = energy;
+            this.Nutrition = nutrition;
+            this.Respect = respect;
+            this.CreationStamp = creationStamp;
+            this.X = x;
+            this.Y = y;
+            this.Z = z;
             PlacedInRoom = false;
-            DBState = PetDatabaseUpdateState.Updated;
-            this.Saddle = Saddle;
-            AnyoneCanRide = Anyonecanride;
-            PetHair = PetHer;
-            HairDye = Dye;
-            this.GnomeClothing = GnomeClothing;
+            DbState = PetDatabaseUpdateState.Updated;
+            this.Saddle = saddle;
+            AnyoneCanRide = anyonecanride;
+            PetHair = petHer;
+            HairDye = dye;
+            this.GnomeClothing = gnomeClothing;
         }
 
         public void OnRespect()
@@ -68,20 +68,20 @@ namespace Plus.HabboHotel.Rooms.AI
             Respect++;
             Room.SendPacket(new RespectPetNotificationMessageComposer(this));
 
-            if (DBState != PetDatabaseUpdateState.NeedsInsert)
-                DBState = PetDatabaseUpdateState.NeedsUpdate;
+            if (DbState != PetDatabaseUpdateState.NeedsInsert)
+                DbState = PetDatabaseUpdateState.NeedsUpdate;
 
-            if (experience <= 150000)
+            if (Experience <= 150000)
                 Addexperience(10);
         }
 
         public void Addexperience(int amount)
         {
-            experience = experience + amount;
+            Experience = Experience + amount;
 
-            if (experience > 150000)
+            if (Experience > 150000)
             {
-                experience = 150000;
+                Experience = 150000;
 
                 if (Room != null)
                     Room.SendPacket(new AddExperiencePointsComposer(PetId, VirtualId, amount));
@@ -89,39 +89,39 @@ namespace Plus.HabboHotel.Rooms.AI
                 return;
             }
 
-            if (DBState != PetDatabaseUpdateState.NeedsInsert)
-                DBState = PetDatabaseUpdateState.NeedsUpdate;
+            if (DbState != PetDatabaseUpdateState.NeedsInsert)
+                DbState = PetDatabaseUpdateState.NeedsUpdate;
 
             if (Room != null)
             {
                 Room.SendPacket(new AddExperiencePointsComposer(PetId, VirtualId, amount));
 
-                if (experience >= ExperienceGoal)
+                if (Experience >= ExperienceGoal)
                     Room.SendPacket(new ChatComposer(VirtualId, "*leveled up to level " + Level + " *", 0, 0));
             }
         }
 
         public void PetEnergy(bool add)
         {
-            int MaxE;
+            int maxE;
             if (add)
             {
                 if (Energy == 100) // If Energy is 100, no point.
                     return;
 
                 if (Energy > 85)
-                    MaxE = MaxEnergy - Energy;
+                    maxE = MaxEnergy - Energy;
                 else
-                    MaxE = 10;
+                    maxE = 10;
 
             }
             else
-                MaxE = 15; // Remove Max Energy as 15
+                maxE = 15; // Remove Max Energy as 15
 
-            if (MaxE <= 4)
-                MaxE = 15;
+            if (maxE <= 4)
+                maxE = 15;
 
-            int r = PlusEnvironment.GetRandomNumber(4, MaxE);
+            int r = PlusEnvironment.GetRandomNumber(4, maxE);
 
             if (!add)
             {
@@ -138,8 +138,8 @@ namespace Plus.HabboHotel.Rooms.AI
                 Energy = Energy + r;
 
 
-            if (DBState != PetDatabaseUpdateState.NeedsInsert)
-                DBState = PetDatabaseUpdateState.NeedsUpdate;
+            if (DbState != PetDatabaseUpdateState.NeedsInsert)
+                DbState = PetDatabaseUpdateState.NeedsUpdate;
         }
 
         public Room Room
@@ -149,8 +149,8 @@ namespace Plus.HabboHotel.Rooms.AI
                 if (!IsInRoom)
                     return null;
 
-                if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(RoomId, out Room _room))
-                    return _room;
+                if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(RoomId, out Room room))
+                    return room;
                 else
                     return null;
 
@@ -166,12 +166,12 @@ namespace Plus.HabboHotel.Rooms.AI
         {
             get
             {
-                for (int level = 0; level < experienceLevels.Length; ++level)
+                for (int level = 0; level < ExperienceLevels.Length; ++level)
                 {
-                    if (experience < experienceLevels[level])
+                    if (Experience < ExperienceLevels[level])
                         return level + 1;
                 }
-                return experienceLevels.Length;
+                return ExperienceLevels.Length;
             }
         }
 
@@ -185,7 +185,7 @@ namespace Plus.HabboHotel.Rooms.AI
             get
             {
                 //will error index out of range (need to look into this sometime)
-                return experienceLevels[Level - 1];
+                return ExperienceLevels[Level - 1];
             }
         }
 

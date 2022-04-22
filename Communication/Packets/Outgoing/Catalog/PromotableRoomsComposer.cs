@@ -4,16 +4,16 @@ namespace Plus.Communication.Packets.Outgoing.Catalog
 {
     class PromotableRoomsComposer : ServerPacket
     {
-        public PromotableRoomsComposer(ICollection<RoomData> Rooms)
+        public PromotableRoomsComposer(ICollection<RoomData> rooms)
             : base(ServerPacketHeader.PromotableRoomsMessageComposer)
         {
             WriteBoolean(true);
-            WriteInteger(Rooms.Count);//Count
+            WriteInteger(rooms.Count);//Count
 
-            foreach (RoomData Data in Rooms)
+            foreach (RoomData data in rooms)
             {
-                WriteInteger(Data.Id);
-               WriteString(Data.Name);
+                WriteInteger(data.Id);
+               WriteString(data.Name);
                 WriteBoolean(false);
             }
         }

@@ -6,11 +6,11 @@
         public int Type;
         public int UserId;
 
-        public Relationship(int Id, int User, int Type)
+        public Relationship(int id, int user, int type)
         {
-            this.Id = Id;
-            UserId = User;
-            this.Type = Type;
+            this.Id = id;
+            UserId = user;
+            this.Type = type;
         }
     }
 }

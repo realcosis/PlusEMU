@@ -21,19 +21,19 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
             get { return "Want some attention? Make everyone face you!"; }
         }
 
-        public void Execute(GameClients.GameClient Session, Room Room, string[] Params)
+        public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            RoomUser ThisUser = Room.GetRoomUserManager().GetRoomUserByHabbo(Session.GetHabbo().Id);
-            if (ThisUser == null)
+            RoomUser thisUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            if (thisUser == null)
                 return;
 
-            List<RoomUser> Users = Room.GetRoomUserManager().GetRoomUsers();
-            foreach (RoomUser U in Users.ToList())
+            List<RoomUser> users = room.GetRoomUserManager().GetRoomUsers();
+            foreach (RoomUser u in users.ToList())
             {
-                if (U == null || Session.GetHabbo().Id == U.UserId)
+                if (u == null || session.GetHabbo().Id == u.UserId)
                     continue;
 
-                U.SetRot(Rotation.Calculate(U.X, U.Y, ThisUser.X, ThisUser.Y), false);
+                u.SetRot(Rotation.Calculate(u.X, u.Y, thisUser.X, thisUser.Y), false);
             }
         }
     }

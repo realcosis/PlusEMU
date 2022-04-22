@@ -2,10 +2,10 @@
 {
     class LoveLockDialogueCloseMessageComposer : ServerPacket
     {
-        public LoveLockDialogueCloseMessageComposer(int ItemId)
+        public LoveLockDialogueCloseMessageComposer(int itemId)
             : base(ServerPacketHeader.LoveLockDialogueCloseMessageComposer)
         {
-            WriteInteger(ItemId);
+            WriteInteger(itemId);
         }
     }
 }

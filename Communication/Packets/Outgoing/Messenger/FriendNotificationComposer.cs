@@ -4,10 +4,10 @@ namespace Plus.Communication.Packets.Outgoing.Messenger
 {
     class FriendNotificationComposer : ServerPacket
     {
-        public FriendNotificationComposer(int UserId, MessengerEventTypes type, string data)
+        public FriendNotificationComposer(int userId, MessengerEventTypes type, string data)
             : base(ServerPacketHeader.FriendNotificationMessageComposer)
         {
-            WriteString(UserId.ToString());
+            WriteString(userId.ToString());
             WriteInteger(MessengerEventTypesUtility.GetEventTypePacketNum(type));
             WriteString(data);
         }

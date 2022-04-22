@@ -3,7 +3,7 @@ using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Rcon.Commands.User
 {
-    class ReloadUserVIPRankCommand : IRconCommand
+    class ReloadUserVipRankCommand : IRconCommand
     {
         public string Description
         {
@@ -28,7 +28,7 @@ namespace Plus.Communication.Rcon.Commands.User
             {
                 dbClient.SetQuery("SELECT `rank_vip` FROM `users` WHERE `id` = @userId LIMIT 1");
                 dbClient.AddParameter("userId", userId);
-                client.GetHabbo().VIPRank = dbClient.GetInteger();
+                client.GetHabbo().VipRank = dbClient.GetInteger();
             }
 
             client.GetHabbo().GetPermissions().Init(client.GetHabbo());

@@ -21,15 +21,15 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
             get { return "Allows you to disable the ability to receive gifts or to enable the ability to receive gifts."; }
         }
 
-        public void Execute(GameClients.GameClient Session, Room Room, string[] Params)
+        public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            Session.GetHabbo().AllowGifts = !Session.GetHabbo().AllowGifts;
-            Session.SendWhisper("You're " + (Session.GetHabbo().AllowGifts == true ? "now" : "no longer") + " accepting gifts.");
+            session.GetHabbo().AllowGifts = !session.GetHabbo().AllowGifts;
+            session.SendWhisper("You're " + (session.GetHabbo().AllowGifts == true ? "now" : "no longer") + " accepting gifts.");
 
             using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
-                dbClient.SetQuery("UPDATE `users` SET `allow_gifts` = @AllowGifts WHERE `id` = '" + Session.GetHabbo().Id + "'");
-                dbClient.AddParameter("AllowGifts", PlusEnvironment.BoolToEnum(Session.GetHabbo().AllowGifts));
+                dbClient.SetQuery("UPDATE `users` SET `allow_gifts` = @AllowGifts WHERE `id` = '" + session.GetHabbo().Id + "'");
+                dbClient.AddParameter("AllowGifts", PlusEnvironment.BoolToEnum(session.GetHabbo().AllowGifts));
                 dbClient.RunQuery();
             }
         }

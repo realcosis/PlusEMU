@@ -2,10 +2,10 @@
 {
     class JoinQueueComposer : ServerPacket
     {
-        public JoinQueueComposer(int GameId)
+        public JoinQueueComposer(int gameId)
             : base(ServerPacketHeader.JoinQueueMessageComposer)
         {
-            WriteInteger(GameId);
+            WriteInteger(gameId);
         }
     }
 }

@@ -6,30 +6,30 @@ namespace Plus.Communication.Packets.Outgoing.Pets
 {
     class RespectPetNotificationMessageComposer : ServerPacket
     {
-        public RespectPetNotificationMessageComposer(Pet Pet)
+        public RespectPetNotificationMessageComposer(Pet pet)
             : base(ServerPacketHeader.RespectPetNotificationMessageComposer)
         {
             //TODO: Structure
-            WriteInteger(Pet.VirtualId);
-            WriteInteger(Pet.VirtualId);
-            WriteInteger(Pet.PetId);//Pet Id, 100%
-           WriteString(Pet.Name);
+            WriteInteger(pet.VirtualId);
+            WriteInteger(pet.VirtualId);
+            WriteInteger(pet.PetId);//Pet Id, 100%
+           WriteString(pet.Name);
             WriteInteger(0);
             WriteInteger(0);
-           WriteString(Pet.Color);
+           WriteString(pet.Color);
             WriteInteger(0);
             WriteInteger(0);//Count - 3 ints.
             WriteInteger(1);
         }
 
-        public RespectPetNotificationMessageComposer(Habbo Habbo, RoomUser User)
+        public RespectPetNotificationMessageComposer(Habbo habbo, RoomUser user)
             : base(ServerPacketHeader.RespectPetNotificationMessageComposer)
         {
             //TODO: Structure
-            WriteInteger(User.VirtualId);
-            WriteInteger(User.VirtualId);
-            WriteInteger(Habbo.Id);//Pet Id, 100%
-           WriteString(Habbo.Username);
+            WriteInteger(user.VirtualId);
+            WriteInteger(user.VirtualId);
+            WriteInteger(habbo.Id);//Pet Id, 100%
+           WriteString(habbo.Username);
             WriteInteger(0);
             WriteInteger(0);
            WriteString("FFFFFF");//Yeah..

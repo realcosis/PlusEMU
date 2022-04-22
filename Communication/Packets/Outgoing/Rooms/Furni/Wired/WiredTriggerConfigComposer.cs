@@ -25,9 +25,9 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired
             WriteString(box.StringData);
 
             WriteInteger(box is IWiredCycle ? 1 : 0);
-            if (box is IWiredCycle Cycle)
+            if (box is IWiredCycle cycle)
             {
-                WriteInteger(Cycle.Delay);
+                WriteInteger(cycle.Delay);
             }
             WriteInteger(0);
             WriteInteger(WiredBoxTypeUtility.GetWiredId(box.Type));

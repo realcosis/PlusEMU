@@ -14,7 +14,7 @@ namespace Plus.HabboHotel.Rooms.AI
         public int BotId;
         public int VirtualId;
 
-        public BotAIType AiType;
+        public BotAiType AiType;
 
         public int DanceId;
         public string Gender;
@@ -65,7 +65,7 @@ namespace Plus.HabboHotel.Rooms.AI
             Look = look;
             Gender = gender.ToUpper();
 
-            AiType = BotUtility.GetAIFromString(type);
+            AiType = BotUtility.GetAiFromString(type);
             WalkingMode = walkingMode;
 
             X = x;
@@ -97,17 +97,17 @@ namespace Plus.HabboHotel.Rooms.AI
 
         public bool IsPet
         {
-            get { return (AiType == BotAIType.Pet); }
+            get { return (AiType == BotAiType.Pet); }
         }
 
         #region Speech Related
-        public void LoadRandomSpeech(List<RandomSpeech> Speeches)
+        public void LoadRandomSpeech(List<RandomSpeech> speeches)
         {
             RandomSpeech = new List<RandomSpeech>();
-            foreach (RandomSpeech Speech in Speeches)
+            foreach (RandomSpeech speech in speeches)
             {
-                if (Speech.BotID == BotId)
-                    RandomSpeech.Add(Speech);
+                if (speech.BotId == BotId)
+                    RandomSpeech.Add(speech);
             }
         }
 
@@ -123,18 +123,18 @@ namespace Plus.HabboHotel.Rooms.AI
         #endregion
 
         #region AI Related
-        public BotAI GenerateBotAI(int VirtualId)
+        public BotAi GenerateBotAi(int virtualId)
         {
             switch (AiType)
             {
-                case BotAIType.Pet:
-                    return new PetBot(VirtualId);
-                case BotAIType.Generic:
-                    return new GenericBot(VirtualId);
-                case BotAIType.Bartender:
-                    return new BartenderBot(VirtualId);
+                case BotAiType.Pet:
+                    return new PetBot(virtualId);
+                case BotAiType.Generic:
+                    return new GenericBot(virtualId);
+                case BotAiType.Bartender:
+                    return new BartenderBot(virtualId);
                 default:
-                    return new GenericBot(VirtualId);
+                    return new GenericBot(virtualId);
             }
         }
         #endregion

@@ -2,11 +2,11 @@
 {
     class UnknownGroupComposer : ServerPacket
     {
-        public UnknownGroupComposer(int GroupId, int HabboId)
+        public UnknownGroupComposer(int groupId, int habboId)
             : base(ServerPacketHeader.UnknownGroupMessageComposer)
         {
-            WriteInteger(GroupId);
-            WriteInteger(HabboId);
+            WriteInteger(groupId);
+            WriteInteger(habboId);
         }
     }
 }

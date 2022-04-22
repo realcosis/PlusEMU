@@ -2,7 +2,7 @@
 
 namespace Plus.HabboHotel.Rooms.AI
 {
-    public abstract class BotAI
+    public abstract class BotAi
     {
         public int BaseId;
         private int _roomId;

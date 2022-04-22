@@ -2,12 +2,12 @@
 {
     class FloorPlanSendDoorComposer : ServerPacket
     {
-        public FloorPlanSendDoorComposer(int DoorX, int DoorY, int DoorDirection)
+        public FloorPlanSendDoorComposer(int doorX, int doorY, int doorDirection)
             : base(ServerPacketHeader.FloorPlanSendDoorMessageComposer)
         {
-            WriteInteger(DoorX);
-            WriteInteger(DoorY);
-            WriteInteger(DoorDirection);
+            WriteInteger(doorX);
+            WriteInteger(doorY);
+            WriteInteger(doorDirection);
         }
     }
 }

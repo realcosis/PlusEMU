@@ -17,7 +17,7 @@
             get { return "Unload the current room."; }
         }
 
-        public void Execute(GameClients.GameClient session, Room room, string[] Params)
+        public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
             if (room.CheckRights(session, true) || session.GetHabbo().GetPermissions().HasRight("room_unload_any"))
             {

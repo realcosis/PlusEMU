@@ -18,42 +18,42 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
         public bool BoolData { get; set; }
         public string ItemsData { get; set; }
 
-        public ActorIsInTeamBox(Room Instance, Item Item)
+        public ActorIsInTeamBox(Room instance, Item item)
         {
-            this.Instance = Instance;
-            this.Item = Item;
+            this.Instance = instance;
+            this.Item = item;
 
             SetItems = new ConcurrentDictionary<int, Item>();
         }
 
-        public void HandleSave(ClientPacket Packet)
+        public void HandleSave(ClientPacket packet)
         {
-            int Unknown = Packet.PopInt();
-            int Unknown2 = Packet.PopInt();
+            int unknown = packet.PopInt();
+            int unknown2 = packet.PopInt();
 
-            StringData = Unknown2.ToString();
+            StringData = unknown2.ToString();
         }
 
-        public bool Execute(params object[] Params)
+        public bool Execute(params object[] @params)
         {
-            if (Params.Length == 0 || Instance == null || String.IsNullOrEmpty(StringData))
+            if (@params.Length == 0 || Instance == null || String.IsNullOrEmpty(StringData))
                 return false;
 
-            Habbo Player = (Habbo)Params[0];
-            if (Player == null)
+            Habbo player = (Habbo)@params[0];
+            if (player == null)
                 return false;
 
-            RoomUser User = Instance.GetRoomUserManager().GetRoomUserByHabbo(Player.Id);
-            if (User == null)
+            RoomUser user = Instance.GetRoomUserManager().GetRoomUserByHabbo(player.Id);
+            if (user == null)
                 return false;
 
-            if (int.Parse(StringData) == 1 && User.Team == Team.Red)
+            if (int.Parse(StringData) == 1 && user.Team == Team.Red)
                 return true;
-            else if (int.Parse(StringData) == 2 && User.Team == Team.Green)
+            else if (int.Parse(StringData) == 2 && user.Team == Team.Green)
                 return true;
-            else if (int.Parse(StringData) == 3 && User.Team == Team.Blue)
+            else if (int.Parse(StringData) == 3 && user.Team == Team.Blue)
                 return true;
-            else if (int.Parse(StringData) == 4 && User.Team == Team.Yellow)
+            else if (int.Parse(StringData) == 4 && user.Team == Team.Yellow)
                 return true;
             return false;
         }

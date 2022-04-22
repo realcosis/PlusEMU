@@ -2,11 +2,11 @@
 {
     class MessengerErrorComposer : ServerPacket
     {
-        public MessengerErrorComposer(int ErrorCode1, int ErrorCode2)
+        public MessengerErrorComposer(int errorCode1, int errorCode2)
             : base(ServerPacketHeader.MessengerErrorMessageComposer)
         {
-            WriteInteger(ErrorCode1);
-            WriteInteger(ErrorCode2);
+            WriteInteger(errorCode1);
+            WriteInteger(errorCode2);
         }
     }
 }

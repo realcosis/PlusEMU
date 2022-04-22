@@ -79,7 +79,7 @@ namespace Plus.Communication.Rcon.Commands.User
                         using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                         {
                             dbClient.SetQuery("UPDATE `users` SET `gotw_points` = @gotw WHERE `id` = @id LIMIT 1");
-                            dbClient.AddParameter("gotw", client.GetHabbo().GOTWPoints);
+                            dbClient.AddParameter("gotw", client.GetHabbo().GotwPoints);
                             dbClient.AddParameter("id", userId);
                             dbClient.RunQuery();
                         }

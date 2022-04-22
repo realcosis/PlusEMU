@@ -17,9 +17,9 @@ namespace Plus.HabboHotel.Catalog.Clothing
             PartIds = new List<int>();
             if (partIds.Contains(","))
             {
-                foreach (string PartId in partIds.Split(','))
+                foreach (string partId in partIds.Split(','))
                 {
-                    PartIds.Add(int.Parse(PartId));
+                    PartIds.Add(int.Parse(partId));
                 }
             }
             else if (!String.IsNullOrEmpty(partIds) && (int.Parse(partIds)) > 0)

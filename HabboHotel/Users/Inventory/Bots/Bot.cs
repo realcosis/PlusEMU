@@ -9,14 +9,14 @@
         private string _figure;
         private string _gender;
 
-        public Bot(int Id, int OwnerId, string Name, string Motto, string Figure, string Gender)
+        public Bot(int id, int ownerId, string name, string motto, string figure, string gender)
         {
-            this.Id = Id;
-            this.OwnerId = OwnerId;
-            this.Name = Name;
-            this.Motto = Motto;
-            this.Figure = Figure;
-            this.Gender = Gender;
+            this.Id = id;
+            this.OwnerId = ownerId;
+            this.Name = name;
+            this.Motto = motto;
+            this.Figure = figure;
+            this.Gender = gender;
         }
 
         public int Id

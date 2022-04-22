@@ -11,16 +11,16 @@ namespace Plus.Communication.Packets.Outgoing.Catalog
         {
             WriteRootIndex(sesion, pages);
 
-            foreach (CatalogPage Parent in pages)
+            foreach (CatalogPage parent in pages)
             {
-                if (Parent.ParentId != -1 || Parent.MinimumRank > sesion.GetHabbo().Rank || (Parent.MinimumVIP > sesion.GetHabbo().VIPRank && sesion.GetHabbo().Rank == 1))
+                if (parent.ParentId != -1 || parent.MinimumRank > sesion.GetHabbo().Rank || (parent.MinimumVip > sesion.GetHabbo().VipRank && sesion.GetHabbo().Rank == 1))
                     continue;
 
-                WritePage(Parent, CalcTreeSize(sesion, pages, Parent.Id));
+                WritePage(parent, CalcTreeSize(sesion, pages, parent.Id));
 
                 foreach (CatalogPage child in pages)
                 {
-                    if (child.ParentId != Parent.Id || child.MinimumRank > sesion.GetHabbo().Rank || (child.MinimumVIP > sesion.GetHabbo().VIPRank && sesion.GetHabbo().Rank == 1))
+                    if (child.ParentId != parent.Id || child.MinimumRank > sesion.GetHabbo().Rank || (child.MinimumVip > sesion.GetHabbo().VipRank && sesion.GetHabbo().Rank == 1))
                         continue;
 
                     if (child.Enabled)
@@ -28,12 +28,12 @@ namespace Plus.Communication.Packets.Outgoing.Catalog
                     else
                         WriteNodeIndex(child, CalcTreeSize(sesion, pages, child.Id));
                     
-                    foreach (CatalogPage SubChild in pages)
+                    foreach (CatalogPage subChild in pages)
                     {
-                        if (SubChild.ParentId != child.Id || SubChild.MinimumRank > sesion.GetHabbo().Rank)
+                        if (subChild.ParentId != child.Id || subChild.MinimumRank > sesion.GetHabbo().Rank)
                             continue;
 
-                        WritePage(SubChild, 0);
+                        WritePage(subChild, 0);
                     }
                 }
             }
@@ -81,15 +81,15 @@ namespace Plus.Communication.Packets.Outgoing.Catalog
             WriteInteger(treeSize);
         }
 
-        public int CalcTreeSize(GameClient Session, ICollection<CatalogPage> Pages, int ParentId)
+        public int CalcTreeSize(GameClient session, ICollection<CatalogPage> pages, int parentId)
         {
             int i = 0;
-            foreach (CatalogPage Page in Pages)
+            foreach (CatalogPage page in pages)
             {
-                if (Page.MinimumRank > Session.GetHabbo().Rank || (Page.MinimumVIP > Session.GetHabbo().VIPRank && Session.GetHabbo().Rank == 1) || Page.ParentId != ParentId)
+                if (page.MinimumRank > session.GetHabbo().Rank || (page.MinimumVip > session.GetHabbo().VipRank && session.GetHabbo().Rank == 1) || page.ParentId != parentId)
                     continue;
 
-                if (Page.ParentId == ParentId)
+                if (page.ParentId == parentId)
                     i++;
             }
 

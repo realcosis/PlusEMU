@@ -4,13 +4,13 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Settings
 {
     class GetRoomFilterListComposer : ServerPacket
     {
-        public GetRoomFilterListComposer(Room Instance)
+        public GetRoomFilterListComposer(Room instance)
             : base(ServerPacketHeader.GetRoomFilterListMessageComposer)
         {
-            WriteInteger(Instance.WordFilterList.Count);
-            foreach (string Word in Instance.WordFilterList)
+            WriteInteger(instance.WordFilterList.Count);
+            foreach (string word in instance.WordFilterList)
             {
-               WriteString(Word);
+               WriteString(word);
             }
         }
     }

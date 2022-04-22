@@ -7,17 +7,17 @@ namespace Plus.Communication.Packets.Outgoing.Marketplace
 {
     class MarketPlaceOwnOffersComposer : ServerPacket
     {
-        public MarketPlaceOwnOffersComposer(int UserId)
+        public MarketPlaceOwnOffersComposer(int userId)
             : base(ServerPacketHeader.MarketPlaceOwnOffersMessageComposer)
         {
             int i = 0;
             DataTable table = null;
             using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
-                dbClient.SetQuery("SELECT timestamp, state, offer_id, item_type, sprite_id, total_price, limited_number, limited_stack FROM catalog_marketplace_offers WHERE user_id = '" + UserId + "'");
+                dbClient.SetQuery("SELECT timestamp, state, offer_id, item_type, sprite_id, total_price, limited_number, limited_stack FROM catalog_marketplace_offers WHERE user_id = '" + userId + "'");
                 table = dbClient.GetTable();
 
-                dbClient.SetQuery("SELECT SUM(asking_price) FROM catalog_marketplace_offers WHERE state = '2' AND user_id = '" + UserId + "'");
+                dbClient.SetQuery("SELECT SUM(asking_price) FROM catalog_marketplace_offers WHERE state = '2' AND user_id = '" + userId + "'");
                 i = dbClient.GetInteger();
 
                 WriteInteger(i);

@@ -7,19 +7,19 @@ namespace Plus.Communication.Packets.Outgoing.LandingView
 {
     class PromoArticlesComposer : ServerPacket
     {
-        public PromoArticlesComposer(ICollection<Promotion> LandingPromotions)
+        public PromoArticlesComposer(ICollection<Promotion> landingPromotions)
             : base(ServerPacketHeader.PromoArticlesMessageComposer)
         {
-            WriteInteger(LandingPromotions.Count);//Count
-            foreach (Promotion Promotion in LandingPromotions.ToList())
+            WriteInteger(landingPromotions.Count);//Count
+            foreach (Promotion promotion in landingPromotions.ToList())
             {
-                WriteInteger(Promotion.Id); //ID
-                WriteString(Promotion.Title); //Title
-                WriteString(Promotion.Text); //Text
-                WriteString(Promotion.ButtonText); //Button text
-                WriteInteger(Promotion.ButtonType); //Link type 0 and 3
-                WriteString(Promotion.ButtonLink); //Link to article
-                WriteString(Promotion.ImageLink); //Image link
+                WriteInteger(promotion.Id); //ID
+                WriteString(promotion.Title); //Title
+                WriteString(promotion.Text); //Text
+                WriteString(promotion.ButtonText); //Button text
+                WriteInteger(promotion.ButtonType); //Link type 0 and 3
+                WriteString(promotion.ButtonLink); //Link to article
+                WriteString(promotion.ImageLink); //Image link
             }
         }
     }

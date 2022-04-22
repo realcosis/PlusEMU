@@ -222,8 +222,8 @@ namespace Plus.Communication.Packets
             _incomingPackets.Add(ClientPacketHeader.GetClientVersionMessageEvent, new GetClientVersionEvent());
             _incomingPackets.Add(ClientPacketHeader.InitCryptoMessageEvent, new InitCryptoEvent());
             _incomingPackets.Add(ClientPacketHeader.GenerateSecretKeyMessageEvent, new GenerateSecretKeyEvent());
-            _incomingPackets.Add(ClientPacketHeader.UniqueIDMessageEvent, new UniqueIdEvent());
-            _incomingPackets.Add(ClientPacketHeader.SSOTicketMessageEvent, new SsoTicketEvent());
+            _incomingPackets.Add(ClientPacketHeader.UniqueIdMessageEvent, new UniqueIdEvent());
+            _incomingPackets.Add(ClientPacketHeader.SsoTicketMessageEvent, new SsoTicketEvent());
             _incomingPackets.Add(ClientPacketHeader.InfoRetrieveMessageEvent, new InfoRetrieveEvent());
             _incomingPackets.Add(ClientPacketHeader.PingMessageEvent, new PingEvent());
         }
@@ -591,8 +591,8 @@ namespace Plus.Communication.Packets
             _packetNames.Add(ClientPacketHeader.GetClientVersionMessageEvent, "GetClientVersionEvent");
             _packetNames.Add(ClientPacketHeader.InitCryptoMessageEvent, "InitCryptoEvent");
             _packetNames.Add(ClientPacketHeader.GenerateSecretKeyMessageEvent, "GenerateSecretKeyEvent");
-            _packetNames.Add(ClientPacketHeader.UniqueIDMessageEvent, "UniqueIDEvent");
-            _packetNames.Add(ClientPacketHeader.SSOTicketMessageEvent, "SSOTicketEvent");
+            _packetNames.Add(ClientPacketHeader.UniqueIdMessageEvent, "UniqueIDEvent");
+            _packetNames.Add(ClientPacketHeader.SsoTicketMessageEvent, "SSOTicketEvent");
             _packetNames.Add(ClientPacketHeader.InfoRetrieveMessageEvent, "InfoRetrieveEvent");
             _packetNames.Add(ClientPacketHeader.PingMessageEvent, "PingEvent");
             _packetNames.Add(ClientPacketHeader.RefreshCampaignMessageEvent, "RefreshCampaignEvent");

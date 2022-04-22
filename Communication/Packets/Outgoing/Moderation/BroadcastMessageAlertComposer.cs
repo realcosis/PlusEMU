@@ -2,11 +2,11 @@
 {
     class BroadcastMessageAlertComposer : ServerPacket
     {
-        public BroadcastMessageAlertComposer(string Message, string URL = "")
+        public BroadcastMessageAlertComposer(string message, string url = "")
             : base(ServerPacketHeader.BroadcastMessageAlertMessageComposer)
         {
-           WriteString(Message);
-           WriteString(URL);
+           WriteString(message);
+           WriteString(url);
         }
     }
 }

@@ -16,31 +16,31 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
             WriteString(habbo.Username);
 
             WriteInteger(chatlogs.Count); // Room Visits Count
-            foreach (KeyValuePair<RoomData, List<ChatlogEntry>> Chatlog in chatlogs)
+            foreach (KeyValuePair<RoomData, List<ChatlogEntry>> chatlog in chatlogs)
             {
                 WriteByte(1);
                 WriteShort(2);//Count
                 WriteString("roomName");
                 WriteByte(2);
-                WriteString(Chatlog.Key.Name); // room name
+                WriteString(chatlog.Key.Name); // room name
                 WriteString("roomId");
                 WriteByte(1);
-                WriteInteger(Chatlog.Key.Id);
+                WriteInteger(chatlog.Key.Id);
 
-                WriteShort(Chatlog.Value.Count); // Chatlogs Count
-                foreach (ChatlogEntry Entry in Chatlog.Value)
+                WriteShort(chatlog.Value.Count); // Chatlogs Count
+                foreach (ChatlogEntry entry in chatlog.Value)
                 {
-                    string Username = "NOT FOUND";
-                    if (Entry.PlayerNullable() != null)
+                    string username = "NOT FOUND";
+                    if (entry.PlayerNullable() != null)
                     {
-                        Username = Entry.PlayerNullable().Username;
+                        username = entry.PlayerNullable().Username;
                     }
 
-                    WriteString(UnixTimestamp.FromUnixTimestamp(Entry.Timestamp).ToShortTimeString());
-                    WriteInteger(Entry.PlayerId); // UserId of message
-                    WriteString(Username); // Username of message
-                    WriteString(!string.IsNullOrEmpty(Entry.Message) ? Entry.Message : "** user sent a blank message **"); // Message        
-                    WriteBoolean(habbo.Id == Entry.PlayerId);
+                    WriteString(UnixTimestamp.FromUnixTimestamp(entry.Timestamp).ToShortTimeString());
+                    WriteInteger(entry.PlayerId); // UserId of message
+                    WriteString(username); // Username of message
+                    WriteString(!string.IsNullOrEmpty(entry.Message) ? entry.Message : "** user sent a blank message **"); // Message        
+                    WriteBoolean(habbo.Id == entry.PlayerId);
                 }
             }
         }

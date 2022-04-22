@@ -2,32 +2,32 @@
 {
     class SlideObjectBundleComposer : ServerPacket
     {
-        public SlideObjectBundleComposer(int FromX, int FromY, double FromZ, int ToX, int ToY, double ToZ, int RollerId, int AvatarId, int ItemId)
+        public SlideObjectBundleComposer(int fromX, int fromY, double fromZ, int toX, int toY, double toZ, int rollerId, int avatarId, int itemId)
             : base(ServerPacketHeader.SlideObjectBundleMessageComposer)
         {
-            bool IsItem = ItemId > 0;
+            bool isItem = itemId > 0;
 
-            WriteInteger(FromX);
-            WriteInteger(FromY);
-            WriteInteger(ToX);
-            WriteInteger(ToY);
-            WriteInteger(IsItem ? 1 : 0);
+            WriteInteger(fromX);
+            WriteInteger(fromY);
+            WriteInteger(toX);
+            WriteInteger(toY);
+            WriteInteger(isItem ? 1 : 0);
 
-            if (IsItem)
-                WriteInteger(ItemId);
+            if (isItem)
+                WriteInteger(itemId);
             else
             {
-                WriteInteger(RollerId);
+                WriteInteger(rollerId);
                 WriteInteger(2);
-                WriteInteger(AvatarId);
+                WriteInteger(avatarId);
             }
 
-            WriteDouble(FromZ);
-            WriteDouble(ToZ);
+            WriteDouble(fromZ);
+            WriteDouble(toZ);
 
-            if (IsItem)
+            if (isItem)
             {
-                WriteInteger(RollerId);
+                WriteInteger(rollerId);
             }
         }
     }

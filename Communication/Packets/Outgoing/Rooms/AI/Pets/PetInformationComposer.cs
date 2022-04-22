@@ -7,33 +7,33 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.AI.Pets
 {
     class PetInformationComposer : ServerPacket
     {
-        public PetInformationComposer(Pet Pet)
+        public PetInformationComposer(Pet pet)
             : base(ServerPacketHeader.PetInformationMessageComposer)
         {
-            Room Room;
+            Room room;
 
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(Pet.RoomId, out Room))
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(pet.RoomId, out room))
                 return;
 
-            WriteInteger(Pet.PetId);
-           WriteString(Pet.Name);
-            WriteInteger(Pet.Level);
+            WriteInteger(pet.PetId);
+           WriteString(pet.Name);
+            WriteInteger(pet.Level);
             WriteInteger(Pet.MaxLevel);
-            WriteInteger(Pet.experience);
-            WriteInteger(Pet.ExperienceGoal);
-            WriteInteger(Pet.Energy);
+            WriteInteger(pet.Experience);
+            WriteInteger(pet.ExperienceGoal);
+            WriteInteger(pet.Energy);
             WriteInteger(Pet.MaxEnergy);
-            WriteInteger(Pet.Nutrition);
+            WriteInteger(pet.Nutrition);
             WriteInteger(Pet.MaxNutrition);
-            WriteInteger(Pet.Respect);
-            WriteInteger(Pet.OwnerId);
-            WriteInteger(Pet.Age);
-           WriteString(Pet.OwnerName);
+            WriteInteger(pet.Respect);
+            WriteInteger(pet.OwnerId);
+            WriteInteger(pet.Age);
+           WriteString(pet.OwnerName);
             WriteInteger(1);//3 on hab
-            WriteBoolean(Pet.Saddle > 0);
+            WriteBoolean(pet.Saddle > 0);
             WriteBoolean(false);
             WriteInteger(0);//5 on hab
-            WriteInteger(Pet.AnyoneCanRide); // Anyone can ride horse
+            WriteInteger(pet.AnyoneCanRide); // Anyone can ride horse
             WriteInteger(0);
             WriteInteger(0);//512 on hab
             WriteInteger(0);//1536
@@ -48,12 +48,12 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.AI.Pets
             WriteBoolean(false);
         }
 
-        public PetInformationComposer(Habbo Habbo)
+        public PetInformationComposer(Habbo habbo)
             : base(ServerPacketHeader.PetInformationMessageComposer)
         {
-            WriteInteger(Habbo.Id);
-           WriteString(Habbo.Username);
-            WriteInteger(Habbo.Rank);
+            WriteInteger(habbo.Id);
+           WriteString(habbo.Username);
+            WriteInteger(habbo.Rank);
             WriteInteger(10);
             WriteInteger(0);
             WriteInteger(0);
@@ -61,10 +61,10 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.AI.Pets
             WriteInteger(100);
             WriteInteger(100);
             WriteInteger(100);
-            WriteInteger(Habbo.GetStats().Respect);
-            WriteInteger(Habbo.Id);
-            WriteInteger(Convert.ToInt32(Math.Floor((PlusEnvironment.GetUnixTimestamp() - Habbo.AccountCreated) / 86400)));//How?
-           WriteString(Habbo.Username);
+            WriteInteger(habbo.GetStats().Respect);
+            WriteInteger(habbo.Id);
+            WriteInteger(Convert.ToInt32(Math.Floor((PlusEnvironment.GetUnixTimestamp() - habbo.AccountCreated) / 86400)));//How?
+           WriteString(habbo.Username);
             WriteInteger(1);//3 on hab
             WriteBoolean(false);
             WriteBoolean(false);

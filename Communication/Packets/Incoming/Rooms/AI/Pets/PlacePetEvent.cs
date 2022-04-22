@@ -73,7 +73,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets
 
             room.GetRoomUserManager().DeployBot(roomBot, pet);
 
-            pet.DBState = PetDatabaseUpdateState.NeedsUpdate;
+            pet.DbState = PetDatabaseUpdateState.NeedsUpdate;
             room.GetRoomUserManager().UpdatePets();
 
             if (!session.GetHabbo().GetInventoryComponent().TryRemovePet(pet.PetId, out Pet toRemove))

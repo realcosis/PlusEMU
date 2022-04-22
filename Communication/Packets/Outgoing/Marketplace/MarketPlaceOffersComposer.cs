@@ -14,7 +14,7 @@ namespace Plus.Communication.Packets.Outgoing.Marketplace
             {
                 foreach (KeyValuePair<int, MarketOffer> pair in dictionary)
                 {
-                    WriteInteger(pair.Value.OfferID);
+                    WriteInteger(pair.Value.OfferId);
                     WriteInteger(1);//State
                     WriteInteger(1);
                     WriteInteger(pair.Value.SpriteId);

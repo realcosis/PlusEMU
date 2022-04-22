@@ -45,7 +45,7 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.Trading
                 }
 
                 WriteInteger(user.OfferedItems.Count);//Item Count
-                WriteInteger(user.OfferedItems.Values.Where(x => x.Data.InteractionType == InteractionType.EXCHANGE).Sum(t => t.Data.BehaviourData));
+                WriteInteger(user.OfferedItems.Values.Where(x => x.Data.InteractionType == InteractionType.Exchange).Sum(t => t.Data.BehaviourData));
             }
         }
     }

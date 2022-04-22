@@ -6,18 +6,18 @@ namespace Plus.Communication.Packets.Outgoing.GameCenter
 {
     class GameListComposer : ServerPacket
     {
-        public GameListComposer(ICollection<GameData> Games)
+        public GameListComposer(ICollection<GameData> games)
             : base(ServerPacketHeader.GameListMessageComposer)
         {
             WriteInteger(PlusEnvironment.GetGame().GetGameDataManager().GetCount());//Game count
-            foreach (GameData Game in Games)
+            foreach (GameData game in games)
             {
-                WriteInteger(Game.Id);
-               WriteString(Game.Name);
-               WriteString(Game.ColourOne);
-               WriteString(Game.ColourTwo);
-               WriteString(Game.ResourcePath);
-               WriteString(Game.StringThree);
+                WriteInteger(game.Id);
+               WriteString(game.Name);
+               WriteString(game.ColourOne);
+               WriteString(game.ColourTwo);
+               WriteString(game.ResourcePath);
+               WriteString(game.StringThree);
             }
         }
     }

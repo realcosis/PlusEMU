@@ -3,7 +3,7 @@
     class MotdNotificationComposer : ServerPacket
     {
         public MotdNotificationComposer(string message)
-            : base(ServerPacketHeader.MOTDNotificationMessageComposer)
+            : base(ServerPacketHeader.MotdNotificationMessageComposer)
         {
             WriteInteger(1);
             WriteString(message);

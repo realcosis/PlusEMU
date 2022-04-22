@@ -17,10 +17,10 @@
             get { return "Allows you to ignore all of the whispers in the room, except from your own."; }
         }
 
-        public void Execute(GameClients.GameClient Session, Room Room, string[] Params)
+        public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            Session.GetHabbo().IgnorePublicWhispers = !Session.GetHabbo().IgnorePublicWhispers;
-            Session.SendWhisper("You're " + (Session.GetHabbo().IgnorePublicWhispers ? "now" : "no longer") + " ignoring public whispers!");
+            session.GetHabbo().IgnorePublicWhispers = !session.GetHabbo().IgnorePublicWhispers;
+            session.SendWhisper("You're " + (session.GetHabbo().IgnorePublicWhispers ? "now" : "no longer") + " ignoring public whispers!");
         }
     }
 }

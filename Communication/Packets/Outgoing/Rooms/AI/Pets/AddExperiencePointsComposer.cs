@@ -2,12 +2,12 @@
 {
     class AddExperiencePointsComposer : ServerPacket
     {
-        public AddExperiencePointsComposer(int PetId, int VirtualId, int Amount)
+        public AddExperiencePointsComposer(int petId, int virtualId, int amount)
             : base(ServerPacketHeader.AddExperiencePointsMessageComposer)
         {
-            WriteInteger(PetId);
-            WriteInteger(VirtualId);
-            WriteInteger(Amount);
+            WriteInteger(petId);
+            WriteInteger(virtualId);
+            WriteInteger(amount);
         }
     }
 }

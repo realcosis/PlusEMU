@@ -5,19 +5,19 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.Achievements
 {
     class BadgeDefinitionsComposer: ServerPacket
     {
-        public BadgeDefinitionsComposer(Dictionary<string, Achievement> Achievements)
+        public BadgeDefinitionsComposer(Dictionary<string, Achievement> achievements)
             : base(ServerPacketHeader.BadgeDefinitionsMessageComposer)
         {
-            WriteInteger(Achievements.Count);
+            WriteInteger(achievements.Count);
 
-            foreach (Achievement Achievement in Achievements.Values)
+            foreach (Achievement achievement in achievements.Values)
             {
-               WriteString(Achievement.GroupName.Replace("ACH_", ""));
-                WriteInteger(Achievement.Levels.Count);
-                foreach (AchievementLevel Level in Achievement.Levels.Values)
+               WriteString(achievement.GroupName.Replace("ACH_", ""));
+                WriteInteger(achievement.Levels.Count);
+                foreach (AchievementLevel level in achievement.Levels.Values)
                 {
-                    WriteInteger(Level.Level);
-                    WriteInteger(Level.Requirement);
+                    WriteInteger(level.Level);
+                    WriteInteger(level.Requirement);
                 }
             }
         }

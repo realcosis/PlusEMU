@@ -31,7 +31,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
             if (petUser.PetData == null || petUser.PetData.OwnerId != session.GetHabbo().Id)
                 return;
 
-            if (item.Data.InteractionType == InteractionType.HORSE_SADDLE_1)
+            if (item.Data.InteractionType == InteractionType.HorseSaddle1)
             {
                 petUser.PetData.Saddle = 9;
                 using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
@@ -43,7 +43,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
                 //We only want to use this if we're successful. 
                 room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
             }
-            else if (item.Data.InteractionType == InteractionType.HORSE_SADDLE_2)
+            else if (item.Data.InteractionType == InteractionType.HorseSaddle2)
             {
                 petUser.PetData.Saddle = 10;
                 using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
@@ -55,7 +55,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
                 //We only want to use this if we're successful. 
                 room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
             }
-            else if (item.Data.InteractionType == InteractionType.HORSE_HAIRSTYLE)
+            else if (item.Data.InteractionType == InteractionType.HorseHairstyle)
             {
                 int parse = 100;
                 string hairType = item.GetBaseItem().ItemName.Split('_')[2];
@@ -72,7 +72,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
                 //We only want to use this if we're successful. 
                 room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
             }
-            else if (item.Data.InteractionType == InteractionType.HORSE_HAIR_DYE)
+            else if (item.Data.InteractionType == InteractionType.HorseHairDye)
             {
                 int hairDye = 48;
                 string hairType = item.GetBaseItem().ItemName.Split('_')[2];
@@ -89,7 +89,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse
                 //We only want to use this if we're successful. 
                 room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
             }
-            else if (item.Data.InteractionType == InteractionType.HORSE_BODY_DYE)
+            else if (item.Data.InteractionType == InteractionType.HorseBodyDye)
             {
                 string race = item.GetBaseItem().ItemName.Split('_')[2];
                 int parse = int.Parse(race);

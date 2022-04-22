@@ -31,7 +31,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni
             if (present == null)
                 return;
 
-            if (present.UserID != session.GetHabbo().Id)
+            if (present.UserId != session.GetHabbo().Id)
                 return;
             
             DataRow data;

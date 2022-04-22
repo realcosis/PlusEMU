@@ -9,14 +9,14 @@ namespace Plus.HabboHotel.Rooms.Games
     public class GameItemHandler
     {
         private Room _room;
-        private Random rnd;
+        private Random _rnd;
         private ConcurrentDictionary<int, Item> _banzaiPyramids;
         private ConcurrentDictionary<int, Item> _banzaiTeleports;
 
         public GameItemHandler(Room room)
         {
             _room = room;
-            rnd = new Random();
+            _rnd = new Random();
 
             _banzaiPyramids = new ConcurrentDictionary<int, Item>();
             _banzaiTeleports = new ConcurrentDictionary<int, Item>();
@@ -36,10 +36,10 @@ namespace Plus.HabboHotel.Rooms.Games
                 if (item == null)
                     continue;
 
-                if (item.interactionCountHelper == 0 && item.ExtraData == "1")
+                if (item.InteractionCountHelper == 0 && item.ExtraData == "1")
                 {
                     _room.GetGameMap().RemoveFromMap(item, false);
-                    item.interactionCountHelper = 1;
+                    item.InteractionCountHelper = 1;
                 }
 
                 if (string.IsNullOrEmpty(item.ExtraData))
@@ -77,7 +77,7 @@ namespace Plus.HabboHotel.Rooms.Games
 
         public void RemovePyramid(int itemId)
         {
-            _banzaiPyramids.TryRemove(itemId, out Item Item);
+            _banzaiPyramids.TryRemove(itemId, out Item item);
         }
 
         public void AddTeleport(Item item, int itemId)
@@ -90,7 +90,7 @@ namespace Plus.HabboHotel.Rooms.Games
 
         public void RemoveTeleport(int itemId)
         {
-            _banzaiTeleports.TryRemove(itemId, out Item Item);
+            _banzaiTeleports.TryRemove(itemId, out Item item);
         }
 
         public void OnTeleportRoomUserEnter(RoomUser user, Item item)
@@ -99,7 +99,7 @@ namespace Plus.HabboHotel.Rooms.Games
 
             int count = items.Count();
 
-            int countID = rnd.Next(0, count);
+            int countId = _rnd.Next(0, count);
             int countAmount = 0;
 
             if (count == 0)
@@ -110,7 +110,7 @@ namespace Plus.HabboHotel.Rooms.Games
                 if (i == null)
                     continue;
 
-                if (countAmount == countID)
+                if (countAmount == countId)
                 {
                     i.ExtraData = "1";
                     i.UpdateNeeded = true;
@@ -136,7 +136,7 @@ namespace Plus.HabboHotel.Rooms.Games
             _banzaiPyramids = null;
             _banzaiTeleports = null;
             _room = null;
-            rnd = null;
+            _rnd = null;
         }
     }
 }

@@ -22,24 +22,24 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 WriteInteger(user.RotHead);
                 WriteInteger(user.RotBody);
 
-                StringBuilder StatusComposer = new StringBuilder();
-                StatusComposer.Append("/");
+                StringBuilder statusComposer = new StringBuilder();
+                statusComposer.Append("/");
 
-                foreach (KeyValuePair<string, string> Status in user.Statusses.ToList())
+                foreach (KeyValuePair<string, string> status in user.Statusses.ToList())
                 {
-                    StatusComposer.Append(Status.Key);
+                    statusComposer.Append(status.Key);
 
-                    if (!String.IsNullOrEmpty(Status.Value))
+                    if (!String.IsNullOrEmpty(status.Value))
                     {
-                        StatusComposer.Append(" ");
-                        StatusComposer.Append(Status.Value);
+                        statusComposer.Append(" ");
+                        statusComposer.Append(status.Value);
                     }
 
-                    StatusComposer.Append("/");
+                    statusComposer.Append("/");
                 }
 
-                StatusComposer.Append("/");
-                WriteString(StatusComposer.ToString());
+                statusComposer.Append("/");
+                WriteString(statusComposer.ToString());
             }
         }
     }

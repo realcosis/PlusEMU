@@ -7,7 +7,7 @@
         public string Gender { get; private set; }
         public string Motto { get; private set; }
         public string Name { get; private set; }
-        public string AIType { get; private set; }
+        public string AiType { get; private set; }
 
         public CatalogBot(int id, string name, string figure, string motto, string gender, string type)
         {
@@ -16,7 +16,7 @@
             Figure = figure;
             Motto = motto;
             Gender = gender;
-            AIType = type;
+            AiType = type;
         }
     }
 }

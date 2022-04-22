@@ -11,7 +11,7 @@ namespace Plus.HabboHotel.Rooms.Chat
 {
     public sealed class ChatManager
     {
-        private static readonly ILogger log = LogManager.GetLogger("Plus.HabboHotel.Rooms.Chat.ChatManager");
+        private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Rooms.Chat.ChatManager");
 
         /// <summary>
         /// Chat Emoticons.
@@ -66,7 +66,7 @@ namespace Plus.HabboHotel.Rooms.Chat
             _chatStyles = new ChatStyleManager();
             _chatStyles.Init();
 
-            log.Info("Chat Manager -> LOADED");
+            Log.Info("Chat Manager -> LOADED");
         }
 
         public ChatEmotionsManager GetEmotions()

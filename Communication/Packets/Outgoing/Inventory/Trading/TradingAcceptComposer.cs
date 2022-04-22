@@ -2,11 +2,11 @@
 {
     class TradingAcceptComposer : ServerPacket
     {
-        public TradingAcceptComposer(int UserId, bool Accept)
+        public TradingAcceptComposer(int userId, bool accept)
             : base(ServerPacketHeader.TradingAcceptMessageComposer)
         {
-            WriteInteger(UserId);
-            WriteInteger(Accept ? 1 : 0);
+            WriteInteger(userId);
+            WriteInteger(accept ? 1 : 0);
         }
     }
 }

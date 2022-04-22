@@ -2,10 +2,10 @@
 {
     class CantConnectComposer : ServerPacket
     {
-        public CantConnectComposer(int Error)
+        public CantConnectComposer(int error)
             : base(ServerPacketHeader.CantConnectMessageComposer)
         {
-            WriteInteger(Error);
+            WriteInteger(error);
         }
     }
 }

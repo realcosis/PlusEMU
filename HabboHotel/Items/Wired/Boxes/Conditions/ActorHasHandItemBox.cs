@@ -17,36 +17,36 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
         public bool BoolData { get; set; }
         public string ItemsData { get; set; }
 
-        public ActorHasHandItemBox(Room Instance, Item Item)
+        public ActorHasHandItemBox(Room instance, Item item)
         {
-            this.Instance = Instance;
-            this.Item = Item;
+            this.Instance = instance;
+            this.Item = item;
 
             SetItems = new ConcurrentDictionary<int, Item>();
         }
 
-        public void HandleSave(ClientPacket Packet)
+        public void HandleSave(ClientPacket packet)
         {
-            int Unknown = Packet.PopInt();
-            int Unknown2 = Packet.PopInt();
+            int unknown = packet.PopInt();
+            int unknown2 = packet.PopInt();
 
-            StringData = Unknown2.ToString();
+            StringData = unknown2.ToString();
         }
 
-        public bool Execute(params object[] Params)
+        public bool Execute(params object[] @params)
         {
-            if (Params.Length == 0 || Instance == null || String.IsNullOrEmpty(StringData))
+            if (@params.Length == 0 || Instance == null || String.IsNullOrEmpty(StringData))
                 return false;
 
-            Habbo Player = (Habbo)Params[0];
-            if (Player == null)
+            Habbo player = (Habbo)@params[0];
+            if (player == null)
                 return false;
 
-            RoomUser User = Instance.GetRoomUserManager().GetRoomUserByHabbo(Player.Id);
-            if (User == null)
+            RoomUser user = Instance.GetRoomUserManager().GetRoomUserByHabbo(player.Id);
+            if (user == null)
                 return false;
 
-            if (User.CarryItemId != int.Parse(StringData))
+            if (user.CarryItemId != int.Parse(StringData))
                 return false;
 
             return true;

@@ -21,18 +21,18 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
             WriteInteger(room.Id);
 
             WriteShort(chats.Count);
-            foreach (ChatlogEntry Entry in chats)
+            foreach (ChatlogEntry entry in chats)
             {
-                string Username = "Unknown";
-                if (Entry.PlayerNullable() != null)
+                string username = "Unknown";
+                if (entry.PlayerNullable() != null)
                 {
-                    Username = Entry.PlayerNullable().Username;
+                    username = entry.PlayerNullable().Username;
                 }
 
-                WriteString(UnixTimestamp.FromUnixTimestamp(Entry.Timestamp).ToShortTimeString()); // time?
-                WriteInteger(Entry.PlayerId); // User Id
-                WriteString(Username); // Username
-                WriteString(!string.IsNullOrEmpty(Entry.Message) ? Entry.Message : "** user sent a blank message **"); // Message        
+                WriteString(UnixTimestamp.FromUnixTimestamp(entry.Timestamp).ToShortTimeString()); // time?
+                WriteInteger(entry.PlayerId); // User Id
+                WriteString(username); // Username
+                WriteString(!string.IsNullOrEmpty(entry.Message) ? entry.Message : "** user sent a blank message **"); // Message        
                 WriteBoolean(false); //TODO, AI's?
             }
         }

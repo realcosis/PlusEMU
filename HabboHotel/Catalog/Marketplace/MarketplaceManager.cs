@@ -58,7 +58,7 @@ namespace Plus.HabboHotel.Catalog.Marketplace
             return (PlusEnvironment.GetUnixTimestamp() - 172800.0);
         }
 
-        public int OfferCountForSprite(int SpriteID)
+        public int OfferCountForSprite(int spriteId)
         {
             Dictionary<int, MarketOffer> dictionary = new Dictionary<int, MarketOffer>();
             Dictionary<int, int> dictionary2 = new Dictionary<int, int>();
@@ -83,9 +83,9 @@ namespace Plus.HabboHotel.Catalog.Marketplace
                 }
             }
 
-            if (dictionary2.ContainsKey(SpriteID))
+            if (dictionary2.ContainsKey(spriteId))
             {
-                return dictionary2[SpriteID];
+                return dictionary2[spriteId];
             }
             return 0;
         }

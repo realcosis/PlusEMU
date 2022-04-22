@@ -15,7 +15,7 @@ namespace Plus.HabboHotel.Quests
 {
     public class QuestManager
     {
-        private static readonly ILogger log = LogManager.GetLogger("Plus.HabboHotel.Quests.QuestManager");
+        private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Quests.QuestManager");
 
         private Dictionary<int, Quest> _quests;
         private Dictionary<string, int> _questCount;
@@ -58,7 +58,7 @@ namespace Plus.HabboHotel.Quests
                 }
             }
 
-            log.Info("Quest Manager -> LOADED");
+            Log.Info("Quest Manager -> LOADED");
         }
 
         private void AddToCounter(string category)
@@ -159,7 +159,7 @@ namespace Plus.HabboHotel.Quests
                     dbClient.RunQuery("UPDATE `user_stats` SET `quest_id` = '0' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
             }
 
-            session.GetHabbo().quests[session.GetHabbo().GetStats().QuestId] = totalProgress;
+            session.GetHabbo().Quests[session.GetHabbo().GetStats().QuestId] = totalProgress;
             session.SendPacket(new QuestStartedComposer(session, quest));
 
             if (completeQuest)
@@ -190,56 +190,56 @@ namespace Plus.HabboHotel.Quests
 
         public void GetList(GameClient session, ClientPacket message)
         {
-            Dictionary<string, int> UserQuestGoals = new Dictionary<string, int>();
-            Dictionary<string, Quest> UserQuests = new Dictionary<string, Quest>();
+            Dictionary<string, int> userQuestGoals = new Dictionary<string, int>();
+            Dictionary<string, Quest> userQuests = new Dictionary<string, Quest>();
 
             foreach (Quest quest in _quests.Values.ToList())
             {
                 if (quest.Category.Contains("xmas2012"))
                     continue;
 
-                if (!UserQuestGoals.ContainsKey(quest.Category))
+                if (!userQuestGoals.ContainsKey(quest.Category))
                 {
-                    UserQuestGoals.Add(quest.Category, 1);
-                    UserQuests.Add(quest.Category, null);
+                    userQuestGoals.Add(quest.Category, 1);
+                    userQuests.Add(quest.Category, null);
                 }
 
-                if (quest.Number >= UserQuestGoals[quest.Category])
+                if (quest.Number >= userQuestGoals[quest.Category])
                 {
-                    int UserProgress = session.GetHabbo().GetQuestProgress(quest.Id);
+                    int userProgress = session.GetHabbo().GetQuestProgress(quest.Id);
 
-                    if (session.GetHabbo().GetStats().QuestId != quest.Id && UserProgress >= quest.GoalData)
+                    if (session.GetHabbo().GetStats().QuestId != quest.Id && userProgress >= quest.GoalData)
                     {
-                        UserQuestGoals[quest.Category] = quest.Number + 1;
+                        userQuestGoals[quest.Category] = quest.Number + 1;
                     }
                 }
             }
 
             foreach (Quest quest in _quests.Values.ToList())
             {
-                foreach (var Goal in UserQuestGoals)
+                foreach (var goal in userQuestGoals)
                 {
                     if (quest.Category.Contains("xmas2012"))
                         continue;
 
-                    if (quest.Category == Goal.Key && quest.Number == Goal.Value)
+                    if (quest.Category == goal.Key && quest.Number == goal.Value)
                     {
-                        UserQuests[Goal.Key] = quest;
+                        userQuests[goal.Key] = quest;
                         break;
                     }
                 }
             }
 
-            session.SendPacket(new QuestListComposer(session, (message != null), UserQuests));
+            session.SendPacket(new QuestListComposer(session, (message != null), userQuests));
         }
 
         public void QuestReminder(GameClient session, int questId)
         {
-            Quest Quest = GetQuest(questId);
-            if (Quest == null)
+            Quest quest = GetQuest(questId);
+            if (quest == null)
                 return;
 
-            session.SendPacket(new QuestStartedComposer(session, Quest));
+            session.SendPacket(new QuestStartedComposer(session, quest));
         }
     }
 }

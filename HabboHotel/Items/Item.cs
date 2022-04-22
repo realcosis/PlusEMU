@@ -35,61 +35,61 @@ namespace Plus.HabboHotel.Items
         public int RoomId;
         public int Rotation;
         public int UpdateCounter;
-        public int UserID;
+        public int UserId;
         public string Username;
-        public int interactingBallUser;
-        public byte interactionCount;
-        public byte interactionCountHelper;
+        public int InteractingBallUser;
+        public byte InteractionCount;
+        public byte InteractionCountHelper;
 
 
         private int _coordX;
         private int _coordY;
         private double _coordZ;
 
-        public Team team;
-        public bool pendingReset = false;
-        public FreezePowerUp freezePowerUp;
+        public Team Team;
+        public bool PendingReset = false;
+        public FreezePowerUp FreezePowerUp;
 
 
-        public int value;
-        public string wallCoord;
-        private bool updateNeeded;
+        public int Value;
+        public string WallCoord;
+        private bool _updateNeeded;
 
         private Room _room;
         private static Random _random = new Random();
         private Dictionary<int, ThreeDCoord> _affectedPoints;
 
-        private readonly bool mIsRoller;
-        private readonly bool mIsWallItem;
-        private readonly bool mIsFloorItem;
+        private readonly bool _mIsRoller;
+        private readonly bool _mIsWallItem;
+        private readonly bool _mIsFloorItem;
 
-        public Item(int Id, int RoomId, int BaseItem, string ExtraData, int X, int Y, double Z, int Rot, int Userid, int Group, int limitedNumber, int limitedStack, string wallCoord, Room Room = null)
+        public Item(int id, int roomId, int baseItem, string extraData, int x, int y, double z, int rot, int userid, int @group, int limitedNumber, int limitedStack, string wallCoord, Room room = null)
         {
-            if (PlusEnvironment.GetGame().GetItemManager().GetItem(BaseItem, out ItemData data))
+            if (PlusEnvironment.GetGame().GetItemManager().GetItem(baseItem, out ItemData data))
             {
-                this.Id = Id;
-                this.RoomId = RoomId;
-                _room = Room;
+                this.Id = id;
+                this.RoomId = roomId;
+                _room = room;
                 _data = data;
-                this.BaseItem = BaseItem;
-                this.ExtraData = ExtraData;
-                GroupId = Group;
+                this.BaseItem = baseItem;
+                this.ExtraData = extraData;
+                GroupId = @group;
 
-                _coordX = X;
-                _coordY = Y;
-                if (!double.IsInfinity(Z))
-                    _coordZ = Z;
-                Rotation = Rot;
+                _coordX = x;
+                _coordY = y;
+                if (!double.IsInfinity(z))
+                    _coordZ = z;
+                Rotation = rot;
                 UpdateNeeded = false;
                 UpdateCounter = 0;
                 InteractingUser = 0;
                 InteractingUser2 = 0;
-                interactingBallUser = 0;
-                interactionCount = 0;
-                value = 0;
+                InteractingBallUser = 0;
+                InteractionCount = 0;
+                Value = 0;
 
-                UserID = Userid;
-                Username = PlusEnvironment.GetUsernameById(Userid);
+                UserId = userid;
+                Username = PlusEnvironment.GetUsernameById(userid);
 
 
                 LimitedNo = limitedNumber;
@@ -97,73 +97,73 @@ namespace Plus.HabboHotel.Items
 
                 switch (GetBaseItem().InteractionType)
                 {
-                    case InteractionType.TELEPORT:
+                    case InteractionType.Teleport:
                         RequestUpdate(0, true);
                         break;
 
-                    case InteractionType.HOPPER:
+                    case InteractionType.Hopper:
                         RequestUpdate(0, true);
                         break;
 
-                    case InteractionType.ROLLER:
-                        mIsRoller = true;
-                        if (RoomId > 0)
+                    case InteractionType.Roller:
+                        _mIsRoller = true;
+                        if (roomId > 0)
                         {
                             GetRoom().GetRoomItemHandler().GotRollers = true;
                         }
                         break;
 
-                    case InteractionType.banzaiscoreblue:
-                    case InteractionType.footballcounterblue:
-                    case InteractionType.banzaigateblue:
-                    case InteractionType.FREEZE_BLUE_GATE:
-                    case InteractionType.freezebluecounter:
-                        team = Team.Blue;
+                    case InteractionType.Banzaiscoreblue:
+                    case InteractionType.Footballcounterblue:
+                    case InteractionType.Banzaigateblue:
+                    case InteractionType.FreezeBlueGate:
+                    case InteractionType.Freezebluecounter:
+                        Team = Team.Blue;
                         break;
 
-                    case InteractionType.banzaiscoregreen:
-                    case InteractionType.footballcountergreen:
-                    case InteractionType.banzaigategreen:
-                    case InteractionType.freezegreencounter:
-                    case InteractionType.FREEZE_GREEN_GATE:
-                        team = Team.Green;
+                    case InteractionType.Banzaiscoregreen:
+                    case InteractionType.Footballcountergreen:
+                    case InteractionType.Banzaigategreen:
+                    case InteractionType.Freezegreencounter:
+                    case InteractionType.FreezeGreenGate:
+                        Team = Team.Green;
                         break;
 
-                    case InteractionType.banzaiscorered:
-                    case InteractionType.footballcounterred:
-                    case InteractionType.banzaigatered:
-                    case InteractionType.freezeredcounter:
-                    case InteractionType.FREEZE_RED_GATE:
-                        team = Team.Red;
+                    case InteractionType.Banzaiscorered:
+                    case InteractionType.Footballcounterred:
+                    case InteractionType.Banzaigatered:
+                    case InteractionType.Freezeredcounter:
+                    case InteractionType.FreezeRedGate:
+                        Team = Team.Red;
                         break;
 
-                    case InteractionType.banzaiscoreyellow:
-                    case InteractionType.footballcounteryellow:
-                    case InteractionType.banzaigateyellow:
-                    case InteractionType.freezeyellowcounter:
-                    case InteractionType.FREEZE_YELLOW_GATE:
-                        team = Team.Yellow;
+                    case InteractionType.Banzaiscoreyellow:
+                    case InteractionType.Footballcounteryellow:
+                    case InteractionType.Banzaigateyellow:
+                    case InteractionType.Freezeyellowcounter:
+                    case InteractionType.FreezeYellowGate:
+                        Team = Team.Yellow;
                         break;
 
-                    case InteractionType.banzaitele:
+                    case InteractionType.Banzaitele:
                         {
                             this.ExtraData = "";
                             break;
                         }
                 }
 
-                mIsWallItem = (GetBaseItem().Type.ToString().ToLower() == "i");
-                mIsFloorItem = (GetBaseItem().Type.ToString().ToLower() == "s");
+                _mIsWallItem = (GetBaseItem().Type.ToString().ToLower() == "i");
+                _mIsFloorItem = (GetBaseItem().Type.ToString().ToLower() == "s");
 
-                if (mIsFloorItem)
+                if (_mIsFloorItem)
                 {
-                    _affectedPoints = Gamemap.GetAffectedTiles(GetBaseItem().Length, GetBaseItem().Width, GetX, GetY, Rot);
+                    _affectedPoints = Gamemap.GetAffectedTiles(GetBaseItem().Length, GetBaseItem().Width, GetX, GetY, rot);
                 }
-                else if (mIsWallItem)
+                else if (_mIsWallItem)
                 {
-                    this.wallCoord = wallCoord;
-                    mIsWallItem = true;
-                    mIsFloorItem = false;
+                    this.WallCoord = wallCoord;
+                    _mIsWallItem = true;
+                    _mIsFloorItem = false;
                     _affectedPoints = new Dictionary<int, ThreeDCoord>();
                 }
             }
@@ -200,18 +200,18 @@ namespace Plus.HabboHotel.Items
 
         public bool UpdateNeeded
         {
-            get { return updateNeeded; }
+            get { return _updateNeeded; }
             set
             {
                 if (value && GetRoom() != null)
                     GetRoom().GetRoomItemHandler().QueueRoomItemUpdate(this);
-                updateNeeded = value;
+                _updateNeeded = value;
             }
         }
 
         public bool IsRoller
         {
-            get { return mIsRoller; }
+            get { return _mIsRoller; }
         }
 
         public Point Coordinate
@@ -254,55 +254,55 @@ namespace Plus.HabboHotel.Items
         {
             get
             {
-                double CurHeight = 0.0;
+                double curHeight = 0.0;
 
                 if (GetBaseItem().AdjustableHeights.Count > 1)
                 {
                     if (int.TryParse(ExtraData, out int num2) && (GetBaseItem().AdjustableHeights.Count) - 1 >= num2)
-                        CurHeight = GetZ + GetBaseItem().AdjustableHeights[num2];
+                        curHeight = GetZ + GetBaseItem().AdjustableHeights[num2];
                 }
 
-                if (CurHeight <= 0.0)
-                    CurHeight = GetZ + GetBaseItem().Height;
+                if (curHeight <= 0.0)
+                    curHeight = GetZ + GetBaseItem().Height;
 
-                return CurHeight;
+                return curHeight;
             }
         }
 
         public bool IsWallItem
         {
-            get { return mIsWallItem; }
+            get { return _mIsWallItem; }
         }
 
         public bool IsFloorItem
         {
-            get { return mIsFloorItem; }
+            get { return _mIsFloorItem; }
         }
 
         public Point SquareInFront
         {
             get
             {
-                var Sq = new Point(GetX, GetY);
+                var sq = new Point(GetX, GetY);
 
                 if (Rotation == 0)
                 {
-                    Sq.Y--;
+                    sq.Y--;
                 }
                 else if (Rotation == 2)
                 {
-                    Sq.X++;
+                    sq.X++;
                 }
                 else if (Rotation == 4)
                 {
-                    Sq.Y++;
+                    sq.Y++;
                 }
                 else if (Rotation == 6)
                 {
-                    Sq.X--;
+                    sq.X--;
                 }
 
-                return Sq;
+                return sq;
             }
         }
 
@@ -310,26 +310,26 @@ namespace Plus.HabboHotel.Items
         {
             get
             {
-                var Sq = new Point(GetX, GetY);
+                var sq = new Point(GetX, GetY);
 
                 if (Rotation == 0)
                 {
-                    Sq.Y++;
+                    sq.Y++;
                 }
                 else if (Rotation == 2)
                 {
-                    Sq.X--;
+                    sq.X--;
                 }
                 else if (Rotation == 4)
                 {
-                    Sq.Y--;
+                    sq.Y--;
                 }
                 else if (Rotation == 6)
                 {
-                    Sq.X++;
+                    sq.X++;
                 }
 
-                return Sq;
+                return sq;
             }
         }
 
@@ -337,26 +337,26 @@ namespace Plus.HabboHotel.Items
         {
             get
             {
-                var Sq = new Point(GetX, GetY);
+                var sq = new Point(GetX, GetY);
 
                 if (Rotation == 0)
                 {
-                    Sq.X++;
+                    sq.X++;
                 }
                 else if (Rotation == 2)
                 {
-                    Sq.Y--;
+                    sq.Y--;
                 }
                 else if (Rotation == 4)
                 {
-                    Sq.X--;
+                    sq.X--;
                 }
                 else if (Rotation == 6)
                 {
-                    Sq.Y++;
+                    sq.Y++;
                 }
 
-                return Sq;
+                return sq;
             }
         }
 
@@ -364,25 +364,25 @@ namespace Plus.HabboHotel.Items
         {
             get
             {
-                var Sq = new Point(GetX, GetY);
+                var sq = new Point(GetX, GetY);
 
                 if (Rotation == 0)
                 {
-                    Sq.X--;
+                    sq.X--;
                 }
                 else if (Rotation == 2)
                 {
-                    Sq.Y++;
+                    sq.Y++;
                 }
                 else if (Rotation == 4)
                 {
-                    Sq.X++;
+                    sq.X++;
                 }
                 else if (Rotation == 6)
                 {
-                    Sq.Y--;
+                    sq.Y--;
                 }
-                return Sq;
+                return sq;
             }
         }
 
@@ -397,81 +397,81 @@ namespace Plus.HabboHotel.Items
 
                 switch (GetBaseItem().InteractionType)
                 {
-                    case InteractionType.GATE:
+                    case InteractionType.Gate:
                         return new InteractorGate();
 
-                    case InteractionType.TELEPORT:
+                    case InteractionType.Teleport:
                         return new InteractorTeleport();
 
-                    case InteractionType.HOPPER:
+                    case InteractionType.Hopper:
                         return new InteractorHopper();
 
-                    case InteractionType.BOTTLE:
+                    case InteractionType.Bottle:
                         return new InteractorSpinningBottle();
 
-                    case InteractionType.DICE:
+                    case InteractionType.Dice:
                         return new InteractorDice();
 
-                    case InteractionType.HABBO_WHEEL:
+                    case InteractionType.HabboWheel:
                         return new InteractorHabboWheel();
 
-                    case InteractionType.LOVE_SHUFFLER:
+                    case InteractionType.LoveShuffler:
                         return new InteractorLoveShuffler();
 
-                    case InteractionType.ONE_WAY_GATE:
+                    case InteractionType.OneWayGate:
                         return new InteractorOneWayGate();
 
-                    case InteractionType.ALERT:
+                    case InteractionType.Alert:
                         return new InteractorAlert();
 
-                    case InteractionType.VENDING_MACHINE:
+                    case InteractionType.VendingMachine:
                         return new InteractorVendor();
 
-                    case InteractionType.SCOREBOARD:
+                    case InteractionType.Scoreboard:
                         return new InteractorScoreboard();
 
-                    case InteractionType.PUZZLE_BOX:
+                    case InteractionType.PuzzleBox:
                         return new InteractorPuzzleBox();
 
-                    case InteractionType.MANNEQUIN:
+                    case InteractionType.Mannequin:
                         return new InteractorMannequin();
 
-                    case InteractionType.banzaicounter:
+                    case InteractionType.Banzaicounter:
                         return new InteractorBanzaiTimer();
 
-                    case InteractionType.freezetimer:
+                    case InteractionType.Freezetimer:
                         return new InteractorFreezeTimer();
 
-                    case InteractionType.FREEZE_TILE_BLOCK:
-                    case InteractionType.FREEZE_TILE:
+                    case InteractionType.FreezeTileBlock:
+                    case InteractionType.FreezeTile:
                         return new InteractorFreezeTile();
 
-                    case InteractionType.footballcounterblue:
-                    case InteractionType.footballcountergreen:
-                    case InteractionType.footballcounterred:
-                    case InteractionType.footballcounteryellow:
+                    case InteractionType.Footballcounterblue:
+                    case InteractionType.Footballcountergreen:
+                    case InteractionType.Footballcounterred:
+                    case InteractionType.Footballcounteryellow:
                         return new InteractorScoreCounter();
 
-                    case InteractionType.banzaiscoreblue:
-                    case InteractionType.banzaiscoregreen:
-                    case InteractionType.banzaiscorered:
-                    case InteractionType.banzaiscoreyellow:
+                    case InteractionType.Banzaiscoreblue:
+                    case InteractionType.Banzaiscoregreen:
+                    case InteractionType.Banzaiscorered:
+                    case InteractionType.Banzaiscoreyellow:
                         return new InteractorBanzaiScoreCounter();
 
-                    case InteractionType.WF_FLOOR_SWITCH_1:
-                    case InteractionType.WF_FLOOR_SWITCH_2:
+                    case InteractionType.WfFloorSwitch1:
+                    case InteractionType.WfFloorSwitch2:
                         return new InteractorSwitch();
 
-                    case InteractionType.LOVELOCK:
+                    case InteractionType.Lovelock:
                         return new InteractorLoveLock();
 
-                    case InteractionType.CANNON:
+                    case InteractionType.Cannon:
                         return new InteractorCannon();
 
-                    case InteractionType.COUNTER:
+                    case InteractionType.Counter:
                         return new InteractorCounter();
 
-                    case InteractionType.NONE:
+                    case InteractionType.None:
                     default:
                         return new InteractorGenericSwitch();
                 }
@@ -484,9 +484,9 @@ namespace Plus.HabboHotel.Items
             {
                 switch (GetBaseItem().InteractionType)
                 {
-                    case InteractionType.WIRED_EFFECT:
-                    case InteractionType.WIRED_TRIGGER:
-                    case InteractionType.WIRED_CONDITION:
+                    case InteractionType.WiredEffect:
+                    case InteractionType.WiredTrigger:
+                    case InteractionType.WiredCondition:
                         return true;
                 }
 
@@ -494,7 +494,7 @@ namespace Plus.HabboHotel.Items
             }
         }
 
-        public void SetState(int pX, int pY, double pZ, Dictionary<int, ThreeDCoord> Tiles)
+        public void SetState(int pX, int pY, double pZ, Dictionary<int, ThreeDCoord> tiles)
         {
             GetX = pX;
             GetY = pY;
@@ -502,7 +502,7 @@ namespace Plus.HabboHotel.Items
             {
                 _coordZ = pZ;
             }
-            _affectedPoints = Tiles;
+            _affectedPoints = tiles;
         }
 
         public void ProcessUpdates()
@@ -516,13 +516,13 @@ namespace Plus.HabboHotel.Items
                     UpdateNeeded = false;
                     UpdateCounter = 0;
 
-                    RoomUser User = null;
-                    RoomUser User2 = null;
+                    RoomUser user = null;
+                    RoomUser user2 = null;
 
                     switch (GetBaseItem().InteractionType)
                     {
                         #region Group Gates
-                        case InteractionType.GUILD_GATE:
+                        case InteractionType.GuildGate:
                             {
                                 if (ExtraData == "1")
                                 {
@@ -541,7 +541,7 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Item Effects
-                        case InteractionType.EFFECT:
+                        case InteractionType.Effect:
                             {
                                 if (ExtraData == "1")
                                 {
@@ -560,33 +560,33 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region One way gates
-                        case InteractionType.ONE_WAY_GATE:
+                        case InteractionType.OneWayGate:
 
-                            User = null;
+                            user = null;
 
                             if (InteractingUser > 0)
                             {
-                                User = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
+                                user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
                             }
 
-                            if (User != null && User.X == GetX && User.Y == GetY)
+                            if (user != null && user.X == GetX && user.Y == GetY)
                             {
                                 ExtraData = "1";
 
-                                User.MoveTo(SquareBehind);
-                                User.InteractingGate = false;
-                                User.GateId = 0;
+                                user.MoveTo(SquareBehind);
+                                user.InteractingGate = false;
+                                user.GateId = 0;
                                 RequestUpdate(1, false);
                                 UpdateState(false, true);
                             }
-                            else if (User != null && User.Coordinate == SquareBehind)
+                            else if (user != null && user.Coordinate == SquareBehind)
                             {
-                                User.UnlockWalking();
+                                user.UnlockWalking();
 
                                 ExtraData = "0";
                                 InteractingUser = 0;
-                                User.InteractingGate = false;
-                                User.GateId = 0;
+                                user.InteractingGate = false;
+                                user.GateId = 0;
                                 UpdateState(false, true);
                             }
                             else if (ExtraData == "1")
@@ -595,7 +595,7 @@ namespace Plus.HabboHotel.Items
                                 UpdateState(false, true);
                             }
 
-                            if (User == null)
+                            if (user == null)
                             {
                                 InteractingUser = 0;
                             }
@@ -604,45 +604,45 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region VIP Gate
-                        case InteractionType.GATE_VIP:
+                        case InteractionType.GateVip:
 
-                            User = null;
+                            user = null;
 
 
                             if (InteractingUser > 0)
                             {
-                                User = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
+                                user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
                             }
 
-                            int NewY = 0;
-                            int NewX = 0;
+                            int newY = 0;
+                            int newX = 0;
 
-                            if (User != null && User.X == GetX && User.Y == GetY)
+                            if (user != null && user.X == GetX && user.Y == GetY)
                             {
-                                if (User.RotBody == 4)
+                                if (user.RotBody == 4)
                                 {
-                                    NewY = 1;
+                                    newY = 1;
                                 }
-                                else if (User.RotBody == 0)
+                                else if (user.RotBody == 0)
                                 {
-                                    NewY = -1;
+                                    newY = -1;
                                 }
-                                else if (User.RotBody == 6)
+                                else if (user.RotBody == 6)
                                 {
-                                    NewX = -1;
+                                    newX = -1;
                                 }
-                                else if (User.RotBody == 2)
+                                else if (user.RotBody == 2)
                                 {
-                                    NewX = 1;
+                                    newX = 1;
                                 }
 
 
-                                User.MoveTo(User.X + NewX, User.Y + NewY);
+                                user.MoveTo(user.X + newX, user.Y + newY);
                                 RequestUpdate(1, false);
                             }
-                            else if (User != null && (User.Coordinate == SquareBehind || User.Coordinate == SquareInFront))
+                            else if (user != null && (user.Coordinate == SquareBehind || user.Coordinate == SquareInFront))
                             {
-                                User.UnlockWalking();
+                                user.UnlockWalking();
 
                                 ExtraData = "0";
                                 InteractingUser = 0;
@@ -654,7 +654,7 @@ namespace Plus.HabboHotel.Items
                                 UpdateState(false, true);
                             }
 
-                            if (User == null)
+                            if (user == null)
                             {
                                 InteractingUser = 0;
                             }
@@ -663,66 +663,66 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Hopper
-                        case InteractionType.HOPPER:
+                        case InteractionType.Hopper:
                             {
-                                User = null;
-                                User2 = null;
+                                user = null;
+                                user2 = null;
                                 bool showHopperEffect = false;
                                 bool keepDoorOpen = false;
-                                int Pause = 0;
+                                int pause = 0;
 
 
                                 // Do we have a primary user that wants to go somewhere?
                                 if (InteractingUser > 0)
                                 {
-                                    User = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
+                                    user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
 
                                     // Is this user okay?
-                                    if (User != null)
+                                    if (user != null)
                                     {
                                         // Is he in the tele?
-                                        if (User.Coordinate == Coordinate)
+                                        if (user.Coordinate == Coordinate)
                                         {
                                             //Remove the user from the square
-                                            User.AllowOverride = false;
-                                            if (User.TeleDelay == 0)
+                                            user.AllowOverride = false;
+                                            if (user.TeleDelay == 0)
                                             {
-                                                int RoomHopId = ItemHopperFinder.GetAHopper(User.RoomId);
-                                                int NextHopperId = ItemHopperFinder.GetHopperId(RoomHopId);
+                                                int roomHopId = ItemHopperFinder.GetAHopper(user.RoomId);
+                                                int nextHopperId = ItemHopperFinder.GetHopperId(roomHopId);
 
-                                                if (!User.IsBot && User != null && User.GetClient() != null &&
-                                                    User.GetClient().GetHabbo() != null)
+                                                if (!user.IsBot && user != null && user.GetClient() != null &&
+                                                    user.GetClient().GetHabbo() != null)
                                                 {
-                                                    User.GetClient().GetHabbo().IsHopping = true;
-                                                    User.GetClient().GetHabbo().HopperId = NextHopperId;
-                                                    User.GetClient().GetHabbo().PrepareRoom(RoomHopId, "");
+                                                    user.GetClient().GetHabbo().IsHopping = true;
+                                                    user.GetClient().GetHabbo().HopperId = nextHopperId;
+                                                    user.GetClient().GetHabbo().PrepareRoom(roomHopId, "");
                                                     //User.GetClient().SendMessage(new RoomForwardComposer(RoomHopId));
                                                     InteractingUser = 0;
                                                 }
                                             }
                                             else
                                             {
-                                                User.TeleDelay--;
+                                                user.TeleDelay--;
                                                 showHopperEffect = true;
                                             }
                                         }
                                         // Is he in front of the tele?
-                                        else if (User.Coordinate == SquareInFront)
+                                        else if (user.Coordinate == SquareInFront)
                                         {
-                                            User.AllowOverride = true;
+                                            user.AllowOverride = true;
                                             keepDoorOpen = true;
 
                                             // Lock his walking. We're taking control over him. Allow overriding so he can get in the tele.
-                                            if (User.IsWalking && (User.GoalX != GetX || User.GoalY != GetY))
+                                            if (user.IsWalking && (user.GoalX != GetX || user.GoalY != GetY))
                                             {
-                                                User.ClearMovement(true);
+                                                user.ClearMovement(true);
                                             }
 
-                                            User.CanWalk = false;
-                                            User.AllowOverride = true;
+                                            user.CanWalk = false;
+                                            user.AllowOverride = true;
 
                                             // Move into the tele
-                                            User.MoveTo(Coordinate.X, Coordinate.Y, true);
+                                            user.MoveTo(Coordinate.X, Coordinate.Y, true);
                                         }
                                         // Not even near, do nothing and move on for the next user.
                                         else
@@ -739,15 +739,15 @@ namespace Plus.HabboHotel.Items
 
                                 if (InteractingUser2 > 0)
                                 {
-                                    User2 = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser2);
+                                    user2 = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser2);
 
                                     // Is this user okay?
-                                    if (User2 != null)
+                                    if (user2 != null)
                                     {
                                         // If so, open the door, unlock the user's walking, and try to push him out in the right direction. We're done with him!
                                         keepDoorOpen = true;
-                                        User2.UnlockWalking();
-                                        User2.MoveTo(SquareInFront);
+                                        user2.UnlockWalking();
+                                        user2.MoveTo(SquareInFront);
                                     }
 
                                     // This is a one time thing, whether the user's valid or not.
@@ -775,15 +775,15 @@ namespace Plus.HabboHotel.Items
                                 {
                                     if (ExtraData != "0")
                                     {
-                                        if (Pause == 0)
+                                        if (pause == 0)
                                         {
                                             ExtraData = "0";
                                             UpdateState(false, true);
-                                            Pause = 2;
+                                            pause = 2;
                                         }
                                         else
                                         {
-                                            Pause--;
+                                            pause--;
                                         }
                                     }
                                 }
@@ -795,10 +795,10 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Teleports
-                        case InteractionType.TELEPORT:
+                        case InteractionType.Teleport:
                             {
-                                User = null;
-                                User2 = null;
+                                user = null;
+                                user2 = null;
 
                                 bool keepDoorOpen = false;
                                 bool showTeleEffect = false;
@@ -806,16 +806,16 @@ namespace Plus.HabboHotel.Items
                                 // Do we have a primary user that wants to go somewhere?
                                 if (InteractingUser > 0)
                                 {
-                                    User = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
+                                    user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
 
                                     // Is this user okay?
-                                    if (User != null)
+                                    if (user != null)
                                     {
                                         // Is he in the tele?
-                                        if (User.Coordinate == Coordinate)
+                                        if (user.Coordinate == Coordinate)
                                         {
                                             //Remove the user from the square
-                                            User.AllowOverride = false;
+                                            user.AllowOverride = false;
 
                                             if (ItemTeleporterFinder.IsTeleLinked(Id, GetRoom()))
                                             {
@@ -824,54 +824,54 @@ namespace Plus.HabboHotel.Items
                                                 if (true)
                                                 {
                                                     // Woop! No more delay.
-                                                    int TeleId = ItemTeleporterFinder.GetLinkedTele(Id);
-                                                    int RoomId = ItemTeleporterFinder.GetTeleRoomId(TeleId, GetRoom());
+                                                    int teleId = ItemTeleporterFinder.GetLinkedTele(Id);
+                                                    int roomId = ItemTeleporterFinder.GetTeleRoomId(teleId, GetRoom());
 
                                                     // Do we need to tele to the same room or gtf to another?
-                                                    if (RoomId == this.RoomId)
+                                                    if (roomId == this.RoomId)
                                                     {
-                                                        Item Item = GetRoom().GetRoomItemHandler().GetItem(TeleId);
+                                                        Item item = GetRoom().GetRoomItemHandler().GetItem(teleId);
 
-                                                        if (Item == null)
+                                                        if (item == null)
                                                         {
-                                                            User.UnlockWalking();
+                                                            user.UnlockWalking();
                                                         }
                                                         else
                                                         {
                                                             // Set pos
-                                                            User.SetPos(Item.GetX, Item.GetY, Item.GetZ);
-                                                            User.SetRot(Item.Rotation, false);
+                                                            user.SetPos(item.GetX, item.GetY, item.GetZ);
+                                                            user.SetRot(item.Rotation, false);
 
                                                             // Force tele effect update (dirty)
-                                                            Item.ExtraData = "2";
-                                                            Item.UpdateState(false, true);
+                                                            item.ExtraData = "2";
+                                                            item.UpdateState(false, true);
 
                                                             // Set secondary interacting user
-                                                            Item.InteractingUser2 = InteractingUser;
-                                                            GetRoom().GetGameMap().RemoveUserFromMap(User, new Point(GetX, GetY));
+                                                            item.InteractingUser2 = InteractingUser;
+                                                            GetRoom().GetGameMap().RemoveUserFromMap(user, new Point(GetX, GetY));
 
                                                             InteractingUser = 0;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        if (User.TeleDelay == 0)
+                                                        if (user.TeleDelay == 0)
                                                         {
                                                             // Let's run the teleport delegate to take futher care of this.. WHY DARIO?!
-                                                            if (!User.IsBot && User != null && User.GetClient() != null &&
-                                                                User.GetClient().GetHabbo() != null)
+                                                            if (!user.IsBot && user != null && user.GetClient() != null &&
+                                                                user.GetClient().GetHabbo() != null)
                                                             {
-                                                                User.GetClient().GetHabbo().IsTeleporting = true;
-                                                                User.GetClient().GetHabbo().TeleportingRoomID = RoomId;
-                                                                User.GetClient().GetHabbo().TeleporterId = TeleId;
-                                                                User.GetClient().GetHabbo().PrepareRoom(RoomId, "");
+                                                                user.GetClient().GetHabbo().IsTeleporting = true;
+                                                                user.GetClient().GetHabbo().TeleportingRoomId = roomId;
+                                                                user.GetClient().GetHabbo().TeleporterId = teleId;
+                                                                user.GetClient().GetHabbo().PrepareRoom(roomId, "");
                                                                 //User.GetClient().SendMessage(new RoomForwardComposer(RoomId));
                                                                 InteractingUser = 0;
                                                             }
                                                         }
                                                         else
                                                         {
-                                                            User.TeleDelay--;
+                                                            user.TeleDelay--;
                                                             showTeleEffect = true;
                                                         }
                                                         //PlusEnvironment.GetGame().GetRoomManager().AddTeleAction(new TeleUserData(User.GetClient().GetMessageHandler(), User.GetClient().GetHabbo(), RoomId, TeleId));
@@ -888,28 +888,28 @@ namespace Plus.HabboHotel.Items
                                             else
                                             {
                                                 // This tele is not linked, so let's gtfo.
-                                                User.UnlockWalking();
+                                                user.UnlockWalking();
                                                 InteractingUser = 0;
                                             }
                                         }
                                         // Is he in front of the tele?
-                                        else if (User.Coordinate == SquareInFront)
+                                        else if (user.Coordinate == SquareInFront)
                                         {
-                                                User.AllowOverride = true;
+                                                user.AllowOverride = true;
                                                 // Open the door
                                                 keepDoorOpen = true;
 
                                                 // Lock his walking. We're taking control over him. Allow overriding so he can get in the tele.
-                                                if (User.IsWalking && (User.GoalX != GetX || User.GoalY != GetY))
+                                                if (user.IsWalking && (user.GoalX != GetX || user.GoalY != GetY))
                                                 {
-                                                    User.ClearMovement(true);
+                                                    user.ClearMovement(true);
                                                 }
 
-                                                User.CanWalk = false;
-                                                User.AllowOverride = true;
+                                                user.CanWalk = false;
+                                                user.AllowOverride = true;
 
                                                 // Move into the tele
-                                                User.MoveTo(Coordinate.X, Coordinate.Y, true);
+                                                user.MoveTo(Coordinate.X, Coordinate.Y, true);
                                             
                                         }
                                         // Not even near, do nothing and move on for the next user.
@@ -928,15 +928,15 @@ namespace Plus.HabboHotel.Items
                                 // Do we have a secondary user that wants to get out of the tele?
                                 if (InteractingUser2 > 0)
                                 {
-                                    User2 = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser2);
+                                    user2 = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser2);
 
                                     // Is this user okay?
-                                    if (User2 != null)
+                                    if (user2 != null)
                                     {
                                         // If so, open the door, unlock the user's walking, and try to push him out in the right direction. We're done with him!
                                         keepDoorOpen = true;
-                                        User2.UnlockWalking();
-                                        User2.MoveTo(SquareInFront);
+                                        user2.UnlockWalking();
+                                        user2.MoveTo(SquareInFront);
                                     }
 
                                     // This is a one time thing, whether the user's valid or not.
@@ -976,14 +976,14 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Bottle
-                        case InteractionType.BOTTLE:
+                        case InteractionType.Bottle:
                             ExtraData = RandomNumber.GenerateNewRandom(0, 7).ToString();
                             UpdateState();
                             break;
                         #endregion
 
                         #region Dice
-                        case InteractionType.DICE:
+                        case InteractionType.Dice:
                             {
                                 string[] numbers = new string[] { "1", "2", "3", "4", "5", "6" };
                                 if (ExtraData == "-1")
@@ -994,14 +994,14 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Habbo Wheel
-                        case InteractionType.HABBO_WHEEL:
+                        case InteractionType.HabboWheel:
                             ExtraData = RandomNumber.GenerateRandom(1, 10).ToString();
                             UpdateState();
                             break;
                         #endregion
 
                         #region Love Shuffler
-                        case InteractionType.LOVE_SHUFFLER:
+                        case InteractionType.LoveShuffler:
 
                             if (ExtraData == "0")
                             {
@@ -1018,7 +1018,7 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Alert
-                        case InteractionType.ALERT:
+                        case InteractionType.Alert:
                             if (ExtraData == "1")
                             {
                                 ExtraData = "0";
@@ -1028,18 +1028,18 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Vending Machine
-                        case InteractionType.VENDING_MACHINE:
+                        case InteractionType.VendingMachine:
 
                             if (ExtraData == "1")
                             {
-                                User = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
-                                if (User == null)
+                                user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
+                                if (user == null)
                                     break;
-                                User.UnlockWalking();
+                                user.UnlockWalking();
                                 if (GetBaseItem().VendingIds.Count > 0)
                                 {
                                     int randomDrink = GetBaseItem().VendingIds[RandomNumber.GenerateRandom(0, (GetBaseItem().VendingIds.Count - 1))];
-                                    User.CarryItem(randomDrink);
+                                    user.CarryItem(randomDrink);
                                 }
 
 
@@ -1052,7 +1052,7 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Scoreboard
-                        case InteractionType.SCOREBOARD:
+                        case InteractionType.Scoreboard:
                             {
                                 if (string.IsNullOrEmpty(ExtraData))
                                     break;
@@ -1070,16 +1070,16 @@ namespace Plus.HabboHotel.Items
 
                                 if (seconds > 0)
                                 {
-                                    if (interactionCountHelper == 1)
+                                    if (InteractionCountHelper == 1)
                                     {
                                         seconds--;
-                                        interactionCountHelper = 0;
+                                        InteractionCountHelper = 0;
 
                                         ExtraData = seconds.ToString();
                                         UpdateState();
                                     }
                                     else
-                                        interactionCountHelper++;
+                                        InteractionCountHelper++;
 
                                     UpdateCounter = 1;
                                 }
@@ -1091,7 +1091,7 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Banzai Counter
-                        case InteractionType.banzaicounter:
+                        case InteractionType.Banzaicounter:
                             {
                                 if (string.IsNullOrEmpty(ExtraData))
                                     break;
@@ -1108,10 +1108,10 @@ namespace Plus.HabboHotel.Items
 
                                 if (seconds > 0)
                                 {
-                                    if (interactionCountHelper == 1)
+                                    if (InteractionCountHelper == 1)
                                     {
                                         seconds--;
-                                        interactionCountHelper = 0;
+                                        InteractionCountHelper = 0;
 
                                         if (GetRoom().GetBanzai().IsBanzaiActive)
                                         {
@@ -1122,7 +1122,7 @@ namespace Plus.HabboHotel.Items
                                             break;
                                     }
                                     else
-                                        interactionCountHelper++;
+                                        InteractionCountHelper++;
 
                                     UpdateCounter = 1;
                                 }
@@ -1137,7 +1137,7 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Banzai Tele
-                        case InteractionType.banzaitele:
+                        case InteractionType.Banzaitele:
                             {
                                 ExtraData = string.Empty;
                                 UpdateState();
@@ -1146,15 +1146,15 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Banzai Floor
-                        case InteractionType.banzaifloor:
+                        case InteractionType.Banzaifloor:
                             {
-                                if (value == 3)
+                                if (Value == 3)
                                 {
-                                    if (interactionCountHelper == 1)
+                                    if (InteractionCountHelper == 1)
                                     {
-                                        interactionCountHelper = 0;
+                                        InteractionCountHelper = 0;
 
-                                        switch (team)
+                                        switch (Team)
                                         {
                                             case Team.Blue:
                                                 {
@@ -1184,14 +1184,14 @@ namespace Plus.HabboHotel.Items
                                     else
                                     {
                                         ExtraData = "";
-                                        interactionCountHelper++;
+                                        InteractionCountHelper++;
                                     }
 
                                     UpdateState();
 
-                                    interactionCount++;
+                                    InteractionCount++;
 
-                                    if (interactionCount < 16)
+                                    if (InteractionCount < 16)
                                     {
                                         UpdateCounter = 1;
                                     }
@@ -1203,16 +1203,16 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Banzai Puck
-                        case InteractionType.banzaipuck:
+                        case InteractionType.Banzaipuck:
                             {
-                                if (interactionCount > 4)
+                                if (InteractionCount > 4)
                                 {
-                                    interactionCount++;
+                                    InteractionCount++;
                                     UpdateCounter = 1;
                                 }
                                 else
                                 {
-                                    interactionCount = 0;
+                                    InteractionCount = 0;
                                     UpdateCounter = 0;
                                 }
 
@@ -1221,22 +1221,22 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Freeze Tile
-                        case InteractionType.FREEZE_TILE:
+                        case InteractionType.FreezeTile:
                             {
                                 if (InteractingUser > 0)
                                 {
                                     ExtraData = "11000";
                                     UpdateState(false, true);
-                                    GetRoom().GetFreeze().onFreezeTiles(this, freezePowerUp);
+                                    GetRoom().GetFreeze().OnFreezeTiles(this, FreezePowerUp);
                                     InteractingUser = 0;
-                                    interactionCountHelper = 0;
+                                    InteractionCountHelper = 0;
                                 }
                                 break;
                             }
                         #endregion
 
                         #region Football Counter
-                        case InteractionType.COUNTER:
+                        case InteractionType.Counter:
                             {
                                 if (string.IsNullOrEmpty(ExtraData))
                                     break;
@@ -1253,10 +1253,10 @@ namespace Plus.HabboHotel.Items
 
                                 if (seconds > 0)
                                 {
-                                    if (interactionCountHelper == 1)
+                                    if (InteractionCountHelper == 1)
                                     {
                                         seconds--;
-                                        interactionCountHelper = 0;
+                                        InteractionCountHelper = 0;
                                         if (GetRoom().GetSoccer().GameIsStarted)
                                         {
                                             ExtraData = seconds.ToString();
@@ -1266,7 +1266,7 @@ namespace Plus.HabboHotel.Items
                                             break;
                                     }
                                     else
-                                        interactionCountHelper++;
+                                        InteractionCountHelper++;
 
                                     UpdateCounter = 1;
                                 }
@@ -1281,7 +1281,7 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Freeze Timer
-                        case InteractionType.freezetimer:
+                        case InteractionType.Freezetimer:
                             {
                                 if (string.IsNullOrEmpty(ExtraData))
                                     break;
@@ -1298,10 +1298,10 @@ namespace Plus.HabboHotel.Items
 
                                 if (seconds > 0)
                                 {
-                                    if (interactionCountHelper == 1)
+                                    if (InteractionCountHelper == 1)
                                     {
                                         seconds--;
-                                        interactionCountHelper = 0;
+                                        InteractionCountHelper = 0;
                                         if (GetRoom().GetFreeze().GameIsStarted)
                                         {
                                             ExtraData = seconds.ToString();
@@ -1311,7 +1311,7 @@ namespace Plus.HabboHotel.Items
                                             break;
                                     }
                                     else
-                                        interactionCountHelper++;
+                                        InteractionCountHelper++;
 
                                     UpdateCounter = 1;
                                 }
@@ -1326,7 +1326,7 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Pressure Pad
-                        case InteractionType.PRESSURE_PAD:
+                        case InteractionType.PressurePad:
                             {
                                 ExtraData = "1";
                                 UpdateState();
@@ -1335,9 +1335,9 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Wired
-                        case InteractionType.WIRED_EFFECT:
-                        case InteractionType.WIRED_TRIGGER:
-                        case InteractionType.WIRED_CONDITION:
+                        case InteractionType.WiredEffect:
+                        case InteractionType.WiredTrigger:
+                        case InteractionType.WiredCondition:
                             {
                                 if (ExtraData == "1")
                                 {
@@ -1349,29 +1349,29 @@ namespace Plus.HabboHotel.Items
                         #endregion
 
                         #region Cannon
-                        case InteractionType.CANNON:
+                        case InteractionType.Cannon:
                             {
                                 if (ExtraData != "1")
                                     break;
 
                                 #region Target Calculation
-                                Point TargetStart = Coordinate;
-                                List<Point> TargetSquares = new List<Point>();
+                                Point targetStart = Coordinate;
+                                List<Point> targetSquares = new List<Point>();
                                 switch (Rotation)
                                 {
                                     case 0:
                                         {
-                                            TargetStart = new Point(GetX - 1, GetY);
+                                            targetStart = new Point(GetX - 1, GetY);
 
-                                            if (!TargetSquares.Contains(TargetStart))
-                                                TargetSquares.Add(TargetStart);
+                                            if (!targetSquares.Contains(targetStart))
+                                                targetSquares.Add(targetStart);
 
                                             for (int I = 1; I <= 3; I++)
                                             {
-                                                Point TargetSquare = new Point(TargetStart.X - I, TargetStart.Y);
+                                                Point targetSquare = new Point(targetStart.X - I, targetStart.Y);
 
-                                                if (!TargetSquares.Contains(TargetSquare))
-                                                    TargetSquares.Add(TargetSquare);
+                                                if (!targetSquares.Contains(targetSquare))
+                                                    targetSquares.Add(targetSquare);
                                             }
 
                                             break;
@@ -1379,17 +1379,17 @@ namespace Plus.HabboHotel.Items
 
                                     case 2:
                                         {
-                                            TargetStart = new Point(GetX, GetY - 1);
+                                            targetStart = new Point(GetX, GetY - 1);
 
-                                            if (!TargetSquares.Contains(TargetStart))
-                                                TargetSquares.Add(TargetStart);
+                                            if (!targetSquares.Contains(targetStart))
+                                                targetSquares.Add(targetStart);
 
                                             for (int I = 1; I <= 3; I++)
                                             {
-                                                Point TargetSquare = new Point(TargetStart.X, TargetStart.Y - I);
+                                                Point targetSquare = new Point(targetStart.X, targetStart.Y - I);
 
-                                                if (!TargetSquares.Contains(TargetSquare))
-                                                    TargetSquares.Add(TargetSquare);
+                                                if (!targetSquares.Contains(targetSquare))
+                                                    targetSquares.Add(targetSquare);
                                             }
 
                                             break;
@@ -1397,17 +1397,17 @@ namespace Plus.HabboHotel.Items
 
                                     case 4:
                                         {
-                                            TargetStart = new Point(GetX + 2, GetY);
+                                            targetStart = new Point(GetX + 2, GetY);
 
-                                            if (!TargetSquares.Contains(TargetStart))
-                                                TargetSquares.Add(TargetStart);
+                                            if (!targetSquares.Contains(targetStart))
+                                                targetSquares.Add(targetStart);
 
                                             for (int I = 1; I <= 3; I++)
                                             {
-                                                Point TargetSquare = new Point(TargetStart.X + I, TargetStart.Y);
+                                                Point targetSquare = new Point(targetStart.X + I, targetStart.Y);
 
-                                                if (!TargetSquares.Contains(TargetSquare))
-                                                    TargetSquares.Add(TargetSquare);
+                                                if (!targetSquares.Contains(targetSquare))
+                                                    targetSquares.Add(targetSquare);
                                             }
 
                                             break;
@@ -1415,18 +1415,18 @@ namespace Plus.HabboHotel.Items
 
                                     case 6:
                                         {
-                                            TargetStart = new Point(GetX, GetY + 2);
+                                            targetStart = new Point(GetX, GetY + 2);
 
 
-                                            if (!TargetSquares.Contains(TargetStart))
-                                                TargetSquares.Add(TargetStart);
+                                            if (!targetSquares.Contains(targetStart))
+                                                targetSquares.Add(targetStart);
 
                                             for (int I = 1; I <= 3; I++)
                                             {
-                                                Point TargetSquare = new Point(TargetStart.X, TargetStart.Y + I);
+                                                Point targetSquare = new Point(targetStart.X, targetStart.Y + I);
 
-                                                if (!TargetSquares.Contains(TargetSquare))
-                                                    TargetSquares.Add(TargetSquare);
+                                                if (!targetSquares.Contains(targetSquare))
+                                                    targetSquares.Add(targetSquare);
                                             }
 
                                             break;
@@ -1434,30 +1434,30 @@ namespace Plus.HabboHotel.Items
                                 }
                                 #endregion
 
-                                if (TargetSquares.Count > 0)
+                                if (targetSquares.Count > 0)
                                 {
-                                    foreach (Point Square in TargetSquares.ToList())
+                                    foreach (Point square in targetSquares.ToList())
                                     {
-                                        List<RoomUser> affectedUsers = _room.GetGameMap().GetRoomUsers(Square).ToList();
+                                        List<RoomUser> affectedUsers = _room.GetGameMap().GetRoomUsers(square).ToList();
 
                                         if (affectedUsers == null || affectedUsers.Count == 0)
                                             continue;
 
-                                        foreach (RoomUser Target in affectedUsers)
+                                        foreach (RoomUser target in affectedUsers)
                                         {
-                                            if (Target == null || Target.IsBot || Target.IsPet)
+                                            if (target == null || target.IsBot || target.IsPet)
                                                 continue;
 
-                                            if (Target.GetClient() == null || Target.GetClient().GetHabbo() == null)
+                                            if (target.GetClient() == null || target.GetClient().GetHabbo() == null)
                                                 continue;
 
-                                            if (_room.CheckRights(Target.GetClient(), true))
+                                            if (_room.CheckRights(target.GetClient(), true))
                                                 continue;
 
-                                            Target.ApplyEffect(4);
-                                            Target.GetClient().SendPacket(new RoomNotificationComposer("Kicked from room", "You were hit by a cannonball!", "room_kick_cannonball", ""));
-                                            Target.ApplyEffect(0);
-                                            _room.GetRoomUserManager().RemoveUserFromRoom(Target.GetClient(), true);
+                                            target.ApplyEffect(4);
+                                            target.GetClient().SendPacket(new RoomNotificationComposer("Kicked from room", "You were hit by a cannonball!", "room_kick_cannonball", ""));
+                                            target.ApplyEffect(0);
+                                            _room.GetRoomUserManager().RemoveUserFromRoom(target.GetClient(), true);
                                         }
                                     }
                                 }
@@ -1502,9 +1502,9 @@ namespace Plus.HabboHotel.Items
             return result;
         }
 
-        public void RequestUpdate(int Cycles, bool setUpdate)
+        public void RequestUpdate(int cycles, bool setUpdate)
         {
-            UpdateCounter = Cycles;
+            UpdateCounter = cycles;
             if (setUpdate)
                 UpdateNeeded = true;
         }
@@ -1553,8 +1553,8 @@ namespace Plus.HabboHotel.Items
             if (_room != null)
                 return _room;
             
-            if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(RoomId, out Room Room))
-                return Room;
+            if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(RoomId, out Room room))
+                return room;
 
             return null;
         }
@@ -1572,7 +1572,7 @@ namespace Plus.HabboHotel.Items
             if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null)
                 return;
 
-            if (GetBaseItem().InteractionType == InteractionType.TENT || GetBaseItem().InteractionType == InteractionType.TENT_SMALL)
+            if (GetBaseItem().InteractionType == InteractionType.Tent || GetBaseItem().InteractionType == InteractionType.TentSmall)
             {
                 GetRoom().AddUserToTent(Id, user);
             }
@@ -1586,7 +1586,7 @@ namespace Plus.HabboHotel.Items
             if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null)
                 return;
 
-            if (GetBaseItem().InteractionType == InteractionType.TENT || GetBaseItem().InteractionType == InteractionType.TENT_SMALL)
+            if (GetBaseItem().InteractionType == InteractionType.Tent || GetBaseItem().InteractionType == InteractionType.TentSmall)
                 GetRoom().RemoveUserFromTent(Id, user);
 
             GetRoom().GetWired().TriggerEvent(Wired.WiredBoxType.TriggerWalkOffFurni, user.GetClient().GetHabbo(), this);

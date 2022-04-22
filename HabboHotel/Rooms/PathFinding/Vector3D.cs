@@ -2,19 +2,19 @@
 {
     sealed class Vector3D
     {
-        private int x;
-        private int y;
-        private double z;
+        private int _x;
+        private int _y;
+        private double _z;
 
         public int X
         {
             get
             {
-                return x;
+                return _x;
             }
             set
             {
-                x = value;
+                _x = value;
             }
         }
 
@@ -22,11 +22,11 @@
         {
             get
             {
-                return y;
+                return _y;
             }
             set
             {
-                y = value;
+                _y = value;
             }
         }
 
@@ -34,11 +34,11 @@
         {
             get
             {
-                return z;
+                return _z;
             }
             set
             {
-                z = value;
+                _z = value;
             }
         }
 
@@ -46,14 +46,14 @@
 
         public Vector3D(int x, int y, double z)
         {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            this._x = x;
+            this._y = y;
+            this._z = z;
         }
 
         public Vector2D ToVector2D()
         {
-            return new Vector2D(x, y);
+            return new Vector2D(_x, _y);
         }
     }
 }

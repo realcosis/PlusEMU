@@ -2,11 +2,11 @@
 {
     class IgnoreStatusComposer : ServerPacket
     {
-        public IgnoreStatusComposer(int Status, string Username)
+        public IgnoreStatusComposer(int status, string username)
             : base(ServerPacketHeader.IgnoreStatusMessageComposer)
         {
-            WriteInteger(Status);
-           WriteString(Username);
+            WriteInteger(status);
+           WriteString(username);
         }
     }
 }

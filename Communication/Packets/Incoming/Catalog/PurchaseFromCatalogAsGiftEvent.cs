@@ -38,7 +38,7 @@ namespace Plus.Communication.Packets.Incoming.Catalog
             if (!PlusEnvironment.GetGame().GetCatalog().TryGetPage(pageId, out CatalogPage page))
                 return;
 
-            if ( !page.Enabled || !page.Visible || page.MinimumRank > session.GetHabbo().Rank || page.MinimumVIP > session.GetHabbo().VIPRank && session.GetHabbo().Rank == 1)
+            if ( !page.Enabled || !page.Visible || page.MinimumRank > session.GetHabbo().Rank || page.MinimumVip > session.GetHabbo().VipRank && session.GetHabbo().Rank == 1)
                 return;
 
             if (!page.Items.TryGetValue(itemId, out CatalogItem item))
@@ -56,7 +56,7 @@ namespace Plus.Communication.Packets.Incoming.Catalog
             if (!ItemUtility.CanGiftItem(item))
                 return;
 
-            if (!PlusEnvironment.GetGame().GetItemManager().GetGift(spriteId, out ItemData presentData) || presentData.InteractionType != InteractionType.GIFT)
+            if (!PlusEnvironment.GetGame().GetItemManager().GetGift(spriteId, out ItemData presentData) || presentData.InteractionType != InteractionType.Gift)
                 return;
 
             if (session.GetHabbo().Credits < item.CostCredits)
@@ -113,13 +113,13 @@ namespace Plus.Communication.Packets.Incoming.Catalog
                 string itemExtraData = null;
                 switch (item.Data.InteractionType)
                 {
-                    case InteractionType.NONE:
+                    case InteractionType.None:
                         itemExtraData = "";
                         break;
 
                     #region Pet handling
 
-                    case InteractionType.PET:
+                    case InteractionType.Pet:
 
                         try
                         {
@@ -148,9 +148,9 @@ namespace Plus.Communication.Packets.Incoming.Catalog
 
                     #endregion
 
-                    case InteractionType.FLOOR:
-                    case InteractionType.WALLPAPER:
-                    case InteractionType.LANDSCAPE:
+                    case InteractionType.Floor:
+                    case InteractionType.Wallpaper:
+                    case InteractionType.Landscape:
 
                         double number = 0;
                         try
@@ -165,23 +165,23 @@ namespace Plus.Communication.Packets.Incoming.Catalog
                         itemExtraData = number.ToString(CultureInfo.CurrentCulture).Replace(',', '.');
                         break; // maintain extra data // todo: validate
 
-                    case InteractionType.POSTIT:
+                    case InteractionType.Postit:
                         itemExtraData = "FFFF33";
                         break;
 
-                    case InteractionType.MOODLIGHT:
+                    case InteractionType.Moodlight:
                         itemExtraData = "1,1,1,#000000,255";
                         break;
 
-                    case InteractionType.TROPHY:
+                    case InteractionType.Trophy:
                         itemExtraData = session.GetHabbo().Username + Convert.ToChar(9) + DateTime.Now.Day + "-" + DateTime.Now.Month + "-" + DateTime.Now.Year + Convert.ToChar(9) + data;
                         break;
 
-                    case InteractionType.MANNEQUIN:
+                    case InteractionType.Mannequin:
                         itemExtraData = "m" + Convert.ToChar(5) + ".ch-210-1321.lg-285-92" + Convert.ToChar(5) + "Default Mannequin";
                         break;
 
-                    case InteractionType.BADGE_DISPLAY:
+                    case InteractionType.BadgeDisplay:
                         if (!session.GetHabbo().GetBadgeComponent().HasBadge(data))
                         {
                             session.SendPacket(new BroadcastMessageAlertComposer("Oops, it appears that you do not own this badge."));
@@ -218,7 +218,7 @@ namespace Plus.Communication.Packets.Incoming.Catalog
                 {
                     receiver.GetHabbo().GetInventoryComponent().TryAddItem(giveItem);
                     receiver.SendPacket(new FurniListNotificationComposer(giveItem.Id, 1));
-                    receiver.SendPacket(new PurchaseOKComposer());
+                    receiver.SendPacket(new PurchaseOkComposer());
                     receiver.SendPacket(new FurniListAddComposer(giveItem));
                     receiver.SendPacket(new FurniListUpdateComposer());
                 }
@@ -232,7 +232,7 @@ namespace Plus.Communication.Packets.Incoming.Catalog
                 }
             }
        
-            session.SendPacket(new PurchaseOKComposer(item, presentData));
+            session.SendPacket(new PurchaseOkComposer(item, presentData));
 
             if (item.CostCredits > 0)
             {

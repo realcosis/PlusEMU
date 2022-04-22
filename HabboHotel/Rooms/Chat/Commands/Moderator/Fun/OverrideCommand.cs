@@ -17,14 +17,14 @@
             get { return "Gives you the ability to walk over anything."; }
         }
 
-        public void Execute(GameClients.GameClient Session, Room Room, string[] Params)
+        public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            RoomUser User = Room.GetRoomUserManager().GetRoomUserByHabbo(Session.GetHabbo().Id);
-            if (User == null)
+            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            if (user == null)
                 return;
 
-            User.AllowOverride = !User.AllowOverride;
-            Session.SendWhisper("Override mode updated.");
+            user.AllowOverride = !user.AllowOverride;
+            session.SendWhisper("Override mode updated.");
         }
     }
 }

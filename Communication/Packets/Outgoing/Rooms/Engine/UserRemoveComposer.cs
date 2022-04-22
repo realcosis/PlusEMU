@@ -2,10 +2,10 @@
 {
     class UserRemoveComposer : ServerPacket
     {
-        public UserRemoveComposer(int Id)
+        public UserRemoveComposer(int id)
             : base(ServerPacketHeader.UserRemoveMessageComposer)
         {
-           WriteString(Id.ToString());
+           WriteString(id.ToString());
         }
     }
 }

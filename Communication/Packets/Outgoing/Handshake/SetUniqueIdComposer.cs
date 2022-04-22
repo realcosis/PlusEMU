@@ -2,10 +2,10 @@
 {
     class SetUniqueIdComposer : ServerPacket
     {
-        public SetUniqueIdComposer(string Id)
+        public SetUniqueIdComposer(string id)
             : base(ServerPacketHeader.SetUniqueIdMessageComposer)
         {
-           WriteString(Id);
+           WriteString(id);
         }
     }
 }

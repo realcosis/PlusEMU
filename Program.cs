@@ -8,8 +8,8 @@ namespace Plus
 {
     public static class Program
     {
-        private const int MF_BYCOMMAND = 0x00000000;
-        public const int SC_CLOSE = 0xF060;
+        private const int MfBycommand = 0x00000000;
+        public const int ScClose = 0xF060;
 
         [DllImport("Kernel32")]
         private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
@@ -25,7 +25,7 @@ namespace Plus
 
         [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
 
-        public static void Main(string[] Args)
+        public static void Main(string[] args)
         {
             //XmlConfigurator.Configure();
 
@@ -42,11 +42,11 @@ namespace Plus
                 if (Console.ReadKey(true).Key == ConsoleKey.Enter)
                 {
                     Console.Write("plus> ");
-                    string Input = Console.ReadLine();
+                    string input = Console.ReadLine();
 
-                    if (Input.Length > 0)
+                    if (input.Length > 0)
                     {
-                        string s = Input.Split(' ')[0];
+                        string s = input.Split(' ')[0];
 
                         ConsoleCommands.InvokeCommand(s);
                     }
@@ -63,11 +63,11 @@ namespace Plus
 
         private enum CtrlType
         {
-            CTRL_C_EVENT = 0,
-            CTRL_BREAK_EVENT = 1,
-            CTRL_CLOSE_EVENT = 2,
-            CTRL_LOGOFF_EVENT = 5,
-            CTRL_SHUTDOWN_EVENT = 6
+            CtrlCEvent = 0,
+            CtrlBreakEvent = 1,
+            CtrlCloseEvent = 2,
+            CtrlLogoffEvent = 5,
+            CtrlShutdownEvent = 6
         }
 
         private delegate bool EventHandler(CtrlType sig);

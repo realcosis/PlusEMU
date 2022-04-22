@@ -6,11 +6,11 @@
         private int _partId;
         private string _part;
 
-        public ClothingParts(int Id, int PartId, string Part)
+        public ClothingParts(int id, int partId, string part)
         {
-            _id = Id;
-            _partId = PartId;
-            _part = Part;
+            _id = id;
+            _partId = partId;
+            _part = part;
         }
 
         public int Id

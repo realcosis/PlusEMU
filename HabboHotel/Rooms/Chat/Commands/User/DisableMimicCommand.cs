@@ -21,15 +21,15 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
             get { return "Allows you to disable the ability to be mimiced or to enable the ability to be mimiced."; }
         }
 
-        public void Execute(GameClients.GameClient Session, Room Room, string[] Params)
+        public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            Session.GetHabbo().AllowMimic = !Session.GetHabbo().AllowMimic;
-            Session.SendWhisper("You're " + (Session.GetHabbo().AllowMimic == true ? "now" : "no longer") + " able to be mimiced.");
+            session.GetHabbo().AllowMimic = !session.GetHabbo().AllowMimic;
+            session.SendWhisper("You're " + (session.GetHabbo().AllowMimic == true ? "now" : "no longer") + " able to be mimiced.");
 
             using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
-                dbClient.SetQuery("UPDATE `users` SET `allow_mimic` = @AllowMimic WHERE `id` = '" + Session.GetHabbo().Id + "'");
-                dbClient.AddParameter("AllowMimic", PlusEnvironment.BoolToEnum(Session.GetHabbo().AllowMimic));
+                dbClient.SetQuery("UPDATE `users` SET `allow_mimic` = @AllowMimic WHERE `id` = '" + session.GetHabbo().Id + "'");
+                dbClient.AddParameter("AllowMimic", PlusEnvironment.BoolToEnum(session.GetHabbo().AllowMimic));
                 dbClient.RunQuery();
             }
         }

@@ -6,18 +6,18 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects
 {
     class AvatarEffectsComposer : ServerPacket
     {
-        public AvatarEffectsComposer(ICollection<AvatarEffect> Effects)
+        public AvatarEffectsComposer(ICollection<AvatarEffect> effects)
             : base(ServerPacketHeader.AvatarEffectsMessageComposer)
         {
-            WriteInteger(Effects.Count);
+            WriteInteger(effects.Count);
 
-            foreach (AvatarEffect Effect in Effects)
+            foreach (AvatarEffect effect in effects)
             {
-                WriteInteger(Effect.SpriteId);//Effect Id
+                WriteInteger(effect.SpriteId);//Effect Id
                 WriteInteger(0);//Type, 0 = Hand, 1 = Full
-                WriteInteger((int)Effect.Duration);
-                WriteInteger(Effect.Activated ? Effect.Quantity - 1 : Effect.Quantity);
-                WriteInteger(Effect.Activated ? (int)Effect.TimeLeft : -1);
+                WriteInteger((int)effect.Duration);
+                WriteInteger(effect.Activated ? effect.Quantity - 1 : effect.Quantity);
+                WriteInteger(effect.Activated ? (int)effect.TimeLeft : -1);
                 WriteBoolean(false);//Permanent
             }
         }

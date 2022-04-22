@@ -19,26 +19,26 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
             get { return "Allow another user to walk again."; }
         }
 
-        public void Execute(GameClient Session, Room Room, string[] Params)
+        public void Execute(GameClient session, Room room, string[] @params)
         {
-            if (Params.Length == 1)
+            if (@params.Length == 1)
             {
-                Session.SendWhisper("Please enter the username of the user you wish to un-freeze.");
+                session.SendWhisper("Please enter the username of the user you wish to un-freeze.");
                 return;
             }
 
-            GameClient TargetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(Params[1]);
-            if (TargetClient == null)
+            GameClient targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+            if (targetClient == null)
             {
-                Session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");
+                session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");
                 return;
             }
 
-            RoomUser TargetUser = Session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(Params[1]);
-            if (TargetUser != null)
-                TargetUser.Frozen = false;
+            RoomUser targetUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(@params[1]);
+            if (targetUser != null)
+                targetUser.Frozen = false;
 
-            Session.SendWhisper("Successfully unfroze " + TargetClient.GetHabbo().Username + "!");
+            session.SendWhisper("Successfully unfroze " + targetClient.GetHabbo().Username + "!");
         }
     }
 }

@@ -5,8 +5,8 @@
         // Handshake
         public const int InitCryptoMessageEvent = 3392;//316
         public const int GenerateSecretKeyMessageEvent = 3622;//3847
-        public const int UniqueIDMessageEvent = 3521;//1471
-        public const int SSOTicketMessageEvent = 1989;//1778
+        public const int UniqueIdMessageEvent = 3521;//1471
+        public const int SsoTicketMessageEvent = 1989;//1778
         public const int InfoRetrieveMessageEvent = 2629;//186
 
         // Avatar

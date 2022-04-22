@@ -12,19 +12,19 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Settings
             WriteInteger(instance.Id);
 
             WriteInteger(instance.GetBans().BannedUsers().Count);//Count
-            foreach (int Id in instance.GetBans().BannedUsers().ToList())
+            foreach (int id in instance.GetBans().BannedUsers().ToList())
             {
-                UserCache Data = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(Id);
+                UserCache data = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
 
-                if (Data == null)
+                if (data == null)
                 {
                     WriteInteger(0);
                     WriteString("Unknown Error");
                 }
                 else
                 {
-                    WriteInteger(Data.Id);
-                    WriteString(Data.Username);
+                    WriteInteger(data.Id);
+                    WriteString(data.Username);
                 }
             }
         }

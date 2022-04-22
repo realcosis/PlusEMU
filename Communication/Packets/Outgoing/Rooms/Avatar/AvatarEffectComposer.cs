@@ -2,11 +2,11 @@
 {
     class AvatarEffectComposer : ServerPacket
     {
-        public AvatarEffectComposer(int playerID, int effectID)
+        public AvatarEffectComposer(int playerId, int effectId)
             : base(ServerPacketHeader.AvatarEffectMessageComposer)
         {
-            WriteInteger(playerID);
-            WriteInteger(effectID);
+            WriteInteger(playerId);
+            WriteInteger(effectId);
             WriteInteger(0);
         }
     }

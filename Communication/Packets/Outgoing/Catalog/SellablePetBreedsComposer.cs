@@ -7,19 +7,19 @@ namespace Plus.Communication.Packets.Outgoing.Catalog
 {
     public class SellablePetBreedsComposer : ServerPacket
     {
-        public SellablePetBreedsComposer(string PetType, int PetId, ICollection<PetRace> Races)
+        public SellablePetBreedsComposer(string petType, int petId, ICollection<PetRace> races)
             : base(ServerPacketHeader.SellablePetBreedsMessageComposer)
         {
-           WriteString(PetType);
+           WriteString(petType);
 
-            WriteInteger(Races.Count);
-            foreach (PetRace Race in Races.ToList())
+            WriteInteger(races.Count);
+            foreach (PetRace race in races.ToList())
             {
-                WriteInteger(PetId);
-                WriteInteger(Race.PrimaryColour);
-                WriteInteger(Race.SecondaryColour);
-                WriteBoolean(Race.HasPrimaryColour);
-                WriteBoolean(Race.HasSecondaryColour);
+                WriteInteger(petId);
+                WriteInteger(race.PrimaryColour);
+                WriteInteger(race.SecondaryColour);
+                WriteBoolean(race.HasPrimaryColour);
+                WriteBoolean(race.HasSecondaryColour);
             }
 
 

@@ -58,7 +58,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets
 
             if (pet.RidingHorse)
             {
-                RoomUser userRiding = room.GetRoomUserManager().GetRoomUserByVirtualId(pet.HorseID);
+                RoomUser userRiding = room.GetRoomUserManager().GetRoomUserByVirtualId(pet.HorseId);
                 if (userRiding != null)
                 {
                     userRiding.RidingHorse = false;
@@ -75,7 +75,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets
                 using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
                     dbClient.RunQuery("UPDATE `bots` SET `room_id` = '0', `x` = '0', `Y` = '0', `Z` = '0' WHERE `id` = '" + data.PetId + "' LIMIT 1");
-                    dbClient.RunQuery("UPDATE `bots_petdata` SET `experience` = '" + data.experience + "', `energy` = '" + data.Energy + "', `nutrition` = '" + data.Nutrition + "', `respect` = '" + data.Respect + "' WHERE `id` = '" + data.PetId + "' LIMIT 1");
+                    dbClient.RunQuery("UPDATE `bots_petdata` SET `experience` = '" + data.Experience + "', `energy` = '" + data.Energy + "', `nutrition` = '" + data.Nutrition + "', `respect` = '" + data.Respect + "' WHERE `id` = '" + data.PetId + "' LIMIT 1");
                 }
             }
 

@@ -5,40 +5,40 @@ namespace Plus.Communication.Packets.Outgoing.Quests
 {
     class QuestStartedComposer : ServerPacket
     {
-        public QuestStartedComposer(GameClient Session, Quest Quest)
+        public QuestStartedComposer(GameClient session, Quest quest)
             : base(ServerPacketHeader.QuestStartedMessageComposer)
         {
-            SerializeQuest(this, Session, Quest, Quest.Category);
+            SerializeQuest(this, session, quest, quest.Category);
         }
 
-        private void SerializeQuest(ServerPacket Message, GameClient Session, Quest Quest, string Category)
+        private void SerializeQuest(ServerPacket message, GameClient session, Quest quest, string category)
         {
-            if (Message == null || Session == null)
+            if (message == null || session == null)
                 return;
 
-            int AmountInCat = PlusEnvironment.GetGame().GetQuestManager().GetAmountOfQuestsInCategory(Category);
-            int Number = Quest == null ? AmountInCat : Quest.Number - 1;
-            int UserProgress = Quest == null ? 0 : Session.GetHabbo().GetQuestProgress(Quest.Id);
+            int amountInCat = PlusEnvironment.GetGame().GetQuestManager().GetAmountOfQuestsInCategory(category);
+            int number = quest == null ? amountInCat : quest.Number - 1;
+            int userProgress = quest == null ? 0 : session.GetHabbo().GetQuestProgress(quest.Id);
 
-            if (Quest != null && Quest.IsCompleted(UserProgress))
-                Number++;
+            if (quest != null && quest.IsCompleted(userProgress))
+                number++;
 
-            Message.WriteString(Category);
-            Message.WriteInteger(Quest == null ? 0 : ((Quest.Category.Contains("xmas2012")) ? 0 : Number));  // Quest progress in this cat
-            Message.WriteInteger(Quest == null ? 0 : (Quest.Category.Contains("xmas2012")) ? 0 : AmountInCat); // Total quests in this cat
-            Message.WriteInteger(Quest == null ? 3 : Quest.RewardType);// Reward type (1 = Snowflakes, 2 = Love hearts, 3 = Pixels, 4 = Seashells, everything else is pixels
-            Message.WriteInteger(Quest == null ? 0 : Quest.Id); // Quest id
-            Message.WriteBoolean(Quest == null ? false : Session.GetHabbo().GetStats().QuestId == Quest.Id);  // Quest started
-            Message.WriteString(Quest == null ? string.Empty : Quest.ActionName);
-            Message.WriteString(Quest == null ? string.Empty : Quest.DataBit);
-            Message.WriteInteger(Quest == null ? 0 : Quest.Reward);
-            Message.WriteString(Quest == null ? string.Empty : Quest.Name);
-            Message.WriteInteger(UserProgress); // Current progress
-            Message.WriteInteger(Quest == null ? 0 : Quest.GoalData); // Target progress
-            Message.WriteInteger(Quest == null ? 0 : Quest.TimeUnlock); // "Next quest available countdown" in seconds
-            Message.WriteString("");
-            Message.WriteString("");
-            Message.WriteBoolean(true);
+            message.WriteString(category);
+            message.WriteInteger(quest == null ? 0 : ((quest.Category.Contains("xmas2012")) ? 0 : number));  // Quest progress in this cat
+            message.WriteInteger(quest == null ? 0 : (quest.Category.Contains("xmas2012")) ? 0 : amountInCat); // Total quests in this cat
+            message.WriteInteger(quest == null ? 3 : quest.RewardType);// Reward type (1 = Snowflakes, 2 = Love hearts, 3 = Pixels, 4 = Seashells, everything else is pixels
+            message.WriteInteger(quest == null ? 0 : quest.Id); // Quest id
+            message.WriteBoolean(quest == null ? false : session.GetHabbo().GetStats().QuestId == quest.Id);  // Quest started
+            message.WriteString(quest == null ? string.Empty : quest.ActionName);
+            message.WriteString(quest == null ? string.Empty : quest.DataBit);
+            message.WriteInteger(quest == null ? 0 : quest.Reward);
+            message.WriteString(quest == null ? string.Empty : quest.Name);
+            message.WriteInteger(userProgress); // Current progress
+            message.WriteInteger(quest == null ? 0 : quest.GoalData); // Target progress
+            message.WriteInteger(quest == null ? 0 : quest.TimeUnlock); // "Next quest available countdown" in seconds
+            message.WriteString("");
+            message.WriteString("");
+            message.WriteBoolean(true);
         }
     }
 }

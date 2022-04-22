@@ -6,11 +6,11 @@
         private int _fromUser;
         private string _username;
 
-        public MessengerRequest(int ToUser, int FromUser, string Username)
+        public MessengerRequest(int toUser, int fromUser, string username)
         {
-            _toUser = ToUser;
-            _fromUser = FromUser;
-            _username = Username;
+            _toUser = toUser;
+            _fromUser = fromUser;
+            _username = username;
         }
 
         public string Username

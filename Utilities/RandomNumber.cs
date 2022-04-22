@@ -4,11 +4,11 @@ namespace Plus.Utilities
 {
     public static class RandomNumber
     {
-        private static readonly Random r = new Random();
-        private static readonly Object l = new Object();
+        private static readonly Random R = new Random();
+        private static readonly Object L = new Object();
 
-        private static readonly Random globalRandom = new Random();
-        [ThreadStatic] private static Random localRandom;
+        private static readonly Random GlobalRandom = new Random();
+        [ThreadStatic] private static Random _localRandom;
 
         /// <summary>
         ///     Generates a new random number, each time this is called a new Random class is initialized.
@@ -31,26 +31,26 @@ namespace Plus.Utilities
         /// <returns>Random generated number.</returns>
         public static int GenerateLockedRandom(int min, int max)
         {
-            lock (l) // only allow one entry at a time to prevent returning the same number to multiple entries.
+            lock (L) // only allow one entry at a time to prevent returning the same number to multiple entries.
             {
-                return r.Next(min, max);
+                return R.Next(min, max);
             }
         }
 
         public static int GenerateRandom(int min, int max)
         {
-            Random inst = localRandom;
+            Random inst = _localRandom;
 
             max++;
 
             if (inst == null)
             {
                 int seed;
-                lock (globalRandom)
+                lock (GlobalRandom)
                 {
-                    seed = globalRandom.Next();
+                    seed = GlobalRandom.Next();
                 }
-                localRandom = inst = new Random(seed);
+                _localRandom = inst = new Random(seed);
             }
 
             return inst.Next(min, max);

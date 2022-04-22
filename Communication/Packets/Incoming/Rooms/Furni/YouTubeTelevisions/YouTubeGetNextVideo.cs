@@ -26,7 +26,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.YouTubeTelevisions
             packet.PopInt(); //next
 
             TelevisionItem item = null;
-            Dictionary<int, TelevisionItem> dict = PlusEnvironment.GetGame().GetTelevisionManager()._televisions;
+            Dictionary<int, TelevisionItem> dict = PlusEnvironment.GetGame().GetTelevisionManager().Televisions;
             foreach (TelevisionItem value in RandomValues(dict).Take(1))
             {
                 item = value;

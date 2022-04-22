@@ -4,10 +4,10 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects
 {
     class AvatarEffectExpiredComposer : ServerPacket
     {
-        public AvatarEffectExpiredComposer(AvatarEffect Effect)
+        public AvatarEffectExpiredComposer(AvatarEffect effect)
             : base(ServerPacketHeader.AvatarEffectExpiredMessageComposer)
         {
-            WriteInteger(Effect.SpriteId);
+            WriteInteger(effect.SpriteId);
         }
     }
 }

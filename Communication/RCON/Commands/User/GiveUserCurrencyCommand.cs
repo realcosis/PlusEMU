@@ -92,17 +92,17 @@ namespace Plus.Communication.Rcon.Commands.User
 
                 case "gotw":
                     {
-                        client.GetHabbo().GOTWPoints += amount;
+                        client.GetHabbo().GotwPoints += amount;
 
                         using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                         {
                             dbClient.SetQuery("UPDATE `users` SET `gotw_points` = @gotw WHERE `id` = @id LIMIT 1");
-                            dbClient.AddParameter("gotw", client.GetHabbo().GOTWPoints);
+                            dbClient.AddParameter("gotw", client.GetHabbo().GotwPoints);
                             dbClient.AddParameter("id", userId);
                             dbClient.RunQuery();
                         }
 
-                        client.SendPacket(new HabboActivityPointNotificationComposer(client.GetHabbo().GOTWPoints, 0, 103));
+                        client.SendPacket(new HabboActivityPointNotificationComposer(client.GetHabbo().GotwPoints, 0, 103));
                         break;
                     }
             }

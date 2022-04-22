@@ -8,26 +8,26 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.Badges
 {
     class BadgesComposer : ServerPacket
     {
-        public BadgesComposer(GameClient Session)
+        public BadgesComposer(GameClient session)
             : base(ServerPacketHeader.BadgesMessageComposer)
         {
-            List<Badge> EquippedBadges = new List<Badge>();
+            List<Badge> equippedBadges = new List<Badge>();
 
-            WriteInteger(Session.GetHabbo().GetBadgeComponent().Count);
-            foreach (Badge Badge in Session.GetHabbo().GetBadgeComponent().GetBadges().ToList())
+            WriteInteger(session.GetHabbo().GetBadgeComponent().Count);
+            foreach (Badge badge in session.GetHabbo().GetBadgeComponent().GetBadges().ToList())
             {
                 WriteInteger(1);
-                WriteString(Badge.Code);
+                WriteString(badge.Code);
 
-                if (Badge.Slot > 0)
-                    EquippedBadges.Add(Badge);
+                if (badge.Slot > 0)
+                    equippedBadges.Add(badge);
             }
 
-            WriteInteger(EquippedBadges.Count);
-            foreach (Badge Badge in EquippedBadges)
+            WriteInteger(equippedBadges.Count);
+            foreach (Badge badge in equippedBadges)
             {
-                WriteInteger(Badge.Slot);
-                WriteString(Badge.Code);
+                WriteInteger(badge.Slot);
+                WriteString(badge.Code);
             }
         }
     }

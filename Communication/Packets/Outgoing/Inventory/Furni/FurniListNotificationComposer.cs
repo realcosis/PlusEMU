@@ -2,13 +2,13 @@
 {
     class FurniListNotificationComposer : ServerPacket
     {
-        public FurniListNotificationComposer(int Id, int Type)
+        public FurniListNotificationComposer(int id, int type)
             : base(ServerPacketHeader.FurniListNotificationMessageComposer)
         {
             WriteInteger(1);
-            WriteInteger(Type);
+            WriteInteger(type);
             WriteInteger(1);
-            WriteInteger(Id);
+            WriteInteger(id);
         }
     }
 }

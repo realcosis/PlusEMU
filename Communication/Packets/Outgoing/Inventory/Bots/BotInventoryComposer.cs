@@ -6,17 +6,17 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.Bots
 {
     class BotInventoryComposer : ServerPacket
     {
-        public BotInventoryComposer(ICollection<Bot> Bots)
+        public BotInventoryComposer(ICollection<Bot> bots)
             : base(ServerPacketHeader.BotInventoryMessageComposer)
         {
-            WriteInteger(Bots.Count);
-            foreach (Bot Bot in Bots.ToList())
+            WriteInteger(bots.Count);
+            foreach (Bot bot in bots.ToList())
             {
-                WriteInteger(Bot.Id);
-               WriteString(Bot.Name);
-               WriteString(Bot.Motto);
-               WriteString(Bot.Gender);
-               WriteString(Bot.Figure);
+                WriteInteger(bot.Id);
+               WriteString(bot.Name);
+               WriteString(bot.Motto);
+               WriteString(bot.Gender);
+               WriteString(bot.Figure);
             }
         }
     }

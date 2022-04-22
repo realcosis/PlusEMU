@@ -4,10 +4,10 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
 {
     class MutedComposer : ServerPacket
     {
-        public MutedComposer(double TimeMuted)
+        public MutedComposer(double timeMuted)
             : base(ServerPacketHeader.MutedMessageComposer)
         {
-            WriteInteger(Convert.ToInt32(TimeMuted));
+            WriteInteger(Convert.ToInt32(timeMuted));
         }
     }
 }

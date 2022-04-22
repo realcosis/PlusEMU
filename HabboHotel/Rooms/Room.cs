@@ -35,11 +35,11 @@ namespace Plus.HabboHotel.Rooms
 {
     public class Room : RoomData
     {
-        public bool isCrashed;
-        public bool mDisposed;
+        public bool IsCrashed;
+        public bool MDisposed;
         public bool RoomMuted;
-        public DateTime lastTimerReset;
-        public DateTime lastRegeneration;
+        public DateTime LastTimerReset;
+        public DateTime LastRegeneration;
 
         public Task ProcessTask;
 
@@ -48,7 +48,7 @@ namespace Plus.HabboHotel.Rooms
 
         public Dictionary<int, double> MutedUsers;
 
-        private Dictionary<int, List<RoomUser>> Tents;
+        private Dictionary<int, List<RoomUser>> _tents;
 
         public List<int> UsersWithRights;
         private GameManager _gameManager;
@@ -59,8 +59,8 @@ namespace Plus.HabboHotel.Rooms
         private Gamemap _gamemap;
         private GameItemHandler _gameItemHandler;
         
-        public TeamManager teambanzai;
-        public TeamManager teamfreeze;
+        public TeamManager Teambanzai;
+        public TeamManager Teamfreeze;
 
         private RoomUserManager _roomUserManager;
         private RoomItemHandling _roomItemHandling;
@@ -86,7 +86,7 @@ namespace Plus.HabboHotel.Rooms
             RoomMuted = false;
 
             MutedUsers = new Dictionary<int, double>();
-            Tents = new Dictionary<int, List<RoomUser>>();
+            _tents = new Dictionary<int, List<RoomUser>>();
 
             _gamemap = new Gamemap(this, data.Model);
             _roomItemHandling = new RoomItemHandling(this);
@@ -106,7 +106,7 @@ namespace Plus.HabboHotel.Rooms
             InitBots();
             InitPets();
 
-            lastRegeneration = DateTime.Now;
+            LastRegeneration = DateTime.Now;
         }
 
         public List<string> WordFilterList
@@ -159,16 +159,16 @@ namespace Plus.HabboHotel.Rooms
 
         public TeamManager GetTeamManagerForBanzai()
         {
-            if (teambanzai == null)
-                teambanzai = TeamManager.CreateTeam("banzai");
-            return teambanzai;
+            if (Teambanzai == null)
+                Teambanzai = TeamManager.CreateTeam("banzai");
+            return Teambanzai;
         }
 
         public TeamManager GetTeamManagerForFreeze()
         {
-            if (teamfreeze == null)
-                teamfreeze = TeamManager.CreateTeam("freeze");
-            return teamfreeze;
+            if (Teamfreeze == null)
+                Teamfreeze = TeamManager.CreateTeam("freeze");
+            return Teamfreeze;
         }
 
         public BattleBanzai GetBanzai()
@@ -229,23 +229,23 @@ namespace Plus.HabboHotel.Rooms
             using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `id`,`room_id`,`name`,`motto`,`look`,`x`,`y`,`z`,`rotation`,`gender`,`user_id`,`ai_type`,`walk_mode`,`automatic_chat`,`speaking_interval`,`mix_sentences`,`chat_bubble` FROM `bots` WHERE `room_id` = '" + RoomId + "' AND `ai_type` != 'pet'");
-                DataTable Data = dbClient.GetTable();
-                if (Data == null)
+                DataTable data = dbClient.GetTable();
+                if (data == null)
                     return;
 
-                foreach (DataRow Bot in Data.Rows)
+                foreach (DataRow bot in data.Rows)
                 {
-                    dbClient.SetQuery("SELECT `text` FROM `bots_speech` WHERE `bot_id` = '" + Convert.ToInt32(Bot["id"]) + "'");
-                    DataTable BotSpeech = dbClient.GetTable();
+                    dbClient.SetQuery("SELECT `text` FROM `bots_speech` WHERE `bot_id` = '" + Convert.ToInt32(bot["id"]) + "'");
+                    DataTable botSpeech = dbClient.GetTable();
 
-                    List<RandomSpeech> Speeches = new List<RandomSpeech>();
+                    List<RandomSpeech> speeches = new List<RandomSpeech>();
 
-                    foreach (DataRow Speech in BotSpeech.Rows)
+                    foreach (DataRow speech in botSpeech.Rows)
                     {
-                        Speeches.Add(new RandomSpeech(Convert.ToString(Speech["text"]), Convert.ToInt32(Bot["id"])));
+                        speeches.Add(new RandomSpeech(Convert.ToString(speech["text"]), Convert.ToInt32(bot["id"])));
                     }
 
-                    _roomUserManager.DeployBot(new RoomBot(Convert.ToInt32(Bot["id"]), Convert.ToInt32(Bot["room_id"]), Convert.ToString(Bot["ai_type"]), Convert.ToString(Bot["walk_mode"]), Convert.ToString(Bot["name"]), Convert.ToString(Bot["motto"]), Convert.ToString(Bot["look"]), int.Parse(Bot["x"].ToString()), int.Parse(Bot["y"].ToString()), int.Parse(Bot["z"].ToString()), int.Parse(Bot["rotation"].ToString()), 0, 0, 0, 0, ref Speeches, "M", 0, Convert.ToInt32(Bot["user_id"].ToString()), Convert.ToBoolean(Bot["automatic_chat"]), Convert.ToInt32(Bot["speaking_interval"]), PlusEnvironment.EnumToBool(Bot["mix_sentences"].ToString()), Convert.ToInt32(Bot["chat_bubble"])), null);
+                    _roomUserManager.DeployBot(new RoomBot(Convert.ToInt32(bot["id"]), Convert.ToInt32(bot["room_id"]), Convert.ToString(bot["ai_type"]), Convert.ToString(bot["walk_mode"]), Convert.ToString(bot["name"]), Convert.ToString(bot["motto"]), Convert.ToString(bot["look"]), int.Parse(bot["x"].ToString()), int.Parse(bot["y"].ToString()), int.Parse(bot["z"].ToString()), int.Parse(bot["rotation"].ToString()), 0, 0, 0, 0, ref speeches, "M", 0, Convert.ToInt32(bot["user_id"].ToString()), Convert.ToBoolean(bot["automatic_chat"]), Convert.ToInt32(bot["speaking_interval"]), PlusEnvironment.EnumToBool(bot["mix_sentences"].ToString()), Convert.ToInt32(bot["chat_bubble"])), null);
                 }
             }
         }
@@ -255,25 +255,25 @@ namespace Plus.HabboHotel.Rooms
             using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `id`,`user_id`,`room_id`,`name`,`x`,`y`,`z` FROM `bots` WHERE `room_id` = '" + RoomId + "' AND `ai_type` = 'pet'");
-                DataTable Data = dbClient.GetTable();
+                DataTable data = dbClient.GetTable();
 
-                if (Data == null)
+                if (data == null)
                     return;
 
-                foreach (DataRow Row in Data.Rows)
+                foreach (DataRow row in data.Rows)
                 {
-                    dbClient.SetQuery("SELECT `type`,`race`,`color`,`experience`,`energy`,`nutrition`,`respect`,`createstamp`,`have_saddle`,`anyone_ride`,`hairdye`,`pethair`,`gnome_clothing` FROM `bots_petdata` WHERE `id` = '" + Row[0] + "' LIMIT 1");
+                    dbClient.SetQuery("SELECT `type`,`race`,`color`,`experience`,`energy`,`nutrition`,`respect`,`createstamp`,`have_saddle`,`anyone_ride`,`hairdye`,`pethair`,`gnome_clothing` FROM `bots_petdata` WHERE `id` = '" + row[0] + "' LIMIT 1");
                     DataRow mRow = dbClient.GetRow();
                     if (mRow == null)
                         continue;
 
-                    Pet Pet = new Pet(Convert.ToInt32(Row["id"]), Convert.ToInt32(Row["user_id"]), Convert.ToInt32(Row["room_id"]), Convert.ToString(Row["name"]), Convert.ToInt32(mRow["type"]), Convert.ToString(mRow["race"]),
-                        Convert.ToString(mRow["color"]), Convert.ToInt32(mRow["experience"]), Convert.ToInt32(mRow["energy"]), Convert.ToInt32(mRow["nutrition"]), Convert.ToInt32(mRow["respect"]), Convert.ToDouble(mRow["createstamp"]), Convert.ToInt32(Row["x"]), Convert.ToInt32(Row["y"]),
-                        Convert.ToDouble(Row["z"]), Convert.ToInt32(mRow["have_saddle"]), Convert.ToInt32(mRow["anyone_ride"]), Convert.ToInt32(mRow["hairdye"]), Convert.ToInt32(mRow["pethair"]), Convert.ToString(mRow["gnome_clothing"]));
+                    Pet pet = new Pet(Convert.ToInt32(row["id"]), Convert.ToInt32(row["user_id"]), Convert.ToInt32(row["room_id"]), Convert.ToString(row["name"]), Convert.ToInt32(mRow["type"]), Convert.ToString(mRow["race"]),
+                        Convert.ToString(mRow["color"]), Convert.ToInt32(mRow["experience"]), Convert.ToInt32(mRow["energy"]), Convert.ToInt32(mRow["nutrition"]), Convert.ToInt32(mRow["respect"]), Convert.ToDouble(mRow["createstamp"]), Convert.ToInt32(row["x"]), Convert.ToInt32(row["y"]),
+                        Convert.ToDouble(row["z"]), Convert.ToInt32(mRow["have_saddle"]), Convert.ToInt32(mRow["anyone_ride"]), Convert.ToInt32(mRow["hairdye"]), Convert.ToInt32(mRow["pethair"]), Convert.ToString(mRow["gnome_clothing"]));
 
-                    var RndSpeechList = new List<RandomSpeech>();
+                    var rndSpeechList = new List<RandomSpeech>();
 
-                    _roomUserManager.DeployBot(new RoomBot(Pet.PetId, RoomId, "pet", "freeroam", Pet.Name, "", Pet.Look, Pet.X, Pet.Y, Convert.ToInt32(Pet.Z), 0, 0, 0, 0, 0, ref RndSpeechList, "", 0, Pet.OwnerId, false, 0, false, 0), Pet);
+                    _roomUserManager.DeployBot(new RoomBot(pet.PetId, RoomId, "pet", "freeroam", pet.Name, "", pet.Look, pet.X, pet.Y, Convert.ToInt32(pet.Z), 0, 0, 0, 0, 0, ref rndSpeechList, "", 0, pet.OwnerId, false, 0, false, 0), pet);
                 }
             }
         }
@@ -304,20 +304,20 @@ namespace Plus.HabboHotel.Rooms
             if (Group != null)
                 return;
 
-            DataTable Data = null;
+            DataTable data = null;
 
             using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT room_rights.user_id FROM room_rights WHERE room_id = @roomid");
                 dbClient.AddParameter("roomid", Id);
-                Data = dbClient.GetTable();
+                data = dbClient.GetTable();
             }
 
-            if (Data != null)
+            if (data != null)
             {
-                foreach (DataRow Row in Data.Rows)
+                foreach (DataRow row in data.Rows)
                 {
-                    UsersWithRights.Add(Convert.ToInt32(Row["user_id"]));
+                    UsersWithRights.Add(Convert.ToInt32(row["user_id"]));
                 }
             }
         }
@@ -326,61 +326,61 @@ namespace Plus.HabboHotel.Rooms
         {
             _wordFilterList = new List<string>();
 
-            DataTable Data = null;
+            DataTable data = null;
             using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `room_filter` WHERE `room_id` = @roomid;");
                 dbClient.AddParameter("roomid", Id);
-                Data = dbClient.GetTable();
+                data = dbClient.GetTable();
             }
 
-            if (Data == null)
+            if (data == null)
                 return;
 
-            foreach (DataRow Row in Data.Rows)
+            foreach (DataRow row in data.Rows)
             {
-                _wordFilterList.Add(Convert.ToString(Row["word"]));
+                _wordFilterList.Add(Convert.ToString(row["word"]));
             }
         }
 
-        public bool CheckRights(GameClient Session)
+        public bool CheckRights(GameClient session)
         {
-            return CheckRights(Session, false);
+            return CheckRights(session, false);
         }
 
-        public bool CheckRights(GameClient Session, bool RequireOwnership, bool CheckForGroups = false)
+        public bool CheckRights(GameClient session, bool requireOwnership, bool checkForGroups = false)
         {
             try
             {
-                if (Session == null || Session.GetHabbo() == null)
+                if (session == null || session.GetHabbo() == null)
                     return false;
 
-                if (Session.GetHabbo().Username == OwnerName && Type == "private")
+                if (session.GetHabbo().Username == OwnerName && Type == "private")
                     return true;
 
-                if (Session.GetHabbo().GetPermissions().HasRight("room_any_owner"))
+                if (session.GetHabbo().GetPermissions().HasRight("room_any_owner"))
                     return true;
 
-                if (!RequireOwnership && Type == "private")
+                if (!requireOwnership && Type == "private")
                 {
-                    if (Session.GetHabbo().GetPermissions().HasRight("room_any_rights"))
+                    if (session.GetHabbo().GetPermissions().HasRight("room_any_rights"))
                         return true;
 
-                    if (UsersWithRights.Contains(Session.GetHabbo().Id))
+                    if (UsersWithRights.Contains(session.GetHabbo().Id))
                         return true;
                 }
 
-                if (CheckForGroups && Type == "private")
+                if (checkForGroups && Type == "private")
                 {
                     if (Group == null)
                         return false;
 
-                    if (Group.IsAdmin(Session.GetHabbo().Id))
+                    if (Group.IsAdmin(session.GetHabbo().Id))
                         return true;
 
                     if (Group.AdminOnlyDeco == 0)
                     {
-                        if (Group.IsAdmin(Session.GetHabbo().Id))
+                        if (Group.IsAdmin(session.GetHabbo().Id))
                             return true;
                     }
                 }
@@ -389,35 +389,35 @@ namespace Plus.HabboHotel.Rooms
             return false;
         }
 
-        public void OnUserShoot(RoomUser User, Item Ball)
+        public void OnUserShoot(RoomUser user, Item ball)
         {
             Func<Item, bool> predicate = null;
-            string Key = null;
-            foreach (Item item in GetRoomItemHandler().GetFurniObjects(Ball.GetX, Ball.GetY).ToList())
+            string key = null;
+            foreach (Item item in GetRoomItemHandler().GetFurniObjects(ball.GetX, ball.GetY).ToList())
             {
                 if (item.GetBaseItem().ItemName.StartsWith("fball_goal_"))
                 {
-                    Key = item.GetBaseItem().ItemName.Split(new char[] { '_' })[2];
-                    User.UnIdle();
-                    User.DanceId = 0;
+                    key = item.GetBaseItem().ItemName.Split(new char[] { '_' })[2];
+                    user.UnIdle();
+                    user.DanceId = 0;
 
 
-                    PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(User.GetClient(), "ACH_FootballGoalScored", 1);
+                    PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(user.GetClient(), "ACH_FootballGoalScored", 1);
 
-                    SendPacket(new ActionComposer(User.VirtualId, 1));
+                    SendPacket(new ActionComposer(user.VirtualId, 1));
                 }
             }
 
-            if (Key != null)
+            if (key != null)
             {
                 if (predicate == null)
                 {
-                    predicate = p => p.GetBaseItem().ItemName == ("fball_score_" + Key);
+                    predicate = p => p.GetBaseItem().ItemName == ("fball_score_" + key);
                 }
 
                 foreach (Item item2 in GetRoomItemHandler().GetFloor.Where<Item>(predicate).ToList())
                 {
-                    if (item2.GetBaseItem().ItemName == ("fball_score_" + Key))
+                    if (item2.GetBaseItem().ItemName == ("fball_score_" + key))
                     {
                         if (!String.IsNullOrEmpty(item2.ExtraData))
                             item2.ExtraData = (Convert.ToInt32(item2.ExtraData) + 1).ToString();
@@ -431,7 +431,7 @@ namespace Plus.HabboHotel.Rooms
 
         public void ProcessRoom()
         {
-            if (isCrashed || mDisposed)
+            if (IsCrashed || MDisposed)
                 return;
 
             try
@@ -526,7 +526,7 @@ namespace Plus.HabboHotel.Rooms
                 ExceptionLogger.LogException(e3);
             }
 
-            isCrashed = true;
+            IsCrashed = true;
             PlusEnvironment.GetGame().GetRoomManager().UnloadRoom(Id);
         }
 
@@ -584,70 +584,70 @@ namespace Plus.HabboHotel.Rooms
         }
 
         #region Tents
-        public void AddTent(int TentId)
+        public void AddTent(int tentId)
         {
-            if (Tents.ContainsKey(TentId))
-                Tents.Remove(TentId);
+            if (_tents.ContainsKey(tentId))
+                _tents.Remove(tentId);
 
-            Tents.Add(TentId, new List<RoomUser>());
+            _tents.Add(tentId, new List<RoomUser>());
         }
 
-        public void RemoveTent(int TentId)
+        public void RemoveTent(int tentId)
         {
-            if (!Tents.ContainsKey(TentId))
+            if (!_tents.ContainsKey(tentId))
                 return;
 
-            List<RoomUser> Users = Tents[TentId];
-            foreach (RoomUser User in Users.ToList())
+            List<RoomUser> users = _tents[tentId];
+            foreach (RoomUser user in users.ToList())
             {
-                if (User == null || User.GetClient() == null || User.GetClient().GetHabbo() == null)
+                if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null)
                     continue;
 
-                User.GetClient().GetHabbo().TentId = 0;
+                user.GetClient().GetHabbo().TentId = 0;
             }
 
-            if (Tents.ContainsKey(TentId))
-                Tents.Remove(TentId);
+            if (_tents.ContainsKey(tentId))
+                _tents.Remove(tentId);
         }
 
-        public void AddUserToTent(int TentId, RoomUser User)
+        public void AddUserToTent(int tentId, RoomUser user)
         {
-            if (User != null && User.GetClient() != null && User.GetClient().GetHabbo() != null)
+            if (user != null && user.GetClient() != null && user.GetClient().GetHabbo() != null)
             {
-                if (!Tents.ContainsKey(TentId))
-                    Tents.Add(TentId, new List<RoomUser>());
+                if (!_tents.ContainsKey(tentId))
+                    _tents.Add(tentId, new List<RoomUser>());
 
-                if (!Tents[TentId].Contains(User))
-                    Tents[TentId].Add(User);
-                User.GetClient().GetHabbo().TentId = TentId;
+                if (!_tents[tentId].Contains(user))
+                    _tents[tentId].Add(user);
+                user.GetClient().GetHabbo().TentId = tentId;
             }
         }
 
-        public void RemoveUserFromTent(int TentId, RoomUser User)
+        public void RemoveUserFromTent(int tentId, RoomUser user)
         {
-            if (User != null && User.GetClient() != null && User.GetClient().GetHabbo() != null)
+            if (user != null && user.GetClient() != null && user.GetClient().GetHabbo() != null)
             {
-                if (!Tents.ContainsKey(TentId))
-                    Tents.Add(TentId, new List<RoomUser>());
+                if (!_tents.ContainsKey(tentId))
+                    _tents.Add(tentId, new List<RoomUser>());
 
-                if (Tents[TentId].Contains(User))
-                    Tents[TentId].Remove(User);
+                if (_tents[tentId].Contains(user))
+                    _tents[tentId].Remove(user);
 
-                User.GetClient().GetHabbo().TentId = 0;
+                user.GetClient().GetHabbo().TentId = 0;
             }
         }
 
-        public void SendToTent(int Id, int TentId, IServerPacket Packet)
+        public void SendToTent(int id, int tentId, IServerPacket packet)
         {
-            if (!Tents.ContainsKey(TentId))
+            if (!_tents.ContainsKey(tentId))
                 return;
 
-            foreach (RoomUser User in Tents[TentId].ToList())
+            foreach (RoomUser user in _tents[tentId].ToList())
             {
-                if (User == null || User.GetClient() == null || User.GetClient().GetHabbo() == null || User.GetClient().GetHabbo().GetIgnores().IgnoredUserIds().Contains(Id) || User.GetClient().GetHabbo().TentId != TentId)
+                if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().GetIgnores().IgnoredUserIds().Contains(id) || user.GetClient().GetHabbo().TentId != tentId)
                     continue;
 
-                User.GetClient().SendPacket(Packet);
+                user.GetClient().SendPacket(packet);
             }
         }
         #endregion
@@ -707,24 +707,24 @@ namespace Plus.HabboHotel.Rooms
 
             try
             {
-                byte[] TotalBytes = new byte[0];
-                int Current = 0;
+                byte[] totalBytes = new byte[0];
+                int current = 0;
 
                 foreach (ServerPacket packet in packets.ToList())
                 {
-                    byte[] ToAdd = packet.GetBytes();
-                    int NewLen = TotalBytes.Length + ToAdd.Length;
+                    byte[] toAdd = packet.GetBytes();
+                    int newLen = totalBytes.Length + toAdd.Length;
 
-                    Array.Resize(ref TotalBytes, NewLen);
+                    Array.Resize(ref totalBytes, newLen);
 
-                    for (int i = 0; i < ToAdd.Length; i++)
+                    for (int i = 0; i < toAdd.Length; i++)
                     {
-                        TotalBytes[Current] = ToAdd[i];
-                        Current++;
+                        totalBytes[current] = toAdd[i];
+                        current++;
                     }
                 }
 
-                BroadcastPacket(TotalBytes);
+                BroadcastPacket(totalBytes);
             }
             catch (Exception e)
             {
@@ -737,10 +737,10 @@ namespace Plus.HabboHotel.Rooms
         {
             SendPacket(new CloseConnectionComposer());
 
-            if (!mDisposed)
+            if (!MDisposed)
             {
-                isCrashed = false;
-                mDisposed = true;
+                IsCrashed = false;
+                MDisposed = true;
 
                 /* TODO: Needs reviewing */
                 try
@@ -756,8 +756,8 @@ namespace Plus.HabboHotel.Rooms
                 if (MutedUsers.Count > 0)
                     MutedUsers.Clear();
 
-                if (Tents.Count > 0)
-                    Tents.Clear();
+                if (_tents.Count > 0)
+                    _tents.Clear();
 
                 if (UsersWithRights.Count > 0)
                     UsersWithRights.Clear();
@@ -800,16 +800,16 @@ namespace Plus.HabboHotel.Rooms
 
                 // Room Data?
 
-                if (teambanzai != null)
+                if (Teambanzai != null)
                 {
-                    teambanzai.Dispose();
-                    teambanzai = null;
+                    Teambanzai.Dispose();
+                    Teambanzai = null;
                 }
 
-                if (teamfreeze != null)
+                if (Teamfreeze != null)
                 {
-                    teamfreeze.Dispose();
-                    teamfreeze = null;
+                    Teamfreeze.Dispose();
+                    Teamfreeze = null;
                 }
 
                 if (_roomUserManager != null)

@@ -1,9 +1,9 @@
 ﻿namespace Plus.Communication.Packets.Outgoing.BuildersClub
 {
-    class BCBorrowedItemsComposer : ServerPacket
+    class BcBorrowedItemsComposer : ServerPacket
     {
-        public BCBorrowedItemsComposer()
-            : base(ServerPacketHeader.BCBorrowedItemsMessageComposer)
+        public BcBorrowedItemsComposer()
+            : base(ServerPacketHeader.BcBorrowedItemsMessageComposer)
         {
             WriteInteger(0);
         }

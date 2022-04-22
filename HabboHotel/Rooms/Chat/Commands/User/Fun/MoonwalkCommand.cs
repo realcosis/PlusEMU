@@ -17,18 +17,18 @@
             get { return "Wear the shoes of Michael Jackson."; }
         }
 
-        public void Execute(GameClients.GameClient Session, Room Room, string[] Params)
+        public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            RoomUser User = Room.GetRoomUserManager().GetRoomUserByHabbo(Session.GetHabbo().Id);
-            if (User == null)
+            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            if (user == null)
                 return;
 
-            User.moonwalkEnabled = !User.moonwalkEnabled;
+            user.MoonwalkEnabled = !user.MoonwalkEnabled;
 
-            if (User.moonwalkEnabled)
-                Session.SendWhisper("Moonwalk enabled!");
+            if (user.MoonwalkEnabled)
+                session.SendWhisper("Moonwalk enabled!");
             else
-                Session.SendWhisper("Moonwalk disabled!");
+                session.SendWhisper("Moonwalk disabled!");
         }
     }
 }

@@ -20,18 +20,18 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
             get { return "Ignore bot chat or enable it again."; }
         }
 
-        public void Execute(GameClients.GameClient Session, Room Room, string[] Params)
+        public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            Session.GetHabbo().AllowPetSpeech = !Session.GetHabbo().AllowPetSpeech;
+            session.GetHabbo().AllowPetSpeech = !session.GetHabbo().AllowPetSpeech;
             using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
-                dbClient.RunQuery("UPDATE `users` SET `pets_muted` = '" + ((Session.GetHabbo().AllowPetSpeech) ? 1 : 0) + "' WHERE `id` = '" + Session.GetHabbo().Id + "' LIMIT 1");
+                dbClient.RunQuery("UPDATE `users` SET `pets_muted` = '" + ((session.GetHabbo().AllowPetSpeech) ? 1 : 0) + "' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
             }
 
-            if (Session.GetHabbo().AllowPetSpeech)
-                Session.SendWhisper("Change successful, you can no longer see speech from pets.");
+            if (session.GetHabbo().AllowPetSpeech)
+                session.SendWhisper("Change successful, you can no longer see speech from pets.");
             else
-                Session.SendWhisper("Change successful, you can now see speech from pets.");
+                session.SendWhisper("Change successful, you can now see speech from pets.");
         }
     }
 }

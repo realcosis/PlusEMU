@@ -2,10 +2,10 @@
 {
     class FindFriendsProcessResultComposer : ServerPacket
     {
-        public FindFriendsProcessResultComposer(bool Found)
+        public FindFriendsProcessResultComposer(bool found)
             : base(ServerPacketHeader.FindFriendsProcessResultMessageComposer)
         {
-            WriteBoolean(Found);
+            WriteBoolean(found);
         }
     }
 }

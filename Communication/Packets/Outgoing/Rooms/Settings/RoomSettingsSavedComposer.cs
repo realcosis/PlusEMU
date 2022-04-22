@@ -2,10 +2,10 @@
 {
     class RoomSettingsSavedComposer : ServerPacket
     {
-        public RoomSettingsSavedComposer(int roomID)
+        public RoomSettingsSavedComposer(int roomId)
             : base(ServerPacketHeader.RoomSettingsSavedMessageComposer)
         {
-            WriteInteger(roomID);
+            WriteInteger(roomId);
         }
     }
 }

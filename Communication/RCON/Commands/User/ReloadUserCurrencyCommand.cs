@@ -94,7 +94,7 @@ namespace Plus.Communication.Rcon.Commands.User
                             gotw = dbClient.GetInteger();
                         }
 
-                        client.GetHabbo().GOTWPoints = gotw;
+                        client.GetHabbo().GotwPoints = gotw;
                         client.SendPacket(new HabboActivityPointNotificationComposer(gotw, 0, 103));
                         break;
                     }

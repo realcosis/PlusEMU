@@ -13,18 +13,18 @@ namespace Plus.Communication.Packets.Outgoing.Avatar
             using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `slot_id`,`look`,`gender` FROM `user_wardrobe` WHERE `user_id` = '" + userId + "'");
-                DataTable WardrobeData = dbClient.GetTable();
+                DataTable wardrobeData = dbClient.GetTable();
 
-                if (WardrobeData == null)
+                if (wardrobeData == null)
                     WriteInteger(0);
                 else
                 {
-                    WriteInteger(WardrobeData.Rows.Count);
-                    foreach (DataRow Row in WardrobeData.Rows)
+                    WriteInteger(wardrobeData.Rows.Count);
+                    foreach (DataRow row in wardrobeData.Rows)
                     {
-                        WriteInteger(Convert.ToInt32(Row["slot_id"]));
-                        WriteString(Convert.ToString(Row["look"]));
-                        WriteString(Row["gender"].ToString().ToUpper());
+                        WriteInteger(Convert.ToInt32(row["slot_id"]));
+                        WriteString(Convert.ToString(row["look"]));
+                        WriteString(row["gender"].ToString().ToUpper());
                     }
                 }
             }

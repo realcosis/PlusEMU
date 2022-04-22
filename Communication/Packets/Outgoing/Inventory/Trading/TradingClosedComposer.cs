@@ -2,10 +2,10 @@
 {
     class TradingClosedComposer : ServerPacket
     {
-        public TradingClosedComposer(int UserId)
+        public TradingClosedComposer(int userId)
             : base(ServerPacketHeader.TradingClosedMessageComposer)
         {
-            WriteInteger(UserId);
+            WriteInteger(userId);
             WriteInteger(0);
         }
     }

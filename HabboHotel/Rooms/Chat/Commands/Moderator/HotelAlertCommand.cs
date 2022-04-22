@@ -19,16 +19,16 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
             get { return "Send a message to the entire hotel."; }
         }
 
-        public void Execute(GameClients.GameClient Session, Room Room, string[] Params)
+        public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            if (Params.Length == 1)
+            if (@params.Length == 1)
             {
-                Session.SendWhisper("Please enter a message to send.");
+                session.SendWhisper("Please enter a message to send.");
                 return;
             }
 
-            string Message = CommandManager.MergeParams(Params, 1);
-            PlusEnvironment.GetGame().GetClientManager().SendPacket(new BroadcastMessageAlertComposer(Message + "\r\n" + "- " + Session.GetHabbo().Username));
+            string message = CommandManager.MergeParams(@params, 1);
+            PlusEnvironment.GetGame().GetClientManager().SendPacket(new BroadcastMessageAlertComposer(message + "\r\n" + "- " + session.GetHabbo().Username));
                             
             return;
         }

@@ -8,32 +8,32 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
 {
     class ModeratorInitComposer : ServerPacket
     {
-        public ModeratorInitComposer(ICollection<string> UserPresets, ICollection<string> RoomPresets, ICollection<ModerationTicket> Tickets)
+        public ModeratorInitComposer(ICollection<string> userPresets, ICollection<string> roomPresets, ICollection<ModerationTicket> tickets)
             : base(ServerPacketHeader.ModeratorInitMessageComposer)
         {
-            WriteInteger(Tickets.Count);
-            foreach (ModerationTicket Ticket in Tickets)
+            WriteInteger(tickets.Count);
+            foreach (ModerationTicket ticket in tickets)
             {
-                WriteInteger(Ticket.Id); // Id
-                WriteInteger(Ticket.GetStatus(Id)); // Tab ID
-                WriteInteger(Ticket.Type); // Type
-                WriteInteger(Ticket.Category); // Category
-                WriteInteger(Convert.ToInt32((DateTime.Now - UnixTimestamp.FromUnixTimestamp(Ticket.Timestamp)).TotalMilliseconds)); // This should fix the overflow?
-                WriteInteger(Ticket.Priority); // Priority
-                WriteInteger(Ticket.Sender == null ? 0 : Ticket.Sender.Id); // Sender ID
+                WriteInteger(ticket.Id); // Id
+                WriteInteger(ticket.GetStatus(Id)); // Tab ID
+                WriteInteger(ticket.Type); // Type
+                WriteInteger(ticket.Category); // Category
+                WriteInteger(Convert.ToInt32((DateTime.Now - UnixTimestamp.FromUnixTimestamp(ticket.Timestamp)).TotalMilliseconds)); // This should fix the overflow?
+                WriteInteger(ticket.Priority); // Priority
+                WriteInteger(ticket.Sender == null ? 0 : ticket.Sender.Id); // Sender ID
                 WriteInteger(1);
-                WriteString(Ticket.Sender == null ? string.Empty : Ticket.Sender.Username); // Sender Name
-                WriteInteger(Ticket.Reported == null ? 0 : Ticket.Reported.Id); // Reported ID
-                WriteString(Ticket.Reported == null ? string.Empty : Ticket.Reported.Username); // Reported Name
-                WriteInteger(Ticket.Moderator == null ? 0 : Ticket.Moderator.Id); // Moderator ID
-                WriteString(Ticket.Moderator == null ? string.Empty : Ticket.Moderator.Username); // Mod Name
-                WriteString(Ticket.Issue); // Issue
-                WriteInteger(Ticket.Room == null ? 0 : Ticket.Room.Id); // Room Id
+                WriteString(ticket.Sender == null ? string.Empty : ticket.Sender.Username); // Sender Name
+                WriteInteger(ticket.Reported == null ? 0 : ticket.Reported.Id); // Reported ID
+                WriteString(ticket.Reported == null ? string.Empty : ticket.Reported.Username); // Reported Name
+                WriteInteger(ticket.Moderator == null ? 0 : ticket.Moderator.Id); // Moderator ID
+                WriteString(ticket.Moderator == null ? string.Empty : ticket.Moderator.Username); // Mod Name
+                WriteString(ticket.Issue); // Issue
+                WriteInteger(ticket.Room == null ? 0 : ticket.Room.Id); // Room Id
                 WriteInteger(0);//LOOP
             }
 
-            WriteInteger(UserPresets.Count);
-            foreach (string pre in UserPresets)
+            WriteInteger(userPresets.Count);
+            foreach (string pre in userPresets)
             {
                 WriteString(pre);
             }
@@ -71,8 +71,8 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
             WriteBoolean(true); // Caution etc
             WriteBoolean(true); // Love you, Tom
 
-            WriteInteger(RoomPresets.Count);
-            foreach (string pre in RoomPresets)
+            WriteInteger(roomPresets.Count);
+            foreach (string pre in roomPresets)
             {
                 WriteString(pre);
             }

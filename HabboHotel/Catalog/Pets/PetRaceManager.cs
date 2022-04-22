@@ -35,7 +35,7 @@ namespace Plus.HabboHotel.Catalog.Pets
 
         public List<PetRace> GetRacesForRaceId(int raceId)
         {
-            return _races.Where(Race => Race.RaceId == raceId).ToList();
+            return _races.Where(race => race.RaceId == raceId).ToList();
         }
     }
 }

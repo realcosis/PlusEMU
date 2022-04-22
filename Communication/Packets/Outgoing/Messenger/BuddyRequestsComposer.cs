@@ -13,13 +13,13 @@ namespace Plus.Communication.Packets.Outgoing.Messenger
             WriteInteger(requests.Count);
             WriteInteger(requests.Count);
 
-            foreach (MessengerRequest Request in requests)
+            foreach (MessengerRequest request in requests)
             {
-                WriteInteger(Request.From);
-                WriteString(Request.Username);
+                WriteInteger(request.From);
+                WriteString(request.Username);
 
-                UserCache User = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(Request.From);
-                WriteString(User != null ? User.Look : "");
+                UserCache user = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(request.From);
+                WriteString(user != null ? user.Look : "");
             }
         }
     }

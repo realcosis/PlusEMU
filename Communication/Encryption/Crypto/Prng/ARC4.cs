@@ -1,57 +1,57 @@
 ﻿namespace Plus.Communication.Encryption.Crypto.Prng
 {
-    public class ARC4
+    public class Arc4
     {
-        private int i;
-        private int j;
-        private byte[] bytes;
+        private int _i;
+        private int _j;
+        private byte[] _bytes;
 
-        public const int POOLSIZE = 256;
+        public const int Poolsize = 256;
 
-        public ARC4()
+        public Arc4()
         {
-            bytes = new byte[POOLSIZE];
+            _bytes = new byte[Poolsize];
         }
 
-        public ARC4(byte[] key)
+        public Arc4(byte[] key)
         {
-            bytes = new byte[POOLSIZE];
+            _bytes = new byte[Poolsize];
             Initialize(key);
         }
 
         public void Initialize(byte[] key)
         {
-            i = 0;
-            j = 0;
+            _i = 0;
+            _j = 0;
 
-            for (i = 0; i < POOLSIZE; ++i)
+            for (_i = 0; _i < Poolsize; ++_i)
             {
-                bytes[i] = (byte)i;
+                _bytes[_i] = (byte)_i;
             }
 
-            for (i = 0; i < POOLSIZE; ++i)
+            for (_i = 0; _i < Poolsize; ++_i)
             {
-                j = (j + bytes[i] + key[i % key.Length]) & (POOLSIZE - 1);
-                Swap(i, j);
+                _j = (_j + _bytes[_i] + key[_i % key.Length]) & (Poolsize - 1);
+                Swap(_i, _j);
             }
 
-            i = 0;
-            j = 0;
+            _i = 0;
+            _j = 0;
         }
 
         private void Swap(int a, int b)
         {
-            byte t = bytes[a];
-            bytes[a] = bytes[b];
-            bytes[b] = t;
+            byte t = _bytes[a];
+            _bytes[a] = _bytes[b];
+            _bytes[b] = t;
         }
 
         public byte Next()
         {
-            i = ++i & (POOLSIZE - 1);
-            j = (j + bytes[i]) & (POOLSIZE - 1);
-            Swap(i, j);
-            return bytes[(bytes[i] + bytes[j]) & 255];
+            _i = ++_i & (Poolsize - 1);
+            _j = (_j + _bytes[_i]) & (Poolsize - 1);
+            Swap(_i, _j);
+            return _bytes[(_bytes[_i] + _bytes[_j]) & 255];
         }
 
         public void Encrypt(ref byte[] src)

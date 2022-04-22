@@ -14,7 +14,7 @@ namespace Plus.HabboHotel.Rooms
 {
     public class RoomManager
     {
-        private static readonly ILogger log = LogManager.GetLogger("Plus.HabboHotel.Rooms.RoomManager");
+        private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Rooms.RoomManager");
 
         private readonly object _roomLoadingSync;
 
@@ -42,7 +42,7 @@ namespace Plus.HabboHotel.Rooms
                     _cycleLastExecution = DateTime.Now;
                     foreach (Room room in _rooms.Values.ToList())
                     {
-                        if (room.isCrashed)
+                        if (room.IsCrashed)
                             continue;
 
                         if (room.ProcessTask == null || room.ProcessTask.IsCompleted)
@@ -56,7 +56,7 @@ namespace Plus.HabboHotel.Rooms
                             room.IsLagging++;
                             if (room.IsLagging >= 30)
                             {
-                                room.isCrashed = true;
+                                room.IsCrashed = true;
                                 UnloadRoom(room.Id);
                             }
                         }
@@ -226,9 +226,9 @@ namespace Plus.HabboHotel.Rooms
             return _rooms.Values.Where(x => x.UsersNow > 0 && x.Access != RoomAccess.Invisible).OrderByDescending(x => x.UsersNow).Take(amount).ToList();
         }
 
-        public List<Room> GetRecommendedRooms(int amount = 50, int CurrentRoomId = 0)
+        public List<Room> GetRecommendedRooms(int amount = 50, int currentRoomId = 0)
         {
-            return _rooms.Values.Where(x => x.Id != CurrentRoomId && x.Access != RoomAccess.Invisible).OrderByDescending(x => x.UsersNow).OrderByDescending(x => x.Score).Take(amount).ToList();
+            return _rooms.Values.Where(x => x.Id != currentRoomId && x.Access != RoomAccess.Invisible).OrderByDescending(x => x.UsersNow).OrderByDescending(x => x.Score).Take(amount).ToList();
         }
 
         public List<Room> GetPopularRatedRooms(int amount = 50)
@@ -241,14 +241,14 @@ namespace Plus.HabboHotel.Rooms
             return _rooms.Values.Where(x => x.Category == category && x.Access != RoomAccess.Invisible && x.UsersNow > 0).OrderByDescending(x => x.UsersNow).Take(amount).ToList();
         }
 
-        public List<Room> GetOnGoingRoomPromotions(int Mode, int Amount = 50)
+        public List<Room> GetOnGoingRoomPromotions(int mode, int amount = 50)
         {
-            if (Mode == 17)
+            if (mode == 17)
             {
-                return _rooms.Values.Where(x => x.HasActivePromotion && x.Access != RoomAccess.Invisible).OrderByDescending(x => x.Promotion.TimestampStarted).Take(Amount).ToList();
+                return _rooms.Values.Where(x => x.HasActivePromotion && x.Access != RoomAccess.Invisible).OrderByDescending(x => x.Promotion.TimestampStarted).Take(amount).ToList();
             }
 
-            return _rooms.Values.Where(x => x.HasActivePromotion && x.Access != RoomAccess.Invisible).OrderByDescending(x => x.UsersNow).Take(Amount).ToList();
+            return _rooms.Values.Where(x => x.HasActivePromotion && x.Access != RoomAccess.Invisible).OrderByDescending(x => x.UsersNow).Take(amount).ToList();
         }
 
         public List<Room> GetPromotedRooms(int categoryId, int amount = 50)
@@ -323,10 +323,10 @@ namespace Plus.HabboHotel.Rooms
 
                 PlusEnvironment.GetGame().GetRoomManager().UnloadRoom(room.Id);
                 Console.Clear();
-                log.Info("<<- SERVER SHUTDOWN ->> ROOM ITEM SAVE: " + String.Format("{0:0.##}", ((double)i / length) * 100) + "%");
+                Log.Info("<<- SERVER SHUTDOWN ->> ROOM ITEM SAVE: " + String.Format("{0:0.##}", ((double)i / length) * 100) + "%");
                 i++;
             }
-            log.Info("Done disposing rooms!");
+            Log.Info("Done disposing rooms!");
         }
     }
 }

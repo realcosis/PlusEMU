@@ -11,62 +11,62 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
 {
     class UsersComposer : ServerPacket
     {
-        public UsersComposer(ICollection<RoomUser> Users)
+        public UsersComposer(ICollection<RoomUser> users)
             : base(ServerPacketHeader.UsersMessageComposer)
         {
-            WriteInteger(Users.Count);
-            foreach (RoomUser User in Users.ToList())
+            WriteInteger(users.Count);
+            foreach (RoomUser user in users.ToList())
             {
-                WriteUser(User);
+                WriteUser(user);
             }
         }
 
-        public UsersComposer(RoomUser User)
+        public UsersComposer(RoomUser user)
             : base(ServerPacketHeader.UsersMessageComposer)
         {
             WriteInteger(1);//1 avatar
-            WriteUser(User);
+            WriteUser(user);
         }
 
-        private void WriteUser(RoomUser User)
+        private void WriteUser(RoomUser user)
         {
-            if (!User.IsPet && !User.IsBot)
+            if (!user.IsPet && !user.IsBot)
             {
-                Habbo Habbo = User.GetClient().GetHabbo();
+                Habbo habbo = user.GetClient().GetHabbo();
 
-                Group Group = null;
-                if (Habbo != null)
+                Group @group = null;
+                if (habbo != null)
                 {
-                    if (Habbo.GetStats() != null)
+                    if (habbo.GetStats() != null)
                     {
-                        if (Habbo.GetStats().FavouriteGroupId > 0)
+                        if (habbo.GetStats().FavouriteGroupId > 0)
                         {
-                            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(Habbo.GetStats().FavouriteGroupId, out Group))
-                                Group = null;
+                            if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(habbo.GetStats().FavouriteGroupId, out @group))
+                                @group = null;
                         }
                     }
                 }
 
-                if (Habbo.PetId == 0)
+                if (habbo.PetId == 0)
                 {
-                    WriteInteger(Habbo.Id);
-                    WriteString(Habbo.Username);
-                    WriteString(Habbo.Motto);
-                    WriteString(Habbo.Look);
-                    WriteInteger(User.VirtualId);
-                    WriteInteger(User.X);
-                    WriteInteger(User.Y);
-                    WriteDouble(User.Z);
+                    WriteInteger(habbo.Id);
+                    WriteString(habbo.Username);
+                    WriteString(habbo.Motto);
+                    WriteString(habbo.Look);
+                    WriteInteger(user.VirtualId);
+                    WriteInteger(user.X);
+                    WriteInteger(user.Y);
+                    WriteDouble(user.Z);
 
                     WriteInteger(0);//2 for user, 4 for bot.
                     WriteInteger(1);//1 for user, 2 for pet, 3 for bot.
-                    WriteString(Habbo.Gender.ToLower());
+                    WriteString(habbo.Gender.ToLower());
 
-                    if (Group != null)
+                    if (@group != null)
                     {
-                        WriteInteger(Group.Id);
+                        WriteInteger(@group.Id);
                         WriteInteger(0);
-                        WriteString(Group.Name);
+                        WriteString(@group.Name);
                     }
                     else
                     {
@@ -76,26 +76,26 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                     }
 
                     WriteString("");//Whats this?
-                    WriteInteger(Habbo.GetStats().AchievementPoints);//Achievement score
+                    WriteInteger(habbo.GetStats().AchievementPoints);//Achievement score
                     WriteBoolean(false);//Builders club?
                 }
-                else if (Habbo.PetId > 0 && Habbo.PetId != 100)
+                else if (habbo.PetId > 0 && habbo.PetId != 100)
                 {
-                    WriteInteger(Habbo.Id);
-                    WriteString(Habbo.Username);
-                    WriteString(Habbo.Motto);
-                    WriteString(PetFigureForType(Habbo.PetId));
+                    WriteInteger(habbo.Id);
+                    WriteString(habbo.Username);
+                    WriteString(habbo.Motto);
+                    WriteString(PetFigureForType(habbo.PetId));
 
-                    WriteInteger(User.VirtualId);
-                    WriteInteger(User.X);
-                    WriteInteger(User.Y);
-                    WriteDouble(User.Z);
+                    WriteInteger(user.VirtualId);
+                    WriteInteger(user.X);
+                    WriteInteger(user.Y);
+                    WriteDouble(user.Z);
                     WriteInteger(0);
                     WriteInteger(2);//Pet.
 
-                    WriteInteger(Habbo.PetId);//pet type.
-                    WriteInteger(Habbo.Id);//UserId of the owner.
-                    WriteString(Habbo.Username);//Username of the owner.
+                    WriteInteger(habbo.PetId);//pet type.
+                    WriteInteger(habbo.Id);//UserId of the owner.
+                    WriteString(habbo.Username);//Username of the owner.
                     WriteInteger(1);
                     WriteBoolean(false);//Has saddle.
                     WriteBoolean(false);//Is someone riding this horse?
@@ -103,66 +103,66 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                     WriteInteger(0);
                     WriteString("");
                 }
-                else if (Habbo.PetId > 0 && Habbo.PetId == 100)
+                else if (habbo.PetId > 0 && habbo.PetId == 100)
                 {
-                    WriteInteger(Habbo.Id);
-                    WriteString(Habbo.Username);
-                    WriteString(Habbo.Motto);
-                    WriteString(Habbo.Look.ToLower());
-                    WriteInteger(User.VirtualId);
-                    WriteInteger(User.X);
-                    WriteInteger(User.Y);
-                    WriteDouble(User.Z);
+                    WriteInteger(habbo.Id);
+                    WriteString(habbo.Username);
+                    WriteString(habbo.Motto);
+                    WriteString(habbo.Look.ToLower());
+                    WriteInteger(user.VirtualId);
+                    WriteInteger(user.X);
+                    WriteInteger(user.Y);
+                    WriteDouble(user.Z);
                     WriteInteger(0);
                     WriteInteger(4);
 
-                    WriteString(Habbo.Gender.ToLower()); // ?
-                    WriteInteger(Habbo.Id); //Owner Id
-                    WriteString(Habbo.Username); // Owner name
+                    WriteString(habbo.Gender.ToLower()); // ?
+                    WriteInteger(habbo.Id); //Owner Id
+                    WriteString(habbo.Username); // Owner name
                     WriteInteger(0);//Action Count
                 }
             }
-            else if (User.IsPet)
+            else if (user.IsPet)
             {
-                WriteInteger(User.BotAI.BaseId);
-                WriteString(User.BotData.Name);
-                WriteString(User.BotData.Motto);
+                WriteInteger(user.BotAi.BaseId);
+                WriteString(user.BotData.Name);
+                WriteString(user.BotData.Motto);
 
                 //base.WriteString("26 30 ffffff 5 3 302 4 2 201 11 1 102 12 0 -1 28 4 401 24");
-                WriteString(User.BotData.Look.ToLower() + ((User.PetData.Saddle > 0) ? " 3 2 " + User.PetData.PetHair + " " + User.PetData.HairDye + " 3 " + User.PetData.PetHair + " " + User.PetData.HairDye + " 4 " + User.PetData.Saddle + " 0" : " 2 2 " + User.PetData.PetHair + " " + User.PetData.HairDye + " 3 " + User.PetData.PetHair + " " + User.PetData.HairDye + ""));
+                WriteString(user.BotData.Look.ToLower() + ((user.PetData.Saddle > 0) ? " 3 2 " + user.PetData.PetHair + " " + user.PetData.HairDye + " 3 " + user.PetData.PetHair + " " + user.PetData.HairDye + " 4 " + user.PetData.Saddle + " 0" : " 2 2 " + user.PetData.PetHair + " " + user.PetData.HairDye + " 3 " + user.PetData.PetHair + " " + user.PetData.HairDye + ""));
 
-                WriteInteger(User.VirtualId);
-                WriteInteger(User.X);
-                WriteInteger(User.Y);
-                WriteDouble(User.Z);
+                WriteInteger(user.VirtualId);
+                WriteInteger(user.X);
+                WriteInteger(user.Y);
+                WriteDouble(user.Z);
                 WriteInteger(0);
-                WriteInteger((User.BotData.AiType == BotAIType.Pet) ? 2 : 4);
-                WriteInteger(User.PetData.Type);
-                WriteInteger(User.PetData.OwnerId); // userid
-                WriteString(User.PetData.OwnerName); // username
+                WriteInteger((user.BotData.AiType == BotAiType.Pet) ? 2 : 4);
+                WriteInteger(user.PetData.Type);
+                WriteInteger(user.PetData.OwnerId); // userid
+                WriteString(user.PetData.OwnerName); // username
                 WriteInteger(1);
-                WriteBoolean(User.PetData.Saddle > 0);
-                WriteBoolean(User.RidingHorse);
+                WriteBoolean(user.PetData.Saddle > 0);
+                WriteBoolean(user.RidingHorse);
                 WriteInteger(0);
                 WriteInteger(0);
                 WriteString("");
             }
-            else if (User.IsBot)
+            else if (user.IsBot)
             {
-                WriteInteger(User.BotAI.BaseId);
-                WriteString(User.BotData.Name);
-                WriteString(User.BotData.Motto);
-                WriteString(User.BotData.Look.ToLower());
-                WriteInteger(User.VirtualId);
-                WriteInteger(User.X);
-                WriteInteger(User.Y);
-                WriteDouble(User.Z);
+                WriteInteger(user.BotAi.BaseId);
+                WriteString(user.BotData.Name);
+                WriteString(user.BotData.Motto);
+                WriteString(user.BotData.Look.ToLower());
+                WriteInteger(user.VirtualId);
+                WriteInteger(user.X);
+                WriteInteger(user.Y);
+                WriteDouble(user.Z);
                 WriteInteger(0);
-                WriteInteger((User.BotData.AiType == BotAIType.Pet) ? 2 : 4);
+                WriteInteger((user.BotData.AiType == BotAiType.Pet) ? 2 : 4);
 
-                WriteString(User.BotData.Gender.ToLower()); // ?
-                WriteInteger(User.BotData.OwnerId); //Owner Id
-                WriteString(PlusEnvironment.GetUsernameById(User.BotData.OwnerId)); // Owner name
+                WriteString(user.BotData.Gender.ToLower()); // ?
+                WriteInteger(user.BotData.OwnerId); //Owner Id
+                WriteString(PlusEnvironment.GetUsernameById(user.BotData.OwnerId)); // Owner name
                 WriteInteger(5);//Action Count
                 WriteShort(1);//Copy looks
                 WriteShort(2);//Setup speech
@@ -174,7 +174,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
 
         public string PetFigureForType(int type)
         {
-            Random _random = new Random();
+            Random random = new Random();
 
             switch (type)
             {
@@ -182,8 +182,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 default:
                 case 60:
                     {
-                        int RandomNumber = _random.Next(1, 4);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 4);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -201,8 +201,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Cat Figures.
                 case 1:
                     {
-                        int RandomNumber = _random.Next(1, 5);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 5);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -222,8 +222,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Terrier Figures
                 case 2:
                     {
-                        int RandomNumber = _random.Next(1, 6);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 6);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -245,8 +245,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Croco Figures
                 case 3:
                     {
-                        int RandomNumber = _random.Next(1, 5);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 5);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -266,8 +266,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Bear Figures
                 case 4:
                     {
-                        int RandomNumber = _random.Next(1, 4);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 4);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -285,8 +285,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Pig Figures
                 case 5:
                     {
-                        int RandomNumber = _random.Next(1, 7);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 7);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -310,8 +310,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Lion Figures
                 case 6:
                     {
-                        int RandomNumber = _random.Next(1, 11);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 11);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -343,8 +343,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Rhino Figures
                 case 7:
                     {
-                        int RandomNumber = _random.Next(1, 7);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 7);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -368,8 +368,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Spider Figures
                 case 8:
                     {
-                        int RandomNumber = _random.Next(1, 13);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 13);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -405,8 +405,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Turtle Figures
                 case 9:
                     {
-                        int RandomNumber = _random.Next(1, 9);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 9);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -434,8 +434,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Chick Figures
                 case 10:
                     {
-                        int RandomNumber = _random.Next(1, 1);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 1);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -447,8 +447,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Frog Figures
                 case 11:
                     {
-                        int RandomNumber = _random.Next(1, 13);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 13);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -484,8 +484,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Dragon Figures
                 case 12:
                     {
-                        int RandomNumber = _random.Next(1, 6);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 6);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -507,8 +507,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Monkey Figures
                 case 14:
                     {
-                        int RandomNumber = _random.Next(1, 14);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 14);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -546,8 +546,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Horse Figures
                 case 15:
                     {
-                        int RandomNumber = _random.Next(1, 20);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 20);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -597,8 +597,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Bunny Figures
                 case 17:
                     {
-                        int RandomNumber = _random.Next(1, 8);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 8);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -624,8 +624,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Pigeon Figures (White & Black)
                 case 21:
                     {
-                        int RandomNumber = _random.Next(1, 3);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 3);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -639,8 +639,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Demon Monkey Figures
                 case 23:
                     {
-                        int RandomNumber = _random.Next(1, 3);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 3);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:
@@ -656,8 +656,8 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
                 #region Gnome Figures
                 case 26:
                     {
-                        int RandomNumber = _random.Next(1, 4);
-                        switch (RandomNumber)
+                        int randomNumber = random.Next(1, 4);
+                        switch (randomNumber)
                         {
                             default:
                             case 1:

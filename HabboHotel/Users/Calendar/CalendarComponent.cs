@@ -27,8 +27,8 @@ namespace Plus.HabboHotel.Users.Calendar
         /// <summary>
         /// Initialize the PermissionComponent.
         /// </summary>
-        /// <param name="Player"></param>
-        public bool Init(Habbo Player)
+        /// <param name="player"></param>
+        public bool Init(Habbo player)
         {
             if (_lateBoxes.Count > 0)
                 _lateBoxes.Clear();
@@ -36,24 +36,24 @@ namespace Plus.HabboHotel.Users.Calendar
             if (_openedBoxes.Count > 0)
                 _openedBoxes.Clear();
 
-            DataTable GetData = null;
+            DataTable getData = null;
             using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT * FROM `user_xmas15_calendar` WHERE `user_id` = @id;");
-                dbClient.AddParameter("id", Player.Id);
-                GetData = dbClient.GetTable();
+                dbClient.AddParameter("id", player.Id);
+                getData = dbClient.GetTable();
 
-                if (GetData != null)
+                if (getData != null)
                 {
-                    foreach (DataRow Row in GetData.Rows)
+                    foreach (DataRow row in getData.Rows)
                     {
-                        if (Convert.ToInt32(Row["status"]) == 0)
+                        if (Convert.ToInt32(row["status"]) == 0)
                         {
-                            _lateBoxes.Add(Convert.ToInt32(Row["day"]));
+                            _lateBoxes.Add(Convert.ToInt32(row["day"]));
                         }
                         else
                         {
-                            _openedBoxes.Add(Convert.ToInt32(Row["day"]));
+                            _openedBoxes.Add(Convert.ToInt32(row["day"]));
                         }
                     }
                 }

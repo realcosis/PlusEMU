@@ -3,10 +3,10 @@
 
     class RoomEntryInfoComposer : ServerPacket
     {
-        public RoomEntryInfoComposer(int roomID, bool isOwner)
+        public RoomEntryInfoComposer(int roomId, bool isOwner)
             : base(ServerPacketHeader.RoomEntryInfoMessageComposer)
         {
-            WriteInteger(roomID);
+            WriteInteger(roomId);
             WriteBoolean(isOwner);
         }
     }

@@ -22,7 +22,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.YouTubeTelevisions
                 return;
             }
 
-            Dictionary<int, TelevisionItem> dict = PlusEnvironment.GetGame().GetTelevisionManager()._televisions;
+            Dictionary<int, TelevisionItem> dict = PlusEnvironment.GetGame().GetTelevisionManager().Televisions;
             foreach (TelevisionItem value in RandomValues(dict).Take(1))
             {
                 session.SendPacket(new GetYouTubeVideoComposer(itemId, value.YouTubeId));

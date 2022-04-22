@@ -4,27 +4,27 @@ namespace Plus.Communication.Packets.Outgoing.Groups
 {
     class ManageGroupComposer : ServerPacket
     {
-        public ManageGroupComposer(Group Group, string[] BadgeParts)
+        public ManageGroupComposer(Group @group, string[] badgeParts)
             : base(ServerPacketHeader.ManageGroupMessageComposer)
         {
             WriteInteger(0);
             WriteBoolean(true);
-            WriteInteger(Group.Id);
-            WriteString(Group.Name);
-            WriteString(Group.Description);
+            WriteInteger(@group.Id);
+            WriteString(@group.Name);
+            WriteString(@group.Description);
             WriteInteger(1);
-            WriteInteger(Group.Colour1);
-            WriteInteger(Group.Colour2);
-            WriteInteger(Group.Type == GroupType.Open ? 0 : Group.Type == GroupType.Locked ? 1 : 2);
-            WriteInteger(Group.AdminOnlyDeco);
+            WriteInteger(@group.Colour1);
+            WriteInteger(@group.Colour2);
+            WriteInteger(@group.Type == GroupType.Open ? 0 : @group.Type == GroupType.Locked ? 1 : 2);
+            WriteInteger(@group.AdminOnlyDeco);
             WriteBoolean(false);
             WriteString("");
 
             WriteInteger(5);
             
-            for (int x = 0; x < BadgeParts.Length; x++)
+            for (int x = 0; x < badgeParts.Length; x++)
             {
-                string symbol = BadgeParts[x];
+                string symbol = badgeParts[x];
 
                 WriteInteger((symbol.Length >= 6) ? int.Parse(symbol.Substring(0, 3)) : int.Parse(symbol.Substring(0, 2)));
                 WriteInteger((symbol.Length >= 6) ? int.Parse(symbol.Substring(3, 2)) : int.Parse(symbol.Substring(2, 2)));
@@ -32,7 +32,7 @@ namespace Plus.Communication.Packets.Outgoing.Groups
             }
 
             int i = 0;
-            while (i < (5 - BadgeParts.Length))
+            while (i < (5 - badgeParts.Length))
             {
                 WriteInteger(0);
                 WriteInteger(0);
@@ -40,8 +40,8 @@ namespace Plus.Communication.Packets.Outgoing.Groups
                 i++;
             }
 
-            WriteString(Group.Badge);
-            WriteInteger(Group.MemberCount);
+            WriteString(@group.Badge);
+            WriteInteger(@group.MemberCount);
         }
     }
 }

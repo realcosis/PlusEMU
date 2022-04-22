@@ -2,10 +2,10 @@
 {
     class SubmitBullyReportComposer : ServerPacket
     {
-        public SubmitBullyReportComposer(int Result)
+        public SubmitBullyReportComposer(int result)
             : base(ServerPacketHeader.SubmitBullyReportMessageComposer)
         {
-            WriteInteger(Result);
+            WriteInteger(result);
         }
     }
 }

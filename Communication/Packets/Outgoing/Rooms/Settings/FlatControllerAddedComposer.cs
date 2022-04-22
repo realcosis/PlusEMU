@@ -2,12 +2,12 @@
 {
     class FlatControllerAddedComposer : ServerPacket
     {
-        public FlatControllerAddedComposer(int RoomId, int UserId, string Username)
+        public FlatControllerAddedComposer(int roomId, int userId, string username)
             : base(ServerPacketHeader.FlatControllerAddedMessageComposer)
         {
-            WriteInteger(RoomId);
-            WriteInteger(UserId);
-           WriteString(Username);
+            WriteInteger(roomId);
+            WriteInteger(userId);
+           WriteString(username);
         }
     }
 }

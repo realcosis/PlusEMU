@@ -2,11 +2,11 @@
 {
     class TradingConfirmedComposer : ServerPacket
     {
-        public TradingConfirmedComposer(int UserId, bool Confirmed)
+        public TradingConfirmedComposer(int userId, bool confirmed)
             : base(ServerPacketHeader.TradingConfirmedMessageComposer)
         {
-            WriteInteger(UserId);
-            WriteInteger(Confirmed ? 1 : 0);
+            WriteInteger(userId);
+            WriteInteger(confirmed ? 1 : 0);
         }
     }
 }

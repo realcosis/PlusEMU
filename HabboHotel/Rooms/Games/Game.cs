@@ -69,22 +69,22 @@ namespace Plus.HabboHotel.Rooms.Games
 
             foreach (Item item in _room.GetRoomItemHandler().GetFloor.ToList())
             {
-                if (team == Team.Blue && item.Data.InteractionType == InteractionType.banzaiscoreblue)
+                if (team == Team.Blue && item.Data.InteractionType == InteractionType.Banzaiscoreblue)
                 {
                     item.ExtraData = _teamPoints[Convert.ToInt32(team)].ToString();
                     item.UpdateState();
                 }
-                else if (team == Team.Red && item.Data.InteractionType == InteractionType.banzaiscorered)
+                else if (team == Team.Red && item.Data.InteractionType == InteractionType.Banzaiscorered)
                 {
                     item.ExtraData = _teamPoints[Convert.ToInt32(team)].ToString();
                     item.UpdateState();
                 }
-                else if (team == Team.Green && item.Data.InteractionType == InteractionType.banzaiscoregreen)
+                else if (team == Team.Green && item.Data.InteractionType == InteractionType.Banzaiscoregreen)
                 {
                     item.ExtraData = _teamPoints[Convert.ToInt32(team)].ToString();
                     item.UpdateState();
                 }
-                else if (team == Team.Yellow && item.Data.InteractionType == InteractionType.banzaiscoreyellow)
+                else if (team == Team.Yellow && item.Data.InteractionType == InteractionType.Banzaiscoreyellow)
                 {
                     item.ExtraData = _teamPoints[Convert.ToInt32(team)].ToString();
                     item.UpdateState();
@@ -124,7 +124,7 @@ namespace Plus.HabboHotel.Rooms.Games
 
         private static bool IsFootballGoal(InteractionType type)
         {
-            return (type == InteractionType.FOOTBALL_GOAL_BLUE || type == InteractionType.FOOTBALL_GOAL_GREEN || type == InteractionType.FOOTBALL_GOAL_RED || type == InteractionType.FOOTBALL_GOAL_YELLOW);
+            return (type == InteractionType.FootballGoalBlue || type == InteractionType.FootballGoalGreen || type == InteractionType.FootballGoalRed || type == InteractionType.FootballGoalYellow);
         }
 
         public void AddFurnitureToTeam(Item item, Team team)
@@ -215,10 +215,10 @@ namespace Plus.HabboHotel.Rooms.Games
         private void LockGate(Item item)
         {
             InteractionType type = item.GetBaseItem().InteractionType;
-            if (type == InteractionType.FREEZE_BLUE_GATE || type == InteractionType.FREEZE_GREEN_GATE ||
-                type == InteractionType.FREEZE_RED_GATE || type == InteractionType.FREEZE_YELLOW_GATE
-                || type == InteractionType.banzaigateblue || type == InteractionType.banzaigatered ||
-                type == InteractionType.banzaigategreen || type == InteractionType.banzaigateyellow)
+            if (type == InteractionType.FreezeBlueGate || type == InteractionType.FreezeGreenGate ||
+                type == InteractionType.FreezeRedGate || type == InteractionType.FreezeYellowGate
+                || type == InteractionType.Banzaigateblue || type == InteractionType.Banzaigatered ||
+                type == InteractionType.Banzaigategreen || type == InteractionType.Banzaigateyellow)
             {
                 foreach (RoomUser user in _room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
                 {
@@ -231,10 +231,10 @@ namespace Plus.HabboHotel.Rooms.Games
         private void UnlockGate(Item item)
         {
             InteractionType type = item.GetBaseItem().InteractionType;
-            if (type == InteractionType.FREEZE_BLUE_GATE || type == InteractionType.FREEZE_GREEN_GATE ||
-                type == InteractionType.FREEZE_RED_GATE || type == InteractionType.FREEZE_YELLOW_GATE
-                || type == InteractionType.banzaigateblue || type == InteractionType.banzaigatered ||
-                type == InteractionType.banzaigategreen || type == InteractionType.banzaigateyellow)
+            if (type == InteractionType.FreezeBlueGate || type == InteractionType.FreezeGreenGate ||
+                type == InteractionType.FreezeRedGate || type == InteractionType.FreezeYellowGate
+                || type == InteractionType.Banzaigateblue || type == InteractionType.Banzaigatered ||
+                type == InteractionType.Banzaigategreen || type == InteractionType.Banzaigateyellow)
             {
                 foreach (RoomUser user in _room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
                 {
@@ -247,7 +247,7 @@ namespace Plus.HabboHotel.Rooms.Games
 
         public void StopGame()
         {
-            _room.lastTimerReset = DateTime.Now;
+            _room.LastTimerReset = DateTime.Now;
         }
 
         public void Dispose()

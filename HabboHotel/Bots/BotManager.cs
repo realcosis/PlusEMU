@@ -41,7 +41,7 @@ namespace Plus.HabboHotel.Bots
             }
         }
 
-        public BotResponse GetResponse(BotAIType type, string message)
+        public BotResponse GetResponse(BotAiType type, string message)
         {
             foreach (BotResponse response in _responses.Where(x => x.AiType == type).ToList())
             {

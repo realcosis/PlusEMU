@@ -2,10 +2,10 @@
 {
     class FurniListRemoveComposer : ServerPacket
     {
-        public FurniListRemoveComposer(int Id)
+        public FurniListRemoveComposer(int id)
             : base(ServerPacketHeader.FurniListRemoveMessageComposer)
         {
-            WriteInteger(Id);
+            WriteInteger(id);
         }
     }
 }

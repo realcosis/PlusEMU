@@ -80,7 +80,7 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
                     session.GetHabbo().GetInventoryComponent().TryAddItem(giveItem);
                     session.SendPacket(new FurniListNotificationComposer(giveItem.Id, 1));
 
-                    session.SendPacket(new Outgoing.Catalog.PurchaseOKComposer());
+                    session.SendPacket(new Outgoing.Catalog.PurchaseOkComposer());
                     session.SendPacket(new FurniListAddComposer(giveItem));
                     session.SendPacket(new FurniListUpdateComposer());
                 }

@@ -4,11 +4,11 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Settings
 {
     class FlatControllerRemovedComposer : ServerPacket
     {
-        public FlatControllerRemovedComposer(Room Instance, int UserId)
+        public FlatControllerRemovedComposer(Room instance, int userId)
             : base(ServerPacketHeader.FlatControllerRemovedMessageComposer)
         {
-            WriteInteger(Instance.Id);
-            WriteInteger(UserId);
+            WriteInteger(instance.Id);
+            WriteInteger(userId);
         }
     }
 }

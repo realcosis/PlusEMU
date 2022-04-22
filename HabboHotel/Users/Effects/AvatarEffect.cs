@@ -17,15 +17,15 @@ namespace Plus.HabboHotel.Users.Effects
         private double _timestampActivated;
         private int _quantity;
 
-        public AvatarEffect(int Id, int UserId, int SpriteId, double Duration, bool Activated, double TimestampActivated, int Quantity)
+        public AvatarEffect(int id, int userId, int spriteId, double duration, bool activated, double timestampActivated, int quantity)
         {
-            this.Id = Id;
-            this.UserId = UserId;
-            this.SpriteId = SpriteId;
-            this.Duration = Duration;
-            this.Activated = Activated;
-            this.TimestampActivated = TimestampActivated;
-            this.Quantity = Quantity;
+            this.Id = id;
+            this.UserId = userId;
+            this.SpriteId = spriteId;
+            this.Duration = duration;
+            this.Activated = activated;
+            this.TimestampActivated = timestampActivated;
+            this.Quantity = quantity;
         }
 
         public int Id
@@ -106,22 +106,22 @@ namespace Plus.HabboHotel.Users.Effects
         /// </summary>
         public bool Activate()
         {
-            double TsNow = UnixTimestamp.GetNow();
+            double tsNow = UnixTimestamp.GetNow();
 
             using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `user_effects` SET `is_activated` = '1', `activated_stamp` = @ts WHERE `id` = @id");
-                dbClient.AddParameter("ts", TsNow);
+                dbClient.AddParameter("ts", tsNow);
                 dbClient.AddParameter("id", Id);
                 dbClient.RunQuery();
 
                 _activated = true;
-                _timestampActivated = TsNow;
+                _timestampActivated = tsNow;
                 return true;
             }
         }
 
-        public void HandleExpiration(Habbo Habbo)
+        public void HandleExpiration(Habbo habbo)
         {
             _quantity--;
 
@@ -145,7 +145,7 @@ namespace Plus.HabboHotel.Users.Effects
                 }
             }
 
-            Habbo.GetClient().SendPacket(new AvatarEffectExpiredComposer(this));
+            habbo.GetClient().SendPacket(new AvatarEffectExpiredComposer(this));
             // reset fx if in room?
         }
 

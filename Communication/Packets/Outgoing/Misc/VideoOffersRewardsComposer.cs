@@ -2,12 +2,12 @@
 {
     class VideoOffersRewardsComposer : ServerPacket
     {
-        public VideoOffersRewardsComposer(int Id, string Type, string Message)
+        public VideoOffersRewardsComposer(int id, string type, string message)
             : base(ServerPacketHeader.VideoOffersRewardsMessageComposer)
         {
-            WriteString(Type);
-            WriteInteger(Id);
-            WriteString(Message);
+            WriteString(type);
+            WriteInteger(id);
+            WriteString(message);
             WriteString("");
         }
     }

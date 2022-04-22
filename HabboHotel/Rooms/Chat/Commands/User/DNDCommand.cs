@@ -1,6 +1,6 @@
 ﻿namespace Plus.HabboHotel.Rooms.Chat.Commands.User
 {
-    class DNDCommand : IChatCommand
+    class DndCommand : IChatCommand
     {
         public string PermissionRequired
         {
@@ -17,10 +17,10 @@
             get { return "Allows you to chose the option to enable or disable console messages."; }
         }
 
-        public void Execute(GameClients.GameClient Session, Room Room, string[] Params)
+        public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            Session.GetHabbo().AllowConsoleMessages = !Session.GetHabbo().AllowConsoleMessages;
-            Session.SendWhisper("You're " + (Session.GetHabbo().AllowConsoleMessages == true ? "now" : "no longer") + " accepting console messages.");
+            session.GetHabbo().AllowConsoleMessages = !session.GetHabbo().AllowConsoleMessages;
+            session.SendWhisper("You're " + (session.GetHabbo().AllowConsoleMessages == true ? "now" : "no longer") + " accepting console messages.");
         }
     }
 }

@@ -2,10 +2,10 @@
 {
     class MarketplaceMakeOfferResultComposer : ServerPacket
     {
-        public MarketplaceMakeOfferResultComposer(int Success)
+        public MarketplaceMakeOfferResultComposer(int success)
             : base(ServerPacketHeader.MarketplaceMakeOfferResultMessageComposer)
         {
-            WriteInteger(Success);
+            WriteInteger(success);
         }
     }
 }

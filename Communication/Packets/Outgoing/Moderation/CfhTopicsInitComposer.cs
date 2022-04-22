@@ -6,20 +6,20 @@ namespace Plus.Communication.Packets.Outgoing.Moderation
 {
     class CfhTopicsInitComposer : ServerPacket
     {
-        public CfhTopicsInitComposer(Dictionary<string, List<ModerationPresetActions>> UserActionPresets)
+        public CfhTopicsInitComposer(Dictionary<string, List<ModerationPresetActions>> userActionPresets)
             : base(ServerPacketHeader.CfhTopicsInitMessageComposer)
         {
 
-            WriteInteger(UserActionPresets.Count);
-            foreach (KeyValuePair<string, List<ModerationPresetActions>> Cat in UserActionPresets.ToList())
+            WriteInteger(userActionPresets.Count);
+            foreach (KeyValuePair<string, List<ModerationPresetActions>> cat in userActionPresets.ToList())
             {
-                WriteString(Cat.Key);
-                WriteInteger(Cat.Value.Count);
-                foreach (ModerationPresetActions Preset in Cat.Value.ToList())
+                WriteString(cat.Key);
+                WriteInteger(cat.Value.Count);
+                foreach (ModerationPresetActions preset in cat.Value.ToList())
                 {
-                    WriteString(Preset.Caption);
-                    WriteInteger(Preset.Id);
-                    WriteString(Preset.Type);
+                    WriteString(preset.Caption);
+                    WriteInteger(preset.Id);
+                    WriteString(preset.Type);
                 }
             }
         }

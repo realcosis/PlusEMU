@@ -23,43 +23,43 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
 
         public string ItemsData { get; set; }
 
-        public FurniHasNoFurniBox(Room Instance, Item Item)
+        public FurniHasNoFurniBox(Room instance, Item item)
         {
-            this.Instance = Instance;
-            this.Item = Item;
+            this.Instance = instance;
+            this.Item = item;
             SetItems = new ConcurrentDictionary<int, Item>();
         }
 
-        public void HandleSave(ClientPacket Packet)
+        public void HandleSave(ClientPacket packet)
         {
-            int Unknown = Packet.PopInt();
-            string Unknown2 = Packet.PopString();
+            int unknown = packet.PopInt();
+            string unknown2 = packet.PopString();
 
             if (SetItems.Count > 0)
                 SetItems.Clear();
 
-            int FurniCount = Packet.PopInt();
-            for (int i = 0; i < FurniCount; i++)
+            int furniCount = packet.PopInt();
+            for (int i = 0; i < furniCount; i++)
             {
-                Item SelectedItem = Instance.GetRoomItemHandler().GetItem(Packet.PopInt());
-                if (SelectedItem != null)
-                    SetItems.TryAdd(SelectedItem.Id, SelectedItem);
+                Item selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+                if (selectedItem != null)
+                    SetItems.TryAdd(selectedItem.Id, selectedItem);
             }
         }
 
-        public bool Execute(params object[] Params)
+        public bool Execute(params object[] @params)
         {
-            foreach (Item Item in SetItems.Values.ToList())
+            foreach (Item item in SetItems.Values.ToList())
             {
-                if (Item == null || !Instance.GetRoomItemHandler().GetFloor.Contains(Item))
+                if (item == null || !Instance.GetRoomItemHandler().GetFloor.Contains(item))
                     continue;
 
-                bool NoFurni = false;
-                List<Item> Items = Instance.GetGameMap().GetAllRoomItemForSquare(Item.GetX, Item.GetY);
-                if (Items.Count == 0)
-                    NoFurni = true;
+                bool noFurni = false;
+                List<Item> items = Instance.GetGameMap().GetAllRoomItemForSquare(item.GetX, item.GetY);
+                if (items.Count == 0)
+                    noFurni = true;
 
-                if (!NoFurni)
+                if (!noFurni)
                     return false;
             }
 

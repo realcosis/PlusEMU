@@ -4,15 +4,15 @@ namespace Plus.Communication.Packets.Outgoing.Groups
 {
     class GroupFurniSettingsComposer : ServerPacket
     {
-        public GroupFurniSettingsComposer(Group Group, int ItemId, int UserId)
+        public GroupFurniSettingsComposer(Group @group, int itemId, int userId)
             : base(ServerPacketHeader.GroupFurniSettingsMessageComposer)
         {
-            WriteInteger(ItemId);//Item Id
-            WriteInteger(Group.Id);//Group Id?
-            WriteString(Group.Name);
-            WriteInteger(Group.RoomId);//RoomId
-            WriteBoolean(Group.IsMember(UserId));//Member?
-            WriteBoolean(Group.ForumEnabled);//Has a forum
+            WriteInteger(itemId);//Item Id
+            WriteInteger(@group.Id);//Group Id?
+            WriteString(@group.Name);
+            WriteInteger(@group.RoomId);//RoomId
+            WriteBoolean(@group.IsMember(userId));//Member?
+            WriteBoolean(@group.ForumEnabled);//Has a forum
         }
     }
 }

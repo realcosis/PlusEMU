@@ -2,10 +2,10 @@
 {
     class PlayableGamesComposer : ServerPacket
     {
-        public PlayableGamesComposer(int GameID)
+        public PlayableGamesComposer(int gameId)
             : base(ServerPacketHeader.PlayableGamesMessageComposer)
         {
-            WriteInteger(GameID);
+            WriteInteger(gameId);
             WriteInteger(0);
         }
     }

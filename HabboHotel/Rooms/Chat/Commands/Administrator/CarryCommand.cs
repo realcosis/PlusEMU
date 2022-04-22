@@ -19,20 +19,20 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator
             get { return "Allows you to carry a hand item"; }
         }
 
-        public void Execute(GameClients.GameClient Session, Room Room, string[] Params)
+        public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            int ItemId = 0;
-            if (!int.TryParse(Convert.ToString(Params[1]), out ItemId))
+            int itemId = 0;
+            if (!int.TryParse(Convert.ToString(@params[1]), out itemId))
             {
-                Session.SendWhisper("Please enter a valid integer.");
+                session.SendWhisper("Please enter a valid integer.");
                 return;
             }
 
-            RoomUser User = Room.GetRoomUserManager().GetRoomUserByHabbo(Session.GetHabbo().Id);
-            if (User == null)
+            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+            if (user == null)
                 return;
 
-            User.CarryItem(ItemId);
+            user.CarryItem(itemId);
         }
     }
 }

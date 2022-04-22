@@ -17,24 +17,24 @@ namespace Plus.Communication.Packets.Outgoing.Messenger
             WriteInteger(page);// Page
 
             WriteInteger(friends.Count);
-            foreach (MessengerBuddy Friend in friends.ToList())
+            foreach (MessengerBuddy friend in friends.ToList())
             {
-                Relationship Relationship = player.Relationships.FirstOrDefault(x => x.Value.UserId == Convert.ToInt32(Friend.UserId)).Value;
+                Relationship relationship = player.Relationships.FirstOrDefault(x => x.Value.UserId == Convert.ToInt32(friend.UserId)).Value;
 
-                WriteInteger(Friend.Id);
-                WriteString(Friend.mUsername);
+                WriteInteger(friend.Id);
+                WriteString(friend.MUsername);
                 WriteInteger(1);//Gender.
-                WriteBoolean(Friend.IsOnline);
-                WriteBoolean(Friend.IsOnline && Friend.InRoom);
-                WriteString(Friend.IsOnline ? Friend.mLook : string.Empty);
+                WriteBoolean(friend.IsOnline);
+                WriteBoolean(friend.IsOnline && friend.InRoom);
+                WriteString(friend.IsOnline ? friend.MLook : string.Empty);
                 WriteInteger(0); // category id
-                WriteString(Friend.IsOnline ? Friend.mMotto : string.Empty);
+                WriteString(friend.IsOnline ? friend.MMotto : string.Empty);
                 WriteString(string.Empty);//Alternative name?
                 WriteString(string.Empty);
                 WriteBoolean(true);
                 WriteBoolean(false);
                 WriteBoolean(false);//Pocket Habbo user.
-                WriteShort(Relationship == null ? 0 : Relationship.Type);
+                WriteShort(relationship == null ? 0 : relationship.Type);
             }
         }
     }

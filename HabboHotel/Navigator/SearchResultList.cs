@@ -14,19 +14,19 @@
         private NavigatorSearchAllowance _searchAllowance;
         private int _orderId;
 
-        public SearchResultList(int Id, string Category, string CategoryIdentifier, string PublicName, bool CanDoActions, int Colour, int RequiredRank, NavigatorViewMode ViewMode, string CategoryType, string SearchAllowance, int OrderId)
+        public SearchResultList(int id, string category, string categoryIdentifier, string publicName, bool canDoActions, int colour, int requiredRank, NavigatorViewMode viewMode, string categoryType, string searchAllowance, int orderId)
         {
-            _id = Id;
-            _category = Category;
-            _categoryName = CategoryIdentifier;
-            _customName = PublicName;
-            _canDoActions = CanDoActions;
-            _colour = Colour;
-            _requiredRank = RequiredRank;
-            _viewMode = ViewMode;
-            _categoryType = NavigatorCategoryTypeUtility.GetCategoryTypeByString(CategoryType);
-            _searchAllowance = NavigatorSearchAllowanceUtility.GetSearchAllowanceByString(SearchAllowance);
-            _orderId = OrderId;
+            _id = id;
+            _category = category;
+            _categoryName = categoryIdentifier;
+            _customName = publicName;
+            _canDoActions = canDoActions;
+            _colour = colour;
+            _requiredRank = requiredRank;
+            _viewMode = viewMode;
+            _categoryType = NavigatorCategoryTypeUtility.GetCategoryTypeByString(categoryType);
+            _searchAllowance = NavigatorSearchAllowanceUtility.GetSearchAllowanceByString(searchAllowance);
+            _orderId = orderId;
         }
 
         public int Id

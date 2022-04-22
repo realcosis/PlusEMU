@@ -16,34 +16,34 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
         public bool BoolData { get; set; }
         public string ItemsData { get; set; }
 
-        public UserCountDoesntInRoomBox(Room Instance, Item Item)
+        public UserCountDoesntInRoomBox(Room instance, Item item)
         {
-            this.Instance = Instance;
-            this.Item = Item;
+            this.Instance = instance;
+            this.Item = item;
             SetItems = new ConcurrentDictionary<int, Item>();
         }
 
-        public void HandleSave(ClientPacket Packet)
+        public void HandleSave(ClientPacket packet)
         {
-            int Unknown = Packet.PopInt();
-            int CountOne = Packet.PopInt();
-            int CountTwo = Packet.PopInt();
+            int unknown = packet.PopInt();
+            int countOne = packet.PopInt();
+            int countTwo = packet.PopInt();
 
-            StringData = CountOne + ";" + CountTwo;
+            StringData = countOne + ";" + countTwo;
         }
 
-        public bool Execute(params object[] Params)
+        public bool Execute(params object[] @params)
         {
-            if (Params.Length == 0)
+            if (@params.Length == 0)
                 return false;
 
             if (String.IsNullOrEmpty(StringData))
                 return false;
 
-            int CountOne = StringData != null ? int.Parse(StringData.Split(';')[0]) : 1;
-            int CountTwo = StringData != null ? int.Parse(StringData.Split(';')[1]) : 50;
+            int countOne = StringData != null ? int.Parse(StringData.Split(';')[0]) : 1;
+            int countTwo = StringData != null ? int.Parse(StringData.Split(';')[1]) : 50;
 
-            if (Instance.UserCount >= CountOne && Instance.UserCount <= CountTwo)
+            if (Instance.UserCount >= countOne && Instance.UserCount <= countTwo)
                 return false;
 
             return true;

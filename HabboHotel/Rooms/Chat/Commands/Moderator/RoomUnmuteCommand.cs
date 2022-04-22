@@ -19,25 +19,25 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator
             get { return "Unmute the room."; }
         }
 
-        public void Execute(GameClients.GameClient Session, Room Room, string[] Params)
+        public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            if (!Room.RoomMuted)
+            if (!room.RoomMuted)
             {
-                Session.SendWhisper("This room isn't muted.");
+                session.SendWhisper("This room isn't muted.");
                 return;
             }
 
-            Room.RoomMuted = false;
+            room.RoomMuted = false;
 
-            List<RoomUser> RoomUsers = Room.GetRoomUserManager().GetRoomUsers();
-            if (RoomUsers.Count > 0)
+            List<RoomUser> roomUsers = room.GetRoomUserManager().GetRoomUsers();
+            if (roomUsers.Count > 0)
             {
-                foreach (RoomUser User in RoomUsers)
+                foreach (RoomUser user in roomUsers)
                 {
-                    if (User == null || User.GetClient() == null || User.GetClient().GetHabbo() == null || User.GetClient().GetHabbo().Username == Session.GetHabbo().Username)
+                    if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().Username == session.GetHabbo().Username)
                         continue;
 
-                    User.GetClient().SendWhisper("This room has been un-muted .");
+                    user.GetClient().SendWhisper("This room has been un-muted .");
                 }
             }
         }

@@ -2,12 +2,12 @@
 {
     class UserNameChangeComposer : ServerPacket
     {
-        public UserNameChangeComposer(int RoomId, int VirtualId, string Username)
+        public UserNameChangeComposer(int roomId, int virtualId, string username)
             : base(ServerPacketHeader.UserNameChangeMessageComposer)
         {
-            WriteInteger(RoomId);
-            WriteInteger(VirtualId);
-           WriteString(Username);
+            WriteInteger(roomId);
+            WriteInteger(virtualId);
+           WriteString(username);
         }
     }
 }

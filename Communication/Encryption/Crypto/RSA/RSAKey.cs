@@ -4,7 +4,7 @@ using Plus.Utilities;
 
 namespace Plus.Communication.Encryption.Crypto.RSA
 {
-    public class RSAKey
+    public class RsaKey
     {
         public int E { get; private set; }
         public BigInteger e { get; private set; }
@@ -19,7 +19,7 @@ namespace Plus.Communication.Encryption.Crypto.RSA
         protected bool CanDecrypt;
         protected bool CanEncrypt;
 
-        public RSAKey(BigInteger n, int e,
+        public RsaKey(BigInteger n, int e,
             BigInteger d,
             BigInteger p, BigInteger q,
             BigInteger dmp1, BigInteger dmq1,
@@ -95,12 +95,12 @@ namespace Plus.Communication.Encryption.Crypto.RSA
             Console.WriteLine(D.ToString(16));
         }
 
-        public static RSAKey ParsePublicKey(string n, string e)
+        public static RsaKey ParsePublicKey(string n, string e)
         {
-            return new RSAKey(new BigInteger(n, 16), Convert.ToInt32(e, 16), 0, 0, 0, 0, 0, 0);
+            return new RsaKey(new BigInteger(n, 16), Convert.ToInt32(e, 16), 0, 0, 0, 0, 0, 0);
         }
 
-        public static RSAKey ParsePrivateKey(string n, string e,
+        public static RsaKey ParsePrivateKey(string n, string e,
             string d,
             string p = null, string q = null,
             string dmp1 = null, string dmq1 = null,
@@ -108,11 +108,11 @@ namespace Plus.Communication.Encryption.Crypto.RSA
         {
             if (p == null)
             {
-                return new RSAKey(new BigInteger(n, 16), Convert.ToInt32(e, 16), new BigInteger(d, 16), 0, 0, 0, 0, 0);
+                return new RsaKey(new BigInteger(n, 16), Convert.ToInt32(e, 16), new BigInteger(d, 16), 0, 0, 0, 0, 0);
             }
             else
             {
-                return new RSAKey(new BigInteger(n, 16), Convert.ToInt32(e, 16), new BigInteger(d, 16), new BigInteger(p, 16), new BigInteger(q, 16), 
+                return new RsaKey(new BigInteger(n, 16), Convert.ToInt32(e, 16), new BigInteger(d, 16), new BigInteger(p, 16), new BigInteger(q, 16), 
                     new BigInteger(dmp1, 16), new BigInteger(dmq1, 16), new BigInteger(coeff, 16));
             }
         }
@@ -148,7 +148,7 @@ namespace Plus.Communication.Encryption.Crypto.RSA
             {
                 int bl = GetBlockSize();
 
-                byte[] paddedBytes = Pkcs1pad(src, bl, type);
+                byte[] paddedBytes = Pkcs1Pad(src, bl, type);
                 BigInteger m = new BigInteger(paddedBytes);
                 if (m == 0)
                 {
@@ -182,7 +182,7 @@ namespace Plus.Communication.Encryption.Crypto.RSA
 
                 int bl = GetBlockSize();
 
-                byte[] bytes = Pkcs1unpad(m.getBytes(), bl, type);
+                byte[] bytes = Pkcs1Unpad(m.getBytes(), bl, type);
 
                 return bytes;
             }
@@ -192,7 +192,7 @@ namespace Plus.Communication.Encryption.Crypto.RSA
             }
         }
 
-        private byte[] Pkcs1pad(byte[] src, int n, Pkcs1PadType type)
+        private byte[] Pkcs1Pad(byte[] src, int n, Pkcs1PadType type)
         {
             byte[] bytes = new byte[n];
 
@@ -219,7 +219,7 @@ namespace Plus.Communication.Encryption.Crypto.RSA
             return bytes;
         }
 
-        private byte[] Pkcs1unpad(byte[] src, int n, Pkcs1PadType type)
+        private byte[] Pkcs1Unpad(byte[] src, int n, Pkcs1PadType type)
         {
             int i = 0;
             while (i < src.Length && src[i] == 0)

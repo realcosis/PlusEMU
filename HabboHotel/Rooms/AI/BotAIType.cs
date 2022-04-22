@@ -1,6 +1,6 @@
 ﻿namespace Plus.HabboHotel.Rooms.AI
 {
-    public enum BotAIType
+    public enum BotAiType
     {
         Pet,
         Generic,

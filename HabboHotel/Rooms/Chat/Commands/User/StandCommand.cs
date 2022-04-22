@@ -17,25 +17,25 @@
             get { return "Allows you to stand up if not stood already."; }
         }
 
-        public void Execute(GameClients.GameClient Session, Room Room, string[] Params)
+        public void Execute(GameClients.GameClient session, Room room, string[] @params)
         {
-            RoomUser User = Room.GetRoomUserManager().GetRoomUserByHabbo(Session.GetHabbo().Username);
-            if (User == null)
+            RoomUser user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Username);
+            if (user == null)
                 return;
 
-            if (User.isSitting)
+            if (user.IsSitting)
             {
-                User.Statusses.Remove("sit");
-                User.Z += 0.35;
-                User.isSitting = false;
-                User.UpdateNeeded = true;
+                user.Statusses.Remove("sit");
+                user.Z += 0.35;
+                user.IsSitting = false;
+                user.UpdateNeeded = true;
             }
-            else if (User.isLying)
+            else if (user.IsLying)
             {
-                User.Statusses.Remove("lay");
-                User.Z += 0.35;
-                User.isLying = false;
-                User.UpdateNeeded = true;
+                user.Statusses.Remove("lay");
+                user.Z += 0.35;
+                user.IsLying = false;
+                user.UpdateNeeded = true;
             }
         }
     }

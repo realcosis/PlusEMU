@@ -7,55 +7,55 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired
 {
     class WiredConditionConfigComposer : ServerPacket
     {
-        public WiredConditionConfigComposer(IWiredItem Box)
+        public WiredConditionConfigComposer(IWiredItem box)
             : base(ServerPacketHeader.WiredConditionConfigMessageComposer)
         {
             WriteBoolean(false);
             WriteInteger(5);
 
-            WriteInteger(Box.SetItems.Count);
-            foreach (Item Item in Box.SetItems.Values.ToList())
+            WriteInteger(box.SetItems.Count);
+            foreach (Item item in box.SetItems.Values.ToList())
             {
-                WriteInteger(Item.Id);
+                WriteInteger(item.Id);
             }
 
-            WriteInteger(Box.Item.GetBaseItem().SpriteId);
-            WriteInteger(Box.Item.Id);
-           WriteString(Box.StringData);
+            WriteInteger(box.Item.GetBaseItem().SpriteId);
+            WriteInteger(box.Item.Id);
+           WriteString(box.StringData);
 
-            if (Box.Type == WiredBoxType.ConditionMatchStateAndPosition || Box.Type == WiredBoxType.ConditionDontMatchStateAndPosition)
+            if (box.Type == WiredBoxType.ConditionMatchStateAndPosition || box.Type == WiredBoxType.ConditionDontMatchStateAndPosition)
             {
-                if (String.IsNullOrEmpty(Box.StringData))
-                    Box.StringData = "0;0;0";
+                if (String.IsNullOrEmpty(box.StringData))
+                    box.StringData = "0;0;0";
 
                 WriteInteger(3);//Loop
-                WriteInteger(Box.StringData != null ? int.Parse(Box.StringData.Split(';')[0]) : 0);
-                WriteInteger(Box.StringData != null ? int.Parse(Box.StringData.Split(';')[1]) : 0);
-                WriteInteger(Box.StringData != null ? int.Parse(Box.StringData.Split(';')[2]) : 0);
+                WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[0]) : 0);
+                WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[1]) : 0);
+                WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[2]) : 0);
             }
-            else if (Box.Type == WiredBoxType.ConditionUserCountInRoom || Box.Type == WiredBoxType.ConditionUserCountDoesntInRoom)
+            else if (box.Type == WiredBoxType.ConditionUserCountInRoom || box.Type == WiredBoxType.ConditionUserCountDoesntInRoom)
             {
-                if (String.IsNullOrEmpty(Box.StringData))
-                    Box.StringData = "0;0";
+                if (String.IsNullOrEmpty(box.StringData))
+                    box.StringData = "0;0";
 
                 WriteInteger(2);//Loop
-                WriteInteger(Box.StringData != null ? int.Parse(Box.StringData.Split(';')[0]) : 1);
-                WriteInteger(Box.StringData != null ? int.Parse(Box.StringData.Split(';')[1]) : 50);
+                WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[0]) : 1);
+                WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[1]) : 50);
             }
 
-            if (Box.Type == WiredBoxType.ConditionFurniHasNoFurni)
+            if (box.Type == WiredBoxType.ConditionFurniHasNoFurni)
                 WriteInteger(1);
 
-            if (Box.Type != WiredBoxType.ConditionUserCountInRoom && Box.Type != WiredBoxType.ConditionUserCountDoesntInRoom && Box.Type != WiredBoxType.ConditionFurniHasNoFurni)
+            if (box.Type != WiredBoxType.ConditionUserCountInRoom && box.Type != WiredBoxType.ConditionUserCountDoesntInRoom && box.Type != WiredBoxType.ConditionFurniHasNoFurni)
                 WriteInteger(0);
-            else if (Box.Type == WiredBoxType.ConditionFurniHasNoFurni)
+            else if (box.Type == WiredBoxType.ConditionFurniHasNoFurni)
             {
-                if (String.IsNullOrEmpty(Box.StringData))
-                    Box.StringData = "0";
-                WriteInteger(Box.StringData != null ? int.Parse(Box.StringData.Split(';')[0]) : 50);
+                if (String.IsNullOrEmpty(box.StringData))
+                    box.StringData = "0";
+                WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[0]) : 50);
             }
             WriteInteger(0);
-            WriteInteger(WiredBoxTypeUtility.GetWiredId(Box.Type));
+            WriteInteger(WiredBoxTypeUtility.GetWiredId(box.Type));
         }
     }
 }

@@ -16,21 +16,21 @@ namespace Plus.HabboHotel.Talents
 
         private Dictionary<int, TalentTrackSubLevel> _subLevels;
 
-        public TalentTrackLevel(string Type, int Level, string DataActions, string DataGifts)
+        public TalentTrackLevel(string type, int level, string dataActions, string dataGifts)
         {
-            this.Type = Type;
-            this.Level = Level;
+            this.Type = type;
+            this.Level = level;
 
-            foreach (string Str in DataActions.Split('|'))
+            foreach (string str in dataActions.Split('|'))
             {
                 if (_dataActions == null) { _dataActions = new List<string>(); }
-                _dataActions.Add(Str);
+                _dataActions.Add(str);
             }
 
-            foreach (string Str in DataGifts.Split('|'))
+            foreach (string str in dataGifts.Split('|'))
             {
                 if (_dataGifts == null) { _dataGifts = new List<string>(); }
-                _dataGifts.Add(Str);
+                _dataGifts.Add(str);
             }
 
             _subLevels = new Dictionary<int, TalentTrackSubLevel>();
@@ -52,19 +52,19 @@ namespace Plus.HabboHotel.Talents
 
         public void Init()
         {
-            DataTable GetTable = null;
+            DataTable getTable = null;
             using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `sub_level`,`badge_code`,`required_progress` FROM `talents_sub_levels` WHERE `talent_level` = @TalentLevel");
                 dbClient.AddParameter("TalentLevel", Level);
-                GetTable = dbClient.GetTable();
+                getTable = dbClient.GetTable();
             }
 
-            if (GetTable != null)
+            if (getTable != null)
             {
-                foreach (DataRow Row in GetTable.Rows)
+                foreach (DataRow row in getTable.Rows)
                 {
-                    _subLevels.Add(Convert.ToInt32(Row["sub_level"]), new TalentTrackSubLevel(Convert.ToInt32(Row["sub_level"]), Convert.ToString(Row["badge_code"]), Convert.ToInt32(Row["required_progress"])));
+                    _subLevels.Add(Convert.ToInt32(row["sub_level"]), new TalentTrackSubLevel(Convert.ToInt32(row["sub_level"]), Convert.ToString(row["badge_code"]), Convert.ToInt32(row["required_progress"])));
                 }
             }
         }

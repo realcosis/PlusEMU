@@ -2,10 +2,10 @@
 {
     public class VoucherRedeemErrorComposer : ServerPacket
     {
-        public VoucherRedeemErrorComposer(int Type)
+        public VoucherRedeemErrorComposer(int type)
             : base(ServerPacketHeader.VoucherRedeemErrorMessageComposer)
         {
-           WriteString(Type.ToString());
+           WriteString(type.ToString());
         }
     }
 }

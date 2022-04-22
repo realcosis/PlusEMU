@@ -6,12 +6,12 @@ namespace Plus.Communication.Encryption.KeyExchange
 {
     public class DiffieHellman
     {
-        public readonly int BITLENGTH = 32;
+        public readonly int Bitlength = 32;
 
         public BigInteger Prime { get; private set; }
         public BigInteger Generator { get; private set; }
 
-        private BigInteger PrivateKey;
+        private BigInteger _privateKey;
         public BigInteger PublicKey { get; private set; }
 
         public DiffieHellman()
@@ -21,7 +21,7 @@ namespace Plus.Communication.Encryption.KeyExchange
 
         public DiffieHellman(int b)
         {
-            BITLENGTH = b;
+            Bitlength = b;
 
             Initialize();
         }
@@ -43,13 +43,13 @@ namespace Plus.Communication.Encryption.KeyExchange
             {
                 if (!ignoreBaseKeys)
                 {
-                    Prime = BigInteger.genPseudoPrime(BITLENGTH, 10, rand);
-                    Generator = BigInteger.genPseudoPrime(BITLENGTH, 10, rand);
+                    Prime = BigInteger.genPseudoPrime(Bitlength, 10, rand);
+                    Generator = BigInteger.genPseudoPrime(Bitlength, 10, rand);
                 }
 
-                byte[] bytes = new byte[BITLENGTH / 8];
+                byte[] bytes = new byte[Bitlength / 8];
                 Randomizer.NextBytes(bytes);
-                PrivateKey = new BigInteger(bytes);
+                _privateKey = new BigInteger(bytes);
 
                 if (Generator > Prime)
                 {
@@ -58,7 +58,7 @@ namespace Plus.Communication.Encryption.KeyExchange
                     Generator = temp;
                 }
 
-                PublicKey = Generator.modPow(PrivateKey, Prime);
+                PublicKey = Generator.modPow(_privateKey, Prime);
 
                 if (!ignoreBaseKeys)
                 {
@@ -69,7 +69,7 @@ namespace Plus.Communication.Encryption.KeyExchange
 
         public BigInteger CalculateSharedKey(BigInteger m)
         {
-            return m.modPow(PrivateKey, Prime);
+            return m.modPow(_privateKey, Prime);
         }
     }
 }

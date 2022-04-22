@@ -2,11 +2,11 @@
 {
     class MarketplaceCancelOfferResultComposer : ServerPacket
     {
-        public MarketplaceCancelOfferResultComposer(int OfferId, bool Success)
+        public MarketplaceCancelOfferResultComposer(int offerId, bool success)
             : base(ServerPacketHeader.MarketplaceCancelOfferResultMessageComposer)
         {
-            WriteInteger(OfferId);
-            WriteBoolean(Success);
+            WriteInteger(offerId);
+            WriteBoolean(success);
         }
     }
 }

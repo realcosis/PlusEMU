@@ -6,6 +6,6 @@
         Blocked = 1,
         Seat = 2,
         Pool = 3,
-        VIP = 4
+        Vip = 4
     }
 }

@@ -6,19 +6,19 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects
 {
     class FigureSetIdsComposer : ServerPacket
     {
-        public FigureSetIdsComposer(ICollection<ClothingParts> ClothingParts)
+        public FigureSetIdsComposer(ICollection<ClothingParts> clothingParts)
             : base(ServerPacketHeader.FigureSetIdsMessageComposer)
         {
-            WriteInteger(ClothingParts.Count);
-            foreach (ClothingParts Part in ClothingParts.ToList())
+            WriteInteger(clothingParts.Count);
+            foreach (ClothingParts part in clothingParts.ToList())
             {
-                WriteInteger(Part.PartId);
+                WriteInteger(part.PartId);
             }
 
-            WriteInteger(ClothingParts.Count);
-            foreach (ClothingParts Part in ClothingParts.ToList())
+            WriteInteger(clothingParts.Count);
+            foreach (ClothingParts part in clothingParts.ToList())
             {
-               WriteString(Part.Part);
+               WriteString(part.Part);
             }
         }
     }

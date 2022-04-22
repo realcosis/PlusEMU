@@ -2,10 +2,10 @@
 {
     class RoomErrorNotifComposer : ServerPacket
     {
-        public RoomErrorNotifComposer(int Error)
+        public RoomErrorNotifComposer(int error)
             : base(ServerPacketHeader.RoomErrorNotifMessageComposer)
         {
-            WriteInteger(Error);
+            WriteInteger(error);
         }
     }
 }

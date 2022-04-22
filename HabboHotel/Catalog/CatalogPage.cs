@@ -10,7 +10,7 @@ namespace Plus.HabboHotel.Catalog
         private string _pageLink;
         private int _icon;
         private int _minRank;
-        private int _minVIP;
+        private int _minVip;
         private bool _visible;
         private bool _enabled;
         private string _template;
@@ -21,7 +21,7 @@ namespace Plus.HabboHotel.Catalog
         private Dictionary<int, CatalogItem> _items;
         private Dictionary<int, CatalogItem> _itemOffers;
 
-        public CatalogPage(int id, int parentId, string enabled, string caption, string pageLink, int icon, int minRank, int minVIP,
+        public CatalogPage(int id, int parentId, string enabled, string caption, string pageLink, int icon, int minRank, int minVip,
               string visible, string template, string pageStrings1, string pageStrings2, Dictionary<int, CatalogItem> items, ref Dictionary<int, int> flatOffers)
         {
             _id = id;
@@ -31,7 +31,7 @@ namespace Plus.HabboHotel.Catalog
             _pageLink = pageLink;
             _icon = icon;
             _minRank = minRank;
-            _minVIP = minVIP;
+            _minVip = minVip;
             _visible = visible.ToLower() == "1" ? true : false;
             _template = template;
 
@@ -108,10 +108,10 @@ namespace Plus.HabboHotel.Catalog
             set { _minRank = value; }
         }
 
-        public int MinimumVIP
+        public int MinimumVip
         {
-            get { return _minVIP;}
-            set { _minVIP = value; }
+            get { return _minVip;}
+            set { _minVip = value; }
         }
 
         public bool Visible

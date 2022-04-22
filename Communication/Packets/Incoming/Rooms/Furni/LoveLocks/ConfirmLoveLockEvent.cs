@@ -20,7 +20,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.LoveLocks
 
             Item item = room.GetRoomItemHandler().GetItem(pId);
 
-            if (item == null || item.GetBaseItem() == null || item.GetBaseItem().InteractionType != InteractionType.LOVELOCK)
+            if (item == null || item.GetBaseItem() == null || item.GetBaseItem().InteractionType != InteractionType.Lovelock)
                 return;
 
             int userOneId = item.InteractingUser;
@@ -49,7 +49,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.LoveLocks
             {
                 userTwo.CanWalk = true;
                 userTwo.GetClient().SendNotification("Your partner has left the room or has cancelled the love lock.");
-                userTwo.LLPartner = 0;
+                userTwo.LlPartner = 0;
                 item.InteractingUser = 0;
                 item.InteractingUser2 = 0;
                 return;
@@ -59,7 +59,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.LoveLocks
             {
                 userOne.CanWalk = true;
                 userOne.GetClient().SendNotification("Your partner has left the room or has cancelled the love lock.");
-                userOne.LLPartner = 0;
+                userOne.LlPartner = 0;
                 item.InteractingUser = 0;
                 item.InteractingUser2 = 0;
                 return;
@@ -69,11 +69,11 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.LoveLocks
             {
                 userTwo.CanWalk = true;
                 userTwo.GetClient().SendNotification("It appears this love lock has already been locked.");
-                userTwo.LLPartner = 0;
+                userTwo.LlPartner = 0;
 
                 userOne.CanWalk = true;
                 userOne.GetClient().SendNotification("It appears this love lock has already been locked.");
-                userOne.LLPartner = 0;
+                userOne.LlPartner = 0;
 
                 item.InteractingUser = 0;
                 item.InteractingUser2 = 0;
@@ -85,8 +85,8 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.LoveLocks
                 item.InteractingUser = 0;
                 item.InteractingUser2 = 0;
 
-                userOne.LLPartner = 0;
-                userTwo.LLPartner = 0;
+                userOne.LlPartner = 0;
+                userTwo.LlPartner = 0;
 
                 userOne.CanWalk = true;
                 userTwo.CanWalk = true;
@@ -96,23 +96,23 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.LoveLocks
             if(userOneId == session.GetHabbo().Id)
             {
                 session.SendPacket(new LoveLockDialogueSetLockedMessageComposer(pId));
-                userOne.LLPartner = userTwoId;
+                userOne.LlPartner = userTwoId;
             }
             else if(userTwoId == session.GetHabbo().Id)
             {
                 session.SendPacket(new LoveLockDialogueSetLockedMessageComposer(pId));
-                userTwo.LLPartner = userOneId;
+                userTwo.LlPartner = userOneId;
             }
 
-            if (userOne.LLPartner == 0 || userTwo.LLPartner == 0)
+            if (userOne.LlPartner == 0 || userTwo.LlPartner == 0)
                 return;
             item.ExtraData = "1" + (char)5 + userOne.GetUsername() + (char)5 + userTwo.GetUsername() + (char)5 + userOne.GetClient().GetHabbo().Look + (char)5 + userTwo.GetClient().GetHabbo().Look + (char)5 + DateTime.Now.ToString("dd/MM/yyyy");
 
             item.InteractingUser = 0;
             item.InteractingUser2 = 0;
 
-            userOne.LLPartner = 0;
-            userTwo.LLPartner = 0;
+            userOne.LlPartner = 0;
+            userTwo.LlPartner = 0;
 
             item.UpdateState(true, true);
 

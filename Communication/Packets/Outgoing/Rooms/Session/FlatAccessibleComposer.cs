@@ -2,10 +2,10 @@
 {
     class FlatAccessibleComposer : ServerPacket
     {
-        public FlatAccessibleComposer(string Username)
+        public FlatAccessibleComposer(string username)
             : base(ServerPacketHeader.FlatAccessibleMessageComposer)
         {
-           WriteString(Username);
+           WriteString(username);
         }
     }
 }

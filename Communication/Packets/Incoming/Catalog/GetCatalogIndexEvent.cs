@@ -10,7 +10,7 @@ namespace Plus.Communication.Packets.Incoming.Catalog
         {
             session.SendPacket(new CatalogIndexComposer(session, PlusEnvironment.GetGame().GetCatalog().GetPages()));
             session.SendPacket(new CatalogItemDiscountComposer());
-            session.SendPacket(new BCBorrowedItemsComposer());
+            session.SendPacket(new BcBorrowedItemsComposer());
         }
     }
 }

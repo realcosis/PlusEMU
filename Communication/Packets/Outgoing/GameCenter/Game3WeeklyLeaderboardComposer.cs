@@ -8,7 +8,7 @@ namespace Plus.Communication.Packets.Outgoing.GameCenter
 {
     public class Game3WeeklyLeaderboardComposer : ServerPacket
     {
-        public Game3WeeklyLeaderboardComposer(GameData GameData, ICollection<Habbo> Habbos)
+        public Game3WeeklyLeaderboardComposer(GameData gameData, ICollection<Habbo> habbos)
             : base(ServerPacketHeader.Game3WeeklyLeaderboardMessageComposer)
         {
             WriteInteger(2014);
@@ -20,20 +20,20 @@ namespace Plus.Communication.Packets.Outgoing.GameCenter
             //Used to generate the ranking numbers.
             int num = 0;
 
-            WriteInteger(Habbos.Count);//Count
-            foreach (Habbo Habbo in Habbos.ToList())
+            WriteInteger(habbos.Count);//Count
+            foreach (Habbo habbo in habbos.ToList())
             {
                 num++;
-                WriteInteger(Habbo.Id);//Id
-                WriteInteger(Habbo.FastfoodScore);//Score
+                WriteInteger(habbo.Id);//Id
+                WriteInteger(habbo.FastfoodScore);//Score
                 WriteInteger(num);//Rank
-               WriteString(Habbo.Username);//Username
-               WriteString(Habbo.Look);//Figure
-               WriteString(Habbo.Gender.ToLower());//Gender .ToLower()
+               WriteString(habbo.Username);//Username
+               WriteString(habbo.Look);//Figure
+               WriteString(habbo.Gender.ToLower());//Gender .ToLower()
             }
 
             WriteInteger(0);//
-            WriteInteger(GameData.Id);//Game Id?
+            WriteInteger(gameData.Id);//Game Id?
         }
     }
 }

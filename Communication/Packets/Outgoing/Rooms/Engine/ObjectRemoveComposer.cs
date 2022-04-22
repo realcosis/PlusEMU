@@ -4,12 +4,12 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
 {
     class ObjectRemoveComposer : ServerPacket
     {
-        public ObjectRemoveComposer(Item Item, int UserId)
+        public ObjectRemoveComposer(Item item, int userId)
             : base(ServerPacketHeader.ObjectRemoveMessageComposer)
         {
-           WriteString(Item.Id.ToString());
+           WriteString(item.Id.ToString());
             WriteBoolean(false);
-            WriteInteger(UserId);
+            WriteInteger(userId);
             WriteInteger(0);
         }
     }

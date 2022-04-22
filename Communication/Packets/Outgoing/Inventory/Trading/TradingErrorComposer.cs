@@ -2,11 +2,11 @@
 {
     class TradingErrorComposer : ServerPacket
     {
-        public TradingErrorComposer(int Error, string Username)
+        public TradingErrorComposer(int error, string username)
             : base(ServerPacketHeader.TradingErrorMessageComposer)
         {
-            WriteInteger(Error);
-           WriteString(Username);
+            WriteInteger(error);
+           WriteString(username);
         }
     }
 }

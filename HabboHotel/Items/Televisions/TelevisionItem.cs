@@ -8,13 +8,13 @@
         private string _description;
         private bool _enabled;
 
-        public TelevisionItem(int Id, string YouTubeId, string Title, string Description, bool Enabled)
+        public TelevisionItem(int id, string youTubeId, string title, string description, bool enabled)
         {
-            _id = Id;
-            _youtubeId = YouTubeId;
-            _title = Title;
-            _description = Description;
-            _enabled = Enabled;
+            _id = id;
+            _youtubeId = youTubeId;
+            _title = title;
+            _description = description;
+            _enabled = enabled;
         }
 
         public int Id

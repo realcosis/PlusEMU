@@ -12,12 +12,12 @@ namespace Plus.HabboHotel.Catalog.Utilities
         public static Bot CreateBot(ItemData itemData, int ownerId)
         {
             DataRow bot = null;
-            if (!PlusEnvironment.GetGame().GetCatalog().TryGetBot(itemData.Id, out CatalogBot CataBot))
+            if (!PlusEnvironment.GetGame().GetCatalog().TryGetBot(itemData.Id, out CatalogBot cataBot))
                 return null;
 
             using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
-                dbClient.SetQuery("INSERT INTO bots (`user_id`,`name`,`motto`,`look`,`gender`,`ai_type`) VALUES ('" + ownerId + "', '" + CataBot.Name + "', '" + CataBot.Motto + "', '" + CataBot.Figure + "', '" + CataBot.Gender + "', '" + CataBot.AIType + "')");
+                dbClient.SetQuery("INSERT INTO bots (`user_id`,`name`,`motto`,`look`,`gender`,`ai_type`) VALUES ('" + ownerId + "', '" + cataBot.Name + "', '" + cataBot.Motto + "', '" + cataBot.Figure + "', '" + cataBot.Gender + "', '" + cataBot.AiType + "')");
                 int id = Convert.ToInt32(dbClient.InsertQuery());
 
                 dbClient.SetQuery("SELECT `id`,`user_id`,`name`,`motto`,`look`,`gender` FROM `bots` WHERE `user_id` = '" + ownerId + "' AND `id` = '" + id + "' LIMIT 1");
@@ -28,20 +28,20 @@ namespace Plus.HabboHotel.Catalog.Utilities
         }
 
 
-        public static BotAIType GetAIFromString(string type)
+        public static BotAiType GetAiFromString(string type)
         {
             switch (type)
             {
                 case "pet":
-                    return BotAIType.Pet;
+                    return BotAiType.Pet;
                 case "generic":
-                    return BotAIType.Generic;
+                    return BotAiType.Generic;
                 case "bartender":
-                    return BotAIType.Bartender;
+                    return BotAiType.Bartender;
                 case "casino_bot":
-                    return BotAIType.CasinoBot;
+                    return BotAiType.CasinoBot;
                 default:
-                    return BotAIType.Generic;
+                    return BotAiType.Generic;
             }
         }
     }

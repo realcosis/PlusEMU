@@ -4,7 +4,7 @@ namespace Plus.Communication.Packets.Outgoing.Handshake
 {
     public class UserPerksComposer : ServerPacket
     {
-        public UserPerksComposer(Habbo Habbo)
+        public UserPerksComposer(Habbo habbo)
             : base(ServerPacketHeader.UserPerksMessageComposer)
         {
             WriteInteger(15); // Count

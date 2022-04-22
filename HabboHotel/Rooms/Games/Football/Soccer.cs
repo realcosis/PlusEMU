@@ -13,14 +13,14 @@ namespace Plus.HabboHotel.Rooms.Games.Football
     public class Soccer
     {
         private Room _room;
-        private Item[] gates;
+        private Item[] _gates;
         private ConcurrentDictionary<int, Item> _balls;
         private bool _gameStarted;
 
         public Soccer(Room room)
         {
             _room = room;
-            gates = new Item[4];
+            _gates = new Item[4];
             _balls = new ConcurrentDictionary<int, Item>();
             _gameStarted = false;
         }
@@ -50,7 +50,7 @@ namespace Plus.HabboHotel.Rooms.Games.Football
 
         public void RemoveBall(int itemId)
         {
-            _balls.TryRemove(itemId, out Item Item);
+            _balls.TryRemove(itemId, out Item item);
         }
 
         public void OnUserWalk(RoomUser user)
@@ -60,8 +60,8 @@ namespace Plus.HabboHotel.Rooms.Games.Football
 
             foreach (Item item in _balls.Values.ToList())
             {
-                int NewX = 0;
-                int NewY = 0;
+                int newX = 0;
+                int newY = 0;
                 int differenceX = user.X - item.GetX;
                 int differenceY = user.Y - item.GetY;
 
@@ -69,108 +69,108 @@ namespace Plus.HabboHotel.Rooms.Games.Football
                 {
                     if (user.RotBody == 4)
                     {
-                        NewX = user.X;
-                        NewY = user.Y + 2;
+                        newX = user.X;
+                        newY = user.Y + 2;
 
                     }
                     else if (user.RotBody == 6)
                     {
-                        NewX = user.X - 2;
-                        NewY = user.Y;
+                        newX = user.X - 2;
+                        newY = user.Y;
 
                     }
                     else if (user.RotBody == 0)
                     {
-                        NewX = user.X;
-                        NewY = user.Y - 2;
+                        newX = user.X;
+                        newY = user.Y - 2;
 
                     }
                     else if (user.RotBody == 2)
                     {
-                        NewX = user.X + 2;
-                        NewY = user.Y;
+                        newX = user.X + 2;
+                        newY = user.Y;
 
                     }
                     else if (user.RotBody == 1)
                     {
-                        NewX = user.X + 2;
-                        NewY = user.Y - 2;
+                        newX = user.X + 2;
+                        newY = user.Y - 2;
 
                     }
                     else if (user.RotBody == 7)
                     {
-                        NewX = user.X - 2;
-                        NewY = user.Y - 2;
+                        newX = user.X - 2;
+                        newY = user.Y - 2;
 
                     }
                     else if (user.RotBody == 3)
                     {
-                        NewX = user.X + 2;
-                        NewY = user.Y + 2;
+                        newX = user.X + 2;
+                        newY = user.Y + 2;
 
                     }
                     else if (user.RotBody == 5)
                     {
-                        NewX = user.X - 2;
-                        NewY = user.Y + 2;
+                        newX = user.X - 2;
+                        newY = user.Y + 2;
                     }
 
-                    if (!_room.GetRoomItemHandler().CheckPosItem(item, NewX, NewY, item.Rotation))
+                    if (!_room.GetRoomItemHandler().CheckPosItem(item, newX, newY, item.Rotation))
                     {
                         if (user.RotBody == 0)
                         {
-                            NewX = user.X;
-                            NewY = user.Y + 1;
+                            newX = user.X;
+                            newY = user.Y + 1;
                         }
                         else if (user.RotBody == 2)
                         {
-                            NewX = user.X - 1;
-                            NewY = user.Y;
+                            newX = user.X - 1;
+                            newY = user.Y;
                         }
                         else if (user.RotBody == 4)
                         {
-                            NewX = user.X;
-                            NewY = user.Y - 1;
+                            newX = user.X;
+                            newY = user.Y - 1;
                         }
                         else if (user.RotBody == 6)
                         {
-                            NewX = user.X + 1;
-                            NewY = user.Y;
+                            newX = user.X + 1;
+                            newY = user.Y;
                         }
                         else if (user.RotBody == 5)
                         {
-                            NewX = user.X + 1;
-                            NewY = user.Y - 1;
+                            newX = user.X + 1;
+                            newY = user.Y - 1;
                         }
                         else if (user.RotBody == 3)
                         {
-                            NewX = user.X - 1;
-                            NewY = user.Y - 1;
+                            newX = user.X - 1;
+                            newY = user.Y - 1;
                         }
                         else if (user.RotBody == 7)
                         {
-                            NewX = user.X + 1;
-                            NewY = user.Y + 1;
+                            newX = user.X + 1;
+                            newY = user.Y + 1;
                         }
                         else if (user.RotBody == 1)
                         {
-                            NewX = user.X - 1;
-                            NewY = user.Y + 1;
+                            newX = user.X - 1;
+                            newY = user.Y + 1;
                         }
                     }
                 }
                 else if (differenceX <= 1 && differenceX >= -1 && differenceY <= 1 && differenceY >= -1 && VerifyBall(user, item.Coordinate.X, item.Coordinate.Y))//VERYFIC BALL CHECAR SI ESTA EN DIRECCION ASIA LA PELOTA
                 {
-                    NewX = differenceX * -1;
-                    NewY = differenceY * -1;
+                    newX = differenceX * -1;
+                    newY = differenceY * -1;
 
-                    NewX = NewX + item.GetX;
-                    NewY = NewY + item.GetY;
+                    newX = newX + item.GetX;
+                    newY = newY + item.GetY;
                 }
 
-                if (item.GetRoom().GetGameMap().ValidTile(NewX, NewY))
+                if (item.GetRoom().GetGameMap().ValidTile(newX, newY))
                 {
-                    MoveBall(item, NewX, NewY, user);
+                    MoveBall(item, newX, newY, user);
                 }
             }
         }
@@ -182,50 +182,50 @@ namespace Plus.HabboHotel.Rooms.Games.Football
 
         public void RegisterGate(Item item)
         {
-            if (gates[0] == null)
+            if (_gates[0] == null)
             {
-                item.team = Team.Blue;
-                gates[0] = item;
+                item.Team = Team.Blue;
+                _gates[0] = item;
             }
-            else if (gates[1] == null)
+            else if (_gates[1] == null)
             {
-                item.team = Team.Red;
-                gates[1] = item;
+                item.Team = Team.Red;
+                _gates[1] = item;
             }
-            else if (gates[2] == null)
+            else if (_gates[2] == null)
             {
-                item.team = Team.Green;
-                gates[2] = item;
+                item.Team = Team.Green;
+                _gates[2] = item;
             }
-            else if (gates[3] == null)
+            else if (_gates[3] == null)
             {
-                item.team = Team.Yellow;
-                gates[3] = item;
+                item.Team = Team.Yellow;
+                _gates[3] = item;
             }
         }
 
         public void UnRegisterGate(Item item)
         {
-            switch (item.team)
+            switch (item.Team)
             {
                 case Team.Blue:
                     {
-                        gates[0] = null;
+                        _gates[0] = null;
                         break;
                     }
                 case Team.Red:
                     {
-                        gates[1] = null;
+                        _gates[1] = null;
                         break;
                     }
                 case Team.Green:
                     {
-                        gates[2] = null;
+                        _gates[2] = null;
                         break;
                     }
                 case Team.Yellow:
                     {
-                        gates[3] = null;
+                        _gates[3] = null;
                         break;
                     }
             }
@@ -235,26 +235,26 @@ namespace Plus.HabboHotel.Rooms.Games.Football
         {
             switch (item.GetBaseItem().InteractionType)
             {
-                case InteractionType.FOOTBALL_GOAL_RED:
-                case InteractionType.footballcounterred:
+                case InteractionType.FootballGoalRed:
+                case InteractionType.Footballcounterred:
                     {
                         _room.GetGameManager().RemoveFurnitureFromTeam(item, Team.Red);
                         break;
                     }
-                case InteractionType.FOOTBALL_GOAL_GREEN:
-                case InteractionType.footballcountergreen:
+                case InteractionType.FootballGoalGreen:
+                case InteractionType.Footballcountergreen:
                     {
                         _room.GetGameManager().RemoveFurnitureFromTeam(item, Team.Green);
                         break;
                     }
-                case InteractionType.FOOTBALL_GOAL_BLUE:
-                case InteractionType.footballcounterblue:
+                case InteractionType.FootballGoalBlue:
+                case InteractionType.Footballcounterblue:
                     {
                         _room.GetGameManager().RemoveFurnitureFromTeam(item, Team.Blue);
                         break;
                     }
-                case InteractionType.FOOTBALL_GOAL_YELLOW:
-                case InteractionType.footballcounteryellow:
+                case InteractionType.FootballGoalYellow:
+                case InteractionType.Footballcounteryellow:
                     {
                         _room.GetGameManager().RemoveFurnitureFromTeam(item, Team.Yellow);
                         break;
@@ -274,9 +274,9 @@ namespace Plus.HabboHotel.Rooms.Games.Football
             if (oldRoomCoord.X == newX && oldRoomCoord.Y == newY)
                 return;
 
-            double NewZ = _room.GetGameMap().Model.SqFloorHeight[newX, newY];
+            double newZ = _room.GetGameMap().Model.SqFloorHeight[newX, newY];
 
-            _room.SendPacket(new SlideObjectBundleComposer(item.Coordinate.X, item.Coordinate.Y, item.GetZ, newX, newY, NewZ, item.Id, item.Id, item.Id));
+            _room.SendPacket(new SlideObjectBundleComposer(item.Coordinate.X, item.Coordinate.Y, item.GetZ, newX, newY, newZ, item.Id, item.Id, item.Id));
 
             item.ExtraData = "11";
             item.UpdateNeeded = true;
@@ -288,8 +288,8 @@ namespace Plus.HabboHotel.Rooms.Games.Football
 
         public void Dispose()
         {
-            Array.Clear(gates, 0, gates.Length);
-            gates = null;
+            Array.Clear(_gates, 0, _gates.Length);
+            _gates = null;
             _room = null;
             _balls.Clear();
             _balls = null;

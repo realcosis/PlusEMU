@@ -37,41 +37,41 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
 
         public int TickCount { get; set; }
         public string ItemsData { get; set; }
-        private bool Requested;
+        private bool _requested;
         private int _delay = 0;
         private long _next = 0;
 
-        public MoveFurniToUserBox(Room Instance, Item Item)
+        public MoveFurniToUserBox(Room instance, Item item)
         {
-            this.Instance = Instance;
-            this.Item = Item;
+            this.Instance = instance;
+            this.Item = item;
             SetItems = new ConcurrentDictionary<int, Item>();
             TickCount = Delay;
-            Requested = false;
+            _requested = false;
         }
 
-        public void HandleSave(ClientPacket Packet)
+        public void HandleSave(ClientPacket packet)
         {
-            int Unknown = Packet.PopInt();
-            string Unknown2 = Packet.PopString();
+            int unknown = packet.PopInt();
+            string unknown2 = packet.PopString();
 
             if (SetItems.Count > 0)
                 SetItems.Clear();
 
-            int FurniCount = Packet.PopInt();
-            for (int i = 0; i < FurniCount; i++)
+            int furniCount = packet.PopInt();
+            for (int i = 0; i < furniCount; i++)
             {
-                Item SelectedItem = Instance.GetRoomItemHandler().GetItem(Packet.PopInt());
+                Item selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
 
-                if (SelectedItem != null && !Instance.GetWired().OtherBoxHasItem(this, SelectedItem.Id))
-                    SetItems.TryAdd(SelectedItem.Id, SelectedItem);
+                if (selectedItem != null && !Instance.GetWired().OtherBoxHasItem(this, selectedItem.Id))
+                    SetItems.TryAdd(selectedItem.Id, selectedItem);
             }
 
-            int Delay = Packet.PopInt();
-            this.Delay = Delay;
+            int delay = packet.PopInt();
+            this.Delay = delay;
         }
 
-        public bool Execute(params object[] Params)
+        public bool Execute(params object[] @params)
         {
             if (SetItems.Count == 0)
                 return false;
@@ -80,72 +80,72 @@ namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
             if (_next == 0 || _next < PlusEnvironment.Now())
                 _next = PlusEnvironment.Now() + Delay;
 
-            if (!Requested)
+            if (!_requested)
             {
                 TickCount = Delay;
-                Requested = true;
+                _requested = true;
             }
             return true;
         }
 
         public bool OnCycle()
         {
-            if (Instance == null || !Requested || _next == 0)
+            if (Instance == null || !_requested || _next == 0)
                 return false;
 
-            long Now = PlusEnvironment.Now();
-            if (_next < Now)
+            long now = PlusEnvironment.Now();
+            if (_next < now)
             {
-                foreach (Item Item in SetItems.Values.ToList())
+                foreach (Item item in SetItems.Values.ToList())
                 {
-                    if (Item == null)
+                    if (item == null)
                         continue;
 
-                    if (!Instance.GetRoomItemHandler().GetFloor.Contains(Item))
+                    if (!Instance.GetRoomItemHandler().GetFloor.Contains(item))
                         continue;
 
                     Item toRemove = null;
 
-                    if (Instance.GetWired().OtherBoxHasItem(this, Item.Id))
-                        SetItems.TryRemove(Item.Id, out toRemove);
+                    if (Instance.GetWired().OtherBoxHasItem(this, item.Id))
+                        SetItems.TryRemove(item.Id, out toRemove);
 
-                    Point Point = Instance.GetGameMap().GetChaseMovement(Item);
+                    Point point = Instance.GetGameMap().GetChaseMovement(item);
 
-                    Instance.GetWired().OnUserFurniCollision(Instance, Item);
+                    Instance.GetWired().OnUserFurniCollision(Instance, item);
 
-                    if (!Instance.GetGameMap().ItemCanMove(Item, Point))
+                    if (!Instance.GetGameMap().ItemCanMove(item, point))
                         continue;
 
-                    if (Instance.GetGameMap().CanRollItemHere(Point.X, Point.Y) && !Instance.GetGameMap().SquareHasUsers(Point.X, Point.Y))
+                    if (Instance.GetGameMap().CanRollItemHere(point.X, point.Y) && !Instance.GetGameMap().SquareHasUsers(point.X, point.Y))
                     {    
-                        Double NewZ = Item.GetZ;
-                        bool CanBePlaced = true;
+                        Double newZ = item.GetZ;
+                        bool canBePlaced = true;
 
-                        List<Item> Items = Instance.GetGameMap().GetCoordinatedItems(Point);
-                        foreach (Item IItem in Items.ToList())
+                        List<Item> coordinatedItems = Instance.GetGameMap().GetCoordinatedItems(point);
+                        foreach (Item coordinateItem in coordinatedItems.ToList())
                         {
-                            if (IItem == null || IItem.Id == Item.Id)
+                            if (coordinateItem == null || coordinateItem.Id == item.Id)
                                 continue;
 
-                            if (!IItem.GetBaseItem().Walkable)
+                            if (!coordinateItem.GetBaseItem().Walkable)
                             {
                                 _next = 0;
-                                CanBePlaced = false;
+                                canBePlaced = false;
                                 break;
                             }
 
-                            if (IItem.TotalHeight > NewZ)
-                                NewZ = IItem.TotalHeight;
+                            if (coordinateItem.TotalHeight > newZ)
+                                newZ = coordinateItem.TotalHeight;
 
-                            if (CanBePlaced == true && !IItem.GetBaseItem().Stackable)
-                                CanBePlaced = false;
+                            if (canBePlaced == true && !coordinateItem.GetBaseItem().Stackable)
+                                canBePlaced = false;
                         }
 
-                        if (CanBePlaced && Point != Item.Coordinate)
+                        if (canBePlaced && point != item.Coordinate)
                         {
-                            Instance.SendPacket(new SlideObjectBundleComposer(Item.GetX, Item.GetY, Item.GetZ, Point.X,
-                                Point.Y, NewZ, 0, 0, Item.Id));
-                            Instance.GetRoomItemHandler().SetFloorItem(Item, Point.X, Point.Y, NewZ);
+                            Instance.SendPacket(new SlideObjectBundleComposer(item.GetX, item.GetY, item.GetZ, point.X,
+                                point.Y, newZ, 0, 0, item.Id));
+                            Instance.GetRoomItemHandler().SetFloorItem(item, point.X, point.Y, newZ);
                         }
                     }
                 }
