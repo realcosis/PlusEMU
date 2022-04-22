@@ -4,14 +4,14 @@ using Plus.HabboHotel.Rooms.Chat.Emotions;
 using Plus.HabboHotel.Rooms.Chat.Commands;
 using Plus.HabboHotel.Rooms.Chat.Pets.Commands;
 using Plus.HabboHotel.Rooms.Chat.Pets.Locale;
-using log4net;
+using NLog;
 using Plus.HabboHotel.Rooms.Chat.Styles;
 
 namespace Plus.HabboHotel.Rooms.Chat
 {
     public sealed class ChatManager
     {
-        private static readonly ILog log = LogManager.GetLogger("Plus.HabboHotel.Rooms.Chat.ChatManager");
+        private static readonly ILogger log = LogManager.GetLogger("Plus.HabboHotel.Rooms.Chat.ChatManager");
 
         /// <summary>
         /// Chat Emoticons.

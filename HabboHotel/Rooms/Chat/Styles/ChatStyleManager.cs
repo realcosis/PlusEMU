@@ -1,4 +1,4 @@
-﻿using log4net;
+﻿using NLog;
 using Plus.Database.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Styles
 {
     public sealed class ChatStyleManager
     {
-        private static readonly ILog log = LogManager.GetLogger("Plus.HabboHotel.Rooms.Chat.Styles.ChatStyleManager");
+        private static readonly ILogger log = LogManager.GetLogger("Plus.HabboHotel.Rooms.Chat.Styles.ChatStyleManager");
 
         private readonly Dictionary<int, ChatStyle> _styles;
 

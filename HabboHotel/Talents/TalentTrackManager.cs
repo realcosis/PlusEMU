@@ -2,14 +2,14 @@
 using System.Data;
 using System.Collections.Generic;
 
-using log4net;
+using NLog;
 using Plus.Database.Interfaces;
 
 namespace Plus.HabboHotel.Talents
 {
     public class TalentTrackManager
     {
-        private static ILog log = LogManager.GetLogger("Plus.HabboHotel.Talents.TalentManager");
+        private static ILogger log = LogManager.GetLogger("Plus.HabboHotel.Talents.TalentManager");
 
         private readonly Dictionary<int, TalentTrackLevel> _citizenshipLevels;
 

@@ -4,13 +4,13 @@ using System.Data;
 using System.Collections.Generic;
 
 using Plus.Database.Interfaces;
-using log4net;
+using NLog;
 
 namespace Plus.HabboHotel.Games
 {
     public class GameDataManager
     {
-        private static readonly ILog log = LogManager.GetLogger("Plus.HabboHotel.Games.GameDataManager");
+        private static readonly ILogger log = LogManager.GetLogger("Plus.HabboHotel.Games.GameDataManager");
 
         private readonly Dictionary<int, GameData> _games;
 

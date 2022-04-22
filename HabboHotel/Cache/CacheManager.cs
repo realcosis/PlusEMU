@@ -1,4 +1,4 @@
-﻿using log4net;
+﻿using NLog;
 using Plus.Database.Interfaces;
 using Plus.HabboHotel.Cache.Process;
 using Plus.HabboHotel.GameClients;
@@ -11,7 +11,7 @@ namespace Plus.HabboHotel.Cache
 {
     public class CacheManager
     {
-        private static readonly ILog Log = LogManager.GetLogger("Plus.HabboHotel.Cache.CacheManager");
+        private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Cache.CacheManager");
         private readonly ConcurrentDictionary<int, UserCache> _usersCached;
         private readonly ProcessComponent _process;
 

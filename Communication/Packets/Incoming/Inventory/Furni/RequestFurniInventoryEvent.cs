@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 
-using MoreLinq;
 using Plus.HabboHotel.Items;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.HabboHotel.GameClients;
@@ -23,7 +22,7 @@ namespace Plus.Communication.Packets.Incoming.Inventory.Furni
             }
             else
             {
-                foreach (ICollection<Item> batch in items.Batch(700))
+                foreach (ICollection<Item> batch in items.Chunk(700))
                 {
                     session.SendPacket(new FurniListComposer(batch.ToList(), pages, page));
 

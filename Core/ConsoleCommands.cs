@@ -1,5 +1,5 @@
 ﻿using System;
-using log4net;
+using NLog;
 
 using Plus.Communication.Packets.Outgoing.Moderation;
 
@@ -7,7 +7,7 @@ namespace Plus.Core
 {
     public static class ConsoleCommands
     {
-        private static readonly ILog Log = LogManager.GetLogger("Plus.Core.ConsoleCommands");
+        private static readonly ILogger Log = LogManager.GetLogger("Plus.Core.ConsoleCommands");
 
         public static void InvokeCommand(string inputData)
         {

@@ -3,13 +3,13 @@ using System.Data;
 using System.Collections.Generic;
 using Plus.Database.Interfaces;
 
-using log4net;
+using NLog;
 
 namespace Plus.HabboHotel.Items.Televisions
 {
     public class TelevisionManager
     {
-        private static readonly ILog log = LogManager.GetLogger("Plus.HabboHotel.Items.Televisions.TelevisionManager");
+        private static readonly ILogger log = LogManager.GetLogger("Plus.HabboHotel.Items.Televisions.TelevisionManager");
 
         public Dictionary<int, TelevisionItem> _televisions;
 

@@ -4,7 +4,7 @@ using System.Data;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
 
-using log4net;
+using NLog;
 
 using Plus.Database.Interfaces;
 
@@ -12,7 +12,7 @@ namespace Plus.HabboHotel.Moderation
 {
     public sealed class ModerationManager
     {
-        private static ILog log = LogManager.GetLogger("Plus.HabboHotel.Moderation.ModerationManager");
+        private static ILogger log = LogManager.GetLogger("Plus.HabboHotel.Moderation.ModerationManager");
 
         private int _ticketCount = 1;
         private List<string> _userPresets = new List<string>();

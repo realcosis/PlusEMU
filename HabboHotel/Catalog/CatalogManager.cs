@@ -2,7 +2,7 @@
 using System.Data;
 using System.Collections.Generic;
 
-using log4net;
+using NLog;
 
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Catalog.Pets;
@@ -16,7 +16,7 @@ namespace Plus.HabboHotel.Catalog
 {
     public class CatalogManager
     {
-        private static readonly ILog log = LogManager.GetLogger("Plus.HabboHotel.Catalog.CatalogManager");
+        private static readonly ILogger log = LogManager.GetLogger("Plus.HabboHotel.Catalog.CatalogManager");
 
         private MarketplaceManager _marketplace;
         private PetRaceManager _petRaceManager;

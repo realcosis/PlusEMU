@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
 
-using MoreLinq;
 using Plus.HabboHotel.Users.Messenger;
 using Plus.Communication.Packets.Outgoing.Messenger;
 using Plus.HabboHotel.GameClients;
@@ -36,7 +35,7 @@ namespace Plus.Communication.Packets.Incoming.Messenger
             else
             {
                 int pages = (friends.Count() - 1) / 500 + 1;
-                foreach (ICollection<MessengerBuddy> batch in friends.Batch(500))
+                foreach (ICollection<MessengerBuddy> batch in friends.Chunk(500))
                 {
                     session.SendPacket(new BuddyListComposer(batch.ToList(), session.GetHabbo(), pages, page));
 

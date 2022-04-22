@@ -15,7 +15,7 @@ namespace Plus.Utilities.Collections
 
         public ObjectPool(Func<T> objectGenerator)
         {
-            if (objectGenerator == null) { Logging.LogCriticalException("ObjectGenerator was null"); }
+            if (objectGenerator == null) { /*TODO ExceptionLogger.LogCriticalException("ObjectGenerator was null");*/ }
             _objects = new ConcurrentBag<T>();
             _objectGenerator = objectGenerator;
         }

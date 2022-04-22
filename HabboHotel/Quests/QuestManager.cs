@@ -9,13 +9,13 @@ using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Communication.Packets.Outgoing.Quests;
 
 using Plus.Database.Interfaces;
-using log4net;
+using NLog;
 
 namespace Plus.HabboHotel.Quests
 {
     public class QuestManager
     {
-        private static readonly ILog log = LogManager.GetLogger("Plus.HabboHotel.Quests.QuestManager");
+        private static readonly ILogger log = LogManager.GetLogger("Plus.HabboHotel.Quests.QuestManager");
 
         private Dictionary<int, Quest> _quests;
         private Dictionary<string, int> _questCount;

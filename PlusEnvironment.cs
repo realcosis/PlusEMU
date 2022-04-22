@@ -11,7 +11,7 @@ using Plus.HabboHotel;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users;
 using Plus.Utilities;
-using log4net;
+using NLog;
 using System.Collections.Concurrent;
 using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Communication.Encryption.Keys;
@@ -31,7 +31,7 @@ namespace Plus
 {
     public static class PlusEnvironment
     {
-        private static readonly ILog log = LogManager.GetLogger("Plus.PlusEnvironment");
+        private static readonly ILogger log = LogManager.GetLogger("Plus.PlusEnvironment");
 
         public const string PrettyVersion = "Plus Emulator";
         public const string PrettyBuild = "3.4.3.0";

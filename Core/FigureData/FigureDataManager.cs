@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-using log4net;
+using NLog;
 using Plus.Core.FigureData.Types;
 using System.Xml;
 using Plus.HabboHotel.Catalog.Clothing;
@@ -13,7 +13,7 @@ namespace Plus.Core.FigureData
 {
     public class FigureDataManager
     {
-        private static readonly ILog Log = LogManager.GetLogger("Plus.Core.FigureData");
+        private static readonly ILogger Log = LogManager.GetLogger("Plus.Core.FigureData");
 
         private readonly List<string> _requirements;
         private readonly Dictionary<int, Palette> _palettes; //pallet id, Pallet

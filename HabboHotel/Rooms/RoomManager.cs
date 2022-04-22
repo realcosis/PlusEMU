@@ -8,13 +8,13 @@ using Plus.Core;
 using Plus.HabboHotel.GameClients;
 using System.Collections.Concurrent;
 using Plus.Database.Interfaces;
-using log4net;
+using NLog;
 
 namespace Plus.HabboHotel.Rooms
 {
     public class RoomManager
     {
-        private static readonly ILog log = LogManager.GetLogger("Plus.HabboHotel.Rooms.RoomManager");
+        private static readonly ILogger log = LogManager.GetLogger("Plus.HabboHotel.Rooms.RoomManager");
 
         private readonly object _roomLoadingSync;
 

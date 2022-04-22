@@ -2,7 +2,7 @@
 using System.Data;
 using System.Collections.Generic;
 
-using log4net;
+using NLog;
 using Plus.Database.Interfaces;
 
 
@@ -10,7 +10,7 @@ namespace Plus.HabboHotel.Items
 {
     public class ItemDataManager
     {
-        private static readonly ILog log = LogManager.GetLogger("Plus.HabboHotel.Items.ItemDataManager");
+        private static readonly ILogger log = LogManager.GetLogger("Plus.HabboHotel.Items.ItemDataManager");
 
         public Dictionary<int, ItemData> _items;
         public Dictionary<int, ItemData> _gifts;//<SpriteId, Item>

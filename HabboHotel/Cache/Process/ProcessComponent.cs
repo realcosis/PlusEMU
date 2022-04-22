@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Collections.Generic;
 
-using log4net;
+using NLog;
 using Plus.HabboHotel.Users;
 using Plus.Core;
 using Plus.HabboHotel.Cache.Type;
@@ -12,7 +12,7 @@ namespace Plus.HabboHotel.Cache.Process
 {
     sealed class ProcessComponent
     {
-        private static readonly ILog Log = LogManager.GetLogger("Plus.HabboHotel.Cache.Process.ProcessComponent");
+        private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Cache.Process.ProcessComponent");
 
         /// <summary>
         /// ThreadPooled Timer.

@@ -2,14 +2,14 @@
 using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
-using log4net;
+using NLog;
 using Plus.Communication.ConnectionManager.Socket_Exceptions;
 
 namespace Plus.Communication.ConnectionManager
 {
     public class SocketManager
     {
-        private static readonly ILog Log = LogManager.GetLogger("Plus.Communication.ConnectionManager");
+        private static readonly ILogger Log = LogManager.GetLogger("Plus.Communication.ConnectionManager");
 
         #region declares
 

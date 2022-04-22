@@ -1,4 +1,4 @@
-﻿using log4net;
+﻿using NLog;
 using Plus.Database.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace Plus.HabboHotel.Subscriptions
 {
     public class SubscriptionManager
     {
-        private static ILog log = LogManager.GetLogger("Plus.HabboHotel.Subscriptions.SubscriptionManager");
+        private static ILogger log = LogManager.GetLogger("Plus.HabboHotel.Subscriptions.SubscriptionManager");
 
         private readonly Dictionary<int, SubscriptionData> _subscriptions = new Dictionary<int, SubscriptionData>();
 

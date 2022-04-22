@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using log4net;
+using NLog;
 using Plus.Database.Interfaces;
 using System.Data;
 using Plus.HabboHotel.Users;
@@ -10,7 +10,7 @@ namespace Plus.HabboHotel.Permissions
 {
     public sealed class PermissionManager
     {
-        private static readonly ILog log = LogManager.GetLogger("Plus.HabboHotel.Permissions.PermissionManager");
+        private static readonly ILogger log = LogManager.GetLogger("Plus.HabboHotel.Permissions.PermissionManager");
 
         private readonly Dictionary<int, Permission> Permissions = new Dictionary<int, Permission>();
 

@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Collections.Generic;
 
-using log4net;
+using NLog;
 using Plus.Database.Interfaces;
 
 namespace Plus.Core.Language
@@ -10,7 +10,7 @@ namespace Plus.Core.Language
     {
         private readonly Dictionary<string, string> _values;
 
-        private static readonly ILog log = LogManager.GetLogger("Plus.Core.Language.LanguageManager");
+        private static readonly ILogger log = LogManager.GetLogger("Plus.Core.Language.LanguageManager");
 
         public LanguageManager()
         {

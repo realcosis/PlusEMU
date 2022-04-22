@@ -5,16 +5,16 @@ using Plus.HabboHotel.Rooms;
 using Plus.Communication.Packets.Outgoing.Inventory.Pets;
 
 using Plus.HabboHotel.Rooms.AI.Speech;
-using log4net;
 using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
 using System;
+using NLog;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets
 {
     class PlacePetEvent : IPacketEvent
     {
-        private static readonly ILog Log = LogManager.GetLogger("Plus.Communication.Packets.Incoming.Rooms.AI.Pets.PlacePetEvent");
+        private static readonly ILogger Log = LogManager.GetLogger("Plus.Communication.Packets.Incoming.Rooms.AI.Pets.PlacePetEvent");
 
         public void Parse(GameClient session, ClientPacket packet)
         {

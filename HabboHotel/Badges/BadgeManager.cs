@@ -2,14 +2,14 @@
 using System.Data;
 using System.Collections.Generic;
 
-using log4net;
+using NLog;
 using Plus.Database.Interfaces;
 
 namespace Plus.HabboHotel.Badges
 {
     public class BadgeManager
     {
-        private static readonly ILog Log = LogManager.GetLogger("Plus.HabboHotel.Badges.BadgeManager");
+        private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Badges.BadgeManager");
 
         private readonly Dictionary<string, BadgeDefinition> _badges;
 

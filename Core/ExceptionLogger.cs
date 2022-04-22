@@ -1,15 +1,15 @@
-﻿using log4net;
+﻿using NLog;
 using System;
 
 namespace Plus.Core
 {
     public static class ExceptionLogger
     {
-        private static readonly ILog SqlLogger = LogManager.GetLogger("MySQL");
-        private static readonly ILog ThreadLogger = LogManager.GetLogger("Thread");
-        private static readonly ILog DefaultLogger = LogManager.GetLogger("Exception");
-        private static readonly ILog CriticalExceptionLogger = LogManager.GetLogger("Critical");
-        private static readonly ILog WiredLogger = LogManager.GetLogger("Wired");
+        private static readonly ILogger SqlLogger = LogManager.GetLogger("MySQL");
+        private static readonly ILogger ThreadLogger = LogManager.GetLogger("Thread");
+        private static readonly ILogger DefaultLogger = LogManager.GetLogger("Exception");
+        private static readonly ILogger CriticalExceptionLogger = LogManager.GetLogger("Critical");
+        private static readonly ILogger WiredLogger = LogManager.GetLogger("Wired");
 
         public static void LogQueryError(string query, Exception exception)
         {
@@ -18,7 +18,7 @@ namespace Plus.Core
 
         public static void LogException(Exception exception)
         {
-            DefaultLogger.ErrorFormat("Exception:\r\n" + exception + "\r\n\r\n");
+            DefaultLogger.Error("Exception:\r\n" + exception + "\r\n\r\n");
         }
 
         public static void LogCriticalException(Exception exception)

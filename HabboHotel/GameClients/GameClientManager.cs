@@ -8,7 +8,7 @@ using System.Linq;
 using System.Collections.Concurrent;
 using Plus.Communication.Packets.Outgoing;
 
-using log4net;
+using NLog;
 using System.Data;
 using Plus.Communication.Packets.Outgoing.Notifications;
 using Plus.Database.Interfaces;
@@ -21,7 +21,7 @@ namespace Plus.HabboHotel.GameClients
 {
     public class GameClientManager
     {
-        private static readonly ILog Log = LogManager.GetLogger("Plus.HabboHotel.GameClients.GameClientManager");
+        private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.GameClients.GameClientManager");
 
         private readonly ConcurrentDictionary<int, GameClient> _clients;
         private readonly ConcurrentDictionary<int, GameClient> _userIdRegister;

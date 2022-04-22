@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Collections.Generic;
 
-using log4net;
+using NLog;
 using Plus.Database.Interfaces;
 
 namespace Plus.Core.Settings
@@ -10,7 +10,7 @@ namespace Plus.Core.Settings
     {
         private readonly Dictionary<string, string> _settings;
 
-        private static readonly ILog Log = LogManager.GetLogger("Plus.Core.Settings.SettingsManager");
+        private static readonly ILogger Log = LogManager.GetLogger("Plus.Core.Settings.SettingsManager");
 
         public SettingsManager()
         {

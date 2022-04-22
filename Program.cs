@@ -2,7 +2,6 @@
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using Plus.Core;
-using log4net.Config;
 
 namespace Plus
 {
@@ -27,7 +26,7 @@ namespace Plus
 
         public static void Main(string[] Args)
         {
-            XmlConfigurator.Configure();
+            //XmlConfigurator.Configure();
 
             Console.ForegroundColor = ConsoleColor.White;
             Console.CursorVisible = false;

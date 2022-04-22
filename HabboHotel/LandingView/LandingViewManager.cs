@@ -3,13 +3,13 @@ using System.Data;
 using System.Collections.Generic;
 using Plus.Database.Interfaces;
 using Plus.HabboHotel.LandingView.Promotions;
-using log4net;
+using NLog;
 
 namespace Plus.HabboHotel.LandingView
 {
     public class LandingViewManager
     {
-        private static readonly ILog log = LogManager.GetLogger("Plus.HabboHotel.LandingView.LandingViewManager");
+        private static readonly ILogger log = LogManager.GetLogger("Plus.HabboHotel.LandingView.LandingViewManager");
 
         private Dictionary<int, Promotion> _promotionItems;
 

@@ -8,13 +8,13 @@ using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Communication.Packets.Outgoing.Inventory.Achievements;
 
 using Plus.Database.Interfaces;
-using log4net;
+using NLog;
 
 namespace Plus.HabboHotel.Achievements
 {
     public class AchievementManager
     {
-        private static readonly ILog log = LogManager.GetLogger("Plus.HabboHotel.Achievements.AchievementManager");
+        private static readonly ILogger log = LogManager.GetLogger("Plus.HabboHotel.Achievements.AchievementManager");
 
         public Dictionary<string, Achievement> Achievements;
 

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Threading;
 
-using log4net;
+using NLog;
 using Plus.Database.Interfaces;
 
 namespace Plus.Core
 {
     public class ServerStatusUpdater : IDisposable
     {
-        private static ILog _log = LogManager.GetLogger("Plus.Core.ServerStatusUpdater");
+        private static ILogger _log = LogManager.GetLogger("Plus.Core.ServerStatusUpdater");
 
         private const int UpdateInSeconds = 30;
 

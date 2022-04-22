@@ -4,13 +4,13 @@ using System.Data;
 using System.Linq;
 using Plus.Database.Interfaces;
 
-using log4net;
+using NLog;
 
 namespace Plus.HabboHotel.Navigator
 {
     public sealed class NavigatorManager
     {
-        private static readonly ILog log = LogManager.GetLogger("Plus.HabboHotel.Navigator.NavigatorManager");
+        private static readonly ILogger log = LogManager.GetLogger("Plus.HabboHotel.Navigator.NavigatorManager");
         
         private readonly Dictionary<int, FeaturedRoom> _featuredRooms;
 
