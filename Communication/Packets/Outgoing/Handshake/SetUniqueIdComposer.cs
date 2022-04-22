@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Handshake
+﻿namespace Plus.Communication.Packets.Outgoing.Handshake;
+
+internal class SetUniqueIdComposer : ServerPacket
 {
-    class SetUniqueIdComposer : ServerPacket
+    public SetUniqueIdComposer(string id)
+        : base(ServerPacketHeader.SetUniqueIdMessageComposer)
     {
-        public SetUniqueIdComposer(string id)
-            : base(ServerPacketHeader.SetUniqueIdMessageComposer)
-        {
-           WriteString(id);
-        }
+        WriteString(id);
     }
 }

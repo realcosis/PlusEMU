@@ -1,41 +1,40 @@
-﻿using Plus.HabboHotel.Users;
-using Plus.HabboHotel.Rooms;
+﻿using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Rooms.AI;
+using Plus.HabboHotel.Users;
 
-namespace Plus.Communication.Packets.Outgoing.Pets
+namespace Plus.Communication.Packets.Outgoing.Pets;
+
+internal class RespectPetNotificationMessageComposer : ServerPacket
 {
-    class RespectPetNotificationMessageComposer : ServerPacket
+    public RespectPetNotificationMessageComposer(Pet pet)
+        : base(ServerPacketHeader.RespectPetNotificationMessageComposer)
     {
-        public RespectPetNotificationMessageComposer(Pet pet)
-            : base(ServerPacketHeader.RespectPetNotificationMessageComposer)
-        {
-            //TODO: Structure
-            WriteInteger(pet.VirtualId);
-            WriteInteger(pet.VirtualId);
-            WriteInteger(pet.PetId);//Pet Id, 100%
-           WriteString(pet.Name);
-            WriteInteger(0);
-            WriteInteger(0);
-           WriteString(pet.Color);
-            WriteInteger(0);
-            WriteInteger(0);//Count - 3 ints.
-            WriteInteger(1);
-        }
+        //TODO: Structure
+        WriteInteger(pet.VirtualId);
+        WriteInteger(pet.VirtualId);
+        WriteInteger(pet.PetId); //Pet Id, 100%
+        WriteString(pet.Name);
+        WriteInteger(0);
+        WriteInteger(0);
+        WriteString(pet.Color);
+        WriteInteger(0);
+        WriteInteger(0); //Count - 3 ints.
+        WriteInteger(1);
+    }
 
-        public RespectPetNotificationMessageComposer(Habbo habbo, RoomUser user)
-            : base(ServerPacketHeader.RespectPetNotificationMessageComposer)
-        {
-            //TODO: Structure
-            WriteInteger(user.VirtualId);
-            WriteInteger(user.VirtualId);
-            WriteInteger(habbo.Id);//Pet Id, 100%
-           WriteString(habbo.Username);
-            WriteInteger(0);
-            WriteInteger(0);
-           WriteString("FFFFFF");//Yeah..
-            WriteInteger(0);
-            WriteInteger(0);//Count - 3 ints.
-            WriteInteger(1);
-        }
+    public RespectPetNotificationMessageComposer(Habbo habbo, RoomUser user)
+        : base(ServerPacketHeader.RespectPetNotificationMessageComposer)
+    {
+        //TODO: Structure
+        WriteInteger(user.VirtualId);
+        WriteInteger(user.VirtualId);
+        WriteInteger(habbo.Id); //Pet Id, 100%
+        WriteString(habbo.Username);
+        WriteInteger(0);
+        WriteInteger(0);
+        WriteString("FFFFFF"); //Yeah..
+        WriteInteger(0);
+        WriteInteger(0); //Count - 3 ints.
+        WriteInteger(1);
     }
 }

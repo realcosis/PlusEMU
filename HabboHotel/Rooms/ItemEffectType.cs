@@ -1,12 +1,11 @@
-﻿namespace Plus.HabboHotel.Rooms
+﻿namespace Plus.HabboHotel.Rooms;
+
+public enum ItemEffectType
 {
-    public enum ItemEffectType
-    {
-        None,
-        Swim,
-        SwimLow,
-        SwimHalloween,
-        Iceskates,
-        Normalskates
-    }
+    None,
+    Swim,
+    SwimLow,
+    SwimHalloween,
+    Iceskates,
+    Normalskates
 }

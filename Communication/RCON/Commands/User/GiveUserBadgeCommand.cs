@@ -1,35 +1,31 @@
 ﻿using System;
 using Plus.Communication.Packets.Outgoing.Moderation;
 
-namespace Plus.Communication.Rcon.Commands.User
+namespace Plus.Communication.Rcon.Commands.User;
+
+internal class GiveUserBadgeCommand : IRconCommand
 {
-    class GiveUserBadgeCommand : IRconCommand
+    public string Description => "This command is used to give a user a badge.";
+
+    public string Parameters => "%userId% %badgeId%";
+
+    public bool TryExecute(string[] parameters)
     {
-        public string Description => "This command is used to give a user a badge.";
+        if (!int.TryParse(parameters[0], out var userId))
+            return false;
+        var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
+        if (client == null || client.GetHabbo() == null)
+            return false;
 
-        public string Parameters => "%userId% %badgeId%";
-
-        public bool TryExecute(string[] parameters)
+        // Validate the badge
+        if (string.IsNullOrEmpty(Convert.ToString(parameters[1])))
+            return false;
+        var badge = Convert.ToString(parameters[1]);
+        if (!client.GetHabbo().GetBadgeComponent().HasBadge(badge))
         {
-            if (!int.TryParse(parameters[0], out var userId))
-                return false;
-
-            var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
-            if (client == null || client.GetHabbo() == null)
-                return false;
-
-            // Validate the badge
-            if (string.IsNullOrEmpty(Convert.ToString(parameters[1])))
-                return false;
-
-            var badge = Convert.ToString(parameters[1]);
-
-            if (!client.GetHabbo().GetBadgeComponent().HasBadge(badge))
-            {
-                client.GetHabbo().GetBadgeComponent().GiveBadge(badge, true, client);
-                client.SendPacket(new BroadcastMessageAlertComposer("You have been given a new badge!"));
-            }
-            return true;
+            client.GetHabbo().GetBadgeComponent().GiveBadge(badge, true, client);
+            client.SendPacket(new BroadcastMessageAlertComposer("You have been given a new badge!"));
         }
+        return true;
     }
 }

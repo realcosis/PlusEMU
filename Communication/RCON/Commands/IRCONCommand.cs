@@ -1,9 +1,8 @@
-﻿namespace Plus.Communication.Rcon.Commands
+﻿namespace Plus.Communication.Rcon.Commands;
+
+public interface IRconCommand
 {
-    public interface IRconCommand
-    {
-        string Parameters { get; }
-        string Description { get; }
-        bool TryExecute(string[] parameters);
-    }
+    string Parameters { get; }
+    string Description { get; }
+    bool TryExecute(string[] parameters);
 }

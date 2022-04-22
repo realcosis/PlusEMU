@@ -1,1515 +1,1218 @@
 ﻿using System;
-using System.Linq;
-using System.Drawing;
 using System.Collections.Generic;
-
-using Plus.Core;
-using Plus.HabboHotel.Rooms;
-using Plus.HabboHotel.Items.Interactor;
-
-using Plus.Utilities;
-using Plus.HabboHotel.Rooms.Games.Freeze;
+using System.Drawing;
+using System.Linq;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
-
-using Plus.HabboHotel.Rooms.Games.Teams;
 using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
+using Plus.Core;
+using Plus.HabboHotel.Items.Interactor;
+using Plus.HabboHotel.Items.Wired;
+using Plus.HabboHotel.Rooms;
+using Plus.HabboHotel.Rooms.Games.Freeze;
+using Plus.HabboHotel.Rooms.Games.Teams;
 using Plus.HabboHotel.Rooms.PathFinding;
+using Plus.Utilities;
 
-namespace Plus.HabboHotel.Items
+namespace Plus.HabboHotel.Items;
+
+public class Item
 {
+    private static readonly Random _random = new();
 
-    public class Item
+
+    private Room _room;
+    private bool _updateNeeded;
+    public int BaseItem;
+    public string ExtraData;
+    public string Figure;
+    public FreezePowerUp FreezePowerUp;
+    public string Gender;
+    public int GroupId;
+    public int Id;
+    public int InteractingBallUser;
+    public int InteractingUser;
+    public int InteractingUser2;
+    public byte InteractionCount;
+    public byte InteractionCountHelper;
+    public int LimitedNo;
+    public int LimitedTot;
+    public bool MagicRemove = false;
+    public bool PendingReset = false;
+    public int RoomId;
+    public int Rotation;
+
+    public Team Team;
+    public int UpdateCounter;
+    public int UserId;
+    public string Username;
+
+
+    public int Value;
+    public string WallCoord;
+
+    public Item(int id, int roomId, int baseItem, string extraData, int x, int y, double z, int rot, int userid, int group, int limitedNumber, int limitedStack, string wallCoord, Room room = null)
     {
-        public int Id;
-        private ItemData _data;
-        public int BaseItem;
-        public string ExtraData;
-        public string Figure;
-        public string Gender;
-        public int GroupId;
-        public int InteractingUser;
-        public int InteractingUser2;
-        public int LimitedNo;
-        public int LimitedTot;
-        public bool MagicRemove = false;
-        public int RoomId;
-        public int Rotation;
-        public int UpdateCounter;
-        public int UserId;
-        public string Username;
-        public int InteractingBallUser;
-        public byte InteractionCount;
-        public byte InteractionCountHelper;
-
-
-        private int _coordX;
-        private int _coordY;
-        private double _coordZ;
-
-        public Team Team;
-        public bool PendingReset = false;
-        public FreezePowerUp FreezePowerUp;
-
-
-        public int Value;
-        public string WallCoord;
-        private bool _updateNeeded;
-
-        private Room _room;
-        private static Random _random = new Random();
-        private Dictionary<int, ThreeDCoord> _affectedPoints;
-
-        private readonly bool _mIsRoller;
-        private readonly bool _mIsWallItem;
-        private readonly bool _mIsFloorItem;
-
-        public Item(int id, int roomId, int baseItem, string extraData, int x, int y, double z, int rot, int userid, int @group, int limitedNumber, int limitedStack, string wallCoord, Room room = null)
+        if (PlusEnvironment.GetGame().GetItemManager().GetItem(baseItem, out var data))
         {
-            if (PlusEnvironment.GetGame().GetItemManager().GetItem(baseItem, out var data))
+            Id = id;
+            RoomId = roomId;
+            _room = room;
+            Data = data;
+            BaseItem = baseItem;
+            ExtraData = extraData;
+            GroupId = group;
+            GetX = x;
+            GetY = y;
+            if (!double.IsInfinity(z))
+                GetZ = z;
+            Rotation = rot;
+            UpdateNeeded = false;
+            UpdateCounter = 0;
+            InteractingUser = 0;
+            InteractingUser2 = 0;
+            InteractingBallUser = 0;
+            InteractionCount = 0;
+            Value = 0;
+            UserId = userid;
+            Username = PlusEnvironment.GetUsernameById(userid);
+            LimitedNo = limitedNumber;
+            LimitedTot = limitedStack;
+            switch (GetBaseItem().InteractionType)
             {
-                this.Id = id;
-                this.RoomId = roomId;
-                _room = room;
-                _data = data;
-                this.BaseItem = baseItem;
-                this.ExtraData = extraData;
-                GroupId = @group;
-
-                _coordX = x;
-                _coordY = y;
-                if (!double.IsInfinity(z))
-                    _coordZ = z;
-                Rotation = rot;
-                UpdateNeeded = false;
-                UpdateCounter = 0;
-                InteractingUser = 0;
-                InteractingUser2 = 0;
-                InteractingBallUser = 0;
-                InteractionCount = 0;
-                Value = 0;
-
-                UserId = userid;
-                Username = PlusEnvironment.GetUsernameById(userid);
-
-
-                LimitedNo = limitedNumber;
-                LimitedTot = limitedStack;
-
-                switch (GetBaseItem().InteractionType)
+                case InteractionType.Teleport:
+                    RequestUpdate(0, true);
+                    break;
+                case InteractionType.Hopper:
+                    RequestUpdate(0, true);
+                    break;
+                case InteractionType.Roller:
+                    IsRoller = true;
+                    if (roomId > 0) GetRoom().GetRoomItemHandler().GotRollers = true;
+                    break;
+                case InteractionType.Banzaiscoreblue:
+                case InteractionType.Footballcounterblue:
+                case InteractionType.Banzaigateblue:
+                case InteractionType.FreezeBlueGate:
+                case InteractionType.Freezebluecounter:
+                    Team = Team.Blue;
+                    break;
+                case InteractionType.Banzaiscoregreen:
+                case InteractionType.Footballcountergreen:
+                case InteractionType.Banzaigategreen:
+                case InteractionType.Freezegreencounter:
+                case InteractionType.FreezeGreenGate:
+                    Team = Team.Green;
+                    break;
+                case InteractionType.Banzaiscorered:
+                case InteractionType.Footballcounterred:
+                case InteractionType.Banzaigatered:
+                case InteractionType.Freezeredcounter:
+                case InteractionType.FreezeRedGate:
+                    Team = Team.Red;
+                    break;
+                case InteractionType.Banzaiscoreyellow:
+                case InteractionType.Footballcounteryellow:
+                case InteractionType.Banzaigateyellow:
+                case InteractionType.Freezeyellowcounter:
+                case InteractionType.FreezeYellowGate:
+                    Team = Team.Yellow;
+                    break;
+                case InteractionType.Banzaitele:
                 {
-                    case InteractionType.Teleport:
-                        RequestUpdate(0, true);
-                        break;
-
-                    case InteractionType.Hopper:
-                        RequestUpdate(0, true);
-                        break;
-
-                    case InteractionType.Roller:
-                        _mIsRoller = true;
-                        if (roomId > 0)
-                        {
-                            GetRoom().GetRoomItemHandler().GotRollers = true;
-                        }
-                        break;
-
-                    case InteractionType.Banzaiscoreblue:
-                    case InteractionType.Footballcounterblue:
-                    case InteractionType.Banzaigateblue:
-                    case InteractionType.FreezeBlueGate:
-                    case InteractionType.Freezebluecounter:
-                        Team = Team.Blue;
-                        break;
-
-                    case InteractionType.Banzaiscoregreen:
-                    case InteractionType.Footballcountergreen:
-                    case InteractionType.Banzaigategreen:
-                    case InteractionType.Freezegreencounter:
-                    case InteractionType.FreezeGreenGate:
-                        Team = Team.Green;
-                        break;
-
-                    case InteractionType.Banzaiscorered:
-                    case InteractionType.Footballcounterred:
-                    case InteractionType.Banzaigatered:
-                    case InteractionType.Freezeredcounter:
-                    case InteractionType.FreezeRedGate:
-                        Team = Team.Red;
-                        break;
-
-                    case InteractionType.Banzaiscoreyellow:
-                    case InteractionType.Footballcounteryellow:
-                    case InteractionType.Banzaigateyellow:
-                    case InteractionType.Freezeyellowcounter:
-                    case InteractionType.FreezeYellowGate:
-                        Team = Team.Yellow;
-                        break;
-
-                    case InteractionType.Banzaitele:
-                        {
-                            this.ExtraData = "";
-                            break;
-                        }
-                }
-
-                _mIsWallItem = (GetBaseItem().Type.ToString().ToLower() == "i");
-                _mIsFloorItem = (GetBaseItem().Type.ToString().ToLower() == "s");
-
-                if (_mIsFloorItem)
-                {
-                    _affectedPoints = Gamemap.GetAffectedTiles(GetBaseItem().Length, GetBaseItem().Width, GetX, GetY, rot);
-                }
-                else if (_mIsWallItem)
-                {
-                    this.WallCoord = wallCoord;
-                    _mIsWallItem = true;
-                    _mIsFloorItem = false;
-                    _affectedPoints = new Dictionary<int, ThreeDCoord>();
+                    ExtraData = "";
+                    break;
                 }
             }
-        }
-
-        public ItemData Data
-        {
-            get => _data;
-            set => _data = value;
-        }
-
-        public Dictionary<int, ThreeDCoord> GetAffectedTiles => _affectedPoints;
-
-        public int GetX
-        {
-            get => _coordX;
-            set => _coordX = value;
-        }
-
-        public int GetY
-        {
-            get => _coordY;
-            set => _coordY = value;
-        }
-
-        public double GetZ
-        {
-            get => _coordZ;
-            set => _coordZ = value;
-        }
-
-        public bool UpdateNeeded
-        {
-            get => _updateNeeded;
-            set
+            IsWallItem = GetBaseItem().Type.ToString().ToLower() == "i";
+            IsFloorItem = GetBaseItem().Type.ToString().ToLower() == "s";
+            if (IsFloorItem)
+                GetAffectedTiles = Gamemap.GetAffectedTiles(GetBaseItem().Length, GetBaseItem().Width, GetX, GetY, rot);
+            else if (IsWallItem)
             {
-                if (value && GetRoom() != null)
-                    GetRoom().GetRoomItemHandler().QueueRoomItemUpdate(this);
-                _updateNeeded = value;
+                WallCoord = wallCoord;
+                IsWallItem = true;
+                IsFloorItem = false;
+                GetAffectedTiles = new Dictionary<int, ThreeDCoord>();
             }
         }
+    }
 
-        public bool IsRoller => _mIsRoller;
+    public ItemData Data { get; set; }
 
-        public Point Coordinate => new Point(GetX, GetY);
+    public Dictionary<int, ThreeDCoord> GetAffectedTiles { get; private set; }
 
-        public List<Point> GetCoords
+    public int GetX { get; set; }
+
+    public int GetY { get; set; }
+
+    public double GetZ { get; set; }
+
+    public bool UpdateNeeded
+    {
+        get => _updateNeeded;
+        set
         {
-            get
-            {
-                var toReturn = new List<Point>
-                {
-                    Coordinate
-                };
-
-                foreach (var tile in _affectedPoints.Values)
-                {
-                    toReturn.Add(new Point(tile.X, tile.Y));
-                }
-
-                return toReturn;
-            }
+            if (value && GetRoom() != null)
+                GetRoom().GetRoomItemHandler().QueueRoomItemUpdate(this);
+            _updateNeeded = value;
         }
+    }
 
-        public List<Point> GetSides()
+    public bool IsRoller { get; }
+
+    public Point Coordinate => new(GetX, GetY);
+
+    public List<Point> GetCoords
+    {
+        get
         {
-            var sides = new List<Point>
+            var toReturn = new List<Point>
             {
-                SquareBehind,
-                SquareInFront,
-                SquareLeft,
-                SquareRight,
                 Coordinate
             };
-            return sides;
+            foreach (var tile in GetAffectedTiles.Values) toReturn.Add(new Point(tile.X, tile.Y));
+            return toReturn;
         }
+    }
 
-        public double TotalHeight
+    public double TotalHeight
+    {
+        get
         {
-            get
+            var curHeight = 0.0;
+            if (GetBaseItem().AdjustableHeights.Count > 1)
             {
-                var curHeight = 0.0;
+                if (int.TryParse(ExtraData, out var num2) && GetBaseItem().AdjustableHeights.Count - 1 >= num2)
+                    curHeight = GetZ + GetBaseItem().AdjustableHeights[num2];
+            }
+            if (curHeight <= 0.0)
+                curHeight = GetZ + GetBaseItem().Height;
+            return curHeight;
+        }
+    }
 
-                if (GetBaseItem().AdjustableHeights.Count > 1)
-                {
-                    if (int.TryParse(ExtraData, out var num2) && (GetBaseItem().AdjustableHeights.Count) - 1 >= num2)
-                        curHeight = GetZ + GetBaseItem().AdjustableHeights[num2];
-                }
+    public bool IsWallItem { get; }
 
-                if (curHeight <= 0.0)
-                    curHeight = GetZ + GetBaseItem().Height;
+    public bool IsFloorItem { get; }
 
-                return curHeight;
+    public Point SquareInFront
+    {
+        get
+        {
+            var sq = new Point(GetX, GetY);
+            if (Rotation == 0)
+                sq.Y--;
+            else if (Rotation == 2)
+                sq.X++;
+            else if (Rotation == 4)
+                sq.Y++;
+            else if (Rotation == 6) sq.X--;
+            return sq;
+        }
+    }
+
+    public Point SquareBehind
+    {
+        get
+        {
+            var sq = new Point(GetX, GetY);
+            if (Rotation == 0)
+                sq.Y++;
+            else if (Rotation == 2)
+                sq.X--;
+            else if (Rotation == 4)
+                sq.Y--;
+            else if (Rotation == 6) sq.X++;
+            return sq;
+        }
+    }
+
+    public Point SquareLeft
+    {
+        get
+        {
+            var sq = new Point(GetX, GetY);
+            if (Rotation == 0)
+                sq.X++;
+            else if (Rotation == 2)
+                sq.Y--;
+            else if (Rotation == 4)
+                sq.X--;
+            else if (Rotation == 6) sq.Y++;
+            return sq;
+        }
+    }
+
+    public Point SquareRight
+    {
+        get
+        {
+            var sq = new Point(GetX, GetY);
+            if (Rotation == 0)
+                sq.X--;
+            else if (Rotation == 2)
+                sq.Y++;
+            else if (Rotation == 4)
+                sq.X++;
+            else if (Rotation == 6) sq.Y--;
+            return sq;
+        }
+    }
+
+    public IFurniInteractor Interactor
+    {
+        get
+        {
+            if (IsWired) return new InteractorWired();
+            switch (GetBaseItem().InteractionType)
+            {
+                case InteractionType.Gate:
+                    return new InteractorGate();
+                case InteractionType.Teleport:
+                    return new InteractorTeleport();
+                case InteractionType.Hopper:
+                    return new InteractorHopper();
+                case InteractionType.Bottle:
+                    return new InteractorSpinningBottle();
+                case InteractionType.Dice:
+                    return new InteractorDice();
+                case InteractionType.HabboWheel:
+                    return new InteractorHabboWheel();
+                case InteractionType.LoveShuffler:
+                    return new InteractorLoveShuffler();
+                case InteractionType.OneWayGate:
+                    return new InteractorOneWayGate();
+                case InteractionType.Alert:
+                    return new InteractorAlert();
+                case InteractionType.VendingMachine:
+                    return new InteractorVendor();
+                case InteractionType.Scoreboard:
+                    return new InteractorScoreboard();
+                case InteractionType.PuzzleBox:
+                    return new InteractorPuzzleBox();
+                case InteractionType.Mannequin:
+                    return new InteractorMannequin();
+                case InteractionType.Banzaicounter:
+                    return new InteractorBanzaiTimer();
+                case InteractionType.Freezetimer:
+                    return new InteractorFreezeTimer();
+                case InteractionType.FreezeTileBlock:
+                case InteractionType.FreezeTile:
+                    return new InteractorFreezeTile();
+                case InteractionType.Footballcounterblue:
+                case InteractionType.Footballcountergreen:
+                case InteractionType.Footballcounterred:
+                case InteractionType.Footballcounteryellow:
+                    return new InteractorScoreCounter();
+                case InteractionType.Banzaiscoreblue:
+                case InteractionType.Banzaiscoregreen:
+                case InteractionType.Banzaiscorered:
+                case InteractionType.Banzaiscoreyellow:
+                    return new InteractorBanzaiScoreCounter();
+                case InteractionType.WfFloorSwitch1:
+                case InteractionType.WfFloorSwitch2:
+                    return new InteractorSwitch();
+                case InteractionType.Lovelock:
+                    return new InteractorLoveLock();
+                case InteractionType.Cannon:
+                    return new InteractorCannon();
+                case InteractionType.Counter:
+                    return new InteractorCounter();
+                case InteractionType.None:
+                default:
+                    return new InteractorGenericSwitch();
             }
         }
+    }
 
-        public bool IsWallItem => _mIsWallItem;
-
-        public bool IsFloorItem => _mIsFloorItem;
-
-        public Point SquareInFront
+    public bool IsWired
+    {
+        get
         {
-            get
+            switch (GetBaseItem().InteractionType)
             {
-                var sq = new Point(GetX, GetY);
-
-                if (Rotation == 0)
-                {
-                    sq.Y--;
-                }
-                else if (Rotation == 2)
-                {
-                    sq.X++;
-                }
-                else if (Rotation == 4)
-                {
-                    sq.Y++;
-                }
-                else if (Rotation == 6)
-                {
-                    sq.X--;
-                }
-
-                return sq;
+                case InteractionType.WiredEffect:
+                case InteractionType.WiredTrigger:
+                case InteractionType.WiredCondition:
+                    return true;
             }
+            return false;
         }
+    }
 
-        public Point SquareBehind
+    public List<Point> GetSides()
+    {
+        var sides = new List<Point>
         {
-            get
-            {
-                var sq = new Point(GetX, GetY);
+            SquareBehind,
+            SquareInFront,
+            SquareLeft,
+            SquareRight,
+            Coordinate
+        };
+        return sides;
+    }
 
-                if (Rotation == 0)
-                {
-                    sq.Y++;
-                }
-                else if (Rotation == 2)
-                {
-                    sq.X--;
-                }
-                else if (Rotation == 4)
-                {
-                    sq.Y--;
-                }
-                else if (Rotation == 6)
-                {
-                    sq.X++;
-                }
+    public void SetState(int pX, int pY, double pZ, Dictionary<int, ThreeDCoord> tiles)
+    {
+        GetX = pX;
+        GetY = pY;
+        if (!double.IsInfinity(pZ)) GetZ = pZ;
+        GetAffectedTiles = tiles;
+    }
 
-                return sq;
-            }
-        }
-
-        public Point SquareLeft
+    public void ProcessUpdates()
+    {
+        try
         {
-            get
+            UpdateCounter--;
+            if (UpdateCounter <= 0)
             {
-                var sq = new Point(GetX, GetY);
-
-                if (Rotation == 0)
-                {
-                    sq.X++;
-                }
-                else if (Rotation == 2)
-                {
-                    sq.Y--;
-                }
-                else if (Rotation == 4)
-                {
-                    sq.X--;
-                }
-                else if (Rotation == 6)
-                {
-                    sq.Y++;
-                }
-
-                return sq;
-            }
-        }
-
-        public Point SquareRight
-        {
-            get
-            {
-                var sq = new Point(GetX, GetY);
-
-                if (Rotation == 0)
-                {
-                    sq.X--;
-                }
-                else if (Rotation == 2)
-                {
-                    sq.Y++;
-                }
-                else if (Rotation == 4)
-                {
-                    sq.X++;
-                }
-                else if (Rotation == 6)
-                {
-                    sq.Y--;
-                }
-                return sq;
-            }
-        }
-
-        public IFurniInteractor Interactor
-        {
-            get
-            {
-                if (IsWired)
-                {
-                    return new InteractorWired();
-                }
-
+                UpdateNeeded = false;
+                UpdateCounter = 0;
+                RoomUser user = null;
+                RoomUser user2 = null;
                 switch (GetBaseItem().InteractionType)
                 {
-                    case InteractionType.Gate:
-                        return new InteractorGate();
-
-                    case InteractionType.Teleport:
-                        return new InteractorTeleport();
-
-                    case InteractionType.Hopper:
-                        return new InteractorHopper();
-
-                    case InteractionType.Bottle:
-                        return new InteractorSpinningBottle();
-
-                    case InteractionType.Dice:
-                        return new InteractorDice();
-
-                    case InteractionType.HabboWheel:
-                        return new InteractorHabboWheel();
-
-                    case InteractionType.LoveShuffler:
-                        return new InteractorLoveShuffler();
-
-                    case InteractionType.OneWayGate:
-                        return new InteractorOneWayGate();
-
-                    case InteractionType.Alert:
-                        return new InteractorAlert();
-
-                    case InteractionType.VendingMachine:
-                        return new InteractorVendor();
-
-                    case InteractionType.Scoreboard:
-                        return new InteractorScoreboard();
-
-                    case InteractionType.PuzzleBox:
-                        return new InteractorPuzzleBox();
-
-                    case InteractionType.Mannequin:
-                        return new InteractorMannequin();
-
-                    case InteractionType.Banzaicounter:
-                        return new InteractorBanzaiTimer();
-
-                    case InteractionType.Freezetimer:
-                        return new InteractorFreezeTimer();
-
-                    case InteractionType.FreezeTileBlock:
-                    case InteractionType.FreezeTile:
-                        return new InteractorFreezeTile();
-
-                    case InteractionType.Footballcounterblue:
-                    case InteractionType.Footballcountergreen:
-                    case InteractionType.Footballcounterred:
-                    case InteractionType.Footballcounteryellow:
-                        return new InteractorScoreCounter();
-
-                    case InteractionType.Banzaiscoreblue:
-                    case InteractionType.Banzaiscoregreen:
-                    case InteractionType.Banzaiscorered:
-                    case InteractionType.Banzaiscoreyellow:
-                        return new InteractorBanzaiScoreCounter();
-
-                    case InteractionType.WfFloorSwitch1:
-                    case InteractionType.WfFloorSwitch2:
-                        return new InteractorSwitch();
-
-                    case InteractionType.Lovelock:
-                        return new InteractorLoveLock();
-
-                    case InteractionType.Cannon:
-                        return new InteractorCannon();
-
-                    case InteractionType.Counter:
-                        return new InteractorCounter();
-
-                    case InteractionType.None:
-                    default:
-                        return new InteractorGenericSwitch();
-                }
-            }
-        }
-
-        public bool IsWired
-        {
-            get
-            {
-                switch (GetBaseItem().InteractionType)
-                {
-                    case InteractionType.WiredEffect:
-                    case InteractionType.WiredTrigger:
-                    case InteractionType.WiredCondition:
-                        return true;
-                }
-
-                return false;
-            }
-        }
-
-        public void SetState(int pX, int pY, double pZ, Dictionary<int, ThreeDCoord> tiles)
-        {
-            GetX = pX;
-            GetY = pY;
-            if (!double.IsInfinity(pZ))
-            {
-                _coordZ = pZ;
-            }
-            _affectedPoints = tiles;
-        }
-
-        public void ProcessUpdates()
-        {
-            try
-            {
-                UpdateCounter--;
-
-                if (UpdateCounter <= 0)
-                {
-                    UpdateNeeded = false;
-                    UpdateCounter = 0;
-
-                    RoomUser user = null;
-                    RoomUser user2 = null;
-
-                    switch (GetBaseItem().InteractionType)
+                    case InteractionType.GuildGate:
                     {
-                        case InteractionType.GuildGate:
+                        if (ExtraData == "1")
+                        {
+                            if (GetRoom().GetRoomUserManager().GetUserForSquare(GetX, GetY) == null)
                             {
-                                if (ExtraData == "1")
+                                ExtraData = "0";
+                                UpdateState(false, true);
+                            }
+                            else
+                                RequestUpdate(2, false);
+                        }
+                        break;
+                    }
+                    case InteractionType.Effect:
+                    {
+                        if (ExtraData == "1")
+                        {
+                            if (GetRoom().GetRoomUserManager().GetUserForSquare(GetX, GetY) == null)
+                            {
+                                ExtraData = "0";
+                                UpdateState(false, true);
+                            }
+                            else
+                                RequestUpdate(2, false);
+                        }
+                        break;
+                    }
+                    case InteractionType.OneWayGate:
+                        user = null;
+                        if (InteractingUser > 0) user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
+                        if (user != null && user.X == GetX && user.Y == GetY)
+                        {
+                            ExtraData = "1";
+                            user.MoveTo(SquareBehind);
+                            user.InteractingGate = false;
+                            user.GateId = 0;
+                            RequestUpdate(1, false);
+                            UpdateState(false, true);
+                        }
+                        else if (user != null && user.Coordinate == SquareBehind)
+                        {
+                            user.UnlockWalking();
+                            ExtraData = "0";
+                            InteractingUser = 0;
+                            user.InteractingGate = false;
+                            user.GateId = 0;
+                            UpdateState(false, true);
+                        }
+                        else if (ExtraData == "1")
+                        {
+                            ExtraData = "0";
+                            UpdateState(false, true);
+                        }
+                        if (user == null) InteractingUser = 0;
+                        break;
+                    case InteractionType.GateVip:
+                        user = null;
+                        if (InteractingUser > 0) user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
+                        var newY = 0;
+                        var newX = 0;
+                        if (user != null && user.X == GetX && user.Y == GetY)
+                        {
+                            if (user.RotBody == 4)
+                                newY = 1;
+                            else if (user.RotBody == 0)
+                                newY = -1;
+                            else if (user.RotBody == 6)
+                                newX = -1;
+                            else if (user.RotBody == 2) newX = 1;
+                            user.MoveTo(user.X + newX, user.Y + newY);
+                            RequestUpdate(1, false);
+                        }
+                        else if (user != null && (user.Coordinate == SquareBehind || user.Coordinate == SquareInFront))
+                        {
+                            user.UnlockWalking();
+                            ExtraData = "0";
+                            InteractingUser = 0;
+                            UpdateState(false, true);
+                        }
+                        else if (ExtraData == "1")
+                        {
+                            ExtraData = "0";
+                            UpdateState(false, true);
+                        }
+                        if (user == null) InteractingUser = 0;
+                        break;
+                    case InteractionType.Hopper:
+                    {
+                        user = null;
+                        user2 = null;
+                        var showHopperEffect = false;
+                        var keepDoorOpen = false;
+                        var pause = 0;
+
+                        // Do we have a primary user that wants to go somewhere?
+                        if (InteractingUser > 0)
+                        {
+                            user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
+
+                            // Is this user okay?
+                            if (user != null)
+                            {
+                                // Is he in the tele?
+                                if (user.Coordinate == Coordinate)
                                 {
-                                    if (GetRoom().GetRoomUserManager().GetUserForSquare(GetX, GetY) == null)
+                                    //Remove the user from the square
+                                    user.AllowOverride = false;
+                                    if (user.TeleDelay == 0)
                                     {
-                                        ExtraData = "0";
-                                        UpdateState(false, true);
+                                        var roomHopId = ItemHopperFinder.GetAHopper(user.RoomId);
+                                        var nextHopperId = ItemHopperFinder.GetHopperId(roomHopId);
+                                        if (!user.IsBot && user != null && user.GetClient() != null &&
+                                            user.GetClient().GetHabbo() != null)
+                                        {
+                                            user.GetClient().GetHabbo().IsHopping = true;
+                                            user.GetClient().GetHabbo().HopperId = nextHopperId;
+                                            user.GetClient().GetHabbo().PrepareRoom(roomHopId, "");
+                                            //User.GetClient().SendMessage(new RoomForwardComposer(RoomHopId));
+                                            InteractingUser = 0;
+                                        }
                                     }
                                     else
                                     {
-                                        RequestUpdate(2, false);
+                                        user.TeleDelay--;
+                                        showHopperEffect = true;
                                     }
                                 }
-                                break;
-                            }
-                        case InteractionType.Effect:
-                            {
-                                if (ExtraData == "1")
+                                // Is he in front of the tele?
+                                else if (user.Coordinate == SquareInFront)
                                 {
-                                    if (GetRoom().GetRoomUserManager().GetUserForSquare(GetX, GetY) == null)
-                                    {
-                                        ExtraData = "0";
-                                        UpdateState(false, true);
-                                    }
-                                    else
-                                    {
-                                        RequestUpdate(2, false);
-                                    }
+                                    user.AllowOverride = true;
+                                    keepDoorOpen = true;
+
+                                    // Lock his walking. We're taking control over him. Allow overriding so he can get in the tele.
+                                    if (user.IsWalking && (user.GoalX != GetX || user.GoalY != GetY)) user.ClearMovement(true);
+                                    user.CanWalk = false;
+                                    user.AllowOverride = true;
+
+                                    // Move into the tele
+                                    user.MoveTo(Coordinate.X, Coordinate.Y, true);
                                 }
-                                break;
+                                // Not even near, do nothing and move on for the next user.
+                                else
+                                    InteractingUser = 0;
                             }
-                        case InteractionType.OneWayGate:
-
-                            user = null;
-
-                            if (InteractingUser > 0)
+                            else
                             {
-                                user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
+                                // Invalid user, do nothing and move on for the next user. 
+                                InteractingUser = 0;
+                            }
+                        }
+                        if (InteractingUser2 > 0)
+                        {
+                            user2 = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser2);
+
+                            // Is this user okay?
+                            if (user2 != null)
+                            {
+                                // If so, open the door, unlock the user's walking, and try to push him out in the right direction. We're done with him!
+                                keepDoorOpen = true;
+                                user2.UnlockWalking();
+                                user2.MoveTo(SquareInFront);
                             }
 
-                            if (user != null && user.X == GetX && user.Y == GetY)
+                            // This is a one time thing, whether the user's valid or not.
+                            InteractingUser2 = 0;
+                        }
+
+                        // Set the new item state, by priority
+                        if (keepDoorOpen)
+                        {
+                            if (ExtraData != "1")
                             {
                                 ExtraData = "1";
-
-                                user.MoveTo(SquareBehind);
-                                user.InteractingGate = false;
-                                user.GateId = 0;
-                                RequestUpdate(1, false);
                                 UpdateState(false, true);
                             }
-                            else if (user != null && user.Coordinate == SquareBehind)
+                        }
+                        else if (showHopperEffect)
+                        {
+                            if (ExtraData != "2")
                             {
-                                user.UnlockWalking();
-
-                                ExtraData = "0";
-                                InteractingUser = 0;
-                                user.InteractingGate = false;
-                                user.GateId = 0;
+                                ExtraData = "2";
                                 UpdateState(false, true);
                             }
-                            else if (ExtraData == "1")
+                        }
+                        else
+                        {
+                            if (ExtraData != "0")
                             {
-                                ExtraData = "0";
-                                UpdateState(false, true);
-                            }
-
-                            if (user == null)
-                            {
-                                InteractingUser = 0;
-                            }
-
-                            break;
-                        case InteractionType.GateVip:
-
-                            user = null;
-
-
-                            if (InteractingUser > 0)
-                            {
-                                user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
-                            }
-
-                            var newY = 0;
-                            var newX = 0;
-
-                            if (user != null && user.X == GetX && user.Y == GetY)
-                            {
-                                if (user.RotBody == 4)
+                                if (pause == 0)
                                 {
-                                    newY = 1;
+                                    ExtraData = "0";
+                                    UpdateState(false, true);
+                                    pause = 2;
                                 }
-                                else if (user.RotBody == 0)
-                                {
-                                    newY = -1;
-                                }
-                                else if (user.RotBody == 6)
-                                {
-                                    newX = -1;
-                                }
-                                else if (user.RotBody == 2)
-                                {
-                                    newX = 1;
-                                }
-
-
-                                user.MoveTo(user.X + newX, user.Y + newY);
-                                RequestUpdate(1, false);
+                                else
+                                    pause--;
                             }
-                            else if (user != null && (user.Coordinate == SquareBehind || user.Coordinate == SquareInFront))
+                        }
+
+                        // We're constantly going!
+                        RequestUpdate(1, false);
+                        break;
+                    }
+                    case InteractionType.Teleport:
+                    {
+                        user = null;
+                        user2 = null;
+                        var keepDoorOpen = false;
+                        var showTeleEffect = false;
+
+                        // Do we have a primary user that wants to go somewhere?
+                        if (InteractingUser > 0)
+                        {
+                            user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
+
+                            // Is this user okay?
+                            if (user != null)
                             {
-                                user.UnlockWalking();
-
-                                ExtraData = "0";
-                                InteractingUser = 0;
-                                UpdateState(false, true);
-                            }
-                            else if (ExtraData == "1")
-                            {
-                                ExtraData = "0";
-                                UpdateState(false, true);
-                            }
-
-                            if (user == null)
-                            {
-                                InteractingUser = 0;
-                            }
-
-                            break;
-                        case InteractionType.Hopper:
-                            {
-                                user = null;
-                                user2 = null;
-                                var showHopperEffect = false;
-                                var keepDoorOpen = false;
-                                var pause = 0;
-
-
-                                // Do we have a primary user that wants to go somewhere?
-                                if (InteractingUser > 0)
+                                // Is he in the tele?
+                                if (user.Coordinate == Coordinate)
                                 {
-                                    user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
-
-                                    // Is this user okay?
-                                    if (user != null)
+                                    //Remove the user from the square
+                                    user.AllowOverride = false;
+                                    if (ItemTeleporterFinder.IsTeleLinked(Id, GetRoom()))
                                     {
-                                        // Is he in the tele?
-                                        if (user.Coordinate == Coordinate)
+                                        showTeleEffect = true;
+                                        if (true)
                                         {
-                                            //Remove the user from the square
-                                            user.AllowOverride = false;
-                                            if (user.TeleDelay == 0)
-                                            {
-                                                var roomHopId = ItemHopperFinder.GetAHopper(user.RoomId);
-                                                var nextHopperId = ItemHopperFinder.GetHopperId(roomHopId);
+                                            // Woop! No more delay.
+                                            var teleId = ItemTeleporterFinder.GetLinkedTele(Id);
+                                            var roomId = ItemTeleporterFinder.GetTeleRoomId(teleId, GetRoom());
 
-                                                if (!user.IsBot && user != null && user.GetClient() != null &&
-                                                    user.GetClient().GetHabbo() != null)
+                                            // Do we need to tele to the same room or gtf to another?
+                                            if (roomId == RoomId)
+                                            {
+                                                var item = GetRoom().GetRoomItemHandler().GetItem(teleId);
+                                                if (item == null)
+                                                    user.UnlockWalking();
+                                                else
                                                 {
-                                                    user.GetClient().GetHabbo().IsHopping = true;
-                                                    user.GetClient().GetHabbo().HopperId = nextHopperId;
-                                                    user.GetClient().GetHabbo().PrepareRoom(roomHopId, "");
-                                                    //User.GetClient().SendMessage(new RoomForwardComposer(RoomHopId));
+                                                    // Set pos
+                                                    user.SetPos(item.GetX, item.GetY, item.GetZ);
+                                                    user.SetRot(item.Rotation, false);
+
+                                                    // Force tele effect update (dirty)
+                                                    item.ExtraData = "2";
+                                                    item.UpdateState(false, true);
+
+                                                    // Set secondary interacting user
+                                                    item.InteractingUser2 = InteractingUser;
+                                                    GetRoom().GetGameMap().RemoveUserFromMap(user, new Point(GetX, GetY));
                                                     InteractingUser = 0;
                                                 }
                                             }
                                             else
                                             {
-                                                user.TeleDelay--;
-                                                showHopperEffect = true;
-                                            }
-                                        }
-                                        // Is he in front of the tele?
-                                        else if (user.Coordinate == SquareInFront)
-                                        {
-                                            user.AllowOverride = true;
-                                            keepDoorOpen = true;
-
-                                            // Lock his walking. We're taking control over him. Allow overriding so he can get in the tele.
-                                            if (user.IsWalking && (user.GoalX != GetX || user.GoalY != GetY))
-                                            {
-                                                user.ClearMovement(true);
-                                            }
-
-                                            user.CanWalk = false;
-                                            user.AllowOverride = true;
-
-                                            // Move into the tele
-                                            user.MoveTo(Coordinate.X, Coordinate.Y, true);
-                                        }
-                                        // Not even near, do nothing and move on for the next user.
-                                        else
-                                        {
-                                            InteractingUser = 0;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        // Invalid user, do nothing and move on for the next user. 
-                                        InteractingUser = 0;
-                                    }
-                                }
-
-                                if (InteractingUser2 > 0)
-                                {
-                                    user2 = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser2);
-
-                                    // Is this user okay?
-                                    if (user2 != null)
-                                    {
-                                        // If so, open the door, unlock the user's walking, and try to push him out in the right direction. We're done with him!
-                                        keepDoorOpen = true;
-                                        user2.UnlockWalking();
-                                        user2.MoveTo(SquareInFront);
-                                    }
-
-                                    // This is a one time thing, whether the user's valid or not.
-                                    InteractingUser2 = 0;
-                                }
-
-                                // Set the new item state, by priority
-                                if (keepDoorOpen)
-                                {
-                                    if (ExtraData != "1")
-                                    {
-                                        ExtraData = "1";
-                                        UpdateState(false, true);
-                                    }
-                                }
-                                else if (showHopperEffect)
-                                {
-                                    if (ExtraData != "2")
-                                    {
-                                        ExtraData = "2";
-                                        UpdateState(false, true);
-                                    }
-                                }
-                                else
-                                {
-                                    if (ExtraData != "0")
-                                    {
-                                        if (pause == 0)
-                                        {
-                                            ExtraData = "0";
-                                            UpdateState(false, true);
-                                            pause = 2;
-                                        }
-                                        else
-                                        {
-                                            pause--;
-                                        }
-                                    }
-                                }
-
-                                // We're constantly going!
-                                RequestUpdate(1, false);
-                                break;
-                            }
-                        case InteractionType.Teleport:
-                            {
-                                user = null;
-                                user2 = null;
-
-                                var keepDoorOpen = false;
-                                var showTeleEffect = false;
-
-                                // Do we have a primary user that wants to go somewhere?
-                                if (InteractingUser > 0)
-                                {
-                                    user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
-
-                                    // Is this user okay?
-                                    if (user != null)
-                                    {
-                                        // Is he in the tele?
-                                        if (user.Coordinate == Coordinate)
-                                        {
-                                            //Remove the user from the square
-                                            user.AllowOverride = false;
-
-                                            if (ItemTeleporterFinder.IsTeleLinked(Id, GetRoom()))
-                                            {
-                                                showTeleEffect = true;
-
-                                                if (true)
+                                                if (user.TeleDelay == 0)
                                                 {
-                                                    // Woop! No more delay.
-                                                    var teleId = ItemTeleporterFinder.GetLinkedTele(Id);
-                                                    var roomId = ItemTeleporterFinder.GetTeleRoomId(teleId, GetRoom());
-
-                                                    // Do we need to tele to the same room or gtf to another?
-                                                    if (roomId == this.RoomId)
+                                                    // Let's run the teleport delegate to take futher care of this.. WHY DARIO?!
+                                                    if (!user.IsBot && user != null && user.GetClient() != null &&
+                                                        user.GetClient().GetHabbo() != null)
                                                     {
-                                                        var item = GetRoom().GetRoomItemHandler().GetItem(teleId);
-
-                                                        if (item == null)
-                                                        {
-                                                            user.UnlockWalking();
-                                                        }
-                                                        else
-                                                        {
-                                                            // Set pos
-                                                            user.SetPos(item.GetX, item.GetY, item.GetZ);
-                                                            user.SetRot(item.Rotation, false);
-
-                                                            // Force tele effect update (dirty)
-                                                            item.ExtraData = "2";
-                                                            item.UpdateState(false, true);
-
-                                                            // Set secondary interacting user
-                                                            item.InteractingUser2 = InteractingUser;
-                                                            GetRoom().GetGameMap().RemoveUserFromMap(user, new Point(GetX, GetY));
-
-                                                            InteractingUser = 0;
-                                                        }
+                                                        user.GetClient().GetHabbo().IsTeleporting = true;
+                                                        user.GetClient().GetHabbo().TeleportingRoomId = roomId;
+                                                        user.GetClient().GetHabbo().TeleporterId = teleId;
+                                                        user.GetClient().GetHabbo().PrepareRoom(roomId, "");
+                                                        //User.GetClient().SendMessage(new RoomForwardComposer(RoomId));
+                                                        InteractingUser = 0;
                                                     }
-                                                    else
-                                                    {
-                                                        if (user.TeleDelay == 0)
-                                                        {
-                                                            // Let's run the teleport delegate to take futher care of this.. WHY DARIO?!
-                                                            if (!user.IsBot && user != null && user.GetClient() != null &&
-                                                                user.GetClient().GetHabbo() != null)
-                                                            {
-                                                                user.GetClient().GetHabbo().IsTeleporting = true;
-                                                                user.GetClient().GetHabbo().TeleportingRoomId = roomId;
-                                                                user.GetClient().GetHabbo().TeleporterId = teleId;
-                                                                user.GetClient().GetHabbo().PrepareRoom(roomId, "");
-                                                                //User.GetClient().SendMessage(new RoomForwardComposer(RoomId));
-                                                                InteractingUser = 0;
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            user.TeleDelay--;
-                                                            showTeleEffect = true;
-                                                        }
-                                                        //PlusEnvironment.GetGame().GetRoomManager().AddTeleAction(new TeleUserData(User.GetClient().GetMessageHandler(), User.GetClient().GetHabbo(), RoomId, TeleId));
-                                                    }
-                                                    GetRoom().GetGameMap().GenerateMaps();
-                                                    // We're done with this tele. We have another one to bother.
                                                 }
                                                 else
                                                 {
-                                                    // We're linked, but there's a delay, so decrease the delay and wait it out.
-                                                    //User.TeleDelay--;
+                                                    user.TeleDelay--;
+                                                    showTeleEffect = true;
                                                 }
+                                                //PlusEnvironment.GetGame().GetRoomManager().AddTeleAction(new TeleUserData(User.GetClient().GetMessageHandler(), User.GetClient().GetHabbo(), RoomId, TeleId));
                                             }
-                                            else
-                                            {
-                                                // This tele is not linked, so let's gtfo.
-                                                user.UnlockWalking();
-                                                InteractingUser = 0;
-                                            }
-                                        }
-                                        // Is he in front of the tele?
-                                        else if (user.Coordinate == SquareInFront)
-                                        {
-                                                user.AllowOverride = true;
-                                                // Open the door
-                                                keepDoorOpen = true;
-
-                                                // Lock his walking. We're taking control over him. Allow overriding so he can get in the tele.
-                                                if (user.IsWalking && (user.GoalX != GetX || user.GoalY != GetY))
-                                                {
-                                                    user.ClearMovement(true);
-                                                }
-
-                                                user.CanWalk = false;
-                                                user.AllowOverride = true;
-
-                                                // Move into the tele
-                                                user.MoveTo(Coordinate.X, Coordinate.Y, true);
-                                            
-                                        }
-                                        // Not even near, do nothing and move on for the next user.
-                                        else
-                                        {
-                                            InteractingUser = 0;
+                                            GetRoom().GetGameMap().GenerateMaps();
+                                            // We're done with this tele. We have another one to bother.
                                         }
                                     }
                                     else
                                     {
-                                        // Invalid user, do nothing and move on for the next user. 
+                                        // This tele is not linked, so let's gtfo.
+                                        user.UnlockWalking();
                                         InteractingUser = 0;
                                     }
                                 }
-
-                                // Do we have a secondary user that wants to get out of the tele?
-                                if (InteractingUser2 > 0)
+                                // Is he in front of the tele?
+                                else if (user.Coordinate == SquareInFront)
                                 {
-                                    user2 = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser2);
+                                    user.AllowOverride = true;
+                                    // Open the door
+                                    keepDoorOpen = true;
 
-                                    // Is this user okay?
-                                    if (user2 != null)
-                                    {
-                                        // If so, open the door, unlock the user's walking, and try to push him out in the right direction. We're done with him!
-                                        keepDoorOpen = true;
-                                        user2.UnlockWalking();
-                                        user2.MoveTo(SquareInFront);
-                                    }
+                                    // Lock his walking. We're taking control over him. Allow overriding so he can get in the tele.
+                                    if (user.IsWalking && (user.GoalX != GetX || user.GoalY != GetY)) user.ClearMovement(true);
+                                    user.CanWalk = false;
+                                    user.AllowOverride = true;
 
-                                    // This is a one time thing, whether the user's valid or not.
-                                    InteractingUser2 = 0;
+                                    // Move into the tele
+                                    user.MoveTo(Coordinate.X, Coordinate.Y, true);
                                 }
-
-                                // Set the new item state, by priority
-                                if (showTeleEffect)
-                                {
-                                    if (ExtraData != "2")
-                                    {
-                                        ExtraData = "2";
-                                        UpdateState(false, true);
-                                    }
-                                }
-                                else if (keepDoorOpen)
-                                {
-                                    if (ExtraData != "1")
-                                    {
-                                        ExtraData = "1";
-                                        UpdateState(false, true);
-                                    }
-                                }
+                                // Not even near, do nothing and move on for the next user.
                                 else
-                                {
-                                    if (ExtraData != "0")
-                                    {
-                                        ExtraData = "0";
-                                        UpdateState(false, true);
-                                    }
-                                }
-
-                                // We're constantly going!
-                                RequestUpdate(1, false);
-                                break;
-                            }
-                        case InteractionType.Bottle:
-                            ExtraData = RandomNumber.GenerateNewRandom(0, 7).ToString();
-                            UpdateState();
-                            break;
-                        case InteractionType.Dice:
-                            {
-                                var numbers = new string[] { "1", "2", "3", "4", "5", "6" };
-                                if (ExtraData == "-1")
-                                    ExtraData = RandomizeStrings(numbers)[0];
-                                UpdateState();
-                            }
-                            break;
-                        case InteractionType.HabboWheel:
-                            ExtraData = RandomNumber.GenerateRandom(1, 10).ToString();
-                            UpdateState();
-                            break;
-                        case InteractionType.LoveShuffler:
-
-                            if (ExtraData == "0")
-                            {
-                                ExtraData = RandomNumber.GenerateNewRandom(1, 4).ToString();
-                                RequestUpdate(20, false);
-                            }
-                            else if (ExtraData != "-1")
-                            {
-                                ExtraData = "-1";
-                            }
-
-                            UpdateState(false, true);
-                            break;
-                        case InteractionType.Alert:
-                            if (ExtraData == "1")
-                            {
-                                ExtraData = "0";
-                                UpdateState(false, true);
-                            }
-                            break;
-                        case InteractionType.VendingMachine:
-
-                            if (ExtraData == "1")
-                            {
-                                user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
-                                if (user == null)
-                                    break;
-                                user.UnlockWalking();
-                                if (GetBaseItem().VendingIds.Count > 0)
-                                {
-                                    var randomDrink = GetBaseItem().VendingIds[RandomNumber.GenerateRandom(0, (GetBaseItem().VendingIds.Count - 1))];
-                                    user.CarryItem(randomDrink);
-                                }
-
-
-                                InteractingUser = 0;
-                                ExtraData = "0";
-
-                                UpdateState(false, true);
-                            }
-                            break;
-                        case InteractionType.Scoreboard:
-                            {
-                                if (string.IsNullOrEmpty(ExtraData))
-                                    break;
-
-
-                                var seconds = 0;
-
-                                try
-                                {
-                                    seconds = int.Parse(ExtraData);
-                                }
-                                catch
-                                {
-                                }
-
-                                if (seconds > 0)
-                                {
-                                    if (InteractionCountHelper == 1)
-                                    {
-                                        seconds--;
-                                        InteractionCountHelper = 0;
-
-                                        ExtraData = seconds.ToString();
-                                        UpdateState();
-                                    }
-                                    else
-                                        InteractionCountHelper++;
-
-                                    UpdateCounter = 1;
-                                }
-                                else
-                                    UpdateCounter = 0;
-
-                                break;
-                            }
-                        case InteractionType.Banzaicounter:
-                            {
-                                if (string.IsNullOrEmpty(ExtraData))
-                                    break;
-
-                                var seconds = 0;
-
-                                try
-                                {
-                                    seconds = int.Parse(ExtraData);
-                                }
-                                catch
-                                {
-                                }
-
-                                if (seconds > 0)
-                                {
-                                    if (InteractionCountHelper == 1)
-                                    {
-                                        seconds--;
-                                        InteractionCountHelper = 0;
-
-                                        if (GetRoom().GetBanzai().IsBanzaiActive)
-                                        {
-                                            ExtraData = seconds.ToString();
-                                            UpdateState();
-                                        }
-                                        else
-                                            break;
-                                    }
-                                    else
-                                        InteractionCountHelper++;
-
-                                    UpdateCounter = 1;
-                                }
-                                else
-                                {
-                                    UpdateCounter = 0;
-                                    GetRoom().GetBanzai().BanzaiEnd();
-                                }
-
-                                break;
-                            }
-                        case InteractionType.Banzaitele:
-                            {
-                                ExtraData = string.Empty;
-                                UpdateState();
-                                break;
-                            }
-                        case InteractionType.Banzaifloor:
-                            {
-                                if (Value == 3)
-                                {
-                                    if (InteractionCountHelper == 1)
-                                    {
-                                        InteractionCountHelper = 0;
-
-                                        switch (Team)
-                                        {
-                                            case Team.Blue:
-                                                {
-                                                    ExtraData = "11";
-                                                    break;
-                                                }
-
-                                            case Team.Green:
-                                                {
-                                                    ExtraData = "8";
-                                                    break;
-                                                }
-
-                                            case Team.Red:
-                                                {
-                                                    ExtraData = "5";
-                                                    break;
-                                                }
-
-                                            case Team.Yellow:
-                                                {
-                                                    ExtraData = "14";
-                                                    break;
-                                                }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        ExtraData = "";
-                                        InteractionCountHelper++;
-                                    }
-
-                                    UpdateState();
-
-                                    InteractionCount++;
-
-                                    if (InteractionCount < 16)
-                                    {
-                                        UpdateCounter = 1;
-                                    }
-                                    else
-                                        UpdateCounter = 0;
-                                }
-                                break;
-                            }
-                        case InteractionType.Banzaipuck:
-                            {
-                                if (InteractionCount > 4)
-                                {
-                                    InteractionCount++;
-                                    UpdateCounter = 1;
-                                }
-                                else
-                                {
-                                    InteractionCount = 0;
-                                    UpdateCounter = 0;
-                                }
-
-                                break;
-                            }
-                        case InteractionType.FreezeTile:
-                            {
-                                if (InteractingUser > 0)
-                                {
-                                    ExtraData = "11000";
-                                    UpdateState(false, true);
-                                    GetRoom().GetFreeze().OnFreezeTiles(this, FreezePowerUp);
                                     InteractingUser = 0;
-                                    InteractionCountHelper = 0;
-                                }
-                                break;
                             }
-                        case InteractionType.Counter:
+                            else
                             {
-                                if (string.IsNullOrEmpty(ExtraData))
-                                    break;
-
-                                var seconds = 0;
-
-                                try
-                                {
-                                    seconds = int.Parse(ExtraData);
-                                }
-                                catch
-                                {
-                                }
-
-                                if (seconds > 0)
-                                {
-                                    if (InteractionCountHelper == 1)
-                                    {
-                                        seconds--;
-                                        InteractionCountHelper = 0;
-                                        if (GetRoom().GetSoccer().GameIsStarted)
-                                        {
-                                            ExtraData = seconds.ToString();
-                                            UpdateState();
-                                        }
-                                        else
-                                            break;
-                                    }
-                                    else
-                                        InteractionCountHelper++;
-
-                                    UpdateCounter = 1;
-                                }
-                                else
-                                {
-                                    UpdateNeeded = false;
-                                    GetRoom().GetSoccer().StopGame();
-                                }
-
-                                break;
+                                // Invalid user, do nothing and move on for the next user. 
+                                InteractingUser = 0;
                             }
-                        case InteractionType.Freezetimer:
+                        }
+
+                        // Do we have a secondary user that wants to get out of the tele?
+                        if (InteractingUser2 > 0)
+                        {
+                            user2 = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser2);
+
+                            // Is this user okay?
+                            if (user2 != null)
                             {
-                                if (string.IsNullOrEmpty(ExtraData))
-                                    break;
-
-                                var seconds = 0;
-
-                                try
-                                {
-                                    seconds = int.Parse(ExtraData);
-                                }
-                                catch
-                                {
-                                }
-
-                                if (seconds > 0)
-                                {
-                                    if (InteractionCountHelper == 1)
-                                    {
-                                        seconds--;
-                                        InteractionCountHelper = 0;
-                                        if (GetRoom().GetFreeze().GameIsStarted)
-                                        {
-                                            ExtraData = seconds.ToString();
-                                            UpdateState();
-                                        }
-                                        else
-                                            break;
-                                    }
-                                    else
-                                        InteractionCountHelper++;
-
-                                    UpdateCounter = 1;
-                                }
-                                else
-                                {
-                                    UpdateNeeded = false;
-                                    GetRoom().GetFreeze().StopGame();
-                                }
-
-                                break;
+                                // If so, open the door, unlock the user's walking, and try to push him out in the right direction. We're done with him!
+                                keepDoorOpen = true;
+                                user2.UnlockWalking();
+                                user2.MoveTo(SquareInFront);
                             }
-                        case InteractionType.PressurePad:
+
+                            // This is a one time thing, whether the user's valid or not.
+                            InteractingUser2 = 0;
+                        }
+
+                        // Set the new item state, by priority
+                        if (showTeleEffect)
+                        {
+                            if (ExtraData != "2")
                             {
-                                ExtraData = "1";
-                                UpdateState();
-                                break;
-                            }
-                        case InteractionType.WiredEffect:
-                        case InteractionType.WiredTrigger:
-                        case InteractionType.WiredCondition:
-                            {
-                                if (ExtraData == "1")
-                                {
-                                    ExtraData = "0";
-                                    UpdateState(false, true);
-                                }
-                            }
-                            break;
-                        case InteractionType.Cannon:
-                            {
-                                if (ExtraData != "1")
-                                    break;
-                                var targetStart = Coordinate;
-                                var targetSquares = new List<Point>();
-                                switch (Rotation)
-                                {
-                                    case 0:
-                                        {
-                                            targetStart = new Point(GetX - 1, GetY);
-
-                                            if (!targetSquares.Contains(targetStart))
-                                                targetSquares.Add(targetStart);
-
-                                            for (var I = 1; I <= 3; I++)
-                                            {
-                                                var targetSquare = new Point(targetStart.X - I, targetStart.Y);
-
-                                                if (!targetSquares.Contains(targetSquare))
-                                                    targetSquares.Add(targetSquare);
-                                            }
-
-                                            break;
-                                        }
-
-                                    case 2:
-                                        {
-                                            targetStart = new Point(GetX, GetY - 1);
-
-                                            if (!targetSquares.Contains(targetStart))
-                                                targetSquares.Add(targetStart);
-
-                                            for (var I = 1; I <= 3; I++)
-                                            {
-                                                var targetSquare = new Point(targetStart.X, targetStart.Y - I);
-
-                                                if (!targetSquares.Contains(targetSquare))
-                                                    targetSquares.Add(targetSquare);
-                                            }
-
-                                            break;
-                                        }
-
-                                    case 4:
-                                        {
-                                            targetStart = new Point(GetX + 2, GetY);
-
-                                            if (!targetSquares.Contains(targetStart))
-                                                targetSquares.Add(targetStart);
-
-                                            for (var I = 1; I <= 3; I++)
-                                            {
-                                                var targetSquare = new Point(targetStart.X + I, targetStart.Y);
-
-                                                if (!targetSquares.Contains(targetSquare))
-                                                    targetSquares.Add(targetSquare);
-                                            }
-
-                                            break;
-                                        }
-
-                                    case 6:
-                                        {
-                                            targetStart = new Point(GetX, GetY + 2);
-
-
-                                            if (!targetSquares.Contains(targetStart))
-                                                targetSquares.Add(targetStart);
-
-                                            for (var I = 1; I <= 3; I++)
-                                            {
-                                                var targetSquare = new Point(targetStart.X, targetStart.Y + I);
-
-                                                if (!targetSquares.Contains(targetSquare))
-                                                    targetSquares.Add(targetSquare);
-                                            }
-
-                                            break;
-                                        }
-                                }
-                                if (targetSquares.Count > 0)
-                                {
-                                    foreach (var square in targetSquares.ToList())
-                                    {
-                                        var affectedUsers = _room.GetGameMap().GetRoomUsers(square).ToList();
-
-                                        if (affectedUsers == null || affectedUsers.Count == 0)
-                                            continue;
-
-                                        foreach (var target in affectedUsers)
-                                        {
-                                            if (target == null || target.IsBot || target.IsPet)
-                                                continue;
-
-                                            if (target.GetClient() == null || target.GetClient().GetHabbo() == null)
-                                                continue;
-
-                                            if (_room.CheckRights(target.GetClient(), true))
-                                                continue;
-
-                                            target.ApplyEffect(4);
-                                            target.GetClient().SendPacket(new RoomNotificationComposer("Kicked from room", "You were hit by a cannonball!", "room_kick_cannonball", ""));
-                                            target.ApplyEffect(0);
-                                            _room.GetRoomUserManager().RemoveUserFromRoom(target.GetClient(), true);
-                                        }
-                                    }
-                                }
-
                                 ExtraData = "2";
                                 UpdateState(false, true);
                             }
-                            break;
+                        }
+                        else if (keepDoorOpen)
+                        {
+                            if (ExtraData != "1")
+                            {
+                                ExtraData = "1";
+                                UpdateState(false, true);
+                            }
+                        }
+                        else
+                        {
+                            if (ExtraData != "0")
+                            {
+                                ExtraData = "0";
+                                UpdateState(false, true);
+                            }
+                        }
+
+                        // We're constantly going!
+                        RequestUpdate(1, false);
+                        break;
                     }
+                    case InteractionType.Bottle:
+                        ExtraData = RandomNumber.GenerateNewRandom(0, 7).ToString();
+                        UpdateState();
+                        break;
+                    case InteractionType.Dice:
+                    {
+                        var numbers = new[] { "1", "2", "3", "4", "5", "6" };
+                        if (ExtraData == "-1")
+                            ExtraData = RandomizeStrings(numbers)[0];
+                        UpdateState();
+                    }
+                        break;
+                    case InteractionType.HabboWheel:
+                        ExtraData = RandomNumber.GenerateRandom(1, 10).ToString();
+                        UpdateState();
+                        break;
+                    case InteractionType.LoveShuffler:
+                        if (ExtraData == "0")
+                        {
+                            ExtraData = RandomNumber.GenerateNewRandom(1, 4).ToString();
+                            RequestUpdate(20, false);
+                        }
+                        else if (ExtraData != "-1") ExtraData = "-1";
+                        UpdateState(false, true);
+                        break;
+                    case InteractionType.Alert:
+                        if (ExtraData == "1")
+                        {
+                            ExtraData = "0";
+                            UpdateState(false, true);
+                        }
+                        break;
+                    case InteractionType.VendingMachine:
+                        if (ExtraData == "1")
+                        {
+                            user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
+                            if (user == null)
+                                break;
+                            user.UnlockWalking();
+                            if (GetBaseItem().VendingIds.Count > 0)
+                            {
+                                var randomDrink = GetBaseItem().VendingIds[RandomNumber.GenerateRandom(0, GetBaseItem().VendingIds.Count - 1)];
+                                user.CarryItem(randomDrink);
+                            }
+                            InteractingUser = 0;
+                            ExtraData = "0";
+                            UpdateState(false, true);
+                        }
+                        break;
+                    case InteractionType.Scoreboard:
+                    {
+                        if (string.IsNullOrEmpty(ExtraData))
+                            break;
+                        var seconds = 0;
+                        try
+                        {
+                            seconds = int.Parse(ExtraData);
+                        }
+                        catch { }
+                        if (seconds > 0)
+                        {
+                            if (InteractionCountHelper == 1)
+                            {
+                                seconds--;
+                                InteractionCountHelper = 0;
+                                ExtraData = seconds.ToString();
+                                UpdateState();
+                            }
+                            else
+                                InteractionCountHelper++;
+                            UpdateCounter = 1;
+                        }
+                        else
+                            UpdateCounter = 0;
+                        break;
+                    }
+                    case InteractionType.Banzaicounter:
+                    {
+                        if (string.IsNullOrEmpty(ExtraData))
+                            break;
+                        var seconds = 0;
+                        try
+                        {
+                            seconds = int.Parse(ExtraData);
+                        }
+                        catch { }
+                        if (seconds > 0)
+                        {
+                            if (InteractionCountHelper == 1)
+                            {
+                                seconds--;
+                                InteractionCountHelper = 0;
+                                if (GetRoom().GetBanzai().IsBanzaiActive)
+                                {
+                                    ExtraData = seconds.ToString();
+                                    UpdateState();
+                                }
+                                else
+                                    break;
+                            }
+                            else
+                                InteractionCountHelper++;
+                            UpdateCounter = 1;
+                        }
+                        else
+                        {
+                            UpdateCounter = 0;
+                            GetRoom().GetBanzai().BanzaiEnd();
+                        }
+                        break;
+                    }
+                    case InteractionType.Banzaitele:
+                    {
+                        ExtraData = string.Empty;
+                        UpdateState();
+                        break;
+                    }
+                    case InteractionType.Banzaifloor:
+                    {
+                        if (Value == 3)
+                        {
+                            if (InteractionCountHelper == 1)
+                            {
+                                InteractionCountHelper = 0;
+                                switch (Team)
+                                {
+                                    case Team.Blue:
+                                    {
+                                        ExtraData = "11";
+                                        break;
+                                    }
+                                    case Team.Green:
+                                    {
+                                        ExtraData = "8";
+                                        break;
+                                    }
+                                    case Team.Red:
+                                    {
+                                        ExtraData = "5";
+                                        break;
+                                    }
+                                    case Team.Yellow:
+                                    {
+                                        ExtraData = "14";
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                ExtraData = "";
+                                InteractionCountHelper++;
+                            }
+                            UpdateState();
+                            InteractionCount++;
+                            if (InteractionCount < 16)
+                                UpdateCounter = 1;
+                            else
+                                UpdateCounter = 0;
+                        }
+                        break;
+                    }
+                    case InteractionType.Banzaipuck:
+                    {
+                        if (InteractionCount > 4)
+                        {
+                            InteractionCount++;
+                            UpdateCounter = 1;
+                        }
+                        else
+                        {
+                            InteractionCount = 0;
+                            UpdateCounter = 0;
+                        }
+                        break;
+                    }
+                    case InteractionType.FreezeTile:
+                    {
+                        if (InteractingUser > 0)
+                        {
+                            ExtraData = "11000";
+                            UpdateState(false, true);
+                            GetRoom().GetFreeze().OnFreezeTiles(this, FreezePowerUp);
+                            InteractingUser = 0;
+                            InteractionCountHelper = 0;
+                        }
+                        break;
+                    }
+                    case InteractionType.Counter:
+                    {
+                        if (string.IsNullOrEmpty(ExtraData))
+                            break;
+                        var seconds = 0;
+                        try
+                        {
+                            seconds = int.Parse(ExtraData);
+                        }
+                        catch { }
+                        if (seconds > 0)
+                        {
+                            if (InteractionCountHelper == 1)
+                            {
+                                seconds--;
+                                InteractionCountHelper = 0;
+                                if (GetRoom().GetSoccer().GameIsStarted)
+                                {
+                                    ExtraData = seconds.ToString();
+                                    UpdateState();
+                                }
+                                else
+                                    break;
+                            }
+                            else
+                                InteractionCountHelper++;
+                            UpdateCounter = 1;
+                        }
+                        else
+                        {
+                            UpdateNeeded = false;
+                            GetRoom().GetSoccer().StopGame();
+                        }
+                        break;
+                    }
+                    case InteractionType.Freezetimer:
+                    {
+                        if (string.IsNullOrEmpty(ExtraData))
+                            break;
+                        var seconds = 0;
+                        try
+                        {
+                            seconds = int.Parse(ExtraData);
+                        }
+                        catch { }
+                        if (seconds > 0)
+                        {
+                            if (InteractionCountHelper == 1)
+                            {
+                                seconds--;
+                                InteractionCountHelper = 0;
+                                if (GetRoom().GetFreeze().GameIsStarted)
+                                {
+                                    ExtraData = seconds.ToString();
+                                    UpdateState();
+                                }
+                                else
+                                    break;
+                            }
+                            else
+                                InteractionCountHelper++;
+                            UpdateCounter = 1;
+                        }
+                        else
+                        {
+                            UpdateNeeded = false;
+                            GetRoom().GetFreeze().StopGame();
+                        }
+                        break;
+                    }
+                    case InteractionType.PressurePad:
+                    {
+                        ExtraData = "1";
+                        UpdateState();
+                        break;
+                    }
+                    case InteractionType.WiredEffect:
+                    case InteractionType.WiredTrigger:
+                    case InteractionType.WiredCondition:
+                    {
+                        if (ExtraData == "1")
+                        {
+                            ExtraData = "0";
+                            UpdateState(false, true);
+                        }
+                    }
+                        break;
+                    case InteractionType.Cannon:
+                    {
+                        if (ExtraData != "1")
+                            break;
+                        var targetStart = Coordinate;
+                        var targetSquares = new List<Point>();
+                        switch (Rotation)
+                        {
+                            case 0:
+                            {
+                                targetStart = new Point(GetX - 1, GetY);
+                                if (!targetSquares.Contains(targetStart))
+                                    targetSquares.Add(targetStart);
+                                for (var I = 1; I <= 3; I++)
+                                {
+                                    var targetSquare = new Point(targetStart.X - I, targetStart.Y);
+                                    if (!targetSquares.Contains(targetSquare))
+                                        targetSquares.Add(targetSquare);
+                                }
+                                break;
+                            }
+                            case 2:
+                            {
+                                targetStart = new Point(GetX, GetY - 1);
+                                if (!targetSquares.Contains(targetStart))
+                                    targetSquares.Add(targetStart);
+                                for (var I = 1; I <= 3; I++)
+                                {
+                                    var targetSquare = new Point(targetStart.X, targetStart.Y - I);
+                                    if (!targetSquares.Contains(targetSquare))
+                                        targetSquares.Add(targetSquare);
+                                }
+                                break;
+                            }
+                            case 4:
+                            {
+                                targetStart = new Point(GetX + 2, GetY);
+                                if (!targetSquares.Contains(targetStart))
+                                    targetSquares.Add(targetStart);
+                                for (var I = 1; I <= 3; I++)
+                                {
+                                    var targetSquare = new Point(targetStart.X + I, targetStart.Y);
+                                    if (!targetSquares.Contains(targetSquare))
+                                        targetSquares.Add(targetSquare);
+                                }
+                                break;
+                            }
+                            case 6:
+                            {
+                                targetStart = new Point(GetX, GetY + 2);
+                                if (!targetSquares.Contains(targetStart))
+                                    targetSquares.Add(targetStart);
+                                for (var I = 1; I <= 3; I++)
+                                {
+                                    var targetSquare = new Point(targetStart.X, targetStart.Y + I);
+                                    if (!targetSquares.Contains(targetSquare))
+                                        targetSquares.Add(targetSquare);
+                                }
+                                break;
+                            }
+                        }
+                        if (targetSquares.Count > 0)
+                        {
+                            foreach (var square in targetSquares.ToList())
+                            {
+                                var affectedUsers = _room.GetGameMap().GetRoomUsers(square).ToList();
+                                if (affectedUsers == null || affectedUsers.Count == 0)
+                                    continue;
+                                foreach (var target in affectedUsers)
+                                {
+                                    if (target == null || target.IsBot || target.IsPet)
+                                        continue;
+                                    if (target.GetClient() == null || target.GetClient().GetHabbo() == null)
+                                        continue;
+                                    if (_room.CheckRights(target.GetClient(), true))
+                                        continue;
+                                    target.ApplyEffect(4);
+                                    target.GetClient().SendPacket(new RoomNotificationComposer("Kicked from room", "You were hit by a cannonball!", "room_kick_cannonball", ""));
+                                    target.ApplyEffect(0);
+                                    _room.GetRoomUserManager().RemoveUserFromRoom(target.GetClient(), true);
+                                }
+                            }
+                        }
+                        ExtraData = "2";
+                        UpdateState(false, true);
+                    }
+                        break;
                 }
             }
-            catch (Exception e)
-            {
-                ExceptionLogger.LogException(e);
-            }
         }
-
-        public static string[] RandomizeStrings(string[] arr)
+        catch (Exception e)
         {
-            var list = new List<KeyValuePair<int, string>>();
-            // Add all strings from array
-            // Add new random int each time
-            foreach (var s in arr)
-            {
-                list.Add(new KeyValuePair<int, string>(_random.Next(), s));
-            }
-            // Sort the list by the random number
-            var sorted = from item in list
-                         orderby item.Key
-                         select item;
-            // Allocate new string array
-            var result = new string[arr.Length];
-            // Copy values to array
-            var index = 0;
-            foreach (var pair in sorted)
-            {
-                result[index] = pair.Value;
-                index++;
-            }
-            // Return copied array
-            return result;
+            ExceptionLogger.LogException(e);
         }
+    }
 
-        public void RequestUpdate(int cycles, bool setUpdate)
+    public static string[] RandomizeStrings(string[] arr)
+    {
+        var list = new List<KeyValuePair<int, string>>();
+        // Add all strings from array
+        // Add new random int each time
+        foreach (var s in arr) list.Add(new KeyValuePair<int, string>(_random.Next(), s));
+        // Sort the list by the random number
+        var sorted = from item in list
+            orderby item.Key
+            select item;
+        // Allocate new string array
+        var result = new string[arr.Length];
+        // Copy values to array
+        var index = 0;
+        foreach (var pair in sorted)
         {
-            UpdateCounter = cycles;
-            if (setUpdate)
-                UpdateNeeded = true;
+            result[index] = pair.Value;
+            index++;
         }
+        // Return copied array
+        return result;
+    }
 
-        public void UpdateState()
+    public void RequestUpdate(int cycles, bool setUpdate)
+    {
+        UpdateCounter = cycles;
+        if (setUpdate)
+            UpdateNeeded = true;
+    }
+
+    public void UpdateState()
+    {
+        UpdateState(true, true);
+    }
+
+    public void UpdateState(bool inDb, bool inRoom)
+    {
+        if (GetRoom() == null)
+            return;
+        if (inDb)
+            GetRoom().GetRoomItemHandler().UpdateItem(this);
+        if (inRoom)
         {
-            UpdateState(true, true);
+            if (IsFloorItem)
+                GetRoom().SendPacket(new ObjectUpdateComposer(this, GetRoom().OwnerId));
+            else
+                GetRoom().SendPacket(new ItemUpdateComposer(this, GetRoom().OwnerId));
         }
+    }
 
-        public void UpdateState(bool inDb, bool inRoom)
+    public void ResetBaseItem()
+    {
+        Data = null;
+        Data = GetBaseItem();
+    }
+
+    public ItemData GetBaseItem()
+    {
+        if (Data == null)
         {
-            if (GetRoom() == null)
-                return;
-
-            if (inDb)
-                GetRoom().GetRoomItemHandler().UpdateItem(this);
-
-            if (inRoom)
-            {
-                if (IsFloorItem)
-                    GetRoom().SendPacket(new ObjectUpdateComposer(this, GetRoom().OwnerId));
-                else
-                    GetRoom().SendPacket(new ItemUpdateComposer(this, GetRoom().OwnerId));
-            }
+            if (PlusEnvironment.GetGame().GetItemManager().GetItem(BaseItem, out var I))
+                Data = I;
         }
+        return Data;
+    }
 
-        public void ResetBaseItem()
-        {
-            _data = null;
-            _data = GetBaseItem();
-        }
+    public Room GetRoom()
+    {
+        if (_room != null)
+            return _room;
+        if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(RoomId, out var room))
+            return room;
+        return null;
+    }
 
-        public ItemData GetBaseItem()
-        {
-            if (_data == null)
-            {
-                if (PlusEnvironment.GetGame().GetItemManager().GetItem(BaseItem, out var I))
-                    _data = I;
-            }
+    public void UserFurniCollision(RoomUser user)
+    {
+        if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null)
+            return;
+        GetRoom().GetWired().TriggerEvent(WiredBoxType.TriggerUserFurniCollision, user.GetClient().GetHabbo(), this);
+    }
 
-            return _data;
-        }
+    public void UserWalksOnFurni(RoomUser user)
+    {
+        if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null)
+            return;
+        if (GetBaseItem().InteractionType == InteractionType.Tent || GetBaseItem().InteractionType == InteractionType.TentSmall) GetRoom().AddUserToTent(Id, user);
+        GetRoom().GetWired().TriggerEvent(WiredBoxType.TriggerWalkOnFurni, user.GetClient().GetHabbo(), this);
+        user.LastItem = this;
+    }
 
-        public Room GetRoom()
-        {
-            if (_room != null)
-                return _room;
-            
-            if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(RoomId, out var room))
-                return room;
+    public void UserWalksOffFurni(RoomUser user)
+    {
+        if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null)
+            return;
+        if (GetBaseItem().InteractionType == InteractionType.Tent || GetBaseItem().InteractionType == InteractionType.TentSmall)
+            GetRoom().RemoveUserFromTent(Id, user);
+        GetRoom().GetWired().TriggerEvent(WiredBoxType.TriggerWalkOffFurni, user.GetClient().GetHabbo(), this);
+    }
 
-            return null;
-        }
-
-        public void UserFurniCollision(RoomUser user)
-        {
-            if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null)
-                return;
-
-            GetRoom().GetWired().TriggerEvent(Wired.WiredBoxType.TriggerUserFurniCollision, user.GetClient().GetHabbo(), this);
-        }
-
-        public void UserWalksOnFurni(RoomUser user)
-        {
-            if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null)
-                return;
-
-            if (GetBaseItem().InteractionType == InteractionType.Tent || GetBaseItem().InteractionType == InteractionType.TentSmall)
-            {
-                GetRoom().AddUserToTent(Id, user);
-            }
-
-            GetRoom().GetWired().TriggerEvent(Wired.WiredBoxType.TriggerWalkOnFurni, user.GetClient().GetHabbo(), this);
-            user.LastItem = this;
-        }
-
-        public void UserWalksOffFurni(RoomUser user)
-        {
-            if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null)
-                return;
-
-            if (GetBaseItem().InteractionType == InteractionType.Tent || GetBaseItem().InteractionType == InteractionType.TentSmall)
-                GetRoom().RemoveUserFromTent(Id, user);
-
-            GetRoom().GetWired().TriggerEvent(Wired.WiredBoxType.TriggerWalkOffFurni, user.GetClient().GetHabbo(), this);
-        }
-
-        public void Destroy()
-        {
-            _room = null;
-            _data = null;
-            _affectedPoints.Clear();
-        }
+    public void Destroy()
+    {
+        _room = null;
+        Data = null;
+        GetAffectedTiles.Clear();
     }
 }

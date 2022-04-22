@@ -1,16 +1,15 @@
-﻿namespace Plus.HabboHotel.Permissions
-{
-    class Permission
-    {
-        public int Id { get; set; }
-        public string PermissionName { get; set; }
-        public string Description { get; set; }
+﻿namespace Plus.HabboHotel.Permissions;
 
-        public Permission(int id, string name, string description)
-        {
-            Id = id;
-            PermissionName = name;
-            Description = description;
-        }
+internal class Permission
+{
+    public Permission(int id, string name, string description)
+    {
+        Id = id;
+        PermissionName = name;
+        Description = description;
     }
+
+    public int Id { get; set; }
+    public string PermissionName { get; set; }
+    public string Description { get; set; }
 }

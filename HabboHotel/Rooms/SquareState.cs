@@ -1,11 +1,10 @@
-﻿namespace Plus.HabboHotel.Rooms
+﻿namespace Plus.HabboHotel.Rooms;
+
+public enum SquareState
 {
-    public enum SquareState
-    {
-        Open = 0,
-        Blocked = 1,
-        Seat = 2,
-        Pool = 3,
-        Vip = 4
-    }
+    Open = 0,
+    Blocked = 1,
+    Seat = 2,
+    Pool = 3,
+    Vip = 4
 }

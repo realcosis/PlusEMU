@@ -1,16 +1,15 @@
-﻿namespace Plus.HabboHotel.Permissions
-{
-    public class PermissionGroup
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Badge { get; set; }
+﻿namespace Plus.HabboHotel.Permissions;
 
-        public PermissionGroup(string name, string description, string badge)
-        {
-            this.Name = name;
-            this.Description = description;
-            this.Badge = badge;
-        }
+public class PermissionGroup
+{
+    public PermissionGroup(string name, string description, string badge)
+    {
+        Name = name;
+        Description = description;
+        Badge = badge;
     }
+
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public string Badge { get; set; }
 }

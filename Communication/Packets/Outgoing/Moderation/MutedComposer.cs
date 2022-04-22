@@ -1,13 +1,12 @@
 ﻿using System;
 
-namespace Plus.Communication.Packets.Outgoing.Moderation
+namespace Plus.Communication.Packets.Outgoing.Moderation;
+
+internal class MutedComposer : ServerPacket
 {
-    class MutedComposer : ServerPacket
+    public MutedComposer(double timeMuted)
+        : base(ServerPacketHeader.MutedMessageComposer)
     {
-        public MutedComposer(double timeMuted)
-            : base(ServerPacketHeader.MutedMessageComposer)
-        {
-            WriteInteger(Convert.ToInt32(timeMuted));
-        }
+        WriteInteger(Convert.ToInt32(timeMuted));
     }
 }

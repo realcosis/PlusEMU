@@ -1,15 +1,13 @@
 ﻿using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Handshake
-{
-    public class GetClientVersionEvent : IPacketEvent
-    {
-        public void Parse(GameClient session, ClientPacket packet)
-        {
-            var build = packet.PopString();
+namespace Plus.Communication.Packets.Incoming.Handshake;
 
-            if (PlusEnvironment.SwfRevision != build)
-                PlusEnvironment.SwfRevision = build;
-        }
+public class GetClientVersionEvent : IPacketEvent
+{
+    public void Parse(GameClient session, ClientPacket packet)
+    {
+        var build = packet.PopString();
+        if (PlusEnvironment.SwfRevision != build)
+            PlusEnvironment.SwfRevision = build;
     }
 }

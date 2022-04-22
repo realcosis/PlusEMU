@@ -1,8 +1,7 @@
-﻿namespace Plus.HabboHotel.Catalog.Vouchers
+﻿namespace Plus.HabboHotel.Catalog.Vouchers;
+
+public enum VoucherType
 {
-    public enum VoucherType
-    {
-        Credit,
-        Ducket,
-    }
+    Credit,
+    Ducket
 }

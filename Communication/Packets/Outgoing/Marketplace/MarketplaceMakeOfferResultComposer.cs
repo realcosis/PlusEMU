@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Marketplace
+﻿namespace Plus.Communication.Packets.Outgoing.Marketplace;
+
+internal class MarketplaceMakeOfferResultComposer : ServerPacket
 {
-    class MarketplaceMakeOfferResultComposer : ServerPacket
+    public MarketplaceMakeOfferResultComposer(int success)
+        : base(ServerPacketHeader.MarketplaceMakeOfferResultMessageComposer)
     {
-        public MarketplaceMakeOfferResultComposer(int success)
-            : base(ServerPacketHeader.MarketplaceMakeOfferResultMessageComposer)
-        {
-            WriteInteger(success);
-        }
+        WriteInteger(success);
     }
 }

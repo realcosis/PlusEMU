@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Session
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Session;
+
+internal class FlatAccessibleComposer : ServerPacket
 {
-    class FlatAccessibleComposer : ServerPacket
+    public FlatAccessibleComposer(string username)
+        : base(ServerPacketHeader.FlatAccessibleMessageComposer)
     {
-        public FlatAccessibleComposer(string username)
-            : base(ServerPacketHeader.FlatAccessibleMessageComposer)
-        {
-           WriteString(username);
-        }
+        WriteString(username);
     }
 }

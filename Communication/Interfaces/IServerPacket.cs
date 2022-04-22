@@ -1,7 +1,6 @@
-﻿namespace Plus.Communication.Interfaces
+﻿namespace Plus.Communication.Interfaces;
+
+public interface IServerPacket
 {
-    public interface IServerPacket
-    {
-        byte[] GetBytes();
-    }
+    byte[] GetBytes();
 }

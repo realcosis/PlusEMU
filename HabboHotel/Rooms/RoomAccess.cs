@@ -1,10 +1,9 @@
-﻿namespace Plus.HabboHotel.Rooms
+﻿namespace Plus.HabboHotel.Rooms;
+
+public enum RoomAccess
 {
-    public enum RoomAccess
-    {
-        Open,
-        Doorbell,
-        Password,
-        Invisible
-    }
+    Open,
+    Doorbell,
+    Password,
+    Invisible
 }

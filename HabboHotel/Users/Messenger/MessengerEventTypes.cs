@@ -1,12 +1,11 @@
-﻿namespace Plus.HabboHotel.Users.Messenger
+﻿namespace Plus.HabboHotel.Users.Messenger;
+
+public enum MessengerEventTypes
 {
-    public enum MessengerEventTypes
-    {
-        EventStarted,
-        AchievementUnlocked,
-        QuestCompleted,
-        PlayingGame,
-        FinishedGame,
-        GameInvite
-    }
+    EventStarted,
+    AchievementUnlocked,
+    QuestCompleted,
+    PlayingGame,
+    FinishedGame,
+    GameInvite
 }

@@ -2,22 +2,19 @@
 using Plus.Communication.Packets.Outgoing.Rooms.Furni.YouTubeTelevisions;
 using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Rooms.Furni.YouTubeTelevisions
+namespace Plus.Communication.Packets.Incoming.Rooms.Furni.YouTubeTelevisions;
+
+internal class YouTubeVideoInformationEvent : IPacketEvent
 {
-    class YouTubeVideoInformationEvent : IPacketEvent
+    public void Parse(GameClient session, ClientPacket packet)
     {
-        public void Parse(GameClient session, ClientPacket packet)
+        var itemId = packet.PopInt();
+        var videoId = packet.PopString();
+        foreach (var tele in PlusEnvironment.GetGame().GetTelevisionManager().TelevisionList.ToList())
         {
-            var itemId = packet.PopInt();
-            var videoId = packet.PopString();
-
-            foreach (var tele in PlusEnvironment.GetGame().GetTelevisionManager().TelevisionList.ToList())
-            {
-                if (tele.YouTubeId != videoId)
-                    continue;
-
-                session.SendPacket(new GetYouTubeVideoComposer(itemId, tele.YouTubeId));
-            }
+            if (tele.YouTubeId != videoId)
+                continue;
+            session.SendPacket(new GetYouTubeVideoComposer(itemId, tele.YouTubeId));
         }
     }
 }

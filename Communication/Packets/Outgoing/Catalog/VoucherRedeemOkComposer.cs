@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Catalog
+﻿namespace Plus.Communication.Packets.Outgoing.Catalog;
+
+public class VoucherRedeemOkComposer : ServerPacket
 {
-    public class VoucherRedeemOkComposer : ServerPacket
+    public VoucherRedeemOkComposer()
+        : base(ServerPacketHeader.VoucherRedeemOkMessageComposer)
     {
-        public VoucherRedeemOkComposer()
-            : base(ServerPacketHeader.VoucherRedeemOkMessageComposer)
-        {
-           WriteString("");//productName
-           WriteString("");//productDescription
-        }
+        WriteString(""); //productName
+        WriteString(""); //productDescription
     }
 }

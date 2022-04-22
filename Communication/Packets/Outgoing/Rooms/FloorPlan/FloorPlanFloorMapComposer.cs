@@ -1,21 +1,19 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-
+﻿using System.Collections.Generic;
+using System.Linq;
 using Plus.HabboHotel.Items;
 
-namespace Plus.Communication.Packets.Outgoing.Rooms.FloorPlan
+namespace Plus.Communication.Packets.Outgoing.Rooms.FloorPlan;
+
+internal class FloorPlanFloorMapComposer : ServerPacket
 {
-    class FloorPlanFloorMapComposer : ServerPacket
+    public FloorPlanFloorMapComposer(ICollection<Item> items)
+        : base(ServerPacketHeader.FloorPlanFloorMapMessageComposer)
     {
-        public FloorPlanFloorMapComposer(ICollection<Item> items)
-            : base(ServerPacketHeader.FloorPlanFloorMapMessageComposer)
+        WriteInteger(items.Count); //TODO: Figure this out, it pushes the room coords, but it iterates them, x,y|x,y|x,y|and so on.
+        foreach (var item in items.ToList())
         {
-            WriteInteger(items.Count);//TODO: Figure this out, it pushes the room coords, but it iterates them, x,y|x,y|x,y|and so on.
-            foreach (var item in items.ToList())
-            {
-                WriteInteger(item.GetX);
-                WriteInteger(item.GetY);
-            }
+            WriteInteger(item.GetX);
+            WriteInteger(item.GetY);
         }
     }
 }

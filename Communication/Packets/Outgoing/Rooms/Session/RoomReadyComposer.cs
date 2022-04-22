@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Session
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Session;
+
+internal class RoomReadyComposer : ServerPacket
 {
-    class RoomReadyComposer : ServerPacket
+    public RoomReadyComposer(int roomId, string model)
+        : base(ServerPacketHeader.RoomReadyMessageComposer)
     {
-        public RoomReadyComposer(int roomId, string model)
-            : base(ServerPacketHeader.RoomReadyMessageComposer)
-        {
-           WriteString(model);
-            WriteInteger(roomId);
-        }
+        WriteString(model);
+        WriteInteger(roomId);
     }
 }

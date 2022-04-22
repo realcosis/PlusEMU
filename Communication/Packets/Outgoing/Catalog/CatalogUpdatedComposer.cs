@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Catalog
+﻿namespace Plus.Communication.Packets.Outgoing.Catalog;
+
+internal class CatalogUpdatedComposer : ServerPacket
 {
-    class CatalogUpdatedComposer : ServerPacket
+    public CatalogUpdatedComposer()
+        : base(ServerPacketHeader.CatalogUpdatedMessageComposer)
     {
-        public CatalogUpdatedComposer()
-            : base(ServerPacketHeader.CatalogUpdatedMessageComposer)
-        {
-            WriteBoolean(false);
-        }
+        WriteBoolean(false);
     }
 }

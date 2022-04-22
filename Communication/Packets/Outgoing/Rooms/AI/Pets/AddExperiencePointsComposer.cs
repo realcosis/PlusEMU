@@ -1,13 +1,12 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.AI.Pets
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.AI.Pets;
+
+internal class AddExperiencePointsComposer : ServerPacket
 {
-    class AddExperiencePointsComposer : ServerPacket
+    public AddExperiencePointsComposer(int petId, int virtualId, int amount)
+        : base(ServerPacketHeader.AddExperiencePointsMessageComposer)
     {
-        public AddExperiencePointsComposer(int petId, int virtualId, int amount)
-            : base(ServerPacketHeader.AddExperiencePointsMessageComposer)
-        {
-            WriteInteger(petId);
-            WriteInteger(virtualId);
-            WriteInteger(amount);
-        }
+        WriteInteger(petId);
+        WriteInteger(virtualId);
+        WriteInteger(amount);
     }
 }

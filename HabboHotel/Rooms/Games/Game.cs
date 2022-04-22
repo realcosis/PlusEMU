@@ -1,267 +1,213 @@
 ﻿using System;
-using System.Linq;
-using System.Drawing;
 using System.Collections.Concurrent;
-
+using System.Drawing;
+using System.Linq;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Rooms.Games.Teams;
 
-namespace Plus.HabboHotel.Rooms.Games
+namespace Plus.HabboHotel.Rooms.Games;
+
+public class GameManager
 {
-    public class GameManager
+    private ConcurrentDictionary<int, Item> _blueTeamItems;
+    private ConcurrentDictionary<int, Item> _greenTeamItems;
+    private ConcurrentDictionary<int, Item> _redTeamItems;
+    private Room _room;
+    private ConcurrentDictionary<int, Item> _yellowTeamItems;
+
+    public GameManager(Room room)
     {
-        private Room _room;
-        private int[] _teamPoints;
-        private ConcurrentDictionary<int, Item> _blueTeamItems;
-        private ConcurrentDictionary<int, Item> _greenTeamItems;
-        private ConcurrentDictionary<int, Item> _redTeamItems;
-        private ConcurrentDictionary<int, Item> _yellowTeamItems;
+        _room = room;
+        Points = new int[5];
+        _redTeamItems = new ConcurrentDictionary<int, Item>();
+        _blueTeamItems = new ConcurrentDictionary<int, Item>();
+        _greenTeamItems = new ConcurrentDictionary<int, Item>();
+        _yellowTeamItems = new ConcurrentDictionary<int, Item>();
+    }
 
-        public GameManager(Room room)
+    public int[] Points { get; set; }
+
+    public Team GetWinningTeam()
+    {
+        var winning = 1;
+        var highestScore = 0;
+        for (var i = 1; i < 5; i++)
         {
-            _room = room;
-            _teamPoints = new int[5];
-
-            _redTeamItems = new ConcurrentDictionary<int, Item>();
-            _blueTeamItems = new ConcurrentDictionary<int, Item>();
-            _greenTeamItems = new ConcurrentDictionary<int, Item>();
-            _yellowTeamItems = new ConcurrentDictionary<int, Item>();
-        }
-
-        public int[] Points
-        {
-            get => _teamPoints;
-            set => _teamPoints = value;
-        }
-
-        public Team GetWinningTeam()
-        {
-            var winning = 1;
-            var highestScore = 0;
-
-            for (var i = 1; i < 5; i++)
+            if (Points[i] > highestScore)
             {
-                if (_teamPoints[i] > highestScore)
-                {
-                    highestScore = _teamPoints[i];
-                    winning = i;
-                }
-            }
-            return (Team)winning;
-        }
-
-        public void AddPointToTeam(Team team, int points)
-        {
-            var newPoints = _teamPoints[Convert.ToInt32(team)] += points;
-            if (newPoints < 0)
-                newPoints = 0;
-
-            _teamPoints[Convert.ToInt32(team)] = newPoints;
-
-            foreach (var item in GetFurniItems(team).Values.ToList())
-            {
-                if (!IsFootballGoal(item.GetBaseItem().InteractionType))
-                {
-                    item.ExtraData = _teamPoints[Convert.ToInt32(team)].ToString();
-                    item.UpdateState();
-                }
-            }
-
-            foreach (var item in _room.GetRoomItemHandler().GetFloor.ToList())
-            {
-                if (team == Team.Blue && item.Data.InteractionType == InteractionType.Banzaiscoreblue)
-                {
-                    item.ExtraData = _teamPoints[Convert.ToInt32(team)].ToString();
-                    item.UpdateState();
-                }
-                else if (team == Team.Red && item.Data.InteractionType == InteractionType.Banzaiscorered)
-                {
-                    item.ExtraData = _teamPoints[Convert.ToInt32(team)].ToString();
-                    item.UpdateState();
-                }
-                else if (team == Team.Green && item.Data.InteractionType == InteractionType.Banzaiscoregreen)
-                {
-                    item.ExtraData = _teamPoints[Convert.ToInt32(team)].ToString();
-                    item.UpdateState();
-                }
-                else if (team == Team.Yellow && item.Data.InteractionType == InteractionType.Banzaiscoreyellow)
-                {
-                    item.ExtraData = _teamPoints[Convert.ToInt32(team)].ToString();
-                    item.UpdateState();
-                }
+                highestScore = Points[i];
+                winning = i;
             }
         }
+        return (Team)winning;
+    }
 
-        public void Reset()
+    public void AddPointToTeam(Team team, int points)
+    {
+        var newPoints = Points[Convert.ToInt32(team)] += points;
+        if (newPoints < 0)
+            newPoints = 0;
+        Points[Convert.ToInt32(team)] = newPoints;
+        foreach (var item in GetFurniItems(team).Values.ToList())
         {
-            AddPointToTeam(Team.Blue, GetScoreForTeam(Team.Blue) * (-1));
-            AddPointToTeam(Team.Green, GetScoreForTeam(Team.Green) * (-1));
-            AddPointToTeam(Team.Red, GetScoreForTeam(Team.Red) * (-1));
-            AddPointToTeam(Team.Yellow, GetScoreForTeam(Team.Yellow) * (-1));
-        }
-
-        private int GetScoreForTeam(Team team)
-        {
-            return _teamPoints[Convert.ToInt32(team)];
-        }
-
-        private ConcurrentDictionary<int, Item> GetFurniItems(Team team)
-        {
-            switch (team)
+            if (!IsFootballGoal(item.GetBaseItem().InteractionType))
             {
-                default:
-                    return new ConcurrentDictionary<int, Item>();
-                case Team.Blue:
-                    return _blueTeamItems;
-                case Team.Green:
-                    return _greenTeamItems;
-                case Team.Red:
-                    return _redTeamItems;
-                case Team.Yellow:
-                    return _yellowTeamItems;
+                item.ExtraData = Points[Convert.ToInt32(team)].ToString();
+                item.UpdateState();
             }
         }
-
-        private static bool IsFootballGoal(InteractionType type)
+        foreach (var item in _room.GetRoomItemHandler().GetFloor.ToList())
         {
-            return (type == InteractionType.FootballGoalBlue || type == InteractionType.FootballGoalGreen || type == InteractionType.FootballGoalRed || type == InteractionType.FootballGoalYellow);
-        }
-
-        public void AddFurnitureToTeam(Item item, Team team)
-        {
-            switch (team)
+            if (team == Team.Blue && item.Data.InteractionType == InteractionType.Banzaiscoreblue)
             {
-                case Team.Blue:
-                    _blueTeamItems.TryAdd(item.Id, item);
-                    break;
-                case Team.Green:
-                    _greenTeamItems.TryAdd(item.Id, item);
-                    break;
-                case Team.Red:
-                    _redTeamItems.TryAdd(item.Id, item);
-                    break;
-                case Team.Yellow:
-                    _yellowTeamItems.TryAdd(item.Id, item);
-                    break;
+                item.ExtraData = Points[Convert.ToInt32(team)].ToString();
+                item.UpdateState();
             }
-        }
-
-        public void RemoveFurnitureFromTeam(Item item, Team team)
-        {
-            switch (team)
+            else if (team == Team.Red && item.Data.InteractionType == InteractionType.Banzaiscorered)
             {
-                case Team.Blue:
-                    _blueTeamItems.TryRemove(item.Id, out item);
-                    break;
-                case Team.Green:
-                    _greenTeamItems.TryRemove(item.Id, out item);
-                    break;
-                case Team.Red:
-                    _redTeamItems.TryRemove(item.Id, out item);
-                    break;
-                case Team.Yellow:
-                    _yellowTeamItems.TryRemove(item.Id, out item);
-                    break;
+                item.ExtraData = Points[Convert.ToInt32(team)].ToString();
+                item.UpdateState();
+            }
+            else if (team == Team.Green && item.Data.InteractionType == InteractionType.Banzaiscoregreen)
+            {
+                item.ExtraData = Points[Convert.ToInt32(team)].ToString();
+                item.UpdateState();
+            }
+            else if (team == Team.Yellow && item.Data.InteractionType == InteractionType.Banzaiscoreyellow)
+            {
+                item.ExtraData = Points[Convert.ToInt32(team)].ToString();
+                item.UpdateState();
             }
         }
+    }
 
-        public void LockGates()
+    public void Reset()
+    {
+        AddPointToTeam(Team.Blue, GetScoreForTeam(Team.Blue) * -1);
+        AddPointToTeam(Team.Green, GetScoreForTeam(Team.Green) * -1);
+        AddPointToTeam(Team.Red, GetScoreForTeam(Team.Red) * -1);
+        AddPointToTeam(Team.Yellow, GetScoreForTeam(Team.Yellow) * -1);
+    }
+
+    private int GetScoreForTeam(Team team) => Points[Convert.ToInt32(team)];
+
+    private ConcurrentDictionary<int, Item> GetFurniItems(Team team)
+    {
+        switch (team)
         {
-            foreach (var item in _redTeamItems.Values.ToList())
-            {
-                LockGate(item);
-            }
-
-            foreach (var item in _greenTeamItems.Values.ToList())
-            {
-                LockGate(item);
-            }
-
-            foreach (var item in _blueTeamItems.Values.ToList())
-            {
-                LockGate(item);
-            }
-
-            foreach (var item in _yellowTeamItems.Values.ToList())
-            {
-                LockGate(item);
-            }
+            default:
+                return new ConcurrentDictionary<int, Item>();
+            case Team.Blue:
+                return _blueTeamItems;
+            case Team.Green:
+                return _greenTeamItems;
+            case Team.Red:
+                return _redTeamItems;
+            case Team.Yellow:
+                return _yellowTeamItems;
         }
+    }
 
-        public void UnlockGates()
+    private static bool IsFootballGoal(InteractionType type) => type == InteractionType.FootballGoalBlue || type == InteractionType.FootballGoalGreen || type == InteractionType.FootballGoalRed ||
+                                                                type == InteractionType.FootballGoalYellow;
+
+    public void AddFurnitureToTeam(Item item, Team team)
+    {
+        switch (team)
         {
-            foreach (var item in _redTeamItems.Values.ToList())
-            {
-                UnlockGate(item);
-            }
-
-            foreach (var item in _greenTeamItems.Values.ToList())
-            {
-                UnlockGate(item);
-            }
-
-            foreach (var item in _blueTeamItems.Values.ToList())
-            {
-                UnlockGate(item);
-            }
-
-            foreach (var item in _yellowTeamItems.Values.ToList())
-            {
-                UnlockGate(item);
-            }
+            case Team.Blue:
+                _blueTeamItems.TryAdd(item.Id, item);
+                break;
+            case Team.Green:
+                _greenTeamItems.TryAdd(item.Id, item);
+                break;
+            case Team.Red:
+                _redTeamItems.TryAdd(item.Id, item);
+                break;
+            case Team.Yellow:
+                _yellowTeamItems.TryAdd(item.Id, item);
+                break;
         }
+    }
 
-        private void LockGate(Item item)
+    public void RemoveFurnitureFromTeam(Item item, Team team)
+    {
+        switch (team)
         {
-            var type = item.GetBaseItem().InteractionType;
-            if (type == InteractionType.FreezeBlueGate || type == InteractionType.FreezeGreenGate ||
-                type == InteractionType.FreezeRedGate || type == InteractionType.FreezeYellowGate
-                || type == InteractionType.Banzaigateblue || type == InteractionType.Banzaigatered ||
-                type == InteractionType.Banzaigategreen || type == InteractionType.Banzaigateyellow)
-            {
-                foreach (var user in _room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
-                {
-                    user.SqState = 0;
-                }
-                _room.GetGameMap().GameMap[item.GetX, item.GetY] = 0;
-            }
+            case Team.Blue:
+                _blueTeamItems.TryRemove(item.Id, out item);
+                break;
+            case Team.Green:
+                _greenTeamItems.TryRemove(item.Id, out item);
+                break;
+            case Team.Red:
+                _redTeamItems.TryRemove(item.Id, out item);
+                break;
+            case Team.Yellow:
+                _yellowTeamItems.TryRemove(item.Id, out item);
+                break;
         }
+    }
 
-        private void UnlockGate(Item item)
+    public void LockGates()
+    {
+        foreach (var item in _redTeamItems.Values.ToList()) LockGate(item);
+        foreach (var item in _greenTeamItems.Values.ToList()) LockGate(item);
+        foreach (var item in _blueTeamItems.Values.ToList()) LockGate(item);
+        foreach (var item in _yellowTeamItems.Values.ToList()) LockGate(item);
+    }
+
+    public void UnlockGates()
+    {
+        foreach (var item in _redTeamItems.Values.ToList()) UnlockGate(item);
+        foreach (var item in _greenTeamItems.Values.ToList()) UnlockGate(item);
+        foreach (var item in _blueTeamItems.Values.ToList()) UnlockGate(item);
+        foreach (var item in _yellowTeamItems.Values.ToList()) UnlockGate(item);
+    }
+
+    private void LockGate(Item item)
+    {
+        var type = item.GetBaseItem().InteractionType;
+        if (type == InteractionType.FreezeBlueGate || type == InteractionType.FreezeGreenGate ||
+            type == InteractionType.FreezeRedGate || type == InteractionType.FreezeYellowGate
+            || type == InteractionType.Banzaigateblue || type == InteractionType.Banzaigatered ||
+            type == InteractionType.Banzaigategreen || type == InteractionType.Banzaigateyellow)
         {
-            var type = item.GetBaseItem().InteractionType;
-            if (type == InteractionType.FreezeBlueGate || type == InteractionType.FreezeGreenGate ||
-                type == InteractionType.FreezeRedGate || type == InteractionType.FreezeYellowGate
-                || type == InteractionType.Banzaigateblue || type == InteractionType.Banzaigatered ||
-                type == InteractionType.Banzaigategreen || type == InteractionType.Banzaigateyellow)
-            {
-                foreach (var user in _room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
-                {
-                    user.SqState = 1;
-                }
-                _room.GetGameMap().GameMap[item.GetX, item.GetY] = 1;
-            }
+            foreach (var user in _room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY))) user.SqState = 0;
+            _room.GetGameMap().GameMap[item.GetX, item.GetY] = 0;
         }
+    }
 
-        public void StopGame()
+    private void UnlockGate(Item item)
+    {
+        var type = item.GetBaseItem().InteractionType;
+        if (type == InteractionType.FreezeBlueGate || type == InteractionType.FreezeGreenGate ||
+            type == InteractionType.FreezeRedGate || type == InteractionType.FreezeYellowGate
+            || type == InteractionType.Banzaigateblue || type == InteractionType.Banzaigatered ||
+            type == InteractionType.Banzaigategreen || type == InteractionType.Banzaigateyellow)
         {
-            _room.LastTimerReset = DateTime.Now;
+            foreach (var user in _room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY))) user.SqState = 1;
+            _room.GetGameMap().GameMap[item.GetX, item.GetY] = 1;
         }
+    }
 
-        public void Dispose()
-        {
-            Array.Clear(_teamPoints, 0, _teamPoints.Length);
-            _redTeamItems.Clear();
-            _blueTeamItems.Clear();
-            _greenTeamItems.Clear();
-            _yellowTeamItems.Clear();
+    public void StopGame()
+    {
+        _room.LastTimerReset = DateTime.Now;
+    }
 
-            _teamPoints = null;
-            _redTeamItems = null;
-            _blueTeamItems = null;
-            _greenTeamItems = null;
-            _yellowTeamItems = null;
-            _room = null;
-        }
+    public void Dispose()
+    {
+        Array.Clear(Points, 0, Points.Length);
+        _redTeamItems.Clear();
+        _blueTeamItems.Clear();
+        _greenTeamItems.Clear();
+        _yellowTeamItems.Clear();
+        Points = null;
+        _redTeamItems = null;
+        _blueTeamItems = null;
+        _greenTeamItems = null;
+        _yellowTeamItems = null;
+        _room = null;
     }
 }

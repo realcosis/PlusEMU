@@ -1,12 +1,11 @@
 ﻿using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Help
+namespace Plus.Communication.Packets.Incoming.Help;
+
+internal class GetSanctionStatusEvent : IPacketEvent
 {
-    class GetSanctionStatusEvent : IPacketEvent
+    public void Parse(GameClient session, ClientPacket packet)
     {
-        public void Parse(GameClient session, ClientPacket packet)
-        {
-            //Session.SendMessage(new SanctionStatusComposer());
-        }
+        //Session.SendMessage(new SanctionStatusComposer());
     }
 }

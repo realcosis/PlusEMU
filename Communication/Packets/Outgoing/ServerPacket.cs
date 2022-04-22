@@ -4,88 +4,75 @@ using System.Globalization;
 using System.Text;
 using Plus.Communication.Interfaces;
 
-namespace Plus.Communication.Packets.Outgoing
+namespace Plus.Communication.Packets.Outgoing;
+
+public class ServerPacket : IServerPacket
 {
-    public class ServerPacket : IServerPacket
+    private readonly List<byte> _body = new();
+    private readonly Encoding _encoding = Encoding.Default;
+
+    public ServerPacket(int id)
     {
-        private readonly Encoding _encoding = Encoding.Default;
+        Id = id;
+        WriteShort(id);
+    }
 
-        private readonly List<byte> _body = new List<byte>();
+    public int Id { get; }
 
-        public ServerPacket(int id)
-        {
-            Id = id;
-            WriteShort(id);
-        }
+    public byte[] GetBytes()
+    {
+        var final = new List<byte>();
+        final.AddRange(BitConverter.GetBytes(_body.Count)); // packet len
+        final.Reverse();
+        final.AddRange(_body); // Add Packet
+        return final.ToArray();
+    }
 
-        public int Id { get; }
+    public void WriteByte(byte b)
+    {
+        _body.Add(b);
+    }
 
-        public byte[] GetBytes()
-        {
-            var final = new List<byte>();
-            final.AddRange(BitConverter.GetBytes(_body.Count)); // packet len
-            final.Reverse();
-            final.AddRange(_body); // Add Packet
-            return final.ToArray();
-        }
+    public void WriteByte(int b)
+    {
+        _body.Add((byte)b);
+    }
 
-        public void WriteByte(byte b)
-        {
-            _body.Add(b);
-        }
+    public void WriteBytes(byte[] b, bool isInt) // d
+    {
+        if (isInt)
+            for (var i = b.Length - 1; i > -1; i--)
+                _body.Add(b[i]);
+        else
+            _body.AddRange(b);
+    }
 
-        public void WriteByte(int b)
-        {
-            _body.Add((byte)b);
-        }
+    public void WriteDouble(double d) // d
+    {
+        var raw = Math.Round(d, 1).ToString(CultureInfo.CurrentCulture);
+        if (raw.Length == 1) raw += ".0";
+        WriteString(raw.Replace(',', '.'));
+    }
 
-        public void WriteBytes(byte[] b, bool isInt) // d
-        {
-            if (isInt)
-            {
-                for (var i = (b.Length - 1); i > -1; i--)
-                {
-                    _body.Add(b[i]);
-                }
-            }
-            else
-            {
-                _body.AddRange(b);
-            }
-        }
+    public void WriteString(string s) // d
+    {
+        WriteShort(s.Length);
+        WriteBytes(_encoding.GetBytes(s), false);
+    }
 
-        public void WriteDouble(double d) // d
-        {
-            var raw = Math.Round(d, 1).ToString(CultureInfo.CurrentCulture);
+    public void WriteShort(int s) // d
+    {
+        var i = (short)s;
+        WriteBytes(BitConverter.GetBytes(i), true);
+    }
 
-            if (raw.Length == 1)
-            {
-                raw += ".0";
-            }
+    public void WriteInteger(int i) // d
+    {
+        WriteBytes(BitConverter.GetBytes(i), true);
+    }
 
-            WriteString(raw.Replace(',', '.'));
-        }
-
-        public void WriteString(string s) // d
-        {
-            WriteShort(s.Length);
-            WriteBytes(_encoding.GetBytes(s), false);
-        }
-
-        public void WriteShort(int s) // d
-        {
-            var i = (Int16) s;
-            WriteBytes(BitConverter.GetBytes(i), true);
-        }
-
-        public void WriteInteger(int i) // d
-        {
-            WriteBytes(BitConverter.GetBytes(i), true);
-        }
-
-        public void WriteBoolean(bool b) // d
-        {
-            WriteBytes(new[] {(byte) (b ? 1 : 0)}, false);
-        }
+    public void WriteBoolean(bool b) // d
+    {
+        WriteBytes(new[] { (byte)(b ? 1 : 0) }, false);
     }
 }

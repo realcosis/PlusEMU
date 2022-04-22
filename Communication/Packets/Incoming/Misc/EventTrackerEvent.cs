@@ -1,12 +1,8 @@
 ﻿using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Misc
-{
-    class EventTrackerEvent : IPacketEvent
-    {
-        public void Parse(GameClient session, ClientPacket packet)
-        {
+namespace Plus.Communication.Packets.Incoming.Misc;
 
-        }
-    }
+internal class EventTrackerEvent : IPacketEvent
+{
+    public void Parse(GameClient session, ClientPacket packet) { }
 }

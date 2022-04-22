@@ -1,15 +1,13 @@
-﻿using Plus.HabboHotel.GameClients;
-using Plus.Communication.Packets.Outgoing.LandingView;
+﻿using Plus.Communication.Packets.Outgoing.LandingView;
+using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Quests
+namespace Plus.Communication.Packets.Incoming.Quests;
+
+internal class GetDailyQuestEvent : IPacketEvent
 {
-    class GetDailyQuestEvent : IPacketEvent
+    public void Parse(GameClient session, ClientPacket packet)
     {
-        public void Parse(GameClient session, ClientPacket packet)
-        {
-            var usersOnline = PlusEnvironment.GetGame().GetClientManager().Count;
-
-            session.SendPacket(new ConcurrentUsersGoalProgressComposer(usersOnline));
-        }
+        var usersOnline = PlusEnvironment.GetGame().GetClientManager().Count;
+        session.SendPacket(new ConcurrentUsersGoalProgressComposer(usersOnline));
     }
 }

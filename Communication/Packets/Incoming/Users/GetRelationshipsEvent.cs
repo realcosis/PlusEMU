@@ -3,20 +3,17 @@ using System.Linq;
 using Plus.Communication.Packets.Outgoing.Users;
 using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Users
+namespace Plus.Communication.Packets.Incoming.Users;
+
+internal class GetRelationshipsEvent : IPacketEvent
 {
-    class GetRelationshipsEvent : IPacketEvent
+    public void Parse(GameClient session, ClientPacket packet)
     {
-        public void Parse(GameClient session, ClientPacket packet)
-        {
-            var habbo = PlusEnvironment.GetHabboById(packet.PopInt());
-            if (habbo == null)
-                return;
-
-            var rand = new Random();
-            habbo.Relationships = habbo.Relationships.OrderBy(x => rand.Next()).ToDictionary(item => item.Key, item => item.Value);
-
-            session.SendPacket(new GetRelationshipsComposer(habbo));
-        }
+        var habbo = PlusEnvironment.GetHabboById(packet.PopInt());
+        if (habbo == null)
+            return;
+        var rand = new Random();
+        habbo.Relationships = habbo.Relationships.OrderBy(x => rand.Next()).ToDictionary(item => item.Key, item => item.Value);
+        session.SendPacket(new GetRelationshipsComposer(habbo));
     }
 }

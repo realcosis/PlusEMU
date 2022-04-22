@@ -1,13 +1,12 @@
 ﻿using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Misc
+namespace Plus.Communication.Packets.Incoming.Misc;
+
+internal class ClientVariablesEvent : IPacketEvent
 {
-    class ClientVariablesEvent : IPacketEvent
+    public void Parse(GameClient session, ClientPacket packet)
     {
-        public void Parse(GameClient session, ClientPacket packet)
-        {
-            var gordanPath = packet.PopString();
-            var externalVariables = packet.PopString();
-        }
+        var gordanPath = packet.PopString();
+        var externalVariables = packet.PopString();
     }
 }

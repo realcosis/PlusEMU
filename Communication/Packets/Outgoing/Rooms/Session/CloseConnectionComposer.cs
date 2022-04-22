@@ -1,11 +1,7 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Session
-{
-    class CloseConnectionComposer : ServerPacket
-    {
-        public CloseConnectionComposer()
-            : base(ServerPacketHeader.CloseConnectionMessageComposer)
-        {
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Session;
 
-        }
-    }
+internal class CloseConnectionComposer : ServerPacket
+{
+    public CloseConnectionComposer()
+        : base(ServerPacketHeader.CloseConnectionMessageComposer) { }
 }

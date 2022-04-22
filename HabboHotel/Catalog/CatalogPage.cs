@@ -1,160 +1,82 @@
 ﻿using System.Collections.Generic;
 
-namespace Plus.HabboHotel.Catalog
+namespace Plus.HabboHotel.Catalog;
+
+public class CatalogPage
 {
-    public class CatalogPage
+    public CatalogPage(int id, int parentId, string enabled, string caption, string pageLink, int icon, int minRank, int minVip,
+        string visible, string template, string pageStrings1, string pageStrings2, Dictionary<int, CatalogItem> items, ref Dictionary<int, int> flatOffers)
     {
-        private int _id;
-        private int _parentId;
-        private string _caption;
-        private string _pageLink;
-        private int _icon;
-        private int _minRank;
-        private int _minVip;
-        private bool _visible;
-        private bool _enabled;
-        private string _template;
-
-        private List<string> _pageStrings1;
-        private List<string> _pageStrings2;
-
-        private Dictionary<int, CatalogItem> _items;
-        private Dictionary<int, CatalogItem> _itemOffers;
-
-        public CatalogPage(int id, int parentId, string enabled, string caption, string pageLink, int icon, int minRank, int minVip,
-              string visible, string template, string pageStrings1, string pageStrings2, Dictionary<int, CatalogItem> items, ref Dictionary<int, int> flatOffers)
+        Id = id;
+        ParentId = parentId;
+        Enabled = enabled.ToLower() == "1" ? true : false;
+        Caption = caption;
+        PageLink = pageLink;
+        Icon = icon;
+        MinimumRank = minRank;
+        MinimumVip = minVip;
+        Visible = visible.ToLower() == "1" ? true : false;
+        Template = template;
+        foreach (var str in pageStrings1.Split('|'))
         {
-            _id = id;
-            _parentId = parentId;
-            _enabled = enabled.ToLower() == "1" ? true : false;
-            _caption = caption;
-            _pageLink = pageLink;
-            _icon = icon;
-            _minRank = minRank;
-            _minVip = minVip;
-            _visible = visible.ToLower() == "1" ? true : false;
-            _template = template;
-
-            foreach (var str in pageStrings1.Split('|'))
+            if (PageStrings1 == null) PageStrings1 = new List<string>();
+            PageStrings1.Add(str);
+        }
+        foreach (var str in pageStrings2.Split('|'))
+        {
+            if (PageStrings2 == null) PageStrings2 = new List<string>();
+            PageStrings2.Add(str);
+        }
+        Items = items;
+        ItemOffers = new Dictionary<int, CatalogItem>();
+        foreach (var i in flatOffers.Keys)
+        {
+            if (flatOffers[i] == id)
             {
-                if (_pageStrings1 == null) { _pageStrings1 = new List<string>(); }
-                _pageStrings1.Add(str);
-            }
-
-            foreach (var str in pageStrings2.Split('|'))
-            {
-                if (_pageStrings2 == null) { _pageStrings2 = new List<string>(); }
-                _pageStrings2.Add(str);
-            }
-
-            _items = items;
-
-            _itemOffers = new Dictionary<int, CatalogItem>();
-            foreach (var i in flatOffers.Keys)
-            {
-                if (flatOffers[i] == id)
+                foreach (var item in Items.Values)
                 {
-                    foreach (var item in _items.Values)
+                    if (item.OfferId == i)
                     {
-                        if (item.OfferId == i)
-                        {
-                            if (!_itemOffers.ContainsKey(i))
-                                _itemOffers.Add(i, item);
-                        }
+                        if (!ItemOffers.ContainsKey(i))
+                            ItemOffers.Add(i, item);
                     }
                 }
             }
         }
+    }
 
-        public int Id
-        {
-            get => _id;
-            set => _id = value;
-        }
+    public int Id { get; set; }
 
-        public int ParentId
-        {
-            get => _parentId;
-            set => _parentId = value;
-        }
+    public int ParentId { get; set; }
 
-        public bool Enabled
-        {
-            get => _enabled;
-            set => _enabled = value;
-        }
+    public bool Enabled { get; set; }
 
-        public string Caption
-        {
-            get => _caption;
-            set => _caption = value;
-        }
+    public string Caption { get; set; }
 
-        public string PageLink
-        {
-            get => _pageLink;
-            set => _pageLink = value;
-        }
+    public string PageLink { get; set; }
 
-        public int Icon
-        {
-            get => _icon;
-            set => _icon = value;
-        }
+    public int Icon { get; set; }
 
-        public int MinimumRank
-        {
-            get => _minRank;
-            set => _minRank = value;
-        }
+    public int MinimumRank { get; set; }
 
-        public int MinimumVip
-        {
-            get => _minVip;
-            set => _minVip = value;
-        }
+    public int MinimumVip { get; set; }
 
-        public bool Visible
-        {
-            get => _visible;
-            set => _visible = value;
-        }
+    public bool Visible { get; set; }
 
-        public string Template
-        {
-            get => _template;
-            set => _template = value;
-        }
+    public string Template { get; set; }
 
-        public List<string> PageStrings1
-        {
-            get => _pageStrings1;
-            private set => _pageStrings1 = value;
-        }
+    public List<string> PageStrings1 { get; }
 
-        public List<string> PageStrings2
-        {
-            get => _pageStrings2;
-            private set => _pageStrings2 = value;
-        }
+    public List<string> PageStrings2 { get; }
 
-        public Dictionary<int, CatalogItem> Items
-        {
-            get => _items;
-            private set => _items = value;
-        }
-        
-        public Dictionary<int, CatalogItem> ItemOffers
-        {
-            get => _itemOffers;
-            private set => _itemOffers = value;
-        }
+    public Dictionary<int, CatalogItem> Items { get; }
 
-        public CatalogItem GetItem(int pId)
-        {
-            if (_items.ContainsKey(pId))
-                return (CatalogItem)_items[pId];
-            return null;
-        }
+    public Dictionary<int, CatalogItem> ItemOffers { get; }
+
+    public CatalogItem GetItem(int pId)
+    {
+        if (Items.ContainsKey(pId))
+            return Items[pId];
+        return null;
     }
 }

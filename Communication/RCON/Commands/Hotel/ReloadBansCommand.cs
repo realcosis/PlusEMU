@@ -1,16 +1,14 @@
-﻿namespace Plus.Communication.Rcon.Commands.Hotel
+﻿namespace Plus.Communication.Rcon.Commands.Hotel;
+
+internal class ReloadBansCommand : IRconCommand
 {
-    class ReloadBansCommand : IRconCommand
+    public string Description => "This command is used to re-cache the bans.";
+
+    public string Parameters => "";
+
+    public bool TryExecute(string[] parameters)
     {
-        public string Description => "This command is used to re-cache the bans.";
-
-        public string Parameters => "";
-
-        public bool TryExecute(string[] parameters)
-        {
-            PlusEnvironment.GetGame().GetModerationManager().ReCacheBans();
-
-            return true;
-        }
+        PlusEnvironment.GetGame().GetModerationManager().ReCacheBans();
+        return true;
     }
 }

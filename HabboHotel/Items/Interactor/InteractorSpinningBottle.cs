@@ -1,38 +1,37 @@
 ﻿using Plus.HabboHotel.GameClients;
 
-namespace Plus.HabboHotel.Items.Interactor
+namespace Plus.HabboHotel.Items.Interactor;
+
+public class InteractorSpinningBottle : IFurniInteractor
 {
-    public class InteractorSpinningBottle : IFurniInteractor
+    public void OnPlace(GameClient session, Item item)
     {
-        public void OnPlace(GameClient session, Item item)
-        {
-            item.ExtraData = "0";
-            item.UpdateState(true, false);
-        }
+        item.ExtraData = "0";
+        item.UpdateState(true, false);
+    }
 
-        public void OnRemove(GameClient session, Item item)
-        {
-            item.ExtraData = "0";
-        }
+    public void OnRemove(GameClient session, Item item)
+    {
+        item.ExtraData = "0";
+    }
 
-        public void OnTrigger(GameClient session, Item item, int request, bool hasRights)
+    public void OnTrigger(GameClient session, Item item, int request, bool hasRights)
+    {
+        if (item.ExtraData != "-1")
         {
-            if (item.ExtraData != "-1")
-            {
-                item.ExtraData = "-1";
-                item.UpdateState(false, true);
-                item.RequestUpdate(3, true);
-            }
+            item.ExtraData = "-1";
+            item.UpdateState(false, true);
+            item.RequestUpdate(3, true);
         }
+    }
 
-        public void OnWiredTrigger(Item item)
+    public void OnWiredTrigger(Item item)
+    {
+        if (item.ExtraData != "-1")
         {
-            if (item.ExtraData != "-1")
-            {
-                item.ExtraData = "-1";
-                item.UpdateState(false, true);
-                item.RequestUpdate(3, true);
-            }
+            item.ExtraData = "-1";
+            item.UpdateState(false, true);
+            item.RequestUpdate(3, true);
         }
     }
 }

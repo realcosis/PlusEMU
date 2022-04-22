@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.LandingView
+﻿namespace Plus.Communication.Packets.Outgoing.LandingView;
+
+internal class CampaignComposer : ServerPacket
 {
-    class CampaignComposer : ServerPacket
+    public CampaignComposer(string campaignString, string campaignName)
+        : base(ServerPacketHeader.CampaignMessageComposer)
     {
-        public CampaignComposer(string campaignString, string campaignName)
-            : base(ServerPacketHeader.CampaignMessageComposer)
-        {
-           WriteString(campaignString);
-           WriteString(campaignName);
-        }
+        WriteString(campaignString);
+        WriteString(campaignName);
     }
 }

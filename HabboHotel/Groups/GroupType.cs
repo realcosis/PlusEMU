@@ -1,9 +1,8 @@
-﻿namespace Plus.HabboHotel.Groups
+﻿namespace Plus.HabboHotel.Groups;
+
+public enum GroupType
 {
-    public enum GroupType
-    {
-        Open = 0,
-        Locked = 1,
-        Private = 2
-    }
+    Open = 0,
+    Locked = 1,
+    Private = 2
 }

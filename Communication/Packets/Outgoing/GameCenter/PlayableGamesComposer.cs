@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.GameCenter
+﻿namespace Plus.Communication.Packets.Outgoing.GameCenter;
+
+internal class PlayableGamesComposer : ServerPacket
 {
-    class PlayableGamesComposer : ServerPacket
+    public PlayableGamesComposer(int gameId)
+        : base(ServerPacketHeader.PlayableGamesMessageComposer)
     {
-        public PlayableGamesComposer(int gameId)
-            : base(ServerPacketHeader.PlayableGamesMessageComposer)
-        {
-            WriteInteger(gameId);
-            WriteInteger(0);
-        }
+        WriteInteger(gameId);
+        WriteInteger(0);
     }
 }

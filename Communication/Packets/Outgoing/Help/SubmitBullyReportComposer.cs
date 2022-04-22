@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Help
+﻿namespace Plus.Communication.Packets.Outgoing.Help;
+
+internal class SubmitBullyReportComposer : ServerPacket
 {
-    class SubmitBullyReportComposer : ServerPacket
+    public SubmitBullyReportComposer(int result)
+        : base(ServerPacketHeader.SubmitBullyReportMessageComposer)
     {
-        public SubmitBullyReportComposer(int result)
-            : base(ServerPacketHeader.SubmitBullyReportMessageComposer)
-        {
-            WriteInteger(result);
-        }
+        WriteInteger(result);
     }
 }

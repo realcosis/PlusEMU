@@ -1,13 +1,12 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Catalog
+﻿namespace Plus.Communication.Packets.Outgoing.Catalog;
+
+internal class CheckGnomeNameComposer : ServerPacket
 {
-    class CheckGnomeNameComposer : ServerPacket
+    public CheckGnomeNameComposer(string petName, int errorId)
+        : base(ServerPacketHeader.CheckGnomeNameMessageComposer)
     {
-        public CheckGnomeNameComposer(string petName, int errorId)
-            : base(ServerPacketHeader.CheckGnomeNameMessageComposer)
-        {
-            WriteInteger(0);
-            WriteInteger(errorId);
-           WriteString(petName);
-        }
+        WriteInteger(0);
+        WriteInteger(errorId);
+        WriteString(petName);
     }
 }

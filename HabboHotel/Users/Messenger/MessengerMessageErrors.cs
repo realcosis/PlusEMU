@@ -1,12 +1,11 @@
-﻿namespace Plus.HabboHotel.Users.Messenger
+﻿namespace Plus.HabboHotel.Users.Messenger;
+
+public enum MessengerMessageErrors
 {
-    public enum MessengerMessageErrors
-    {
-        FriendMuted,
-        YourMuted,
-        FriendOffline,
-        NotFriends,
-        FriendBusy,
-        OfflineFailed
-    }
+    FriendMuted,
+    YourMuted,
+    FriendOffline,
+    NotFriends,
+    FriendBusy,
+    OfflineFailed
 }

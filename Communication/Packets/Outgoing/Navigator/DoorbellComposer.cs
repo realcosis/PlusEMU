@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Navigator
+﻿namespace Plus.Communication.Packets.Outgoing.Navigator;
+
+internal class DoorbellComposer : ServerPacket
 {
-    class DoorbellComposer : ServerPacket
+    public DoorbellComposer(string username)
+        : base(ServerPacketHeader.DoorbellMessageComposer)
     {
-        public DoorbellComposer(string username)
-            : base(ServerPacketHeader.DoorbellMessageComposer)
-        {
-           WriteString(username);
-        }
+        WriteString(username);
     }
 }

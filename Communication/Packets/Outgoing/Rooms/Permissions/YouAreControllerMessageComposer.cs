@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Permissions
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Permissions;
+
+internal class YouAreControllerComposer : ServerPacket
 {
-    class YouAreControllerComposer : ServerPacket
+    public YouAreControllerComposer(int setting)
+        : base(ServerPacketHeader.YouAreControllerMessageComposer)
     {
-        public YouAreControllerComposer(int setting)
-            : base(ServerPacketHeader.YouAreControllerMessageComposer)
-        {
-            WriteInteger(setting);
-        }
+        WriteInteger(setting);
     }
 }

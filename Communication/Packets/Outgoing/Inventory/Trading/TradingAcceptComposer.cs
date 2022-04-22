@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Trading
+﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Trading;
+
+internal class TradingAcceptComposer : ServerPacket
 {
-    class TradingAcceptComposer : ServerPacket
+    public TradingAcceptComposer(int userId, bool accept)
+        : base(ServerPacketHeader.TradingAcceptMessageComposer)
     {
-        public TradingAcceptComposer(int userId, bool accept)
-            : base(ServerPacketHeader.TradingAcceptMessageComposer)
-        {
-            WriteInteger(userId);
-            WriteInteger(accept ? 1 : 0);
-        }
+        WriteInteger(userId);
+        WriteInteger(accept ? 1 : 0);
     }
 }

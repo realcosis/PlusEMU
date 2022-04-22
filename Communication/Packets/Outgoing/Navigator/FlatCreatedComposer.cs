@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Navigator
+﻿namespace Plus.Communication.Packets.Outgoing.Navigator;
+
+internal class FlatCreatedComposer : ServerPacket
 {
-    class FlatCreatedComposer : ServerPacket
+    public FlatCreatedComposer(int roomId, string roomName)
+        : base(ServerPacketHeader.FlatCreatedMessageComposer)
     {
-        public FlatCreatedComposer(int roomId, string roomName)
-            : base(ServerPacketHeader.FlatCreatedMessageComposer)
-        {
-            WriteInteger(roomId);
-            WriteString(roomName);
-        }
+        WriteInteger(roomId);
+        WriteString(roomName);
     }
 }

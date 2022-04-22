@@ -1,18 +1,15 @@
 ﻿using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Rooms.Connection
-{
-    public class OpenFlatConnectionEvent : IPacketEvent
-    {
-        public void Parse(GameClient session, ClientPacket packet)
-        {
-            if (session == null || session.GetHabbo() == null)
-                return;
+namespace Plus.Communication.Packets.Incoming.Rooms.Connection;
 
-            var roomId = packet.PopInt();
-            var password = packet.PopString();
-        
-            session.GetHabbo().PrepareRoom(roomId, password);
-        }
+public class OpenFlatConnectionEvent : IPacketEvent
+{
+    public void Parse(GameClient session, ClientPacket packet)
+    {
+        if (session == null || session.GetHabbo() == null)
+            return;
+        var roomId = packet.PopInt();
+        var password = packet.PopString();
+        session.GetHabbo().PrepareRoom(roomId, password);
     }
 }

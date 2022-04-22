@@ -1,16 +1,15 @@
 ﻿using Plus.HabboHotel.Items;
 
-namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
+namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
+
+internal class ObjectRemoveComposer : ServerPacket
 {
-    class ObjectRemoveComposer : ServerPacket
+    public ObjectRemoveComposer(Item item, int userId)
+        : base(ServerPacketHeader.ObjectRemoveMessageComposer)
     {
-        public ObjectRemoveComposer(Item item, int userId)
-            : base(ServerPacketHeader.ObjectRemoveMessageComposer)
-        {
-           WriteString(item.Id.ToString());
-            WriteBoolean(false);
-            WriteInteger(userId);
-            WriteInteger(0);
-        }
+        WriteString(item.Id.ToString());
+        WriteBoolean(false);
+        WriteInteger(userId);
+        WriteInteger(0);
     }
 }

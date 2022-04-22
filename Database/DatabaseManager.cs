@@ -3,53 +3,48 @@ using MySqlConnector;
 using Plus.Core;
 using Plus.Database.Interfaces;
 
-namespace Plus.Database
+namespace Plus.Database;
+
+public sealed class DatabaseManager
 {
-    public sealed class DatabaseManager
+    private readonly string _connectionStr;
+
+    public DatabaseManager(string connectionString)
     {
-        private readonly string _connectionStr;
+        _connectionStr = connectionString;
+    }
 
-        public DatabaseManager(string connectionString)
+    public bool IsConnected()
+    {
+        try
         {
-            _connectionStr = connectionString;
+            var con = new MySqlConnection(_connectionStr);
+            con.Open();
+            var cmd = con.CreateCommand();
+            cmd.CommandText = "SELECT 1+1";
+            cmd.ExecuteNonQuery();
+            cmd.Dispose();
+            con.Close();
         }
-
-        public bool IsConnected()
+        catch (MySqlException)
         {
-            try
-            {
-                var con = new MySqlConnection(_connectionStr);
-                con.Open();
-                var cmd = con.CreateCommand();
-                cmd.CommandText = "SELECT 1+1";
-                cmd.ExecuteNonQuery();
-
-                cmd.Dispose();
-                con.Close();
-            }
-            catch (MySqlException)
-            {
-                return false;
-            }
-
-            return true;
+            return false;
         }
+        return true;
+    }
 
-        public IQueryAdapter GetQueryReactor()
+    public IQueryAdapter GetQueryReactor()
+    {
+        try
         {
-            try
-            {
-                IDatabaseClient dbConnection = new DatabaseConnection(_connectionStr);
-              
-                dbConnection.Connect();
-
-                return dbConnection.GetQueryReactor();
-            }
-            catch (Exception e)
-            {
-                ExceptionLogger.LogException(e);
-                return null;
-            }
+            IDatabaseClient dbConnection = new DatabaseConnection(_connectionStr);
+            dbConnection.Connect();
+            return dbConnection.GetQueryReactor();
+        }
+        catch (Exception e)
+        {
+            ExceptionLogger.LogException(e);
+            return null;
         }
     }
 }

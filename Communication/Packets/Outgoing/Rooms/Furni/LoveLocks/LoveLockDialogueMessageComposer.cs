@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.LoveLocks
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.LoveLocks;
+
+internal class LoveLockDialogueMessageComposer : ServerPacket
 {
-    class LoveLockDialogueMessageComposer : ServerPacket
+    public LoveLockDialogueMessageComposer(int itemId)
+        : base(ServerPacketHeader.LoveLockDialogueMessageComposer)
     {
-        public LoveLockDialogueMessageComposer(int itemId)
-            : base(ServerPacketHeader.LoveLockDialogueMessageComposer)
-        {
-            WriteInteger(itemId);
-            WriteBoolean(true);
-        }
+        WriteInteger(itemId);
+        WriteBoolean(true);
     }
 }

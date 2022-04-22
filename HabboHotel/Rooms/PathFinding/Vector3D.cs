@@ -1,41 +1,21 @@
-﻿namespace Plus.HabboHotel.Rooms.PathFinding
+﻿namespace Plus.HabboHotel.Rooms.PathFinding;
+
+internal sealed class Vector3D
 {
-    sealed class Vector3D
+    public Vector3D() { }
+
+    public Vector3D(int x, int y, double z)
     {
-        private int _x;
-        private int _y;
-        private double _z;
-
-        public int X
-        {
-            get => _x;
-            set => _x = value;
-        }
-
-        public int Y
-        {
-            get => _y;
-            set => _y = value;
-        }
-
-        public double Z
-        {
-            get => _z;
-            set => _z = value;
-        }
-
-        public Vector3D() { }
-
-        public Vector3D(int x, int y, double z)
-        {
-            this._x = x;
-            this._y = y;
-            this._z = z;
-        }
-
-        public Vector2D ToVector2D()
-        {
-            return new Vector2D(_x, _y);
-        }
+        X = x;
+        Y = y;
+        Z = z;
     }
+
+    public int X { get; set; }
+
+    public int Y { get; set; }
+
+    public double Z { get; set; }
+
+    public Vector2D ToVector2D() => new Vector2D(X, Y);
 }

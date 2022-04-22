@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Sound
+﻿namespace Plus.Communication.Packets.Outgoing.Sound;
+
+internal class TraxSongInfoComposer : ServerPacket
 {
-    class TraxSongInfoComposer : ServerPacket
+    public TraxSongInfoComposer()
+        : base(ServerPacketHeader.TraxSongInfoMessageComposer)
     {
-        public TraxSongInfoComposer()
-            : base(ServerPacketHeader.TraxSongInfoMessageComposer)
-        {
-            WriteInteger(0);//Count
-        }
+        WriteInteger(0); //Count
     }
 }

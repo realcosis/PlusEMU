@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Handshake
+﻿namespace Plus.Communication.Packets.Outgoing.Handshake;
+
+public class SecretKeyComposer : ServerPacket
 {
-    public class SecretKeyComposer : ServerPacket
+    public SecretKeyComposer(string publicKey)
+        : base(ServerPacketHeader.SecretKeyMessageComposer)
     {
-        public SecretKeyComposer(string publicKey)
-            : base(ServerPacketHeader.SecretKeyMessageComposer)
-        {
-           WriteString(publicKey);
-        }
+        WriteString(publicKey);
     }
 }

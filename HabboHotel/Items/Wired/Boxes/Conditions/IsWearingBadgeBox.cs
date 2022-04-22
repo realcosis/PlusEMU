@@ -1,62 +1,53 @@
-﻿using System;
+﻿using System.Collections.Concurrent;
 using System.Linq;
-using System.Collections.Concurrent;
-
 using Plus.Communication.Packets.Incoming;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 
-namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
+namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions;
+
+internal class IsWearingBadgeBox : IWiredItem
 {
-    class IsWearingBadgeBox : IWiredItem
+    public IsWearingBadgeBox(Room instance, Item item)
     {
-        public Room Instance { get; set; }
-        public Item Item { get; set; }
-        public WiredBoxType Type => WiredBoxType.ConditionIsWearingBadge;
-        public ConcurrentDictionary<int, Item> SetItems { get; set; }
-        public string StringData { get; set; }
-        public bool BoolData { get; set; }
-        public string ItemsData { get; set; }
+        Instance = instance;
+        Item = item;
+        SetItems = new ConcurrentDictionary<int, Item>();
+    }
 
-        public IsWearingBadgeBox(Room instance, Item item)
-        {
-            this.Instance = instance;
-            this.Item = item;
-            SetItems = new ConcurrentDictionary<int, Item>();
-        }
+    public Room Instance { get; set; }
+    public Item Item { get; set; }
+    public WiredBoxType Type => WiredBoxType.ConditionIsWearingBadge;
+    public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public string StringData { get; set; }
+    public bool BoolData { get; set; }
+    public string ItemsData { get; set; }
 
-        public void HandleSave(ClientPacket packet)
-        {
-            var unknown = packet.PopInt();
-            var badgeCode = packet.PopString();
+    public void HandleSave(ClientPacket packet)
+    {
+        var unknown = packet.PopInt();
+        var badgeCode = packet.PopString();
+        StringData = badgeCode;
+    }
 
-            StringData = badgeCode;
-        }
-
-        public bool Execute(params object[] @params)
-        {
-            if (@params.Length == 0)
-                return false;
-
-            if (String.IsNullOrEmpty(StringData))
-                return false;
-
-            var player = (Habbo)@params[0];
-            if (player == null)
-                return false;
-
-            if (!player.GetBadgeComponent().GetBadges().Contains(player.GetBadgeComponent().GetBadge(StringData)))
-                return false;
-
-            foreach (var badge in player.GetBadgeComponent().GetBadges().ToList())
-            {
-                if (badge.Slot <= 0)
-                    continue;
-
-                if (badge.Code == StringData)
-                    return true;
-            }
+    public bool Execute(params object[] @params)
+    {
+        if (@params.Length == 0)
             return false;
+        if (string.IsNullOrEmpty(StringData))
+            return false;
+        var player = (Habbo)@params[0];
+        if (player == null)
+            return false;
+        if (!player.GetBadgeComponent().GetBadges().Contains(player.GetBadgeComponent().GetBadge(StringData)))
+            return false;
+        foreach (var badge in player.GetBadgeComponent().GetBadges().ToList())
+        {
+            if (badge.Slot <= 0)
+                continue;
+            if (badge.Code == StringData)
+                return true;
         }
+        return false;
     }
 }

@@ -1,10 +1,6 @@
-﻿namespace Plus.Utilities
+﻿namespace Plus.Utilities;
+
+public static class TextHandling
 {
-    public static class TextHandling
-    {
-        public static string GetString(double k)
-        {
-            return k.ToString(PlusEnvironment.CultureInfo);
-        }
-    }
+    public static string GetString(double k) => k.ToString(PlusEnvironment.CultureInfo);
 }

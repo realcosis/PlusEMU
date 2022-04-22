@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Users
+﻿namespace Plus.Communication.Packets.Outgoing.Users;
+
+internal class RespectNotificationComposer : ServerPacket
 {
-    class RespectNotificationComposer : ServerPacket
+    public RespectNotificationComposer(int userId, int respect)
+        : base(ServerPacketHeader.RespectNotificationMessageComposer)
     {
-        public RespectNotificationComposer(int userId, int respect)
-            : base(ServerPacketHeader.RespectNotificationMessageComposer)
-        {
-            WriteInteger(userId);
-            WriteInteger(respect);
-        }
+        WriteInteger(userId);
+        WriteInteger(respect);
     }
 }

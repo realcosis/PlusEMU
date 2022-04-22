@@ -1,58 +1,26 @@
-﻿namespace Plus.HabboHotel.Users.Inventory.Bots
+﻿namespace Plus.HabboHotel.Users.Inventory.Bots;
+
+public class Bot
 {
-    public class Bot
+    public Bot(int id, int ownerId, string name, string motto, string figure, string gender)
     {
-        private int _id;
-        private int _ownerId;
-        private string _name;
-        private string _motto;
-        private string _figure;
-        private string _gender;
-
-        public Bot(int id, int ownerId, string name, string motto, string figure, string gender)
-        {
-            this.Id = id;
-            this.OwnerId = ownerId;
-            this.Name = name;
-            this.Motto = motto;
-            this.Figure = figure;
-            this.Gender = gender;
-        }
-
-        public int Id
-        {
-            get => _id;
-            set => _id = value;
-        }
-
-        public int OwnerId
-        {
-            get => _ownerId;
-            set => _ownerId = value;
-        }
-
-        public string Name
-        {
-            get => _name;
-            set => _name = value;
-        }
-
-        public string Motto
-        {
-            get => _motto;
-            set => _motto = value;
-        }
-
-        public string Figure
-        {
-            get => _figure;
-            set => _figure = value;
-        }
-
-        public string Gender
-        {
-            get => _gender;
-            set => _gender = value;
-        }
+        Id = id;
+        OwnerId = ownerId;
+        Name = name;
+        Motto = motto;
+        Figure = figure;
+        Gender = gender;
     }
+
+    public int Id { get; set; }
+
+    public int OwnerId { get; set; }
+
+    public string Name { get; set; }
+
+    public string Motto { get; set; }
+
+    public string Figure { get; set; }
+
+    public string Gender { get; set; }
 }

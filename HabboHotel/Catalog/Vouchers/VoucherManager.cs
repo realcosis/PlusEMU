@@ -1,42 +1,38 @@
 ﻿using System;
-using System.Data;
 using System.Collections.Generic;
+using System.Data;
 
-namespace Plus.HabboHotel.Catalog.Vouchers
+namespace Plus.HabboHotel.Catalog.Vouchers;
+
+public class VoucherManager
 {
-    public class VoucherManager
+    private readonly Dictionary<string, Voucher> _vouchers;
+
+    public VoucherManager()
     {
-        private readonly Dictionary<string, Voucher> _vouchers;
+        _vouchers = new Dictionary<string, Voucher>();
+    }
 
-        public VoucherManager()
+    public void Init()
+    {
+        if (_vouchers.Count > 0)
+            _vouchers.Clear();
+        DataTable data = null;
+        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
-            _vouchers = new Dictionary<string, Voucher>();
+            dbClient.SetQuery("SELECT `voucher`,`type`,`value`,`current_uses`,`max_uses` FROM `catalog_vouchers` WHERE `enabled` = '1'");
+            data = dbClient.GetTable();
         }
-
-        public void Init()
+        if (data != null)
         {
-            if (_vouchers.Count > 0)
-                _vouchers.Clear();
-
-            DataTable data = null;
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            foreach (DataRow row in data.Rows)
             {
-                dbClient.SetQuery("SELECT `voucher`,`type`,`value`,`current_uses`,`max_uses` FROM `catalog_vouchers` WHERE `enabled` = '1'");
-                data = dbClient.GetTable();
+                _vouchers.Add(Convert.ToString(row["voucher"]),
+                    new Voucher(Convert.ToString(row["voucher"]), Convert.ToString(row["type"]), Convert.ToInt32(row["value"]), Convert.ToInt32(row["current_uses"]),
+                        Convert.ToInt32(row["max_uses"])));
             }
-
-            if (data != null)
-            {
-                foreach (DataRow row in data.Rows)
-                {
-                    _vouchers.Add(Convert.ToString(row["voucher"]), new Voucher(Convert.ToString(row["voucher"]), Convert.ToString(row["type"]), Convert.ToInt32(row["value"]), Convert.ToInt32(row["current_uses"]), Convert.ToInt32(row["max_uses"])));
-                }
-            }
-        }
-
-        public bool TryGetVoucher(string code, out Voucher voucher)
-        {
-            return _vouchers.TryGetValue(code, out voucher);
         }
     }
+
+    public bool TryGetVoucher(string code, out Voucher voucher) => _vouchers.TryGetValue(code, out voucher);
 }

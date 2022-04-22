@@ -1,19 +1,18 @@
-﻿namespace Plus.Core.FigureData.Types
+﻿namespace Plus.Core.FigureData.Types;
+
+public enum SetType
 {
-    public enum SetType
-    {
-        Hr,
-        Hd,
-        Ch,
-        Lg,
-        Sh,
-        Ha,
-        He,
-        Ea,
-        Fa,
-        Ca,
-        Wa,
-        Cc,
-        Cp
-    }
+    Hr,
+    Hd,
+    Ch,
+    Lg,
+    Sh,
+    Ha,
+    He,
+    Ea,
+    Fa,
+    Ca,
+    Wa,
+    Cc,
+    Cp
 }

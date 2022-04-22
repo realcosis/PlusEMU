@@ -1,13 +1,12 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
+
+internal class FloorHeightMapComposer : ServerPacket
 {
-    class FloorHeightMapComposer : ServerPacket
+    public FloorHeightMapComposer(string map, int wallHeight)
+        : base(ServerPacketHeader.FloorHeightMapMessageComposer)
     {
-        public FloorHeightMapComposer(string map, int wallHeight)
-            : base(ServerPacketHeader.FloorHeightMapMessageComposer)
-        {
-            WriteBoolean(false);
-            WriteInteger(wallHeight);
-           WriteString(map);
-        }
+        WriteBoolean(false);
+        WriteInteger(wallHeight);
+        WriteString(map);
     }
 }

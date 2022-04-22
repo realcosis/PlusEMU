@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Handshake
+﻿namespace Plus.Communication.Packets.Outgoing.Handshake;
+
+public class InitCryptoComposer : ServerPacket
 {
-    public class InitCryptoComposer : ServerPacket
+    public InitCryptoComposer(string prime, string generator)
+        : base(ServerPacketHeader.InitCryptoMessageComposer)
     {
-        public InitCryptoComposer(string prime, string generator)
-            : base(ServerPacketHeader.InitCryptoMessageComposer)
-        {
-           WriteString(prime);
-           WriteString(generator);
-        }
+        WriteString(prime);
+        WriteString(generator);
     }
 }

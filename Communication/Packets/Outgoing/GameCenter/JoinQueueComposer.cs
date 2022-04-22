@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.GameCenter
+﻿namespace Plus.Communication.Packets.Outgoing.GameCenter;
+
+internal class JoinQueueComposer : ServerPacket
 {
-    class JoinQueueComposer : ServerPacket
+    public JoinQueueComposer(int gameId)
+        : base(ServerPacketHeader.JoinQueueMessageComposer)
     {
-        public JoinQueueComposer(int gameId)
-            : base(ServerPacketHeader.JoinQueueMessageComposer)
-        {
-            WriteInteger(gameId);
-        }
+        WriteInteger(gameId);
     }
 }

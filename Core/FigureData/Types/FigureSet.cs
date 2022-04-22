@@ -1,19 +1,17 @@
 ﻿using System.Collections.Generic;
 
-namespace Plus.Core.FigureData.Types
+namespace Plus.Core.FigureData.Types;
+
+internal class FigureSet
 {
-    class FigureSet
+    public FigureSet(SetType type, int palletId)
     {
-        public SetType Type { get; set; }
-        public int PalletId { get; set; }
-        public Dictionary<int, Set> Sets { get; set; }
-
-        public FigureSet(SetType type, int palletId)
-        {
-            Type = type;
-            PalletId = palletId;
-
-            Sets = new Dictionary<int, Set>();
-        }
+        Type = type;
+        PalletId = palletId;
+        Sets = new Dictionary<int, Set>();
     }
+
+    public SetType Type { get; set; }
+    public int PalletId { get; set; }
+    public Dictionary<int, Set> Sets { get; set; }
 }

@@ -1,15 +1,14 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Users
+﻿namespace Plus.Communication.Packets.Outgoing.Users;
+
+internal class UserTagsComposer : ServerPacket
 {
-    class UserTagsComposer : ServerPacket
+    public UserTagsComposer(int userId)
+        : base(ServerPacketHeader.UserTagsMessageComposer)
     {
-        public UserTagsComposer(int userId)
-            : base(ServerPacketHeader.UserTagsMessageComposer)
+        WriteInteger(userId);
+        WriteInteger(0); //Count of the tags.
         {
-            WriteInteger(userId);
-            WriteInteger(0);//Count of the tags.
-            {
-                //Append a string.
-            }
+            //Append a string.
         }
     }
 }

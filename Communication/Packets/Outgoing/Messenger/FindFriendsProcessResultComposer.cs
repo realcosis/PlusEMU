@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Messenger
+﻿namespace Plus.Communication.Packets.Outgoing.Messenger;
+
+internal class FindFriendsProcessResultComposer : ServerPacket
 {
-    class FindFriendsProcessResultComposer : ServerPacket
+    public FindFriendsProcessResultComposer(bool found)
+        : base(ServerPacketHeader.FindFriendsProcessResultMessageComposer)
     {
-        public FindFriendsProcessResultComposer(bool found)
-            : base(ServerPacketHeader.FindFriendsProcessResultMessageComposer)
-        {
-            WriteBoolean(found);
-        }
+        WriteBoolean(found);
     }
 }

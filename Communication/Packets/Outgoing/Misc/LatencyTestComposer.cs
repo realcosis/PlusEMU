@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Misc
+﻿namespace Plus.Communication.Packets.Outgoing.Misc;
+
+internal class LatencyTestComposer : ServerPacket
 {
-    class LatencyTestComposer : ServerPacket
+    public LatencyTestComposer(int testResponce)
+        : base(ServerPacketHeader.LatencyResponseMessageComposer)
     {
-        public LatencyTestComposer(int testResponce)
-            : base(ServerPacketHeader.LatencyResponseMessageComposer)
-        {
-            WriteInteger(testResponce);
-        }
+        WriteInteger(testResponce);
     }
 }

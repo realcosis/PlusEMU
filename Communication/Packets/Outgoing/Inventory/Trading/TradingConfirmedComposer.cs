@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Trading
+﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Trading;
+
+internal class TradingConfirmedComposer : ServerPacket
 {
-    class TradingConfirmedComposer : ServerPacket
+    public TradingConfirmedComposer(int userId, bool confirmed)
+        : base(ServerPacketHeader.TradingConfirmedMessageComposer)
     {
-        public TradingConfirmedComposer(int userId, bool confirmed)
-            : base(ServerPacketHeader.TradingConfirmedMessageComposer)
-        {
-            WriteInteger(userId);
-            WriteInteger(confirmed ? 1 : 0);
-        }
+        WriteInteger(userId);
+        WriteInteger(confirmed ? 1 : 0);
     }
 }

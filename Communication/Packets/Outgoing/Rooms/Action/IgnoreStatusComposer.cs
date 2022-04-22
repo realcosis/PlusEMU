@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Action
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Action;
+
+internal class IgnoreStatusComposer : ServerPacket
 {
-    class IgnoreStatusComposer : ServerPacket
+    public IgnoreStatusComposer(int status, string username)
+        : base(ServerPacketHeader.IgnoreStatusMessageComposer)
     {
-        public IgnoreStatusComposer(int status, string username)
-            : base(ServerPacketHeader.IgnoreStatusMessageComposer)
-        {
-            WriteInteger(status);
-           WriteString(username);
-        }
+        WriteInteger(status);
+        WriteString(username);
     }
 }

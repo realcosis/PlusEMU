@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Navigator
+﻿namespace Plus.Communication.Packets.Outgoing.Navigator;
+
+internal class NavigatorSettingsComposer : ServerPacket
 {
-    class NavigatorSettingsComposer : ServerPacket
+    public NavigatorSettingsComposer(int homeroom)
+        : base(ServerPacketHeader.NavigatorSettingsMessageComposer)
     {
-        public NavigatorSettingsComposer(int homeroom)
-            : base(ServerPacketHeader.NavigatorSettingsMessageComposer)
-        {
-            WriteInteger(homeroom);
-            WriteInteger(homeroom);
-        }
+        WriteInteger(homeroom);
+        WriteInteger(homeroom);
     }
 }

@@ -1,9 +1,8 @@
-﻿namespace Plus.HabboHotel.Navigator
+﻿namespace Plus.HabboHotel.Navigator;
+
+public enum NavigatorSearchAllowance
 {
-    public enum NavigatorSearchAllowance
-    {
-        Nothing,
-        ShowMore,
-        GoBack
-    }
+    Nothing,
+    ShowMore,
+    GoBack
 }

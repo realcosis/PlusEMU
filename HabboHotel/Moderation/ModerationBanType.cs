@@ -1,9 +1,8 @@
-﻿namespace Plus.HabboHotel.Moderation
+﻿namespace Plus.HabboHotel.Moderation;
+
+public enum ModerationBanType
 {
-    public enum ModerationBanType
-    {
-        Ip,
-        Machine,
-        Username
-    }
+    Ip,
+    Machine,
+    Username
 }

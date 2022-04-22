@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Trading
+﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Trading;
+
+internal class TradingErrorComposer : ServerPacket
 {
-    class TradingErrorComposer : ServerPacket
+    public TradingErrorComposer(int error, string username)
+        : base(ServerPacketHeader.TradingErrorMessageComposer)
     {
-        public TradingErrorComposer(int error, string username)
-            : base(ServerPacketHeader.TradingErrorMessageComposer)
-        {
-            WriteInteger(error);
-           WriteString(username);
-        }
+        WriteInteger(error);
+        WriteString(username);
     }
 }

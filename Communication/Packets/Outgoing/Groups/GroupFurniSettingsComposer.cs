@@ -1,18 +1,17 @@
 ﻿using Plus.HabboHotel.Groups;
 
-namespace Plus.Communication.Packets.Outgoing.Groups
+namespace Plus.Communication.Packets.Outgoing.Groups;
+
+internal class GroupFurniSettingsComposer : ServerPacket
 {
-    class GroupFurniSettingsComposer : ServerPacket
+    public GroupFurniSettingsComposer(Group group, int itemId, int userId)
+        : base(ServerPacketHeader.GroupFurniSettingsMessageComposer)
     {
-        public GroupFurniSettingsComposer(Group @group, int itemId, int userId)
-            : base(ServerPacketHeader.GroupFurniSettingsMessageComposer)
-        {
-            WriteInteger(itemId);//Item Id
-            WriteInteger(@group.Id);//Group Id?
-            WriteString(@group.Name);
-            WriteInteger(@group.RoomId);//RoomId
-            WriteBoolean(@group.IsMember(userId));//Member?
-            WriteBoolean(@group.ForumEnabled);//Has a forum
-        }
+        WriteInteger(itemId); //Item Id
+        WriteInteger(group.Id); //Group Id?
+        WriteString(group.Name);
+        WriteInteger(group.RoomId); //RoomId
+        WriteBoolean(group.IsMember(userId)); //Member?
+        WriteBoolean(group.ForumEnabled); //Has a forum
     }
 }

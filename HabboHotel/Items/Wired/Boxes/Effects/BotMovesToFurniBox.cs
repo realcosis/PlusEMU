@@ -1,97 +1,77 @@
 ﻿using System;
-using System.Linq;
-using System.Drawing;
 using System.Collections.Concurrent;
-
-using Plus.HabboHotel.Rooms;
+using System.Drawing;
+using System.Linq;
 using Plus.Communication.Packets.Incoming;
+using Plus.HabboHotel.Rooms;
 
-namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
+namespace Plus.HabboHotel.Items.Wired.Boxes.Effects;
+
+internal class BotMovesToFurniBox : IWiredItem
 {
-    class BotMovesToFurniBox : IWiredItem
+    public BotMovesToFurniBox(Room instance, Item item)
     {
-        public Room Instance { get; set; }
-        public Item Item { get; set; }
-        public WiredBoxType Type => WiredBoxType.EffectBotMovesToFurniBox;
-        public ConcurrentDictionary<int, Item> SetItems { get; set; }
-        public string StringData { get; set; }
-        public bool BoolData { get; set; }
-        public string ItemsData { get; set; }
+        Instance = instance;
+        Item = item;
+        SetItems = new ConcurrentDictionary<int, Item>();
+    }
 
-        public BotMovesToFurniBox(Room instance, Item item)
+    public Room Instance { get; set; }
+    public Item Item { get; set; }
+    public WiredBoxType Type => WiredBoxType.EffectBotMovesToFurniBox;
+    public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public string StringData { get; set; }
+    public bool BoolData { get; set; }
+    public string ItemsData { get; set; }
+
+    public void HandleSave(ClientPacket packet)
+    {
+        var unknown = packet.PopInt();
+        var botName = packet.PopString();
+        if (SetItems.Count > 0)
+            SetItems.Clear();
+        var furniCount = packet.PopInt();
+        for (var i = 0; i < furniCount; i++)
         {
-            this.Instance = instance;
-            this.Item = item;
-            SetItems = new ConcurrentDictionary<int, Item>();
+            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+            if (selectedItem != null)
+                SetItems.TryAdd(selectedItem.Id, selectedItem);
         }
+        StringData = botName;
+    }
 
-        public void HandleSave(ClientPacket packet)
+    public bool Execute(params object[] @params)
+    {
+        if (@params == null || @params.Length == 0 || string.IsNullOrEmpty(StringData))
+            return false;
+        var user = Instance.GetRoomUserManager().GetBotByName(StringData);
+        if (user == null)
+            return false;
+        var rand = new Random();
+        var items = SetItems.Values.ToList();
+        items = items.OrderBy(x => rand.Next()).ToList();
+        if (items.Count == 0)
+            return false;
+        var item = items.First();
+        if (item == null)
+            return false;
+        if (!Instance.GetRoomItemHandler().GetFloor.Contains(item))
         {
-            var unknown = packet.PopInt();
-            var botName = packet.PopString();
-
-            if (SetItems.Count > 0)
-                SetItems.Clear();
-
-            var furniCount = packet.PopInt();
-            for (var i = 0; i < furniCount; i++)
-            {
-                var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
-                if (selectedItem != null)
-                    SetItems.TryAdd(selectedItem.Id, selectedItem);
-            }
-
-            StringData = botName;
-        }
-
-        public bool Execute(params object[] @params)
-        {
-            if (@params == null || @params.Length == 0 || String.IsNullOrEmpty(StringData))
+            SetItems.TryRemove(item.Id, out item);
+            if (items.Contains(item))
+                items.Remove(item);
+            if (SetItems.Count == 0 || items.Count == 0)
                 return false;
-
-            var user = Instance.GetRoomUserManager().GetBotByName(StringData);
-            if (user == null)
-                return false;
-
-            var rand = new Random();
-            var items = SetItems.Values.ToList();
-            items = items.OrderBy(x => rand.Next()).ToList();
-
-            if (items.Count == 0)
-                return false;
-
-            var item = items.First();
+            item = items.First();
             if (item == null)
                 return false;
-
-            if (!Instance.GetRoomItemHandler().GetFloor.Contains(item))
-            {
-                SetItems.TryRemove(item.Id, out item);
-
-                if (items.Contains(item))
-                    items.Remove(item);
-
-                if (SetItems.Count == 0 || items.Count == 0)
-                    return false;
-
-                item = items.First();
-                if (item == null)
-                    return false;
-            }
-
-            if (Instance.GetGameMap() == null)
-                return false;
-
-            if (user.IsWalking)
-            {
-                user.ClearMovement(true);
-            }
-
-            user.BotData.ForcedMovement = true;
-            user.BotData.TargetCoordinate = new Point(item.GetX, item.GetY);
-            user.MoveTo(item.GetX, item.GetY);
-
-            return true;
         }
+        if (Instance.GetGameMap() == null)
+            return false;
+        if (user.IsWalking) user.ClearMovement(true);
+        user.BotData.ForcedMovement = true;
+        user.BotData.TargetCoordinate = new Point(item.GetX, item.GetY);
+        user.MoveTo(item.GetX, item.GetY);
+        return true;
     }
 }

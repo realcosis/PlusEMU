@@ -2,15 +2,13 @@
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
-namespace Plus.Communication.Packets.Incoming.Catalog
-{
-    class GetCatalogRoomPromotionEvent : IPacketEvent
-    {
-        public void Parse(GameClient session, ClientPacket packet)
-        {
-            var rooms = RoomFactory.GetRoomsDataByOwnerSortByName(session.GetHabbo().Id);
+namespace Plus.Communication.Packets.Incoming.Catalog;
 
-            session.SendPacket(new GetCatalogRoomPromotionComposer(rooms));
-        }
+internal class GetCatalogRoomPromotionEvent : IPacketEvent
+{
+    public void Parse(GameClient session, ClientPacket packet)
+    {
+        var rooms = RoomFactory.GetRoomsDataByOwnerSortByName(session.GetHabbo().Id);
+        session.SendPacket(new GetCatalogRoomPromotionComposer(rooms));
     }
 }

@@ -1,16 +1,14 @@
-﻿namespace Plus.Communication.Rcon.Commands.Hotel
+﻿namespace Plus.Communication.Rcon.Commands.Hotel;
+
+internal class ReloadItemsCommand : IRconCommand
 {
-    class ReloadItemsCommand : IRconCommand
+    public string Description => "This command is used to reload the game items.";
+
+    public string Parameters => "";
+
+    public bool TryExecute(string[] parameters)
     {
-        public string Description => "This command is used to reload the game items.";
-
-        public string Parameters => "";
-
-        public bool TryExecute(string[] parameters)
-        {
-            PlusEnvironment.GetGame().GetItemManager().Init();
-
-            return true;
-        }
+        PlusEnvironment.GetGame().GetItemManager().Init();
+        return true;
     }
 }

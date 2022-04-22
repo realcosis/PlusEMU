@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Settings
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Settings;
+
+internal class RoomMuteSettingsComposer : ServerPacket
 {
-    class RoomMuteSettingsComposer : ServerPacket
+    public RoomMuteSettingsComposer(bool status)
+        : base(ServerPacketHeader.RoomMuteSettingsMessageComposer)
     {
-        public RoomMuteSettingsComposer(bool status)
-            : base(ServerPacketHeader.RoomMuteSettingsMessageComposer)
-        {
-            WriteBoolean(status);
-        }
+        WriteBoolean(status);
     }
 }

@@ -1,17 +1,15 @@
 ﻿using System.Collections.Generic;
 
-namespace Plus.Core.FigureData.Types
+namespace Plus.Core.FigureData.Types;
+
+public class Palette
 {
-    public class Palette
+    public Palette(int id)
     {
-        public int Id { get; set; }
-        public Dictionary<int, Color> Colors { get; set; }
-
-        public Palette(int id)
-        {
-            Id = id;
-            Colors = new Dictionary<int, Color>();
-        }
-
+        Id = id;
+        Colors = new Dictionary<int, Color>();
     }
+
+    public int Id { get; set; }
+    public Dictionary<int, Color> Colors { get; set; }
 }

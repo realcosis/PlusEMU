@@ -1,29 +1,27 @@
 ﻿using System.Linq;
+using Plus.HabboHotel.GameClients;
 
-namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun
+namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun;
+
+internal class AllAroundMeCommand : IChatCommand
 {
-    class AllAroundMeCommand : IChatCommand
+    public string PermissionRequired => "command_allaroundme";
+
+    public string Parameters => "";
+
+    public string Description => "Need some attention? Pull all of the users to you.";
+
+    public void Execute(GameClient session, Room room, string[] @params)
     {
-        public string PermissionRequired => "command_allaroundme";
-
-        public string Parameters => "";
-
-        public string Description => "Need some attention? Pull all of the users to you.";
-
-        public void Execute(GameClients.GameClient session, Room room, string[] @params)
+        var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+        if (user == null)
+            return;
+        var users = room.GetRoomUserManager().GetRoomUsers();
+        foreach (var u in users.ToList())
         {
-            var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
-            if (user == null)
-                return;
-
-            var users = room.GetRoomUserManager().GetRoomUsers();
-            foreach (var u in users.ToList())
-            {
-                if (u == null || session.GetHabbo().Id == u.UserId)
-                    continue;
-
-                u.MoveTo(user.X, user.Y, true);
-            }
+            if (u == null || session.GetHabbo().Id == u.UserId)
+                continue;
+            u.MoveTo(user.X, user.Y, true);
         }
     }
 }

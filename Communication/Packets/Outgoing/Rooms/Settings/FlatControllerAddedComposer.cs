@@ -1,13 +1,12 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Settings
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Settings;
+
+internal class FlatControllerAddedComposer : ServerPacket
 {
-    class FlatControllerAddedComposer : ServerPacket
+    public FlatControllerAddedComposer(int roomId, int userId, string username)
+        : base(ServerPacketHeader.FlatControllerAddedMessageComposer)
     {
-        public FlatControllerAddedComposer(int roomId, int userId, string username)
-            : base(ServerPacketHeader.FlatControllerAddedMessageComposer)
-        {
-            WriteInteger(roomId);
-            WriteInteger(userId);
-           WriteString(username);
-        }
+        WriteInteger(roomId);
+        WriteInteger(userId);
+        WriteString(username);
     }
 }

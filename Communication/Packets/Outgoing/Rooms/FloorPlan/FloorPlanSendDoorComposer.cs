@@ -1,13 +1,12 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.FloorPlan
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.FloorPlan;
+
+internal class FloorPlanSendDoorComposer : ServerPacket
 {
-    class FloorPlanSendDoorComposer : ServerPacket
+    public FloorPlanSendDoorComposer(int doorX, int doorY, int doorDirection)
+        : base(ServerPacketHeader.FloorPlanSendDoorMessageComposer)
     {
-        public FloorPlanSendDoorComposer(int doorX, int doorY, int doorDirection)
-            : base(ServerPacketHeader.FloorPlanSendDoorMessageComposer)
-        {
-            WriteInteger(doorX);
-            WriteInteger(doorY);
-            WriteInteger(doorDirection);
-        }
+        WriteInteger(doorX);
+        WriteInteger(doorY);
+        WriteInteger(doorDirection);
     }
 }

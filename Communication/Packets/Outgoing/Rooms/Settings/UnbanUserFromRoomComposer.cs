@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Settings
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Settings;
+
+internal class UnbanUserFromRoomComposer : ServerPacket
 {
-    class UnbanUserFromRoomComposer : ServerPacket
+    public UnbanUserFromRoomComposer(int roomId, int userId)
+        : base(ServerPacketHeader.UnbanUserFromRoomMessageComposer)
     {
-        public UnbanUserFromRoomComposer(int roomId, int userId)
-            : base(ServerPacketHeader.UnbanUserFromRoomMessageComposer)
-        {
-            WriteInteger(roomId);
-            WriteInteger(userId);
-        }
+        WriteInteger(roomId);
+        WriteInteger(userId);
     }
 }

@@ -1,8 +1,7 @@
-﻿namespace Plus.HabboHotel.Navigator
+﻿namespace Plus.HabboHotel.Navigator;
+
+public enum NavigatorViewMode
 {
-    public enum NavigatorViewMode
-    {
-        Regular,
-        Thumbnail
-    }
+    Regular,
+    Thumbnail
 }

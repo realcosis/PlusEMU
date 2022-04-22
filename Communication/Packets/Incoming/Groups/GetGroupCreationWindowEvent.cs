@@ -1,20 +1,17 @@
 ﻿using System.Linq;
-using Plus.HabboHotel.Rooms;
 using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Rooms;
 
-namespace Plus.Communication.Packets.Incoming.Groups
+namespace Plus.Communication.Packets.Incoming.Groups;
+
+internal class GetGroupCreationWindowEvent : IPacketEvent
 {
-    class GetGroupCreationWindowEvent : IPacketEvent
+    public void Parse(GameClient session, ClientPacket packet)
     {
-        public void Parse(GameClient session, ClientPacket packet)
-        {
-            if (session == null)
-                return;
-
-            var rooms = RoomFactory.GetRoomsDataByOwnerSortByName(session.GetHabbo().Id).Where(x => x.Group == null).ToList();
-
-            session.SendPacket(new GroupCreationWindowComposer(rooms));
-        }
+        if (session == null)
+            return;
+        var rooms = RoomFactory.GetRoomsDataByOwnerSortByName(session.GetHabbo().Id).Where(x => x.Group == null).ToList();
+        session.SendPacket(new GroupCreationWindowComposer(rooms));
     }
 }

@@ -1,63 +1,52 @@
 ﻿using System;
-
 using Plus.HabboHotel.Users;
 
-namespace Plus.HabboHotel.Rooms.Chat.Logs
+namespace Plus.HabboHotel.Rooms.Chat.Logs;
+
+public sealed class ChatlogEntry
 {
-    public sealed class ChatlogEntry
+    private readonly WeakReference _playerReference;
+    private readonly WeakReference _roomReference;
+
+    public ChatlogEntry(int playerId, int roomId, string message, double timestamp, Habbo player = null, RoomData instance = null)
     {
-        private int _playerId;
-        private int _roomId;
-        private string _message;
-        private double _timestamp;
+        PlayerId = playerId;
+        RoomId = roomId;
+        Message = message;
+        Timestamp = timestamp;
+        if (player != null)
+            _playerReference = new WeakReference(player);
+        if (instance != null)
+            _roomReference = new WeakReference(instance);
+    }
 
-        private WeakReference _playerReference;
-        private WeakReference _roomReference;
+    public int PlayerId { get; }
 
-        public ChatlogEntry(int playerId, int roomId, string message, double timestamp, Habbo player = null, RoomData instance = null)
+    public int RoomId { get; }
+
+    public string Message { get; }
+
+    public double Timestamp { get; }
+
+    public Habbo PlayerNullable()
+    {
+        if (_playerReference.IsAlive)
         {
-            _playerId = playerId;
-            _roomId = roomId;
-            _message = message;
-            _timestamp = timestamp;
-
-            if (player != null)
-                _playerReference = new WeakReference(player);
-
-            if (instance != null)
-                _roomReference = new WeakReference(instance);
+            var playerObj = (Habbo)_playerReference.Target;
+            return playerObj;
         }
+        return null;
+    }
 
-        public int PlayerId => _playerId;
-
-        public int RoomId => _roomId;
-
-        public string Message => _message;
-
-        public double Timestamp => _timestamp;
-
-        public Habbo PlayerNullable()
+    public Room RoomNullable()
+    {
+        if (_roomReference.IsAlive)
         {
-            if (_playerReference.IsAlive)
-            {
-                var playerObj = (Habbo)_playerReference.Target;
-
-                return playerObj;
-            }
-
-            return null;
+            var roomObj = (Room)_roomReference.Target;
+            if (roomObj.MDisposed)
+                return null;
+            return roomObj;
         }
-
-        public Room RoomNullable()
-        {
-            if (_roomReference.IsAlive)
-            {
-                var roomObj = (Room)_roomReference.Target;
-                if (roomObj.MDisposed)
-                    return null;
-                return roomObj;
-            }
-            return null;
-        }
+        return null;
     }
 }

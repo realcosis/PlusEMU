@@ -1,19 +1,16 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-
-using Plus.HabboHotel.Users.Messenger;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Plus.Communication.Packets.Outgoing.Messenger;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Users.Messenger;
 
-namespace Plus.Communication.Packets.Incoming.Messenger
+namespace Plus.Communication.Packets.Incoming.Messenger;
+
+internal class GetBuddyRequestsEvent : IPacketEvent
 {
-    class GetBuddyRequestsEvent : IPacketEvent
+    public void Parse(GameClient session, ClientPacket packet)
     {
-        public void Parse(GameClient session, ClientPacket packet)
-        {
-            ICollection<MessengerRequest> requests = session.GetHabbo().GetMessenger().GetRequests().ToList();
-
-            session.SendPacket(new BuddyRequestsComposer(requests));
-        }
+        ICollection<MessengerRequest> requests = session.GetHabbo().GetMessenger().GetRequests().ToList();
+        session.SendPacket(new BuddyRequestsComposer(requests));
     }
 }

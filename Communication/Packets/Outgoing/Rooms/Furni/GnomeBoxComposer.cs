@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Furni
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Furni;
+
+internal class GnomeBoxComposer : ServerPacket
 {
-    class GnomeBoxComposer : ServerPacket
+    public GnomeBoxComposer(int itemId)
+        : base(ServerPacketHeader.GnomeBoxMessageComposer)
     {
-        public GnomeBoxComposer(int itemId)
-            : base(ServerPacketHeader.GnomeBoxMessageComposer)
-        {
-            WriteInteger(itemId);
-        }
+        WriteInteger(itemId);
     }
 }

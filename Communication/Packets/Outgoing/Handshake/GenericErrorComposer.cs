@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Handshake
+﻿namespace Plus.Communication.Packets.Outgoing.Handshake;
+
+internal class GenericErrorComposer : ServerPacket
 {
-    class GenericErrorComposer : ServerPacket
+    public GenericErrorComposer(int errorId)
+        : base(ServerPacketHeader.GenericErrorMessageComposer)
     {
-        public GenericErrorComposer(int errorId)
-            : base(ServerPacketHeader.GenericErrorMessageComposer)
-        {
-            WriteInteger(errorId);
-        }
+        WriteInteger(errorId);
     }
 }

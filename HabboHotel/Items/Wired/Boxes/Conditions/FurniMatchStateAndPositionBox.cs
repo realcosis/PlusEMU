@@ -1,119 +1,104 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Concurrent;
-
+using System.Linq;
 using Plus.Communication.Packets.Incoming;
 using Plus.HabboHotel.Rooms;
 
-namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
+namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions;
+
+internal class FurniMatchStateAndPositionBox : IWiredItem
 {
-    internal class FurniMatchStateAndPositionBox : IWiredItem
+    public FurniMatchStateAndPositionBox(Room instance, Item item)
     {
-        public Room Instance { get; set; }
+        Instance = instance;
+        Item = item;
+        SetItems = new ConcurrentDictionary<int, Item>();
+    }
 
-        public Item Item { get; set; }
+    public Room Instance { get; set; }
 
-        public WiredBoxType Type => WiredBoxType.ConditionMatchStateAndPosition;
+    public Item Item { get; set; }
 
-        public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public WiredBoxType Type => WiredBoxType.ConditionMatchStateAndPosition;
 
-        public string StringData { get; set; }
+    public ConcurrentDictionary<int, Item> SetItems { get; set; }
 
-        public bool BoolData { get; set; }
+    public string StringData { get; set; }
 
-        public string ItemsData { get; set; }
+    public bool BoolData { get; set; }
 
-        public FurniMatchStateAndPositionBox(Room instance, Item item)
+    public string ItemsData { get; set; }
+
+    public void HandleSave(ClientPacket packet)
+    {
+        if (SetItems.Count > 0)
+            SetItems.Clear();
+        var unknown = packet.PopInt();
+        var state = packet.PopInt();
+        var direction = packet.PopInt();
+        var placement = packet.PopInt();
+        var unknown2 = packet.PopString();
+        var furniCount = packet.PopInt();
+        for (var i = 0; i < furniCount; i++)
         {
-            this.Instance = instance;
-            this.Item = item;
-            SetItems = new ConcurrentDictionary<int, Item>();
+            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+            if (selectedItem != null)
+                SetItems.TryAdd(selectedItem.Id, selectedItem);
         }
+        StringData = state + ";" + direction + ";" + placement;
+    }
 
-        public void HandleSave(ClientPacket packet)
+    public bool Execute(params object[] @params)
+    {
+        if (@params.Length == 0)
+            return false;
+        if (string.IsNullOrEmpty(StringData) || StringData == "0;0;0" || SetItems.Count == 0)
+            return false;
+        foreach (var item in SetItems.Values.ToList())
         {
-            if (SetItems.Count > 0)
-                SetItems.Clear();
-
-            var unknown = packet.PopInt();
-            var state = packet.PopInt();
-            var direction = packet.PopInt();
-            var placement = packet.PopInt();
-            var unknown2 = packet.PopString();
-
-            var furniCount = packet.PopInt();
-            for (var i = 0; i < furniCount; i++)
+            if (item == null)
+                continue;
+            if (!Instance.GetRoomItemHandler().GetFloor.Contains(item))
+                continue;
+            foreach (var I in ItemsData.Split(';'))
             {
-                var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
-                if (selectedItem != null)
-                    SetItems.TryAdd(selectedItem.Id, selectedItem);
-            }
-
-            StringData = state + ";" + direction + ";" + placement;
-        }
-
-        public bool Execute(params object[] @params)
-        {
-            if (@params.Length == 0)
-                return false;
-
-            if (String.IsNullOrEmpty(StringData) || StringData == "0;0;0" || SetItems.Count == 0)
-                return false;
-
-            foreach (var item in SetItems.Values.ToList())
-            {
-                if (item == null)
+                if (string.IsNullOrEmpty(I))
                     continue;
-
-                if (!Instance.GetRoomItemHandler().GetFloor.Contains(item))
+                var ii = Instance.GetRoomItemHandler().GetItem(Convert.ToInt32(I.Split(':')[0]));
+                if (ii == null)
                     continue;
-
-                foreach (var I in ItemsData.Split(';'))
+                var partsString = I.Split(':');
+                var part = partsString[1].Split(',');
+                if (int.Parse(StringData.Split(';')[0]) == 1) //State
                 {
-                    if (String.IsNullOrEmpty(I))
-                        continue;
-
-                    var ii = Instance.GetRoomItemHandler().GetItem(Convert.ToInt32(I.Split(':')[0]));
-                    if (ii == null)
-                        continue;
-
-                    var partsString = I.Split(':');
-                    var part = partsString[1].Split(',');
-
-                    if (int.Parse(StringData.Split(';')[0]) == 1) //State
+                    try
                     {
-                        try
-                        {
-                            if (ii.ExtraData != part[4].ToString())
-                                return false;
-                        }
-                        catch { }
+                        if (ii.ExtraData != part[4])
+                            return false;
                     }
-
-                    if (int.Parse(StringData.Split(';')[1]) == 1) //Direction
+                    catch { }
+                }
+                if (int.Parse(StringData.Split(';')[1]) == 1) //Direction
+                {
+                    try
                     {
-                        try
-                        {
-                            if (ii.Rotation != Convert.ToInt32(part[3]))
-                                return false;
-                        }
-                        catch { }
+                        if (ii.Rotation != Convert.ToInt32(part[3]))
+                            return false;
                     }
-
-                    if (int.Parse(StringData.Split(';')[2]) == 1) //Position
+                    catch { }
+                }
+                if (int.Parse(StringData.Split(';')[2]) == 1) //Position
+                {
+                    try
                     {
-                        try
-                        {
-                            if (ii.GetX != Convert.ToInt32(part[0]) || ii.GetY != Convert.ToInt32(part[1]) ||
-                                ii.GetZ != Convert.ToDouble(part[2]))
-                                return false;
-                        }
-                        catch { }
+                        if (ii.GetX != Convert.ToInt32(part[0]) || ii.GetY != Convert.ToInt32(part[1]) ||
+                            ii.GetZ != Convert.ToDouble(part[2]))
+                            return false;
                     }
-
+                    catch { }
                 }
             }
-            return true;
         }
+        return true;
     }
 }

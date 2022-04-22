@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.BuildersClub
+﻿namespace Plus.Communication.Packets.Outgoing.BuildersClub;
+
+internal class BcBorrowedItemsComposer : ServerPacket
 {
-    class BcBorrowedItemsComposer : ServerPacket
+    public BcBorrowedItemsComposer()
+        : base(ServerPacketHeader.BcBorrowedItemsMessageComposer)
     {
-        public BcBorrowedItemsComposer()
-            : base(ServerPacketHeader.BcBorrowedItemsMessageComposer)
-        {
-            WriteInteger(0);
-        }
+        WriteInteger(0);
     }
 }

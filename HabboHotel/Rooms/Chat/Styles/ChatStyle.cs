@@ -1,34 +1,17 @@
-﻿namespace Plus.HabboHotel.Rooms.Chat.Styles
+﻿namespace Plus.HabboHotel.Rooms.Chat.Styles;
+
+public sealed class ChatStyle
 {
-    public sealed class ChatStyle
+    public ChatStyle(int id, string name, string requiredRight)
     {
-        private int _id;
-        private string _name;
-        private string _requiredRight;
-
-        public ChatStyle(int id, string name, string requiredRight)
-        {
-            _id = id;
-            _name = name;
-            _requiredRight = requiredRight;
-        }
-
-        public int Id
-        {
-            get => _id;
-            set => _id = value;
-        }
-
-        public string Name
-        {
-            get => _name;
-            set => _name = value;
-        }
-
-        public string RequiredRight
-        {
-            get => _requiredRight;
-            set => _requiredRight = value;
-        }
+        Id = id;
+        Name = name;
+        RequiredRight = requiredRight;
     }
+
+    public int Id { get; set; }
+
+    public string Name { get; set; }
+
+    public string RequiredRight { get; set; }
 }

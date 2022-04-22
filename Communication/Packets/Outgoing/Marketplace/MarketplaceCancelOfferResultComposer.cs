@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Marketplace
+﻿namespace Plus.Communication.Packets.Outgoing.Marketplace;
+
+internal class MarketplaceCancelOfferResultComposer : ServerPacket
 {
-    class MarketplaceCancelOfferResultComposer : ServerPacket
+    public MarketplaceCancelOfferResultComposer(int offerId, bool success)
+        : base(ServerPacketHeader.MarketplaceCancelOfferResultMessageComposer)
     {
-        public MarketplaceCancelOfferResultComposer(int offerId, bool success)
-            : base(ServerPacketHeader.MarketplaceCancelOfferResultMessageComposer)
-        {
-            WriteInteger(offerId);
-            WriteBoolean(success);
-        }
+        WriteInteger(offerId);
+        WriteBoolean(success);
     }
 }

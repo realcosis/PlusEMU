@@ -1,71 +1,64 @@
-﻿using System.Linq;
-using System.Collections.Concurrent;
-
+﻿using System.Collections.Concurrent;
+using System.Linq;
 using Plus.Communication.Packets.Incoming;
 using Plus.HabboHotel.Rooms;
 
-namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
+namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions;
+
+internal class FurniHasNoUsersBox : IWiredItem
 {
-    class FurniHasNoUsersBox : IWiredItem
+    public FurniHasNoUsersBox(Room instance, Item item)
     {
-        public Room Instance { get; set; }
+        Instance = instance;
+        Item = item;
+        SetItems = new ConcurrentDictionary<int, Item>();
+    }
 
-        public Item Item { get; set; }
+    public Room Instance { get; set; }
 
-        public WiredBoxType Type => WiredBoxType.ConditionFurniHasNoUsers;
+    public Item Item { get; set; }
 
-        public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public WiredBoxType Type => WiredBoxType.ConditionFurniHasNoUsers;
 
-        public string StringData { get; set; }
+    public ConcurrentDictionary<int, Item> SetItems { get; set; }
 
-        public bool BoolData { get; set; }
-        public string ItemsData { get; set; }
+    public string StringData { get; set; }
 
-        public FurniHasNoUsersBox(Room instance, Item item)
+    public bool BoolData { get; set; }
+    public string ItemsData { get; set; }
+
+    public void HandleSave(ClientPacket packet)
+    {
+        var unknown = packet.PopInt();
+        var unknown2 = packet.PopString();
+        if (SetItems.Count > 0)
+            SetItems.Clear();
+        var furniCount = packet.PopInt();
+        for (var i = 0; i < furniCount; i++)
         {
-            this.Instance = instance;
-            this.Item = item;
-            SetItems = new ConcurrentDictionary<int, Item>();
+            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+            if (selectedItem != null)
+                SetItems.TryAdd(selectedItem.Id, selectedItem);
         }
+    }
 
-        public void HandleSave(ClientPacket packet)
+    public bool Execute(params object[] @params)
+    {
+        foreach (var item in SetItems.Values.ToList())
         {
-            var unknown = packet.PopInt();
-            var unknown2 = packet.PopString();
-
-            if (SetItems.Count > 0)
-                SetItems.Clear();
-
-            var furniCount = packet.PopInt();
-            for (var i = 0; i < furniCount; i++)
+            if (item == null || !Instance.GetRoomItemHandler().GetFloor.Contains(item))
+                continue;
+            var hasUsers = false;
+            foreach (var tile in item.GetAffectedTiles.Values)
             {
-                var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
-                if (selectedItem != null)
-                    SetItems.TryAdd(selectedItem.Id, selectedItem);
-            }
-        }
-
-        public bool Execute(params object[] @params)
-        {
-            foreach (var item in SetItems.Values.ToList())
-            {
-                if (item == null || !Instance.GetRoomItemHandler().GetFloor.Contains(item))
-                    continue;
-
-                var hasUsers = false;
-                foreach (var tile in item.GetAffectedTiles.Values)
-                {
-                    if (Instance.GetGameMap().SquareHasUsers(tile.X, tile.Y))
-                        hasUsers = true;
-                }
-
-                if (Instance.GetGameMap().SquareHasUsers(item.GetX, item.GetY))
+                if (Instance.GetGameMap().SquareHasUsers(tile.X, tile.Y))
                     hasUsers = true;
-
-                if (hasUsers)
-                    return false;
             }
-            return true;
+            if (Instance.GetGameMap().SquareHasUsers(item.GetX, item.GetY))
+                hasUsers = true;
+            if (hasUsers)
+                return false;
         }
+        return true;
     }
 }

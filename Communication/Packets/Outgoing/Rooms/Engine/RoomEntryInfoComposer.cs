@@ -1,13 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
-{
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-    class RoomEntryInfoComposer : ServerPacket
+internal class RoomEntryInfoComposer : ServerPacket
+{
+    public RoomEntryInfoComposer(int roomId, bool isOwner)
+        : base(ServerPacketHeader.RoomEntryInfoMessageComposer)
     {
-        public RoomEntryInfoComposer(int roomId, bool isOwner)
-            : base(ServerPacketHeader.RoomEntryInfoMessageComposer)
-        {
-            WriteInteger(roomId);
-            WriteBoolean(isOwner);
-        }
+        WriteInteger(roomId);
+        WriteBoolean(isOwner);
     }
 }

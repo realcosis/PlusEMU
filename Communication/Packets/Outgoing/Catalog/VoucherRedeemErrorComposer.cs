@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Catalog
+﻿namespace Plus.Communication.Packets.Outgoing.Catalog;
+
+public class VoucherRedeemErrorComposer : ServerPacket
 {
-    public class VoucherRedeemErrorComposer : ServerPacket
+    public VoucherRedeemErrorComposer(int type)
+        : base(ServerPacketHeader.VoucherRedeemErrorMessageComposer)
     {
-        public VoucherRedeemErrorComposer(int type)
-            : base(ServerPacketHeader.VoucherRedeemErrorMessageComposer)
-        {
-           WriteString(type.ToString());
-        }
+        WriteString(type.ToString());
     }
 }

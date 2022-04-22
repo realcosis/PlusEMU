@@ -1,26 +1,22 @@
 ﻿using System.Linq;
 
-namespace Plus.Communication.Rcon.Commands.Hotel
+namespace Plus.Communication.Rcon.Commands.Hotel;
+
+internal class ReloadRanksCommand : IRconCommand
 {
-    class ReloadRanksCommand : IRconCommand
+    public string Description => "This command is used to reload user permissions.";
+
+    public string Parameters => "";
+
+    public bool TryExecute(string[] parameters)
     {
-        public string Description => "This command is used to reload user permissions.";
-
-        public string Parameters => "";
-
-        public bool TryExecute(string[] parameters)
+        PlusEnvironment.GetGame().GetPermissionManager().Init();
+        foreach (var client in PlusEnvironment.GetGame().GetClientManager().GetClients.ToList())
         {
-            PlusEnvironment.GetGame().GetPermissionManager().Init();
-
-            foreach (var client in PlusEnvironment.GetGame().GetClientManager().GetClients.ToList())
-            {
-                if (client == null || client.GetHabbo() == null || client.GetHabbo().GetPermissions() == null)
-                    continue;
-
-                client.GetHabbo().GetPermissions().Init(client.GetHabbo());
-            }
-            
-            return true;
+            if (client == null || client.GetHabbo() == null || client.GetHabbo().GetPermissions() == null)
+                continue;
+            client.GetHabbo().GetPermissions().Init(client.GetHabbo());
         }
+        return true;
     }
 }

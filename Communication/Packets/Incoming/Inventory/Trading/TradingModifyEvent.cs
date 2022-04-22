@@ -1,39 +1,31 @@
 ﻿using Plus.Communication.Packets.Outgoing.Inventory.Trading;
 using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Inventory.Trading
+namespace Plus.Communication.Packets.Incoming.Inventory.Trading;
+
+internal class TradingModifyEvent : IPacketEvent
 {
-    class TradingModifyEvent : IPacketEvent
+    public void Parse(GameClient session, ClientPacket packet)
     {
-        public void Parse(GameClient session, ClientPacket packet)
+        if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
+            return;
+        var room = session.GetHabbo().CurrentRoom;
+        if (room == null)
+            return;
+        var roomUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+        if (roomUser == null)
+            return;
+        if (!room.GetTrading().TryGetTrade(roomUser.TradeId, out var trade))
         {
-            if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
-                return;
-
-            var room = session.GetHabbo().CurrentRoom;
-            if (room == null)
-                return;
-
-            var roomUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
-            if (roomUser == null)
-                return;
-
-            if (!room.GetTrading().TryGetTrade(roomUser.TradeId, out var trade))
-            {
-                session.SendPacket(new TradingClosedComposer(session.GetHabbo().Id));
-                return;
-            }
-
-            if (!trade.CanChange)
-                return;
-
-            var user = trade.Users[0];
-
-            if (user.RoomUser != roomUser)
-                user = trade.Users[1];
-
-            user.HasAccepted = false;
-            trade.SendPacket(new TradingAcceptComposer(session.GetHabbo().Id, false));
+            session.SendPacket(new TradingClosedComposer(session.GetHabbo().Id));
+            return;
         }
+        if (!trade.CanChange)
+            return;
+        var user = trade.Users[0];
+        if (user.RoomUser != roomUser)
+            user = trade.Users[1];
+        user.HasAccepted = false;
+        trade.SendPacket(new TradingAcceptComposer(session.GetHabbo().Id, false));
     }
 }

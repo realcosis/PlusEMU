@@ -1,21 +1,17 @@
 ﻿using Plus.Communication.Packets.Outgoing.Rooms.Settings;
 using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Rooms.Settings
+namespace Plus.Communication.Packets.Incoming.Rooms.Settings;
+
+internal class GetRoomSettingsEvent : IPacketEvent
 {
-    class GetRoomSettingsEvent : IPacketEvent
+    public void Parse(GameClient session, ClientPacket packet)
     {
-        public void Parse(GameClient session, ClientPacket packet)
-        {
-            var roomId = packet.PopInt();
-
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryLoadRoom(roomId, out var room))
-                return;
-
-            if (!room.CheckRights(session, true))
-                return;
-
-            session.SendPacket(new RoomSettingsDataComposer(room));
-        }
+        var roomId = packet.PopInt();
+        if (!PlusEnvironment.GetGame().GetRoomManager().TryLoadRoom(roomId, out var room))
+            return;
+        if (!room.CheckRights(session, true))
+            return;
+        session.SendPacket(new RoomSettingsDataComposer(room));
     }
 }

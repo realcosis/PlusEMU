@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Freeze
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Freeze;
+
+internal class UpdateFreezeLivesComposer : ServerPacket
 {
-    class UpdateFreezeLivesComposer : ServerPacket
+    public UpdateFreezeLivesComposer(int userId, int freezeLives)
+        : base(ServerPacketHeader.UpdateFreezeLivesMessageComposer)
     {
-        public UpdateFreezeLivesComposer(int userId, int freezeLives)
-            : base(ServerPacketHeader.UpdateFreezeLivesMessageComposer)
-        {
-            WriteInteger(userId);
-            WriteInteger(freezeLives);
-        }
+        WriteInteger(userId);
+        WriteInteger(freezeLives);
     }
 }

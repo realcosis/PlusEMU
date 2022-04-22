@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Groups
+﻿namespace Plus.Communication.Packets.Outgoing.Groups;
+
+internal class UnknownGroupComposer : ServerPacket
 {
-    class UnknownGroupComposer : ServerPacket
+    public UnknownGroupComposer(int groupId, int habboId)
+        : base(ServerPacketHeader.UnknownGroupMessageComposer)
     {
-        public UnknownGroupComposer(int groupId, int habboId)
-            : base(ServerPacketHeader.UnknownGroupMessageComposer)
-        {
-            WriteInteger(groupId);
-            WriteInteger(habboId);
-        }
+        WriteInteger(groupId);
+        WriteInteger(habboId);
     }
 }

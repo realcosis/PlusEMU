@@ -1,11 +1,10 @@
-﻿namespace Plus.HabboHotel.Rooms.Chat.Emotions
+﻿namespace Plus.HabboHotel.Rooms.Chat.Emotions;
+
+internal enum ChatEmotions
 {
-    enum ChatEmotions
-    {
-        Smile,
-        Angry,
-        Sad,
-        Shocked,
-        None
-    }
+    Smile,
+    Angry,
+    Sad,
+    Shocked,
+    None
 }

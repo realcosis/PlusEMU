@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Navigator
+﻿namespace Plus.Communication.Packets.Outgoing.Navigator;
+
+internal class RoomInfoUpdatedComposer : ServerPacket
 {
-    class RoomInfoUpdatedComposer : ServerPacket
+    public RoomInfoUpdatedComposer(int roomId)
+        : base(ServerPacketHeader.RoomInfoUpdatedMessageComposer)
     {
-        public RoomInfoUpdatedComposer(int roomId)
-            : base(ServerPacketHeader.RoomInfoUpdatedMessageComposer)
-        {
-            WriteInteger(roomId);
-        }
+        WriteInteger(roomId);
     }
 }

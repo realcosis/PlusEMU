@@ -1,145 +1,97 @@
-﻿using Plus.Utilities;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
+using Plus.Utilities;
 
+namespace Plus.HabboHotel.Users.Effects;
 
-using Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
-
-namespace Plus.HabboHotel.Users.Effects
+public sealed class AvatarEffect
 {
-    public sealed class AvatarEffect
+    public AvatarEffect(int id, int userId, int spriteId, double duration, bool activated, double timestampActivated, int quantity)
     {
-        private int _id;
-        private int _userId;
-        private int _spriteId;
-        private double _duration;
-        private bool _activated;
-        private double _timestampActivated;
-        private int _quantity;
+        Id = id;
+        UserId = userId;
+        SpriteId = spriteId;
+        Duration = duration;
+        Activated = activated;
+        TimestampActivated = timestampActivated;
+        Quantity = quantity;
+    }
 
-        public AvatarEffect(int id, int userId, int spriteId, double duration, bool activated, double timestampActivated, int quantity)
+    public int Id { get; set; }
+
+    public int UserId { get; set; }
+
+    public int SpriteId { get; set; }
+
+    public double Duration { get; set; }
+
+    public bool Activated { get; set; }
+
+    public double TimestampActivated { get; set; }
+
+    public int Quantity { get; set; }
+
+    public double TimeUsed => UnixTimestamp.GetNow() - TimestampActivated;
+
+    public double TimeLeft
+    {
+        get
         {
-            this.Id = id;
-            this.UserId = userId;
-            this.SpriteId = spriteId;
-            this.Duration = duration;
-            this.Activated = activated;
-            this.TimestampActivated = timestampActivated;
-            this.Quantity = quantity;
+            var tl = Activated ? Duration - TimeUsed : Duration;
+            if (tl < 0) tl = 0;
+            return tl;
         }
+    }
 
-        public int Id
+    public bool HasExpired => Activated && TimeLeft <= 0;
+
+    /// <summary>
+    /// Activates the AvatarEffect
+    /// </summary>
+    public bool Activate()
+    {
+        var tsNow = UnixTimestamp.GetNow();
+        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        dbClient.SetQuery("UPDATE `user_effects` SET `is_activated` = '1', `activated_stamp` = @ts WHERE `id` = @id");
+        dbClient.AddParameter("ts", tsNow);
+        dbClient.AddParameter("id", Id);
+        dbClient.RunQuery();
+        Activated = true;
+        TimestampActivated = tsNow;
+        return true;
+    }
+
+    public void HandleExpiration(Habbo habbo)
+    {
+        Quantity--;
+        Activated = false;
+        TimestampActivated = 0;
+        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
-            get => _id;
-            set => _id = value;
-        }
-
-        public int UserId
-        {
-            get => _userId;
-            set => _userId = value;
-        }
-
-        public int SpriteId
-        {
-            get => _spriteId;
-            set => _spriteId = value;
-        }
-
-        public double Duration
-        {
-            get => _duration;
-            set => _duration = value;
-        }
-
-        public bool Activated
-        {
-            get => _activated;
-            set => _activated = value;
-        }
-
-        public double TimestampActivated
-        {
-            get => _timestampActivated;
-            set => _timestampActivated = value;
-        }
-
-        public int Quantity
-        {
-            get => _quantity;
-            set => _quantity = value;
-        }
-
-        public double TimeUsed => (UnixTimestamp.GetNow() - _timestampActivated);
-
-        public double TimeLeft
-        {
-            get
+            if (Quantity < 1)
             {
-                var tl = (_activated ? _duration - TimeUsed : _duration);
-
-                if (tl < 0)
-                {
-                    tl = 0;
-                }
-
-                return tl;
+                dbClient.SetQuery("DELETE FROM `user_effects` WHERE `id` = @id");
+                dbClient.AddParameter("id", Id);
+                dbClient.RunQuery();
+            }
+            else
+            {
+                dbClient.SetQuery("UPDATE `user_effects` SET `quantity` = @qt, `is_activated` = '0', `activated_stamp` = 0 WHERE `id` = @id");
+                dbClient.AddParameter("qt", Quantity);
+                dbClient.AddParameter("id", Id);
+                dbClient.RunQuery();
             }
         }
+        habbo.GetClient().SendPacket(new AvatarEffectExpiredComposer(this));
+        // reset fx if in room?
+    }
 
-        public bool HasExpired => (_activated && TimeLeft <= 0);
-
-        /// <summary>
-        /// Activates the AvatarEffect
-        /// </summary>
-        public bool Activate()
-        {
-            var tsNow = UnixTimestamp.GetNow();
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-            dbClient.SetQuery("UPDATE `user_effects` SET `is_activated` = '1', `activated_stamp` = @ts WHERE `id` = @id");
-            dbClient.AddParameter("ts", tsNow);
-            dbClient.AddParameter("id", Id);
-            dbClient.RunQuery();
-
-            _activated = true;
-            _timestampActivated = tsNow;
-            return true;
-        }
-
-        public void HandleExpiration(Habbo habbo)
-        {
-            _quantity--;
-
-            _activated = false;
-            _timestampActivated = 0;
-
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                if (_quantity < 1)
-                {
-                    dbClient.SetQuery("DELETE FROM `user_effects` WHERE `id` = @id");
-                    dbClient.AddParameter("id", Id);
-                    dbClient.RunQuery();
-                }
-                else
-                {
-                    dbClient.SetQuery("UPDATE `user_effects` SET `quantity` = @qt, `is_activated` = '0', `activated_stamp` = 0 WHERE `id` = @id");
-                    dbClient.AddParameter("qt", Quantity);
-                    dbClient.AddParameter("id", Id);
-                    dbClient.RunQuery();
-                }
-            }
-
-            habbo.GetClient().SendPacket(new AvatarEffectExpiredComposer(this));
-            // reset fx if in room?
-        }
-
-        public void AddToQuantity()
-        {
-            _quantity++;
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-            dbClient.SetQuery("UPDATE `user_effects` SET `quantity` = @qt WHERE `id` = @id");
-            dbClient.AddParameter("qt", Quantity);
-            dbClient.AddParameter("id", Id);
-            dbClient.RunQuery();
-        }
+    public void AddToQuantity()
+    {
+        Quantity++;
+        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        dbClient.SetQuery("UPDATE `user_effects` SET `quantity` = @qt WHERE `id` = @id");
+        dbClient.AddParameter("qt", Quantity);
+        dbClient.AddParameter("id", Id);
+        dbClient.RunQuery();
     }
 }

@@ -1,13 +1,12 @@
 ﻿using Plus.HabboHotel.Users.Effects;
 
-namespace Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects
+namespace Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
+
+internal class AvatarEffectExpiredComposer : ServerPacket
 {
-    class AvatarEffectExpiredComposer : ServerPacket
+    public AvatarEffectExpiredComposer(AvatarEffect effect)
+        : base(ServerPacketHeader.AvatarEffectExpiredMessageComposer)
     {
-        public AvatarEffectExpiredComposer(AvatarEffect effect)
-            : base(ServerPacketHeader.AvatarEffectExpiredMessageComposer)
-        {
-            WriteInteger(effect.SpriteId);
-        }
+        WriteInteger(effect.SpriteId);
     }
 }

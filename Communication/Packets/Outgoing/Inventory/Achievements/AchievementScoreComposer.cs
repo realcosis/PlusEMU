@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Achievements
+﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Achievements;
+
+internal class AchievementScoreComposer : ServerPacket
 {
-    class AchievementScoreComposer : ServerPacket
+    public AchievementScoreComposer(int achScore)
+        : base(ServerPacketHeader.AchievementScoreMessageComposer)
     {
-        public AchievementScoreComposer(int achScore)
-            : base(ServerPacketHeader.AchievementScoreMessageComposer)
-        {
-            WriteInteger(achScore);
-        }
+        WriteInteger(achScore);
     }
 }

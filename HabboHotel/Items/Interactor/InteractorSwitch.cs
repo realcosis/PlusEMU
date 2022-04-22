@@ -1,63 +1,43 @@
-﻿using Plus.HabboHotel.Rooms;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
-using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Rooms;
 
-namespace Plus.HabboHotel.Items.Interactor
+namespace Plus.HabboHotel.Items.Interactor;
+
+internal class InteractorSwitch : IFurniInteractor
 {
-    class InteractorSwitch : IFurniInteractor
+    public void OnPlace(GameClient session, Item item) { }
+
+    public void OnRemove(GameClient session, Item item) { }
+
+    public void OnTrigger(GameClient session, Item item, int request, bool hasRights)
     {
-        public void OnPlace(GameClient session, Item item)
+        if (session == null)
+            return;
+        var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
+        if (user == null)
+            return;
+        if (Gamemap.TilesTouching(item.GetX, item.GetY, user.X, user.Y))
         {
-
-        }
-
-        public void OnRemove(GameClient session, Item item)
-        {
-
-        }
-
-        public void OnTrigger(GameClient session, Item item, int request, bool hasRights)
-        {
-            if (session == null)
+            var modes = item.GetBaseItem().Modes - 1;
+            if (modes <= 0)
                 return;
-
-            var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
-            if (user == null)
-                return;
-
-            if (Gamemap.TilesTouching(item.GetX, item.GetY, user.X, user.Y))
-            {
-                var modes = item.GetBaseItem().Modes - 1;
-
-                if (modes <= 0)
-                    return;
-
-                PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.FurniSwitch);
-
-                var currentMode = 0;
-                var newMode = 0;
-
-                if (!int.TryParse(item.ExtraData, out currentMode))
-                {
-                }
-
-                if (currentMode <= 0)
-                    newMode = 1;
-                else if (currentMode >= modes)
-                    newMode = 0;
-                else
-                    newMode = currentMode + 1;
-
-                item.ExtraData = newMode.ToString();
-                item.UpdateState();
-            }
+            PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.FurniSwitch);
+            var currentMode = 0;
+            var newMode = 0;
+            if (!int.TryParse(item.ExtraData, out currentMode)) { }
+            if (currentMode <= 0)
+                newMode = 1;
+            else if (currentMode >= modes)
+                newMode = 0;
             else
-                user.MoveTo(item.SquareInFront);
+                newMode = currentMode + 1;
+            item.ExtraData = newMode.ToString();
+            item.UpdateState();
         }
-
-        public void OnWiredTrigger(Item item)
-        {
-          
-        }
+        else
+            user.MoveTo(item.SquareInFront);
     }
+
+    public void OnWiredTrigger(Item item) { }
 }

@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Notifications
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Notifications;
+
+internal class RoomErrorNotifComposer : ServerPacket
 {
-    class RoomErrorNotifComposer : ServerPacket
+    public RoomErrorNotifComposer(int error)
+        : base(ServerPacketHeader.RoomErrorNotifMessageComposer)
     {
-        public RoomErrorNotifComposer(int error)
-            : base(ServerPacketHeader.RoomErrorNotifMessageComposer)
-        {
-            WriteInteger(error);
-        }
+        WriteInteger(error);
     }
 }

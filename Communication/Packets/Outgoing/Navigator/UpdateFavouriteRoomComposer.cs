@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Navigator
+﻿namespace Plus.Communication.Packets.Outgoing.Navigator;
+
+public class UpdateFavouriteRoomComposer : ServerPacket
 {
-    public class UpdateFavouriteRoomComposer : ServerPacket
+    public UpdateFavouriteRoomComposer(int roomId, bool added)
+        : base(ServerPacketHeader.UpdateFavouriteRoomMessageComposer)
     {
-        public UpdateFavouriteRoomComposer(int roomId, bool added)
-            : base(ServerPacketHeader.UpdateFavouriteRoomMessageComposer)
-        {
-            WriteInteger(roomId);
-            WriteBoolean(added);
-        }
+        WriteInteger(roomId);
+        WriteBoolean(added);
     }
 }

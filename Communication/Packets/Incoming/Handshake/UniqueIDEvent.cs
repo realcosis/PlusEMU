@@ -1,18 +1,15 @@
-﻿using Plus.HabboHotel.GameClients;
-using Plus.Communication.Packets.Outgoing.Handshake;
+﻿using Plus.Communication.Packets.Outgoing.Handshake;
+using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Handshake
+namespace Plus.Communication.Packets.Incoming.Handshake;
+
+public class UniqueIdEvent : IPacketEvent
 {
-    public class UniqueIdEvent : IPacketEvent
+    public void Parse(GameClient session, ClientPacket packet)
     {
-        public void Parse(GameClient session, ClientPacket packet)
-        {
-            packet.PopString();
-            var machineId = packet.PopString();
-
-            session.MachineId = machineId;
-
-            session.SendPacket(new SetUniqueIdComposer(machineId));
-        }
+        packet.PopString();
+        var machineId = packet.PopString();
+        session.MachineId = machineId;
+        session.SendPacket(new SetUniqueIdComposer(machineId));
     }
 }

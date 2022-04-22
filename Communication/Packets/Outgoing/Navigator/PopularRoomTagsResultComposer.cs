@@ -1,18 +1,17 @@
 ﻿using System.Collections.Generic;
 
-namespace Plus.Communication.Packets.Outgoing.Navigator
+namespace Plus.Communication.Packets.Outgoing.Navigator;
+
+internal class PopularRoomTagsResultComposer : ServerPacket
 {
-    class PopularRoomTagsResultComposer : ServerPacket
+    public PopularRoomTagsResultComposer(ICollection<KeyValuePair<string, int>> tags)
+        : base(ServerPacketHeader.PopularRoomTagsResultMessageComposer)
     {
-        public PopularRoomTagsResultComposer(ICollection<KeyValuePair<string, int>> tags)
-            : base(ServerPacketHeader.PopularRoomTagsResultMessageComposer)
+        WriteInteger(tags.Count);
+        foreach (var tag in tags)
         {
-            WriteInteger(tags.Count);
-            foreach (var tag in tags)
-            {
-                WriteString(tag.Key);
-                WriteInteger(tag.Value);
-            }
+            WriteString(tag.Key);
+            WriteInteger(tag.Value);
         }
     }
 }

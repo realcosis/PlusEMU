@@ -1,29 +1,28 @@
-﻿namespace Plus.HabboHotel.Catalog.Vouchers
-{
-    public static class VoucherUtility
-    {
-        public static VoucherType GetType(string type)
-        {
-            switch (type)
-            {
-                default:
-                case "credit":
-                    return VoucherType.Credit;
-                case "ducket":
-                    return VoucherType.Ducket;
-            }
-        }
+﻿namespace Plus.HabboHotel.Catalog.Vouchers;
 
-        public static string FromType(VoucherType type)
+public static class VoucherUtility
+{
+    public static VoucherType GetType(string type)
+    {
+        switch (type)
         {
-            switch (type)
-            {
-                default:
-                case VoucherType.Credit:
-                    return "credit";
-                case VoucherType.Ducket:
-                    return "ducket";
-            }
+            default:
+            case "credit":
+                return VoucherType.Credit;
+            case "ducket":
+                return VoucherType.Ducket;
+        }
+    }
+
+    public static string FromType(VoucherType type)
+    {
+        switch (type)
+        {
+            default:
+            case VoucherType.Credit:
+                return "credit";
+            case VoucherType.Ducket:
+                return "ducket";
         }
     }
 }

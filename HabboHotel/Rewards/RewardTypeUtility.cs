@@ -1,27 +1,22 @@
-﻿namespace Plus.HabboHotel.Rewards
+﻿namespace Plus.HabboHotel.Rewards;
+
+public static class RewardTypeUtility
 {
-    public static class RewardTypeUtility
+    public static RewardType GetType(string type)
     {
-        public static RewardType GetType(string type)
+        switch (type.ToLower())
         {
-            switch (type.ToLower())
-            {
-                case "badge":
-                    return RewardType.Badge;
-
-                case "credits":
-                    return RewardType.Credits;
-
-                case "duckets":
-                    return RewardType.Duckets;
-
-                case "diamonds":
-                    return RewardType.Diamonds;
-
-                default:
-                case "none":
-                    return RewardType.None;
-            }
+            case "badge":
+                return RewardType.Badge;
+            case "credits":
+                return RewardType.Credits;
+            case "duckets":
+                return RewardType.Duckets;
+            case "diamonds":
+                return RewardType.Diamonds;
+            default:
+            case "none":
+                return RewardType.None;
         }
     }
 }

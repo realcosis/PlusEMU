@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace Plus.Database.Interfaces
+namespace Plus.Database.Interfaces;
+
+public interface IQueryAdapter : IRegularQueryAdapter, IDisposable
 {
-    public interface IQueryAdapter : IRegularQueryAdapter, IDisposable
-    {
-        long InsertQuery();
-        void RunQuery();
-    }
+    long InsertQuery();
+    void RunQuery();
 }

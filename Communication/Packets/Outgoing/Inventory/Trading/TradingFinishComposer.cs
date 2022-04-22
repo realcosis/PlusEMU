@@ -1,10 +1,7 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Trading
+﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Trading;
+
+internal class TradingFinishComposer : ServerPacket
 {
-    class TradingFinishComposer : ServerPacket
-    {
-        public TradingFinishComposer()
-            : base(ServerPacketHeader.TradingFinishMessageComposer)
-        {
-        }
-    }
+    public TradingFinishComposer()
+        : base(ServerPacketHeader.TradingFinishMessageComposer) { }
 }

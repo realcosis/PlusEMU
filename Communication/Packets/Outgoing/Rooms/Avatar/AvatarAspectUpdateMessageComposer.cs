@@ -1,14 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
+
+internal class AvatarAspectUpdateMessageComposer : ServerPacket
 {
-    class AvatarAspectUpdateMessageComposer : ServerPacket
+    public AvatarAspectUpdateMessageComposer(string figure, string gender)
+        : base(ServerPacketHeader.AvatarAspectUpdateMessageComposer)
     {
-        public AvatarAspectUpdateMessageComposer(string figure, string gender)
-            : base(ServerPacketHeader.AvatarAspectUpdateMessageComposer)
-        {
-            base.WriteString(figure);
-            base.WriteString(gender);
-
-
-        }
+        WriteString(figure);
+        WriteString(gender);
     }
 }

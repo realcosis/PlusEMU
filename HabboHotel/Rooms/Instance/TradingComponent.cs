@@ -1,51 +1,45 @@
 ﻿using System.Collections.Concurrent;
-
 using Plus.HabboHotel.Rooms.Trading;
 
-namespace Plus.HabboHotel.Rooms.Instance
+namespace Plus.HabboHotel.Rooms.Instance;
+
+public class TradingComponent
 {
-    public class TradingComponent
+    private readonly ConcurrentDictionary<int, Trade> _activeTrades;
+    private readonly Room _instance;
+    private int _currentId;
+
+    public TradingComponent(Room instance)
     {
-        private int _currentId;
-        private Room _instance;
-        private readonly ConcurrentDictionary<int, Trade> _activeTrades;
+        _currentId = 1;
+        _instance = instance;
+        _activeTrades = new ConcurrentDictionary<int, Trade>();
+    }
 
-        public TradingComponent(Room instance)
-        {
-            _currentId = 1;
-            _instance = instance;
-            _activeTrades = new ConcurrentDictionary<int, Trade>();
-        }
+    public bool StartTrade(RoomUser player1, RoomUser player2, out Trade trade)
+    {
+        _currentId++;
+        trade = new Trade(_currentId, player1, player2, _instance);
+        return _activeTrades.TryAdd(_currentId, trade);
+    }
 
-        public bool StartTrade(RoomUser player1, RoomUser player2, out Trade trade)
-        {
-            _currentId++;
-            trade = new Trade(_currentId, player1, player2, _instance);
-            return _activeTrades.TryAdd(_currentId, trade);
-        }
+    public bool TryGetTrade(int tradeId, out Trade trade) => _activeTrades.TryGetValue(tradeId, out trade);
 
-        public bool TryGetTrade(int tradeId, out Trade trade)
-        {
-            return _activeTrades.TryGetValue(tradeId, out trade);
-        }
+    public bool RemoveTrade(int id)
+    {
+        Trade trade = null;
+        return _activeTrades.TryRemove(id, out trade);
+    }
 
-        public bool RemoveTrade(int id)
+    public void Cleanup()
+    {
+        foreach (var trade in _activeTrades.Values)
         {
-            Trade trade = null;
-            return _activeTrades.TryRemove(id, out trade);
-        }
-
-        public void Cleanup()
-        {
-            foreach (var trade in _activeTrades.Values)
+            foreach (var user in trade.Users)
             {
-                foreach (var user in trade.Users)
-                {
-                    if (user == null || user.RoomUser == null)
-                        continue;
-
-                    trade.EndTrade(user.RoomUser.HabboId);
-                }
+                if (user == null || user.RoomUser == null)
+                    continue;
+                trade.EndTrade(user.RoomUser.HabboId);
             }
         }
     }

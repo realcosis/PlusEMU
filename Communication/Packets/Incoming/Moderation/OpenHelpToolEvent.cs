@@ -1,13 +1,12 @@
 ﻿using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Moderation
+namespace Plus.Communication.Packets.Incoming.Moderation;
+
+internal class OpenHelpToolEvent : IPacketEvent
 {
-    class OpenHelpToolEvent : IPacketEvent
+    public void Parse(GameClient session, ClientPacket packet)
     {
-        public void Parse(GameClient session, ClientPacket packet)
-        {
-            session.SendPacket(new OpenHelpToolComposer());
-        }
+        session.SendPacket(new OpenHelpToolComposer());
     }
 }

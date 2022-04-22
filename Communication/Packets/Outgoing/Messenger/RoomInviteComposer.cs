@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Messenger
+﻿namespace Plus.Communication.Packets.Outgoing.Messenger;
+
+internal class RoomInviteComposer : ServerPacket
 {
-    class RoomInviteComposer : ServerPacket
+    public RoomInviteComposer(int senderId, string text)
+        : base(ServerPacketHeader.RoomInviteMessageComposer)
     {
-        public RoomInviteComposer(int senderId, string text)
-            : base(ServerPacketHeader.RoomInviteMessageComposer)
-        {
-            WriteInteger(senderId);
-           WriteString(text);
-        }
+        WriteInteger(senderId);
+        WriteString(text);
     }
 }

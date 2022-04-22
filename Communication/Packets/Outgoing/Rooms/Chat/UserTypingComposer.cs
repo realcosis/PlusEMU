@@ -1,12 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Chat
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Chat;
+
+public class UserTypingComposer : ServerPacket
 {
-    public class UserTypingComposer : ServerPacket
+    public UserTypingComposer(int virtualId, bool typing)
+        : base(ServerPacketHeader.UserTypingMessageComposer)
     {
-        public UserTypingComposer(int virtualId, bool typing)
-            : base(ServerPacketHeader.UserTypingMessageComposer)
-        {
-            WriteInteger(virtualId);
-            WriteInteger(typing ? 1 : 0);
-        }
+        WriteInteger(virtualId);
+        WriteInteger(typing ? 1 : 0);
     }
 }

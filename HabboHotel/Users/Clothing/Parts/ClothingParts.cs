@@ -1,34 +1,17 @@
-﻿namespace Plus.HabboHotel.Users.Clothing.Parts
+﻿namespace Plus.HabboHotel.Users.Clothing.Parts;
+
+public sealed class ClothingParts
 {
-    public sealed class ClothingParts
+    public ClothingParts(int id, int partId, string part)
     {
-        private int _id;
-        private int _partId;
-        private string _part;
-
-        public ClothingParts(int id, int partId, string part)
-        {
-            _id = id;
-            _partId = partId;
-            _part = part;
-        }
-
-        public int Id
-        {
-            get => _id;
-            set => _id = value;
-        }
-
-        public int PartId
-        {
-            get => _partId;
-            set => _partId = value;
-        }
-
-        public string Part
-        {
-            get => _part;
-            set => _part = value;
-        }
+        Id = id;
+        PartId = partId;
+        Part = part;
     }
+
+    public int Id { get; set; }
+
+    public int PartId { get; set; }
+
+    public string Part { get; set; }
 }

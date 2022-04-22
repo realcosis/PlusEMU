@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Navigator
+﻿namespace Plus.Communication.Packets.Outgoing.Navigator;
+
+internal class FlatAccessDeniedComposer : ServerPacket
 {
-    class FlatAccessDeniedComposer : ServerPacket
+    public FlatAccessDeniedComposer(string username)
+        : base(ServerPacketHeader.FlatAccessDeniedMessageComposer)
     {
-        public FlatAccessDeniedComposer(string username)
-            : base(ServerPacketHeader.FlatAccessDeniedMessageComposer)
-        {
-           WriteString(username);
-        }
+        WriteString(username);
     }
 }

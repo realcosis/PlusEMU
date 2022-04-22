@@ -1,10 +1,7 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Permissions
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Permissions;
+
+internal class YouAreOwnerComposer : ServerPacket
 {
-    class YouAreOwnerComposer : ServerPacket
-    {
-        public YouAreOwnerComposer()
-            : base(ServerPacketHeader.YouAreOwnerMessageComposer)
-        {
-        }
-    }
+    public YouAreOwnerComposer()
+        : base(ServerPacketHeader.YouAreOwnerMessageComposer) { }
 }

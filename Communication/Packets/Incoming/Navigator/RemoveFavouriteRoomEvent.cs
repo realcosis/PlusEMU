@@ -1,18 +1,16 @@
 ﻿using Plus.Communication.Packets.Outgoing.Navigator;
 using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Navigator
-{
-    public class RemoveFavouriteRoomEvent : IPacketEvent
-    {
-        public void Parse(GameClient session, ClientPacket packet)
-        {
-            var id = packet.PopInt();
+namespace Plus.Communication.Packets.Incoming.Navigator;
 
-            session.GetHabbo().FavoriteRooms.Remove(id);
-            session.SendPacket(new UpdateFavouriteRoomComposer(id, false));
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-            dbClient.RunQuery("DELETE FROM user_favorites WHERE user_id = " + session.GetHabbo().Id + " AND room_id = " + id + " LIMIT 1");
-        }
+public class RemoveFavouriteRoomEvent : IPacketEvent
+{
+    public void Parse(GameClient session, ClientPacket packet)
+    {
+        var id = packet.PopInt();
+        session.GetHabbo().FavoriteRooms.Remove(id);
+        session.SendPacket(new UpdateFavouriteRoomComposer(id, false));
+        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        dbClient.RunQuery("DELETE FROM user_favorites WHERE user_id = " + session.GetHabbo().Id + " AND room_id = " + id + " LIMIT 1");
     }
 }

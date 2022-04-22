@@ -1,13 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Moderation
+﻿namespace Plus.Communication.Packets.Outgoing.Moderation;
+
+internal class BroadcastMessageAlertComposer : ServerPacket
 {
-    class BroadcastMessageAlertComposer : ServerPacket
+    public BroadcastMessageAlertComposer(string message, string url = "")
+        : base(ServerPacketHeader.BroadcastMessageAlertMessageComposer)
     {
-        public BroadcastMessageAlertComposer(string message, string url = "")
-            : base(ServerPacketHeader.BroadcastMessageAlertMessageComposer)
-        {
-           WriteString(message);
-           WriteString(url);
-        }
+        WriteString(message);
+        WriteString(url);
     }
 }
-

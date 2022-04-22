@@ -1,94 +1,92 @@
-﻿using System.Linq;
-using System.Collections.Concurrent;
-
+﻿using System.Collections.Concurrent;
+using System.Linq;
 using Plus.Communication.Packets.Incoming;
 using Plus.HabboHotel.Rooms;
 
-namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
+namespace Plus.HabboHotel.Items.Wired.Boxes.Effects;
+
+internal class ToggleFurniBox : IWiredItem, IWiredCycle
 {
-    class ToggleFurniBox : IWiredItem, IWiredCycle
+    private int _delay;
+
+    private long _next;
+    private bool _requested;
+
+    public ToggleFurniBox(Room instance, Item item)
     {
-        public Room Instance { get; set; }
-        public Item Item { get; set; }
-        public WiredBoxType Type => WiredBoxType.EffectToggleFurniState;
-        public ConcurrentDictionary<int, Item> SetItems { get; set; }
-        public int TickCount { get; set; }
-        public string StringData { get; set; }
-        public bool BoolData { get; set; }
-        public int Delay { get => _delay;
-            set { _delay = value; TickCount = value; } }
-        public string ItemsData { get; set; }
+        Instance = instance;
+        Item = item;
+        SetItems = new ConcurrentDictionary<int, Item>();
+    }
 
-        private long _next;
-        private int _delay = 0;
-        private bool _requested = false;
+    public int TickCount { get; set; }
 
-        public ToggleFurniBox(Room instance, Item item)
+    public int Delay
+    {
+        get => _delay;
+        set
         {
-            this.Instance = instance;
-            this.Item = item;
-            SetItems = new ConcurrentDictionary<int, Item>();
+            _delay = value;
+            TickCount = value;
         }
+    }
 
-        public void HandleSave(ClientPacket packet)
+    public bool OnCycle()
+    {
+        if (SetItems.Count == 0 || !_requested)
+            return false;
+        var now = PlusEnvironment.Now();
+        if (_next < now)
         {
-            SetItems.Clear();
-            var unknown = packet.PopInt();
-            var unknown2 = packet.PopString();
-
-            var furniCount = packet.PopInt();
-            for (var i = 0; i < furniCount; i++)
+            foreach (var item in SetItems.Values.ToList())
             {
-                var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
-                if (selectedItem != null)
-                    SetItems.TryAdd(selectedItem.Id, selectedItem);
-            }
-
-            var delay = packet.PopInt();
-            this.Delay = delay;
-        }
-
-        public bool Execute(params object[] @params)
-        {
-            if (_next == 0 || _next < PlusEnvironment.Now())
-                _next = PlusEnvironment.Now() + Delay;
-
-
-            _requested = true;
-            TickCount = Delay;
-            return true;
-        }
-
-        public bool OnCycle()
-        {
-            if (SetItems.Count == 0 || !_requested)
-                return false;
-
-            var now = PlusEnvironment.Now();
-            if (_next < now)
-            {
-                foreach (var item in SetItems.Values.ToList())
+                if (item == null)
+                    continue;
+                if (!Instance.GetRoomItemHandler().GetFloor.Contains(item))
                 {
-                    if (item == null)
-                        continue;
-
-                    if (!Instance.GetRoomItemHandler().GetFloor.Contains(item))
-                    {
-                        Item n = null;
-                        SetItems.TryRemove(item.Id, out n);
-                        continue;
-                    }
-
-                    item.Interactor.OnWiredTrigger(item);
+                    Item n = null;
+                    SetItems.TryRemove(item.Id, out n);
+                    continue;
                 }
-
-                _requested = false;
-
-                _next = 0;
-                TickCount = Delay;
-        
+                item.Interactor.OnWiredTrigger(item);
             }
-            return true;
+            _requested = false;
+            _next = 0;
+            TickCount = Delay;
         }
+        return true;
+    }
+
+    public Room Instance { get; set; }
+    public Item Item { get; set; }
+    public WiredBoxType Type => WiredBoxType.EffectToggleFurniState;
+    public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public string StringData { get; set; }
+    public bool BoolData { get; set; }
+    public string ItemsData { get; set; }
+
+    public void HandleSave(ClientPacket packet)
+    {
+        SetItems.Clear();
+        var unknown = packet.PopInt();
+        var unknown2 = packet.PopString();
+        var furniCount = packet.PopInt();
+        for (var i = 0; i < furniCount; i++)
+        {
+            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+            if (selectedItem != null)
+                SetItems.TryAdd(selectedItem.Id, selectedItem);
+        }
+        var delay = packet.PopInt();
+        Delay = delay;
+    }
+
+    public bool Execute(params object[] @params)
+    {
+        if (_next == 0 || _next < PlusEnvironment.Now())
+            _next = PlusEnvironment.Now() + Delay;
+        _requested = true;
+        TickCount = Delay;
+        return true;
     }
 }

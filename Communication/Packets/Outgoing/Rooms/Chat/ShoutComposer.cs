@@ -1,16 +1,15 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Chat
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Chat;
+
+public class ShoutComposer : ServerPacket
 {
-    public class ShoutComposer : ServerPacket
+    public ShoutComposer(int virtualId, string message, int emotion, int colour)
+        : base(ServerPacketHeader.ShoutMessageComposer)
     {
-        public ShoutComposer(int virtualId, string message, int emotion, int colour)
-            : base(ServerPacketHeader.ShoutMessageComposer)
-        {
-            WriteInteger(virtualId);
-           WriteString(message);
-            WriteInteger(emotion);
-            WriteInteger(colour);
-            WriteInteger(0);
-            WriteInteger(-1);
-        }
+        WriteInteger(virtualId);
+        WriteString(message);
+        WriteInteger(emotion);
+        WriteInteger(colour);
+        WriteInteger(0);
+        WriteInteger(-1);
     }
 }

@@ -1,90 +1,80 @@
-﻿using System.Linq;
-using System.Collections.Concurrent;
-
+﻿using System.Collections.Concurrent;
+using System.Linq;
 using Plus.Communication.Packets.Incoming;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 
-namespace Plus.HabboHotel.Items.Wired.Boxes.Triggers
+namespace Plus.HabboHotel.Items.Wired.Boxes.Triggers;
+
+internal class RoomEnterBox : IWiredItem
 {
-    class RoomEnterBox : IWiredItem
+    public RoomEnterBox(Room instance, Item item)
     {
-        public Room Instance { get; set; }
-        public Item Item { get; set; }
-        public WiredBoxType Type => WiredBoxType.TriggerRoomEnter;
-        public ConcurrentDictionary<int, Item> SetItems { get; set; }
-        public string StringData { get; set; }
-        public bool BoolData { get; set; }
-        public string ItemsData { get; set; }
+        Instance = instance;
+        Item = item;
+        SetItems = new ConcurrentDictionary<int, Item>();
+    }
 
-        public RoomEnterBox(Room instance, Item item)
+    public Room Instance { get; set; }
+    public Item Item { get; set; }
+    public WiredBoxType Type => WiredBoxType.TriggerRoomEnter;
+    public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public string StringData { get; set; }
+    public bool BoolData { get; set; }
+    public string ItemsData { get; set; }
+
+    public void HandleSave(ClientPacket packet)
+    {
+        var unknown = packet.PopInt();
+        var user = packet.PopString();
+        StringData = user;
+    }
+
+    public bool Execute(params object[] @params)
+    {
+        Instance.GetWired().OnEvent(Item);
+        var player = (Habbo)@params[0];
+        if (!string.IsNullOrWhiteSpace(StringData) && player.Username != StringData)
+            return false;
+        var effects = Instance.GetWired().GetEffects(this);
+        var conditions = Instance.GetWired().GetConditions(this);
+        foreach (var condition in conditions)
         {
-            this.Instance = instance;
-            this.Item = item;
-            SetItems = new ConcurrentDictionary<int, Item>();
+            if (!condition.Execute(player))
+                return false;
+            Instance.GetWired().OnEvent(condition.Item);
         }
 
-        public void HandleSave(ClientPacket packet)
+        //Check the ICollection to find the random addon effect.
+        var hasRandomEffectAddon = effects.Count(x => x.Type == WiredBoxType.AddonRandomEffect) > 0;
+        if (hasRandomEffectAddon)
         {
-            var unknown = packet.PopInt();
-            var user = packet.PopString();
-
-            StringData = user;
-        }
-
-        public bool Execute(params object[] @params)
-        {
-            Instance.GetWired().OnEvent(Item);
-
-            var player = (Habbo)@params[0];
-
-            if (!string.IsNullOrWhiteSpace(StringData) && player.Username != StringData)
+            //Okay, so we have a random addon effect, now lets get the IWiredItem and attempt to execute it.
+            var randomBox = effects.FirstOrDefault(x => x.Type == WiredBoxType.AddonRandomEffect);
+            if (!randomBox.Execute())
                 return false;
 
-            var effects = Instance.GetWired().GetEffects(this);
-            var conditions = Instance.GetWired().GetConditions(this);
+            //Success! Let's get our selected box and continue.
+            var selectedBox = Instance.GetWired().GetRandomEffect(effects.ToList());
+            if (!selectedBox.Execute())
+                return false;
 
-            foreach (var condition in conditions)
+            //Woo! Almost there captain, now lets broadcast the update to the room instance.
+            if (Instance != null)
             {
-                if (!condition.Execute(player))
-                    return false;
-
-                Instance.GetWired().OnEvent(condition.Item);
+                Instance.GetWired().OnEvent(randomBox.Item);
+                Instance.GetWired().OnEvent(selectedBox.Item);
             }
-
-            //Check the ICollection to find the random addon effect.
-            var hasRandomEffectAddon = effects.Count(x => x.Type == WiredBoxType.AddonRandomEffect) > 0;
-            if (hasRandomEffectAddon)
-            {
-                //Okay, so we have a random addon effect, now lets get the IWiredItem and attempt to execute it.
-                var randomBox = effects.FirstOrDefault(x => x.Type == WiredBoxType.AddonRandomEffect);
-                if (!randomBox.Execute())
-                    return false;
-
-                //Success! Let's get our selected box and continue.
-                var selectedBox = Instance.GetWired().GetRandomEffect(effects.ToList());
-                if (!selectedBox.Execute())
-                    return false;
-
-                //Woo! Almost there captain, now lets broadcast the update to the room instance.
-                if (Instance != null)
-                {
-                    Instance.GetWired().OnEvent(randomBox.Item);
-                    Instance.GetWired().OnEvent(selectedBox.Item);
-                }
-            }
-            else
-            {
-                foreach (var effect in effects)
-                {
-                    if (!effect.Execute(player))
-                        return false;
-
-                    Instance.GetWired().OnEvent(effect.Item);
-                }
-            }
-
-            return true;
         }
+        else
+        {
+            foreach (var effect in effects)
+            {
+                if (!effect.Execute(player))
+                    return false;
+                Instance.GetWired().OnEvent(effect.Item);
+            }
+        }
+        return true;
     }
 }

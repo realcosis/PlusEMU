@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
+﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
+
+internal class UserRemoveComposer : ServerPacket
 {
-    class UserRemoveComposer : ServerPacket
+    public UserRemoveComposer(int id)
+        : base(ServerPacketHeader.UserRemoveMessageComposer)
     {
-        public UserRemoveComposer(int id)
-            : base(ServerPacketHeader.UserRemoveMessageComposer)
-        {
-           WriteString(id.ToString());
-        }
+        WriteString(id.ToString());
     }
 }

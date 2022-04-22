@@ -1,12 +1,9 @@
 ﻿using System;
 
-namespace Plus.Communication.ConnectionManager.Socket_Exceptions
+namespace Plus.Communication.ConnectionManager.Socket_Exceptions;
+
+public class SocketInitializationException : Exception
 {
-    public class SocketInitializationException : Exception
-    {
-        public SocketInitializationException(string message)
-            : base(message)
-        {
-        }
-    }
+    public SocketInitializationException(string message)
+        : base(message) { }
 }

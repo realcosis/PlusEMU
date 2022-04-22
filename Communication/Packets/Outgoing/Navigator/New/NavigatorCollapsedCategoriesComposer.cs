@@ -1,11 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Navigator.New
+﻿namespace Plus.Communication.Packets.Outgoing.Navigator.New;
+
+internal class NavigatorCollapsedCategoriesComposer : ServerPacket
 {
-    class NavigatorCollapsedCategoriesComposer : ServerPacket
+    public NavigatorCollapsedCategoriesComposer()
+        : base(ServerPacketHeader.NavigatorCollapsedCategoriesMessageComposer)
     {
-        public NavigatorCollapsedCategoriesComposer()
-            : base(ServerPacketHeader.NavigatorCollapsedCategoriesMessageComposer)
-        {
-            WriteInteger(0);
-        }
+        WriteInteger(0);
     }
 }

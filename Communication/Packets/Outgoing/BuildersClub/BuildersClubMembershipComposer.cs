@@ -1,14 +1,13 @@
-﻿namespace Plus.Communication.Packets.Outgoing.BuildersClub
+﻿namespace Plus.Communication.Packets.Outgoing.BuildersClub;
+
+internal class BuildersClubMembershipComposer : ServerPacket
 {
-    class BuildersClubMembershipComposer : ServerPacket
+    public BuildersClubMembershipComposer()
+        : base(ServerPacketHeader.BuildersClubMembershipMessageComposer)
     {
-        public BuildersClubMembershipComposer()
-            : base(ServerPacketHeader.BuildersClubMembershipMessageComposer)
-        {
-            WriteInteger(int.MaxValue);
-            WriteInteger(100);
-            WriteInteger(0);
-            WriteInteger(int.MaxValue);
-        }
+        WriteInteger(int.MaxValue);
+        WriteInteger(100);
+        WriteInteger(0);
+        WriteInteger(int.MaxValue);
     }
 }

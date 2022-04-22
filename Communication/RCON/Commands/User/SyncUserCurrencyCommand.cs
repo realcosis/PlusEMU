@@ -1,76 +1,68 @@
 ﻿using System;
 
-namespace Plus.Communication.Rcon.Commands.User
+namespace Plus.Communication.Rcon.Commands.User;
+
+internal class SyncUserCurrencyCommand : IRconCommand
 {
-    class SyncUserCurrencyCommand : IRconCommand
+    public string Description => "This command is used to sync a users specified currency to the database.";
+
+    public string Parameters => "%userId% %currency%";
+
+    public bool TryExecute(string[] parameters)
     {
-        public string Description => "This command is used to sync a users specified currency to the database.";
+        if (!int.TryParse(parameters[0], out var userId))
+            return false;
+        var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
+        if (client == null || client.GetHabbo() == null)
+            return false;
 
-        public string Parameters => "%userId% %currency%";
-
-        public bool TryExecute(string[] parameters)
+        // Validate the currency type
+        if (string.IsNullOrEmpty(Convert.ToString(parameters[1])))
+            return false;
+        var currency = Convert.ToString(parameters[1]);
+        switch (currency)
         {
-            if (!int.TryParse(parameters[0], out var userId))
+            default:
                 return false;
-
-            var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
-            if (client == null || client.GetHabbo() == null)
-                return false;
-
-            // Validate the currency type
-            if (string.IsNullOrEmpty(Convert.ToString(parameters[1])))
-                return false;
-
-            var currency = Convert.ToString(parameters[1]);
-
-            switch (currency)
+            case "coins":
+            case "credits":
             {
-                default:
-                    return false;
-
-                case "coins":
-                case "credits":
-                    {
-                        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-                        dbClient.SetQuery("UPDATE `users` SET `credits` = @credits WHERE `id` = @id LIMIT 1");
-                        dbClient.AddParameter("credits", client.GetHabbo().Credits);
-                        dbClient.AddParameter("id", userId);
-                        dbClient.RunQuery();
-                        break;
-                    }
-
-                case "pixels":
-                case "duckets":
-                    {
-                        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-                        dbClient.SetQuery("UPDATE `users` SET `activity_points` = @duckets WHERE `id` = @id LIMIT 1");
-                        dbClient.AddParameter("duckets", client.GetHabbo().Duckets);
-                        dbClient.AddParameter("id", userId);
-                        dbClient.RunQuery();
-                        break;
-                    }
-
-                case "diamonds":
-                    {
-                        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-                        dbClient.SetQuery("UPDATE `users` SET `vip_points` = @diamonds WHERE `id` = @id LIMIT 1");
-                        dbClient.AddParameter("diamonds", client.GetHabbo().Diamonds);
-                        dbClient.AddParameter("id", userId);
-                        dbClient.RunQuery();
-                        break;
-                    }
-
-                case "gotw":
-                    {
-                        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-                        dbClient.SetQuery("UPDATE `users` SET `gotw_points` = @gotw WHERE `id` = @id LIMIT 1");
-                        dbClient.AddParameter("gotw", client.GetHabbo().GotwPoints);
-                        dbClient.AddParameter("id", userId);
-                        dbClient.RunQuery();
-                        break;
-                    }
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                dbClient.SetQuery("UPDATE `users` SET `credits` = @credits WHERE `id` = @id LIMIT 1");
+                dbClient.AddParameter("credits", client.GetHabbo().Credits);
+                dbClient.AddParameter("id", userId);
+                dbClient.RunQuery();
+                break;
             }
-            return true;
+            case "pixels":
+            case "duckets":
+            {
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                dbClient.SetQuery("UPDATE `users` SET `activity_points` = @duckets WHERE `id` = @id LIMIT 1");
+                dbClient.AddParameter("duckets", client.GetHabbo().Duckets);
+                dbClient.AddParameter("id", userId);
+                dbClient.RunQuery();
+                break;
+            }
+            case "diamonds":
+            {
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                dbClient.SetQuery("UPDATE `users` SET `vip_points` = @diamonds WHERE `id` = @id LIMIT 1");
+                dbClient.AddParameter("diamonds", client.GetHabbo().Diamonds);
+                dbClient.AddParameter("id", userId);
+                dbClient.RunQuery();
+                break;
+            }
+            case "gotw":
+            {
+                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                dbClient.SetQuery("UPDATE `users` SET `gotw_points` = @gotw WHERE `id` = @id LIMIT 1");
+                dbClient.AddParameter("gotw", client.GetHabbo().GotwPoints);
+                dbClient.AddParameter("id", userId);
+                dbClient.RunQuery();
+                break;
+            }
         }
+        return true;
     }
 }

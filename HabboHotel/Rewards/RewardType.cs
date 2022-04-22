@@ -1,11 +1,10 @@
-﻿namespace Plus.HabboHotel.Rewards
+﻿namespace Plus.HabboHotel.Rewards;
+
+public enum RewardType
 {
-    public enum RewardType
-    {
-        Badge,
-        Credits,
-        Duckets,
-        Diamonds,
-        None
-    }
+    Badge,
+    Credits,
+    Duckets,
+    Diamonds,
+    None
 }

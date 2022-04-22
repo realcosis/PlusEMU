@@ -1,16 +1,15 @@
-﻿namespace Plus.HabboHotel.Groups
-{
-    public class GroupMember
-    {
-        public int Id { get; set; }
-        public string Username { get; set; }
-        public string Look { get; set; }
+﻿namespace Plus.HabboHotel.Groups;
 
-        public GroupMember(int id, string username, string look)
-        {
-            this.Id = id;
-            this.Username = username;
-            this.Look = look;
-        }
+public class GroupMember
+{
+    public GroupMember(int id, string username, string look)
+    {
+        Id = id;
+        Username = username;
+        Look = look;
     }
+
+    public int Id { get; set; }
+    public string Username { get; set; }
+    public string Look { get; set; }
 }

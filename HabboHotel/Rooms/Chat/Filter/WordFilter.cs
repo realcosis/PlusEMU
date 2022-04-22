@@ -1,26 +1,20 @@
-﻿namespace Plus.HabboHotel.Rooms.Chat.Filter
+﻿namespace Plus.HabboHotel.Rooms.Chat.Filter;
+
+internal sealed class WordFilter
 {
-    sealed class WordFilter
+    public WordFilter(string word, string replacement, bool strict, bool bannable)
     {
-        private string _word;
-        private string _replacement;
-        private bool _strict;
-        private bool _bannable;
-
-        public WordFilter(string word, string replacement, bool strict, bool bannable)
-        {
-            _word = word;
-            _replacement = replacement;
-            _strict = strict;
-            _bannable = bannable;
-        }
-
-        public string Word => _word;
-
-        public string Replacement => _replacement;
-
-        public bool IsStrict => _strict;
-
-        public bool IsBannable => _bannable;
+        Word = word;
+        Replacement = replacement;
+        IsStrict = strict;
+        IsBannable = bannable;
     }
+
+    public string Word { get; }
+
+    public string Replacement { get; }
+
+    public bool IsStrict { get; }
+
+    public bool IsBannable { get; }
 }

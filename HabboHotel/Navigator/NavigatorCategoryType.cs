@@ -1,20 +1,19 @@
-﻿namespace Plus.HabboHotel.Navigator
+﻿namespace Plus.HabboHotel.Navigator;
+
+public enum NavigatorCategoryType
 {
-    public enum NavigatorCategoryType
-    {
-        Category,
-        Featured,
-        Popular,
-        Recommended,
-        Query,
-        MyRooms,
-        MyFavourites,
-        MyGroups,
-        MyHistory,
-        MyFriendsRooms,
-        MyFrequentHistory,
-        TopPromotions,
-        PromotionCategory,
-        MyRights
-    }
+    Category,
+    Featured,
+    Popular,
+    Recommended,
+    Query,
+    MyRooms,
+    MyFavourites,
+    MyGroups,
+    MyHistory,
+    MyFriendsRooms,
+    MyFrequentHistory,
+    TopPromotions,
+    PromotionCategory,
+    MyRights
 }

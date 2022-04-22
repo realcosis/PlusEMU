@@ -1,30 +1,24 @@
 ﻿using Plus.HabboHotel.GameClients;
 
+namespace Plus.Communication.Packets.Incoming.Sound;
 
-namespace Plus.Communication.Packets.Incoming.Sound
+internal class SetSoundSettingsEvent : IPacketEvent
 {
-    class SetSoundSettingsEvent : IPacketEvent
+    public void Parse(GameClient session, ClientPacket packet)
     {
-        public void Parse(GameClient session, ClientPacket packet)
+        var volume = "";
+        for (var i = 0; i < 3; i++)
         {
-            var volume = "";
-            for (var i = 0; i < 3; i++)
-            {
-                var vol = packet.PopInt();
-                if (vol < 0 || vol > 100)
-                {
-                    vol = 100;
-                }
-
-                if (i < 2)
-                    volume += vol + ",";
-                else
-                    volume += vol;
-            }
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-            dbClient.SetQuery("UPDATE users SET volume = @volume WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
-            dbClient.AddParameter("volume", volume);
-            dbClient.RunQuery();
+            var vol = packet.PopInt();
+            if (vol < 0 || vol > 100) vol = 100;
+            if (i < 2)
+                volume += vol + ",";
+            else
+                volume += vol;
         }
+        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        dbClient.SetQuery("UPDATE users SET volume = @volume WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
+        dbClient.AddParameter("volume", volume);
+        dbClient.RunQuery();
     }
 }

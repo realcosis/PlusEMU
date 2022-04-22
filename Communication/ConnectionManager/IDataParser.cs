@@ -1,9 +1,8 @@
 ﻿using System;
 
-namespace Plus.Communication.ConnectionManager
+namespace Plus.Communication.ConnectionManager;
+
+public interface IDataParser : IDisposable, ICloneable
 {
-    public interface IDataParser : IDisposable, ICloneable
-    {
-        void HandlePacketData(byte[] packet);
-    }
+    void HandlePacketData(byte[] packet);
 }

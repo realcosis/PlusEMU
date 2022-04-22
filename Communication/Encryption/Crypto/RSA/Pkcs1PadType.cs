@@ -1,8 +1,7 @@
-﻿namespace Plus.Communication.Encryption.Crypto.RSA
+﻿namespace Plus.Communication.Encryption.Crypto.RSA;
+
+public enum Pkcs1PadType
 {
-    public enum Pkcs1PadType
-    {
-        FullByte = 1,
-        RandomByte = 2
-    }
+    FullByte = 1,
+    RandomByte = 2
 }

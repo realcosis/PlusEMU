@@ -1,12 +1,11 @@
 ﻿using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Misc
+namespace Plus.Communication.Packets.Incoming.Misc;
+
+internal class LatencyTestEvent : IPacketEvent
 {
-    class LatencyTestEvent : IPacketEvent
+    public void Parse(GameClient session, ClientPacket packet)
     {
-        public void Parse(GameClient session, ClientPacket packet)
-        {
-            //Session.SendMessage(new LatencyTestComposer(Packet.PopInt()));
-        }
+        //Session.SendMessage(new LatencyTestComposer(Packet.PopInt()));
     }
 }

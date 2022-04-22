@@ -1,10 +1,9 @@
 ﻿using Plus.Communication.Packets.Incoming;
 using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets
+namespace Plus.Communication.Packets;
+
+public interface IPacketEvent
 {
-    public interface IPacketEvent
-    {
-        void Parse(GameClient session, ClientPacket packet);
-    }
+    void Parse(GameClient session, ClientPacket packet);
 }

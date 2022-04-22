@@ -1,96 +1,71 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Plus.HabboHotel.Catalog.Marketplace
+namespace Plus.HabboHotel.Catalog.Marketplace;
+
+public class MarketplaceManager
 {
-    public class MarketplaceManager
+    public Dictionary<int, int> MarketAverages = new();
+    public Dictionary<int, int> MarketCounts = new();
+    public List<int> MarketItemKeys = new();
+    public List<MarketOffer> MarketItems = new();
+
+    public int AvgPriceForSprite(int spriteId)
     {
-        public List<int> MarketItemKeys = new List<int>();
-        public List<MarketOffer> MarketItems = new List<MarketOffer>();
-        public Dictionary<int, int> MarketCounts = new Dictionary<int, int>();
-        public Dictionary<int, int> MarketAverages = new Dictionary<int, int>();
-
-        public MarketplaceManager()
+        var num = 0;
+        var num2 = 0;
+        if (MarketAverages.ContainsKey(spriteId) && MarketCounts.ContainsKey(spriteId))
         {
-
-        }
-
-        public int AvgPriceForSprite(int spriteId)
-        {
-            var num = 0;
-            var num2 = 0;
-            if (MarketAverages.ContainsKey(spriteId) && MarketCounts.ContainsKey(spriteId))
-            {
-                if (MarketCounts[spriteId] > 0)
-                {
-                    return (MarketAverages[spriteId] / MarketCounts[spriteId]);
-                }
-                return 0;
-            }
-
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("SELECT `avgprice` FROM `catalog_marketplace_data` WHERE `sprite` = '" + spriteId + "' LIMIT 1");
-                num = dbClient.GetInteger();
-
-                dbClient.SetQuery("SELECT `sold` FROM `catalog_marketplace_data` WHERE `sprite` = '" + spriteId + "' LIMIT 1");
-                num2 = dbClient.GetInteger();
-            }
-
-            MarketAverages.Add(spriteId, num);
-            MarketCounts.Add(spriteId, num2);
-
-            if (num2 > 0)
-                return Convert.ToInt32(Math.Ceiling((double)(num / num2)));
-            
+            if (MarketCounts[spriteId] > 0) return MarketAverages[spriteId] / MarketCounts[spriteId];
             return 0;
         }
-
-        public string FormatTimestampString()
+        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
-            return FormatTimestamp().ToString().Split(new char[] { ',' })[0];
+            dbClient.SetQuery("SELECT `avgprice` FROM `catalog_marketplace_data` WHERE `sprite` = '" + spriteId + "' LIMIT 1");
+            num = dbClient.GetInteger();
+            dbClient.SetQuery("SELECT `sold` FROM `catalog_marketplace_data` WHERE `sprite` = '" + spriteId + "' LIMIT 1");
+            num2 = dbClient.GetInteger();
         }
-
-        public double FormatTimestamp()
-        {
-            return (PlusEnvironment.GetUnixTimestamp() - 172800.0);
-        }
-
-        public int OfferCountForSprite(int spriteId)
-        {
-            var dictionary = new Dictionary<int, MarketOffer>();
-            var dictionary2 = new Dictionary<int, int>();
-            foreach (var item in MarketItems)
-            {
-                if (dictionary.ContainsKey(item.SpriteId))
-                {
-                    if (dictionary[item.SpriteId].TotalPrice > item.TotalPrice)
-                    {
-                        dictionary.Remove(item.SpriteId);
-                        dictionary.Add(item.SpriteId, item);
-                    }
-
-                    var num = dictionary2[item.SpriteId];
-                    dictionary2.Remove(item.SpriteId);
-                    dictionary2.Add(item.SpriteId, num + 1);
-                }
-                else
-                {
-                    dictionary.Add(item.SpriteId, item);
-                    dictionary2.Add(item.SpriteId, 1);
-                }
-            }
-
-            if (dictionary2.ContainsKey(spriteId))
-            {
-                return dictionary2[spriteId];
-            }
-            return 0;
-        }
-
-        public int CalculateComissionPrice(float price)
-        {
-            return Convert.ToInt32(Math.Ceiling(price / 100 * 1));
-        }
+        MarketAverages.Add(spriteId, num);
+        MarketCounts.Add(spriteId, num2);
+        if (num2 > 0)
+            return Convert.ToInt32(Math.Ceiling((double)(num / num2)));
+        return 0;
     }
+
+    public string FormatTimestampString()
+    {
+        return FormatTimestamp().ToString().Split(new[] { ',' })[0];
+    }
+
+    public double FormatTimestamp() => PlusEnvironment.GetUnixTimestamp() - 172800.0;
+
+    public int OfferCountForSprite(int spriteId)
+    {
+        var dictionary = new Dictionary<int, MarketOffer>();
+        var dictionary2 = new Dictionary<int, int>();
+        foreach (var item in MarketItems)
+        {
+            if (dictionary.ContainsKey(item.SpriteId))
+            {
+                if (dictionary[item.SpriteId].TotalPrice > item.TotalPrice)
+                {
+                    dictionary.Remove(item.SpriteId);
+                    dictionary.Add(item.SpriteId, item);
+                }
+                var num = dictionary2[item.SpriteId];
+                dictionary2.Remove(item.SpriteId);
+                dictionary2.Add(item.SpriteId, num + 1);
+            }
+            else
+            {
+                dictionary.Add(item.SpriteId, item);
+                dictionary2.Add(item.SpriteId, 1);
+            }
+        }
+        if (dictionary2.ContainsKey(spriteId)) return dictionary2[spriteId];
+        return 0;
+    }
+
+    public int CalculateComissionPrice(float price) => Convert.ToInt32(Math.Ceiling(price / 100 * 1));
 }

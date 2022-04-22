@@ -1,58 +1,52 @@
-﻿using System.Threading;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Threading;
 
-namespace Plus.HabboHotel.Rooms.Chat.Logs
+namespace Plus.HabboHotel.Rooms.Chat.Logs;
+
+public sealed class ChatlogManager
 {
-    public sealed class ChatlogManager
+    private const int FlushOnCount = 10;
+
+    private readonly List<ChatlogEntry> _chatlogs;
+    private readonly ReaderWriterLockSlim _lock;
+
+    public ChatlogManager()
     {
-        private const int FlushOnCount = 10;
+        _chatlogs = new List<ChatlogEntry>();
+        _lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
+    }
 
-        private readonly List<ChatlogEntry> _chatlogs;
-        private readonly ReaderWriterLockSlim _lock;
+    public void StoreChatlog(ChatlogEntry entry)
+    {
+        _lock.EnterUpgradeableReadLock();
+        _chatlogs.Add(entry);
+        OnChatlogStore();
+        _lock.ExitUpgradeableReadLock();
+    }
 
-        public ChatlogManager()
+    private void OnChatlogStore()
+    {
+        if (_chatlogs.Count >= FlushOnCount)
+            FlushAndSave();
+    }
+
+    public void FlushAndSave()
+    {
+        _lock.EnterWriteLock();
+        if (_chatlogs.Count > 0)
         {
-            _chatlogs = new List<ChatlogEntry>();
-            _lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
-        }
-
-        public void StoreChatlog(ChatlogEntry entry)
-        {
-            _lock.EnterUpgradeableReadLock();
-
-            _chatlogs.Add(entry);
-
-            OnChatlogStore();
-
-            _lock.ExitUpgradeableReadLock();
-        }
-
-        private void OnChatlogStore()
-        {
-            if (_chatlogs.Count >= FlushOnCount)
-                FlushAndSave();
-        }
-
-        public void FlushAndSave()
-        {
-            _lock.EnterWriteLock();
-
-            if (_chatlogs.Count > 0)
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            foreach (var entry in _chatlogs)
             {
-                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-                foreach (var entry in _chatlogs)
-                {
-                    dbClient.SetQuery("INSERT INTO chatlogs (`user_id`, `room_id`, `timestamp`, `message`) VALUES " + "(@uid, @rid, @time, @msg)");
-                    dbClient.AddParameter("uid", entry.PlayerId);
-                    dbClient.AddParameter("rid", entry.RoomId);
-                    dbClient.AddParameter("time", entry.Timestamp);
-                    dbClient.AddParameter("msg", entry.Message);
-                    dbClient.RunQuery();
-                }
+                dbClient.SetQuery("INSERT INTO chatlogs (`user_id`, `room_id`, `timestamp`, `message`) VALUES " + "(@uid, @rid, @time, @msg)");
+                dbClient.AddParameter("uid", entry.PlayerId);
+                dbClient.AddParameter("rid", entry.RoomId);
+                dbClient.AddParameter("time", entry.Timestamp);
+                dbClient.AddParameter("msg", entry.Message);
+                dbClient.RunQuery();
             }
-
-            _chatlogs.Clear();
-            _lock.ExitWriteLock();
         }
+        _chatlogs.Clear();
+        _lock.ExitWriteLock();
     }
 }

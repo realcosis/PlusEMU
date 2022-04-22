@@ -1,12 +1,11 @@
 ﻿using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Catalog
+namespace Plus.Communication.Packets.Incoming.Catalog;
+
+internal class GetCatalogModeEvent : IPacketEvent
 {
-    class GetCatalogModeEvent : IPacketEvent
+    public void Parse(GameClient session, ClientPacket packet)
     {
-        public void Parse(GameClient session, ClientPacket packet)
-        {
-            // string mode = packet.PopString();
-        }
+        // string mode = packet.PopString();
     }
 }

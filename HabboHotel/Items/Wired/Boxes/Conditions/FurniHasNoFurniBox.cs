@@ -1,68 +1,61 @@
-﻿using System.Linq;
-using System.Collections.Concurrent;
-
+﻿using System.Collections.Concurrent;
+using System.Linq;
 using Plus.Communication.Packets.Incoming;
 using Plus.HabboHotel.Rooms;
 
-namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions
+namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions;
+
+internal class FurniHasNoFurniBox : IWiredItem
 {
-    class FurniHasNoFurniBox : IWiredItem
+    public FurniHasNoFurniBox(Room instance, Item item)
     {
-        public Room Instance { get; set; }
+        Instance = instance;
+        Item = item;
+        SetItems = new ConcurrentDictionary<int, Item>();
+    }
 
-        public Item Item { get; set; }
+    public Room Instance { get; set; }
 
-        public WiredBoxType Type => WiredBoxType.ConditionFurniHasNoFurni;
+    public Item Item { get; set; }
 
-        public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public WiredBoxType Type => WiredBoxType.ConditionFurniHasNoFurni;
 
-        public string StringData { get; set; }
+    public ConcurrentDictionary<int, Item> SetItems { get; set; }
 
-        public bool BoolData { get; set; }
+    public string StringData { get; set; }
 
-        public string ItemsData { get; set; }
+    public bool BoolData { get; set; }
 
-        public FurniHasNoFurniBox(Room instance, Item item)
+    public string ItemsData { get; set; }
+
+    public void HandleSave(ClientPacket packet)
+    {
+        var unknown = packet.PopInt();
+        var unknown2 = packet.PopString();
+        if (SetItems.Count > 0)
+            SetItems.Clear();
+        var furniCount = packet.PopInt();
+        for (var i = 0; i < furniCount; i++)
         {
-            this.Instance = instance;
-            this.Item = item;
-            SetItems = new ConcurrentDictionary<int, Item>();
+            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+            if (selectedItem != null)
+                SetItems.TryAdd(selectedItem.Id, selectedItem);
         }
+    }
 
-        public void HandleSave(ClientPacket packet)
+    public bool Execute(params object[] @params)
+    {
+        foreach (var item in SetItems.Values.ToList())
         {
-            var unknown = packet.PopInt();
-            var unknown2 = packet.PopString();
-
-            if (SetItems.Count > 0)
-                SetItems.Clear();
-
-            var furniCount = packet.PopInt();
-            for (var i = 0; i < furniCount; i++)
-            {
-                var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
-                if (selectedItem != null)
-                    SetItems.TryAdd(selectedItem.Id, selectedItem);
-            }
+            if (item == null || !Instance.GetRoomItemHandler().GetFloor.Contains(item))
+                continue;
+            var noFurni = false;
+            var items = Instance.GetGameMap().GetAllRoomItemForSquare(item.GetX, item.GetY);
+            if (items.Count == 0)
+                noFurni = true;
+            if (!noFurni)
+                return false;
         }
-
-        public bool Execute(params object[] @params)
-        {
-            foreach (var item in SetItems.Values.ToList())
-            {
-                if (item == null || !Instance.GetRoomItemHandler().GetFloor.Contains(item))
-                    continue;
-
-                var noFurni = false;
-                var items = Instance.GetGameMap().GetAllRoomItemForSquare(item.GetX, item.GetY);
-                if (items.Count == 0)
-                    noFurni = true;
-
-                if (!noFurni)
-                    return false;
-            }
-
-            return true;
-        }
+        return true;
     }
 }

@@ -1,13 +1,12 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Handshake
+﻿namespace Plus.Communication.Packets.Outgoing.Handshake;
+
+internal class AvailabilityStatusComposer : ServerPacket
 {
-    class AvailabilityStatusComposer : ServerPacket
+    public AvailabilityStatusComposer()
+        : base(ServerPacketHeader.AvailabilityStatusMessageComposer)
     {
-        public AvailabilityStatusComposer()
-            : base(ServerPacketHeader.AvailabilityStatusMessageComposer)
-        {
-            WriteBoolean(true);
-            WriteBoolean(false);
-            WriteBoolean(true);
-        }
+        WriteBoolean(true);
+        WriteBoolean(false);
+        WriteBoolean(true);
     }
 }

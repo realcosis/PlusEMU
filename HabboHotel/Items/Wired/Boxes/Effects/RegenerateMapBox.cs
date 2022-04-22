@@ -1,51 +1,47 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using Plus.HabboHotel.Rooms;
 using Plus.Communication.Packets.Incoming;
+using Plus.HabboHotel.Rooms;
 
-namespace Plus.HabboHotel.Items.Wired.Boxes.Effects
+namespace Plus.HabboHotel.Items.Wired.Boxes.Effects;
+
+internal class RegenerateMapsBox : IWiredItem
 {
-    internal class RegenerateMapsBox : IWiredItem
+    public RegenerateMapsBox(Room instance, Item item)
     {
-        public Room Instance { get; set; }
-        public Item Item { get; set; }
+        Instance = instance;
+        Item = item;
+        StringData = "";
+        SetItems = new ConcurrentDictionary<int, Item>();
+    }
 
-        public WiredBoxType Type => WiredBoxType.EffectRegenerateMaps;
+    public Room Instance { get; set; }
+    public Item Item { get; set; }
 
-        public ConcurrentDictionary<int, Item> SetItems { get; set; }
-        public string StringData { get; set; }
-        public bool BoolData { get; set; }
-        public string ItemsData { get; set; }
+    public WiredBoxType Type => WiredBoxType.EffectRegenerateMaps;
 
-        public RegenerateMapsBox(Room instance, Item item)
-        {
-            this.Instance = instance;
-            this.Item = item;
-            StringData = "";
-            SetItems = new ConcurrentDictionary<int, Item>();
-        }
+    public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public string StringData { get; set; }
+    public bool BoolData { get; set; }
+    public string ItemsData { get; set; }
 
-        public void HandleSave(ClientPacket packet)
-        {
-            var unknown = packet.PopInt();
-            var unknown2 = packet.PopString();
-        }
+    public void HandleSave(ClientPacket packet)
+    {
+        var unknown = packet.PopInt();
+        var unknown2 = packet.PopString();
+    }
 
-        public bool Execute(params object[] @params)
-        {
-            if (Instance == null)
-                return false;
-
-            var timeSinceRegen = DateTime.Now - Instance.LastRegeneration;
-
-            if (timeSinceRegen.TotalMinutes > 1)
-            {
-                Instance.GetGameMap().GenerateMaps();
-                Instance.LastRegeneration = DateTime.Now;
-                return true;
-            }
-            
+    public bool Execute(params object[] @params)
+    {
+        if (Instance == null)
             return false;
+        var timeSinceRegen = DateTime.Now - Instance.LastRegeneration;
+        if (timeSinceRegen.TotalMinutes > 1)
+        {
+            Instance.GetGameMap().GenerateMaps();
+            Instance.LastRegeneration = DateTime.Now;
+            return true;
         }
+        return false;
     }
 }

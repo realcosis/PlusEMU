@@ -1,18 +1,17 @@
-﻿using Plus.HabboHotel.Games;
+﻿using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Games;
 
-namespace Plus.Communication.Packets.Incoming.GameCenter
+namespace Plus.Communication.Packets.Incoming.GameCenter;
+
+internal class Game2GetWeeklyLeaderboardEvent : IPacketEvent
 {
-    class Game2GetWeeklyLeaderboardEvent : IPacketEvent
+    public void Parse(GameClient session, ClientPacket packet)
     {
-        public void Parse(HabboHotel.GameClients.GameClient session, ClientPacket packet)
+        var gameId = packet.PopInt();
+        GameData gameData = null;
+        if (PlusEnvironment.GetGame().GetGameDataManager().TryGetGame(gameId, out gameData))
         {
-            var gameId = packet.PopInt();
-
-            GameData gameData = null;
-            if (PlusEnvironment.GetGame().GetGameDataManager().TryGetGame(gameId, out gameData))
-            {
-                //Code
-            }
+            //Code
         }
     }
 }
