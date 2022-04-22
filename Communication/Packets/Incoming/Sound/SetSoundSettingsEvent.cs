@@ -22,13 +22,10 @@ namespace Plus.Communication.Packets.Incoming.Sound
                 else
                     volume += vol;
             }
-
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("UPDATE users SET volume = @volume WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
-                dbClient.AddParameter("volume", volume);
-                dbClient.RunQuery();
-            }
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("UPDATE users SET volume = @volume WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
+            dbClient.AddParameter("volume", volume);
+            dbClient.RunQuery();
         }
     }
 }

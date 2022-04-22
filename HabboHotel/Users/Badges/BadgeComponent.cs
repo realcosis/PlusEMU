@@ -89,12 +89,10 @@ namespace Plus.HabboHotel.Users.Badges
 
             if (inDatabase)
             {
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                {
-                    dbClient.SetQuery("REPLACE INTO `user_badges` (`user_id`,`badge_id`,`badge_slot`) VALUES ('" + _player.Id + "', @badge, '" + 0 + "')");
-                    dbClient.AddParameter("badge", code);
-                    dbClient.RunQuery();
-                }
+                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                dbClient.SetQuery("REPLACE INTO `user_badges` (`user_id`,`badge_id`,`badge_slot`) VALUES ('" + _player.Id + "', @badge, '" + 0 + "')");
+                dbClient.AddParameter("badge", code);
+                dbClient.RunQuery();
             }
 
             _badges.Add(code, new Badge(code, 0));

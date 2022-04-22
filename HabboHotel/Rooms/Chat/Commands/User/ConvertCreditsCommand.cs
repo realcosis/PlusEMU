@@ -44,27 +44,25 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                 }
                 if (table.Rows.Count > 0)
                 {
-                    using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                    using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                    foreach (DataRow row in table.Rows)
                     {
-                        foreach (DataRow row in table.Rows)
-                        {
-                            Item item = session.GetHabbo().GetInventoryComponent().GetItem(Convert.ToInt32(row[0]));
-                            if (item == null || item.RoomId > 0 || item.Data.InteractionType != InteractionType.Exchange)
-                                continue;
+                        Item item = session.GetHabbo().GetInventoryComponent().GetItem(Convert.ToInt32(row[0]));
+                        if (item == null || item.RoomId > 0 || item.Data.InteractionType != InteractionType.Exchange)
+                            continue;
                             
-                            int value = item.Data.BehaviourData;
+                        int value = item.Data.BehaviourData;
 
-                            dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
+                        dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
 
-                            session.GetHabbo().GetInventoryComponent().RemoveItem(item.Id);
+                        session.GetHabbo().GetInventoryComponent().RemoveItem(item.Id);
 
-                            totalValue += value;
+                        totalValue += value;
 
-                            if (value > 0)
-                            {
-                                session.GetHabbo().Credits += value;
-                                session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
-                            }
+                        if (value > 0)
+                        {
+                            session.GetHabbo().Credits += value;
+                            session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
                         }
                     }
                 }

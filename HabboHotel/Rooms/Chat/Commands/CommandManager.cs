@@ -260,15 +260,13 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands
 
         public void LogCommand(int userId, string data, string machineId)
         {
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("INSERT INTO `logs_client_staff` (`user_id`,`data_string`,`machine_id`, `timestamp`) VALUES (@UserId,@Data,@MachineId,@Timestamp)");
-                dbClient.AddParameter("UserId", userId);
-                dbClient.AddParameter("Data", data);
-                dbClient.AddParameter("MachineId", machineId);
-                dbClient.AddParameter("Timestamp", PlusEnvironment.GetUnixTimestamp());
-                dbClient.RunQuery();
-            }
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("INSERT INTO `logs_client_staff` (`user_id`,`data_string`,`machine_id`, `timestamp`) VALUES (@UserId,@Data,@MachineId,@Timestamp)");
+            dbClient.AddParameter("UserId", userId);
+            dbClient.AddParameter("Data", data);
+            dbClient.AddParameter("MachineId", machineId);
+            dbClient.AddParameter("Timestamp", PlusEnvironment.GetUnixTimestamp());
+            dbClient.RunQuery();
         }
 
         public bool TryGetCommand(string command, out IChatCommand chatCommand)

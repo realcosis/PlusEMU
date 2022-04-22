@@ -32,11 +32,8 @@ namespace Plus.Communication.Packets.Incoming.Marketplace
                     session.GetHabbo().Credits += creditsOwed;
                     session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
                 }
-
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                {
-                    dbClient.RunQuery("DELETE FROM `catalog_marketplace_offers` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND `state` = '2'");
-                }
+                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                dbClient.RunQuery("DELETE FROM `catalog_marketplace_offers` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND `state` = '2'");
             }
         }
     }

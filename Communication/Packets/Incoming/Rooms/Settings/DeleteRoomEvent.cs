@@ -34,12 +34,10 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Settings
 
                 if (item.GetBaseItem().InteractionType == InteractionType.Moodlight)
                 {
-                    using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                    {
-                        dbClient.SetQuery("DELETE FROM `room_items_moodlight` WHERE `item_id` = @itemId LIMIT 1");
-                        dbClient.AddParameter("itemId", item.Id);
-                        dbClient.RunQuery();
-                    }
+                    using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                    dbClient.SetQuery("DELETE FROM `room_items_moodlight` WHERE `item_id` = @itemId LIMIT 1");
+                    dbClient.AddParameter("itemId", item.Id);
+                    dbClient.RunQuery();
                 }
 
                 itemsToRemove.Add(item);
@@ -57,12 +55,10 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Settings
                 else//No, query time.
                 {
                     room.GetRoomItemHandler().RemoveFurniture(null, item.Id);
-                    using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                    {
-                        dbClient.SetQuery("UPDATE `items` SET `room_id` = '0' WHERE `id` = @itemId LIMIT 1");
-                        dbClient.AddParameter("itemId", item.Id);
-                        dbClient.RunQuery();
-                    }
+                    using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                    dbClient.SetQuery("UPDATE `items` SET `room_id` = '0' WHERE `id` = @itemId LIMIT 1");
+                    dbClient.AddParameter("itemId", item.Id);
+                    dbClient.RunQuery();
                 }
             }
 

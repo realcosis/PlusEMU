@@ -50,27 +50,25 @@ namespace Plus.HabboHotel.Users.Messenger
         public void ProcessOfflineMessages()
         {
             DataTable getMessages = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("SELECT * FROM `messenger_offline_messages` WHERE `to_id` = @id;");
+            dbClient.AddParameter("id", _userId);
+            getMessages = dbClient.GetTable();
+
+            if (getMessages != null)
             {
-                dbClient.SetQuery("SELECT * FROM `messenger_offline_messages` WHERE `to_id` = @id;");
-                dbClient.AddParameter("id", _userId);
-                getMessages = dbClient.GetTable();
+                GameClient client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(_userId);
+                if (client == null)
+                    return;
 
-                if (getMessages != null)
+                foreach (DataRow row in getMessages.Rows)
                 {
-                    GameClient client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(_userId);
-                    if (client == null)
-                        return;
-
-                    foreach (DataRow row in getMessages.Rows)
-                    {
-                        client.SendPacket(new NewConsoleMessageComposer(Convert.ToInt32(row["from_id"]), Convert.ToString(row["message"]), (int)(UnixTimestamp.GetNow() - Convert.ToInt32(row["timestamp"]))));
-                    }
-
-                    dbClient.SetQuery("DELETE FROM `messenger_offline_messages` WHERE `to_id` = @id");
-                    dbClient.AddParameter("id", _userId);
-                    dbClient.RunQuery();
+                    client.SendPacket(new NewConsoleMessageComposer(Convert.ToInt32(row["from_id"]), Convert.ToString(row["message"]), (int)(UnixTimestamp.GetNow() - Convert.ToInt32(row["timestamp"]))));
                 }
+
+                dbClient.SetQuery("DELETE FROM `messenger_offline_messages` WHERE `to_id` = @id");
+                dbClient.AddParameter("id", _userId);
+                dbClient.RunQuery();
             }
         }
 
@@ -232,15 +230,12 @@ namespace Plus.HabboHotel.Users.Messenger
         {
             if (_requests.ContainsKey(requestId))
                 return true;
-
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery(
-                    "SELECT user_one_id FROM messenger_friendships WHERE user_one_id = @myID AND user_two_id = @friendID");
-                dbClient.AddParameter("myID", Convert.ToInt32(_userId));
-                dbClient.AddParameter("friendID", Convert.ToInt32(requestId));
-                return dbClient.FindsResult();
-            }
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery(
+                "SELECT user_one_id FROM messenger_friendships WHERE user_one_id = @myID AND user_two_id = @friendID");
+            dbClient.AddParameter("myID", Convert.ToInt32(_userId));
+            dbClient.AddParameter("friendID", Convert.ToInt32(requestId));
+            return dbClient.FindsResult();
         }
 
         public bool FriendshipExists(int friendId)
@@ -361,14 +356,12 @@ namespace Plus.HabboHotel.Users.Messenger
             GameClient client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(toId);
             if (client == null || client.GetHabbo() == null || client.GetHabbo().GetMessenger() == null)
             {
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                {
-                    dbClient.SetQuery("INSERT INTO `messenger_offline_messages` (`to_id`, `from_id`, `message`, `timestamp`) VALUES (@tid, @fid, @msg, UNIX_TIMESTAMP())");
-                    dbClient.AddParameter("tid", toId);
-                    dbClient.AddParameter("fid", GetClient().GetHabbo().Id);
-                    dbClient.AddParameter("msg", message);
-                    dbClient.RunQuery();
-                }
+                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                dbClient.SetQuery("INSERT INTO `messenger_offline_messages` (`to_id`, `from_id`, `message`, `timestamp`) VALUES (@tid, @fid, @msg, UNIX_TIMESTAMP())");
+                dbClient.AddParameter("tid", toId);
+                dbClient.AddParameter("fid", GetClient().GetHabbo().Id);
+                dbClient.AddParameter("msg", message);
+                dbClient.RunQuery();
                 return;
             }
 
@@ -398,12 +391,10 @@ namespace Plus.HabboHotel.Users.Messenger
 
         public void LogPm(int fromId, int toId, string message)
         {
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("INSERT INTO chatlogs_console VALUES (NULL, " + fromId + ", " + toId + ", @message, UNIX_TIMESTAMP())");
-                dbClient.AddParameter("message", message);
-                dbClient.RunQuery();
-            }
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("INSERT INTO chatlogs_console VALUES (NULL, " + fromId + ", " + toId + ", @message, UNIX_TIMESTAMP())");
+            dbClient.AddParameter("message", message);
+            dbClient.RunQuery();
         }
 
         public ServerPacket SerializeUpdate(MessengerBuddy friend)

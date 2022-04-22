@@ -191,16 +191,14 @@ namespace Plus.HabboHotel.Rooms
         public void LoadPromotions()
         {
             DataRow getPromotion = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("SELECT * FROM `room_promotions` WHERE `room_id` = " + Id + " LIMIT 1;");
-                getPromotion = dbClient.GetRow();
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("SELECT * FROM `room_promotions` WHERE `room_id` = " + Id + " LIMIT 1;");
+            getPromotion = dbClient.GetRow();
 
-                if (getPromotion != null)
-                {
-                    if (Convert.ToDouble(getPromotion["timestamp_expire"]) > Utilities.UnixTimestamp.GetNow())
-                        _promotion = new RoomPromotion(Convert.ToString(getPromotion["title"]), Convert.ToString(getPromotion["description"]), Convert.ToDouble(getPromotion["timestamp_start"]), Convert.ToDouble(getPromotion["timestamp_expire"]), Convert.ToInt32(getPromotion["category_id"]));
-                }
+            if (getPromotion != null)
+            {
+                if (Convert.ToDouble(getPromotion["timestamp_expire"]) > Utilities.UnixTimestamp.GetNow())
+                    _promotion = new RoomPromotion(Convert.ToString(getPromotion["title"]), Convert.ToString(getPromotion["description"]), Convert.ToDouble(getPromotion["timestamp_start"]), Convert.ToDouble(getPromotion["timestamp_expire"]), Convert.ToInt32(getPromotion["category_id"]));
             }
         }
 

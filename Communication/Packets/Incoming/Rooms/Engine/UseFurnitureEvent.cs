@@ -41,11 +41,8 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine
                 room.SendPacket(new ObjectUpdateComposer(item, room.OwnerId));
 
                 item.UpdateState();
-
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                {
-                    dbClient.RunQuery("UPDATE `room_items_toner` SET `enabled` = '" + room.TonerData.Enabled + "' LIMIT 1");
-                }
+                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                dbClient.RunQuery("UPDATE `room_items_toner` SET `enabled` = '" + room.TonerData.Enabled + "' LIMIT 1");
                 return;
             }
 

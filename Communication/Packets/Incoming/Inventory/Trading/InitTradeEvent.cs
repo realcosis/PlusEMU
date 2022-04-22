@@ -38,11 +38,8 @@ namespace Plus.Communication.Packets.Incoming.Inventory.Trading
 
                 session.GetHabbo().TradingLockExpiry = 0;
                 session.SendNotification("Your trading ban has now expired.");
-
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                {
-                    dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '0' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
-                }
+                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '0' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
             }
 
             if (!session.GetHabbo().GetPermissions().HasRight("room_trade_override"))

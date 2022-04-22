@@ -45,10 +45,8 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                     else
                     {
                         room.GetRoomItemHandler().RemoveFurniture(null, item.Id);
-                        using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                        {
-                            dbClient.RunQuery("UPDATE `items` SET `room_id` = '0' WHERE `id` = '" + item.Id + "' LIMIT 1");
-                        }
+                        using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                        dbClient.RunQuery("UPDATE `items` SET `room_id` = '0' WHERE `id` = '" + item.Id + "' LIMIT 1");
                     }
                 }
             }
@@ -69,10 +67,8 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User
                     else
                     {
                         room.GetRoomItemHandler().RemoveFurniture(null, item.Id);
-                        using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                        {
-                            dbClient.RunQuery("UPDATE `items` SET `room_id` = '0' WHERE `id` = '" + item.Id + "' LIMIT 1");
-                        }
+                        using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                        dbClient.RunQuery("UPDATE `items` SET `room_id` = '0' WHERE `id` = '" + item.Id + "' LIMIT 1");
                     }
                 }
             }

@@ -475,17 +475,14 @@ namespace Plus.HabboHotel.Rooms.Instance
 
             if (item.Type == WiredBoxType.EffectMatchPosition || item.Type == WiredBoxType.ConditionMatchStateAndPosition || item.Type == WiredBoxType.ConditionDontMatchStateAndPosition)
                 item.ItemsData = items;
-
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("REPLACE INTO `wired_items` VALUES (@id, @items, @delay, @string, @bool)");
-                dbClient.AddParameter("id", item.Item.Id);
-                dbClient.AddParameter("items", items);
-                dbClient.AddParameter("delay", (item is IWiredCycle) ? cycle.Delay : 0);
-                dbClient.AddParameter("string", item.StringData);
-                dbClient.AddParameter("bool", item.BoolData ? "1" : "0");
-                dbClient.RunQuery();
-            }
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("REPLACE INTO `wired_items` VALUES (@id, @items, @delay, @string, @bool)");
+            dbClient.AddParameter("id", item.Item.Id);
+            dbClient.AddParameter("items", items);
+            dbClient.AddParameter("delay", (item is IWiredCycle) ? cycle.Delay : 0);
+            dbClient.AddParameter("string", item.StringData);
+            dbClient.AddParameter("bool", item.BoolData ? "1" : "0");
+            dbClient.RunQuery();
         }
 
         public bool AddBox(IWiredItem item)

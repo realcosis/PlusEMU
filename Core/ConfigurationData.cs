@@ -21,26 +21,24 @@ namespace Plus.Core
 
             try
             {
-                using (var stream = new StreamReader(filePath))
+                using var stream = new StreamReader(filePath);
+                string line;
+
+                while ((line = stream.ReadLine()) != null)
                 {
-                    string line;
-
-                    while ((line = stream.ReadLine()) != null)
+                    if (line.Length < 1 || line.StartsWith("#"))
                     {
-                        if (line.Length < 1 || line.StartsWith("#"))
-                        {
-                            continue;
-                        }
+                        continue;
+                    }
 
-                        int delimiterIndex = line.IndexOf('=');
+                    int delimiterIndex = line.IndexOf('=');
 
-                        if (delimiterIndex != -1)
-                        {
-                            string key = line.Substring(0, delimiterIndex);
-                            string val = line.Substring(delimiterIndex + 1);
+                    if (delimiterIndex != -1)
+                    {
+                        string key = line.Substring(0, delimiterIndex);
+                        string val = line.Substring(delimiterIndex + 1);
 
-                            Data.Add(key, val);
-                        }
+                        Data.Add(key, val);
                     }
                 }
             }

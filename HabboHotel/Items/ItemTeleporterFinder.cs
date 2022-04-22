@@ -12,37 +12,32 @@ namespace Plus.HabboHotel.Items
     {
         public static int GetLinkedTele(int teleId)
         {
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("SELECT `tele_two_id` FROM `room_items_tele_links` WHERE `tele_one_id` = '" + teleId + "' LIMIT 1");
+            DataRow row = dbClient.GetRow();
+
+            if (row == null)
             {
-                dbClient.SetQuery("SELECT `tele_two_id` FROM `room_items_tele_links` WHERE `tele_one_id` = '" + teleId + "' LIMIT 1");
-                DataRow row = dbClient.GetRow();
-
-                if (row == null)
-                {
-                    return 0;
-                }
-
-                return Convert.ToInt32(row[0]);
+                return 0;
             }
+
+            return Convert.ToInt32(row[0]);
         }
 
         public static int GetTeleRoomId(int teleId, Room pRoom)
         {
             if (pRoom.GetRoomItemHandler().GetItem(teleId) != null)
                 return pRoom.RoomId;
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("SELECT `room_id` FROM `items` WHERE `id` = " + teleId + " LIMIT 1");
+            DataRow row = dbClient.GetRow();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            if (row == null)
             {
-                dbClient.SetQuery("SELECT `room_id` FROM `items` WHERE `id` = " + teleId + " LIMIT 1");
-                DataRow row = dbClient.GetRow();
-
-                if (row == null)
-                {
-                    return 0;
-                }
-
-                return Convert.ToInt32(row[0]);
+                return 0;
             }
+
+            return Convert.ToInt32(row[0]);
         }
 
         public static bool IsTeleLinked(int teleId, Room pRoom)

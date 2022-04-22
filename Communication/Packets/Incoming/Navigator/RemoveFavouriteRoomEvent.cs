@@ -13,11 +13,8 @@ namespace Plus.Communication.Packets.Incoming.Navigator
 
             session.GetHabbo().FavoriteRooms.Remove(id);
             session.SendPacket(new UpdateFavouriteRoomComposer(id, false));
-
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.RunQuery("DELETE FROM user_favorites WHERE user_id = " + session.GetHabbo().Id + " AND room_id = " + id + " LIMIT 1");
-            }
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.RunQuery("DELETE FROM user_favorites WHERE user_id = " + session.GetHabbo().Id + " AND room_id = " + id + " LIMIT 1");
         }
     }
 }

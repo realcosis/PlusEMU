@@ -21,18 +21,16 @@ namespace Plus.HabboHotel.Users.Navigator.SavedSearches
                 _savedSearches.Clear();
 
             DataTable getSearches = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("SELECT `id`,`filter`,`search_code` FROM `user_saved_searches` WHERE `user_id` = @UserId");
-                dbClient.AddParameter("UserId", habbo.Id);
-                getSearches = dbClient.GetTable();
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("SELECT `id`,`filter`,`search_code` FROM `user_saved_searches` WHERE `user_id` = @UserId");
+            dbClient.AddParameter("UserId", habbo.Id);
+            getSearches = dbClient.GetTable();
 
-                if (getSearches != null)
+            if (getSearches != null)
+            {
+                foreach (DataRow row in getSearches.Rows)
                 {
-                    foreach (DataRow row in getSearches.Rows)
-                    {
-                        _savedSearches.TryAdd(Convert.ToInt32(row["id"]), new SavedSearch(Convert.ToInt32(row["id"]), Convert.ToString(row["filter"]), Convert.ToString(row["search_code"])));
-                    }
+                    _savedSearches.TryAdd(Convert.ToInt32(row["id"]), new SavedSearch(Convert.ToInt32(row["id"]), Convert.ToString(row["filter"]), Convert.ToString(row["search_code"])));
                 }
             }
             return true;

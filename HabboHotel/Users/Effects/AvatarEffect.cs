@@ -107,18 +107,15 @@ namespace Plus.HabboHotel.Users.Effects
         public bool Activate()
         {
             double tsNow = UnixTimestamp.GetNow();
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("UPDATE `user_effects` SET `is_activated` = '1', `activated_stamp` = @ts WHERE `id` = @id");
+            dbClient.AddParameter("ts", tsNow);
+            dbClient.AddParameter("id", Id);
+            dbClient.RunQuery();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("UPDATE `user_effects` SET `is_activated` = '1', `activated_stamp` = @ts WHERE `id` = @id");
-                dbClient.AddParameter("ts", tsNow);
-                dbClient.AddParameter("id", Id);
-                dbClient.RunQuery();
-
-                _activated = true;
-                _timestampActivated = tsNow;
-                return true;
-            }
+            _activated = true;
+            _timestampActivated = tsNow;
+            return true;
         }
 
         public void HandleExpiration(Habbo habbo)
@@ -152,14 +149,11 @@ namespace Plus.HabboHotel.Users.Effects
         public void AddToQuantity()
         {
             _quantity++;
-
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("UPDATE `user_effects` SET `quantity` = @qt WHERE `id` = @id");
-                dbClient.AddParameter("qt", Quantity);
-                dbClient.AddParameter("id", Id);
-                dbClient.RunQuery();
-            }
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("UPDATE `user_effects` SET `quantity` = @qt WHERE `id` = @id");
+            dbClient.AddParameter("qt", Quantity);
+            dbClient.AddParameter("id", Id);
+            dbClient.RunQuery();
         }
     }
 }

@@ -24,17 +24,15 @@ namespace Plus.HabboHotel.Rooms.Chat.Filter
                 _filteredWords.Clear();
 
             DataTable data = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("SELECT * FROM `wordfilter`");
-                data = dbClient.GetTable();
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("SELECT * FROM `wordfilter`");
+            data = dbClient.GetTable();
 
-                if (data != null)
+            if (data != null)
+            {
+                foreach (DataRow row in data.Rows)
                 {
-                    foreach (DataRow row in data.Rows)
-                    {
-                        _filteredWords.Add(new WordFilter(Convert.ToString(row["word"]), Convert.ToString(row["replacement"]), PlusEnvironment.EnumToBool(row["strict"].ToString()), PlusEnvironment.EnumToBool(row["bannable"].ToString())));
-                    }
+                    _filteredWords.Add(new WordFilter(Convert.ToString(row["word"]), Convert.ToString(row["replacement"]), PlusEnvironment.EnumToBool(row["strict"].ToString()), PlusEnvironment.EnumToBool(row["bannable"].ToString())));
                 }
             }
         }

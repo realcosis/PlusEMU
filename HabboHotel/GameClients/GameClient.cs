@@ -160,13 +160,11 @@ namespace Plus.HabboHotel.GameClients
                     {
                         if (_habbo.MachineId != MachineId)
                         {
-                            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                            {
-                                dbClient.SetQuery("UPDATE `users` SET `machine_id` = @MachineId WHERE `id` = @id LIMIT 1");
-                                dbClient.AddParameter("MachineId", MachineId);
-                                dbClient.AddParameter("id", _habbo.Id);
-                                dbClient.RunQuery();
-                            }
+                            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                            dbClient.SetQuery("UPDATE `users` SET `machine_id` = @MachineId WHERE `id` = @id LIMIT 1");
+                            dbClient.AddParameter("MachineId", MachineId);
+                            dbClient.AddParameter("id", _habbo.Id);
+                            dbClient.RunQuery();
                         }
 
                         _habbo.MachineId = MachineId;

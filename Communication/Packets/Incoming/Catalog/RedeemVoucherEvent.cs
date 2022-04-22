@@ -44,13 +44,11 @@ namespace Plus.Communication.Packets.Incoming.Catalog
             }
             else
             {
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                {
-                    dbClient.SetQuery("INSERT INTO `user_vouchers` (`user_id`,`voucher`) VALUES (@userId, @Voucher)");
-                    dbClient.AddParameter("userId", session.GetHabbo().Id);
-                    dbClient.AddParameter("Voucher", code);
-                    dbClient.RunQuery();
-                }
+                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                dbClient.SetQuery("INSERT INTO `user_vouchers` (`user_id`,`voucher`) VALUES (@userId, @Voucher)");
+                dbClient.AddParameter("userId", session.GetHabbo().Id);
+                dbClient.AddParameter("Voucher", code);
+                dbClient.RunQuery();
             }
 
             voucher.UpdateUses();

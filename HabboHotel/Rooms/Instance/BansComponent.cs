@@ -33,17 +33,15 @@ namespace Plus.HabboHotel.Rooms.Instance
             _bans = new ConcurrentDictionary<int, double>();
 
             DataTable getBans = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("SELECT `user_id`, `expire` FROM `room_bans` WHERE `room_id` = " + _instance.Id + " AND `expire` > UNIX_TIMESTAMP();");
-                getBans = dbClient.GetTable();
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("SELECT `user_id`, `expire` FROM `room_bans` WHERE `room_id` = " + _instance.Id + " AND `expire` > UNIX_TIMESTAMP();");
+            getBans = dbClient.GetTable();
 
-                if (getBans != null)
+            if (getBans != null)
+            {
+                foreach (DataRow row in getBans.Rows)
                 {
-                    foreach (DataRow row in getBans.Rows)
-                    {
-                        _bans.TryAdd(Convert.ToInt32(row["user_id"]), Convert.ToDouble(row["expire"]));
-                    }
+                    _bans.TryAdd(Convert.ToInt32(row["user_id"]), Convert.ToDouble(row["expire"]));
                 }
             }
         }
@@ -79,14 +77,11 @@ namespace Plus.HabboHotel.Rooms.Instance
             {
                 double time;
                 _bans.TryRemove(userId, out time);
-
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                {
-                    dbClient.SetQuery("DELETE FROM `room_bans` WHERE `room_id` = @rid AND `user_id` = @uid;");
-                    dbClient.AddParameter("rid", _instance.Id);
-                    dbClient.AddParameter("uid", userId);
-                    dbClient.RunQuery();
-                }
+                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                dbClient.SetQuery("DELETE FROM `room_bans` WHERE `room_id` = @rid AND `user_id` = @uid;");
+                dbClient.AddParameter("rid", _instance.Id);
+                dbClient.AddParameter("uid", userId);
+                dbClient.RunQuery();
                 return false;
             }
 
@@ -100,13 +95,11 @@ namespace Plus.HabboHotel.Rooms.Instance
 
             if (_bans.TryRemove(userId, out double time))
             {
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                {
-                    dbClient.SetQuery("DELETE FROM `room_bans` WHERE `room_id` = @rid AND `user_id` = @uid;");
-                    dbClient.AddParameter("rid", _instance.Id);
-                    dbClient.AddParameter("uid", userId);
-                    dbClient.RunQuery();
-                }
+                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                dbClient.SetQuery("DELETE FROM `room_bans` WHERE `room_id` = @rid AND `user_id` = @uid;");
+                dbClient.AddParameter("rid", _instance.Id);
+                dbClient.AddParameter("uid", userId);
+                dbClient.RunQuery();
                 return true;
             }
 
@@ -117,22 +110,18 @@ namespace Plus.HabboHotel.Rooms.Instance
         {
             DataTable getBans = null;
             List<int> bans = new List<int>();
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("SELECT `user_id` FROM `room_bans` WHERE `room_id` = '" + _instance.Id + "' AND `expire` > UNIX_TIMESTAMP();");
+            getBans = dbClient.GetTable();
 
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            if (getBans != null)
             {
-                dbClient.SetQuery("SELECT `user_id` FROM `room_bans` WHERE `room_id` = '" + _instance.Id + "' AND `expire` > UNIX_TIMESTAMP();");
-                getBans = dbClient.GetTable();
-
-                if (getBans != null)
+                foreach (DataRow row in getBans.Rows)
                 {
-                    foreach (DataRow row in getBans.Rows)
-                    {
-                        if (!bans.Contains(Convert.ToInt32(row["user_id"])))
-                            bans.Add(Convert.ToInt32(row["user_id"]));
-                    }
+                    if (!bans.Contains(Convert.ToInt32(row["user_id"])))
+                        bans.Add(Convert.ToInt32(row["user_id"]));
                 }
             }
-
             return bans;
         }
 

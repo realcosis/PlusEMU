@@ -32,15 +32,12 @@ namespace Plus.Communication.Packets.Incoming.Inventory.Badges
                     return;
 
                 session.GetHabbo().GetBadgeComponent().GetBadge(badge).Slot = slot;
-
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                {
-                    dbClient.SetQuery("UPDATE `user_badges` SET `badge_slot` = @slot WHERE `badge_id` = @badge AND `user_id` = @userId LIMIT 1");
-                    dbClient.AddParameter("slot", slot);
-                    dbClient.AddParameter("badge", badge);
-                    dbClient.AddParameter("userId", session.GetHabbo().Id);
-                    dbClient.RunQuery();
-                }
+                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                dbClient.SetQuery("UPDATE `user_badges` SET `badge_slot` = @slot WHERE `badge_id` = @badge AND `user_id` = @userId LIMIT 1");
+                dbClient.AddParameter("slot", slot);
+                dbClient.AddParameter("badge", badge);
+                dbClient.AddParameter("userId", session.GetHabbo().Id);
+                dbClient.RunQuery();
             }
 
             PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.ProfileBadge);

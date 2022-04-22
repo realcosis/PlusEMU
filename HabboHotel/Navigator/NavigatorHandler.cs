@@ -290,22 +290,20 @@ namespace Plus.HabboHotel.Navigator
                         if (session != null)
                         {
                             DataTable getRights = null;
-                            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                            dbClient.SetQuery("SELECT `room_id` FROM `room_rights` WHERE `user_id` = @UserId LIMIT @FetchLimit");
+                            dbClient.AddParameter("UserId", session.GetHabbo().Id);
+                            dbClient.AddParameter("FetchLimit", limit);
+                            getRights = dbClient.GetTable();
+
+                            foreach (DataRow row in getRights.Rows)
                             {
-                                dbClient.SetQuery("SELECT `room_id` FROM `room_rights` WHERE `user_id` = @UserId LIMIT @FetchLimit");
-                                dbClient.AddParameter("UserId", session.GetHabbo().Id);
-                                dbClient.AddParameter("FetchLimit", limit);
-                                getRights = dbClient.GetTable();
+                                RoomData data = null;
+                                if (!RoomFactory.TryGetData(Convert.ToInt32(row["room_id"]), out data))
+                                    continue;
 
-                                foreach (DataRow row in getRights.Rows)
-                                {
-                                    RoomData data = null;
-                                    if (!RoomFactory.TryGetData(Convert.ToInt32(row["room_id"]), out data))
-                                        continue;
-
-                                    if (!myRights.Contains(data))
-                                        myRights.Add(data);
-                                }
+                                if (!myRights.Contains(data))
+                                    myRights.Add(data);
                             }
                         }
 

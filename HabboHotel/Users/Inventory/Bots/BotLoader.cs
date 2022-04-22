@@ -14,18 +14,16 @@ namespace Plus.HabboHotel.Users.Inventory.Bots
             List<Bot> b = new List<Bot>();
 
             DataTable dBots = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("SELECT `id`,`user_id`,`name`,`motto`,`look`,`gender`FROM `bots` WHERE `user_id` = '" + userId + "' AND `room_id` = '0' AND `ai_type` != 'pet'");
-                dBots = dbClient.GetTable();
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("SELECT `id`,`user_id`,`name`,`motto`,`look`,`gender`FROM `bots` WHERE `user_id` = '" + userId + "' AND `room_id` = '0' AND `ai_type` != 'pet'");
+            dBots = dbClient.GetTable();
 
-                if (dBots != null)
+            if (dBots != null)
+            {
+                foreach (DataRow dRow in dBots.Rows)
                 {
-                    foreach (DataRow dRow in dBots.Rows)
-                    {
-                        b.Add(new Bot(Convert.ToInt32(dRow["id"]), Convert.ToInt32(dRow["user_id"]), Convert.ToString(dRow["name"]), 
-                            Convert.ToString(dRow["motto"]),  Convert.ToString(dRow["look"]), Convert.ToString(dRow["gender"])));
-                    }
+                    b.Add(new Bot(Convert.ToInt32(dRow["id"]), Convert.ToInt32(dRow["user_id"]), Convert.ToString(dRow["name"]), 
+                        Convert.ToString(dRow["motto"]),  Convert.ToString(dRow["look"]), Convert.ToString(dRow["gender"])));
                 }
             }
             return b;

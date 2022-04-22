@@ -26,11 +26,8 @@ namespace Plus.Communication.Packets.Incoming.Navigator
 
             session.GetHabbo().FavoriteRooms.Add(roomId);
             session.SendPacket(new UpdateFavouriteRoomComposer(roomId, true));
-
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.RunQuery("INSERT INTO user_favorites (user_id,room_id) VALUES (" + session.GetHabbo().Id + "," + roomId + ")");
-            }
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.RunQuery("INSERT INTO user_favorites (user_id,room_id) VALUES (" + session.GetHabbo().Id + "," + roomId + ")");
         }
     }
 }

@@ -184,16 +184,14 @@ namespace Plus.Communication.Packets.Incoming.Catalog
                 }
 
                 item.LimitedEditionSells++;
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                {
-                    dbClient.SetQuery("UPDATE `catalog_items` SET `limited_sells` = @limitSells WHERE `id` = @itemId LIMIT 1");
-                    dbClient.AddParameter("limitSells", item.LimitedEditionSells);
-                    dbClient.AddParameter("itemId", item.Id);
-                    dbClient.RunQuery();
+                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                dbClient.SetQuery("UPDATE `catalog_items` SET `limited_sells` = @limitSells WHERE `id` = @itemId LIMIT 1");
+                dbClient.AddParameter("limitSells", item.LimitedEditionSells);
+                dbClient.AddParameter("itemId", item.Id);
+                dbClient.RunQuery();
 
-                    limitedEditionSells = item.LimitedEditionSells;
-                    limitedEditionStack = item.LimitedEditionStack;
-                }
+                limitedEditionSells = item.LimitedEditionSells;
+                limitedEditionStack = item.LimitedEditionStack;
             }
 
             if (item.CostCredits > 0)

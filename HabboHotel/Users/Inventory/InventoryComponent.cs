@@ -150,34 +150,30 @@ namespace Plus.HabboHotel.Users.Inventory
             {
                 if (fromRoom)
                 {
-                    using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                    {
-                        dbClient.RunQuery("UPDATE `items` SET `room_id` = '0', `user_id` = '" + _userId + "' WHERE `id` = '" + id + "' LIMIT 1");
-                    }
+                    using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                    dbClient.RunQuery("UPDATE `items` SET `room_id` = '0', `user_id` = '" + _userId + "' WHERE `id` = '" + id + "' LIMIT 1");
                 }
                 else
                 {
-                    using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                    using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                    if (id > 0)
+                        dbClient.RunQuery("INSERT INTO `items` (`id`,`base_item`, `user_id`, `limited_number`, `limited_stack`) VALUES ('" + id + "', '" + baseItem + "', '" + _userId + "', '" + limitedNumber + "', '" + limitedStack + "')");
+                    else
                     {
-                        if (id > 0)
-                            dbClient.RunQuery("INSERT INTO `items` (`id`,`base_item`, `user_id`, `limited_number`, `limited_stack`) VALUES ('" + id + "', '" + baseItem + "', '" + _userId + "', '" + limitedNumber + "', '" + limitedStack + "')");
-                        else
-                        {
-                            dbClient.SetQuery("INSERT INTO `items` (`base_item`, `user_id`, `limited_number`, `limited_stack`) VALUES ('" + baseItem + "', '" + _userId + "', '" + limitedNumber + "', '" + limitedStack + "')");
-                            id = Convert.ToInt32(dbClient.InsertQuery());
-                        }
+                        dbClient.SetQuery("INSERT INTO `items` (`base_item`, `user_id`, `limited_number`, `limited_stack`) VALUES ('" + baseItem + "', '" + _userId + "', '" + limitedNumber + "', '" + limitedStack + "')");
+                        id = Convert.ToInt32(dbClient.InsertQuery());
+                    }
 
-                        SendNewItems(Convert.ToInt32(id));
+                    SendNewItems(Convert.ToInt32(id));
 
-                        if (group > 0)
-                            dbClient.RunQuery("INSERT INTO `items_groups` VALUES (" + id + ", " + group + ")");
+                    if (@group > 0)
+                        dbClient.RunQuery("INSERT INTO `items_groups` VALUES (" + id + ", " + @group + ")");
 
-                        if (!string.IsNullOrEmpty(extraData))
-                        {
-                            dbClient.SetQuery("UPDATE `items` SET `extra_data` = @extradata WHERE `id` = '" + id + "' LIMIT 1");
-                            dbClient.AddParameter("extradata", extraData);
-                            dbClient.RunQuery();
-                        }
+                    if (!string.IsNullOrEmpty(extraData))
+                    {
+                        dbClient.SetQuery("UPDATE `items` SET `extra_data` = @extradata WHERE `id` = '" + id + "' LIMIT 1");
+                        dbClient.AddParameter("extradata", extraData);
+                        dbClient.RunQuery();
                     }
                 }
             }

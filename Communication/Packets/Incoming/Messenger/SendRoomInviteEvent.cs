@@ -47,14 +47,11 @@ namespace Plus.Communication.Packets.Incoming.Messenger
 
                 client.SendPacket(new RoomInviteComposer(session.GetHabbo().Id, message));
             }
-
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("INSERT INTO `chatlogs_console_invitations` (`user_id`,`message`,`timestamp`) VALUES (@userId, @message, UNIX_TIMESTAMP())");
-                dbClient.AddParameter("userId", session.GetHabbo().Id);
-                dbClient.AddParameter("message", message);
-                dbClient.RunQuery();
-            }
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("INSERT INTO `chatlogs_console_invitations` (`user_id`,`message`,`timestamp`) VALUES (@userId, @message, UNIX_TIMESTAMP())");
+            dbClient.AddParameter("userId", session.GetHabbo().Id);
+            dbClient.AddParameter("message", message);
+            dbClient.RunQuery();
         }
     }
 }

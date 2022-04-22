@@ -54,50 +54,48 @@ namespace Plus.HabboHotel.Groups
 
         public void InitMembers()
         {
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("SELECT `user_id`, `rank` FROM `group_memberships` WHERE `group_id` = @id");
+            dbClient.AddParameter("id", Id);
+            DataTable members = dbClient.GetTable();
+
+            if (members != null)
             {
-                dbClient.SetQuery("SELECT `user_id`, `rank` FROM `group_memberships` WHERE `group_id` = @id");
-                dbClient.AddParameter("id", Id);
-                DataTable members = dbClient.GetTable();
-
-                if (members != null)
+                foreach (DataRow row in members.Rows)
                 {
-                    foreach (DataRow row in members.Rows)
-                    {
-                        int userId = Convert.ToInt32(row["user_id"]);
-                        bool isAdmin = Convert.ToInt32(row["rank"]) != 0;
+                    int userId = Convert.ToInt32(row["user_id"]);
+                    bool isAdmin = Convert.ToInt32(row["rank"]) != 0;
 
-                        if (isAdmin)
-                        {
-                            if (!_administrators.Contains(userId))
-                                _administrators.Add(userId);
-                        }
-                        else
-                        {
-                            if (!_members.Contains(userId))
-                                _members.Add(userId);
-                        }
+                    if (isAdmin)
+                    {
+                        if (!_administrators.Contains(userId))
+                            _administrators.Add(userId);
+                    }
+                    else
+                    {
+                        if (!_members.Contains(userId))
+                            _members.Add(userId);
                     }
                 }
+            }
 
-                dbClient.SetQuery("SELECT `user_id` FROM `group_requests` WHERE `group_id` = @id");
-                dbClient.AddParameter("id", Id);
-                DataTable requests = dbClient.GetTable();
+            dbClient.SetQuery("SELECT `user_id` FROM `group_requests` WHERE `group_id` = @id");
+            dbClient.AddParameter("id", Id);
+            DataTable requests = dbClient.GetTable();
 
-                if (requests != null)
+            if (requests != null)
+            {
+                foreach (DataRow row in requests.Rows)
                 {
-                    foreach (DataRow row in requests.Rows)
-                    {
-                        int userId = Convert.ToInt32(row["user_id"]);
+                    int userId = Convert.ToInt32(row["user_id"]);
 
-                        if (_members.Contains(userId) || _administrators.Contains(userId))
-                        {
-                            dbClient.RunQuery("DELETE FROM `group_requests` WHERE `group_id` = '" + Id + "' AND `user_id` = '" + userId + "'");
-                        }
-                        else if (!_requests.Contains(userId))
-                        {
-                            _requests.Add(userId);
-                        }
+                    if (_members.Contains(userId) || _administrators.Contains(userId))
+                    {
+                        dbClient.RunQuery("DELETE FROM `group_requests` WHERE `group_id` = '" + Id + "' AND `user_id` = '" + userId + "'");
+                    }
+                    else if (!_requests.Contains(userId))
+                    {
+                        _requests.Add(userId);
                     }
                 }
             }
@@ -192,30 +190,27 @@ namespace Plus.HabboHotel.Groups
         {
             if (IsMember(id) || Type == GroupType.Locked && _requests.Contains(id))
                 return;
-
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            if (IsAdmin(id))
             {
-                if (IsAdmin(id))
-                {
-                    dbClient.SetQuery("UPDATE `group_memberships` SET `rank` = '0' WHERE user_id = @uid AND group_id = @gid");
-                    _administrators.Remove(id);
-                    _members.Add(id);
-                }
-                else if (Type == GroupType.Locked)
-                {
-                    dbClient.SetQuery("INSERT INTO `group_requests` (user_id, group_id) VALUES (@uid, @gid)");
-                    _requests.Add(id);
-                }
-                else
-                {
-                    dbClient.SetQuery("INSERT INTO `group_memberships` (user_id, group_id) VALUES (@uid, @gid)");
-                    _members.Add(id);
-                }
-
-                dbClient.AddParameter("gid", Id);
-                dbClient.AddParameter("uid", id);
-                dbClient.RunQuery();
+                dbClient.SetQuery("UPDATE `group_memberships` SET `rank` = '0' WHERE user_id = @uid AND group_id = @gid");
+                _administrators.Remove(id);
+                _members.Add(id);
             }
+            else if (Type == GroupType.Locked)
+            {
+                dbClient.SetQuery("INSERT INTO `group_requests` (user_id, group_id) VALUES (@uid, @gid)");
+                _requests.Add(id);
+            }
+            else
+            {
+                dbClient.SetQuery("INSERT INTO `group_memberships` (user_id, group_id) VALUES (@uid, @gid)");
+                _members.Add(id);
+            }
+
+            dbClient.AddParameter("gid", Id);
+            dbClient.AddParameter("uid", id);
+            dbClient.RunQuery();
         }
 
         public void DeleteMember(int id)
@@ -232,14 +227,11 @@ namespace Plus.HabboHotel.Groups
             }
             else
                 return;
-
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("DELETE FROM group_memberships WHERE user_id=@uid AND group_id=@gid LIMIT 1");
-                dbClient.AddParameter("gid", Id);
-                dbClient.AddParameter("uid", id);
-                dbClient.RunQuery();
-            }
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("DELETE FROM group_memberships WHERE user_id=@uid AND group_id=@gid LIMIT 1");
+            dbClient.AddParameter("gid", Id);
+            dbClient.AddParameter("uid", id);
+            dbClient.RunQuery();
         }
 
         public void HandleRequest(int id, bool accepted)

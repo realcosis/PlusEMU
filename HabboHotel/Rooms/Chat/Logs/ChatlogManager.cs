@@ -40,17 +40,15 @@ namespace Plus.HabboHotel.Rooms.Chat.Logs
 
             if (_chatlogs.Count > 0)
             {
-                using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                foreach (ChatlogEntry entry in _chatlogs)
                 {
-                    foreach (ChatlogEntry entry in _chatlogs)
-                    {
-                        dbClient.SetQuery("INSERT INTO chatlogs (`user_id`, `room_id`, `timestamp`, `message`) VALUES " + "(@uid, @rid, @time, @msg)");
-                        dbClient.AddParameter("uid", entry.PlayerId);
-                        dbClient.AddParameter("rid", entry.RoomId);
-                        dbClient.AddParameter("time", entry.Timestamp);
-                        dbClient.AddParameter("msg", entry.Message);
-                        dbClient.RunQuery();
-                    }
+                    dbClient.SetQuery("INSERT INTO chatlogs (`user_id`, `room_id`, `timestamp`, `message`) VALUES " + "(@uid, @rid, @time, @msg)");
+                    dbClient.AddParameter("uid", entry.PlayerId);
+                    dbClient.AddParameter("rid", entry.RoomId);
+                    dbClient.AddParameter("time", entry.Timestamp);
+                    dbClient.AddParameter("msg", entry.Message);
+                    dbClient.RunQuery();
                 }
             }
 

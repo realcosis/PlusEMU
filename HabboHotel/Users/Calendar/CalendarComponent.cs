@@ -37,24 +37,22 @@ namespace Plus.HabboHotel.Users.Calendar
                 _openedBoxes.Clear();
 
             DataTable getData = null;
-            using (IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("SELECT * FROM `user_xmas15_calendar` WHERE `user_id` = @id;");
-                dbClient.AddParameter("id", player.Id);
-                getData = dbClient.GetTable();
+            using IQueryAdapter dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            dbClient.SetQuery("SELECT * FROM `user_xmas15_calendar` WHERE `user_id` = @id;");
+            dbClient.AddParameter("id", player.Id);
+            getData = dbClient.GetTable();
 
-                if (getData != null)
+            if (getData != null)
+            {
+                foreach (DataRow row in getData.Rows)
                 {
-                    foreach (DataRow row in getData.Rows)
+                    if (Convert.ToInt32(row["status"]) == 0)
                     {
-                        if (Convert.ToInt32(row["status"]) == 0)
-                        {
-                            _lateBoxes.Add(Convert.ToInt32(row["day"]));
-                        }
-                        else
-                        {
-                            _openedBoxes.Add(Convert.ToInt32(row["day"]));
-                        }
+                        _lateBoxes.Add(Convert.ToInt32(row["day"]));
+                    }
+                    else
+                    {
+                        _openedBoxes.Add(Convert.ToInt32(row["day"]));
                     }
                 }
             }
