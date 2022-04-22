@@ -1,31 +1,33 @@
 ﻿using System.Collections.Generic;
-using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
+using Dapper;
 using NLog;
+using Plus.Database;
 
 namespace Plus.Core.Language;
 
-public class LanguageManager
+public interface ILanguageManager
 {
-    private static readonly ILogger Log = LogManager.GetLogger("Plus.Core.Language.LanguageManager");
-    private readonly Dictionary<string, string> _values;
+    string TryGetValue(string value);
+    Task Reload();
+}
 
-    public LanguageManager()
+public class LanguageManager : ILanguageManager
+{
+    private readonly IDatabase _database;
+    private static readonly ILogger Log = LogManager.GetLogger("Plus.Core.Language.LanguageManager");
+    private Dictionary<string, string> _values = new(0);
+
+    public LanguageManager(IDatabase database)
     {
-        _values = new Dictionary<string, string>();
+        _database = database;
     }
 
-    public void Init()
+    public async Task Reload()
     {
-        if (_values.Count > 0)
-            _values.Clear();
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-        {
-            dbClient.SetQuery("SELECT * FROM `server_locale`");
-            var table = dbClient.GetTable();
-            if (table != null)
-                foreach (DataRow row in table.Rows)
-                    _values.Add(row["key"].ToString(), row["value"].ToString());
-        }
+        using var connection = _database.Connection();
+        _values = (await connection.QueryAsync<(string, string)>("SELECT `key`, `value` FROM `server_locale`")).ToDictionary(x => x.Item1, x => x.Item2);
         Log.Info("Loaded " + _values.Count + " language locales.");
     }
 

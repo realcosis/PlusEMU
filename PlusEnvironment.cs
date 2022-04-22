@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Extensions.DependencyInjection;
 using MySqlConnector;
 using NLog;
 using Plus.Communication.ConnectionManager;
@@ -28,7 +29,7 @@ namespace Plus;
 
 public interface IPlusEnvironment
 {
-    Task Start();
+    Task<bool> Start();
 }
 
 public class PlusEnvironment : IPlusEnvironment
@@ -40,14 +41,14 @@ public class PlusEnvironment : IPlusEnvironment
     private static Encoding _defaultEncoding;
     public static CultureInfo CultureInfo;
 
-    private static Game _game;
+    private static IGame _game;
     private static ConfigurationData _configuration;
     private static ConnectionHandling _connectionManager;
-    private static LanguageManager _languageManager;
-    private static SettingsManager _settingsManager;
+    private static ILanguageManager _languageManager;
+    private static ISettingsManager _settingsManager;
     private static IDatabase _database;
     private static RconSocket _rcon;
-    private static FigureDataManager _figureManager;
+    private static IFigureDataManager _figureManager;
 
     // TODO: Get rid?
     public static bool Event = false;
@@ -65,13 +66,17 @@ public class PlusEnvironment : IPlusEnvironment
 
     public static string SwfRevision = "";
 
-    public PlusEnvironment(ConfigurationData configurationData, IDatabase database)
+    public PlusEnvironment(ConfigurationData configurationData, IDatabase database, ILanguageManager languageManager, ISettingsManager settingsManager, IFigureDataManager figureDataManager, IGame game)
     {
         _database = database;
         _configuration = configurationData;
+        _languageManager = languageManager;
+        _settingsManager = settingsManager;
+        _figureManager = figureDataManager;
+        _game = game;
     }
 
-    public async Task Start()
+    public async Task<bool> Start()
     {
         ServerStarted = DateTime.Now;
         Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -96,8 +101,7 @@ public class PlusEnvironment : IPlusEnvironment
             {
                 Log.Error("Failed to Connect to the specified MySQL server.");
                 Console.ReadKey(true);
-                Environment.Exit(1);
-                return;
+                return false;
             }
             Log.Info("Connected to Database!");
 
@@ -105,11 +109,8 @@ public class PlusEnvironment : IPlusEnvironment
             await ResetStatistics();
 
             //Get the configuration & Game set.
-            _languageManager = new LanguageManager();
-            _languageManager.Init();
-            _settingsManager = new SettingsManager();
-            _settingsManager.Init();
-            _figureManager = new FigureDataManager();
+            await _languageManager.Reload();
+            await _settingsManager.Reload();
             _figureManager.Init();
 
             //Have our encryption ready.
@@ -122,7 +123,7 @@ public class PlusEnvironment : IPlusEnvironment
             _connectionManager = new ConnectionHandling(int.Parse(GetConfig().Data["game.tcp.port"]), int.Parse(GetConfig().Data["game.tcp.conlimit"]),
                 int.Parse(GetConfig().Data["game.tcp.conperip"]), GetConfig().Data["game.tcp.enablenagles"].ToLower() == "true");
             _connectionManager.Init();
-            _game = new Game();
+            _game.Init();
             _game.StartGameLoop();
             var timeUsed = DateTime.Now - ServerStarted;
             Console.WriteLine();
@@ -135,22 +136,24 @@ public class PlusEnvironment : IPlusEnvironment
             Log.Error("Please check your configuration file - some values appear to be missing.");
             Log.Error("Press any key to shut down ...");
             Console.ReadKey(true);
-            Environment.Exit(1);
+            return false;
         }
         catch (InvalidOperationException e)
         {
             Log.Error("Failed to initialize PlusEmulator: " + e.Message);
             Log.Error("Press any key to shut down ...");
             Console.ReadKey(true);
-            Environment.Exit(1);
+            return false;
         }
         catch (Exception e)
         {
             Log.Error("Fatal error during startup: " + e);
             Log.Error("Press a key to exit");
             Console.ReadKey();
-            Environment.Exit(1);
+            return false;
         }
+
+        return true;
     }
 
     private async Task ResetStatistics()
@@ -321,17 +324,17 @@ public class PlusEnvironment : IPlusEnvironment
 
     public static ConnectionHandling GetConnectionManager() => _connectionManager;
 
-    public static Game GetGame() => _game;
+    public static IGame GetGame() => _game;
 
     public static RconSocket GetRconSocket() => _rcon;
 
-    public static FigureDataManager GetFigureManager() => _figureManager;
+    public static IFigureDataManager GetFigureManager() => _figureManager;
 
     public static IDatabase GetDatabaseManager() => _database;
 
-    public static LanguageManager GetLanguageManager() => _languageManager;
+    public static ILanguageManager GetLanguageManager() => _languageManager;
 
-    public static SettingsManager GetSettingsManager() => _settingsManager;
+    public static ISettingsManager GetSettingsManager() => _settingsManager;
 
     public static ICollection<Habbo> GetUsersCached() => _usersCached.Values;
 

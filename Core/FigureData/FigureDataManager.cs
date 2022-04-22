@@ -9,7 +9,16 @@ using Plus.HabboHotel.Users.Clothing.Parts;
 
 namespace Plus.Core.FigureData;
 
-public class FigureDataManager
+public interface IFigureDataManager
+{
+    void Init();
+    string ProcessFigure(string figure, string gender, ICollection<ClothingParts> clothingParts, bool hasHabboClub);
+    Palette GetPalette(int colorId);
+    bool TryGetPalette(int palletId, out Palette palette);
+    int GetRandomColor(int palletId);
+}
+
+public class FigureDataManager : IFigureDataManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.Core.FigureData");
     private readonly Dictionary<int, Palette> _palettes; //pallet id, Pallet

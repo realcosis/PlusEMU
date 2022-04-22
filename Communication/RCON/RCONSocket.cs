@@ -18,6 +18,7 @@ public class RconSocket
         foreach (var ipAddress in allowedConnections) _allowedConnections.Add(ipAddress);
         try
         {
+            // TODO: Add verification / Authentication. Currently everyone can execute ANY command!!!
             _musSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _musSocket.Bind(new IPEndPoint(IPAddress.Parse(host), port)); // SHould be host?
             _musSocket.Listen(0);

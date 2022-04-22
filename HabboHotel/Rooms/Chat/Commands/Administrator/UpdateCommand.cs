@@ -131,7 +131,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_configuration' permission.");
                     break;
                 }
-                PlusEnvironment.GetSettingsManager().Init();
+                PlusEnvironment.GetSettingsManager().Reload();
                 session.SendWhisper("Server configuration successfully updated.");
                 break;
             }
@@ -222,7 +222,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_locale' permission.");
                     break;
                 }
-                PlusEnvironment.GetLanguageManager().Init();
+                PlusEnvironment.GetLanguageManager().Reload();
                 session.SendWhisper("Locale cache successfully updated.");
                 break;
             }

@@ -25,39 +25,44 @@ using Plus.HabboHotel.Talents;
 
 namespace Plus.HabboHotel;
 
-public class Game
+public class Game : IGame
 {
-    private readonly AchievementManager _achievementManager;
-    private readonly BadgeManager _badgeManager;
-    private readonly BotManager _botManager;
-    private readonly CacheManager _cacheManager;
-    private readonly CatalogManager _catalogManager;
-    private readonly ChatManager _chatManager;
-    private readonly GameClientManager _clientManager;
-    private readonly int _cycleSleepTime = 25;
-    private readonly GameDataManager _gameDataManager;
-    private readonly ServerStatusUpdater _globalUpdater;
-    private readonly GroupManager _groupManager;
-    private readonly ItemDataManager _itemDataManager;
-    private readonly LandingViewManager _landingViewManager; //TODO: Rename class
-    private readonly ModerationManager _moderationManager;
-    private readonly NavigatorManager _navigatorManager;
-    private readonly PacketManager _packetManager;
-    private readonly PermissionManager _permissionManager;
-    private readonly QuestManager _questManager;
-    private readonly RewardManager _rewardManager;
-    private readonly RoomManager _roomManager;
-    private readonly SubscriptionManager _subscriptionManager;
-    private readonly TalentTrackManager _talentTrackManager;
-    private readonly TelevisionManager _televisionManager; //TODO: Initialize from the item manager.
+    private readonly IPacketManager _packetManager;
+
+    private AchievementManager _achievementManager;
+    private BadgeManager _badgeManager;
+    private BotManager _botManager;
+    private CacheManager _cacheManager;
+    private CatalogManager _catalogManager;
+    private ChatManager _chatManager;
+    private GameClientManager _clientManager;
+    private int _cycleSleepTime = 25;
+    private GameDataManager _gameDataManager;
+    private ServerStatusUpdater _globalUpdater;
+    private GroupManager _groupManager;
+    private ItemDataManager _itemDataManager;
+    private LandingViewManager _landingViewManager; //TODO: Rename class
+    private ModerationManager _moderationManager;
+    private NavigatorManager _navigatorManager;
+    private PermissionManager _permissionManager;
+    private QuestManager _questManager;
+    private RewardManager _rewardManager;
+    private RoomManager _roomManager;
+    private SubscriptionManager _subscriptionManager;
+    private TalentTrackManager _talentTrackManager;
+    private TelevisionManager _televisionManager; //TODO: Initialize from the item manager.
     private bool _cycleActive;
 
     private bool _cycleEnded;
     private Task _gameCycle;
 
-    public Game()
+    public Game(IPacketManager packetManager)
     {
-        _packetManager = new PacketManager();
+        _packetManager = packetManager;
+    }
+
+    public void Init()
+    {
         _clientManager = new GameClientManager();
         _moderationManager = new ModerationManager();
         _moderationManager.Init();
@@ -124,7 +129,7 @@ public class Game
         while (!_cycleEnded) Thread.Sleep(_cycleSleepTime);
     }
 
-    public PacketManager GetPacketManager() => _packetManager;
+    public IPacketManager GetPacketManager() => _packetManager;
 
     public GameClientManager GetClientManager() => _clientManager;
 

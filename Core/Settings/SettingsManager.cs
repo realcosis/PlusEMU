@@ -1,31 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Data;
+﻿using Dapper;
 using NLog;
+using Plus.Database;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Plus.Core.Settings;
 
 public class SettingsManager : ISettingsManager
 {
+    private readonly IDatabase _database;
     private static readonly ILogger Log = LogManager.GetLogger("Plus.Core.Settings.SettingsManager");
-    private readonly Dictionary<string, string> _settings;
+    private Dictionary<string, string> _settings = new(0);
 
-    public SettingsManager()
+    public SettingsManager(IDatabase database)
     {
-        _settings = new Dictionary<string, string>();
+        _database = database;
     }
 
-    public void Init()
+    public async Task Reload()
     {
-        if (_settings.Count > 0)
-            _settings.Clear();
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-        {
-            dbClient.SetQuery("SELECT * FROM `server_settings`");
-            var table = dbClient.GetTable();
-            if (table != null)
-                foreach (DataRow row in table.Rows)
-                    _settings.Add(row["key"].ToString().ToLower(), row["value"].ToString().ToLower());
-        }
+        using var connection = _database.Connection();
+        _settings = (await connection.QueryAsync<(string, string)>("SELECT `key`, `value` FROM `server_settings`")).ToDictionary(x => x.Item1, x => x.Item2.ToLower());
         Log.Info("Loaded " + _settings.Count + " server settings.");
     }
 
