@@ -55,13 +55,6 @@ public class PlusEnvironment : IPlusEnvironment
     public static DateTime LastEvent;
     public static DateTime ServerStarted;
 
-    private static readonly List<char> Allowedchars = new(new[]
-    {
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
-        'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
-        'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '.'
-    });
-
     private static readonly ConcurrentDictionary<int, Habbo> _usersCached = new();
 
     public static string SwfRevision = "";
@@ -111,6 +104,7 @@ public class PlusEnvironment : IPlusEnvironment
                 Console.ReadKey(true);
                 return false;
             }
+
             Log.Info("Connected to Database!");
 
             //Reset our statistics first.
@@ -125,11 +119,14 @@ public class PlusEnvironment : IPlusEnvironment
             HabboEncryptionV2.Initialize(new RsaKeys());
 
             //Make sure Rcon is connected before we allow clients to Connect.
-            _rcon = new RconSocket(GetConfig().Data["rcon.tcp.bindip"], int.Parse(GetConfig().Data["rcon.tcp.port"]), GetConfig().Data["rcon.tcp.allowedaddr"].Split(Convert.ToChar(";")));
+            _rcon = new RconSocket(GetConfig().Data["rcon.tcp.bindip"], int.Parse(GetConfig().Data["rcon.tcp.port"]),
+                GetConfig().Data["rcon.tcp.allowedaddr"].Split(Convert.ToChar(";")));
 
             //Accept connections.
-            _connectionManager = new ConnectionHandling(int.Parse(GetConfig().Data["game.tcp.port"]), int.Parse(GetConfig().Data["game.tcp.conlimit"]),
-                int.Parse(GetConfig().Data["game.tcp.conperip"]), GetConfig().Data["game.tcp.enablenagles"].ToLower() == "true");
+            _connectionManager = new ConnectionHandling(int.Parse(GetConfig().Data["game.tcp.port"]),
+                int.Parse(GetConfig().Data["game.tcp.conlimit"]),
+                int.Parse(GetConfig().Data["game.tcp.conperip"]),
+                GetConfig().Data["game.tcp.enablenagles"].ToLower() == "true");
             _connectionManager.Init();
 
             // Allow services to self initialize
@@ -142,11 +139,9 @@ public class PlusEnvironment : IPlusEnvironment
             Console.WriteLine();
             Log.Info("EMULATOR -> READY! (" + timeUsed.Seconds + " s, " + timeUsed.Milliseconds + " ms)");
         }
-#pragma warning disable CS0168 // The variable 'e' is declared but never used
         catch (KeyNotFoundException e)
-#pragma warning restore CS0168 // The variable 'e' is declared but never used
         {
-            Log.Error("Please check your configuration file - some values appear to be missing.");
+            Log.Error("Failed to initialize PlusEmulator: " + e.Message);
             Log.Error("Press any key to shut down ...");
             Console.ReadKey(true);
             return false;
