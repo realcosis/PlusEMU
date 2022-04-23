@@ -7,6 +7,7 @@ using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Rooms.AI;
 using Plus.HabboHotel.Rooms.AI.Speech;
+using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Catalog;
 
@@ -29,7 +30,7 @@ internal class CheckGnomeNameEvent : IPacketEvent
             session.SendPacket(new CheckGnomeNameComposer(petName, 1));
             return;
         }
-        if (!PlusEnvironment.IsValidAlphaNumeric(petName))
+        if (!StringCharFilter.IsValidAlphaNumeric(petName))
         {
             session.SendPacket(new CheckGnomeNameComposer(petName, 1));
             return;

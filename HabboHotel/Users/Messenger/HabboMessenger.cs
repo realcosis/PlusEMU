@@ -166,7 +166,7 @@ public class HabboMessenger
                 dRow = dbClient.GetRow();
             }
             newFriend = new MessengerBuddy(friendId, Convert.ToString(dRow["username"]), Convert.ToString(dRow["look"]), Convert.ToString(dRow["motto"]), Convert.ToInt32(dRow["last_online"]),
-                PlusEnvironment.EnumToBool(dRow["hide_online"].ToString()), PlusEnvironment.EnumToBool(dRow["hide_inroom"].ToString()));
+                ConvertExtensions.EnumToBool(dRow["hide_online"].ToString()), ConvertExtensions.EnumToBool(dRow["hide_inroom"].ToString()));
         }
         else
         {
@@ -217,7 +217,7 @@ public class HabboMessenger
             if (row == null)
                 return false;
             userId = Convert.ToInt32(row["id"]);
-            hasFqDisabled = PlusEnvironment.EnumToBool(row["block_newfriends"].ToString());
+            hasFqDisabled = ConvertExtensions.EnumToBool(row["block_newfriends"].ToString());
         }
         else
         {

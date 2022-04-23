@@ -1,10 +1,34 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Plus.Utilities;
 
 internal static class StringCharFilter
 {
+    private const string _defaultFigure =
+        "sh-3338-93.ea-1406-62.hr-831-49.ha-3331-92.hd-180-7.ch-3334-93-1408.lg-3337-92.ca-1813-62";
+    private static readonly Regex _allowedChars = new (@"^[a-zA-Z0-9-.]+$");
+    private static readonly Regex _allowedAlphaNum = new (@"^[a-zA-Z0-9]+$");
+    private static readonly Regex _scapesRegex = new (@"[\u0001-\u0008\u000B-\u000C\u000E-\u001F\u007F-\u009F]");
+    private static readonly Regex _breakLinesRegex = new (@"[\r\n]");
+
+    public static bool IsValid(string input)
+    {
+        return _allowedChars.IsMatch(input);
+    }
+
+    public static bool IsValidAlphaNumeric(char input)
+    {
+        return  _allowedAlphaNum.IsMatch(input.ToString());
+    }
+    
+    public static bool IsValidAlphaNumeric(string input)
+    {
+        return _allowedAlphaNum.IsMatch(input);
+    }
+
+
     /// <summary>
     /// Escapes the characters used for injecting special chars from a user input.
     /// </summary>
@@ -13,17 +37,21 @@ internal static class StringCharFilter
     /// <returns></returns>
     public static string Escape(string str, bool allowBreaks = false)
     {
-        str = str.Trim();
-        str = str.Replace(Convert.ToChar(1), ' ');
-        str = str.Replace(Convert.ToChar(2), ' ');
-        str = str.Replace(Convert.ToChar(3), ' ');
-        str = str.Replace(Convert.ToChar(9), ' ');
+        if (string.IsNullOrWhiteSpace(str))
+        {
+            return string.Empty;
+        }
+        
         if (!allowBreaks)
         {
-            str = str.Replace(Convert.ToChar(10), ' ');
-            str = str.Replace(Convert.ToChar(13), ' ');
+            str = _breakLinesRegex.Replace(str, " ");
         }
-        str = Regex.Replace(str, "<(.|\\n)*?>", string.Empty);
-        return str;
+        
+        return _scapesRegex.Replace(str, string.Empty);
+    }
+
+    public static string FilterFigure(string figure)
+    {
+        return IsValid(figure) ? figure : _defaultFigure;
     }
 }

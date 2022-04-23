@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using NLog;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Games;
 
@@ -37,7 +38,7 @@ public class GameDataManager
                         new GameData(Convert.ToInt32(row["id"]), Convert.ToString(row["name"]), Convert.ToString(row["colour_one"]), Convert.ToString(row["colour_two"]),
                             Convert.ToString(row["resource_path"]), Convert.ToString(row["string_three"]), Convert.ToString(row["game_swf"]), Convert.ToString(row["game_assets"]),
                             Convert.ToString(row["game_server_host"]), Convert.ToString(row["game_server_port"]), Convert.ToString(row["socket_policy_port"]),
-                            PlusEnvironment.EnumToBool(row["game_enabled"].ToString())));
+                            ConvertExtensions.EnumToBool(row["game_enabled"].ToString())));
                 }
             }
         }

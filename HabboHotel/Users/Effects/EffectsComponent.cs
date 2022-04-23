@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Users.Effects;
 
@@ -37,7 +38,7 @@ public sealed class EffectsComponent
                 {
                     if (_effects.TryAdd(Convert.ToInt32(row["id"]),
                             new AvatarEffect(Convert.ToInt32(row["id"]), Convert.ToInt32(row["user_id"]), Convert.ToInt32(row["effect_id"]), Convert.ToDouble(row["total_duration"]),
-                                PlusEnvironment.EnumToBool(row["is_activated"].ToString()), Convert.ToDouble(row["activated_stamp"]), Convert.ToInt32(row["quantity"]))))
+                                ConvertExtensions.EnumToBool(row["is_activated"].ToString()), Convert.ToDouble(row["activated_stamp"]), Convert.ToInt32(row["quantity"]))))
                     {
                         //umm?
                     }

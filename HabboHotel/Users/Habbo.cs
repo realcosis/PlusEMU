@@ -87,7 +87,7 @@ public class Habbo
         Motto = motto;
         Look = look;
         Gender = gender.ToLower();
-        FootballLook = PlusEnvironment.FilterFigure(look.ToLower());
+        FootballLook = StringCharFilter.FilterFigure(look.ToLower());
         FootballGender = gender.ToLower();
         Credits = credits;
         Duckets = activityPoints;

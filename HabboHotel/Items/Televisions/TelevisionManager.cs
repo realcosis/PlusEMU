@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using NLog;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Items.Televisions;
 
@@ -34,7 +35,7 @@ public class TelevisionManager
                 {
                     Televisions.Add(Convert.ToInt32(row["id"]),
                         new TelevisionItem(Convert.ToInt32(row["id"]), row["youtube_id"].ToString(), row["title"].ToString(), row["description"].ToString(),
-                            PlusEnvironment.EnumToBool(row["enabled"].ToString())));
+                            ConvertExtensions.EnumToBool(row["enabled"].ToString())));
                 }
             }
         }

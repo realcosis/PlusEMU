@@ -1,5 +1,6 @@
 ﻿using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.HabboHotel.GameClients;
+using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Catalog;
 
@@ -8,7 +9,7 @@ public class CheckPetNameEvent : IPacketEvent
     public void Parse(GameClient session, ClientPacket packet)
     {
         var petName = packet.PopString();
-        if (petName.Length < 2)
+        if (string.IsNullOrWhiteSpace(petName) || petName.Length < 2)
         {
             session.SendPacket(new CheckPetNameComposer(2, "2"));
             return;
@@ -18,7 +19,7 @@ public class CheckPetNameEvent : IPacketEvent
             session.SendPacket(new CheckPetNameComposer(1, "15"));
             return;
         }
-        if (!PlusEnvironment.IsValidAlphaNumeric(petName))
+        if (!StringCharFilter.IsValidAlphaNumeric(petName))
         {
             session.SendPacket(new CheckPetNameComposer(3, string.Empty));
             return;

@@ -153,7 +153,7 @@ public class Pet
             maxE = 15; // Remove Max Energy as 15
         if (maxE <= 4)
             maxE = 15;
-        var r = PlusEnvironment.GetRandomNumber(4, maxE);
+        var r = RandomNumber.GenerateNewRandom(4, maxE);
         if (!add)
         {
             Energy = Energy - r;

@@ -8,6 +8,7 @@ using Plus.Communication.Packets.Outgoing.Rooms.Freeze;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Items.Wired;
 using Plus.HabboHotel.Rooms.Games.Teams;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.Games.Freeze;
 
@@ -45,7 +46,7 @@ public class Freeze
             ExitTeleports.TryRemove(id, out temp);
     }
 
-    public Item GetRandomExitTile() => ExitTeleports.Values.ToList()[PlusEnvironment.GetRandomNumber(0, ExitTeleports.Count - 1)];
+    public Item GetRandomExitTile() => ExitTeleports.Values.ToList()[RandomNumber.GenerateNewRandom(0, ExitTeleports.Count - 1)];
 
     public void StartGame()
     {

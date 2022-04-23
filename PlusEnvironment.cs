@@ -178,36 +178,6 @@ public class PlusEnvironment : IPlusEnvironment
         await connection.ExecuteAsync("UPDATE `server_status` SET `users_online` = '0', `loaded_rooms` = '0'");
     }
 
-    public static bool EnumToBool(string @enum) => @enum == "1";
-
-    public static string BoolToEnum(bool @bool) => @bool ? "1" : "0";
-
-    public static int GetRandomNumber(int min, int max) => RandomNumber.GenerateNewRandom(min, max);
-
-    public static string FilterFigure(string figure)
-    {
-        foreach (var character in figure)
-        {
-            if (!IsValid(character))
-                return "sh-3338-93.ea-1406-62.hr-831-49.ha-3331-92.hd-180-7.ch-3334-93-1408.lg-3337-92.ca-1813-62";
-        }
-        return figure;
-    }
-
-    private static bool IsValid(char character) => Allowedchars.Contains(character);
-
-    public static bool IsValidAlphaNumeric(string inputStr)
-    {
-        inputStr = inputStr.ToLower();
-        if (string.IsNullOrEmpty(inputStr)) return false;
-        for (var i = 0; i < inputStr.Length; i++)
-        {
-            if (!IsValid(inputStr[i]))
-                return false;
-        }
-        return true;
-    }
-
     public static string GetUsernameById(int userId)
     {
         var name = "Unknown User";

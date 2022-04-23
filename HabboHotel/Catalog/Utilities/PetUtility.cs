@@ -8,9 +8,11 @@ public static class PetUtility
 {
     public static bool CheckPetName(string name)
     {
+        if (string.IsNullOrWhiteSpace(name))
+            return false;
         if (name.Length < 1 || name.Length > 16)
             return false;
-        if (!PlusEnvironment.IsValidAlphaNumeric(name))
+        if (!StringCharFilter.IsValidAlphaNumeric(name))
             return false;
         return true;
     }

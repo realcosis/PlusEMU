@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Items.Data.Moodlight;
 
@@ -30,7 +31,8 @@ public class MoodlightData
             dbClient.SetQuery("SELECT enabled,current_preset,preset_one,preset_two,preset_three FROM room_items_moodlight WHERE item_id=" + itemId + " LIMIT 1");
             row = dbClient.GetRow();
         }
-        Enabled = PlusEnvironment.EnumToBool(row["enabled"].ToString());
+
+        Enabled = ConvertExtensions.EnumToBool(row["enabled"].ToString());
         CurrentPreset = Convert.ToInt32(row["current_preset"]);
         Presets = new List<MoodlightPreset>();
         Presets.Add(GeneratePreset(Convert.ToString(row["preset_one"])));
@@ -71,7 +73,7 @@ public class MoodlightData
         }
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
-            dbClient.SetQuery("UPDATE room_items_moodlight SET preset_" + pr + " = '@color," + intensity + "," + PlusEnvironment.BoolToEnum(bgOnly) + "' WHERE item_id = '" + ItemId + "' LIMIT 1");
+            dbClient.SetQuery("UPDATE room_items_moodlight SET preset_" + pr + " = '@color," + intensity + "," + ConvertExtensions.ToStringEnumValue(bgOnly) + "' WHERE item_id = '" + ItemId + "' LIMIT 1");
             dbClient.AddParameter("color", color);
             dbClient.RunQuery();
         }
@@ -84,7 +86,7 @@ public class MoodlightData
     {
         var bits = data.Split(',');
         if (!IsValidColor(bits[0])) bits[0] = "#000000";
-        return new MoodlightPreset(bits[0], int.Parse(bits[1]), PlusEnvironment.EnumToBool(bits[2]));
+        return new MoodlightPreset(bits[0], int.Parse(bits[1]), ConvertExtensions.EnumToBool(bits[2]));
     }
 
     public MoodlightPreset GetPreset(int i)

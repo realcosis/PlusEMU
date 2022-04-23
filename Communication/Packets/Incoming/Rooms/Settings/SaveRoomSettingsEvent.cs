@@ -7,6 +7,7 @@ using Plus.Communication.Packets.Outgoing.Rooms.Settings;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Navigator;
 using Plus.HabboHotel.Rooms;
+using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Settings;
 
@@ -36,10 +37,10 @@ internal class SaveRoomSettingsEvent : IPacketEvent
             formattedTags.Append(tag);
         }
         var tradeSettings = packet.PopInt(); //2 = All can trade, 1 = owner only, 0 = no trading.
-        var allowPets = Convert.ToInt32(PlusEnvironment.BoolToEnum(packet.PopBoolean()));
-        var allowPetsEat = Convert.ToInt32(PlusEnvironment.BoolToEnum(packet.PopBoolean()));
-        var roomBlockingEnabled = Convert.ToInt32(PlusEnvironment.BoolToEnum(packet.PopBoolean()));
-        var hidewall = Convert.ToInt32(PlusEnvironment.BoolToEnum(packet.PopBoolean()));
+        var allowPets = packet.PopBoolean().ToInt32();
+        var allowPetsEat = packet.PopBoolean().ToInt32();
+        var roomBlockingEnabled = packet.PopBoolean().ToInt32();
+        var hidewall = packet.PopBoolean().ToInt32();
         var wallThickness = packet.PopInt();
         var floorThickness = packet.PopInt();
         var whoMute = packet.PopInt(); // mute
@@ -164,13 +165,13 @@ internal class SaveRoomSettingsEvent : IPacketEvent
         {
             session.SendPacket(new RoomSettingsSavedComposer(room.RoomId));
             session.SendPacket(new RoomInfoUpdatedComposer(room.RoomId));
-            session.SendPacket(new RoomVisualizationSettingsComposer(room.WallThickness, room.FloorThickness, PlusEnvironment.EnumToBool(room.Hidewall.ToString())));
+            session.SendPacket(new RoomVisualizationSettingsComposer(room.WallThickness, room.FloorThickness, Convert.ToBoolean(room.Hidewall)));
         }
         else
         {
             room.SendPacket(new RoomSettingsSavedComposer(room.RoomId));
             room.SendPacket(new RoomInfoUpdatedComposer(room.RoomId));
-            room.SendPacket(new RoomVisualizationSettingsComposer(room.WallThickness, room.FloorThickness, PlusEnvironment.EnumToBool(room.Hidewall.ToString())));
+            room.SendPacket(new RoomVisualizationSettingsComposer(room.WallThickness, room.FloorThickness, Convert.ToBoolean(room.Hidewall)));
         }
         PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_SelfModDoorModeSeen", 1);
         PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_SelfModWalkthroughSeen", 1);

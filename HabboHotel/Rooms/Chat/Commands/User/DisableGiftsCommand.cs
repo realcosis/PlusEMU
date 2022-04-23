@@ -1,4 +1,5 @@
 ﻿using Plus.HabboHotel.GameClients;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
@@ -15,8 +16,9 @@ internal class DisableGiftsCommand : IChatCommand
         session.GetHabbo().AllowGifts = !session.GetHabbo().AllowGifts;
         session.SendWhisper("You're " + (session.GetHabbo().AllowGifts ? "now" : "no longer") + " accepting gifts.");
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-        dbClient.SetQuery("UPDATE `users` SET `allow_gifts` = @AllowGifts WHERE `id` = '" + session.GetHabbo().Id + "'");
-        dbClient.AddParameter("AllowGifts", PlusEnvironment.BoolToEnum(session.GetHabbo().AllowGifts));
+        dbClient.SetQuery("UPDATE `users` SET `allow_gifts` = @allowGifts WHERE `id` = @habboId'");
+        dbClient.AddParameter("habboId", session.GetHabbo().Id);
+        dbClient.AddParameter("allowGifts", ConvertExtensions.ToStringEnumValue(session.GetHabbo().AllowGifts));
         dbClient.RunQuery();
     }
 }

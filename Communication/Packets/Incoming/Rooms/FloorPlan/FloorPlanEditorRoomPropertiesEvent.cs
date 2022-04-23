@@ -1,4 +1,5 @@
-﻿using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+﻿using System;
+using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Communication.Packets.Outgoing.Rooms.FloorPlan;
 using Plus.HabboHotel.GameClients;
 
@@ -19,6 +20,6 @@ internal class FloorPlanEditorRoomPropertiesEvent : IPacketEvent
         var floorItems = room.GetRoomItemHandler().GetFloor;
         session.SendPacket(new FloorPlanFloorMapComposer(floorItems));
         session.SendPacket(new FloorPlanSendDoorComposer(model.DoorX, model.DoorY, model.DoorOrientation));
-        session.SendPacket(new RoomVisualizationSettingsComposer(room.WallThickness, room.FloorThickness, PlusEnvironment.EnumToBool(room.Hidewall.ToString())));
+        session.SendPacket(new RoomVisualizationSettingsComposer(room.WallThickness, room.FloorThickness, Convert.ToBoolean(room.Hidewall)));
     }
 }
