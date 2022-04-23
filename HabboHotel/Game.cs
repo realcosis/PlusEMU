@@ -42,8 +42,8 @@ public class Game : IGame
     private readonly IChatManager _chatManager;
     private readonly IGroupManager _groupManager;
     private readonly IQuestManager _questManager;
+    private readonly IAchievementManager _achievementManager;
 
-    private AchievementManager _achievementManager;
     private BadgeManager _badgeManager;
     private BotManager _botManager;
     private CacheManager _cacheManager;
@@ -70,7 +70,8 @@ public class Game : IGame
         IRoomManager roomManager,
         IChatManager chatManager,
         IGroupManager groupManager,
-        IQuestManager questManager)
+        IQuestManager questManager,
+        IAchievementManager achievementManager)
     {
         _packetManager = packetManager;
         _landingViewManager = landingViewManager;
@@ -84,6 +85,7 @@ public class Game : IGame
         _chatManager = chatManager;
         _groupManager = groupManager;
         _questManager = questManager;
+        _achievementManager = achievementManager;
     }
 
     public Task Init()
@@ -97,7 +99,6 @@ public class Game : IGame
         _chatManager.Init();
         _groupManager.Init();
         _questManager.Init();
-        _achievementManager = new AchievementManager();
         _achievementManager.Init();
         _talentTrackManager = new TalentTrackManager();
         _talentTrackManager.Init();
@@ -156,7 +157,7 @@ public class Game : IGame
 
     public IRoomManager GetRoomManager() => _roomManager;
 
-    public AchievementManager GetAchievementManager() => _achievementManager;
+    public IAchievementManager GetAchievementManager() => _achievementManager;
 
     public TalentTrackManager GetTalentTrackManager() => _talentTrackManager;
 

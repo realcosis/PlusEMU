@@ -33,7 +33,7 @@ public interface IGame
     INavigatorManager GetNavigator();
     IItemDataManager GetItemManager();
     IRoomManager GetRoomManager();
-    AchievementManager GetAchievementManager();
+    IAchievementManager GetAchievementManager();
     TalentTrackManager GetTalentTrackManager();
     IModerationManager GetModerationManager();
     PermissionManager GetPermissionManager();
