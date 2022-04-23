@@ -1,15 +1,22 @@
-﻿using Plus.HabboHotel.GameClients;
+﻿using Plus.Database;
+using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class SetMaxCommand : IChatCommand
 {
+    private readonly IDatabase _database;
     public string Key => "setmax";
     public string PermissionRequired => "command_setmax";
 
     public string Parameters => "%value%";
 
     public string Description => "Set the visitor limit to the room.";
+
+    public SetMaxCommand(IDatabase database)
+    {
+        _database = database;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -36,7 +43,7 @@ internal class SetMaxCommand : IChatCommand
             else
                 session.SendWhisper("visitor amount set to " + maxAmount + ".");
             room.UsersMax = maxAmount;
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = _database.GetQueryReactor();
             dbClient.RunQuery("UPDATE `rooms` SET `users_max` = " + maxAmount + " WHERE `id` = '" + room.Id + "' LIMIT 1");
         }
         else

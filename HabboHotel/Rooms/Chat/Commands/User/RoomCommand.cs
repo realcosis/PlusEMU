@@ -1,17 +1,24 @@
 ﻿using System.Text;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class RoomCommand : IChatCommand
 {
+    private readonly IDatabase _database;
     public string Key => "room";
     public string PermissionRequired => "command_room";
 
     public string Parameters => "push/pull/enables/respect";
 
     public string Description => "Gives you the ability to enable or disable basic room commands.";
+
+    public RoomCommand(IDatabase database)
+    {
+        _database = database;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -46,7 +53,7 @@ internal class RoomCommand : IChatCommand
             case "push":
             {
                 room.PushEnabled = !room.PushEnabled;
-                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = _database.GetQueryReactor())
                 {
                     dbClient.SetQuery("UPDATE `rooms` SET `push_enabled` = @PushEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
                     dbClient.AddParameter("PushEnabled", PlusEnvironment.BoolToEnum(room.PushEnabled));
@@ -58,7 +65,7 @@ internal class RoomCommand : IChatCommand
             case "spush":
             {
                 room.SuperPushEnabled = !room.SuperPushEnabled;
-                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = _database.GetQueryReactor())
                 {
                     dbClient.SetQuery("UPDATE `rooms` SET `spush_enabled` = @PushEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
                     dbClient.AddParameter("PushEnabled", PlusEnvironment.BoolToEnum(room.SuperPushEnabled));
@@ -70,7 +77,7 @@ internal class RoomCommand : IChatCommand
             case "spull":
             {
                 room.SuperPullEnabled = !room.SuperPullEnabled;
-                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = _database.GetQueryReactor())
                 {
                     dbClient.SetQuery("UPDATE `rooms` SET `spull_enabled` = @PullEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
                     dbClient.AddParameter("PullEnabled", PlusEnvironment.BoolToEnum(room.SuperPullEnabled));
@@ -82,7 +89,7 @@ internal class RoomCommand : IChatCommand
             case "pull":
             {
                 room.PullEnabled = !room.PullEnabled;
-                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = _database.GetQueryReactor())
                 {
                     dbClient.SetQuery("UPDATE `rooms` SET `pull_enabled` = @PullEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
                     dbClient.AddParameter("PullEnabled", PlusEnvironment.BoolToEnum(room.PullEnabled));
@@ -95,7 +102,7 @@ internal class RoomCommand : IChatCommand
             case "enables":
             {
                 room.EnablesEnabled = !room.EnablesEnabled;
-                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = _database.GetQueryReactor())
                 {
                     dbClient.SetQuery("UPDATE `rooms` SET `enables_enabled` = @EnablesEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
                     dbClient.AddParameter("EnablesEnabled", PlusEnvironment.BoolToEnum(room.EnablesEnabled));
@@ -107,7 +114,7 @@ internal class RoomCommand : IChatCommand
             case "respect":
             {
                 room.RespectNotificationsEnabled = !room.RespectNotificationsEnabled;
-                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = _database.GetQueryReactor())
                 {
                     dbClient.SetQuery("UPDATE `rooms` SET `respect_notifications_enabled` = @RespectNotificationsEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
                     dbClient.AddParameter("RespectNotificationsEnabled", PlusEnvironment.BoolToEnum(room.RespectNotificationsEnabled));
@@ -120,7 +127,7 @@ internal class RoomCommand : IChatCommand
             case "morphs":
             {
                 room.PetMorphsAllowed = !room.PetMorphsAllowed;
-                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = _database.GetQueryReactor())
                 {
                     dbClient.SetQuery("UPDATE `rooms` SET `pet_morphs_allowed` = @PetMorphsAllowed WHERE `id` = '" + room.Id + "' LIMIT 1");
                     dbClient.AddParameter("PetMorphsAllowed", PlusEnvironment.BoolToEnum(room.PetMorphsAllowed));

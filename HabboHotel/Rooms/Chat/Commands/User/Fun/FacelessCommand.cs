@@ -1,16 +1,26 @@
 ﻿using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+using Plus.Core.FigureData;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun;
 
 internal class FacelessCommand : IChatCommand
 {
+    private readonly IFigureDataManager _figureDataManager;
+    private readonly IDatabase _database;
     public string Key => "faceless";
     public string PermissionRequired => "command_faceless";
 
     public string Parameters => "";
 
     public string Description => "Allows you to go faceless!";
+
+    public FacelessCommand(IFigureDataManager figureDataManager, IDatabase database)
+    {
+        _figureDataManager = figureDataManager;
+        _database = database;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -32,8 +42,8 @@ internal class FacelessCommand : IChatCommand
                 break;
             }
         }
-        session.GetHabbo().Look = PlusEnvironment.GetFigureManager().ProcessFigure(session.GetHabbo().Look, session.GetHabbo().Gender, session.GetHabbo().GetClothing().GetClothingParts, true);
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        session.GetHabbo().Look = _figureDataManager.ProcessFigure(session.GetHabbo().Look, session.GetHabbo().Gender, session.GetHabbo().GetClothing().GetClothingParts, true);
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.RunQuery("UPDATE `users` SET `look` = '" + session.GetHabbo().Look + "' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
         }
