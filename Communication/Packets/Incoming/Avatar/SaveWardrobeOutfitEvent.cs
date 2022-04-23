@@ -1,16 +1,27 @@
-﻿using Plus.HabboHotel.GameClients;
+﻿using Plus.Core.FigureData;
+using Plus.Database;
+using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Avatar;
 
 internal class SaveWardrobeOutfitEvent : IPacketEvent
 {
+    private readonly IFigureDataManager _figureDataManager;
+    private readonly IDatabase _database;
+
+    public SaveWardrobeOutfitEvent(IFigureDataManager figureDataManager, IDatabase database)
+    {
+        _figureDataManager = figureDataManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         var slotId = packet.PopInt();
         var look = packet.PopString();
         var gender = packet.PopString();
-        look = PlusEnvironment.GetFigureManager().ProcessFigure(look, gender, session.GetHabbo().GetClothing().GetClothingParts, true);
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        look = _figureDataManager.ProcessFigure(look, gender, session.GetHabbo().GetClothing().GetClothingParts, true);
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("SELECT null FROM `user_wardrobe` WHERE `user_id` = @id AND `slot_id` = @slot");
         dbClient.AddParameter("id", session.GetHabbo().Id);
         dbClient.AddParameter("slot", slotId);
