@@ -1,11 +1,19 @@
 ﻿using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Quests;
 
 namespace Plus.Communication.Packets.Incoming.Quests;
 
 public class GetQuestListEvent : IPacketEvent
 {
+    private readonly IQuestManager _questManager;
+
+    public GetQuestListEvent(IQuestManager questManager)
+    {
+        _questManager = questManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
-        PlusEnvironment.GetGame().GetQuestManager().GetList(session, null);
+        _questManager.GetList(session, null);
     }
 }
