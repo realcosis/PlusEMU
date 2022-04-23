@@ -8,12 +8,6 @@ using Plus.HabboHotel.Rooms.AI.Responses;
 
 namespace Plus.HabboHotel.Bots;
 
-public interface IBotManager
-{
-    void Init();
-    BotResponse GetResponse(BotAiType type, string message);
-}
-
 public class BotManager : IBotManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Bots.BotManager");

@@ -5,14 +5,6 @@ using NLog;
 
 namespace Plus.HabboHotel.Items.Televisions;
 
-public interface ITelevisionManager
-{
-    ICollection<TelevisionItem> TelevisionList { get; }
-    Dictionary<int, TelevisionItem> Televisions { get; }
-    void Init();
-    bool TryGet(int itemId, out TelevisionItem televisionItem);
-}
-
 public class TelevisionManager : ITelevisionManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Items.Televisions.TelevisionManager");

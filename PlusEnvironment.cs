@@ -27,11 +27,6 @@ using Plus.Utilities;
 
 namespace Plus;
 
-public interface IPlusEnvironment
-{
-    Task<bool> Start();
-}
-
 public class PlusEnvironment : IPlusEnvironment
 {
     public const string PrettyVersion = "Plus Emulator";

@@ -5,12 +5,6 @@ using NLog;
 
 namespace Plus.HabboHotel.Badges;
 
-public interface IBadgeManager
-{
-    void Init();
-    bool TryGetBadge(string code, out BadgeDefinition badge);
-}
-
 public class BadgeManager : IBadgeManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Badges.BadgeManager");

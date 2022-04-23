@@ -9,14 +9,6 @@ using Plus.HabboHotel.Users.Messenger;
 
 namespace Plus.HabboHotel.Achievements;
 
-public interface IAchievementManager
-{
-    Dictionary<string, Achievement> Achievements { get; }
-    void Init();
-    bool ProgressAchievement(GameClient session, string group, int progress, bool fromBeginning = false);
-    ICollection<Achievement> GetGameAchievements(int gameId);
-}
-
 public class AchievementManager : IAchievementManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Achievements.AchievementManager");

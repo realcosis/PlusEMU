@@ -6,14 +6,6 @@ using NLog;
 
 namespace Plus.HabboHotel.Games;
 
-public interface IGameDataManager
-{
-    ICollection<GameData> GameData { get; }
-    void Init();
-    bool TryGetGame(int gameId, out GameData data);
-    int GetCount();
-}
-
 public class GameDataManager : IGameDataManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Games.GameDataManager");

@@ -189,5 +189,3 @@ public class RsaKey
         return 0;
     }
 }
-
-public delegate BigInteger DoCalculateionDelegate(BigInteger m);

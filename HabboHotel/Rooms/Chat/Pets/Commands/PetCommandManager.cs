@@ -4,12 +4,6 @@ using System.Data;
 
 namespace Plus.HabboHotel.Rooms.Chat.Pets.Commands;
 
-public interface IPetCommandManager
-{
-    void Init();
-    int TryInvoke(string input);
-}
-
 public class PetCommandManager : IPetCommandManager
 {
     private readonly Dictionary<string, string> _commandDatabase;

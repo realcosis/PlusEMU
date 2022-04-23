@@ -9,18 +9,6 @@ using Plus.HabboHotel.Rooms.Chat.Styles;
 
 namespace Plus.HabboHotel.Rooms.Chat;
 
-public interface IChatManager
-{
-    IChatEmotionsManager GetEmotions();
-    IChatlogManager GetLogs();
-    IWordFilterManager GetFilter();
-    ICommandManager GetCommands();
-    IPetCommandManager GetPetCommands();
-    IPetLocale GetPetLocale();
-    IChatStyleManager GetChatStyles();
-    void Init();
-}
-
 public sealed class ChatManager : IChatManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Rooms.Chat.ChatManager");

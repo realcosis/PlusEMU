@@ -4,13 +4,6 @@ using System.Data;
 
 namespace Plus.HabboHotel.Catalog.Clothing;
 
-public interface IClothingManager
-{
-    ICollection<ClothingItem> GetClothingAllParts { get; }
-    void Init();
-    bool TryGetClothing(int itemId, out ClothingItem clothing);
-}
-
 public class ClothingManager : IClothingManager
 {
     private readonly Dictionary<int, ClothingItem> _clothing;

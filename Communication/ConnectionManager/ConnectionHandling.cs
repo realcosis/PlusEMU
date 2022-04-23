@@ -3,12 +3,6 @@ using Plus.Core;
 
 namespace Plus.Communication.ConnectionManager;
 
-public interface IConnectionHandling
-{
-    void Init(int port, int maxConnections, int connectionsPerIp, bool enabeNagles);
-    void Destroy();
-}
-
 public class ConnectionHandling : IConnectionHandling
 {
     private readonly ISocketManager _socketManager;

@@ -3,12 +3,6 @@ using System.Data;
 
 namespace Plus.HabboHotel.Rooms.Chat.Pets.Locale;
 
-public interface IPetLocale
-{
-    void Init();
-    string[] GetValue(string key);
-}
-
 public class PetLocale : IPetLocale
 {
     private Dictionary<string, string[]> _values;

@@ -5,12 +5,6 @@ using NLog;
 
 namespace Plus.HabboHotel.Subscriptions;
 
-public interface ISubscriptionManager
-{
-    void Init();
-    bool TryGetSubscriptionData(int id, out SubscriptionData data);
-}
-
 public class SubscriptionManager : ISubscriptionManager
 {
     private static readonly ILogger _log = LogManager.GetLogger("Plus.HabboHotel.Subscriptions.SubscriptionManager");

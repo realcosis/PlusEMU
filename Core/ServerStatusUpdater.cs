@@ -4,13 +4,6 @@ using NLog;
 
 namespace Plus.Core;
 
-public interface IServerStatusUpdater
-{
-    void Dispose();
-    void Init();
-    void OnTick(object obj);
-}
-
 public class ServerStatusUpdater : IDisposable, IServerStatusUpdater
 {
     private const int UpdateInSeconds = 30;

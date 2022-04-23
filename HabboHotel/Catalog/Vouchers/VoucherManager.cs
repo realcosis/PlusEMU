@@ -4,12 +4,6 @@ using System.Data;
 
 namespace Plus.HabboHotel.Catalog.Vouchers;
 
-public interface IVoucherManager
-{
-    void Init();
-    bool TryGetVoucher(string code, out Voucher voucher);
-}
-
 public class VoucherManager : IVoucherManager
 {
     private readonly Dictionary<string, Voucher> _vouchers;
