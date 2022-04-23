@@ -45,11 +45,11 @@ public class Game : IGame
     private readonly IAchievementManager _achievementManager;
 
     private BadgeManager _badgeManager;
-    private BotManager _botManager;
+    private IBotManager _botManager;
     private CacheManager _cacheManager;
     private readonly int _cycleSleepTime = 25;
     private IGameDataManager _gameDataManager;
-    private ServerStatusUpdater _globalUpdater;
+    private IServerStatusUpdater _globalUpdater;
     private PermissionManager _permissionManager;
     private RewardManager _rewardManager;
     private SubscriptionManager _subscriptionManager;
@@ -73,7 +73,9 @@ public class Game : IGame
         IQuestManager questManager,
         IAchievementManager achievementManager,
         ITalentTrackManager talentTrackManager,
-        IGameDataManager gameDataManager)
+        IGameDataManager gameDataManager,
+        IServerStatusUpdater serverStatusUpdater,
+        IBotManager botManager)
     {
         _packetManager = packetManager;
         _landingViewManager = landingViewManager;
@@ -90,6 +92,8 @@ public class Game : IGame
         _achievementManager = achievementManager;
         _talentTrackManager = talentTrackManager;
         _gameDataManager = gameDataManager;
+        _globalUpdater = serverStatusUpdater;
+        _botManager = botManager;
     }
 
     public Task Init()
@@ -106,9 +110,7 @@ public class Game : IGame
         _achievementManager.Init();
         _talentTrackManager.Init();
         _gameDataManager.Init();
-        _globalUpdater = new ServerStatusUpdater();
         _globalUpdater.Init();
-        _botManager = new BotManager();
         _botManager.Init();
         _cacheManager = new CacheManager();
         _rewardManager = new RewardManager();
@@ -181,7 +183,7 @@ public class Game : IGame
 
     public IGameDataManager GetGameDataManager() => _gameDataManager;
 
-    public BotManager GetBotManager() => _botManager;
+    public IBotManager GetBotManager() => _botManager;
 
     public CacheManager GetCacheManager() => _cacheManager;
 

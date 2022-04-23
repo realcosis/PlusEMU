@@ -44,7 +44,7 @@ public interface IGame
     ITelevisionManager GetTelevisionManager();
     IChatManager GetChatManager();
     IGameDataManager GetGameDataManager();
-    BotManager GetBotManager();
+    IBotManager GetBotManager();
     CacheManager GetCacheManager();
     RewardManager GetRewardManager();
     BadgeManager GetBadgeManager();
