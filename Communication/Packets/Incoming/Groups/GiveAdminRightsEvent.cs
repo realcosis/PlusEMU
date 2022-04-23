@@ -1,16 +1,27 @@
 ﻿using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.Communication.Packets.Outgoing.Rooms.Permissions;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Groups;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Groups;
 
 internal class GiveAdminRightsEvent : IPacketEvent
 {
+    private readonly IGroupManager _groupManager;
+    private readonly IRoomManager _roomManager;
+
+    public GiveAdminRightsEvent(IGroupManager groupManager, IRoomManager roomManager)
+    {
+        _groupManager = groupManager;
+        _roomManager = roomManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         var groupId = packet.PopInt();
         var userId = packet.PopInt();
-        if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
+        if (!_groupManager.TryGetGroup(groupId, out var group))
             return;
         if (session.GetHabbo().Id != group.CreatorId || !group.IsMember(userId))
             return;
@@ -21,7 +32,7 @@ internal class GiveAdminRightsEvent : IPacketEvent
             return;
         }
         group.MakeAdmin(userId);
-        if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(group.RoomId, out var room))
+        if (_roomManager.TryGetRoom(group.RoomId, out var room))
         {
             var user = room.GetRoomUserManager().GetRoomUserByHabbo(userId);
             if (user != null)

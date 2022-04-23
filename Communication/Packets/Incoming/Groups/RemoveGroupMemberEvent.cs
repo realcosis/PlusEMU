@@ -2,18 +2,35 @@
 using System.Linq;
 using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.Communication.Packets.Outgoing.Rooms.Permissions;
+using Plus.Database;
+using Plus.HabboHotel.Cache;
 using Plus.HabboHotel.Cache.Type;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Groups;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Groups;
 
 internal class RemoveGroupMemberEvent : IPacketEvent
 {
+    private readonly IGroupManager _groupManager;
+    private readonly IRoomManager _roomManager;
+    private readonly IDatabase _database;
+    private readonly ICacheManager _cacheManager;
+
+    public RemoveGroupMemberEvent(IGroupManager groupManager, IRoomManager roomManager, IDatabase database, ICacheManager cacheManager)
+    {
+        _groupManager = groupManager;
+        _roomManager = roomManager;
+        _database = database;
+        _cacheManager = cacheManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         var groupId = packet.PopInt();
         var userId = packet.PopInt();
-        if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
+        if (!_groupManager.TryGetGroup(groupId, out var group))
             return;
         if (userId == session.GetHabbo().Id)
         {
@@ -23,7 +40,7 @@ internal class RemoveGroupMemberEvent : IPacketEvent
             {
                 if (group.IsAdmin(userId))
                     group.TakeAdmin(userId);
-                if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(group.RoomId, out var room))
+                if (!_roomManager.TryGetRoom(group.RoomId, out var room))
                     return;
                 var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
                 if (user != null)
@@ -34,7 +51,7 @@ internal class RemoveGroupMemberEvent : IPacketEvent
                         user.GetClient().SendPacket(new YouAreControllerComposer(0));
                 }
             }
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.SetQuery(
                     "DELETE FROM `group_memberships` WHERE `group_id` = @GroupId AND `user_id` = @UserId");
@@ -46,7 +63,7 @@ internal class RemoveGroupMemberEvent : IPacketEvent
             if (session.GetHabbo().GetStats().FavouriteGroupId == groupId)
             {
                 session.GetHabbo().GetStats().FavouriteGroupId = 0;
-                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = _database.GetQueryReactor())
                 {
                     dbClient.SetQuery("UPDATE `user_stats` SET `groupid` = '0' WHERE `id` = @userId LIMIT 1");
                     dbClient.AddParameter("userId", userId);
@@ -54,7 +71,7 @@ internal class RemoveGroupMemberEvent : IPacketEvent
                 }
                 if (group.AdminOnlyDeco == 0)
                 {
-                    if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(group.RoomId, out var room))
+                    if (!_roomManager.TryGetRoom(group.RoomId, out var room))
                         return;
                     var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
                     if (user != null)
@@ -100,7 +117,7 @@ internal class RemoveGroupMemberEvent : IPacketEvent
             var memberIds = group.GetAllMembers;
             foreach (var id in memberIds.ToList())
             {
-                var groupMember = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
+                var groupMember = _cacheManager.GenerateUser(id);
                 if (groupMember == null)
                     continue;
                 if (!members.Contains(groupMember))

@@ -2,23 +2,33 @@
 using System.Linq;
 using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Items;
 
 namespace Plus.Communication.Packets.Incoming.Groups;
 
 internal class UpdateGroupColoursEvent : IPacketEvent
 {
+    private readonly IGroupManager _groupManager;
+    private readonly IDatabase _database;
+
+    public UpdateGroupColoursEvent(IGroupManager groupManager, IDatabase database)
+    {
+        _groupManager = groupManager;
+        _database = database;
+    }
     public void Parse(GameClient session, ClientPacket packet)
     {
         var groupId = packet.PopInt();
         var mainColour = packet.PopInt();
         var secondaryColour = packet.PopInt();
-        if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
+        if (!_groupManager.TryGetGroup(groupId, out var group))
             return;
         if (group.CreatorId != session.GetHabbo().Id)
             return;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `groups` SET `colour1` = @colour1, `colour2` = @colour2 WHERE `id` = @groupId LIMIT 1");
             dbClient.AddParameter("colour1", mainColour);

@@ -1,14 +1,26 @@
 ﻿using System;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Groups;
 
 internal class DeleteGroupEvent : IPacketEvent
 {
+    private readonly IGroupManager _groupManager;
+    private readonly IDatabase _database;
+    private readonly IRoomManager _roomManager;
+
+    public DeleteGroupEvent(IGroupManager groupManager, IDatabase database, IRoomManager roomManager)
+    {
+        _groupManager = groupManager;
+        _database = database;
+        _roomManager = roomManager;
+    }
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(packet.PopInt(), out var group))
+        if (!_groupManager.TryGetGroup(packet.PopInt(), out var group))
         {
             session.SendNotification("Oops, we couldn't find that group!");
             return;
@@ -32,10 +44,10 @@ internal class DeleteGroupEvent : IPacketEvent
         room.Group = null;
 
         //Remove it from the cache.
-        PlusEnvironment.GetGame().GetGroupManager().DeleteGroup(group.Id);
+        _groupManager.DeleteGroup(group.Id);
 
         //Now the :S stuff.
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.RunQuery("DELETE FROM `groups` WHERE `id` = '" + group.Id + "'");
             dbClient.RunQuery("DELETE FROM `group_memberships` WHERE `group_id` = '" + group.Id + "'");
@@ -46,7 +58,7 @@ internal class DeleteGroupEvent : IPacketEvent
         }
 
         //Unload it last.
-        PlusEnvironment.GetGame().GetRoomManager().UnloadRoom(room.Id);
+        _roomManager.UnloadRoom(room.Id);
 
         //Say hey!
         session.SendNotification("You have successfully deleted your group.");

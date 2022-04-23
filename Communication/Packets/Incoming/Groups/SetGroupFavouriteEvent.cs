@@ -1,11 +1,19 @@
 ﻿using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.Communication.Packets.Outgoing.Users;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Groups;
 
 internal class SetGroupFavouriteEvent : IPacketEvent
 {
+    private readonly IDatabase _database;
+
+    public SetGroupFavouriteEvent(IDatabase database)
+    {
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null)
@@ -16,7 +24,7 @@ internal class SetGroupFavouriteEvent : IPacketEvent
         if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
             return;
         session.GetHabbo().GetStats().FavouriteGroupId = group.Id;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `user_stats` SET `groupid` = @groupId WHERE `id` = @userId LIMIT 1");
             dbClient.AddParameter("groupId", session.GetHabbo().GetStats().FavouriteGroupId);
