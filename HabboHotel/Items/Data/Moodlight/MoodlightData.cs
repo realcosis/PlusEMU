@@ -15,12 +15,11 @@ public class MoodlightData
 
     public List<MoodlightPreset> Presets;
 
-    public MoodlightData(int itemId, IDatabase database)
+    public MoodlightData(int itemId)
     {
-        _database = database;
         ItemId = itemId;
         DataRow row = null;
-        using (var dbClient = _database.GetQueryReactor())
+        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
             dbClient.SetQuery("SELECT enabled,current_preset,preset_one,preset_two,preset_three FROM room_items_moodlight WHERE item_id = '" + itemId + "' LIMIT 1");
             row = dbClient.GetRow();
