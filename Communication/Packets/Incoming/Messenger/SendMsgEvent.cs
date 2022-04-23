@@ -1,9 +1,17 @@
 ﻿using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Rooms.Chat;
 
 namespace Plus.Communication.Packets.Incoming.Messenger;
 
 internal class SendMsgEvent : IPacketEvent
 {
+    private readonly IChatManager _chatManager;
+
+    public SendMsgEvent(IChatManager chatManager)
+    {
+        _chatManager = chatManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
@@ -11,7 +19,7 @@ internal class SendMsgEvent : IPacketEvent
         var userId = packet.PopInt();
         if (userId == 0 || userId == session.GetHabbo().Id)
             return;
-        var message = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
+        var message = _chatManager.GetFilter().CheckMessage(packet.PopString());
         if (string.IsNullOrWhiteSpace(message))
             return;
         if (session.GetHabbo().TimeMuted > 0)
