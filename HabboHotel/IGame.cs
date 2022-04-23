@@ -30,9 +30,9 @@ public interface IGame
     IPacketManager GetPacketManager();
     IGameClientManager GetClientManager();
     ICatalogManager GetCatalog();
-    NavigatorManager GetNavigator();
+    INavigatorManager GetNavigator();
     IItemDataManager GetItemManager();
-    RoomManager GetRoomManager();
+    IRoomManager GetRoomManager();
     AchievementManager GetAchievementManager();
     TalentTrackManager GetTalentTrackManager();
     IModerationManager GetModerationManager();
@@ -42,7 +42,7 @@ public interface IGame
     GroupManager GetGroupManager();
     ILandingViewManager GetLandingManager();
     ITelevisionManager GetTelevisionManager();
-    ChatManager GetChatManager();
+    IChatManager GetChatManager();
     GameDataManager GetGameDataManager();
     BotManager GetBotManager();
     CacheManager GetCacheManager();

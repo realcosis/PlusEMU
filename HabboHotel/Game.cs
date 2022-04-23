@@ -37,21 +37,21 @@ public class Game : IGame
     private readonly IItemDataManager _itemDataManager;
     private readonly ICatalogManager _catalogManager;
     private readonly ITelevisionManager _televisionManager; //TODO: Initialize from the item manager.
+    private readonly INavigatorManager _navigatorManager;
+    private readonly IRoomManager _roomManager;
+    private readonly IChatManager _chatManager;
 
     private AchievementManager _achievementManager;
     private BadgeManager _badgeManager;
     private BotManager _botManager;
     private CacheManager _cacheManager;
-    private ChatManager _chatManager;
     private readonly int _cycleSleepTime = 25;
     private GameDataManager _gameDataManager;
     private ServerStatusUpdater _globalUpdater;
     private GroupManager _groupManager;
-    private NavigatorManager _navigatorManager;
     private PermissionManager _permissionManager;
     private QuestManager _questManager;
     private RewardManager _rewardManager;
-    private RoomManager _roomManager;
     private SubscriptionManager _subscriptionManager;
     private TalentTrackManager _talentTrackManager;
     private bool _cycleActive;
@@ -65,7 +65,10 @@ public class Game : IGame
         IModerationManager moderationManager,
         IItemDataManager itemDataManager,
         ICatalogManager catalogManager,
-        ITelevisionManager televisionManager)
+        ITelevisionManager televisionManager,
+        INavigatorManager navigatorManager,
+        IRoomManager roomManager,
+        IChatManager chatManager)
     {
         _packetManager = packetManager;
         _landingViewManager = landingViewManager;
@@ -74,6 +77,9 @@ public class Game : IGame
         _itemDataManager = itemDataManager;
         _catalogManager = catalogManager;
         _televisionManager = televisionManager;
+        _navigatorManager = navigatorManager;
+        _roomManager = roomManager;
+        _chatManager = chatManager;
     }
 
     public Task Init()
@@ -82,11 +88,9 @@ public class Game : IGame
         _itemDataManager.Init();
         _catalogManager.Init(_itemDataManager);
         _televisionManager.Init();
-        _navigatorManager = new NavigatorManager();
         _navigatorManager.Init();
-        _roomManager = new RoomManager();
         _roomManager.LoadModels();
-        _chatManager = new ChatManager();
+        _chatManager.Init();
         _groupManager = new GroupManager();
         _groupManager.Init();
         _questManager = new QuestManager();
@@ -144,11 +148,11 @@ public class Game : IGame
 
     public ICatalogManager GetCatalog() => _catalogManager;
 
-    public NavigatorManager GetNavigator() => _navigatorManager;
+    public INavigatorManager GetNavigator() => _navigatorManager;
 
     public IItemDataManager GetItemManager() => _itemDataManager;
 
-    public RoomManager GetRoomManager() => _roomManager;
+    public IRoomManager GetRoomManager() => _roomManager;
 
     public AchievementManager GetAchievementManager() => _achievementManager;
 
@@ -168,7 +172,7 @@ public class Game : IGame
 
     public ITelevisionManager GetTelevisionManager() => _televisionManager;
 
-    public ChatManager GetChatManager() => _chatManager;
+    public IChatManager GetChatManager() => _chatManager;
 
     public GameDataManager GetGameDataManager() => _gameDataManager;
 

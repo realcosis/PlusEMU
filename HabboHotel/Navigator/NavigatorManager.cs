@@ -6,13 +6,27 @@ using NLog;
 
 namespace Plus.HabboHotel.Navigator;
 
-public sealed class NavigatorManager
+public interface INavigatorManager
+{
+    void Init();
+    List<SearchResultList> GetCategorysForSearch(string category);
+    ICollection<SearchResultList> GetResultByIdentifier(string category);
+    ICollection<SearchResultList> GetFlatCategories();
+    ICollection<SearchResultList> GetEventCategories();
+    ICollection<TopLevelItem> GetTopLevelItems();
+    ICollection<SearchResultList> GetSearchResultLists();
+    bool TryGetTopLevelItem(int id, out TopLevelItem topLevelItem);
+    bool TryGetSearchResultList(int id, out SearchResultList searchResultList);
+    bool TryGetFeaturedRoom(int roomId, out FeaturedRoom publicRoom);
+    ICollection<FeaturedRoom> GetFeaturedRooms();
+}
+
+public sealed class NavigatorManager : INavigatorManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Navigator.NavigatorManager");
 
     private readonly Dictionary<int, FeaturedRoom> _featuredRooms;
     private readonly Dictionary<int, SearchResultList> _searchResultLists;
-
     private readonly Dictionary<int, TopLevelItem> _topLevelItems;
 
     public NavigatorManager()

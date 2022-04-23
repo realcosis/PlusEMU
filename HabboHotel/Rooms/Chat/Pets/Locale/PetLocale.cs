@@ -3,14 +3,19 @@ using System.Data;
 
 namespace Plus.HabboHotel.Rooms.Chat.Pets.Locale;
 
-public class PetLocale
+public interface IPetLocale
+{
+    void Init();
+    string[] GetValue(string key);
+}
+
+public class PetLocale : IPetLocale
 {
     private Dictionary<string, string[]> _values;
 
     public PetLocale()
     {
         _values = new Dictionary<string, string[]>();
-        Init();
     }
 
     public void Init()

@@ -2,7 +2,17 @@
 
 namespace Plus.HabboHotel.Rooms.Chat.Emotions;
 
-public sealed class ChatEmotionsManager
+public interface IChatEmotionsManager
+{
+    /// <summary>
+    /// Searches the provided text for any emotions that need to be applied and returns the packet number.
+    /// </summary>
+    /// <param name="text">The text to search through</param>
+    /// <returns></returns>
+    int GetEmotionsForText(string text);
+}
+
+public sealed class ChatEmotionsManager : IChatEmotionsManager
 {
     private readonly Dictionary<string, ChatEmotions> _emotions = new()
     {
