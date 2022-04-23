@@ -34,7 +34,7 @@ public interface IGame
     IItemDataManager GetItemManager();
     IRoomManager GetRoomManager();
     IAchievementManager GetAchievementManager();
-    TalentTrackManager GetTalentTrackManager();
+    ITalentTrackManager GetTalentTrackManager();
     IModerationManager GetModerationManager();
     PermissionManager GetPermissionManager();
     SubscriptionManager GetSubscriptionManager();

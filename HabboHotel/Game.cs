@@ -53,7 +53,7 @@ public class Game : IGame
     private PermissionManager _permissionManager;
     private RewardManager _rewardManager;
     private SubscriptionManager _subscriptionManager;
-    private TalentTrackManager _talentTrackManager;
+    private ITalentTrackManager _talentTrackManager;
     private bool _cycleActive;
 
     private bool _cycleEnded;
@@ -71,7 +71,8 @@ public class Game : IGame
         IChatManager chatManager,
         IGroupManager groupManager,
         IQuestManager questManager,
-        IAchievementManager achievementManager)
+        IAchievementManager achievementManager,
+        ITalentTrackManager talentTrackManager)
     {
         _packetManager = packetManager;
         _landingViewManager = landingViewManager;
@@ -86,6 +87,7 @@ public class Game : IGame
         _groupManager = groupManager;
         _questManager = questManager;
         _achievementManager = achievementManager;
+        _talentTrackManager = talentTrackManager;
     }
 
     public Task Init()
@@ -100,7 +102,6 @@ public class Game : IGame
         _groupManager.Init();
         _questManager.Init();
         _achievementManager.Init();
-        _talentTrackManager = new TalentTrackManager();
         _talentTrackManager.Init();
         _gameDataManager = new GameDataManager();
         _gameDataManager.Init();
@@ -159,7 +160,7 @@ public class Game : IGame
 
     public IAchievementManager GetAchievementManager() => _achievementManager;
 
-    public TalentTrackManager GetTalentTrackManager() => _talentTrackManager;
+    public ITalentTrackManager GetTalentTrackManager() => _talentTrackManager;
 
     public IModerationManager GetModerationManager() => _moderationManager;
 
