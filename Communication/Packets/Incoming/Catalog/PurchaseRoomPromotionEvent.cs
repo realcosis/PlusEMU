@@ -1,13 +1,24 @@
 ﻿using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
+using Plus.HabboHotel.Rooms.Chat.Filter;
 using Plus.HabboHotel.Users.Messenger;
 
 namespace Plus.Communication.Packets.Incoming.Catalog;
 
 public class PurchaseRoomPromotionEvent : IPacketEvent
 {
+    private readonly IWordFilterManager _wordFilterManager;
+    private readonly IDatabase _database;
+
+    public PurchaseRoomPromotionEvent(IWordFilterManager wordFilterManager, IDatabase database)
+    {
+        _wordFilterManager = wordFilterManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null)
@@ -15,9 +26,9 @@ public class PurchaseRoomPromotionEvent : IPacketEvent
         packet.PopInt(); //pageId
         packet.PopInt(); //itemId
         var roomId = packet.PopInt();
-        var name = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
+        var name = _wordFilterManager.CheckMessage(packet.PopString());
         packet.PopBoolean(); //junk
-        var desc = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
+        var desc = _wordFilterManager.CheckMessage(packet.PopString());
         var categoryId = packet.PopInt();
         if (!RoomFactory.TryGetData(roomId, out var data))
             return;
@@ -31,7 +42,7 @@ public class PurchaseRoomPromotionEvent : IPacketEvent
             data.Promotion.Description = desc;
             data.Promotion.TimestampExpires += 7200;
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery(
                 "REPLACE INTO `room_promotions` (`room_id`,`title`,`description`,`timestamp_start`,`timestamp_expire`,`category_id`) VALUES (@room_id, @title, @description, @start, @expires, @CategoryId)");
@@ -47,7 +58,7 @@ public class PurchaseRoomPromotionEvent : IPacketEvent
             session.GetHabbo().GetBadgeComponent().GiveBadge("RADZZ", true, session);
         session.SendPacket(new PurchaseOkComposer());
         if (session.GetHabbo().InRoom && session.GetHabbo().CurrentRoomId == roomId)
-            session.GetHabbo().CurrentRoom.SendPacket(new RoomEventComposer(data, data.Promotion));
+            session.GetHabbo().CurrentRoom?.SendPacket(new RoomEventComposer(data, data.Promotion));
         session.GetHabbo().GetMessenger().BroadcastAchievement(session.GetHabbo().Id, MessengerEventTypes.EventStarted, name);
     }
 }

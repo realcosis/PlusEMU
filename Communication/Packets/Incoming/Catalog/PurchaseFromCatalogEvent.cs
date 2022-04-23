@@ -10,18 +10,51 @@ using Plus.Communication.Packets.Outgoing.Inventory.Pets;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Core;
+using Plus.Core.Settings;
+using Plus.Database;
+using Plus.HabboHotel.Achievements;
+using Plus.HabboHotel.Badges;
+using Plus.HabboHotel.Catalog;
 using Plus.HabboHotel.Catalog.Utilities;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
+using Plus.HabboHotel.Quests;
 using Plus.HabboHotel.Users.Effects;
 
 namespace Plus.Communication.Packets.Incoming.Catalog;
 
 public class PurchaseFromCatalogEvent : IPacketEvent
 {
+    private readonly ICatalogManager _catalogManager;
+    private readonly IDatabase _database;
+    private readonly ISettingsManager _settingsManager;
+    private readonly IAchievementManager _achievementManager;
+    private readonly IQuestManager _questManager;
+    private readonly IGameClientManager _gameClientManager;
+    private readonly IItemDataManager _itemManager;
+    private readonly IBadgeManager _badgeManager;
+
+    public PurchaseFromCatalogEvent(ICatalogManager catalogManager,
+        IDatabase database,
+        ISettingsManager settingsManager,
+        IAchievementManager achievementManager,
+        IQuestManager questManager,
+        IGameClientManager gameClientManager,
+        IItemDataManager _itemManager,
+        IBadgeManager badgeManager)
+    {
+        _catalogManager = catalogManager;
+        _database = database;
+        _settingsManager = settingsManager;
+        _achievementManager = achievementManager;
+        _questManager = questManager;
+        _gameClientManager = gameClientManager;
+        this._itemManager = _itemManager;
+        _badgeManager = badgeManager;
+    }
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (PlusEnvironment.GetSettingsManager().TryGetValue("catalog.enabled") != "1")
+        if (_settingsManager.TryGetValue("catalog.enabled") != "1")
         {
             session.SendNotification("The hotel managers have disabled the catalogue");
             return;
@@ -30,7 +63,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
         var itemId = packet.PopInt();
         var extraData = packet.PopString();
         var amount = packet.PopInt();
-        if (!PlusEnvironment.GetGame().GetCatalog().TryGetPage(pageId, out var page))
+        if (!_catalogManager.TryGetPage(pageId, out var page))
             return;
         if (!page.Enabled || !page.Visible || page.MinimumRank > session.GetHabbo().Rank || page.MinimumVip > session.GetHabbo().VipRank && session.GetHabbo().Rank == 1)
             return;
@@ -76,7 +109,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                         return;
                     if (color.Length != 6)
                         return;
-                    PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_PetLover", 1);
+                    _achievementManager.ProgressAchievement(session, "ACH_PetLover", 1);
                 }
                 catch (Exception e)
                 {
@@ -141,7 +174,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                 return;
             }
             item.LimitedEditionSells++;
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = _database.GetQueryReactor();
             dbClient.SetQuery("UPDATE `catalog_items` SET `limited_sells` = @limitSells WHERE `id` = @itemId LIMIT 1");
             dbClient.AddParameter("limitSells", item.LimitedEditionSells);
             dbClient.AddParameter("itemId", item.Id);
@@ -251,7 +284,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                         break;
                     case InteractionType.Deal:
                     {
-                        if (PlusEnvironment.GetGame().GetCatalog().TryGetDeal(item.Data.BehaviourData, out var deal))
+                        if (_catalogManager.TryGetDeal(item.Data.BehaviourData, out var deal))
                         {
                             foreach (var catalogItem in deal.ItemDataList.ToList())
                             {
@@ -312,7 +345,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                         pet.PlacedInRoom = false;
                         session.SendPacket(new FurniListNotificationComposer(pet.PetId, 3));
                         session.SendPacket(new PetInventoryComposer(session.GetHabbo().GetInventoryComponent().GetPets()));
-                        if (PlusEnvironment.GetGame().GetItemManager().GetItem(320, out var petFood))
+                        if (_itemManager.GetItem(320, out var petFood))
                         {
                             var food = ItemFactory.CreateSingleItemNullable(petFood, session.GetHabbo(), "", "");
                             if (food != null)
@@ -327,7 +360,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
             }
         }
         if (!string.IsNullOrEmpty(item.Badge) &&
-            PlusEnvironment.GetGame().GetBadgeManager().TryGetBadge(item.Badge, out var badge) &&
+            _badgeManager.TryGetBadge(item.Badge, out var badge) &&
             (string.IsNullOrEmpty(badge.RequiredRight) || session.GetHabbo().GetPermissions().HasRight(badge.RequiredRight)))
             session.GetHabbo().GetBadgeComponent().GiveBadge(badge.Code, true, session);
         session.SendPacket(new PurchaseOkComposer(item, item.Data));

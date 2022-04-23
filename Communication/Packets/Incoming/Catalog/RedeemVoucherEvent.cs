@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
+using Plus.Database;
 using Plus.HabboHotel.Catalog.Vouchers;
 using Plus.HabboHotel.GameClients;
 
@@ -8,10 +9,18 @@ namespace Plus.Communication.Packets.Incoming.Catalog;
 
 public class RedeemVoucherEvent : IPacketEvent
 {
+    private readonly IVoucherManager _voucherManager;
+    private readonly IDatabase _database;
+
+    public RedeemVoucherEvent(IVoucherManager voucherManager, IDatabase database)
+    {
+        _voucherManager = voucherManager;
+        _database = database;
+    }
     public void Parse(GameClient session, ClientPacket packet)
     {
         var code = packet.PopString().Replace("\r", "");
-        if (!PlusEnvironment.GetGame().GetCatalog().GetVoucherManager().TryGetVoucher(code, out var voucher))
+        if (!_voucherManager.TryGetVoucher(code, out var voucher))
         {
             session.SendPacket(new VoucherRedeemErrorComposer(0));
             return;
@@ -22,7 +31,7 @@ public class RedeemVoucherEvent : IPacketEvent
             return;
         }
         DataRow row;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `user_vouchers` WHERE `user_id` = @userId AND `voucher` = @Voucher LIMIT 1");
             dbClient.AddParameter("userId", session.GetHabbo().Id);
@@ -35,7 +44,7 @@ public class RedeemVoucherEvent : IPacketEvent
             return;
         }
         {
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = _database.GetQueryReactor();
             dbClient.SetQuery("INSERT INTO `user_vouchers` (`user_id`,`voucher`) VALUES (@userId, @Voucher)");
             dbClient.AddParameter("userId", session.GetHabbo().Id);
             dbClient.AddParameter("Voucher", code);
