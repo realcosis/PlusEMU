@@ -2,23 +2,30 @@
 using System.Collections.Generic;
 using System.Data;
 using NLog;
+using Plus.Database;
+using Plus.HabboHotel.Badges;
 
 namespace Plus.HabboHotel.Badges;
 
 public class BadgeManager : IBadgeManager
 {
+    private readonly IDatabase _database;
+    private readonly IBadgeManager _badgeManager;
+
+    public BadgeManager(IBadgeManager badgeManager, IDatabase database)
+    {
+        _database = database;
+        _badgeManager = badgeManager;
+        _badges = new Dictionary<string, BadgeDefinition>();
+    }
+
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Badges.BadgeManager");
 
     private readonly Dictionary<string, BadgeDefinition> _badges;
 
-    public BadgeManager()
-    {
-        _badges = new Dictionary<string, BadgeDefinition>();
-    }
-
     public void Init()
     {
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `badge_definitions`;");
             var data = dbClient.GetTable();
