@@ -9,12 +9,10 @@ namespace Plus.HabboHotel.Badges;
 public class BadgeManager : IBadgeManager
 {
     private readonly IDatabase _database;
-    private readonly IBadgeManager _badgeManager;
 
-    public BadgeManager(IBadgeManager badgeManager, IDatabase database)
+    public BadgeManager(IDatabase database)
     {
         _database = database;
-        _badgeManager = badgeManager;
         _badges = new Dictionary<string, BadgeDefinition>();
     }
 
