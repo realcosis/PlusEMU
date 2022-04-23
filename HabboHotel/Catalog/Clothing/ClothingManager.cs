@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Plus.Database;
 
 namespace Plus.HabboHotel.Catalog.Clothing;
 
 public class ClothingManager : IClothingManager
 {
+    private readonly IDatabase _database;
     private readonly Dictionary<int, ClothingItem> _clothing;
 
-    public ClothingManager()
+    public ClothingManager(IDatabase database)
     {
+        _database = database;
         _clothing = new Dictionary<int, ClothingItem>();
     }
 
@@ -20,7 +23,7 @@ public class ClothingManager : IClothingManager
         if (_clothing.Count > 0)
             _clothing.Clear();
         DataTable data = null;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `id`,`clothing_name`,`clothing_parts` FROM `catalog_clothing`");
             data = dbClient.GetTable();
