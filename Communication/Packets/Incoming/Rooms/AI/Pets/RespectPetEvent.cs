@@ -1,17 +1,30 @@
 ﻿using Plus.Communication.Packets.Outgoing.Pets;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
+using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets;
 
 internal class RespectPetEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+    private readonly IAchievementManager _achievementManager;
+    private readonly IQuestManager _questManager;
+
+    public RespectPetEvent(IRoomManager roomManager, IAchievementManager achievementManager, IQuestManager questManager)
+    {
+        _roomManager = roomManager;
+        _achievementManager = achievementManager;
+        _questManager = questManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom || session.GetHabbo().GetStats() == null || session.GetHabbo().GetStats().DailyPetRespectPoints == 0)
             return;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
         var thisUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (thisUser == null)
@@ -34,9 +47,9 @@ internal class RespectPetEvent : IPacketEvent
             }
 
             //And boom! Let us send some respect points.
-            PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.SocialRespect);
-            PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_RespectGiven", 1);
-            PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(targetUser.GetClient(), "ACH_RespectEarned", 1);
+            _questManager.ProgressUserQuest(session, QuestType.SocialRespect);
+            _achievementManager.ProgressAchievement(session, "ACH_RespectGiven", 1);
+            _achievementManager.ProgressAchievement(targetUser.GetClient(), "ACH_RespectEarned", 1);
 
             //Take away from pet respect points, just in-case users abuse this..
             session.GetHabbo().GetStats().DailyPetRespectPoints -= 1;
@@ -56,7 +69,7 @@ internal class RespectPetEvent : IPacketEvent
         if (pet == null || pet.PetData == null || pet.RoomId != session.GetHabbo().CurrentRoomId)
             return;
         session.GetHabbo().GetStats().DailyPetRespectPoints -= 1;
-        PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_PetRespectGiver", 1);
+        _achievementManager.ProgressAchievement(session, "ACH_PetRespectGiver", 1);
         thisUser.CarryItemId = 999999999;
         thisUser.CarryTimer = 5;
         pet.PetData.OnRespect();
