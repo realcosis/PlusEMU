@@ -6,8 +6,6 @@ namespace Plus.Utilities;
 
 internal static class StringCharFilter
 {
-    private const string _defaultFigure =
-        "sh-3338-93.ea-1406-62.hr-831-49.ha-3331-92.hd-180-7.ch-3334-93-1408.lg-3337-92.ca-1813-62";
     private static readonly Regex _allowedChars = new (@"^[a-zA-Z0-9-.]+$");
     private static readonly Regex _allowedAlphaNum = new (@"^[a-zA-Z0-9]+$");
     private static readonly Regex _scapesRegex = new (@"[\u0001-\u0008\u000B-\u000C\u000E-\u001F\u007F-\u009F]");
@@ -48,10 +46,5 @@ internal static class StringCharFilter
         }
         
         return _scapesRegex.Replace(str, string.Empty);
-    }
-
-    public static string FilterFigure(string figure)
-    {
-        return IsValid(figure) ? figure : _defaultFigure;
     }
 }

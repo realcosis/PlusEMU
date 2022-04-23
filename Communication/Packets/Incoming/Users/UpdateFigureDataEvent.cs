@@ -3,6 +3,7 @@ using System.Linq;
 using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+using Plus.Core.FigureData;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
 using Plus.Utilities;
@@ -36,7 +37,7 @@ internal class UpdateFigureDataEvent : IPacketEvent
             return;
         }
         PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.ProfileChangeLook);
-        session.GetHabbo().Look = StringCharFilter.FilterFigure(look);
+        session.GetHabbo().Look = FigureDataManager.FilterFigure(look);
         session.GetHabbo().Gender = gender.ToLower();
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {

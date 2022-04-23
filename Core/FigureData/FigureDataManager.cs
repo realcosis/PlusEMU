@@ -6,6 +6,7 @@ using System.Xml;
 using NLog;
 using Plus.Core.FigureData.Types;
 using Plus.HabboHotel.Users.Clothing.Parts;
+using Plus.Utilities;
 
 namespace Plus.Core.FigureData;
 
@@ -240,4 +241,12 @@ public class FigureDataManager : IFigureDataManager
     public bool TryGetPalette(int palletId, out Palette palette) => _palettes.TryGetValue(palletId, out palette);
 
     public int GetRandomColor(int palletId) => _palettes[palletId].Colors.FirstOrDefault().Value.Id;
+
+    private const string _defaultFigure =
+        "sh-3338-93.ea-1406-62.hr-831-49.ha-3331-92.hd-180-7.ch-3334-93-1408.lg-3337-92.ca-1813-62";
+
+    public static string FilterFigure(string figure)
+    {
+        return StringCharFilter.IsValid(figure) ? figure : _defaultFigure;
+    }
 }
