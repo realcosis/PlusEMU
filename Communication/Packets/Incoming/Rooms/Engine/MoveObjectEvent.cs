@@ -2,11 +2,21 @@
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Quests;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Engine;
 
 internal class MoveObjectEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+    private readonly IQuestManager _questManager;
+
+    public MoveObjectEvent(IRoomManager roomManager, IQuestManager questManager)
+    {
+        _roomManager = roomManager;
+        _questManager = questManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
@@ -14,7 +24,7 @@ internal class MoveObjectEvent : IPacketEvent
         var itemId = packet.PopInt();
         if (itemId == 0)
             return;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
         Item item;
         if (room.Group != null)
@@ -39,15 +49,15 @@ internal class MoveObjectEvent : IPacketEvent
         var y = packet.PopInt();
         var rotation = packet.PopInt();
         if (x != item.GetX || y != item.GetY)
-            PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.FurniMove);
+            _questManager.ProgressUserQuest(session, QuestType.FurniMove);
         if (rotation != item.Rotation)
-            PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.FurniRotate);
+            _questManager.ProgressUserQuest(session, QuestType.FurniRotate);
         if (!room.GetRoomItemHandler().SetFloorItem(session, item, x, y, rotation, false, false, true))
         {
             room.SendPacket(new ObjectUpdateComposer(item, room.OwnerId));
             return;
         }
         if (item.GetZ >= 0.1)
-            PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.FurniStack);
+            _questManager.ProgressUserQuest(session, QuestType.FurniStack);
     }
 }

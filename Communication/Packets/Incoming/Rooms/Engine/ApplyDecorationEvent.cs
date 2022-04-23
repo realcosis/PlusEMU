@@ -1,17 +1,33 @@
 ﻿using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+using Plus.Database;
+using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Quests;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Engine;
 
 internal class ApplyDecorationEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+    private readonly IAchievementManager _achievementManager;
+    private readonly IQuestManager _questManager;
+    private readonly IDatabase _database;
+
+    public ApplyDecorationEvent(IRoomManager roomManager, IAchievementManager achievementManager, IQuestManager questManager, IDatabase database)
+    {
+        _roomManager = roomManager;
+        _achievementManager = achievementManager;
+        _questManager = questManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
         if (!room.CheckRights(session, true))
             return;
@@ -37,20 +53,20 @@ internal class ApplyDecorationEvent : IPacketEvent
         {
             case "floor":
                 room.Floor = item.ExtraData;
-                PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.FurniDecoFloor);
-                PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_RoomDecoFloor", 1);
+                _questManager.ProgressUserQuest(session, QuestType.FurniDecoFloor);
+                _achievementManager.ProgressAchievement(session, "ACH_RoomDecoFloor", 1);
                 break;
             case "wallpaper":
                 room.Wallpaper = item.ExtraData;
-                PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.FurniDecoWall);
-                PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_RoomDecoWallpaper", 1);
+                _questManager.ProgressUserQuest(session, QuestType.FurniDecoWall);
+                _achievementManager.ProgressAchievement(session, "ACH_RoomDecoWallpaper", 1);
                 break;
             case "landscape":
                 room.Landscape = item.ExtraData;
-                PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_RoomDecoLandscape", 1);
+                _achievementManager.ProgressAchievement(session, "ACH_RoomDecoLandscape", 1);
                 break;
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `rooms` SET `" + decorationKey + "` = @extradata WHERE `id` = '" + room.RoomId + "' LIMIT 1");
             dbClient.AddParameter("extradata", item.ExtraData);
