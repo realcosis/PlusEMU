@@ -8,13 +8,19 @@ namespace Plus.Communication.Packets.Incoming.GameCenter;
 
 internal class JoinPlayerQueueEvent : IPacketEvent
 {
+    private readonly IGameDataManager _gameDataManager;
+
+    public JoinPlayerQueueEvent(IGameDataManager gameDataManager)
+    {
+        _gameDataManager = gameDataManager;
+    }
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null)
             return;
         var gameId = packet.PopInt();
         GameData gameData = null;
-        if (PlusEnvironment.GetGame().GetGameDataManager().TryGetGame(gameId, out gameData))
+        if (_gameDataManager.TryGetGame(gameId, out gameData))
         {
             var ssoTicket = "HABBOON-Fastfood-" + GenerateSso(32) + "-" + session.GetHabbo().Id;
             session.SendPacket(new JoinQueueComposer(gameData.Id));
