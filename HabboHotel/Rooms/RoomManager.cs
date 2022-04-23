@@ -11,7 +11,7 @@ using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms;
 
-public class RoomManager
+public class RoomManager : IRoomManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Rooms.RoomManager");
 

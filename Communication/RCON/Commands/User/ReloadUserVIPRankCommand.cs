@@ -4,6 +4,7 @@ internal class ReloadUserVipRankCommand : IRconCommand
 {
     public string Description => "This command is used to reload a users VIP rank and permissions.";
 
+    public string Key => "reload_user_vip_rank";
     public string Parameters => "%userId%";
 
     public bool TryExecute(string[] parameters)

@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using NLog;
+using Plus.Database;
 using Plus.HabboHotel.Users;
 
 namespace Plus.HabboHotel.Permissions;
 
-public sealed class PermissionManager
+public sealed class PermissionManager : IPermissionManager
 {
+    private readonly IDatabase _database;
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Permissions.PermissionManager");
 
     private readonly Dictionary<string, PermissionCommand> _commands = new();
@@ -21,13 +23,18 @@ public sealed class PermissionManager
 
     private readonly Dictionary<int, List<string>> _permissionSubscriptionRights = new();
 
+    public PermissionManager(IDatabase database)
+    {
+        _database = database;
+    }
+
     public void Init()
     {
         _permissions.Clear();
         _commands.Clear();
         _permissionGroups.Clear();
         _permissionGroupRights.Clear();
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `permissions`");
             var getPermissions = dbClient.GetTable();
@@ -37,7 +44,7 @@ public sealed class PermissionManager
                     _permissions.Add(Convert.ToInt32(row["id"]), new Permission(Convert.ToInt32(row["id"]), Convert.ToString(row["permission"]), Convert.ToString(row["description"])));
             }
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `permissions_commands`");
             var getCommands = dbClient.GetTable();
@@ -47,7 +54,7 @@ public sealed class PermissionManager
                     _commands.Add(Convert.ToString(row["command"]), new PermissionCommand(Convert.ToString(row["command"]), Convert.ToInt32(row["group_id"]), Convert.ToInt32(row["subscription_id"])));
             }
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `permissions_groups`");
             var getPermissionGroups = dbClient.GetTable();
@@ -57,7 +64,7 @@ public sealed class PermissionManager
                     _permissionGroups.Add(Convert.ToInt32(row["id"]), new PermissionGroup(Convert.ToString("name"), Convert.ToString("description"), Convert.ToString("badge")));
             }
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `permissions_rights`");
             var getPermissionRights = dbClient.GetTable();
@@ -83,7 +90,7 @@ public sealed class PermissionManager
                 }
             }
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `permissions_subscriptions`");
             var getPermissionSubscriptions = dbClient.GetTable();

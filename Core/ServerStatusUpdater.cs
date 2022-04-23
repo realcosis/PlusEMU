@@ -4,7 +4,7 @@ using NLog;
 
 namespace Plus.Core;
 
-public class ServerStatusUpdater : IDisposable
+public class ServerStatusUpdater : IDisposable, IServerStatusUpdater
 {
     private const int UpdateInSeconds = 30;
     private static readonly ILogger _log = LogManager.GetLogger("Plus.Core.ServerStatusUpdater");

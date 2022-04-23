@@ -6,16 +6,11 @@ using Plus.Utilities;
 
 namespace Plus.HabboHotel.Items.Televisions;
 
-public class TelevisionManager
+public class TelevisionManager : ITelevisionManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Items.Televisions.TelevisionManager");
 
-    public Dictionary<int, TelevisionItem> Televisions;
-
-    public TelevisionManager()
-    {
-        Televisions = new Dictionary<int, TelevisionItem>();
-    }
+    public Dictionary<int, TelevisionItem> Televisions { get; } = new();
 
 
     public ICollection<TelevisionItem> TelevisionList => Televisions.Values;

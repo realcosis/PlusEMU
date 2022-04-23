@@ -1,16 +1,23 @@
 ﻿using System;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
-using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class TradeBanCommand : IChatCommand
 {
+    private readonly IDatabase _database;
+    public string Key => "tradeban";
     public string PermissionRequired => "command_trade_ban";
 
     public string Parameters => "%target% %length%";
 
     public string Description => "Trade ban another user.";
+
+    public TradeBanCommand(IDatabase database)
+    {
+        _database = database;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -19,7 +26,7 @@ internal class TradeBanCommand : IChatCommand
             session.SendWhisper("Please enter a username and a valid length in days (min 1 day, max 365 days).");
             return;
         }
-        var habbo = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1])?.GetHabbo();
+        var habbo = PlusEnvironment.GetHabboByUsername(@params[1]);
         if (habbo == null)
         {
             session.SendWhisper("An error occoured whilst finding that user in the database.");
@@ -27,7 +34,7 @@ internal class TradeBanCommand : IChatCommand
         }
         if (Convert.ToDouble(@params[2]) == 0)
         {
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '0' WHERE `user_id` = '" + habbo.Id + "' LIMIT 1");
             }
@@ -46,8 +53,8 @@ internal class TradeBanCommand : IChatCommand
                 days = 1;
             if (days > 365)
                 days = 365;
-            var length = UnixTimestamp.GetNow() + days * 86400;
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            var length = PlusEnvironment.GetUnixTimestamp() + days * 86400;
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '" + length + "', `trading_locks_count` = `trading_locks_count` + '1' WHERE `user_id` = '" + habbo.Id + "' LIMIT 1");
             }

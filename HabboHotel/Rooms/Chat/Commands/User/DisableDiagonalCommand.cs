@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class DisableDiagonalCommand : IChatCommand
 {
+    public string Key => "disablediagonal";
     public string PermissionRequired => "command_disable_diagonal";
 
     public string Parameters => "";

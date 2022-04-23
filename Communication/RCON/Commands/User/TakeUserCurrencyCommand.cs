@@ -7,6 +7,7 @@ internal class TakeUserCurrencyCommand : IRconCommand
 {
     public string Description => "This command is used to take a specified amount of a specified currency from a user.";
 
+    public string Key => "take_user_currency";
     public string Parameters => "%userId% %currency% %amount%";
 
     public bool TryExecute(string[] parameters)

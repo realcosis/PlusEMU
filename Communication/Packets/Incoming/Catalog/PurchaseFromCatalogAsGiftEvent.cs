@@ -4,6 +4,10 @@ using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Communication.Packets.Outgoing.Moderation;
+using Plus.Core.Settings;
+using Plus.Database;
+using Plus.HabboHotel.Achievements;
+using Plus.HabboHotel.Catalog;
 using Plus.HabboHotel.Catalog.Utilities;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
@@ -14,6 +18,30 @@ namespace Plus.Communication.Packets.Incoming.Catalog;
 
 public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
 {
+    private readonly ICatalogManager _catalogManager;
+    private readonly ISettingsManager _settingsManager;
+    private readonly IItemDataManager _itemManager;
+    private readonly IDatabase _database;
+    private readonly IAchievementManager _achievementManager;
+    private readonly IGameClientManager _gameClientManager;
+    private readonly IQuestManager _questManager;
+
+    public PurchaseFromCatalogAsGiftEvent(ICatalogManager catalogManager,
+        ISettingsManager settingsManager,
+        IItemDataManager itemManager,
+        IDatabase database,
+        IAchievementManager achievementManager,
+        IGameClientManager gameClientManager,
+        IQuestManager questManager)
+    {
+        _catalogManager = catalogManager;
+        _settingsManager = settingsManager;
+        _itemManager = itemManager;
+        _database = database;
+        _achievementManager = achievementManager;
+        _gameClientManager = gameClientManager;
+        _questManager = questManager;
+    }
     public void Parse(GameClient session, ClientPacket packet)
     {
         var pageId = packet.PopInt();
@@ -25,12 +53,12 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
         var ribbon = packet.PopInt();
         var colour = packet.PopInt();
         packet.PopBoolean();
-        if (PlusEnvironment.GetSettingsManager().TryGetValue("room.item.gifts.enabled") != "1")
+        if (_settingsManager.TryGetValue("room.item.gifts.enabled") != "1")
         {
             session.SendNotification("The hotel managers have disabled gifting");
             return;
         }
-        if (!PlusEnvironment.GetGame().GetCatalog().TryGetPage(pageId, out var page))
+        if (!_catalogManager.TryGetPage(pageId, out var page))
             return;
         if (!page.Enabled || !page.Visible || page.MinimumRank > session.GetHabbo().Rank || page.MinimumVip > session.GetHabbo().VipRank && session.GetHabbo().Rank == 1)
             return;
@@ -47,7 +75,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
         }
         if (!ItemUtility.CanGiftItem(item))
             return;
-        if (!PlusEnvironment.GetGame().GetItemManager().GetGift(spriteId, out var presentData) || presentData.InteractionType != InteractionType.Gift)
+        if (!_itemManager.GetGift(spriteId, out var presentData) || presentData.InteractionType != InteractionType.Gift)
             return;
         if (session.GetHabbo().Credits < item.CostCredits)
         {
@@ -83,7 +111,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
         var ed = giftUser + Convert.ToChar(5) + giftMessage + Convert.ToChar(5) + session.GetHabbo().Id + Convert.ToChar(5) + item.Data.Id + Convert.ToChar(5) + spriteId + Convert.ToChar(5) + ribbon +
                  Convert.ToChar(5) + colour;
         int newItemId;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             //Insert the dummy item.
             dbClient.SetQuery("INSERT INTO `items` (`base_item`,`user_id`,`extra_data`) VALUES (@baseId, @habboId, @extra_data)");
@@ -110,7 +138,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
                             return;
                         if (color.Length != 6)
                             return;
-                        PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_PetLover", 1);
+                        _achievementManager.ProgressAchievement(session, "ACH_PetLover", 1);
                     }
                     catch
                     {
@@ -171,7 +199,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
         var giveItem = ItemFactory.CreateGiftItem(presentData, habbo, ed, ed, newItemId);
         if (giveItem != null)
         {
-            var receiver = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(habbo.Id);
+            var receiver = _gameClientManager.GetClientByUserId(habbo.Id);
             if (receiver != null)
             {
                 receiver.GetHabbo().GetInventoryComponent().TryAddItem(giveItem);
@@ -182,10 +210,10 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
             }
             if (habbo.Id != session.GetHabbo().Id && !string.IsNullOrWhiteSpace(giftMessage))
             {
-                PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_GiftGiver", 1);
+                _achievementManager.ProgressAchievement(session, "ACH_GiftGiver", 1);
                 if (receiver != null)
-                    PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(receiver, "ACH_GiftReceiver", 1);
-                PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.GiftOthers);
+                    _achievementManager.ProgressAchievement(receiver, "ACH_GiftReceiver", 1);
+                _questManager.ProgressUserQuest(session, QuestType.GiftOthers);
             }
         }
         session.SendPacket(new PurchaseOkComposer(item, presentData));

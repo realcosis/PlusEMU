@@ -6,6 +6,13 @@ namespace Plus.Communication.Packets.Incoming.Messenger;
 
 internal class FollowFriendEvent : IPacketEvent
 {
+    private readonly IGameClientManager _clientManager;
+
+    public FollowFriendEvent(IGameClientManager clientManager)
+    {
+        _clientManager = clientManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
@@ -13,7 +20,7 @@ internal class FollowFriendEvent : IPacketEvent
         var buddyId = packet.PopInt();
         if (buddyId == 0 || buddyId == session.GetHabbo().Id)
             return;
-        var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(buddyId);
+        var client = _clientManager.GetClientByUserId(buddyId);
         if (client == null || client.GetHabbo() == null)
             return;
         if (!client.GetHabbo().InRoom)

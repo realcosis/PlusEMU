@@ -2,6 +2,7 @@
 using System.Data;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Marketplace;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 
@@ -9,13 +10,21 @@ namespace Plus.Communication.Packets.Incoming.Marketplace;
 
 internal class CancelOfferEvent : IPacketEvent
 {
+    private readonly IItemDataManager _itemDataManager;
+    private readonly IDatabase _database;
+
+    public CancelOfferEvent(IItemDataManager itemDataManager, IDatabase database)
+    {
+        _itemDataManager = itemDataManager;
+        _database = database;
+    }
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null)
             return;
         DataRow row;
         var offerId = packet.PopInt();
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery(
                 "SELECT `furni_id`, `item_id`, `user_id`, `extra_data`, `offer_id`, `state`, `timestamp`, `limited_number`, `limited_stack` FROM `catalog_marketplace_offers` WHERE `offer_id` = @OfferId LIMIT 1");
@@ -32,7 +41,7 @@ internal class CancelOfferEvent : IPacketEvent
             session.SendPacket(new MarketplaceCancelOfferResultComposer(offerId, false));
             return;
         }
-        if (!PlusEnvironment.GetGame().GetItemManager().GetItem(Convert.ToInt32(row["item_id"]), out var item))
+        if (!_itemDataManager.GetItem(Convert.ToInt32(row["item_id"]), out var item))
         {
             session.SendPacket(new MarketplaceCancelOfferResultComposer(offerId, false));
             return;
@@ -43,7 +52,7 @@ internal class CancelOfferEvent : IPacketEvent
             Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]));
         session.SendPacket(new FurniListNotificationComposer(giveItem.Id, 1));
         session.SendPacket(new FurniListUpdateComposer());
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("DELETE FROM `catalog_marketplace_offers` WHERE `offer_id` = @OfferId AND `user_id` = @UserId LIMIT 1");
             dbClient.AddParameter("OfferId", offerId);

@@ -5,18 +5,11 @@ using NLog;
 
 namespace Plus.HabboHotel.Items;
 
-public class ItemDataManager
+public class ItemDataManager : IItemDataManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Items.ItemDataManager");
-    public Dictionary<int, ItemData> Gifts; //<SpriteId, Item>
-
-    public Dictionary<int, ItemData> Items;
-
-    public ItemDataManager()
-    {
-        Items = new Dictionary<int, ItemData>();
-        Gifts = new Dictionary<int, ItemData>();
-    }
+    public Dictionary<int, ItemData> Gifts = new(0); //<SpriteId, Item>
+    public Dictionary<int, ItemData> Items = new(0);
 
     public void Init()
     {

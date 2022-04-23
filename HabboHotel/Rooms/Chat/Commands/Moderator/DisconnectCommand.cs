@@ -4,12 +4,18 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class DisconnectCommand : IChatCommand
 {
+    private readonly IGameClientManager _gameClientManager;
+    public string Key => "dc";
     public string PermissionRequired => "command_disconnect";
 
     public string Parameters => "%username%";
 
     public string Description => "Disconnects another user from the hotel.";
 
+    public DisconnectCommand(IGameClientManager gameClientManager)
+    {
+        _gameClientManager = gameClientManager;
+    }
     public void Execute(GameClient session, Room room, string[] @params)
     {
         if (@params.Length == 1)
@@ -17,7 +23,7 @@ internal class DisconnectCommand : IChatCommand
             session.SendWhisper("Please enter the username of the user you wish to Disconnect.");
             return;
         }
-        var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+        var targetClient = _gameClientManager.GetClientByUsername(@params[1]);
         if (targetClient == null)
         {
             session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");

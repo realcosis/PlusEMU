@@ -5,6 +5,7 @@ namespace Plus.Communication.Rcon.Commands.User;
 
 internal class AlertUserCommand : IRconCommand
 {
+    public string Key => "alert_user";
     public string Description => "This command is used to alert a user.";
 
     public string Parameters => "%userId% %message%";

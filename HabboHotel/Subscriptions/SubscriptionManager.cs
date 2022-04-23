@@ -5,7 +5,7 @@ using NLog;
 
 namespace Plus.HabboHotel.Subscriptions;
 
-public class SubscriptionManager
+public class SubscriptionManager : ISubscriptionManager
 {
     private static readonly ILogger _log = LogManager.GetLogger("Plus.HabboHotel.Subscriptions.SubscriptionManager");
 

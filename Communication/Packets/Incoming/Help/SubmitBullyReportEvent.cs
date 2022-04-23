@@ -7,6 +7,13 @@ namespace Plus.Communication.Packets.Incoming.Help;
 
 internal class SubmitBullyReportEvent : IPacketEvent
 {
+    private readonly IGameClientManager _clientManager;
+
+    public SubmitBullyReportEvent(IGameClientManager clientManager)
+    {
+        _clientManager = clientManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         //0 = sent, 1 = blocked, 2 = no chat, 3 = already reported.
@@ -20,7 +27,7 @@ internal class SubmitBullyReportEvent : IPacketEvent
             session.SendPacket(new SubmitBullyReportComposer(1)); //This user is blocked from reporting.
             return;
         }
-        var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(Convert.ToInt32(userId));
+        var client = _clientManager.GetClientByUserId(Convert.ToInt32(userId));
         if (client == null)
         {
             session.SendPacket(new SubmitBullyReportComposer(0)); //Just say it's sent, the user isn't found.
@@ -56,7 +63,7 @@ internal class SubmitBullyReportEvent : IPacketEvent
             session.GetHabbo().LastAdvertiseReport = UnixTimestamp.GetNow();
         client.GetHabbo().AdvertisingReported = true;
         session.SendPacket(new SubmitBullyReportComposer(0));
-        //PlusEnvironment.GetGame().GetClientManager().ModAlert("New advertising report! " + Client.GetHabbo().Username + " has been reported for advertising by " + Session.GetHabbo().Username +".");
-        PlusEnvironment.GetGame().GetClientManager().DoAdvertisingReport(session, client);
+        //_clientManager.ModAlert("New advertising report! " + Client.GetHabbo().Username + " has been reported for advertising by " + Session.GetHabbo().Username +".");
+        _clientManager.DoAdvertisingReport(session, client);
     }
 }

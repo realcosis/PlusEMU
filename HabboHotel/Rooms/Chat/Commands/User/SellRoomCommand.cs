@@ -1,14 +1,22 @@
-﻿using Plus.HabboHotel.GameClients;
+﻿using Plus.Database;
+using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class SellRoomCommand : IChatCommand
 {
+    private readonly IDatabase _database;
     public string Description => "Allows the user to sell their own room.";
 
     public string Parameters => "%price%";
 
+    public string Key => "sellroom";
     public string PermissionRequired => "command_sell_room";
+
+    public SellRoomCommand(IDatabase database)
+    {
+        _database = database;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -34,7 +42,7 @@ internal class SellRoomCommand : IChatCommand
             session.SendWhisper("Oops, you cannot sell a room for 0 credits.");
             return;
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `rooms` SET `sale_price` = @SalePrice WHERE `id` = @Id LIMIT 1");
             dbClient.AddParameter("SalePrice", price);

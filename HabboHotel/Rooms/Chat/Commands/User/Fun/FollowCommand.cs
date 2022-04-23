@@ -4,11 +4,18 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun;
 
 internal class FollowCommand : IChatCommand
 {
+    private readonly IGameClientManager _gameClientManager;
+    public string Key => "follow";
     public string PermissionRequired => "command_follow";
 
     public string Parameters => "%username%";
 
     public string Description => "Want to visit a specific user? Use this command!";
+
+    public FollowCommand(IGameClientManager gameClientManager)
+    {
+        _gameClientManager = gameClientManager;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -17,7 +24,7 @@ internal class FollowCommand : IChatCommand
             session.SendWhisper("Please enter the username of the user you wish to follow.");
             return;
         }
-        var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+        var targetClient = _gameClientManager.GetClientByUsername(@params[1]);
         if (targetClient == null)
         {
             session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");

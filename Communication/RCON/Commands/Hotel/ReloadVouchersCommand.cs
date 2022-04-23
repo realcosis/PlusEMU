@@ -4,6 +4,7 @@ internal class ReloadVouchersCommand : IRconCommand
 {
     public string Description => "This command is used to reload the voucher manager.";
 
+    public string Key => "reload_vouchers";
     public string Parameters => "";
 
     public bool TryExecute(string[] parameters)

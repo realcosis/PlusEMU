@@ -5,11 +5,18 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class GiveCommand : IChatCommand
 {
+    private readonly IGameClientManager _gameClientManager;
+    public string Key => "give";
     public string PermissionRequired => "command_give";
 
     public string Parameters => "%username% %type% %amount%";
 
     public string Description => "";
+
+    public GiveCommand(IGameClientManager gameClientManager)
+    {
+        _gameClientManager = gameClientManager;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -18,7 +25,7 @@ internal class GiveCommand : IChatCommand
             session.SendWhisper("Please enter a currency type! (coins, duckets, diamonds, gotw)");
             return;
         }
-        var target = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+        var target = _gameClientManager.GetClientByUsername(@params[1]);
         if (target == null)
         {
             session.SendWhisper("Oops, couldn't find that user!");

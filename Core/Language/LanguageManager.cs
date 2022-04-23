@@ -7,12 +7,6 @@ using Plus.Database;
 
 namespace Plus.Core.Language;
 
-public interface ILanguageManager
-{
-    string TryGetValue(string value);
-    Task Reload();
-}
-
 public class LanguageManager : ILanguageManager
 {
     private readonly IDatabase _database;

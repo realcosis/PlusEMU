@@ -2,7 +2,7 @@
 
 namespace Plus.HabboHotel.Rooms.Chat.Emotions;
 
-public sealed class ChatEmotionsManager
+public sealed class ChatEmotionsManager : IChatEmotionsManager
 {
     private readonly Dictionary<string, ChatEmotions> _emotions = new()
     {

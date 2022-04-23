@@ -8,7 +8,7 @@ using Plus.Utilities;
 
 namespace Plus.HabboHotel.Groups;
 
-public class GroupManager
+public class GroupManager : IGroupManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Groups.GroupManager");
     private readonly Dictionary<int, GroupColours> _backgroundColours;

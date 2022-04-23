@@ -5,7 +5,7 @@ using NLog;
 
 namespace Plus.HabboHotel.Rooms.Chat.Styles;
 
-public sealed class ChatStyleManager
+public sealed class ChatStyleManager : IChatStyleManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Rooms.Chat.Styles.ChatStyleManager");
 

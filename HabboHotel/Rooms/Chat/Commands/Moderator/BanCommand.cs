@@ -1,4 +1,5 @@
 ﻿using System;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
 using Plus.Utilities;
@@ -7,11 +8,22 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class BanCommand : IChatCommand
 {
+    private readonly IDatabase _database;
+    private readonly IModerationManager _moderationManager;
+    private readonly IGameClientManager _gameClientManager;
+    public string Key => "ban";
     public string PermissionRequired => "command_ban";
 
     public string Parameters => "%username% %length% %reason% ";
 
     public string Description => "Remove a toxic player from the hotel for a fixed amount of time.";
+
+    public BanCommand(IDatabase database, IModerationManager moderationManager, IGameClientManager gameClientManager)
+    {
+        _database = database;
+        _moderationManager = moderationManager;
+        _gameClientManager = gameClientManager;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -43,12 +55,12 @@ internal class BanCommand : IChatCommand
         else
             reason = "No reason specified.";
         var username = habbo.Username;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.RunQuery("UPDATE `user_info` SET `bans` = `bans` + '1' WHERE `user_id` = '" + habbo.Id + "' LIMIT 1");
         }
-        PlusEnvironment.GetGame().GetModerationManager().BanUser(session.GetHabbo().Username, ModerationBanType.Username, habbo.Username, reason, expire);
-        var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(username);
+        _moderationManager.BanUser(session.GetHabbo().Username, ModerationBanType.Username, habbo.Username, reason, expire);
+        var targetClient = _gameClientManager.GetClientByUsername(username);
         if (targetClient != null)
             targetClient.Disconnect();
         session.SendWhisper("Success, you have account banned the user '" + username + "' for " + hours + " hour(s) with the reason '" + reason + "'!");

@@ -5,11 +5,18 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun;
 
 internal class SuperPullCommand : IChatCommand
 {
+    private readonly IGameClientManager _gameClientManager;
+    public string Key => "spull";
     public string PermissionRequired => "command_super_pull";
 
     public string Parameters => "%username%";
 
     public string Description => "Pull another user to you, with no limits!";
+
+    public SuperPullCommand(IGameClientManager gameClientManager)
+    {
+        _gameClientManager = gameClientManager;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -23,7 +30,7 @@ internal class SuperPullCommand : IChatCommand
             session.SendWhisper("Oops, it appears that the room owner has disabled the ability to use the spull command in here.");
             return;
         }
-        var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+        var targetClient = _gameClientManager.GetClientByUsername(@params[1]);
         if (targetClient == null)
         {
             session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");

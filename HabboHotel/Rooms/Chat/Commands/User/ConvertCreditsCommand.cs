@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 
@@ -8,11 +9,18 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class ConvertCreditsCommand : IChatCommand
 {
+    private readonly IDatabase _database;
+    public string Key => "convertcredits";
     public string PermissionRequired => "command_convert_credits";
 
     public string Parameters => "";
 
     public string Description => "Convert your exchangeable furniture into actual credits.";
+
+    public ConvertCreditsCommand(IDatabase database)
+    {
+        _database = database;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -20,7 +28,7 @@ internal class ConvertCreditsCommand : IChatCommand
         try
         {
             DataTable table = null;
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.SetQuery("SELECT `id` FROM `items` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND (`room_id`=  '0' OR `room_id` = '')");
                 table = dbClient.GetTable();
@@ -32,7 +40,7 @@ internal class ConvertCreditsCommand : IChatCommand
             }
             if (table.Rows.Count > 0)
             {
-                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = _database.GetQueryReactor();
                 foreach (DataRow row in table.Rows)
                 {
                     var item = session.GetHabbo().GetInventoryComponent().GetItem(Convert.ToInt32(row[0]));

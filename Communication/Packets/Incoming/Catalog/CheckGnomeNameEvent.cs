@@ -2,17 +2,26 @@
 using System.Collections.Generic;
 using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
+using Plus.Database;
 using Plus.HabboHotel.Catalog.Utilities;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Rooms.AI;
 using Plus.HabboHotel.Rooms.AI.Speech;
-using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Catalog;
 
 internal class CheckGnomeNameEvent : IPacketEvent
 {
+    private readonly IDatabase _database;
+    private readonly IItemDataManager _itemDataManager;
+
+    public CheckGnomeNameEvent(IDatabase database, IItemDataManager itemDataManager)
+    {
+        _database = database;
+        _itemDataManager = itemDataManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
@@ -30,7 +39,7 @@ internal class CheckGnomeNameEvent : IPacketEvent
             session.SendPacket(new CheckGnomeNameComposer(petName, 1));
             return;
         }
-        if (!StringCharFilter.IsValidAlphaNumeric(petName))
+        if (!PetUtility.CheckPetName(petName))
         {
             session.SendPacket(new CheckGnomeNameComposer(petName, 1));
             return;
@@ -39,7 +48,7 @@ internal class CheckGnomeNameEvent : IPacketEvent
         var y = item.GetY;
 
         //Quickly delete it from the database.
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("DELETE FROM `items` WHERE `id` = @ItemId LIMIT 1");
             dbClient.AddParameter("ItemId", item.Id);
@@ -64,7 +73,7 @@ internal class CheckGnomeNameEvent : IPacketEvent
         pet.GnomeClothing = RandomClothing();
 
         //Update the pets gnome clothing.
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `bots_petdata` SET `gnome_clothing` = @GnomeClothing WHERE `id` = @PetId LIMIT 1");
             dbClient.AddParameter("GnomeClothing", pet.GnomeClothing);
@@ -77,7 +86,7 @@ internal class CheckGnomeNameEvent : IPacketEvent
             .DeployBot(new RoomBot(pet.PetId, pet.RoomId, "pet", "freeroam", pet.Name, "", pet.Look, x, y, 0, 0, 0, 0, 0, 0, ref rndSpeechList, "", 0, pet.OwnerId, false, 0, false, 0), pet);
 
         //Give the food.
-        if (PlusEnvironment.GetGame().GetItemManager().GetItem(320, out var petFood))
+        if (_itemDataManager.GetItem(320, out var petFood))
         {
             var food = ItemFactory.CreateSingleItemNullable(petFood, session.GetHabbo(), "", "");
             if (food != null)

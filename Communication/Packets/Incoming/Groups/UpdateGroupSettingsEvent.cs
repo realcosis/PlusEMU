@@ -1,17 +1,30 @@
 ﻿using System.Linq;
 using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.Communication.Packets.Outgoing.Rooms.Permissions;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Groups;
 
 internal class UpdateGroupSettingsEvent : IPacketEvent
 {
+    private readonly IGroupManager _groupManager;
+    private readonly IRoomManager _roomManager;
+    private readonly IDatabase _database;
+
+    public UpdateGroupSettingsEvent(IGroupManager groupManager, IRoomManager roomManager, IDatabase database)
+    {
+        _groupManager = groupManager;
+        _roomManager = roomManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         var groupId = packet.PopInt();
-        if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
+        if (!_groupManager.TryGetGroup(groupId, out var group))
             return;
         if (group.CreatorId != session.GetHabbo().Id)
             return;
@@ -37,7 +50,7 @@ internal class UpdateGroupSettingsEvent : IPacketEvent
                 group.ClearRequests();
             }
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `groups` SET `state` = @GroupState, `admindeco` = @AdminDeco WHERE `id` = @groupId LIMIT 1");
             dbClient.AddParameter("GroupState", (group.Type == GroupType.Open ? 0 : group.Type == GroupType.Locked ? 1 : 2).ToString());
@@ -46,7 +59,7 @@ internal class UpdateGroupSettingsEvent : IPacketEvent
             dbClient.RunQuery();
         }
         group.AdminOnlyDeco = furniOptions;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(group.RoomId, out var room))
+        if (!_roomManager.TryGetRoom(group.RoomId, out var room))
             return;
         foreach (var user in room.GetRoomUserManager().GetRoomUsers().ToList())
         {

@@ -5,7 +5,7 @@ using NLog;
 
 namespace Plus.HabboHotel.Talents;
 
-public class TalentTrackManager
+public class TalentTrackManager : ITalentTrackManager
 {
     private static readonly ILogger _log = LogManager.GetLogger("Plus.HabboHotel.Talents.TalentManager");
 

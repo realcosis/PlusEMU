@@ -1,4 +1,5 @@
 ﻿using Plus.Communication.Packets.Outgoing.Groups;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 
@@ -6,10 +7,19 @@ namespace Plus.Communication.Packets.Incoming.Groups;
 
 internal class UpdateGroupBadgeEvent : IPacketEvent
 {
+    private readonly IGroupManager _groupManager;
+    private readonly IDatabase _database;
+
+    public UpdateGroupBadgeEvent(IGroupManager groupManager, IDatabase database)
+    {
+        _groupManager = groupManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         var groupId = packet.PopInt();
-        if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
+        if (!_groupManager.TryGetGroup(groupId, out var group))
             return;
         if (group.CreatorId != session.GetHabbo().Id)
             return;
@@ -17,7 +27,7 @@ internal class UpdateGroupBadgeEvent : IPacketEvent
         var badge = "";
         for (var i = 0; i < count; i++) badge += BadgePartUtility.WorkBadgeParts(i == 0, packet.PopInt().ToString(), packet.PopInt().ToString(), packet.PopInt().ToString());
         group.Badge = string.IsNullOrWhiteSpace(badge) ? "b05114s06114" : badge;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `groups` SET `badge` = @badge WHERE `id` = @groupId LIMIT 1");
             dbClient.AddParameter("badge", group.Badge);

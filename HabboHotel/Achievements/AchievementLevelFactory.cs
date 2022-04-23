@@ -6,9 +6,9 @@ namespace Plus.HabboHotel.Achievements;
 
 public static class AchievementLevelFactory
 {
-    public static void GetAchievementLevels(out Dictionary<string, Achievement> achievements)
+    public static Dictionary<string, Achievement> GetAchievementLevels()
     {
-        achievements = new Dictionary<string, Achievement>();
+        var achievements = new Dictionary<string, Achievement>();
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
         dbClient.SetQuery("SELECT `id`,`category`,`group_name`,`level`,`reward_pixels`,`reward_points`,`progress_needed`,`game_id` FROM `achievements`");
         var table = dbClient.GetTable();
@@ -33,5 +33,6 @@ public static class AchievementLevelFactory
                     achievements[groupName].AddLevel(level);
             }
         }
+        return achievements;
     }
 }

@@ -9,73 +9,85 @@ using Plus.HabboHotel.Rooms.Chat.Styles;
 
 namespace Plus.HabboHotel.Rooms.Chat;
 
-public sealed class ChatManager
+public sealed class ChatManager : IChatManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Rooms.Chat.ChatManager");
 
     /// <summary>
     /// Chat styles.
     /// </summary>
-    private readonly ChatStyleManager _chatStyles;
+    private readonly IChatStyleManager _chatStyles;
 
     /// <summary>
     /// Commands.
     /// </summary>
-    private readonly CommandManager _commands;
+    private readonly ICommandManager _commands;
 
     /// <summary>
     /// Chat Emoticons.
     /// </summary>
-    private readonly ChatEmotionsManager _emotions;
+    private readonly IChatEmotionsManager _emotions;
 
     /// <summary>
     /// Filter Manager.
     /// </summary>
-    private readonly WordFilterManager _filter;
+    private readonly IWordFilterManager _filter;
 
     /// <summary>
     /// Chatlog Manager
     /// </summary>
-    private readonly ChatlogManager _logs;
+    private readonly IChatlogManager _logs;
 
     /// <summary>
     /// Pet Commands.
     /// </summary>
-    private readonly PetCommandManager _petCommands;
+    private readonly IPetCommandManager _petCommands;
 
     /// <summary>
     /// Pet Locale.
     /// </summary>
-    private readonly PetLocale _petLocale;
+    private readonly IPetLocale _petLocale;
 
     /// <summary>
     /// Initializes a new instance of the ChatManager class.
     /// </summary>
-    public ChatManager()
+    public ChatManager(IChatStyleManager chatStyleManager,
+        ICommandManager commandManager,
+        IChatEmotionsManager chatEmotionsManager,
+        IChatlogManager chatlogManager,
+        IWordFilterManager wordFilterManager,
+        IPetCommandManager petCommandManager,
+        IPetLocale petLocale)
     {
-        _emotions = new ChatEmotionsManager();
-        _logs = new ChatlogManager();
-        _filter = new WordFilterManager();
-        _filter.Init();
-        _commands = new CommandManager(":");
-        _petCommands = new PetCommandManager();
-        _petLocale = new PetLocale();
-        _chatStyles = new ChatStyleManager();
+        _emotions = chatEmotionsManager;
+        _logs = chatlogManager;
+        _filter = wordFilterManager;
+        _commands = commandManager;
+        _petCommands = petCommandManager;
+        _petLocale = petLocale;
+        _chatStyles = chatStyleManager;
+    }
+
+    public void Init()
+    {
         _chatStyles.Init();
+        _filter.Init();
+        _petCommands.Init();
+        _petLocale.Init();
         Log.Info("Chat Manager -> LOADED");
     }
 
-    public ChatEmotionsManager GetEmotions() => _emotions;
+    public IChatEmotionsManager GetEmotions() => _emotions;
 
-    public ChatlogManager GetLogs() => _logs;
+    public IChatlogManager GetLogs() => _logs;
 
-    public WordFilterManager GetFilter() => _filter;
+    public IWordFilterManager GetFilter() => _filter;
 
-    public CommandManager GetCommands() => _commands;
+    public ICommandManager GetCommands() => _commands;
 
-    public PetCommandManager GetPetCommands() => _petCommands;
+    public IPetCommandManager GetPetCommands() => _petCommands;
 
-    public PetLocale GetPetLocale() => _petLocale;
+    public IPetLocale GetPetLocale() => _petLocale;
 
-    public ChatStyleManager GetChatStyles() => _chatStyles;
+    public IChatStyleManager GetChatStyles() => _chatStyles;
 }

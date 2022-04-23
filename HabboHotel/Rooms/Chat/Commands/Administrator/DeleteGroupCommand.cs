@@ -1,14 +1,27 @@
-﻿using Plus.HabboHotel.GameClients;
+﻿using Plus.Database;
+using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Groups;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator;
 
 internal class DeleteGroupCommand : IChatCommand
 {
+    private readonly IGroupManager _groupManager;
+    private readonly IRoomManager _roomManager;
+    private readonly IDatabase _database;
+    public string Key => "deletegroup";
     public string PermissionRequired => "command_delete_group";
 
     public string Parameters => "";
 
     public string Description => "Delete a group from the database and cache.";
+
+    public DeleteGroupCommand(IGroupManager groupManager, IRoomManager roomManager, IDatabase database)
+    {
+        _groupManager = groupManager;
+        _roomManager = roomManager;
+        _database = database;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -20,7 +33,7 @@ internal class DeleteGroupCommand : IChatCommand
             session.SendWhisper("Oops, there is no group here?");
             return;
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.RunQuery("DELETE FROM `groups` WHERE `id` = '" + room.Group.Id + "'");
             dbClient.RunQuery("DELETE FROM `group_memberships` WHERE `group_id` = '" + room.Group.Id + "'");
@@ -29,9 +42,9 @@ internal class DeleteGroupCommand : IChatCommand
             dbClient.RunQuery("UPDATE `user_stats` SET `groupid` = '0' WHERE `groupid` = '" + room.Group.Id + "' LIMIT 1");
             dbClient.RunQuery("DELETE FROM `items_groups` WHERE `group_id` = '" + room.Group.Id + "'");
         }
-        PlusEnvironment.GetGame().GetGroupManager().DeleteGroup(room.Group.Id);
+        _groupManager.DeleteGroup(room.Group.Id);
         room.Group = null;
-        PlusEnvironment.GetGame().GetRoomManager().UnloadRoom(room.Id);
+        _roomManager.UnloadRoom(room.Id);
         session.SendNotification("Success, group deleted.");
     }
 }

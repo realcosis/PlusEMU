@@ -4,12 +4,20 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class KickCommand : IChatCommand
 {
+    private readonly IGameClientManager _gameClientManager;
+    private readonly IRoomManager _roomManager;
+    public string Key => "kick";
     public string PermissionRequired => "command_kick";
 
     public string Parameters => "%username% %reason%";
 
     public string Description => "Kick a user from a room and send them a reason.";
 
+    public KickCommand(IGameClientManager gameClientManager, IRoomManager roomManager)
+    {
+        _gameClientManager = gameClientManager;
+        _roomManager = roomManager;
+    }
     public void Execute(GameClient session, Room room, string[] @params)
     {
         if (@params.Length == 1)
@@ -17,7 +25,7 @@ internal class KickCommand : IChatCommand
             session.SendWhisper("Please enter the username of the user you wish to summon.");
             return;
         }
-        var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+        var targetClient = _gameClientManager.GetClientByUsername(@params[1]);
         if (targetClient == null)
         {
             session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");
@@ -39,7 +47,7 @@ internal class KickCommand : IChatCommand
             return;
         }
         Room targetRoom;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(targetClient.GetHabbo().CurrentRoomId, out targetRoom))
+        if (!_roomManager.TryGetRoom(targetClient.GetHabbo().CurrentRoomId, out targetRoom))
             return;
         if (@params.Length > 2)
             targetClient.SendNotification("A moderator has kicked you from the room for the following reason: " + CommandManager.MergeParams(@params, 2));

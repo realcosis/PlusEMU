@@ -5,11 +5,18 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator;
 
 internal class BubbleCommand : IChatCommand
 {
+    private readonly IChatStyleManager _chatStyleManager;
+    public string Key => "bubble";
     public string PermissionRequired => "command_bubble";
 
     public string Parameters => "%id%";
 
     public string Description => "Use a custom bubble to chat with.";
+
+    public BubbleCommand(IChatStyleManager chatStyleManager)
+    {
+        _chatStyleManager = chatStyleManager;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -28,7 +35,7 @@ internal class BubbleCommand : IChatCommand
             return;
         }
         ChatStyle style = null;
-        if (!PlusEnvironment.GetGame().GetChatManager().GetChatStyles().TryGetStyle(bubble, out style) ||
+        if (!_chatStyleManager.TryGetStyle(bubble, out style) ||
             style.RequiredRight.Length > 0 && !session.GetHabbo().GetPermissions().HasRight(style.RequiredRight))
         {
             session.SendWhisper("Oops, you cannot use this bubble due to a rank requirement, sorry!");

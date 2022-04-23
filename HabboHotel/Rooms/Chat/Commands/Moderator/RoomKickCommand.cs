@@ -5,6 +5,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class RoomKickCommand : IChatCommand
 {
+    public string Key => "roomkick";
     public string PermissionRequired => "command_room_kick";
 
     public string Parameters => "%message%";

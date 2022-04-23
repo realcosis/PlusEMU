@@ -4,17 +4,10 @@ using System.Text;
 using Plus.Communication.Packets.Outgoing.Notifications;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items.Wired;
-using Plus.HabboHotel.Rooms.Chat.Commands.Administrator;
-using Plus.HabboHotel.Rooms.Chat.Commands.Events;
-using Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
-using Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun;
-using Plus.HabboHotel.Rooms.Chat.Commands.User;
-using Plus.HabboHotel.Rooms.Chat.Commands.User.Fun;
-using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands;
 
-public class CommandManager
+public class CommandManager : ICommandManager
 {
     /// <summary>
     /// Commands registered for use.
@@ -28,15 +21,9 @@ public class CommandManager
     /// <summary>
     /// The default initializer for the CommandManager
     /// </summary>
-    public CommandManager(string prefix)
+    public CommandManager(IEnumerable<IChatCommand> commands)
     {
-        _prefix = prefix;
-        _commands = new Dictionary<string, IChatCommand>();
-        RegisterVip();
-        RegisterUser();
-        RegisterEvents();
-        RegisterModerator();
-        RegisterAdministrator();
+        _commands = commands.ToDictionary(command => command.Key);
     }
 
     /// <summary>
@@ -90,129 +77,6 @@ public class CommandManager
     }
 
     /// <summary>
-    /// Registers the VIP set of commands.
-    /// </summary>
-    private void RegisterVip()
-    {
-        Register("spull", new SuperPullCommand());
-    }
-
-    /// <summary>
-    /// Registers the Events set of commands.
-    /// </summary>
-    private void RegisterEvents()
-    {
-        Register("eha", new EventAlertCommand());
-        Register("eventalert", new EventAlertCommand());
-    }
-
-    /// <summary>
-    /// Registers the default set of commands.
-    /// </summary>
-    private void RegisterUser()
-    {
-        Register("about", new InfoCommand());
-        Register("pickall", new PickAllCommand());
-        Register("ejectall", new EjectAllCommand());
-        Register("lay", new LayCommand());
-        Register("sit", new SitCommand());
-        Register("stand", new StandCommand());
-        Register("mutepets", new MutePetsCommand());
-        Register("mutebots", new MuteBotsCommand());
-        Register("mimic", new MimicCommand());
-        Register("dance", new DanceCommand());
-        Register("push", new PushCommand());
-        Register("pull", new PullCommand());
-        Register("enable", new EnableCommand());
-        Register("follow", new FollowCommand());
-        Register("faceless", new FacelessCommand());
-        Register("moonwalk", new MoonwalkCommand());
-        Register("unload", new UnloadCommand());
-        Register("regenmaps", new RegenMaps());
-        Register("emptyitems", new EmptyItems());
-        Register("setmax", new SetMaxCommand());
-        Register("setspeed", new SetSpeedCommand());
-        Register("disablediagonal", new DisableDiagonalCommand());
-        Register("flagme", new FlagMeCommand());
-        Register("stats", new StatsCommand());
-        Register("kickpets", new KickPetsCommand());
-        Register("kickbots", new KickBotsCommand());
-        Register("room", new RoomCommand());
-        Register("dnd", new DndCommand());
-        Register("disablegifts", new DisableGiftsCommand());
-        Register("convertcredits", new ConvertCreditsCommand());
-        Register("disablewhispers", new DisableWhispersCommand());
-        Register("disablemimic", new DisableMimicCommand());
-        ;
-        Register("pet", new PetCommand());
-        Register("spush", new SuperPushCommand());
-        Register("superpush", new SuperPushCommand());
-    }
-
-    /// <summary>
-    /// Registers the moderator set of commands.
-    /// </summary>
-    private void RegisterModerator()
-    {
-        Register("ban", new BanCommand());
-        Register("mip", new MipCommand());
-        Register("ipban", new IpBanCommand());
-        Register("ui", new UserInfoCommand());
-        Register("userinfo", new UserInfoCommand());
-        Register("sa", new StaffAlertCommand());
-        Register("roomunmute", new RoomUnmuteCommand());
-        Register("roommute", new RoomMuteCommand());
-        Register("roombadge", new RoomBadgeCommand());
-        Register("roomalert", new RoomAlertCommand());
-        Register("roomkick", new RoomKickCommand());
-        Register("mute", new MuteCommand());
-        Register("smute", new MuteCommand());
-        Register("unmute", new UnmuteCommand());
-        Register("massbadge", new MassBadgeCommand());
-        Register("kick", new KickCommand());
-        Register("skick", new KickCommand());
-        Register("ha", new HotelAlertCommand());
-        Register("hotelalert", new HotelAlertCommand());
-        Register("hal", new HalCommand());
-        Register("give", new GiveCommand());
-        Register("givebadge", new GiveBadgeCommand());
-        Register("dc", new DisconnectCommand());
-        Register("kill", new DisconnectCommand());
-        Register("Disconnect", new DisconnectCommand());
-        Register("alert", new AlertCommand());
-        Register("tradeban", new TradeBanCommand());
-        Register("teleport", new TeleportCommand());
-        Register("summon", new SummonCommand());
-        Register("override", new OverrideCommand());
-        Register("massenable", new MassEnableCommand());
-        Register("massdance", new MassDanceCommand());
-        Register("freeze", new FreezeCommand());
-        Register("unfreeze", new UnFreezeCommand());
-        Register("fastwalk", new FastwalkCommand());
-        Register("superfastwalk", new SuperFastwalkCommand());
-        Register("coords", new CoordsCommand());
-        Register("alleyesonme", new AllEyesOnMeCommand());
-        Register("allaroundme", new AllAroundMeCommand());
-        Register("forcesit", new ForceSitCommand());
-        Register("ignorewhispers", new IgnoreWhispersCommand());
-        Register("forced_effects", new DisableForcedFxCommand());
-        Register("makesay", new MakeSayCommand());
-        Register("flaguser", new FlagUserCommand());
-    }
-
-    /// <summary>
-    /// Registers the administrator set of commands.
-    /// </summary>
-    private void RegisterAdministrator()
-    {
-        Register("bubble", new BubbleCommand());
-        Register("update", new UpdateCommand());
-        Register("deletegroup", new DeleteGroupCommand());
-        Register("carry", new CarryCommand());
-        Register("goto", new GotoCommand());
-    }
-
-    /// <summary>
     /// Registers a Chat Command.
     /// </summary>
     /// <param name="commandText">Text to type for this command.</param>
@@ -241,7 +105,7 @@ public class CommandManager
         dbClient.AddParameter("UserId", userId);
         dbClient.AddParameter("Data", data);
         dbClient.AddParameter("MachineId", machineId);
-        dbClient.AddParameter("Timestamp", UnixTimestamp.GetNow());
+        dbClient.AddParameter("Timestamp", PlusEnvironment.GetUnixTimestamp());
         dbClient.RunQuery();
     }
 

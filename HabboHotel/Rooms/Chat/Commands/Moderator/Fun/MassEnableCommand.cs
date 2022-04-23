@@ -5,6 +5,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun;
 
 internal class MassEnableCommand : IChatCommand
 {
+    public string Key => "massenable";
     public string PermissionRequired => "command_massenable";
 
     public string Parameters => "%EffectId%";

@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using NLog;
+using Plus.Database;
 
 namespace Plus.HabboHotel.Navigator;
 
-public sealed class NavigatorManager
+public sealed class NavigatorManager : INavigatorManager
 {
+    private readonly IDatabase _database;
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Navigator.NavigatorManager");
 
     private readonly Dictionary<int, FeaturedRoom> _featuredRooms;
     private readonly Dictionary<int, SearchResultList> _searchResultLists;
-
     private readonly Dictionary<int, TopLevelItem> _topLevelItems;
 
-    public NavigatorManager()
+    public NavigatorManager(IDatabase database)
     {
+        _database = database;
         _topLevelItems = new Dictionary<int, TopLevelItem>();
         _searchResultLists = new Dictionary<int, SearchResultList>();
 
@@ -35,7 +37,7 @@ public sealed class NavigatorManager
         if (_featuredRooms.Count > 0)
             _featuredRooms.Clear();
         DataTable table = null;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `navigator_categories` ORDER BY `id` ASC");
             table = dbClient.GetTable();

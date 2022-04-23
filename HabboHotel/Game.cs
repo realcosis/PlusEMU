@@ -31,79 +31,102 @@ namespace Plus.HabboHotel;
 public class Game : IGame
 {
     private readonly IPacketManager _packetManager;
-    private ILandingViewManager _landingViewManager; //TODO: Rename class
+    private readonly ILandingViewManager _landingViewManager; //TODO: Rename class
+    private readonly IGameClientManager _clientManager;
+    private readonly IModerationManager _moderationManager;
+    private readonly IItemDataManager _itemDataManager;
+    private readonly ICatalogManager _catalogManager;
+    private readonly ITelevisionManager _televisionManager; //TODO: Initialize from the item manager.
+    private readonly INavigatorManager _navigatorManager;
+    private readonly IRoomManager _roomManager;
+    private readonly IChatManager _chatManager;
+    private readonly IGroupManager _groupManager;
+    private readonly IQuestManager _questManager;
+    private readonly IAchievementManager _achievementManager;
 
-    private AchievementManager _achievementManager;
-    private BadgeManager _badgeManager;
-    private BotManager _botManager;
-    private CacheManager _cacheManager;
-    private CatalogManager _catalogManager;
-    private ChatManager _chatManager;
-    private GameClientManager _clientManager;
-    private int _cycleSleepTime = 25;
-    private GameDataManager _gameDataManager;
-    private ServerStatusUpdater _globalUpdater;
-    private GroupManager _groupManager;
-    private ItemDataManager _itemDataManager;
-    private ModerationManager _moderationManager;
-    private NavigatorManager _navigatorManager;
-    private PermissionManager _permissionManager;
-    private QuestManager _questManager;
-    private RewardManager _rewardManager;
-    private RoomManager _roomManager;
-    private SubscriptionManager _subscriptionManager;
-    private TalentTrackManager _talentTrackManager;
-    private TelevisionManager _televisionManager; //TODO: Initialize from the item manager.
+    private IBadgeManager _badgeManager;
+    private IBotManager _botManager;
+    private ICacheManager _cacheManager;
+    private readonly int _cycleSleepTime = 25;
+    private IGameDataManager _gameDataManager;
+    private IServerStatusUpdater _globalUpdater;
+    private IPermissionManager _permissionManager;
+    private IRewardManager _rewardManager;
+    private ISubscriptionManager _subscriptionManager;
+    private ITalentTrackManager _talentTrackManager;
     private bool _cycleActive;
 
     private bool _cycleEnded;
     private Task _gameCycle;
 
-    public Game(IPacketManager packetManager, ILandingViewManager landingViewManager)
+    public Game(IPacketManager packetManager,
+        ILandingViewManager landingViewManager,
+        IGameClientManager gameClientManager,
+        IModerationManager moderationManager,
+        IItemDataManager itemDataManager,
+        ICatalogManager catalogManager,
+        ITelevisionManager televisionManager,
+        INavigatorManager navigatorManager,
+        IRoomManager roomManager,
+        IChatManager chatManager,
+        IGroupManager groupManager,
+        IQuestManager questManager,
+        IAchievementManager achievementManager,
+        ITalentTrackManager talentTrackManager,
+        IGameDataManager gameDataManager,
+        IServerStatusUpdater serverStatusUpdater,
+        IBotManager botManager,
+        ICacheManager cacheManager,
+        IRewardManager rewardManager,
+        IBadgeManager badgeManager,
+        ISubscriptionManager subscriptionManager,
+        IPermissionManager permissionManager)
     {
         _packetManager = packetManager;
         _landingViewManager = landingViewManager;
+        _clientManager = gameClientManager;
+        _moderationManager = moderationManager;
+        _itemDataManager = itemDataManager;
+        _catalogManager = catalogManager;
+        _televisionManager = televisionManager;
+        _navigatorManager = navigatorManager;
+        _roomManager = roomManager;
+        _chatManager = chatManager;
+        _groupManager = groupManager;
+        _questManager = questManager;
+        _achievementManager = achievementManager;
+        _talentTrackManager = talentTrackManager;
+        _gameDataManager = gameDataManager;
+        _globalUpdater = serverStatusUpdater;
+        _botManager = botManager;
+        _cacheManager = cacheManager;
+        _rewardManager = rewardManager;
+        _badgeManager = badgeManager;
+        _subscriptionManager = subscriptionManager;
+        _permissionManager = permissionManager;
     }
 
     public Task Init()
     {
-        _clientManager = new GameClientManager();
-        _moderationManager = new ModerationManager();
         _moderationManager.Init();
-        _itemDataManager = new ItemDataManager();
         _itemDataManager.Init();
-        _catalogManager = new CatalogManager();
         _catalogManager.Init(_itemDataManager);
-        _televisionManager = new TelevisionManager();
         _televisionManager.Init();
-        _navigatorManager = new NavigatorManager();
         _navigatorManager.Init();
-        _roomManager = new RoomManager();
         _roomManager.LoadModels();
-        _chatManager = new ChatManager();
-        _groupManager = new GroupManager();
+        _chatManager.Init();
         _groupManager.Init();
-        _questManager = new QuestManager();
         _questManager.Init();
-        _achievementManager = new AchievementManager();
         _achievementManager.Init();
-        _talentTrackManager = new TalentTrackManager();
         _talentTrackManager.Init();
-        _gameDataManager = new GameDataManager();
         _gameDataManager.Init();
-        _globalUpdater = new ServerStatusUpdater();
         _globalUpdater.Init();
-        _botManager = new BotManager();
         _botManager.Init();
-        _cacheManager = new CacheManager();
-        _rewardManager = new RewardManager();
         _rewardManager.Init();
-        _badgeManager = new BadgeManager();
         _badgeManager.Init();
-        _permissionManager = new PermissionManager();
         _permissionManager.Init();
-        _subscriptionManager = new SubscriptionManager();
         _subscriptionManager.Init();
+        _cacheManager.Init();
         return Task.CompletedTask;
     }
 
@@ -134,43 +157,43 @@ public class Game : IGame
 
     public IPacketManager GetPacketManager() => _packetManager;
 
-    public GameClientManager GetClientManager() => _clientManager;
+    public IGameClientManager GetClientManager() => _clientManager;
 
-    public CatalogManager GetCatalog() => _catalogManager;
+    public ICatalogManager GetCatalog() => _catalogManager;
 
-    public NavigatorManager GetNavigator() => _navigatorManager;
+    public INavigatorManager GetNavigator() => _navigatorManager;
 
-    public ItemDataManager GetItemManager() => _itemDataManager;
+    public IItemDataManager GetItemManager() => _itemDataManager;
 
-    public RoomManager GetRoomManager() => _roomManager;
+    public IRoomManager GetRoomManager() => _roomManager;
 
-    public AchievementManager GetAchievementManager() => _achievementManager;
+    public IAchievementManager GetAchievementManager() => _achievementManager;
 
-    public TalentTrackManager GetTalentTrackManager() => _talentTrackManager;
+    public ITalentTrackManager GetTalentTrackManager() => _talentTrackManager;
 
-    public ModerationManager GetModerationManager() => _moderationManager;
+    public IModerationManager GetModerationManager() => _moderationManager;
 
-    public PermissionManager GetPermissionManager() => _permissionManager;
+    public IPermissionManager GetPermissionManager() => _permissionManager;
 
-    public SubscriptionManager GetSubscriptionManager() => _subscriptionManager;
+    public ISubscriptionManager GetSubscriptionManager() => _subscriptionManager;
 
-    public QuestManager GetQuestManager() => _questManager;
+    public IQuestManager GetQuestManager() => _questManager;
 
-    public GroupManager GetGroupManager() => _groupManager;
+    public IGroupManager GetGroupManager() => _groupManager;
 
     public ILandingViewManager GetLandingManager() => _landingViewManager;
 
-    public TelevisionManager GetTelevisionManager() => _televisionManager;
+    public ITelevisionManager GetTelevisionManager() => _televisionManager;
 
-    public ChatManager GetChatManager() => _chatManager;
+    public IChatManager GetChatManager() => _chatManager;
 
-    public GameDataManager GetGameDataManager() => _gameDataManager;
+    public IGameDataManager GetGameDataManager() => _gameDataManager;
 
-    public BotManager GetBotManager() => _botManager;
+    public IBotManager GetBotManager() => _botManager;
 
-    public CacheManager GetCacheManager() => _cacheManager;
+    public ICacheManager GetCacheManager() => _cacheManager;
 
-    public RewardManager GetRewardManager() => _rewardManager;
+    public IRewardManager GetRewardManager() => _rewardManager;
 
-    public BadgeManager GetBadgeManager() => _badgeManager;
+    public IBadgeManager GetBadgeManager() => _badgeManager;
 }

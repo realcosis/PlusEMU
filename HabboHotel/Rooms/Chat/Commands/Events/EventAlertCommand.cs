@@ -6,11 +6,18 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Events;
 
 internal class EventAlertCommand : IChatCommand
 {
+    private readonly IGameClientManager _gameClientManager;
+    public string Key => "eha";
     public string PermissionRequired => "command_event_alert";
 
     public string Parameters => "";
 
     public string Description => "Send a hotel alert for your event!";
+
+    public EventAlertCommand(IGameClientManager gameClientManager)
+    {
+        _gameClientManager = gameClientManager;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -22,8 +29,7 @@ internal class EventAlertCommand : IChatCommand
                     session.SendWhisper("Invalid command! :eventalert");
                 else if (!PlusEnvironment.Event)
                 {
-                    PlusEnvironment.GetGame().GetClientManager()
-                        .SendPacket(new BroadcastMessageAlertComposer(":follow " + session.GetHabbo().Username + " for events! win prizes!\r\n- " + session.GetHabbo().Username));
+                    _gameClientManager.SendPacket(new BroadcastMessageAlertComposer(":follow " + session.GetHabbo().Username + " for events! win prizes!\r\n- " + session.GetHabbo().Username));
                     PlusEnvironment.LastEvent = DateTime.Now;
                     PlusEnvironment.Event = true;
                 }
@@ -32,8 +38,7 @@ internal class EventAlertCommand : IChatCommand
                     var timeSpan = DateTime.Now - PlusEnvironment.LastEvent;
                     if (timeSpan.Hours >= 1)
                     {
-                        PlusEnvironment.GetGame().GetClientManager()
-                            .SendPacket(new BroadcastMessageAlertComposer(":follow " + session.GetHabbo().Username + " for events! win prizes!\r\n- " + session.GetHabbo().Username));
+                        _gameClientManager.SendPacket(new BroadcastMessageAlertComposer(":follow " + session.GetHabbo().Username + " for events! win prizes!\r\n- " + session.GetHabbo().Username));
                         PlusEnvironment.LastEvent = DateTime.Now;
                     }
                     else

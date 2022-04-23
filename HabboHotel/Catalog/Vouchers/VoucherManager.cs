@@ -4,7 +4,7 @@ using System.Data;
 
 namespace Plus.HabboHotel.Catalog.Vouchers;
 
-public class VoucherManager
+public class VoucherManager : IVoucherManager
 {
     private readonly Dictionary<string, Voucher> _vouchers;
 

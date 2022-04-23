@@ -5,11 +5,18 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class MassBadgeCommand : IChatCommand
 {
+    private readonly IGameClientManager _gameClientManager;
+    public string Key => "massbadge";
     public string PermissionRequired => "command_mass_badge";
 
     public string Parameters => "%badge%";
 
     public string Description => "Give a badge to the entire hotel.";
+
+    public MassBadgeCommand(IGameClientManager gameClientManager)
+    {
+        _gameClientManager = gameClientManager;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -18,7 +25,7 @@ internal class MassBadgeCommand : IChatCommand
             session.SendWhisper("Please enter the code of the badge you'd like to give to the entire hotel.");
             return;
         }
-        foreach (var client in PlusEnvironment.GetGame().GetClientManager().GetClients.ToList())
+        foreach (var client in _gameClientManager.GetClients.ToList())
         {
             if (client == null || client.GetHabbo() == null || client.GetHabbo().Username == session.GetHabbo().Username)
                 continue;

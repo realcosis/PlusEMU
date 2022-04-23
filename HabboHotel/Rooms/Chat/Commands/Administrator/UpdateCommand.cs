@@ -1,16 +1,98 @@
 ﻿using System.Linq;
 using Plus.Communication.Packets.Outgoing.Catalog;
+using Plus.Core.FigureData;
+using Plus.Core.Settings;
+using Plus.HabboHotel.Achievements;
+using Plus.HabboHotel.Badges;
+using Plus.HabboHotel.Bots;
+using Plus.HabboHotel.Catalog;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Games;
+using Plus.HabboHotel.Items;
+using Plus.HabboHotel.Items.Televisions;
+using Plus.HabboHotel.LandingView;
+using Plus.HabboHotel.Moderation;
+using Plus.HabboHotel.Navigator;
+using Plus.HabboHotel.Permissions;
+using Plus.HabboHotel.Quests;
+using Plus.HabboHotel.Rewards;
+using Plus.HabboHotel.Rooms.Chat.Filter;
+using Plus.HabboHotel.Rooms.Chat.Pets.Locale;
+using Plus.HabboHotel.Rooms.Chat.Styles;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator;
 
 internal class UpdateCommand : IChatCommand
 {
+    private readonly ICatalogManager _catalogManager;
+    private readonly IGameClientManager _clientManager;
+    private readonly IItemDataManager _itemDataManager;
+    private readonly IRoomManager _roomManager;
+    private readonly ILandingViewManager _landingViewManager;
+    private readonly ITelevisionManager _televisionManager;
+    private readonly ISettingsManager _settingsManager;
+    private readonly IModerationManager _moderationManager;
+    private readonly INavigatorManager _navigatorManager;
+    private readonly IPermissionManager _permissionManager;
+    private readonly IQuestManager _questManager;
+    private readonly IWordFilterManager _wordFilterManager;
+    private readonly IAchievementManager _achievementManager;
+    private readonly IGameDataManager _gameDataManager;
+    private readonly IFigureDataManager _figureDataManager;
+    private readonly IBotManager _botManager;
+    private readonly IBadgeManager _badgeManager;
+    private readonly IRewardManager _rewardManager;
+    private readonly IPetLocale _petLocale;
+    private readonly IChatStyleManager _chatStyleManager;
+    public string Key => "update";
     public string PermissionRequired => "command_update";
 
     public string Parameters => "%variable%";
 
     public string Description => "Reload a specific part of the hotel.";
+
+    public UpdateCommand(ICatalogManager catalogManager,
+        IGameClientManager clientManager,
+        IItemDataManager itemDataManager,
+        IRoomManager roomManager,
+        ILandingViewManager landingViewManager,
+        ITelevisionManager televisionManager,
+        ISettingsManager settingsManager,
+        IModerationManager moderationManager,
+        INavigatorManager navigatorManager,
+        IPermissionManager permissionManager,
+        IQuestManager questManager,
+        IWordFilterManager wordFilterManager,
+        IAchievementManager achievementManager,
+        IGameDataManager gameDataManager,
+        IFigureDataManager figureDataManager,
+        IBotManager botManager,
+        IBadgeManager badgeManager,
+        IRewardManager rewardManager,
+        IPetLocale petLocale,
+        IChatStyleManager chatStyleManager)
+    {
+        _catalogManager = catalogManager;
+        _clientManager = clientManager;
+        _itemDataManager = itemDataManager;
+        _roomManager = roomManager;
+        _landingViewManager = landingViewManager;
+        _televisionManager = televisionManager;
+        _settingsManager = settingsManager;
+        _moderationManager = moderationManager;
+        _navigatorManager = navigatorManager;
+        _permissionManager = permissionManager;
+        _questManager = questManager;
+        _wordFilterManager = wordFilterManager;
+        _achievementManager = achievementManager;
+        _gameDataManager = gameDataManager;
+        _figureDataManager = figureDataManager;
+        _botManager = botManager;
+        _badgeManager = badgeManager;
+        _rewardManager = rewardManager;
+        _petLocale = petLocale;
+        _chatStyleManager = chatStyleManager;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -31,8 +113,8 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_catalog' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetCatalog().Init(PlusEnvironment.GetGame().GetItemManager());
-                PlusEnvironment.GetGame().GetClientManager().SendPacket(new CatalogUpdatedComposer());
+                _catalogManager.Init(_itemDataManager);
+                _clientManager.SendPacket(new CatalogUpdatedComposer());
                 session.SendWhisper("Catalogue successfully updated.");
                 break;
             }
@@ -45,7 +127,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_furni' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetItemManager().Init();
+                _itemDataManager.Init();
                 session.SendWhisper("Items successfully updated.");
                 break;
             }
@@ -56,7 +138,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_models' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetRoomManager().LoadModels();
+                _roomManager.LoadModels();
                 session.SendWhisper("Room models successfully updated.");
                 break;
             }
@@ -67,7 +149,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_promotions' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetLandingManager().Reload();
+                _landingViewManager.Reload();
                 session.SendWhisper("Landing view promotions successfully updated.");
                 break;
             }
@@ -78,7 +160,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_youtube' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetTelevisionManager().Init();
+                _televisionManager.Init();
                 session.SendWhisper("Youtube televisions playlist successfully updated.");
                 break;
             }
@@ -89,7 +171,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_filter' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetChatManager().GetFilter().Init();
+                _wordFilterManager.Init();
                 session.SendWhisper("Filter definitions successfully updated.");
                 break;
             }
@@ -100,7 +182,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_navigator' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetNavigator().Init();
+                _navigatorManager.Init();
                 session.SendWhisper("Navigator items successfully updated.");
                 break;
             }
@@ -113,8 +195,8 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_rights' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetPermissionManager().Init();
-                foreach (var client in PlusEnvironment.GetGame().GetClientManager().GetClients.ToList())
+                _permissionManager.Init();
+                foreach (var client in _clientManager.GetClients.ToList())
                 {
                     if (client == null || client.GetHabbo() == null || client.GetHabbo().GetPermissions() == null)
                         continue;
@@ -131,7 +213,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_configuration' permission.");
                     break;
                 }
-                PlusEnvironment.GetSettingsManager().Reload();
+                _settingsManager.Reload();
                 session.SendWhisper("Server configuration successfully updated.");
                 break;
             }
@@ -142,7 +224,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_bans' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetModerationManager().ReCacheBans();
+                _moderationManager.ReCacheBans();
                 session.SendWhisper("Ban cache re-loaded.");
                 break;
             }
@@ -153,7 +235,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_quests' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetQuestManager().Init();
+                _questManager.Init();
                 session.SendWhisper("Quest definitions successfully updated.");
                 break;
             }
@@ -164,7 +246,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_achievements' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetAchievementManager().Init();
+                _achievementManager.Init();
                 session.SendWhisper("Achievement definitions bans successfully updated.");
                 break;
             }
@@ -175,8 +257,8 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_moderation' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetModerationManager().Init();
-                PlusEnvironment.GetGame().GetClientManager().ModAlert("Moderation presets have been updated. Please reload the client to view the new presets.");
+                _moderationManager.Init();
+                _clientManager.ModAlert("Moderation presets have been updated. Please reload the client to view the new presets.");
                 session.SendWhisper("Moderation configuration successfully updated.");
                 break;
             }
@@ -187,7 +269,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_vouchers' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetCatalog().GetVoucherManager().Init();
+                _catalogManager.GetVoucherManager().Init();
                 session.SendWhisper("Catalogue vouche cache successfully updated.");
                 break;
             }
@@ -200,7 +282,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_game_center' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetGameDataManager().Init();
+                _gameDataManager.Init();
                 session.SendWhisper("Game Center cache successfully updated.");
                 break;
             }
@@ -211,7 +293,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_pet_locale' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetChatManager().GetPetLocale().Init();
+                _petLocale.Init();
                 session.SendWhisper("Pet locale cache successfully updated.");
                 break;
             }
@@ -233,7 +315,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_anti_mutant' permission.");
                     break;
                 }
-                PlusEnvironment.GetFigureManager().Init();
+                _figureDataManager.Init();
                 session.SendWhisper("FigureData manager successfully reloaded.");
                 break;
             }
@@ -244,7 +326,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_bots' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetBotManager().Init();
+                _botManager.Init();
                 session.SendWhisper("Bot managaer successfully reloaded.");
                 break;
             }
@@ -255,7 +337,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_rewards' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetRewardManager().Init();
+                _rewardManager.Init();
                 session.SendWhisper("Rewards managaer successfully reloaded.");
                 break;
             }
@@ -266,7 +348,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_chat_styles' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetChatManager().GetChatStyles().Init();
+                _chatStyleManager.Init();
                 session.SendWhisper("Chat Styles successfully reloaded.");
                 break;
             }
@@ -277,7 +359,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_badge_definitions' permission.");
                     break;
                 }
-                PlusEnvironment.GetGame().GetBadgeManager().Init();
+                _badgeManager.Init();
                 session.SendWhisper("Badge definitions successfully reloaded.");
                 break;
             }

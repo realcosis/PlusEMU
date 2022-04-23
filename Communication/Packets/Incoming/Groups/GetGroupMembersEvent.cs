@@ -1,20 +1,30 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Plus.Communication.Packets.Outgoing.Groups;
+using Plus.HabboHotel.Cache;
 using Plus.HabboHotel.Cache.Type;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Groups;
 
 namespace Plus.Communication.Packets.Incoming.Groups;
 
 internal class GetGroupMembersEvent : IPacketEvent
 {
+    private readonly IGroupManager _groupManager;
+    private readonly ICacheManager _cacheManager;
+
+    public GetGroupMembersEvent(IGroupManager groupManager, ICacheManager cacheManager)
+    {
+        _groupManager = groupManager;
+        _cacheManager = cacheManager;
+    }
     public void Parse(GameClient session, ClientPacket packet)
     {
         var groupId = packet.PopInt();
         var page = packet.PopInt();
         var searchVal = packet.PopString();
         var requestType = packet.PopInt();
-        if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
+        if (!_groupManager.TryGetGroup(groupId, out var group))
             return;
         var members = new List<UserCache>();
         switch (requestType)
@@ -24,7 +34,7 @@ internal class GetGroupMembersEvent : IPacketEvent
                 var memberIds = group.GetAllMembers;
                 foreach (var id in memberIds.ToList())
                 {
-                    var groupMember = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
+                    var groupMember = _cacheManager.GenerateUser(id);
                     if (groupMember == null)
                         continue;
                     if (!members.Contains(groupMember))
@@ -37,7 +47,7 @@ internal class GetGroupMembersEvent : IPacketEvent
                 var adminIds = group.GetAdministrators;
                 foreach (var id in adminIds.ToList())
                 {
-                    var groupMember = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
+                    var groupMember = _cacheManager.GenerateUser(id);
                     if (groupMember == null)
                         continue;
                     if (!members.Contains(groupMember))
@@ -50,7 +60,7 @@ internal class GetGroupMembersEvent : IPacketEvent
                 var requestIds = group.GetRequests;
                 foreach (var id in requestIds.ToList())
                 {
-                    var groupMember = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
+                    var groupMember = _cacheManager.GenerateUser(id);
                     if (groupMember == null)
                         continue;
                     if (!members.Contains(groupMember))

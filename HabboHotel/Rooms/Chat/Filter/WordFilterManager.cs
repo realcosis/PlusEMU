@@ -7,7 +7,7 @@ using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.Chat.Filter;
 
-public sealed class WordFilterManager
+public sealed class WordFilterManager : IWordFilterManager
 {
     private readonly List<WordFilter> _filteredWords;
 

@@ -4,12 +4,12 @@ using Plus.Utilities;
 
 namespace Plus.HabboHotel.Catalog.Marketplace;
 
-public class MarketplaceManager
+public class MarketplaceManager : IMarketplaceManager
 {
-    public Dictionary<int, int> MarketAverages = new();
-    public Dictionary<int, int> MarketCounts = new();
-    public List<int> MarketItemKeys = new();
-    public List<MarketOffer> MarketItems = new();
+    public Dictionary<int, int> MarketAverages { get; } = new();
+    public Dictionary<int, int> MarketCounts { get; } = new();
+    public List<int> MarketItemKeys { get; } = new();
+    public List<MarketOffer> MarketItems { get; } = new();
 
     public int AvgPriceForSprite(int spriteId)
     {

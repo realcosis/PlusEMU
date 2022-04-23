@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class DndCommand : IChatCommand
 {
+    public string Key => "dnd";
     public string PermissionRequired => "command_dnd";
 
     public string Parameters => "";

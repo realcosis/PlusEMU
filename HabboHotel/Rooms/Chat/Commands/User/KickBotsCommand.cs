@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Plus.Communication.Packets.Outgoing.Inventory.Bots;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Inventory.Bots;
 
@@ -8,11 +9,18 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class KickBotsCommand : IChatCommand
 {
+    private readonly IDatabase _database;
+    public string Key => "kickbots";
     public string PermissionRequired => "command_kickbots";
 
     public string Parameters => "";
 
     public string Description => "Kick all of the bots from the room.";
+
+    public KickBotsCommand(IDatabase database)
+    {
+        _database = database;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -28,7 +36,7 @@ internal class KickBotsCommand : IChatCommand
             RoomUser botUser = null;
             if (!room.GetRoomUserManager().TryGetBot(user.BotData.Id, out botUser))
                 return;
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `bots` SET `room_id` = '0' WHERE `id` = @id LIMIT 1");
                 dbClient.AddParameter("id", user.BotData.Id);

@@ -4,7 +4,7 @@ using System.Data;
 
 namespace Plus.HabboHotel.Rooms.Chat.Pets.Commands;
 
-public class PetCommandManager
+public class PetCommandManager : IPetCommandManager
 {
     private readonly Dictionary<string, string> _commandDatabase;
     private readonly Dictionary<int, string> _commandRegister;
@@ -15,7 +15,6 @@ public class PetCommandManager
         _petCommands = new Dictionary<string, PetCommand>();
         _commandRegister = new Dictionary<int, string>();
         _commandDatabase = new Dictionary<string, string>();
-        Init();
     }
 
     public void Init()

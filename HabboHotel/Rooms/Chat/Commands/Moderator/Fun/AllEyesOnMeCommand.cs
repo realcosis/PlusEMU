@@ -6,6 +6,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun;
 
 internal class AllEyesOnMeCommand : IChatCommand
 {
+    public string Key => "alleyesonme";
     public string PermissionRequired => "command_alleyesonme";
 
     public string Parameters => "";

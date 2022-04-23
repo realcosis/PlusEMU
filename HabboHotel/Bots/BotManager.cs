@@ -5,25 +5,28 @@ using System.Linq;
 using NLog;
 using Plus.HabboHotel.Rooms.AI;
 using Plus.HabboHotel.Rooms.AI.Responses;
+using Plus.Database;
 
 namespace Plus.HabboHotel.Bots;
 
-public class BotManager
+public class BotManager : IBotManager
 {
+    private readonly IDatabase _database;
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Bots.BotManager");
 
     private readonly List<BotResponse> _responses;
 
-    public BotManager()
+    public BotManager(IDatabase database)
     {
         _responses = new List<BotResponse>();
+        _database = database;
     }
 
     public void Init()
     {
         if (_responses.Count > 0)
             _responses.Clear();
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("SELECT `bot_ai`,`chat_keywords`,`response_text`,`response_mode`,`response_beverage` FROM `bots_responses`");
         var data = dbClient.GetTable();
         if (data != null)

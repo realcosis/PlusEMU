@@ -3,24 +3,27 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rewards;
 
-public class RewardManager
+public class RewardManager : IRewardManager
 {
+    private readonly IDatabase _database;
     private readonly ConcurrentDictionary<int, List<int>> _rewardLogs;
     private readonly ConcurrentDictionary<int, Reward> _rewards;
 
-    public RewardManager()
+    public RewardManager(IDatabase database)
     {
+        _database = database;
         _rewards = new ConcurrentDictionary<int, Reward>();
         _rewardLogs = new ConcurrentDictionary<int, List<int>>();
     }
 
     public void Init()
     {
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("SELECT * FROM `server_rewards` WHERE enabled = '1'");
         var dTable = dbClient.GetTable();
         if (dTable != null)
@@ -63,7 +66,7 @@ public class RewardManager
             _rewardLogs.TryAdd(id, new List<int>());
         if (!_rewardLogs[id].Contains(rewardId))
             _rewardLogs[id].Add(rewardId);
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("INSERT INTO `server_reward_logs` VALUES ('', @userId, @rewardId)");
         dbClient.AddParameter("userId", id);
         dbClient.AddParameter("rewardId", rewardId);

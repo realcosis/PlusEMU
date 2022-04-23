@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace Plus.HabboHotel.Rooms.Chat.Logs;
 
-public sealed class ChatlogManager
+public sealed class ChatlogManager : IChatlogManager
 {
     private const int FlushOnCount = 10;
 
