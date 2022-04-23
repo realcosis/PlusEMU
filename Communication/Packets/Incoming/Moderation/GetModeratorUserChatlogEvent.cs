@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Data;
 using Plus.Communication.Packets.Outgoing.Moderation;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
+using Plus.HabboHotel.Rooms.Chat;
 using Plus.HabboHotel.Rooms.Chat.Logs;
 using Plus.Utilities;
 
@@ -11,6 +13,15 @@ namespace Plus.Communication.Packets.Incoming.Moderation;
 
 internal class GetModeratorUserChatlogEvent : IPacketEvent
 {
+    public readonly IChatManager _chatManager;
+    public readonly IDatabase _database;
+
+    public GetModeratorUserChatlogEvent(IChatManager chatManager, IDatabase database)
+    {
+        _chatManager = chatManager; 
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null)
@@ -23,9 +34,9 @@ internal class GetModeratorUserChatlogEvent : IPacketEvent
             session.SendNotification("Unable to load info for user.");
             return;
         }
-        PlusEnvironment.GetGame().GetChatManager().GetLogs().FlushAndSave();
+        _chatManager.GetLogs().FlushAndSave();
         var chatlogs = new List<KeyValuePair<RoomData, List<ChatlogEntry>>>();
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("SELECT `room_id`,`entry_timestamp`,`exit_timestamp` FROM `user_roomvisits` WHERE `user_id` = '" + data.Id + "' ORDER BY `entry_timestamp` DESC LIMIT 7");
         var getLogs = dbClient.GetTable();
         if (getLogs != null)
@@ -44,7 +55,7 @@ internal class GetModeratorUserChatlogEvent : IPacketEvent
     private List<ChatlogEntry> GetChatlogs(RoomData roomData, double timeEnter, double timeExit)
     {
         var chats = new List<ChatlogEntry>();
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("SELECT `user_id`, `timestamp`, `message` FROM `chatlogs` WHERE `room_id` = " + roomData.Id + " AND `timestamp` > " + timeEnter + " AND `timestamp` < " + timeExit +
                           " ORDER BY `timestamp` DESC LIMIT 100");
         var data = dbClient.GetTable();
