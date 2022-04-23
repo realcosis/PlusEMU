@@ -11,7 +11,18 @@ using Plus.HabboHotel.Users.Messenger;
 
 namespace Plus.HabboHotel.Quests;
 
-public class QuestManager
+public interface IQuestManager
+{
+    void Init();
+    Quest GetQuest(int id);
+    int GetAmountOfQuestsInCategory(string category);
+    void ProgressUserQuest(GameClient session, QuestType type, int data = 0);
+    Quest GetNextQuestInSeries(string category, int number);
+    void GetList(GameClient session, ClientPacket message);
+    void QuestReminder(GameClient session, int questId);
+}
+
+public class QuestManager : IQuestManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Quests.QuestManager");
     private readonly Dictionary<string, int> _questCount;

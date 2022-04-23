@@ -40,6 +40,8 @@ public class Game : IGame
     private readonly INavigatorManager _navigatorManager;
     private readonly IRoomManager _roomManager;
     private readonly IChatManager _chatManager;
+    private readonly IGroupManager _groupManager;
+    private readonly IQuestManager _questManager;
 
     private AchievementManager _achievementManager;
     private BadgeManager _badgeManager;
@@ -48,9 +50,7 @@ public class Game : IGame
     private readonly int _cycleSleepTime = 25;
     private GameDataManager _gameDataManager;
     private ServerStatusUpdater _globalUpdater;
-    private GroupManager _groupManager;
     private PermissionManager _permissionManager;
-    private QuestManager _questManager;
     private RewardManager _rewardManager;
     private SubscriptionManager _subscriptionManager;
     private TalentTrackManager _talentTrackManager;
@@ -68,7 +68,9 @@ public class Game : IGame
         ITelevisionManager televisionManager,
         INavigatorManager navigatorManager,
         IRoomManager roomManager,
-        IChatManager chatManager)
+        IChatManager chatManager,
+        IGroupManager groupManager,
+        IQuestManager questManager)
     {
         _packetManager = packetManager;
         _landingViewManager = landingViewManager;
@@ -80,6 +82,8 @@ public class Game : IGame
         _navigatorManager = navigatorManager;
         _roomManager = roomManager;
         _chatManager = chatManager;
+        _groupManager = groupManager;
+        _questManager = questManager;
     }
 
     public Task Init()
@@ -91,9 +95,7 @@ public class Game : IGame
         _navigatorManager.Init();
         _roomManager.LoadModels();
         _chatManager.Init();
-        _groupManager = new GroupManager();
         _groupManager.Init();
-        _questManager = new QuestManager();
         _questManager.Init();
         _achievementManager = new AchievementManager();
         _achievementManager.Init();
@@ -164,9 +166,9 @@ public class Game : IGame
 
     public SubscriptionManager GetSubscriptionManager() => _subscriptionManager;
 
-    public QuestManager GetQuestManager() => _questManager;
+    public IQuestManager GetQuestManager() => _questManager;
 
-    public GroupManager GetGroupManager() => _groupManager;
+    public IGroupManager GetGroupManager() => _groupManager;
 
     public ILandingViewManager GetLandingManager() => _landingViewManager;
 

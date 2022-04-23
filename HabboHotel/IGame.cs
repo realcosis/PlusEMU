@@ -38,8 +38,8 @@ public interface IGame
     IModerationManager GetModerationManager();
     PermissionManager GetPermissionManager();
     SubscriptionManager GetSubscriptionManager();
-    QuestManager GetQuestManager();
-    GroupManager GetGroupManager();
+    IQuestManager GetQuestManager();
+    IGroupManager GetGroupManager();
     ILandingViewManager GetLandingManager();
     ITelevisionManager GetTelevisionManager();
     IChatManager GetChatManager();
