@@ -43,7 +43,7 @@ public interface IGame
     ILandingViewManager GetLandingManager();
     ITelevisionManager GetTelevisionManager();
     IChatManager GetChatManager();
-    GameDataManager GetGameDataManager();
+    IGameDataManager GetGameDataManager();
     BotManager GetBotManager();
     CacheManager GetCacheManager();
     RewardManager GetRewardManager();

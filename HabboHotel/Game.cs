@@ -48,7 +48,7 @@ public class Game : IGame
     private BotManager _botManager;
     private CacheManager _cacheManager;
     private readonly int _cycleSleepTime = 25;
-    private GameDataManager _gameDataManager;
+    private IGameDataManager _gameDataManager;
     private ServerStatusUpdater _globalUpdater;
     private PermissionManager _permissionManager;
     private RewardManager _rewardManager;
@@ -72,7 +72,8 @@ public class Game : IGame
         IGroupManager groupManager,
         IQuestManager questManager,
         IAchievementManager achievementManager,
-        ITalentTrackManager talentTrackManager)
+        ITalentTrackManager talentTrackManager,
+        IGameDataManager gameDataManager)
     {
         _packetManager = packetManager;
         _landingViewManager = landingViewManager;
@@ -88,6 +89,7 @@ public class Game : IGame
         _questManager = questManager;
         _achievementManager = achievementManager;
         _talentTrackManager = talentTrackManager;
+        _gameDataManager = gameDataManager;
     }
 
     public Task Init()
@@ -103,7 +105,6 @@ public class Game : IGame
         _questManager.Init();
         _achievementManager.Init();
         _talentTrackManager.Init();
-        _gameDataManager = new GameDataManager();
         _gameDataManager.Init();
         _globalUpdater = new ServerStatusUpdater();
         _globalUpdater.Init();
@@ -178,7 +179,7 @@ public class Game : IGame
 
     public IChatManager GetChatManager() => _chatManager;
 
-    public GameDataManager GetGameDataManager() => _gameDataManager;
+    public IGameDataManager GetGameDataManager() => _gameDataManager;
 
     public BotManager GetBotManager() => _botManager;
 
