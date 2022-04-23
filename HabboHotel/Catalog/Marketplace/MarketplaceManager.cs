@@ -3,12 +3,25 @@ using System.Collections.Generic;
 
 namespace Plus.HabboHotel.Catalog.Marketplace;
 
-public class MarketplaceManager
+public interface IMarketplaceManager
 {
-    public Dictionary<int, int> MarketAverages = new();
-    public Dictionary<int, int> MarketCounts = new();
-    public List<int> MarketItemKeys = new();
-    public List<MarketOffer> MarketItems = new();
+    Dictionary<int, int> MarketAverages { get; }
+    Dictionary<int, int> MarketCounts { get; }
+    List<int> MarketItemKeys { get; }
+    List<MarketOffer> MarketItems { get; }
+    int AvgPriceForSprite(int spriteId);
+    string FormatTimestampString();
+    double FormatTimestamp();
+    int OfferCountForSprite(int spriteId);
+    int CalculateComissionPrice(float price);
+}
+
+public class MarketplaceManager : IMarketplaceManager
+{
+    public Dictionary<int, int> MarketAverages { get; } = new();
+    public Dictionary<int, int> MarketCounts { get; } = new();
+    public List<int> MarketItemKeys { get; } = new();
+    public List<MarketOffer> MarketItems { get; } = new();
 
     public int AvgPriceForSprite(int spriteId)
     {

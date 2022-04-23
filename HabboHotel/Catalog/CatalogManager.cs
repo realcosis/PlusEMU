@@ -10,30 +10,42 @@ using Plus.HabboHotel.Items;
 
 namespace Plus.HabboHotel.Catalog;
 
-public class CatalogManager
+public interface ICatalogManager
+{
+    Dictionary<int, int> ItemOffers { get; }
+    void Init(IItemDataManager itemDataManager);
+    bool TryGetBot(int itemId, out CatalogBot bot);
+    bool TryGetPage(int pageId, out CatalogPage page);
+    bool TryGetDeal(int dealId, out CatalogDeal deal);
+    ICollection<CatalogPage> GetPages();
+    ICollection<CatalogPromotion> GetPromotions();
+    IMarketplaceManager GetMarketplace();
+    IPetRaceManager GetPetRaceManager();
+    IVoucherManager GetVoucherManager();
+    IClothingManager GetClothingManager();
+}
+
+public class CatalogManager : ICatalogManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Catalog.CatalogManager");
     private readonly Dictionary<int, CatalogBot> _botPresets;
-    private readonly ClothingManager _clothingManager;
     private readonly Dictionary<int, CatalogDeal> _deals;
     private readonly Dictionary<int, Dictionary<int, CatalogItem>> _items;
-
-    private readonly MarketplaceManager _marketplace;
     private readonly Dictionary<int, CatalogPage> _pages;
-    private readonly PetRaceManager _petRaceManager;
     private readonly Dictionary<int, CatalogPromotion> _promotions;
-    private readonly VoucherManager _voucherManager;
-
     private Dictionary<int, int> _itemOffers;
 
-    public CatalogManager()
+    private readonly IClothingManager _clothingManager;
+    private readonly IMarketplaceManager _marketplace;
+    private readonly IPetRaceManager _petRaceManager;
+    private readonly IVoucherManager _voucherManager;
+
+    public CatalogManager(IMarketplaceManager marketplace, IPetRaceManager petRaceManager, IVoucherManager voucherManager, IClothingManager clothingManager)
     {
-        _marketplace = new MarketplaceManager();
-        _petRaceManager = new PetRaceManager();
-        _voucherManager = new VoucherManager();
-        _voucherManager.Init();
-        _clothingManager = new ClothingManager();
-        _clothingManager.Init();
+        _marketplace = marketplace;
+        _petRaceManager = petRaceManager;
+        _voucherManager = voucherManager;
+        _clothingManager = clothingManager;
         _itemOffers = new Dictionary<int, int>();
         _pages = new Dictionary<int, CatalogPage>();
         _botPresets = new Dictionary<int, CatalogBot>();
@@ -44,8 +56,10 @@ public class CatalogManager
 
     public Dictionary<int, int> ItemOffers => _itemOffers;
 
-    public void Init(ItemDataManager itemDataManager)
+    public void Init(IItemDataManager itemDataManager)
     {
+        _voucherManager.Init();
+        _clothingManager.Init();
         if (_pages.Count > 0)
             _pages.Clear();
         if (_botPresets.Count > 0)
@@ -156,11 +170,11 @@ public class CatalogManager
 
     public ICollection<CatalogPromotion> GetPromotions() => _promotions.Values;
 
-    public MarketplaceManager GetMarketplace() => _marketplace;
+    public IMarketplaceManager GetMarketplace() => _marketplace;
 
-    public PetRaceManager GetPetRaceManager() => _petRaceManager;
+    public IPetRaceManager GetPetRaceManager() => _petRaceManager;
 
-    public VoucherManager GetVoucherManager() => _voucherManager;
+    public IVoucherManager GetVoucherManager() => _voucherManager;
 
-    public ClothingManager GetClothingManager() => _clothingManager;
+    public IClothingManager GetClothingManager() => _clothingManager;
 }

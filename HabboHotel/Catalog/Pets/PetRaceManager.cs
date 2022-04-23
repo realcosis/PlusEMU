@@ -5,7 +5,13 @@ using System.Linq;
 
 namespace Plus.HabboHotel.Catalog.Pets;
 
-public class PetRaceManager
+public interface IPetRaceManager
+{
+    void Init();
+    List<PetRace> GetRacesForRaceId(int raceId);
+}
+
+public class PetRaceManager : IPetRaceManager
 {
     private readonly List<PetRace> _races = new();
 

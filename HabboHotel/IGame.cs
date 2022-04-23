@@ -29,13 +29,13 @@ public interface IGame
     void StopGameLoop();
     IPacketManager GetPacketManager();
     IGameClientManager GetClientManager();
-    CatalogManager GetCatalog();
+    ICatalogManager GetCatalog();
     NavigatorManager GetNavigator();
-    ItemDataManager GetItemManager();
+    IItemDataManager GetItemManager();
     RoomManager GetRoomManager();
     AchievementManager GetAchievementManager();
     TalentTrackManager GetTalentTrackManager();
-    ModerationManager GetModerationManager();
+    IModerationManager GetModerationManager();
     PermissionManager GetPermissionManager();
     SubscriptionManager GetSubscriptionManager();
     QuestManager GetQuestManager();

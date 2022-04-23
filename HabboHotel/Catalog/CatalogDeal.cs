@@ -7,7 +7,7 @@ namespace Plus.HabboHotel.Catalog;
 
 public class CatalogDeal
 {
-    public CatalogDeal(int id, string items, string displayName, int roomId, ItemDataManager itemDataManager)
+    public CatalogDeal(int id, string items, string displayName, int roomId, IItemDataManager itemDataManager)
     {
         Id = id;
         DisplayName = displayName;
