@@ -1,10 +1,18 @@
 ﻿using System;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni;
 
 internal class SetMannequinNameEvent : IPacketEvent
 {
+    private readonly IDatabase _database;
+
+    public SetMannequinNameEvent(IDatabase database)
+    {
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         var room = session.GetHabbo().CurrentRoom;
@@ -22,7 +30,7 @@ internal class SetMannequinNameEvent : IPacketEvent
         }
         else
             item.ExtraData = "m" + Convert.ToChar(5) + ".ch-210-1321.lg-285-92" + Convert.ToChar(5) + "Default Mannequin";
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `items` SET `extra_data` = @Ed WHERE `id` = @itemId LIMIT 1");
             dbClient.AddParameter("itemId", item.Id);

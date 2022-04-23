@@ -3,6 +3,8 @@ using System.Data;
 using System.Threading;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Communication.Packets.Outgoing.Rooms.Furni;
+using Plus.Database;
+using Plus.HabboHotel.Cache;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Rooms;
@@ -11,6 +13,17 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni;
 
 internal class OpenGiftEvent : IPacketEvent
 {
+    private readonly IItemDataManager _itemDataManger;
+    private readonly ICacheManager _cacheManager;
+    private readonly IDatabase _database;
+
+    public OpenGiftEvent(IItemDataManager itemDataManager, ICacheManager cacheManager , IDatabase database)
+    {
+        _itemDataManger = itemDataManager;
+        _cacheManager = cacheManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
@@ -25,7 +38,7 @@ internal class OpenGiftEvent : IPacketEvent
         if (present.UserId != session.GetHabbo().Id)
             return;
         DataRow data;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `base_id`,`extra_data` FROM `user_presents` WHERE `item_id` = @presentId LIMIT 1");
             dbClient.AddParameter("presentId", present.Id);
@@ -35,7 +48,7 @@ internal class OpenGiftEvent : IPacketEvent
         {
             session.SendNotification("Oops! Appears there was a bug with this gift.\nWe'll just get rid of it for you.");
             room.GetRoomItemHandler().RemoveFurniture(null, present.Id);
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + present.Id + "' LIMIT 1");
                 dbClient.RunQuery("DELETE FROM `user_presents` WHERE `item_id` = '" + present.Id + "' LIMIT 1");
@@ -47,7 +60,7 @@ internal class OpenGiftEvent : IPacketEvent
         {
             session.SendNotification("Oops! Appears there was a bug with this gift.\nWe'll just get rid of it for you.");
             room.GetRoomItemHandler().RemoveFurniture(null, present.Id);
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + present.Id + "' LIMIT 1");
                 dbClient.RunQuery("DELETE FROM `user_presents` WHERE `item_id` = '" + present.Id + "' LIMIT 1");
@@ -55,12 +68,12 @@ internal class OpenGiftEvent : IPacketEvent
             session.GetHabbo().GetInventoryComponent().RemoveItem(present.Id);
             return;
         }
-        var purchaser = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(purchaserId);
+        var purchaser = _cacheManager.GenerateUser(purchaserId);
         if (purchaser == null)
         {
             session.SendNotification("Oops! Appears there was a bug with this gift.\nWe'll just get rid of it for you.");
             room.GetRoomItemHandler().RemoveFurniture(null, present.Id);
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + present.Id + "' LIMIT 1");
                 dbClient.RunQuery("DELETE FROM `user_presents` WHERE `item_id` = '" + present.Id + "' LIMIT 1");
@@ -68,11 +81,11 @@ internal class OpenGiftEvent : IPacketEvent
             session.GetHabbo().GetInventoryComponent().RemoveItem(present.Id);
             return;
         }
-        if (!PlusEnvironment.GetGame().GetItemManager().GetItem(Convert.ToInt32(data["base_id"]), out var baseItem))
+        if (!_itemDataManger.GetItem(Convert.ToInt32(data["base_id"]), out var baseItem))
         {
             session.SendNotification("Oops, it appears that the item within the gift is no longer in the hotel!");
             room.GetRoomItemHandler().RemoveFurniture(null, present.Id);
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + present.Id + "' LIMIT 1");
                 dbClient.RunQuery("DELETE FROM `user_presents` WHERE `item_id` = '" + present.Id + "' LIMIT 1");
@@ -95,7 +108,7 @@ internal class OpenGiftEvent : IPacketEvent
             Thread.Sleep(1500);
             var itemIsInRoom = true;
             room.GetRoomItemHandler().RemoveFurniture(session, present.Id);
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.SetQuery("UPDATE `items` SET `base_item` = @BaseItem, `extra_data` = @edata WHERE `id` = @itemId LIMIT 1");
                 dbClient.AddParameter("itemId", present.Id);
@@ -111,7 +124,7 @@ internal class OpenGiftEvent : IPacketEvent
             {
                 if (!room.GetRoomItemHandler().SetFloorItem(session, present, present.GetX, present.GetY, present.Rotation, true, false, true))
                 {
-                    using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                    using (var dbClient = _database.GetQueryReactor())
                     {
                         dbClient.SetQuery("UPDATE `items` SET `room_id` = '0' WHERE `id` = @itemId LIMIT 1");
                         dbClient.AddParameter("itemId", present.Id);
@@ -122,7 +135,7 @@ internal class OpenGiftEvent : IPacketEvent
             }
             else
             {
-                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = _database.GetQueryReactor())
                 {
                     dbClient.SetQuery("UPDATE `items` SET `room_id` = '0' WHERE `id` = @itemId LIMIT 1");
                     dbClient.AddParameter("itemId", present.Id);
