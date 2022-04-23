@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Catalog.Marketplace;
 
@@ -38,7 +39,7 @@ public class MarketplaceManager
         return FormatTimestamp().ToString().Split(new[] { ',' })[0];
     }
 
-    public double FormatTimestamp() => PlusEnvironment.GetUnixTimestamp() - 172800.0;
+    public double FormatTimestamp() => UnixTimestamp.GetNow() - 172800.0;
 
     public int OfferCountForSprite(int spriteId)
     {

@@ -1,5 +1,6 @@
 ﻿using Plus.Communication.Packets.Outgoing.Inventory.Trading;
 using Plus.HabboHotel.GameClients;
+using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Inventory.Trading;
 
@@ -21,7 +22,7 @@ internal class InitTradeEvent : IPacketEvent
             return;
         if (session.GetHabbo().TradingLockExpiry > 0)
         {
-            if (session.GetHabbo().TradingLockExpiry > PlusEnvironment.GetUnixTimestamp())
+            if (session.GetHabbo().TradingLockExpiry > UnixTimestamp.GetNow())
             {
                 session.SendNotification("You're currently banned from trading.");
                 return;

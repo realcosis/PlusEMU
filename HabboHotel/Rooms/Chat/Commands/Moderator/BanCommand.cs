@@ -1,6 +1,7 @@
 ﻿using System;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
@@ -33,9 +34,9 @@ internal class BanCommand : IChatCommand
         double expire = 0;
         var hours = @params[2];
         if (string.IsNullOrEmpty(hours) || hours == "perm")
-            expire = PlusEnvironment.GetUnixTimestamp() + 78892200;
+            expire = UnixTimestamp.GetNow() + 78892200;
         else
-            expire = PlusEnvironment.GetUnixTimestamp() + Convert.ToDouble(hours) * 3600;
+            expire = UnixTimestamp.GetNow() + Convert.ToDouble(hours) * 3600;
         string reason = null;
         if (@params.Length >= 4)
             reason = CommandManager.MergeParams(@params, 3);

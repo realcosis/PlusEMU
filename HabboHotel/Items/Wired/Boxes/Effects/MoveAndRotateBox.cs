@@ -40,7 +40,7 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
     {
         if (Instance == null || !_requested || _next == 0)
             return false;
-        var now = PlusEnvironment.Now();
+        var now = DateTime.UtcNow.Ticks;
         if (_next < now)
         {
             foreach (var item in SetItems.Values.ToList())
@@ -129,8 +129,8 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
     {
         if (SetItems.Count == 0)
             return false;
-        if (_next == 0 || _next < PlusEnvironment.Now())
-            _next = PlusEnvironment.Now() + Delay;
+        if (_next == 0 || _next < DateTime.UtcNow.Ticks)
+            _next = DateTime.UtcNow.Ticks + Delay;
         if (!_requested)
         {
             TickCount = Delay;

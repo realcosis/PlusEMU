@@ -1,5 +1,6 @@
 ﻿using System;
 using Plus.HabboHotel.GameClients;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
@@ -45,7 +46,7 @@ internal class TradeBanCommand : IChatCommand
                 days = 1;
             if (days > 365)
                 days = 365;
-            var length = PlusEnvironment.GetUnixTimestamp() + days * 86400;
+            var length = UnixTimestamp.GetNow() + days * 86400;
             using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '" + length + "', `trading_locks_count` = `trading_locks_count` + '1' WHERE `user_id` = '" + habbo.Id + "' LIMIT 1");

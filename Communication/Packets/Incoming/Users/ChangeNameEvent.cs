@@ -5,6 +5,7 @@ using Plus.Communication.Packets.Outgoing.Rooms.Session;
 using Plus.Communication.Packets.Outgoing.Users;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users;
+using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Users;
 
@@ -69,7 +70,7 @@ internal class ChangeNameEvent : IPacketEvent
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
             dbClient.SetQuery("INSERT INTO `logs_client_namechange` (`user_id`,`new_name`,`old_name`,`timestamp`) VALUES ('" + session.GetHabbo().Id + "', @name, '" + oldName + "', '" +
-                              PlusEnvironment.GetUnixTimestamp() + "')");
+                              UnixTimestamp.GetNow() + "')");
             dbClient.AddParameter("name", newName);
             dbClient.RunQuery();
         }
@@ -88,9 +89,9 @@ internal class ChangeNameEvent : IPacketEvent
     {
         if (habbo.Rank == 1 && habbo.VipRank == 0 && habbo.LastNameChange == 0)
             return true;
-        if (habbo.Rank == 1 && habbo.VipRank == 1 && (habbo.LastNameChange == 0 || PlusEnvironment.GetUnixTimestamp() + 604800 > habbo.LastNameChange))
+        if (habbo.Rank == 1 && habbo.VipRank == 1 && (habbo.LastNameChange == 0 || UnixTimestamp.GetNow() + 604800 > habbo.LastNameChange))
             return true;
-        if (habbo.Rank == 1 && habbo.VipRank == 2 && (habbo.LastNameChange == 0 || PlusEnvironment.GetUnixTimestamp() + 86400 > habbo.LastNameChange))
+        if (habbo.Rank == 1 && habbo.VipRank == 2 && (habbo.LastNameChange == 0 || UnixTimestamp.GetNow() + 86400 > habbo.LastNameChange))
             return true;
         if (habbo.Rank == 1 && habbo.VipRank == 3)
             return true;

@@ -270,14 +270,14 @@ public class HabboMessenger
         }
         if (GetClient().GetHabbo().MessengerSpamCount >= 12)
         {
-            GetClient().GetHabbo().MessengerSpamTime = PlusEnvironment.GetUnixTimestamp() + 60;
+            GetClient().GetHabbo().MessengerSpamTime = UnixTimestamp.GetNow() + 60;
             GetClient().GetHabbo().MessengerSpamCount = 0;
             GetClient().SendNotification("You cannot send a message, you have flooded the console.\n\nYou can send a message in 60 seconds.");
             return;
         }
-        if (GetClient().GetHabbo().MessengerSpamTime > PlusEnvironment.GetUnixTimestamp())
+        if (GetClient().GetHabbo().MessengerSpamTime > UnixTimestamp.GetNow())
         {
-            var time = GetClient().GetHabbo().MessengerSpamTime - PlusEnvironment.GetUnixTimestamp();
+            var time = GetClient().GetHabbo().MessengerSpamTime - UnixTimestamp.GetNow();
             GetClient().SendNotification("You cannot send a message, you have flooded the console.\n\nYou can send a message in " + time + " seconds.");
             return;
         }

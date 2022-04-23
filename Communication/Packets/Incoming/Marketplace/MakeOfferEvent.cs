@@ -1,6 +1,7 @@
 ﻿using Plus.Communication.Packets.Outgoing.Marketplace;
 using Plus.HabboHotel.Catalog.Utilities;
 using Plus.HabboHotel.GameClients;
+using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Marketplace;
 
@@ -37,7 +38,7 @@ internal class MakeOfferEvent : IPacketEvent
             dbClient.SetQuery(
                 "INSERT INTO `catalog_marketplace_offers` (`furni_id`,`item_id`,`user_id`,`asking_price`,`total_price`,`public_name`,`sprite_id`,`item_type`,`timestamp`,`extra_data`,`limited_number`,`limited_stack`) VALUES ('" +
                 itemId + "','" + item.BaseItem + "','" + session.GetHabbo().Id + "','" + sellingPrice + "','" + totalPrice + "',@public_name,'" + item.GetBaseItem().SpriteId + "','" + itemType +
-                "','" + PlusEnvironment.GetUnixTimestamp() + "',@extra_data, '" + item.LimitedNo + "', '" + item.LimitedTot + "')");
+                "','" + UnixTimestamp.GetNow() + "',@extra_data, '" + item.LimitedNo + "', '" + item.LimitedTot + "')");
             dbClient.AddParameter("public_name", item.GetBaseItem().PublicName);
             dbClient.AddParameter("extra_data", item.ExtraData);
             dbClient.RunQuery();

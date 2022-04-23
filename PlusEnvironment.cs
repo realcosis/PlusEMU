@@ -184,19 +184,6 @@ public class PlusEnvironment : IPlusEnvironment
 
     public static int GetRandomNumber(int min, int max) => RandomNumber.GenerateNewRandom(min, max);
 
-    public static double GetUnixTimestamp()
-    {
-        var ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0);
-        return ts.TotalSeconds;
-    }
-
-    public static long Now()
-    {
-        var ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0);
-        var unixTime = ts.TotalMilliseconds;
-        return (long)unixTime;
-    }
-
     public static string FilterFigure(string figure)
     {
         foreach (var character in figure)

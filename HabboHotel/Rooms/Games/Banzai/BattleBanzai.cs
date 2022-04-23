@@ -9,6 +9,7 @@ using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Items.Wired;
 using Plus.HabboHotel.Rooms.Games.Teams;
 using Plus.HabboHotel.Rooms.PathFinding;
+using Plus.Utilities;
 using Plus.Utilities.Enclosure;
 
 namespace Plus.HabboHotel.Rooms.Games.Banzai;
@@ -172,7 +173,7 @@ public class BattleBanzai
             return;
         _floorMap = new byte[_room.GetGameMap().Model.MapSizeY, _room.GetGameMap().Model.MapSizeX];
         _field = new GameField(_floorMap, true);
-        _timestarted = PlusEnvironment.GetUnixTimestamp();
+        _timestarted = UnixTimestamp.GetNow();
         _room.GetGameManager().LockGates();
         for (var i = 1; i < 5; i++) _room.GetGameManager().Points[i] = 0;
         foreach (var tile in _banzaiTiles.Values)
@@ -237,7 +238,7 @@ public class BattleBanzai
             {
                 if (user.Team != Team.None)
                 {
-                    if (PlusEnvironment.GetUnixTimestamp() - _timestarted > 5)
+                    if (UnixTimestamp.GetNow() - _timestarted > 5)
                     {
                         PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(user.GetClient(), "ACH_BattleBallTilesLocked", user.LockedTilesCount);
                         PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(user.GetClient(), "ACH_BattleBallPlayer", 1);
@@ -247,7 +248,7 @@ public class BattleBanzai
                 {
                     if (user.CurrentEffect == 35)
                     {
-                        if (PlusEnvironment.GetUnixTimestamp() - _timestarted > 5)
+                        if (UnixTimestamp.GetNow() - _timestarted > 5)
                             PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(user.GetClient(), "ACH_BattleBallWinner", 1);
                         _room.SendPacket(new ActionComposer(user.VirtualId, 1));
                     }
@@ -256,7 +257,7 @@ public class BattleBanzai
                 {
                     if (user.CurrentEffect == 33)
                     {
-                        if (PlusEnvironment.GetUnixTimestamp() - _timestarted > 5)
+                        if (UnixTimestamp.GetNow() - _timestarted > 5)
                             PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(user.GetClient(), "ACH_BattleBallWinner", 1);
                         _room.SendPacket(new ActionComposer(user.VirtualId, 1));
                     }
@@ -265,7 +266,7 @@ public class BattleBanzai
                 {
                     if (user.CurrentEffect == 34)
                     {
-                        if (PlusEnvironment.GetUnixTimestamp() - _timestarted > 5)
+                        if (UnixTimestamp.GetNow() - _timestarted > 5)
                             PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(user.GetClient(), "ACH_BattleBallWinner", 1);
                         _room.SendPacket(new ActionComposer(user.VirtualId, 1));
                     }
@@ -274,7 +275,7 @@ public class BattleBanzai
                 {
                     if (user.CurrentEffect == 36)
                     {
-                        if (PlusEnvironment.GetUnixTimestamp() - _timestarted > 5)
+                        if (UnixTimestamp.GetNow() - _timestarted > 5)
                             PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(user.GetClient(), "ACH_BattleBallWinner", 1);
                         _room.SendPacket(new ActionComposer(user.VirtualId, 1));
                     }

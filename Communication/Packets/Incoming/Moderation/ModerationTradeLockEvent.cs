@@ -1,4 +1,5 @@
 ﻿using Plus.HabboHotel.GameClients;
+using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Moderation;
 
@@ -13,7 +14,7 @@ internal class ModerationTradeLockEvent : IPacketEvent
         var days = packet.PopInt() / 1440.0;
         packet.PopString(); //unk1
         packet.PopString(); //unk2
-        var length = PlusEnvironment.GetUnixTimestamp() + days * 86400;
+        var length = UnixTimestamp.GetNow() + days * 86400;
         var habbo = PlusEnvironment.GetHabboById(userId);
         if (habbo == null)
         {

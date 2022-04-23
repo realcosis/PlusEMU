@@ -29,7 +29,7 @@ public class ChatEvent : IPacketEvent
             style.RequiredRight.Length > 0 && !session.GetHabbo().GetPermissions().HasRight(style.RequiredRight))
             colour = 0;
         user.UnIdle();
-        if (PlusEnvironment.GetUnixTimestamp() < session.GetHabbo().FloodTime && session.GetHabbo().FloodTime != 0)
+        if (UnixTimestamp.GetNow() < session.GetHabbo().FloodTime && session.GetHabbo().FloodTime != 0)
             return;
         if (session.GetHabbo().TimeMuted > 0)
         {
@@ -59,7 +59,7 @@ public class ChatEvent : IPacketEvent
             if (session.GetHabbo().BannedPhraseCount >= Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("room.chat.filter.banned_phrases.chances")))
             {
                 PlusEnvironment.GetGame().GetModerationManager().BanUser("System", ModerationBanType.Username, session.GetHabbo().Username, "Spamming banned phrases (" + message + ")",
-                    PlusEnvironment.GetUnixTimestamp() + 78892200);
+                    UnixTimestamp.GetNow() + 78892200);
                 session.Disconnect();
                 return;
             }

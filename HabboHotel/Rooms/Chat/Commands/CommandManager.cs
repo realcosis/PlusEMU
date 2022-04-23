@@ -10,6 +10,7 @@ using Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 using Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun;
 using Plus.HabboHotel.Rooms.Chat.Commands.User;
 using Plus.HabboHotel.Rooms.Chat.Commands.User.Fun;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands;
 
@@ -240,7 +241,7 @@ public class CommandManager
         dbClient.AddParameter("UserId", userId);
         dbClient.AddParameter("Data", data);
         dbClient.AddParameter("MachineId", machineId);
-        dbClient.AddParameter("Timestamp", PlusEnvironment.GetUnixTimestamp());
+        dbClient.AddParameter("Timestamp", UnixTimestamp.GetNow());
         dbClient.RunQuery();
     }
 

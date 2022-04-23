@@ -23,7 +23,7 @@ public class WhisperEvent : IPacketEvent
             session.SendWhisper("Oops, you're currently muted.");
             return;
         }
-        if (PlusEnvironment.GetUnixTimestamp() < session.GetHabbo().FloodTime && session.GetHabbo().FloodTime != 0)
+        if (UnixTimestamp.GetNow() < session.GetHabbo().FloodTime && session.GetHabbo().FloodTime != 0)
             return;
         var @params = packet.PopString();
         var toUser = @params.Split(' ')[0];
@@ -67,7 +67,7 @@ public class WhisperEvent : IPacketEvent
             if (session.GetHabbo().BannedPhraseCount >= Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("room.chat.filter.banned_phrases.chances")))
             {
                 PlusEnvironment.GetGame().GetModerationManager().BanUser("System", ModerationBanType.Username, session.GetHabbo().Username, "Spamming banned phrases (" + message + ")",
-                    PlusEnvironment.GetUnixTimestamp() + 78892200);
+                    UnixTimestamp.GetNow() + 78892200);
                 session.Disconnect();
                 return;
             }

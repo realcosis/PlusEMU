@@ -21,6 +21,7 @@ using Plus.HabboHotel.Rooms.Games.Football;
 using Plus.HabboHotel.Rooms.Games.Freeze;
 using Plus.HabboHotel.Rooms.Games.Teams;
 using Plus.HabboHotel.Rooms.Instance;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms;
 
@@ -434,7 +435,7 @@ public class Room : RoomData
     {
         if (MutedUsers.ContainsKey(session.GetHabbo().Id))
         {
-            if (MutedUsers[session.GetHabbo().Id] < PlusEnvironment.GetUnixTimestamp())
+            if (MutedUsers[session.GetHabbo().Id] < UnixTimestamp.GetNow())
                 MutedUsers.Remove(session.GetHabbo().Id);
             else
                 return true;

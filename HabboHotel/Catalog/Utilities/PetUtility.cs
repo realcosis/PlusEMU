@@ -1,5 +1,6 @@
 ﻿using System;
 using Plus.HabboHotel.Rooms.AI;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Catalog.Utilities;
 
@@ -16,7 +17,7 @@ public static class PetUtility
 
     public static Pet CreatePet(int userId, string name, int type, string race, string colour)
     {
-        var pet = new Pet(0, userId, 0, name, type, race, colour, 0, 100, 100, 0, PlusEnvironment.GetUnixTimestamp(), 0, 0, 0.0, 0, 0, 0, -1, "-1");
+        var pet = new Pet(0, userId, 0, name, type, race, colour, 0, 100, 100, 0, UnixTimestamp.GetNow(), 0, 0, 0.0, 0, 0, 0, -1, "-1");
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
         dbClient.SetQuery("INSERT INTO bots (user_id,name, ai_type) VALUES (" + pet.OwnerId + ",@" + pet.PetId + "name, 'pet')");
         dbClient.AddParameter(pet.PetId + "name", pet.Name);

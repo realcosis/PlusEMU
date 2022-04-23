@@ -2,6 +2,7 @@
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items.Wired;
+using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Engine;
 
@@ -31,7 +32,7 @@ internal class GetRoomEntryDataEvent : IPacketEvent
         session.SendPacket(new RoomEventComposer(room, room.Promotion));
         if (room.GetWired() != null)
             room.GetWired().TriggerEvent(WiredBoxType.TriggerRoomEnter, session.GetHabbo());
-        if (PlusEnvironment.GetUnixTimestamp() < session.GetHabbo().FloodTime && session.GetHabbo().FloodTime != 0)
-            session.SendPacket(new FloodControlComposer((int)session.GetHabbo().FloodTime - (int)PlusEnvironment.GetUnixTimestamp()));
+        if (UnixTimestamp.GetNow() < session.GetHabbo().FloodTime && session.GetHabbo().FloodTime != 0)
+            session.SendPacket(new FloodControlComposer((int)session.GetHabbo().FloodTime - (int)UnixTimestamp.GetNow()));
     }
 }

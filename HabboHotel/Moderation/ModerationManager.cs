@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using NLog;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Moderation;
 
@@ -152,7 +153,7 @@ public sealed class ModerationManager
                     var ban = new ModerationBan(BanTypeUtility.GetModerationBanType(type), value, reason, expires);
                     if (ban != null)
                     {
-                        if (expires > PlusEnvironment.GetUnixTimestamp())
+                        if (expires > UnixTimestamp.GetNow())
                         {
                             if (!_bans.ContainsKey(value))
                                 _bans.Add(value, ban);
@@ -193,7 +194,7 @@ public sealed class ModerationManager
                     var ban = new ModerationBan(BanTypeUtility.GetModerationBanType(type), value, reason, expires);
                     if (ban != null)
                     {
-                        if (expires > PlusEnvironment.GetUnixTimestamp())
+                        if (expires > UnixTimestamp.GetNow())
                         {
                             if (!_bans.ContainsKey(value))
                                 _bans.Add(value, ban);
@@ -217,7 +218,7 @@ public sealed class ModerationManager
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
             dbClient.SetQuery("REPLACE INTO `bans` (`bantype`, `value`, `reason`, `expire`, `added_by`,`added_date`) VALUES ('" + banType + "', '" + banValue + "', @reason, " + expireTimestamp +
-                              ", '" + mod + "', '" + PlusEnvironment.GetUnixTimestamp() + "');");
+                              ", '" + mod + "', '" + UnixTimestamp.GetNow() + "');");
             dbClient.AddParameter("reason", reason);
             dbClient.RunQuery();
         }

@@ -1,5 +1,6 @@
 ﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
@@ -30,7 +31,7 @@ internal class MipCommand : IChatCommand
             return;
         }
         var ipAddress = string.Empty;
-        var expire = PlusEnvironment.GetUnixTimestamp() + 78892200;
+        var expire = UnixTimestamp.GetNow() + 78892200;
         var username = habbo.Username;
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
