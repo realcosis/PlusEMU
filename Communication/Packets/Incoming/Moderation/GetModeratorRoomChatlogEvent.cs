@@ -13,13 +13,13 @@ namespace Plus.Communication.Packets.Incoming.Moderation;
 internal class GetModeratorRoomChatlogEvent : IPacketEvent
 {
     private readonly IRoomManager _roomManager; 
-    private readonly IChatManager _chatManager;
+    private readonly IChatlogManager _chatlogManager;
     private readonly IDatabase _database;
 
-    public GetModeratorRoomChatlogEvent(IRoomManager roomManager, IChatManager chatManager, IDatabase database)
+    public GetModeratorRoomChatlogEvent(IRoomManager roomManager, IChatlogManager chatlogManager, IDatabase database)
     {
         _roomManager = roomManager;
-        _chatManager = chatManager;
+        _chatlogManager = chatlogManager;
         _database = database;
     }
 
@@ -32,7 +32,7 @@ internal class GetModeratorRoomChatlogEvent : IPacketEvent
         packet.PopInt(); //junk
         var roomId = packet.PopInt();
         if (!_roomManager.TryGetRoom(roomId, out var room)) return;
-        _chatManager.GetLogs().FlushAndSave();
+        _chatlogManager.FlushAndSave();
         var chats = new List<ChatlogEntry>();
         using (var dbClient = _database.GetQueryReactor())
         {

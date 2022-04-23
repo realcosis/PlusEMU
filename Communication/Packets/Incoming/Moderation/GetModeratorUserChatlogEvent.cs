@@ -13,12 +13,12 @@ namespace Plus.Communication.Packets.Incoming.Moderation;
 
 internal class GetModeratorUserChatlogEvent : IPacketEvent
 {
-    public readonly IChatManager _chatManager;
+    public readonly IChatlogManager _chatlogManager;
     public readonly IDatabase _database;
 
-    public GetModeratorUserChatlogEvent(IChatManager chatManager, IDatabase database)
+    public GetModeratorUserChatlogEvent(IChatlogManager chatlogManager, IDatabase database)
     {
-        _chatManager = chatManager; 
+        _chatlogManager = chatlogManager; 
         _database = database;
     }
 
@@ -34,7 +34,7 @@ internal class GetModeratorUserChatlogEvent : IPacketEvent
             session.SendNotification("Unable to load info for user.");
             return;
         }
-        _chatManager.GetLogs().FlushAndSave();
+        _chatlogManager.FlushAndSave();
         var chatlogs = new List<KeyValuePair<RoomData, List<ChatlogEntry>>>();
         using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("SELECT `room_id`,`entry_timestamp`,`exit_timestamp` FROM `user_roomvisits` WHERE `user_id` = '" + data.Id + "' ORDER BY `entry_timestamp` DESC LIMIT 7");
