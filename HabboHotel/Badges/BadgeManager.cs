@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using NLog;
 using Plus.Database;
-using Plus.HabboHotel.Badges;
 
 namespace Plus.HabboHotel.Badges;
 
