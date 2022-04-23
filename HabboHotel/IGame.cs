@@ -36,8 +36,8 @@ public interface IGame
     IAchievementManager GetAchievementManager();
     ITalentTrackManager GetTalentTrackManager();
     IModerationManager GetModerationManager();
-    PermissionManager GetPermissionManager();
-    SubscriptionManager GetSubscriptionManager();
+    IPermissionManager GetPermissionManager();
+    ISubscriptionManager GetSubscriptionManager();
     IQuestManager GetQuestManager();
     IGroupManager GetGroupManager();
     ILandingViewManager GetLandingManager();
@@ -45,8 +45,8 @@ public interface IGame
     IChatManager GetChatManager();
     IGameDataManager GetGameDataManager();
     IBotManager GetBotManager();
-    CacheManager GetCacheManager();
-    RewardManager GetRewardManager();
-    BadgeManager GetBadgeManager();
+    ICacheManager GetCacheManager();
+    IRewardManager GetRewardManager();
+    IBadgeManager GetBadgeManager();
     Task Init();
 }

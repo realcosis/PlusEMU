@@ -7,7 +7,15 @@ using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rewards;
 
-public class RewardManager
+public interface IRewardManager
+{
+    void Init();
+    bool HasReward(int id, int rewardId);
+    void LogReward(int id, int rewardId);
+    void CheckRewards(GameClient session);
+}
+
+public class RewardManager : IRewardManager
 {
     private readonly ConcurrentDictionary<int, List<int>> _rewardLogs;
     private readonly ConcurrentDictionary<int, Reward> _rewards;

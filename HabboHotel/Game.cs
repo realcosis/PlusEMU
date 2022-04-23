@@ -44,15 +44,15 @@ public class Game : IGame
     private readonly IQuestManager _questManager;
     private readonly IAchievementManager _achievementManager;
 
-    private BadgeManager _badgeManager;
+    private IBadgeManager _badgeManager;
     private IBotManager _botManager;
-    private CacheManager _cacheManager;
+    private ICacheManager _cacheManager;
     private readonly int _cycleSleepTime = 25;
     private IGameDataManager _gameDataManager;
     private IServerStatusUpdater _globalUpdater;
-    private PermissionManager _permissionManager;
-    private RewardManager _rewardManager;
-    private SubscriptionManager _subscriptionManager;
+    private IPermissionManager _permissionManager;
+    private IRewardManager _rewardManager;
+    private ISubscriptionManager _subscriptionManager;
     private ITalentTrackManager _talentTrackManager;
     private bool _cycleActive;
 
@@ -75,7 +75,12 @@ public class Game : IGame
         ITalentTrackManager talentTrackManager,
         IGameDataManager gameDataManager,
         IServerStatusUpdater serverStatusUpdater,
-        IBotManager botManager)
+        IBotManager botManager,
+        ICacheManager cacheManager,
+        IRewardManager rewardManager,
+        IBadgeManager badgeManager,
+        ISubscriptionManager subscriptionManager,
+        IPermissionManager permissionManager)
     {
         _packetManager = packetManager;
         _landingViewManager = landingViewManager;
@@ -94,6 +99,11 @@ public class Game : IGame
         _gameDataManager = gameDataManager;
         _globalUpdater = serverStatusUpdater;
         _botManager = botManager;
+        _cacheManager = cacheManager;
+        _rewardManager = rewardManager;
+        _badgeManager = badgeManager;
+        _subscriptionManager = subscriptionManager;
+        _permissionManager = permissionManager;
     }
 
     public Task Init()
@@ -112,15 +122,11 @@ public class Game : IGame
         _gameDataManager.Init();
         _globalUpdater.Init();
         _botManager.Init();
-        _cacheManager = new CacheManager();
-        _rewardManager = new RewardManager();
         _rewardManager.Init();
-        _badgeManager = new BadgeManager();
         _badgeManager.Init();
-        _permissionManager = new PermissionManager();
         _permissionManager.Init();
-        _subscriptionManager = new SubscriptionManager();
         _subscriptionManager.Init();
+        _cacheManager.Init();
         return Task.CompletedTask;
     }
 
@@ -167,9 +173,9 @@ public class Game : IGame
 
     public IModerationManager GetModerationManager() => _moderationManager;
 
-    public PermissionManager GetPermissionManager() => _permissionManager;
+    public IPermissionManager GetPermissionManager() => _permissionManager;
 
-    public SubscriptionManager GetSubscriptionManager() => _subscriptionManager;
+    public ISubscriptionManager GetSubscriptionManager() => _subscriptionManager;
 
     public IQuestManager GetQuestManager() => _questManager;
 
@@ -185,9 +191,9 @@ public class Game : IGame
 
     public IBotManager GetBotManager() => _botManager;
 
-    public CacheManager GetCacheManager() => _cacheManager;
+    public ICacheManager GetCacheManager() => _cacheManager;
 
-    public RewardManager GetRewardManager() => _rewardManager;
+    public IRewardManager GetRewardManager() => _rewardManager;
 
-    public BadgeManager GetBadgeManager() => _badgeManager;
+    public IBadgeManager GetBadgeManager() => _badgeManager;
 }

@@ -7,7 +7,15 @@ using Plus.HabboHotel.Users;
 
 namespace Plus.HabboHotel.Permissions;
 
-public sealed class PermissionManager
+public interface IPermissionManager
+{
+    void Init();
+    bool TryGetGroup(int id, out PermissionGroup group);
+    List<string> GetPermissionsForPlayer(Habbo player);
+    List<string> GetCommandsForPlayer(Habbo player);
+}
+
+public sealed class PermissionManager : IPermissionManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Permissions.PermissionManager");
 

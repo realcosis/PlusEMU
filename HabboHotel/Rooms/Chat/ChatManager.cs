@@ -78,7 +78,6 @@ public sealed class ChatManager : IChatManager
         _petCommands = petCommandManager;
         _petLocale = petLocale;
         _chatStyles = chatStyleManager;
-        Log.Info("Chat Manager -> LOADED");
     }
 
     public void Init()
@@ -87,6 +86,7 @@ public sealed class ChatManager : IChatManager
         _filter.Init();
         _petCommands.Init();
         _petLocale.Init();
+        Log.Info("Chat Manager -> LOADED");
     }
 
     public IChatEmotionsManager GetEmotions() => _emotions;

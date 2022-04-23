@@ -6,16 +6,31 @@ using Plus.HabboHotel.Cache.Type;
 
 namespace Plus.HabboHotel.Cache;
 
-public class CacheManager
+public interface ICacheManager
+{
+    bool ContainsUser(int id);
+    UserCache GenerateUser(int id);
+    bool TryRemoveUser(int id, out UserCache user);
+    bool TryGetUser(int id, out UserCache user);
+    ICollection<UserCache> GetUserCache();
+    void Init();
+}
+
+public class CacheManager : ICacheManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Cache.CacheManager");
-    private readonly ProcessComponent _process;
+    private readonly IProcessComponent _process;
     private readonly ConcurrentDictionary<int, UserCache> _usersCached;
 
-    public CacheManager()
+    public CacheManager(IProcessComponent processComponent)
     {
         _usersCached = new ConcurrentDictionary<int, UserCache>();
-        _process = new ProcessComponent();
+        _process = processComponent;
+    }
+
+    public void Init()
+    {
+
         _process.Init();
         Log.Info("Cache Manager -> LOADED");
     }
