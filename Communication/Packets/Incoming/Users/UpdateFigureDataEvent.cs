@@ -37,7 +37,7 @@ internal class UpdateFigureDataEvent : IPacketEvent
             return;
         }
         PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.ProfileChangeLook);
-        session.GetHabbo().Look = FigureDataManager.FilterFigure(look);
+        session.GetHabbo().Look = IFigureDataManager.FilterFigure(look);
         session.GetHabbo().Gender = gender.ToLower();
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
