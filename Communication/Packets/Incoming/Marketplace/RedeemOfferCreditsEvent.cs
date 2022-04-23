@@ -1,17 +1,25 @@
 ﻿using System;
 using System.Data;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Marketplace;
 
 internal class RedeemOfferCreditsEvent : IPacketEvent
 {
+    private readonly IDatabase _database;
+
+    public RedeemOfferCreditsEvent(IDatabase database)
+    {
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         var creditsOwed = 0;
         DataTable table;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `asking_price` FROM `catalog_marketplace_offers` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND `state` = '2'");
             table = dbClient.GetTable();
@@ -24,7 +32,7 @@ internal class RedeemOfferCreditsEvent : IPacketEvent
                 session.GetHabbo().Credits += creditsOwed;
                 session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
             }
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = _database.GetQueryReactor();
             dbClient.RunQuery("DELETE FROM `catalog_marketplace_offers` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND `state` = '2'");
         }
     }
