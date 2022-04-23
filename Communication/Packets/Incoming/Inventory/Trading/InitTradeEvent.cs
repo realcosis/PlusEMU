@@ -1,10 +1,18 @@
 ﻿using Plus.Communication.Packets.Outgoing.Inventory.Trading;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Inventory.Trading;
 
 internal class InitTradeEvent : IPacketEvent
 {
+    private readonly IDatabase _database;
+
+    public InitTradeEvent(IDatabase database)
+    {
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         var userId = packet.PopInt();
@@ -28,7 +36,7 @@ internal class InitTradeEvent : IPacketEvent
             }
             session.GetHabbo().TradingLockExpiry = 0;
             session.SendNotification("Your trading ban has now expired.");
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = _database.GetQueryReactor();
             dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '0' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
         }
         if (!session.GetHabbo().GetPermissions().HasRight("room_trade_override"))
