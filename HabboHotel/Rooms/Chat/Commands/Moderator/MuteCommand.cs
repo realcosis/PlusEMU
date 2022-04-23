@@ -17,7 +17,7 @@ internal class MuteCommand : IChatCommand
             session.SendWhisper("Please enter a username and a valid time in seconds (max 600, anything over will be set back to 600).");
             return;
         }
-        var habbo = PlusEnvironment.GetHabboByUsername(@params[1]);
+        var habbo = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1])?.GetHabbo();
         if (habbo == null)
         {
             session.SendWhisper("An error occoured whilst finding that user in the database.");

@@ -19,7 +19,7 @@ internal class TradeBanCommand : IChatCommand
             session.SendWhisper("Please enter a username and a valid length in days (min 1 day, max 365 days).");
             return;
         }
-        var habbo = PlusEnvironment.GetHabboByUsername(@params[1]);
+        var habbo = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1])?.GetHabbo();
         if (habbo == null)
         {
             session.SendWhisper("An error occoured whilst finding that user in the database.");

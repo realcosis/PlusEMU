@@ -19,7 +19,7 @@ internal class IpBanCommand : IChatCommand
             session.SendWhisper("Please enter the username of the user you'd like to IP ban & account ban.");
             return;
         }
-        var habbo = PlusEnvironment.GetHabboByUsername(@params[1]);
+        var habbo = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1])?.GetHabbo();
         if (habbo == null)
         {
             session.SendWhisper("An error occoured whilst finding that user in the database.");

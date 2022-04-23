@@ -169,6 +169,7 @@ public class PlusEnvironment : IPlusEnvironment
         return true;
     }
 
+    // todo: move to a status service
     private async Task ResetStatistics()
     {
         using var connection = _database.Connection();
@@ -178,26 +179,18 @@ public class PlusEnvironment : IPlusEnvironment
         await connection.ExecuteAsync("UPDATE `server_status` SET `users_online` = '0', `loaded_rooms` = '0'");
     }
 
+    // todo: remove this weird cache from here
     public static string GetUsernameById(int userId)
     {
-        var name = "Unknown User";
         var client = GetGame().GetClientManager().GetClientByUserId(userId);
-        if (client != null && client.GetHabbo() != null)
+        if (client?.GetHabbo() != null)
             return client.GetHabbo().Username;
+        
         var user = GetGame().GetCacheManager().GenerateUser(userId);
-        if (user != null)
-            return user.Username;
-        using (var dbClient = GetDatabaseManager().GetQueryReactor())
-        {
-            dbClient.SetQuery("SELECT `username` FROM `users` WHERE `id` = @id LIMIT 1");
-            dbClient.AddParameter("id", userId);
-            name = dbClient.GetString();
-        }
-        if (string.IsNullOrEmpty(name))
-            name = "Unknown User";
-        return name;
+        return user?.Username;
     }
 
+    // todo: remove this weird cache from here
     public static Habbo GetHabboById(int userId)
     {
         try
@@ -236,24 +229,6 @@ public class PlusEnvironment : IPlusEnvironment
                     return null;
                 }
             }
-            return null;
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    public static Habbo GetHabboByUsername(string userName)
-    {
-        try
-        {
-            using var dbClient = GetDatabaseManager().GetQueryReactor();
-            dbClient.SetQuery("SELECT `id` FROM `users` WHERE `username` = @user LIMIT 1");
-            dbClient.AddParameter("user", userName);
-            var id = dbClient.GetInteger();
-            if (id > 0)
-                return GetHabboById(Convert.ToInt32(id));
             return null;
         }
         catch
