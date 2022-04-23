@@ -2,13 +2,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.Extensions.DependencyInjection;
-using MySqlConnector;
 using NLog;
 using Plus.Communication.ConnectionManager;
 using Plus.Communication.Encryption;
@@ -42,7 +39,7 @@ public class PlusEnvironment : IPlusEnvironment
     private static ILanguageManager _languageManager;
     private static ISettingsManager _settingsManager;
     private static IDatabase _database;
-    private static RconSocket _rcon;
+    private static IRconSocket _rcon;
     private static IFigureDataManager _figureManager;
 
     // TODO: Get rid?
@@ -69,7 +66,8 @@ public class PlusEnvironment : IPlusEnvironment
         IFigureDataManager figureDataManager,
         IGame game,
         IEnumerable<IStartable> startableTasks,
-        IConnectionHandling connectionHandling)
+        IConnectionHandling connectionHandling,
+        IRconSocket rconSocket)
     {
         _database = database;
         _configuration = configurationData;
@@ -79,6 +77,7 @@ public class PlusEnvironment : IPlusEnvironment
         _game = game;
         _startableTasks = startableTasks;
         _connectionManager = connectionHandling;
+        _rcon = rconSocket;
     }
 
     public async Task<bool> Start()
@@ -122,7 +121,7 @@ public class PlusEnvironment : IPlusEnvironment
             HabboEncryptionV2.Initialize(new RsaKeys());
 
             //Make sure Rcon is connected before we allow clients to Connect.
-            _rcon = new RconSocket(GetConfig().Data["rcon.tcp.bindip"], int.Parse(GetConfig().Data["rcon.tcp.port"]), GetConfig().Data["rcon.tcp.allowedaddr"].Split(Convert.ToChar(";")));
+            _rcon.Init(GetConfig().Data["rcon.tcp.bindip"], int.Parse(GetConfig().Data["rcon.tcp.port"]), GetConfig().Data["rcon.tcp.allowedaddr"].Split(Convert.ToChar(";")));
 
             //Accept connections.
             _connectionManager.Init(int.Parse(GetConfig().Data["game.tcp.port"]), int.Parse(GetConfig().Data["game.tcp.conlimit"]),
@@ -333,7 +332,7 @@ public class PlusEnvironment : IPlusEnvironment
 
     public static IGame GetGame() => _game;
 
-    public static RconSocket GetRconSocket() => _rcon;
+    public static IRconSocket GetRconSocket() => _rcon;
 
     public static IFigureDataManager GetFigureManager() => _figureManager;
 

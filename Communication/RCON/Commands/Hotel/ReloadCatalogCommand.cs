@@ -6,6 +6,7 @@ internal class ReloadCatalogCommand : IRconCommand
 {
     public string Description => "This command is used to reload the catalog.";
 
+    public string Key => "reload_catalog";
     public string Parameters => "";
 
     public bool TryExecute(string[] parameters)

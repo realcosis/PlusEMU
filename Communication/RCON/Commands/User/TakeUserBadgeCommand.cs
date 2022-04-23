@@ -6,6 +6,7 @@ internal class TakeUserBadgeCommand : IRconCommand
 {
     public string Description => "This command is used to take a badge from a user.";
 
+    public string Key => "take_user_badge";
     public string Parameters => "%userId% %badgeId%";
 
     public bool TryExecute(string[] parameters)

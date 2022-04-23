@@ -4,6 +4,7 @@ internal class ReloadFilterCommand : IRconCommand
 {
     public string Description => "This command is used to reload the chatting filter manager.";
 
+    public string Key => "reload_filter";
     public string Parameters => "";
 
     public bool TryExecute(string[] parameters)

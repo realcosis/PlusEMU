@@ -6,6 +6,7 @@ internal class SyncUserCurrencyCommand : IRconCommand
 {
     public string Description => "This command is used to sync a users specified currency to the database.";
 
+    public string Key => "sync_user_currency";
     public string Parameters => "%userId% %currency%";
 
     public bool TryExecute(string[] parameters)

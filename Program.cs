@@ -6,6 +6,7 @@ using Plus.HabboHotel.Rooms.Chat.Commands;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Plus.Communication.Rcon.Commands;
 
 namespace Plus;
 
@@ -23,6 +24,7 @@ public static class Program
         collection.AddAssignableTo<IChatCommand>();
         collection.AddAssignableTo<IPacketEvent>();
         collection.AddAssignableTo<IStartable>();
+        collection.AddAssignableTo<IRconCommand>();
 
         var projectSolutionPath = Directory.GetCurrentDirectory();
         var configuration = new ConfigurationData(projectSolutionPath + "//Config//config.ini");

@@ -6,6 +6,7 @@ internal class ReloadUserMottoCommand : IRconCommand
 {
     public string Description => "This command is used to reload the users motto from the database.";
 
+    public string Key => "reload_user_motto";
     public string Parameters => "%userId%";
 
     public bool TryExecute(string[] parameters)

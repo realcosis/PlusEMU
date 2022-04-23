@@ -4,6 +4,7 @@ internal class DisconnectUserCommand : IRconCommand
 {
     public string Description => "This command is used to Disconnect a user.";
 
+    public string Key => "disconnect_user";
     public string Parameters => "%userId%";
 
     public bool TryExecute(string[] parameters)

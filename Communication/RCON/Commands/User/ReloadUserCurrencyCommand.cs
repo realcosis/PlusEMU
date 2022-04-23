@@ -7,6 +7,7 @@ internal class ReloadUserCurrencyCommand : IRconCommand
 {
     public string Description => "This command is used to update the users currency from the database.";
 
+    public string Key => "reload_user_currency";
     public string Parameters => "%userId% %currency%";
 
     public bool TryExecute(string[] parameters)

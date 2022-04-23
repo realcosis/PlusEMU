@@ -7,6 +7,7 @@ internal class GiveUserCurrencyCommand : IRconCommand
 {
     public string Description => "This command is used to give a user a specified amount of a specified currency.";
 
+    public string Key => "give_user_currency";
     public string Parameters => "%userId% %currency% %amount%";
 
     public bool TryExecute(string[] parameters)

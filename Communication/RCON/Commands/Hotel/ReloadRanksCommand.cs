@@ -6,6 +6,7 @@ internal class ReloadRanksCommand : IRconCommand
 {
     public string Description => "This command is used to reload user permissions.";
 
+    public string Key => "reload_ranks";
     public string Parameters => "";
 
     public bool TryExecute(string[] parameters)

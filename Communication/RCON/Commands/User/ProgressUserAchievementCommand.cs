@@ -6,6 +6,7 @@ internal class ProgressUserAchievementCommand : IRconCommand
 {
     public string Description => "This command is used to progress a users achievement.";
 
+    public string Key => "progress_user_achievement";
     public string Parameters => "%userId% %achievement% %progess%";
 
     public bool TryExecute(string[] parameters)

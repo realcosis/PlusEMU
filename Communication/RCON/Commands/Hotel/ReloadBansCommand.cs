@@ -4,6 +4,7 @@ internal class ReloadBansCommand : IRconCommand
 {
     public string Description => "This command is used to re-cache the bans.";
 
+    public string Key => "reload_bans";
     public string Parameters => "";
 
     public bool TryExecute(string[] parameters)

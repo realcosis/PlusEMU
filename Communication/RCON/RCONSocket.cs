@@ -6,19 +6,29 @@ using Plus.Communication.Rcon.Commands;
 
 namespace Plus.Communication.Rcon;
 
-public class RconSocket
+public interface IRconSocket
 {
-    private readonly List<string> _allowedConnections;
-    private readonly CommandManager _commands;
-    private readonly Socket _musSocket;
+    void Init(string host, int port, IEnumerable<string> allowedConnections);
+    ICommandManager GetCommands();
+}
 
-    public RconSocket(string host, int port, IEnumerable<string> allowedConnections)
+public class RconSocket : IRconSocket
+{
+    private List<string> _allowedConnections;
+    private readonly ICommandManager _commands;
+    private Socket _musSocket;
+
+    public RconSocket(ICommandManager commandManager)
+    {
+        _commands = commandManager;
+    }
+
+    public void Init(string host, int port, IEnumerable<string> allowedConnections)
     {
         _allowedConnections = new List<string>();
         foreach (var ipAddress in allowedConnections) _allowedConnections.Add(ipAddress);
         try
         {
-            // TODO: Add verification / Authentication. Currently everyone can execute ANY command!!!
             _musSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _musSocket.Bind(new IPEndPoint(IPAddress.Parse(host), port)); // SHould be host?
             _musSocket.Listen(0);
@@ -28,7 +38,6 @@ public class RconSocket
         {
             throw new ArgumentException("Could not set up Rcon socket:\n" + e);
         }
-        _commands = new CommandManager();
     }
 
     private void OnCallBack(IAsyncResult iAr)
@@ -49,5 +58,5 @@ public class RconSocket
         _musSocket.BeginAccept(OnCallBack, _musSocket);
     }
 
-    public CommandManager GetCommands() => _commands;
+    public ICommandManager GetCommands() => _commands;
 }
