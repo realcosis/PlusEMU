@@ -2,18 +2,24 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Plus.Database;
 
 namespace Plus.HabboHotel.Catalog.Pets;
 
 public class PetRaceManager : IPetRaceManager
 {
+    private readonly IDatabase _database;
     private readonly List<PetRace> _races = new();
 
+    public PetRaceManager(IDatabase database)
+    {
+        _database = database;
+    }
     public void Init()
     {
         if (_races.Count > 0)
             _races.Clear();
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("SELECT * FROM `catalog_pet_races`");
         var data = dbClient.GetTable();
         if (data != null)
