@@ -1,4 +1,6 @@
 ﻿using Plus.Communication.Packets.Outgoing.Marketplace;
+using Plus.Database;
+using Plus.HabboHotel.Catalog.Marketplace;
 using Plus.HabboHotel.Catalog.Utilities;
 using Plus.HabboHotel.GameClients;
 
@@ -6,6 +8,15 @@ namespace Plus.Communication.Packets.Incoming.Marketplace;
 
 internal class MakeOfferEvent : IPacketEvent
 {
+    private readonly IMarketplaceManager _marketplaceManager;
+    private readonly IDatabase _database;
+
+    public MakeOfferEvent(IMarketplaceManager marketplaceManager, IDatabase database)
+    {
+        _marketplaceManager = marketplaceManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         var sellingPrice = packet.PopInt();
@@ -27,12 +38,12 @@ internal class MakeOfferEvent : IPacketEvent
             session.SendPacket(new MarketplaceMakeOfferResultComposer(0));
             return;
         }
-        var comission = PlusEnvironment.GetGame().GetCatalog().GetMarketplace().CalculateComissionPrice(sellingPrice);
+        var comission = _marketplaceManager.CalculateComissionPrice(sellingPrice);
         var totalPrice = sellingPrice + comission;
         var itemType = 1;
         if (item.GetBaseItem().Type == 'i')
             itemType++;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery(
                 "INSERT INTO `catalog_marketplace_offers` (`furni_id`,`item_id`,`user_id`,`asking_price`,`total_price`,`public_name`,`sprite_id`,`item_type`,`timestamp`,`extra_data`,`limited_number`,`limited_stack`) VALUES ('" +
