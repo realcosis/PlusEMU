@@ -2,11 +2,23 @@
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Navigator;
 using Plus.HabboHotel.Rooms;
+using Plus.HabboHotel.Rooms.Chat.Filter;
 
 namespace Plus.Communication.Packets.Incoming.Navigator;
 
 internal class CreateFlatEvent : IPacketEvent
 {
+    private readonly IWordFilterManager _wordFilterManager;
+    private readonly IRoomManager _roomManager;
+    private readonly INavigatorManager _navigatorManager;
+
+    public CreateFlatEvent(IWordFilterManager wordFilterManager, IRoomManager roomManager, INavigatorManager navigatorManager)
+    {
+        _wordFilterManager = wordFilterManager;
+        _roomManager = roomManager;
+        _navigatorManager = navigatorManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null)
@@ -17,8 +29,8 @@ internal class CreateFlatEvent : IPacketEvent
             session.SendPacket(new CanCreateRoomComposer(true, 500));
             return;
         }
-        var name = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
-        var description = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
+        var name = _wordFilterManager.CheckMessage(packet.PopString());
+        var description = _wordFilterManager.CheckMessage(packet.PopString());
         var modelName = packet.PopString();
         var category = packet.PopInt();
         var maxVisitors = packet.PopInt(); //10 = min, 25 = max.
@@ -27,9 +39,9 @@ internal class CreateFlatEvent : IPacketEvent
             return;
         if (name.Length > 25)
             return;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetModel(modelName, out var model))
+        if (!_roomManager.TryGetModel(modelName, out var model))
             return;
-        if (!PlusEnvironment.GetGame().GetNavigator().TryGetSearchResultList(category, out var searchResultList))
+        if (!_navigatorManager.TryGetSearchResultList(category, out var searchResultList))
             category = 36;
         if (searchResultList.CategoryType != NavigatorCategoryType.Category || searchResultList.RequiredRank > session.GetHabbo().Rank)
             category = 36;
@@ -37,7 +49,7 @@ internal class CreateFlatEvent : IPacketEvent
             maxVisitors = 10;
         if (tradeSettings < 0 || tradeSettings > 2)
             tradeSettings = 0;
-        var newRoom = PlusEnvironment.GetGame().GetRoomManager().CreateRoom(session, name, description, category, maxVisitors, tradeSettings, model);
+        var newRoom = _roomManager.CreateRoom(session, name, description, category, maxVisitors, tradeSettings, model);
         if (newRoom != null) session.SendPacket(new FlatCreatedComposer(newRoom.Id, name));
         if (session.GetHabbo() != null && session.GetHabbo().GetMessenger() != null)
             session.GetHabbo().GetMessenger().OnStatusChanged(true);
