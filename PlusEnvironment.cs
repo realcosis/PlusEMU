@@ -43,7 +43,7 @@ public class PlusEnvironment : IPlusEnvironment
 
     private static IGame _game;
     private static ConfigurationData _configuration;
-    private static ConnectionHandling _connectionManager;
+    private static IConnectionHandling _connectionManager;
     private static ILanguageManager _languageManager;
     private static ISettingsManager _settingsManager;
     private static IDatabase _database;
@@ -73,7 +73,8 @@ public class PlusEnvironment : IPlusEnvironment
         ISettingsManager settingsManager,
         IFigureDataManager figureDataManager,
         IGame game,
-        IEnumerable<IStartable> startableTasks)
+        IEnumerable<IStartable> startableTasks,
+        IConnectionHandling connectionHandling)
     {
         _database = database;
         _configuration = configurationData;
@@ -82,6 +83,7 @@ public class PlusEnvironment : IPlusEnvironment
         _figureManager = figureDataManager;
         _game = game;
         _startableTasks = startableTasks;
+        _connectionManager = connectionHandling;
     }
 
     public async Task<bool> Start()
@@ -128,9 +130,8 @@ public class PlusEnvironment : IPlusEnvironment
             _rcon = new RconSocket(GetConfig().Data["rcon.tcp.bindip"], int.Parse(GetConfig().Data["rcon.tcp.port"]), GetConfig().Data["rcon.tcp.allowedaddr"].Split(Convert.ToChar(";")));
 
             //Accept connections.
-            _connectionManager = new ConnectionHandling(int.Parse(GetConfig().Data["game.tcp.port"]), int.Parse(GetConfig().Data["game.tcp.conlimit"]),
+            _connectionManager.Init(int.Parse(GetConfig().Data["game.tcp.port"]), int.Parse(GetConfig().Data["game.tcp.conlimit"]),
                 int.Parse(GetConfig().Data["game.tcp.conperip"]), GetConfig().Data["game.tcp.enablenagles"].ToLower() == "true");
-            _connectionManager.Init();
 
             // Allow services to self initialize
             foreach (var task in _startableTasks)
@@ -314,7 +315,7 @@ public class PlusEnvironment : IPlusEnvironment
         GetGame().GetClientManager().SendPacket(new BroadcastMessageAlertComposer(GetLanguageManager().TryGetValue("server.shutdown.message")));
         GetGame().StopGameLoop();
         Thread.Sleep(2500);
-        GetConnectionManager().Destroy(); //Stop listening.
+        _connectionManager.Destroy(); //Stop listening.
         GetGame().GetPacketManager().UnregisterAll(); //Unregister the packets.
         GetGame().GetPacketManager().WaitForAllToComplete();
         GetGame().GetClientManager().CloseAll(); //Close all connections
@@ -334,8 +335,6 @@ public class PlusEnvironment : IPlusEnvironment
     public static ConfigurationData GetConfig() => _configuration;
 
     public static Encoding GetDefaultEncoding() => _defaultEncoding;
-
-    public static ConnectionHandling GetConnectionManager() => _connectionManager;
 
     public static IGame GetGame() => _game;
 

@@ -31,7 +31,8 @@ namespace Plus.HabboHotel;
 public class Game : IGame
 {
     private readonly IPacketManager _packetManager;
-    private ILandingViewManager _landingViewManager; //TODO: Rename class
+    private readonly ILandingViewManager _landingViewManager; //TODO: Rename class
+    private readonly IGameClientManager _clientManager;
 
     private AchievementManager _achievementManager;
     private BadgeManager _badgeManager;
@@ -39,7 +40,6 @@ public class Game : IGame
     private CacheManager _cacheManager;
     private CatalogManager _catalogManager;
     private ChatManager _chatManager;
-    private GameClientManager _clientManager;
     private int _cycleSleepTime = 25;
     private GameDataManager _gameDataManager;
     private ServerStatusUpdater _globalUpdater;
@@ -59,15 +59,15 @@ public class Game : IGame
     private bool _cycleEnded;
     private Task _gameCycle;
 
-    public Game(IPacketManager packetManager, ILandingViewManager landingViewManager)
+    public Game(IPacketManager packetManager, ILandingViewManager landingViewManager, IGameClientManager gameClientManager)
     {
         _packetManager = packetManager;
         _landingViewManager = landingViewManager;
+        _clientManager = gameClientManager;
     }
 
     public Task Init()
     {
-        _clientManager = new GameClientManager();
         _moderationManager = new ModerationManager();
         _moderationManager.Init();
         _itemDataManager = new ItemDataManager();
@@ -134,7 +134,7 @@ public class Game : IGame
 
     public IPacketManager GetPacketManager() => _packetManager;
 
-    public GameClientManager GetClientManager() => _clientManager;
+    public IGameClientManager GetClientManager() => _clientManager;
 
     public CatalogManager GetCatalog() => _catalogManager;
 

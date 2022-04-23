@@ -3,20 +3,26 @@ using Plus.Core;
 
 namespace Plus.Communication.ConnectionManager;
 
-public class ConnectionHandling
+public interface IConnectionHandling
 {
-    private readonly SocketManager _manager;
+    void Init(int port, int maxConnections, int connectionsPerIp, bool enabeNagles);
+    void Destroy();
+}
 
-    public ConnectionHandling(int port, int maxConnections, int connectionsPerIp, bool enabeNagles)
+public class ConnectionHandling : IConnectionHandling
+{
+    private readonly ISocketManager _socketManager;
+
+    public ConnectionHandling(ISocketManager socketSocketManager)
     {
-        _manager = new SocketManager();
-        _manager.Init(port, maxConnections, connectionsPerIp, new InitialPacketParser(), !enabeNagles);
+        _socketManager = socketSocketManager;
     }
 
-    public void Init()
+    public void Init(int port, int maxConnections, int connectionsPerIp, bool enabeNagles)
     {
-        _manager.OnConnectionEvent += OnConnectionEvent;
-        _manager.InitializeConnectionRequests();
+        _socketManager.Init(port, maxConnections, connectionsPerIp, new InitialPacketParser(), !enabeNagles);
+        _socketManager.OnConnectionEvent += OnConnectionEvent;
+        _socketManager.InitializeConnectionRequests();
     }
 
     private void OnConnectionEvent(ConnectionInformation connection)
@@ -45,6 +51,6 @@ public class ConnectionHandling
 
     public void Destroy()
     {
-        _manager.Destroy();
+        _socketManager.Destroy();
     }
 }

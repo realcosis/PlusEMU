@@ -28,7 +28,7 @@ public interface IGame
     void StartGameLoop();
     void StopGameLoop();
     IPacketManager GetPacketManager();
-    GameClientManager GetClientManager();
+    IGameClientManager GetClientManager();
     CatalogManager GetCatalog();
     NavigatorManager GetNavigator();
     ItemDataManager GetItemManager();

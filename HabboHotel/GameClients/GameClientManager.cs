@@ -16,7 +16,7 @@ using Plus.HabboHotel.Users.Messenger;
 
 namespace Plus.HabboHotel.GameClients;
 
-public class GameClientManager
+public class GameClientManager : IGameClientManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.GameClients.GameClientManager");
 
