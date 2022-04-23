@@ -4,23 +4,47 @@ using System.Text;
 using Plus.Communication.Packets.Outgoing.Navigator;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Communication.Packets.Outgoing.Rooms.Settings;
+using Plus.Database;
+using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Navigator;
 using Plus.HabboHotel.Rooms;
+using Plus.HabboHotel.Rooms.Chat.Filter;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Settings;
 
 internal class SaveRoomSettingsEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+    private readonly IWordFilterManager _wordFilterManager;
+    private readonly INavigatorManager _navigationManager;
+    private readonly IAchievementManager _achievementManager;
+    private readonly IDatabase _database;
+
+    public SaveRoomSettingsEvent(IRoomManager roomManager, IWordFilterManager wordFilterManager, INavigatorManager navigatorManager, IAchievementManager achievementManager, IDatabase database)
+    {
+        _roomManager = roomManager;
+        _wordFilterManager = wordFilterManager;
+        _navigationManager = navigatorManager;
+        _achievementManager = achievementManager;
+        _database = database;
+    }
+
+    public SaveRoomSettingsEvent(IRoomManager roomManager, INavigatorManager navigatorManager)
+    {
+        _roomManager = roomManager;
+        _navigationManager = navigatorManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null)
             return;
         var roomId = packet.PopInt();
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryLoadRoom(roomId, out var room))
+        if (!_roomManager.TryLoadRoom(roomId, out var room))
             return;
-        var name = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
-        var description = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(packet.PopString());
+        var name = _wordFilterManager.CheckMessage(packet.PopString());
+        var description = _wordFilterManager.CheckMessage(packet.PopString());
         var access = RoomAccessUtility.ToRoomAccess(packet.PopInt());
         var password = packet.PopString();
         var maxUsers = packet.PopInt();
@@ -84,7 +108,7 @@ internal class SaveRoomSettingsEvent : IPacketEvent
             maxUsers = 10;
         if (maxUsers > 50)
             maxUsers = 50;
-        if (!PlusEnvironment.GetGame().GetNavigator().TryGetSearchResultList(categoryId, out var searchResultList))
+        if (!_navigationManager.TryGetSearchResultList(categoryId, out var searchResultList))
             categoryId = 36;
         if (searchResultList.CategoryType != NavigatorCategoryType.Category || searchResultList.RequiredRank > session.GetHabbo().Rank ||
             session.GetHabbo().Id != room.OwnerId && session.GetHabbo().Rank >= searchResultList.RequiredRank)
@@ -130,7 +154,7 @@ internal class SaveRoomSettingsEvent : IPacketEvent
                 accessStr = "invisible";
                 break;
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery(
                 "UPDATE `rooms` SET `caption` = @caption, `description` = @description, `password` = @password, `category` = @categoryId, `state` = @state, `tags` = @tags, `users_max` = @maxUsers, `allow_pets` = @allowPets, `allow_pets_eat` = @allowPetsEat, `room_blocking_disabled` = @roomBlockingDisabled, `allow_hidewall` = @allowHidewall, `floorthick` = @floorThick, `wallthick` = @wallThick, `mute_settings` = @muteSettings, `kick_settings` = @kickSettings, `ban_settings` = @banSettings, `chat_mode` = @chatMode, `chat_size` = @chatSize, `chat_speed` = @chatSpeed, `chat_extra_flood` = @extraFlood, `chat_hearing_distance` = @chatDistance, `trade_settings` = @tradeSettings WHERE `id` = @roomId LIMIT 1");
@@ -172,10 +196,10 @@ internal class SaveRoomSettingsEvent : IPacketEvent
             room.SendPacket(new RoomInfoUpdatedComposer(room.RoomId));
             room.SendPacket(new RoomVisualizationSettingsComposer(room.WallThickness, room.FloorThickness, PlusEnvironment.EnumToBool(room.Hidewall.ToString())));
         }
-        PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_SelfModDoorModeSeen", 1);
-        PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_SelfModWalkthroughSeen", 1);
-        PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_SelfModChatScrollSpeedSeen", 1);
-        PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_SelfModChatFloodFilterSeen", 1);
-        PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_SelfModChatHearRangeSeen", 1);
+        _achievementManager.ProgressAchievement(session, "ACH_SelfModDoorModeSeen", 1);
+        _achievementManager.ProgressAchievement(session, "ACH_SelfModWalkthroughSeen", 1);
+        _achievementManager.ProgressAchievement(session, "ACH_SelfModChatScrollSpeedSeen", 1);
+        _achievementManager.ProgressAchievement(session, "ACH_SelfModChatFloodFilterSeen", 1);
+        _achievementManager.ProgressAchievement(session, "ACH_SelfModChatHearRangeSeen", 1);
     }
 }
