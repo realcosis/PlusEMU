@@ -3,9 +3,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
+using Plus.Communication.Attributes;
 using Plus.Communication.Packets.Incoming;
 using Plus.Communication.Packets.Incoming.Avatar;
 using Plus.Communication.Packets.Incoming.Catalog;
@@ -134,14 +136,13 @@ public sealed class PacketManager : IPacketManager
 
     public void TryExecutePacket(GameClient session, ClientPacket packet)
     {
-        if (session == null)
-            return;
         if (!_incomingPackets.TryGetValue(packet.Id, out var pak))
         {
             if (Debugger.IsAttached)
                 Log.Debug("Unhandled Packet: " + packet);
             return;
         }
+        
         if (Debugger.IsAttached)
         {
             if (_packetNames.ContainsKey(packet.Id))
@@ -149,6 +150,14 @@ public sealed class PacketManager : IPacketManager
             else
                 Log.Debug("Handled Packet: [" + packet.Id + "] UnnamedPacketEvent");
         }
+
+        var needAuthentication = pak.GetType().GetCustomAttribute<NoAuth>() is null;
+        if (needAuthentication && session.GetHabbo() == null) // null-forgiving return
+        {
+            Log.Debug($"Session {session.ConnectionId} tried execute packet {packet.Id} but didn't handshake yet.");
+            return;
+        }
+        
         if (!_ignoreTasks)
             ExecutePacketAsync(session, packet, pak);
         else
