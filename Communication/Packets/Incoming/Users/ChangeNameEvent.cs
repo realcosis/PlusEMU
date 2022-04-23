@@ -3,13 +3,29 @@ using Plus.Communication.Packets.Outgoing.Navigator;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Communication.Packets.Outgoing.Rooms.Session;
 using Plus.Communication.Packets.Outgoing.Users;
+using Plus.Database;
+using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 
 namespace Plus.Communication.Packets.Incoming.Users;
 
 internal class ChangeNameEvent : IPacketEvent
 {
+    private readonly IGameClientManager _clientManager;
+    private readonly IRoomManager _roomManager;
+    private readonly IAchievementManager _achievementManager;
+    private readonly IDatabase _database;
+
+    public ChangeNameEvent(IGameClientManager clientManager, IRoomManager roomManager, IAchievementManager achievementManager, IDatabase database)
+    {
+        _clientManager = clientManager;
+        _roomManager = roomManager;
+        _achievementManager = achievementManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null)
@@ -34,7 +50,7 @@ internal class ChangeNameEvent : IPacketEvent
             return;
         }
         bool inUse;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT COUNT(0) FROM `users` WHERE `username` = @name LIMIT 1");
             dbClient.AddParameter("name", newName);
@@ -55,7 +71,7 @@ internal class ChangeNameEvent : IPacketEvent
             return;
         if (inUse)
             return;
-        if (!PlusEnvironment.GetGame().GetClientManager().UpdateClientUsername(session, oldName, newName))
+        if (!_clientManager.UpdateClientUsername(session, oldName, newName))
         {
             session.SendNotification("Oops! An issue occoured whilst updating your username.");
             return;
@@ -66,21 +82,21 @@ internal class ChangeNameEvent : IPacketEvent
         session.GetHabbo().GetMessenger().OnStatusChanged(true);
         session.SendPacket(new UpdateUsernameComposer(newName));
         room.SendPacket(new UserNameChangeComposer(room.Id, user.VirtualId, newName));
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("INSERT INTO `logs_client_namechange` (`user_id`,`new_name`,`old_name`,`timestamp`) VALUES ('" + session.GetHabbo().Id + "', @name, '" + oldName + "', '" +
                               PlusEnvironment.GetUnixTimestamp() + "')");
             dbClient.AddParameter("name", newName);
             dbClient.RunQuery();
         }
-        foreach (var ownRooms in PlusEnvironment.GetGame().GetRoomManager().GetRooms().ToList())
+        foreach (var ownRooms in _roomManager.GetRooms().ToList())
         {
             if (ownRooms == null || ownRooms.OwnerId != session.GetHabbo().Id || ownRooms.OwnerName == newName)
                 continue;
             ownRooms.OwnerName = newName;
             ownRooms.SendPacket(new RoomInfoUpdatedComposer(ownRooms.Id));
         }
-        PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_Name", 1);
+        _achievementManager.ProgressAchievement(session, "ACH_Name", 1);
         session.SendPacket(new RoomForwardComposer(room.Id));
     }
 
