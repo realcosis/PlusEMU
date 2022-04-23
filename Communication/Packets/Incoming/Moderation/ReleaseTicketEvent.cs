@@ -1,10 +1,20 @@
 ﻿using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Moderation;
 
 namespace Plus.Communication.Packets.Incoming.Moderation;
 
 internal class ReleaseTicketEvent : IPacketEvent
 {
+    public readonly IModerationManager _moderationManager;
+    public readonly IGameClientManager _clientManager;
+
+    public ReleaseTicketEvent(IModerationManager moderationManager, IGameClientManager clientManager)
+    {
+        _moderationManager = moderationManager;
+        _clientManager = clientManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null || !session.GetHabbo().GetPermissions().HasRight("mod_tool"))
@@ -12,10 +22,10 @@ internal class ReleaseTicketEvent : IPacketEvent
         var amount = packet.PopInt();
         for (var i = 0; i < amount; i++)
         {
-            if (!PlusEnvironment.GetGame().GetModerationManager().TryGetTicket(packet.PopInt(), out var ticket))
+            if (!_moderationManager.TryGetTicket(packet.PopInt(), out var ticket))
                 continue;
             ticket.Moderator = null;
-            PlusEnvironment.GetGame().GetClientManager().SendPacket(new ModeratorSupportTicketComposer(session.GetHabbo().Id, ticket), "mod_tool");
+            _clientManager.SendPacket(new ModeratorSupportTicketComposer(session.GetHabbo().Id, ticket), "mod_tool");
         }
     }
 }
