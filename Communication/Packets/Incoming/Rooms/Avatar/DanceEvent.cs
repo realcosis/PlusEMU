@@ -1,16 +1,26 @@
 ﻿using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Avatar;
 
 internal class DanceEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+    private readonly IQuestManager _questManager;
+
+    public DanceEvent(IRoomManager roomManager, IQuestManager questManager)
+    {
+        _roomManager = roomManager;
+        _questManager = questManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (user == null)
@@ -25,8 +35,8 @@ internal class DanceEvent : IPacketEvent
             room.SendPacket(new AvatarEffectComposer(user.VirtualId, 0));
         user.DanceId = danceId;
         room.SendPacket(new DanceComposer(user, danceId));
-        PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.SocialDance);
+        _questManager.ProgressUserQuest(session, QuestType.SocialDance);
         if (room.GetRoomUserManager().GetRoomUsers().Count > 19)
-            PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.MassDance);
+            _questManager.ProgressUserQuest(session, QuestType.MassDance);
     }
 }
