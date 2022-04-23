@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class DisableGiftsCommand : IChatCommand
 {
+    public string Key => "disablegifts";
     public string PermissionRequired => "command_disable_gifts";
 
     public string Parameters => "";

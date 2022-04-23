@@ -5,6 +5,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun;
 
 internal class SuperPullCommand : IChatCommand
 {
+    public string Key => "spull";
     public string PermissionRequired => "command_super_pull";
 
     public string Parameters => "%username%";

@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class DisconnectCommand : IChatCommand
 {
+    public string Key => "dc";
     public string PermissionRequired => "command_disconnect";
 
     public string Parameters => "%username%";

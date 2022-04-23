@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator;
 
 internal class DeleteGroupCommand : IChatCommand
 {
+    public string Key => "deletegroup";
     public string PermissionRequired => "command_delete_group";
 
     public string Parameters => "";

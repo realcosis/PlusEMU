@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun;
 
 internal class FreezeCommand : IChatCommand
 {
+    public string Key => "freeze";
     public string PermissionRequired => "command_freeze";
 
     public string Parameters => "%username%";

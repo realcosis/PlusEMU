@@ -5,6 +5,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun;
 
 internal class SummonCommand : IChatCommand
 {
+    public string Key => "summon";
     public string PermissionRequired => "command_summon";
 
     public string Parameters => "%username%";

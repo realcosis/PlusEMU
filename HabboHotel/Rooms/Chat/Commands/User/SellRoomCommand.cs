@@ -8,6 +8,7 @@ internal class SellRoomCommand : IChatCommand
 
     public string Parameters => "%price%";
 
+    public string Key => "sellroom";
     public string PermissionRequired => "command_sell_room";
 
     public void Execute(GameClient session, Room room, string[] @params)

@@ -6,6 +6,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun;
 
 internal class PullCommand : IChatCommand
 {
+    public string Key => "pull";
     public string PermissionRequired => "command_pull";
 
     public string Parameters => "%target%";

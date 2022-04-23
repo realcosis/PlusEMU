@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class GiveBadgeCommand : IChatCommand
 {
+    public string Key => "givebadge";
     public string PermissionRequired => "command_give_badge";
 
     public string Parameters => "%username% %badge%";

@@ -5,6 +5,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class GiveCommand : IChatCommand
 {
+    public string Key => "give";
     public string PermissionRequired => "command_give";
 
     public string Parameters => "%username% %type% %amount%";

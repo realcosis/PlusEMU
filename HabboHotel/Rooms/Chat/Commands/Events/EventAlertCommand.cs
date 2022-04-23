@@ -6,6 +6,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Events;
 
 internal class EventAlertCommand : IChatCommand
 {
+    public string Key => "eha";
     public string PermissionRequired => "command_event_alert";
 
     public string Parameters => "";

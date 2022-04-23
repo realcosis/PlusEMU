@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class DisableMimicCommand : IChatCommand
 {
+    public string Key => "disablemimic";
     public string PermissionRequired => "command_disable_mimic";
 
     public string Parameters => "";

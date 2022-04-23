@@ -6,6 +6,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator;
 
 internal class UpdateCommand : IChatCommand
 {
+    public string Key => "update";
     public string PermissionRequired => "command_update";
 
     public string Parameters => "%variable%";

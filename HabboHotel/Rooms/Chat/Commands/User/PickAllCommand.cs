@@ -6,6 +6,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class PickAllCommand : IChatCommand
 {
+    public string Key => "pickall";
     public string PermissionRequired => "command_pickall";
 
     public string Parameters => "";

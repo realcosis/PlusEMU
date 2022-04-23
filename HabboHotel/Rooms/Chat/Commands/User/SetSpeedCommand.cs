@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class SetSpeedCommand : IChatCommand
 {
+    public string Key => "setspeed";
     public string PermissionRequired => "command_setspeed";
 
     public string Parameters => "%value%";

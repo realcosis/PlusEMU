@@ -5,6 +5,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator;
 
 internal class HalCommand : IChatCommand
 {
+    public string Key => "hal";
     public string PermissionRequired => "command_hal";
 
     public string Parameters => "%message%";

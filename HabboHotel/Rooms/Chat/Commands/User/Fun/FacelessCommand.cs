@@ -5,6 +5,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun;
 
 internal class FacelessCommand : IChatCommand
 {
+    public string Key => "faceless";
     public string PermissionRequired => "command_faceless";
 
     public string Parameters => "";

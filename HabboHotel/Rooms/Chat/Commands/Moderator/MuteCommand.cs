@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class MuteCommand : IChatCommand
 {
+    public string Key => "mute";
     public string PermissionRequired => "command_mute";
 
     public string Parameters => "%username% %time%";

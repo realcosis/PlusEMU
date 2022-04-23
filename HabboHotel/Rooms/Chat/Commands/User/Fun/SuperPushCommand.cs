@@ -6,6 +6,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun;
 
 internal class SuperPushCommand : IChatCommand
 {
+    public string Key => "spush";
     public string PermissionRequired => "command_super_push";
 
     public string Parameters => "%target%";

@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class DisableForcedFxCommand : IChatCommand
 {
+    public string Key => "forced_effects";
     public string PermissionRequired => "command_forced_effects";
 
     public string Parameters => "";

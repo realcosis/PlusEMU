@@ -5,6 +5,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun;
 
 internal class MakeSayCommand : IChatCommand
 {
+    public string Key => "makesay";
     public string PermissionRequired => "command_makesay";
 
     public string Parameters => "%username% %message%";

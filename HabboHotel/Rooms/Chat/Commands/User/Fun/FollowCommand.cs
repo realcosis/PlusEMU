@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun;
 
 internal class FollowCommand : IChatCommand
 {
+    public string Key => "follow";
     public string PermissionRequired => "command_follow";
 
     public string Parameters => "%username%";

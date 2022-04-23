@@ -5,6 +5,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class EjectAllCommand : IChatCommand
 {
+    public string Key => "ejectall";
     public string PermissionRequired => "command_ejectall";
 
     public string Parameters => "";

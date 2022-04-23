@@ -5,6 +5,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class IpBanCommand : IChatCommand
 {
+    public string Key => "ipban";
     public string PermissionRequired => "command_ip_ban";
 
     public string Parameters => "%username%";

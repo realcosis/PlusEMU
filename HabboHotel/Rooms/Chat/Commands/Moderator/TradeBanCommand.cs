@@ -5,6 +5,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class TradeBanCommand : IChatCommand
 {
+    public string Key => "tradeban";
     public string PermissionRequired => "command_trade_ban";
 
     public string Parameters => "%target% %length%";

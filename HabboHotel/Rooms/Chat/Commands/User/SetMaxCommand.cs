@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class SetMaxCommand : IChatCommand
 {
+    public string Key => "setmax";
     public string PermissionRequired => "command_setmax";
 
     public string Parameters => "%value%";

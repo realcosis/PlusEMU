@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class LayCommand : IChatCommand
 {
+    public string Key => "lay";
     public string PermissionRequired => "command_lay";
 
     public string Parameters => "";

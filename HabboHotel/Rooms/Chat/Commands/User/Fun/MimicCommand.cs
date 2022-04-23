@@ -6,6 +6,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun;
 
 internal class MimicCommand : IChatCommand
 {
+    public string Key => "mimic";
     public string PermissionRequired => "command_mimic";
 
     public string Parameters => "%username%";

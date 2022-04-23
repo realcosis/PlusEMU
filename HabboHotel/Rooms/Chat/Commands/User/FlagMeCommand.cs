@@ -6,6 +6,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class FlagMeCommand : IChatCommand
 {
+    public string Key => "flagme";
     public string PermissionRequired => "command_flagme";
 
     public string Parameters => "";

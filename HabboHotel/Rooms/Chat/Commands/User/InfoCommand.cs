@@ -6,6 +6,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class InfoCommand : IChatCommand
 {
+    public string Key => "about";
     public string PermissionRequired => "command_info";
 
     public string Parameters => "";

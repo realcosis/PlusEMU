@@ -5,6 +5,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class MipCommand : IChatCommand
 {
+    public string Key => "mip";
     public string PermissionRequired => "command_mip";
 
     public string Parameters => "%username%";

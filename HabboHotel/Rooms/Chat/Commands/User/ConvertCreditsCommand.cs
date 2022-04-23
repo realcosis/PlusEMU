@@ -8,6 +8,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class ConvertCreditsCommand : IChatCommand
 {
+    public string Key => "convertcredits";
     public string PermissionRequired => "command_convert_credits";
 
     public string Parameters => "";

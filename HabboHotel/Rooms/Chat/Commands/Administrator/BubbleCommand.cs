@@ -5,6 +5,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Administrator;
 
 internal class BubbleCommand : IChatCommand
 {
+    public string Key => "bubble";
     public string PermissionRequired => "command_bubble";
 
     public string Parameters => "%id%";

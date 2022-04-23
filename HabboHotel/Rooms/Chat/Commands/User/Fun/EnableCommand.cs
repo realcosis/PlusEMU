@@ -5,6 +5,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun;
 
 internal class EnableCommand : IChatCommand
 {
+    public string Key => "enable";
     public string PermissionRequired => "command_enable";
 
     public string Parameters => "%EffectId%";

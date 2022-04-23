@@ -6,6 +6,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun;
 
 internal class PushCommand : IChatCommand
 {
+    public string Key => "push";
     public string PermissionRequired => "command_push";
 
     public string Parameters => "%target%";

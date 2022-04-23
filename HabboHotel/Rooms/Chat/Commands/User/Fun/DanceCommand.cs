@@ -5,6 +5,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun;
 
 internal class DanceCommand : IChatCommand
 {
+    public string Key => "dance";
     public string PermissionRequired => "command_dance";
 
     public string Parameters => "%DanceId%";

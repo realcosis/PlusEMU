@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class EmptyItems : IChatCommand
 {
+    public string Key => "emptyitems";
     public string PermissionRequired => "command_empty_items";
 
     public string Parameters => "%yes%";

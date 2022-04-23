@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun;
 
 internal class CoordsCommand : IChatCommand
 {
+    public string Key => "coords";
     public string PermissionRequired => "command_coords";
 
     public string Parameters => "";

@@ -5,6 +5,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class FlagUserCommand : IChatCommand
 {
+    public string Key => "flaguser";
     public string PermissionRequired => "command_flaguser";
 
     public string Parameters => "%username%";

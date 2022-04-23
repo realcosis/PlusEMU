@@ -8,6 +8,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class KickBotsCommand : IChatCommand
 {
+    public string Key => "kickbots";
     public string PermissionRequired => "command_kickbots";
 
     public string Parameters => "";

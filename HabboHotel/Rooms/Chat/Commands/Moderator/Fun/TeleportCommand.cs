@@ -4,6 +4,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun;
 
 internal class TeleportCommand : IChatCommand
 {
+    public string Key => "teleport";
     public string PermissionRequired => "command_teleport";
 
     public string Parameters => "";
