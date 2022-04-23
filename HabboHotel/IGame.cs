@@ -41,7 +41,7 @@ public interface IGame
     QuestManager GetQuestManager();
     GroupManager GetGroupManager();
     ILandingViewManager GetLandingManager();
-    TelevisionManager GetTelevisionManager();
+    ITelevisionManager GetTelevisionManager();
     ChatManager GetChatManager();
     GameDataManager GetGameDataManager();
     BotManager GetBotManager();

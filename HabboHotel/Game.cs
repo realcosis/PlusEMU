@@ -36,6 +36,7 @@ public class Game : IGame
     private readonly IModerationManager _moderationManager;
     private readonly IItemDataManager _itemDataManager;
     private readonly ICatalogManager _catalogManager;
+    private readonly ITelevisionManager _televisionManager; //TODO: Initialize from the item manager.
 
     private AchievementManager _achievementManager;
     private BadgeManager _badgeManager;
@@ -53,7 +54,6 @@ public class Game : IGame
     private RoomManager _roomManager;
     private SubscriptionManager _subscriptionManager;
     private TalentTrackManager _talentTrackManager;
-    private TelevisionManager _televisionManager; //TODO: Initialize from the item manager.
     private bool _cycleActive;
 
     private bool _cycleEnded;
@@ -64,7 +64,8 @@ public class Game : IGame
         IGameClientManager gameClientManager,
         IModerationManager moderationManager,
         IItemDataManager itemDataManager,
-        ICatalogManager catalogManager)
+        ICatalogManager catalogManager,
+        ITelevisionManager televisionManager)
     {
         _packetManager = packetManager;
         _landingViewManager = landingViewManager;
@@ -72,6 +73,7 @@ public class Game : IGame
         _moderationManager = moderationManager;
         _itemDataManager = itemDataManager;
         _catalogManager = catalogManager;
+        _televisionManager = televisionManager;
     }
 
     public Task Init()
@@ -79,7 +81,6 @@ public class Game : IGame
         _moderationManager.Init();
         _itemDataManager.Init();
         _catalogManager.Init(_itemDataManager);
-        _televisionManager = new TelevisionManager();
         _televisionManager.Init();
         _navigatorManager = new NavigatorManager();
         _navigatorManager.Init();
@@ -165,7 +166,7 @@ public class Game : IGame
 
     public ILandingViewManager GetLandingManager() => _landingViewManager;
 
-    public TelevisionManager GetTelevisionManager() => _televisionManager;
+    public ITelevisionManager GetTelevisionManager() => _televisionManager;
 
     public ChatManager GetChatManager() => _chatManager;
 
