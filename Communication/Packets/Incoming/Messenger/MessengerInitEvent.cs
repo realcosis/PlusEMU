@@ -10,8 +10,6 @@ internal class MessengerInitEvent : IPacketEvent
 {
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
-            return;
         session.GetHabbo().GetMessenger().OnStatusChanged(false);
         ICollection<MessengerBuddy> friends = new List<MessengerBuddy>();
         foreach (var buddy in session.GetHabbo().GetMessenger().GetFriends().ToList())

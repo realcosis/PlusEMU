@@ -20,7 +20,7 @@ internal class CloseTicketEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || !session.GetHabbo().GetPermissions().HasRight("mod_tool"))
+        if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
             return;
         var result = packet.PopInt(); // 1 = useless, 2 = abusive, 3 = resolved
         packet.PopInt(); //junk

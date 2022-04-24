@@ -14,8 +14,6 @@ internal class GoToHotelViewEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
         if (session.GetHabbo().InRoom)
         {
             if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var oldRoom))

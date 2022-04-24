@@ -7,7 +7,7 @@ internal class GetPetTrainingPanelEvent : IPacketEvent
 {
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
+        if (!session.GetHabbo().InRoom)
             return;
         var petId = packet.PopInt();
         if (!session.GetHabbo().CurrentRoom.GetRoomUserManager().TryGetPet(petId, out var pet))

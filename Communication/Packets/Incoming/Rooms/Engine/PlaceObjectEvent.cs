@@ -25,7 +25,7 @@ internal class PlaceObjectEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
+        if (!session.GetHabbo().InRoom)
             return;
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;

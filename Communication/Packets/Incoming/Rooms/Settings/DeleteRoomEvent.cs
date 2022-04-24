@@ -22,8 +22,6 @@ internal class DeleteRoomEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
         var roomId = packet.PopInt();
         if (roomId == 0)
             return;

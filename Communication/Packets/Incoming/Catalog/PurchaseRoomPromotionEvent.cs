@@ -21,8 +21,6 @@ public class PurchaseRoomPromotionEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
         packet.PopInt(); //pageId
         packet.PopInt(); //itemId
         var roomId = packet.PopInt();

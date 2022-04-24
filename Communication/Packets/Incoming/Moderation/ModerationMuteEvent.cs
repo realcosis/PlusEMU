@@ -14,7 +14,7 @@ internal class ModerationMuteEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || !session.GetHabbo().GetPermissions().HasRight("mod_mute"))
+        if (!session.GetHabbo().GetPermissions().HasRight("mod_mute"))
             return;
         var userId = packet.PopInt();
         packet.PopString(); //message

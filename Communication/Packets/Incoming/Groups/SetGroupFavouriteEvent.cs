@@ -19,8 +19,6 @@ internal class SetGroupFavouriteEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null)
-            return;
         var groupId = packet.PopInt();
         if (groupId == 0)
             return;

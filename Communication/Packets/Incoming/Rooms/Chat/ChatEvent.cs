@@ -43,7 +43,7 @@ public class ChatEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
+        if (!session.GetHabbo().InRoom)
             return;
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)

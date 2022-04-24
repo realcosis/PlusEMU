@@ -20,8 +20,6 @@ internal class SetRelationshipEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
-            return;
         var user = packet.PopInt();
         var type = packet.PopInt();
         if (!session.GetHabbo().GetMessenger().FriendshipExists(user))

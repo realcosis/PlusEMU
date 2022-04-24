@@ -19,7 +19,7 @@ internal class ModerationBanEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || !session.GetHabbo().GetPermissions().HasRight("mod_soft_ban"))
+        if (!session.GetHabbo().GetPermissions().HasRight("mod_soft_ban"))
             return;
         var userId = packet.PopInt();
         var message = packet.PopString();

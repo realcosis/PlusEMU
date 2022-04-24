@@ -24,10 +24,10 @@ internal class PickUpPetEvent : IPacketEvent
     {
         if (!session.GetHabbo().InRoom)
             return;
-        if (session.GetHabbo() == null || session.GetHabbo().GetInventoryComponent() == null)
-            return;
+     
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
+            
         var petId = packet.PopInt();
         if (!room.GetRoomUserManager().TryGetPet(petId, out var pet))
         {

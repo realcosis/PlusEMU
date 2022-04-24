@@ -28,8 +28,6 @@ internal class UpdateFigureDataEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
         var gender = packet.PopString().ToUpper();
         var look = _figureManager.ProcessFigure(packet.PopString(), gender, session.GetHabbo().GetClothing().GetClothingParts, true);
         if (look == session.GetHabbo().Look)

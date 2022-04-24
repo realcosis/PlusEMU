@@ -25,8 +25,6 @@ internal class GetModeratorRoomChatlogEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
         if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
             return;
         packet.PopInt(); //junk

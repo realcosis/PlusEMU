@@ -1,10 +1,12 @@
-﻿using Plus.Communication.Encryption;
+﻿using Plus.Communication.Attributes;
+using Plus.Communication.Encryption;
 using Plus.Communication.Encryption.Crypto.Prng;
 using Plus.Communication.Packets.Outgoing.Handshake;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Handshake;
 
+[NoAuth]
 public class GenerateSecretKeyEvent : IPacketEvent
 {
     public void Parse(GameClient session, ClientPacket packet)

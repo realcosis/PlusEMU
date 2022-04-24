@@ -14,7 +14,7 @@ internal class ModerationTradeLockEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || !session.GetHabbo().GetPermissions().HasRight("mod_trade_lock"))
+        if (!session.GetHabbo().GetPermissions().HasRight("mod_trade_lock"))
             return;
         var userId = packet.PopInt();
         var message = packet.PopString();

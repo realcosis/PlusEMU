@@ -18,7 +18,7 @@ internal class GetCurrentQuestEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
+        if (!session.GetHabbo().InRoom)
             return;
         var userQuest = _questManager.GetQuest(session.GetHabbo().QuestLastCompleted);
         var nextQuest = _questManager.GetNextQuestInSeries(userQuest.Category, userQuest.Number + 1);

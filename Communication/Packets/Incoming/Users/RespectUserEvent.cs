@@ -22,8 +22,6 @@ internal class RespectUserEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
         if (!session.GetHabbo().InRoom || session.GetHabbo().GetStats().DailyRespectPoints <= 0)
             return;
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))

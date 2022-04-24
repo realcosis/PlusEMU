@@ -17,8 +17,6 @@ internal class RemoveBuddyEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
-            return;
         var amount = packet.PopInt();
         if (amount > 100)
             amount = 100;

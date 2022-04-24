@@ -6,8 +6,6 @@ internal class MoveAvatarEvent : IPacketEvent
 {
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
         if (!session.GetHabbo().InRoom)
             return;
         var room = session.GetHabbo().CurrentRoom;
