@@ -14,8 +14,6 @@ internal class SaveRoomSettingsEvent : IPacketEvent
 {
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
         var roomId = packet.PopInt();
         if (!PlusEnvironment.GetGame().GetRoomManager().TryLoadRoom(roomId, out var room))
             return;

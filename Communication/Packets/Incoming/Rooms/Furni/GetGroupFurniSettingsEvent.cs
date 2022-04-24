@@ -8,7 +8,7 @@ internal class GetGroupFurniSettingsEvent : IPacketEvent
 {
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
+        if (!session.GetHabbo().InRoom)
             return;
         var itemId = packet.PopInt();
         var groupId = packet.PopInt();

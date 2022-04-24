@@ -12,8 +12,6 @@ internal class ChangeNameEvent : IPacketEvent
 {
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
             return;
