@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using NLog;
+using Plus.Database;
 
 namespace Plus.HabboHotel.Moderation;
 
 public sealed class ModerationManager : IModerationManager
 {
+    private readonly IDatabase _database;
     private static readonly ILogger _log = LogManager.GetLogger("Plus.HabboHotel.Moderation.ModerationManager");
     private readonly Dictionary<string, ModerationBan> _bans = new();
     private readonly Dictionary<int, List<ModerationPresetActions>> _moderationCfhTopicActions = new();
@@ -28,6 +30,11 @@ public sealed class ModerationManager : IModerationManager
     public ICollection<string> RoomMessagePresets => _roomPresets;
 
     public ICollection<ModerationTicket> GetTickets => _modTickets.Values;
+
+    public ModerationManager(IDatabase database)
+    {
+        _database = database;
+    }
 
     public Dictionary<string, List<ModerationPresetActions>> UserActionPresets
     {
@@ -55,7 +62,7 @@ public sealed class ModerationManager : IModerationManager
             _moderationCfhTopicActions.Clear();
         if (_bans.Count > 0)
             _bans.Clear();
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             DataTable presetsTable = null;
             dbClient.SetQuery("SELECT * FROM `moderation_presets`;");
@@ -77,7 +84,7 @@ public sealed class ModerationManager : IModerationManager
                 }
             }
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             DataTable moderationTopics = null;
             dbClient.SetQuery("SELECT * FROM `moderation_topics`;");
@@ -91,7 +98,7 @@ public sealed class ModerationManager : IModerationManager
                 }
             }
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             DataTable moderationTopicsActions = null;
             dbClient.SetQuery("SELECT * FROM `moderation_topic_actions`;");
@@ -109,7 +116,7 @@ public sealed class ModerationManager : IModerationManager
                 }
             }
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             DataTable presetsActionCats = null;
             dbClient.SetQuery("SELECT * FROM `moderation_preset_action_categories`;");
@@ -118,7 +125,7 @@ public sealed class ModerationManager : IModerationManager
                 foreach (DataRow row in presetsActionCats.Rows)
                     _userActionPresetCategories.Add(Convert.ToInt32(row["id"]), Convert.ToString(row["caption"]));
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             DataTable presetsActionMessages = null;
             dbClient.SetQuery("SELECT * FROM `moderation_preset_action_messages`;");
@@ -136,7 +143,7 @@ public sealed class ModerationManager : IModerationManager
                 }
             }
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             DataTable getBans = null;
             dbClient.SetQuery("SELECT `bantype`,`value`,`reason`,`expire` FROM `bans` WHERE `bantype` = 'machine' OR `bantype` = 'user'");
@@ -177,7 +184,7 @@ public sealed class ModerationManager : IModerationManager
     {
         if (_bans.Count > 0)
             _bans.Clear();
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             DataTable getBans = null;
             dbClient.SetQuery("SELECT `bantype`,`value`,`reason`,`expire` FROM `bans` WHERE `bantype` = 'machine' OR `bantype` = 'user'");
@@ -214,7 +221,7 @@ public sealed class ModerationManager : IModerationManager
     public void BanUser(string mod, ModerationBanType type, string banValue, string reason, double expireTimestamp)
     {
         var banType = type == ModerationBanType.Ip ? "ip" : type == ModerationBanType.Machine ? "machine" : "user";
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("REPLACE INTO `bans` (`bantype`, `value`, `reason`, `expire`, `added_by`,`added_date`) VALUES ('" + banType + "', '" + banValue + "', @reason, " + expireTimestamp +
                               ", '" + mod + "', '" + PlusEnvironment.GetUnixTimestamp() + "');");
@@ -260,7 +267,7 @@ public sealed class ModerationManager : IModerationManager
                 return true;
 
             //This ban has expired, let us quickly remove it here.
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.SetQuery("DELETE FROM `bans` WHERE `bantype` = '" + BanTypeUtility.FromModerationBanType(ban.Type) + "' AND `value` = @Key LIMIT 1");
                 dbClient.AddParameter("Key", key);
@@ -283,10 +290,10 @@ public sealed class ModerationManager : IModerationManager
     public bool MachineBanCheck(string machineId)
     {
         ModerationBan machineBanRecord = null;
-        if (PlusEnvironment.GetGame().GetModerationManager().IsBanned(machineId, out machineBanRecord))
+        if (IsBanned(machineId, out machineBanRecord))
         {
             DataRow banRow = null;
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = _database.GetQueryReactor();
             dbClient.SetQuery("SELECT * FROM `bans` WHERE `bantype` = 'machine' AND `value` = @value LIMIT 1");
             dbClient.AddParameter("value", machineId);
             banRow = dbClient.GetRow();
@@ -294,7 +301,7 @@ public sealed class ModerationManager : IModerationManager
             //If there is no more ban record, then we can simply remove it from our cache!
             if (banRow == null)
             {
-                PlusEnvironment.GetGame().GetModerationManager().RemoveBan(machineId);
+                RemoveBan(machineId);
                 return false;
             }
         }
@@ -309,10 +316,10 @@ public sealed class ModerationManager : IModerationManager
     public bool UsernameBanCheck(string username)
     {
         ModerationBan usernameBanRecord = null;
-        if (PlusEnvironment.GetGame().GetModerationManager().IsBanned(username, out usernameBanRecord))
+        if (IsBanned(username, out usernameBanRecord))
         {
             DataRow banRow = null;
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = _database.GetQueryReactor();
             dbClient.SetQuery("SELECT * FROM `bans` WHERE `bantype` = 'user' AND `value` = @value LIMIT 1");
             dbClient.AddParameter("value", username);
             banRow = dbClient.GetRow();
@@ -320,7 +327,7 @@ public sealed class ModerationManager : IModerationManager
             //If there is no more ban record, then we can simply remove it from our cache!
             if (banRow == null)
             {
-                PlusEnvironment.GetGame().GetModerationManager().RemoveBan(username);
+                RemoveBan(username);
                 return false;
             }
         }

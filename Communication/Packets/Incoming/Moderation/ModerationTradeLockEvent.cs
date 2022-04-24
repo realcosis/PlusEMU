@@ -1,9 +1,17 @@
-﻿using Plus.HabboHotel.GameClients;
+﻿using Plus.Database;
+using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Moderation;
 
 internal class ModerationTradeLockEvent : IPacketEvent
 {
+    public readonly IDatabase _database;
+
+    public ModerationTradeLockEvent(IDatabase database)
+    {
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null || !session.GetHabbo().GetPermissions().HasRight("mod_trade_lock"))
@@ -29,7 +37,7 @@ internal class ModerationTradeLockEvent : IPacketEvent
             days = 1;
         if (days > 365)
             days = 365;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '" + length + "', `trading_locks_count` = `trading_locks_count` + '1' WHERE `user_id` = '" + habbo.Id + "' LIMIT 1");
         }

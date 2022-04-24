@@ -3,18 +3,21 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using NLog;
+using Plus.Database;
 
 namespace Plus.HabboHotel.Games;
 
 public class GameDataManager : IGameDataManager
 {
+    private readonly IDatabase _database;
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Games.GameDataManager");
 
     private readonly Dictionary<int, GameData> _games;
 
-    public GameDataManager()
+    public GameDataManager(IDatabase database)
     {
         _games = new Dictionary<int, GameData>();
+        _database = database;
     }
 
     public ICollection<GameData> GameData => _games.Values;
@@ -23,7 +26,7 @@ public class GameDataManager : IGameDataManager
     {
         if (_games.Count > 0)
             _games.Clear();
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             DataTable data = null;
             dbClient.SetQuery(
@@ -37,7 +40,7 @@ public class GameDataManager : IGameDataManager
                         new GameData(Convert.ToInt32(row["id"]), Convert.ToString(row["name"]), Convert.ToString(row["colour_one"]), Convert.ToString(row["colour_two"]),
                             Convert.ToString(row["resource_path"]), Convert.ToString(row["string_three"]), Convert.ToString(row["game_swf"]), Convert.ToString(row["game_assets"]),
                             Convert.ToString(row["game_server_host"]), Convert.ToString(row["game_server_port"]), Convert.ToString(row["socket_policy_port"]),
-                            PlusEnvironment.EnumToBool(row["game_enabled"].ToString())));
+                           PlusEnvironment.EnumToBool(row["game_enabled"].ToString())));
                 }
             }
         }

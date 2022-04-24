@@ -1,16 +1,23 @@
 ﻿using System;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class TradeBanCommand : IChatCommand
 {
+    private readonly IDatabase _database;
     public string Key => "tradeban";
     public string PermissionRequired => "command_trade_ban";
 
     public string Parameters => "%target% %length%";
 
     public string Description => "Trade ban another user.";
+
+    public TradeBanCommand(IDatabase database)
+    {
+        _database = database;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -27,7 +34,7 @@ internal class TradeBanCommand : IChatCommand
         }
         if (Convert.ToDouble(@params[2]) == 0)
         {
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '0' WHERE `user_id` = '" + habbo.Id + "' LIMIT 1");
             }
@@ -47,7 +54,7 @@ internal class TradeBanCommand : IChatCommand
             if (days > 365)
                 days = 365;
             var length = PlusEnvironment.GetUnixTimestamp() + days * 86400;
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '" + length + "', `trading_locks_count` = `trading_locks_count` + '1' WHERE `user_id` = '" + habbo.Id + "' LIMIT 1");
             }

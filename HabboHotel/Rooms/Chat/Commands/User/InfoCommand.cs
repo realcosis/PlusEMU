@@ -6,6 +6,8 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class InfoCommand : IChatCommand
 {
+    private readonly IGameClientManager _gameClientManager;
+    private readonly IRoomManager _roomManager;
     public string Key => "about";
     public string PermissionRequired => "command_info";
 
@@ -13,11 +15,16 @@ internal class InfoCommand : IChatCommand
 
     public string Description => "Displays generic information that everybody loves to see.";
 
+    public InfoCommand(IGameClientManager gameClientManager, IRoomManager roomManager)
+    {
+        _gameClientManager = gameClientManager;
+        _roomManager = roomManager;
+    }
     public void Execute(GameClient session, Room room, string[] @params)
     {
         var uptime = DateTime.Now - PlusEnvironment.ServerStarted;
-        var onlineUsers = PlusEnvironment.GetGame().GetClientManager().Count;
-        var roomCount = PlusEnvironment.GetGame().GetRoomManager().Count;
+        var onlineUsers = _gameClientManager.Count;
+        var roomCount = _roomManager.Count;
         session.SendPacket(new RoomNotificationComposer("Powered by PlusEmulator",
             "<b>Credits</b>:\n" +
             "DevBest Community\n\n" +

@@ -1,9 +1,17 @@
-﻿using Plus.HabboHotel.GameClients;
+﻿using Plus.Database;
+using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Moderation;
 
 internal class ModerationMuteEvent : IPacketEvent
 {
+    public readonly IDatabase _database;
+
+    public ModerationMuteEvent(IDatabase database)
+    {
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null || !session.GetHabbo().GetPermissions().HasRight("mod_mute"))
@@ -24,7 +32,7 @@ internal class ModerationMuteEvent : IPacketEvent
             session.SendWhisper("Oops, you cannot mute that user.");
             return;
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.RunQuery("UPDATE `users` SET `time_muted` = '" + length + "' WHERE `id` = '" + habbo.Id + "' LIMIT 1");
         }

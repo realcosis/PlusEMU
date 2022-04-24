@@ -4,12 +4,18 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun;
 
 internal class FreezeCommand : IChatCommand
 {
+    private readonly IGameClientManager _gameClientManager;
     public string Key => "freeze";
     public string PermissionRequired => "command_freeze";
 
     public string Parameters => "%username%";
 
     public string Description => "Prevent another user from walking.";
+
+    public FreezeCommand(IGameClientManager gameClientManager)
+    {
+        _gameClientManager = gameClientManager;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -18,7 +24,7 @@ internal class FreezeCommand : IChatCommand
             session.SendWhisper("Please enter the username of the user you wish to freeze.");
             return;
         }
-        var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+        var targetClient = _gameClientManager.GetClientByUsername(@params[1]);
         if (targetClient == null)
         {
             session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");

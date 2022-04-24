@@ -6,6 +6,7 @@ using NLog;
 using Plus.Communication.Packets.Incoming;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Communication.Packets.Outgoing.Quests;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Messenger;
 
@@ -13,13 +14,15 @@ namespace Plus.HabboHotel.Quests;
 
 public class QuestManager : IQuestManager
 {
+    private readonly IDatabase _database;
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Quests.QuestManager");
     private readonly Dictionary<string, int> _questCount;
 
     private readonly Dictionary<int, Quest> _quests;
 
-    public QuestManager()
+    public QuestManager(IDatabase database)
     {
+        _database = database;
         _quests = new Dictionary<int, Quest>();
         _questCount = new Dictionary<string, int>();
     }
@@ -28,7 +31,7 @@ public class QuestManager : IQuestManager
     {
         if (_quests.Count > 0)
             _quests.Clear();
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `id`,`type`,`level_num`,`goal_type`,`goal_data`,`action`,`pixel_reward`,`data_bit`,`reward_type`,`timestamp_unlock`,`timestamp_lock` FROM `quests`");
             var dTable = dbClient.GetTable();
@@ -114,7 +117,7 @@ public class QuestManager : IQuestManager
                 completeQuest = true;
                 break;
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.RunQuery("UPDATE `user_quests` SET `progress` = '" + totalProgress + "' WHERE `user_id` = '" + session.GetHabbo().Id + "' AND `quest_id` = '" + quest.Id + "' LIMIT 1");
             if (completeQuest)

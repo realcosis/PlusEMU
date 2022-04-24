@@ -7,6 +7,13 @@ namespace Plus.Communication.Packets.Incoming.Navigator;
 
 internal class NavigatorSearchEvent : IPacketEvent
 {
+    private readonly INavigatorManager _navigatorManager;
+
+    public NavigatorSearchEvent(INavigatorManager navigatorManager)
+    {
+        _navigatorManager = navigatorManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         var category = packet.PopString();
@@ -14,15 +21,15 @@ internal class NavigatorSearchEvent : IPacketEvent
         ICollection<SearchResultList> categories = new List<SearchResultList>();
         if (!string.IsNullOrEmpty(search))
         {
-            if (PlusEnvironment.GetGame().GetNavigator().TryGetSearchResultList(0, out var queryResult)) categories.Add(queryResult);
+            if (_navigatorManager.TryGetSearchResultList(0, out var queryResult)) categories.Add(queryResult);
         }
         else
         {
-            categories = PlusEnvironment.GetGame().GetNavigator().GetCategorysForSearch(category);
+            categories = _navigatorManager.GetCategorysForSearch(category);
             if (categories.Count == 0)
             {
                 //Are we going in deep?!
-                categories = PlusEnvironment.GetGame().GetNavigator().GetResultByIdentifier(category);
+                categories = _navigatorManager.GetResultByIdentifier(category);
                 if (categories.Count > 0)
                 {
                     session.SendPacket(new NavigatorSearchResultSetComposer(category, search, categories, session, 2, 100));

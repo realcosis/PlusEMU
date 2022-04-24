@@ -6,12 +6,18 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun;
 
 internal class PullCommand : IChatCommand
 {
+    private readonly IGameClientManager _gameClientManager;
     public string Key => "pull";
     public string PermissionRequired => "command_pull";
 
     public string Parameters => "%target%";
 
     public string Description => "Pull another user towards you.";
+
+    public PullCommand(IGameClientManager gameClientManager)
+    {
+        _gameClientManager = gameClientManager;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -25,7 +31,7 @@ internal class PullCommand : IChatCommand
             session.SendWhisper("Oops, it appears that the room owner has disabled the ability to use the pull command in here.");
             return;
         }
-        var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+        var targetClient = _gameClientManager.GetClientByUsername(@params[1]);
         if (targetClient == null)
         {
             session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");

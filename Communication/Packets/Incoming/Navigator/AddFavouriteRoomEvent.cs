@@ -1,4 +1,5 @@
 ﻿using Plus.Communication.Packets.Outgoing.Navigator;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
@@ -6,6 +7,13 @@ namespace Plus.Communication.Packets.Incoming.Navigator;
 
 public class AddFavouriteRoomEvent : IPacketEvent
 {
+    private readonly IDatabase _database;
+
+    public AddFavouriteRoomEvent(IDatabase database)
+    {
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null)
@@ -20,7 +28,7 @@ public class AddFavouriteRoomEvent : IPacketEvent
         }
         session.GetHabbo().FavoriteRooms.Add(roomId);
         session.SendPacket(new UpdateFavouriteRoomComposer(roomId, true));
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.RunQuery("INSERT INTO user_favorites (user_id,room_id) VALUES (" + session.GetHabbo().Id + "," + roomId + ")");
     }
 }

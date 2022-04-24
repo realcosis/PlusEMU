@@ -6,12 +6,18 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun;
 
 internal class SuperPushCommand : IChatCommand
 {
+    private readonly IGameClientManager _gameClientManager;
     public string Key => "spush";
     public string PermissionRequired => "command_super_push";
 
     public string Parameters => "%target%";
 
     public string Description => "Superpush another user. (Pushes them 3 squares away)";
+
+    public SuperPushCommand(IGameClientManager gameClientManager)
+    {
+        _gameClientManager = gameClientManager;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -25,7 +31,7 @@ internal class SuperPushCommand : IChatCommand
             session.SendWhisper("Oops, it appears that the room owner has disabled the ability to use the push command in here.");
             return;
         }
-        var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+        var targetClient = _gameClientManager.GetClientByUsername(@params[1]);
         if (targetClient == null)
         {
             session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");

@@ -1,18 +1,27 @@
 ﻿using System.Drawing;
 using System.Linq;
 using Plus.Communication.Packets.Outgoing.Inventory.Pets;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class KickPetsCommand : IChatCommand
 {
+    private readonly IGameClientManager _gameClientManager;
+    private readonly IDatabase _database;
     public string Key => "kickpets";
     public string PermissionRequired => "command_kickpets";
 
     public string Parameters => "";
 
     public string Description => "Kick all of the pets from the room.";
+
+    public KickPetsCommand(IGameClientManager gameClientManager, IDatabase database)
+    {
+        _gameClientManager = gameClientManager;
+        _database = database;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -45,13 +54,13 @@ internal class KickPetsCommand : IChatCommand
             room.GetRoomUserManager().RemoveBot(bot.VirtualId, false);
             if (pet.OwnerId != session.GetHabbo().Id)
             {
-                var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(pet.OwnerId);
+                var targetClient = _gameClientManager.GetClientByUserId(pet.OwnerId);
                 if (targetClient != null)
                     if (targetClient.GetHabbo().GetInventoryComponent().TryAddPet(pet))
                         targetClient.SendPacket(new PetInventoryComposer(targetClient.GetHabbo().GetInventoryComponent().GetPets()));
             }
             if (session.GetHabbo().GetInventoryComponent().TryAddPet(pet)) session.SendPacket(new PetInventoryComposer(session.GetHabbo().GetInventoryComponent().GetPets()));
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = _database.GetQueryReactor();
             dbClient.RunQuery("UPDATE `bots` SET `room_id` = '0', `x` = '0', `Y` = '0', `Z` = '0' WHERE `id` = '" + pet.PetId + "' LIMIT 1");
             dbClient.RunQuery("UPDATE `bots_petdata` SET `experience` = '" + pet.Experience + "', `energy` = '" + pet.Energy + "', `nutrition` = '" + pet.Nutrition + "', `respect` = '" + pet.Respect +
                               "' WHERE `id` = '" + pet.PetId + "' LIMIT 1");

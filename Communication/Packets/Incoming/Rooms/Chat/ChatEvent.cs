@@ -4,6 +4,7 @@ using Plus.Communication.Packets.Outgoing.Rooms.Chat;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
 using Plus.HabboHotel.Quests;
+using Plus.HabboHotel.Rooms.Chat.Commands;
 using Plus.HabboHotel.Rooms.Chat.Logs;
 using Plus.Utilities;
 
@@ -11,6 +12,12 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Chat;
 
 public class ChatEvent : IPacketEvent
 {
+    private readonly ICommandManager _commandManager;
+
+    public ChatEvent(ICommandManager commandManager)
+    {
+        _commandManager = commandManager;
+    }
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
@@ -51,7 +58,7 @@ public class ChatEvent : IPacketEvent
             }
         }
         PlusEnvironment.GetGame().GetChatManager().GetLogs().StoreChatlog(new ChatlogEntry(session.GetHabbo().Id, room.Id, message, UnixTimestamp.GetNow(), session.GetHabbo(), room));
-        if (message.StartsWith(":", StringComparison.CurrentCulture) && PlusEnvironment.GetGame().GetChatManager().GetCommands().Parse(session, message))
+        if (message.StartsWith(":", StringComparison.CurrentCulture) && _commandManager.Parse(session, message))
             return;
         if (PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckBannedWords(message))
         {
