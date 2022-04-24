@@ -1,4 +1,5 @@
-﻿using Plus.HabboHotel.GameClients;
+﻿using Plus.Database;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Quests;
 
@@ -6,6 +7,17 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine;
 
 internal class PickupObjectEvent : IPacketEvent
 {
+    private readonly IGameClientManager _clientManager;
+    private readonly IQuestManager _questManager;
+    private readonly IDatabase _database;
+
+    public PickupObjectEvent(IGameClientManager clientManager, IQuestManager questManager, IDatabase database)
+    {
+        _clientManager = clientManager;
+        _questManager = questManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
@@ -33,12 +45,12 @@ internal class PickupObjectEvent : IPacketEvent
                 room.RemoveTent(item.Id);
             if (item.GetBaseItem().InteractionType == InteractionType.Moodlight)
             {
-                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = _database.GetQueryReactor();
                 dbClient.RunQuery("DELETE FROM `room_items_moodlight` WHERE `item_id` = '" + item.Id + "' LIMIT 1");
             }
             else if (item.GetBaseItem().InteractionType == InteractionType.Toner)
             {
-                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = _database.GetQueryReactor();
                 dbClient.RunQuery("DELETE FROM `room_items_toner` WHERE `id` = '" + item.Id + "' LIMIT 1");
             }
             if (item.UserId == session.GetHabbo().Id)
@@ -55,7 +67,7 @@ internal class PickupObjectEvent : IPacketEvent
             }
             else //Item is being ejected.
             {
-                var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(item.UserId);
+                var targetClient = _clientManager.GetClientByUserId(item.UserId);
                 if (targetClient != null && targetClient.GetHabbo() != null) //Again, do we have an active client?
                 {
                     room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
@@ -65,11 +77,11 @@ internal class PickupObjectEvent : IPacketEvent
                 else //No, query time.
                 {
                     room.GetRoomItemHandler().RemoveFurniture(null, item.Id);
-                    using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                    using var dbClient = _database.GetQueryReactor();
                     dbClient.RunQuery("UPDATE `items` SET `room_id` = '0' WHERE `id` = '" + item.Id + "' LIMIT 1");
                 }
             }
-            PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.FurniPick);
+            _questManager.ProgressUserQuest(session, QuestType.FurniPick);
         }
     }
 }

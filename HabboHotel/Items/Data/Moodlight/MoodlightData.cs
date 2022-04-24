@@ -8,7 +8,6 @@ namespace Plus.HabboHotel.Items.Data.Moodlight;
 
 public class MoodlightData
 {
-    private readonly IDatabase _database;
     public int CurrentPreset;
     public bool Enabled;
     public int ItemId;
@@ -26,7 +25,7 @@ public class MoodlightData
         }
         if (row == null)
         {
-            using var dbClient = _database.GetQueryReactor();
+            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.RunQuery("INSERT INTO `room_items_moodlight` (item_id,enabled,current_preset,preset_one,preset_two,preset_three) VALUES (" + itemId +
                               ",0,1,'#000000,255,0','#000000,255,0','#000000,255,0')");
             dbClient.SetQuery("SELECT enabled,current_preset,preset_one,preset_two,preset_three FROM room_items_moodlight WHERE item_id=" + itemId + " LIMIT 1");
@@ -43,14 +42,14 @@ public class MoodlightData
     public void Enable()
     {
         Enabled = true;
-        using var dbClient = _database.GetQueryReactor();
+        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
         dbClient.RunQuery("UPDATE room_items_moodlight SET enabled = 1 WHERE item_id = '" + ItemId + "' LIMIT 1");
     }
 
     public void Disable()
     {
         Enabled = false;
-        using var dbClient = _database.GetQueryReactor();
+        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
         dbClient.RunQuery("UPDATE room_items_moodlight SET enabled = 0 WHERE item_id = '" + ItemId + "' LIMIT 1");
     }
 
@@ -71,7 +70,7 @@ public class MoodlightData
                 pr = "one";
                 break;
         }
-        using (var dbClient = _database.GetQueryReactor())
+        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE room_items_moodlight SET preset_" + pr + " = '@color," + intensity + "," + PlusEnvironment.BoolToEnum(bgOnly) + "' WHERE item_id = '" + ItemId + "' LIMIT 1");
             dbClient.AddParameter("color", color);

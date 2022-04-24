@@ -1,22 +1,44 @@
 ﻿using System;
 using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Communication.Packets.Outgoing.Rooms.Chat;
+using Plus.Core.Settings;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
 using Plus.HabboHotel.Quests;
 using Plus.HabboHotel.Rooms.Chat.Commands;
+using Plus.HabboHotel.Rooms.Chat.Filter;
 using Plus.HabboHotel.Rooms.Chat.Logs;
+using Plus.HabboHotel.Rooms.Chat.Styles;
 using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Chat;
 
 public class ShoutEvent : IPacketEvent
 {
+    private readonly IChatStyleManager _chatStyleManager;
+    private readonly IChatlogManager _chatlogManager;
+    private readonly IWordFilterManager _wordFilterManager;
     private readonly ICommandManager _commandManager;
+    private readonly IModerationManager _moderationManager;
+    private readonly ISettingsManager _settingsManager;
+    private readonly IQuestManager _questManager;
 
-    public ShoutEvent(ICommandManager commandManager)
+    public ShoutEvent(
+        IChatStyleManager chatStyleManager,
+        IChatlogManager chatlogManager,
+        IWordFilterManager wordFilterManager,
+        ICommandManager commandManager,
+        IModerationManager moderationManager,
+        ISettingsManager settingsManager,
+        IQuestManager questManager)
     {
+        _chatStyleManager = chatStyleManager;
+        _chatlogManager = chatlogManager;
+        _wordFilterManager = wordFilterManager;
         _commandManager = commandManager;
+        _moderationManager = moderationManager;
+        _settingsManager = settingsManager;
+        _questManager = questManager;
     }
 
     public void Parse(GameClient session, ClientPacket packet)
@@ -33,7 +55,7 @@ public class ShoutEvent : IPacketEvent
         if (message.Length > 100)
             message = message.Substring(0, 100);
         var colour = packet.PopInt();
-        if (!PlusEnvironment.GetGame().GetChatManager().GetChatStyles().TryGetStyle(colour, out var style) ||
+        if (!_chatStyleManager.TryGetStyle(colour, out var style) ||
             style.RequiredRight.Length > 0 && !session.GetHabbo().GetPermissions().HasRight(style.RequiredRight))
             colour = 0;
         user.LastBubble = session.GetHabbo().CustomBubbleId == 0 ? colour : session.GetHabbo().CustomBubbleId;
@@ -57,15 +79,17 @@ public class ShoutEvent : IPacketEvent
                 return;
             }
         }
-        PlusEnvironment.GetGame().GetChatManager().GetLogs().StoreChatlog(new ChatlogEntry(session.GetHabbo().Id, room.Id, message, UnixTimestamp.GetNow(), session.GetHabbo(), room));
+        
+        _chatlogManager.StoreChatlog(new ChatlogEntry(session.GetHabbo().Id, room.Id, message, UnixTimestamp.GetNow(), session.GetHabbo(), room));
+
         if (message.StartsWith(":", StringComparison.CurrentCulture) && _commandManager.Parse(session, message))
             return;
-        if (PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckBannedWords(message))
+        if (_wordFilterManager.CheckBannedWords(message))
         {
             session.GetHabbo().BannedPhraseCount++;
-            if (session.GetHabbo().BannedPhraseCount >= Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("room.chat.filter.banned_phrases.chances")))
+            if (session.GetHabbo().BannedPhraseCount >= Convert.ToInt32(_settingsManager.TryGetValue("room.chat.filter.banned_phrases.chances")))
             {
-                PlusEnvironment.GetGame().GetModerationManager().BanUser("System", ModerationBanType.Username, session.GetHabbo().Username, "Spamming banned phrases (" + message + ")",
+                _moderationManager.BanUser("System", ModerationBanType.Username, session.GetHabbo().Username, "Spamming banned phrases (" + message + ")",
                     PlusEnvironment.GetUnixTimestamp() + 78892200);
                 session.Disconnect();
                 return;
@@ -74,8 +98,8 @@ public class ShoutEvent : IPacketEvent
             return;
         }
         if (!session.GetHabbo().GetPermissions().HasRight("word_filter_override"))
-            message = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(message);
-        PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.SocialChat);
+            message = _wordFilterManager.CheckMessage(message);
+        _questManager.ProgressUserQuest(session, QuestType.SocialChat);
         user.UnIdle();
         user.OnChat(user.LastBubble, message, true);
     }

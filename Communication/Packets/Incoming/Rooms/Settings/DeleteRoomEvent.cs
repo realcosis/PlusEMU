@@ -1,18 +1,31 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Settings;
 
 internal class DeleteRoomEvent : IPacketEvent
 {
+    private readonly IGameClientManager _clientManager;
+    private readonly IRoomManager _roomManager;
+    private readonly IDatabase _database;
+
+    public DeleteRoomEvent(IGameClientManager clientManager, IRoomManager roomManager, IDatabase database)
+    {
+        _clientManager = clientManager;
+        _roomManager = roomManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         var roomId = packet.PopInt();
         if (roomId == 0)
             return;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(roomId, out var room))
+        if (!_roomManager.TryGetRoom(roomId, out var room))
             return;
         if (room.OwnerId != session.GetHabbo().Id && !session.GetHabbo().GetPermissions().HasRight("room_delete_any"))
             return;
@@ -23,7 +36,7 @@ internal class DeleteRoomEvent : IPacketEvent
                 continue;
             if (item.GetBaseItem().InteractionType == InteractionType.Moodlight)
             {
-                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = _database.GetQueryReactor();
                 dbClient.SetQuery("DELETE FROM `room_items_moodlight` WHERE `item_id` = @itemId LIMIT 1");
                 dbClient.AddParameter("itemId", item.Id);
                 dbClient.RunQuery();
@@ -32,7 +45,7 @@ internal class DeleteRoomEvent : IPacketEvent
         }
         foreach (var item in itemsToRemove)
         {
-            var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(item.UserId);
+            var targetClient = _clientManager.GetClientByUserId(item.UserId);
             if (targetClient != null && targetClient.GetHabbo() != null) //Again, do we have an active client?
             {
                 room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
@@ -42,14 +55,14 @@ internal class DeleteRoomEvent : IPacketEvent
             else //No, query time.
             {
                 room.GetRoomItemHandler().RemoveFurniture(null, item.Id);
-                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = _database.GetQueryReactor();
                 dbClient.SetQuery("UPDATE `items` SET `room_id` = '0' WHERE `id` = @itemId LIMIT 1");
                 dbClient.AddParameter("itemId", item.Id);
                 dbClient.RunQuery();
             }
         }
-        PlusEnvironment.GetGame().GetRoomManager().UnloadRoom(room.Id);
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        _roomManager.UnloadRoom(room.Id);
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.RunQuery("DELETE FROM `user_roomvisits` WHERE `room_id` = '" + roomId + "'");
             dbClient.RunQuery("DELETE FROM `rooms` WHERE `id` = '" + roomId + "' LIMIT 1");
@@ -58,6 +71,6 @@ internal class DeleteRoomEvent : IPacketEvent
             dbClient.RunQuery("DELETE FROM `room_rights` WHERE `room_id` = '" + roomId + "'");
             dbClient.RunQuery("UPDATE `users` SET `home_room` = '0' WHERE `home_room` = '" + roomId + "'");
         }
-        PlusEnvironment.GetGame().GetRoomManager().UnloadRoom(room.Id);
+        _roomManager.UnloadRoom(room.Id);
     }
 }

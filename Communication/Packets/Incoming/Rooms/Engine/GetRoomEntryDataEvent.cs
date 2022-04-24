@@ -2,11 +2,19 @@
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items.Wired;
+using Plus.HabboHotel.Quests;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Engine;
 
 internal class GetRoomEntryDataEvent : IPacketEvent
 {
+    private readonly IQuestManager _questManager;
+
+    public GetRoomEntryDataEvent(IQuestManager questManager)
+    {
+        _questManager = questManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null)
@@ -23,7 +31,7 @@ internal class GetRoomEntryDataEvent : IPacketEvent
         if (session.GetHabbo().GetMessenger() != null)
             session.GetHabbo().GetMessenger().OnStatusChanged(true);
         if (session.GetHabbo().GetStats().QuestId > 0)
-            PlusEnvironment.GetGame().GetQuestManager().QuestReminder(session, session.GetHabbo().GetStats().QuestId);
+            _questManager.QuestReminder(session, session.GetHabbo().GetStats().QuestId);
         session.SendPacket(new RoomEntryInfoComposer(room.RoomId, room.CheckRights(session, true)));
         session.SendPacket(new RoomVisualizationSettingsComposer(room.WallThickness, room.FloorThickness, PlusEnvironment.EnumToBool(room.Hidewall.ToString())));
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Username);

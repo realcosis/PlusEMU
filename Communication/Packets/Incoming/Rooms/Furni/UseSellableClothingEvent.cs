@@ -1,5 +1,7 @@
 ﻿using Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
 using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
+using Plus.Database;
+using Plus.HabboHotel.Catalog.Clothing;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 
@@ -7,6 +9,15 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni;
 
 internal class UseSellableClothingEvent : IPacketEvent
 {
+    private readonly IClothingManager _clothingManager;
+    private readonly IDatabase _database;
+
+    public UseSellableClothingEvent(IClothingManager clothingManager, IDatabase database)
+    {
+        _clothingManager = clothingManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
@@ -32,14 +43,14 @@ internal class UseSellableClothingEvent : IPacketEvent
             session.SendNotification("Oops, this item doesn't have a linking clothing configuration, please report it!");
             return;
         }
-        if (!PlusEnvironment.GetGame().GetCatalog().GetClothingManager().TryGetClothing(item.Data.BehaviourData, out var clothing))
+        if (!_clothingManager.TryGetClothing(item.Data.BehaviourData, out var clothing))
         {
             session.SendNotification("Oops, we couldn't find this clothing part!");
             return;
         }
 
         //Quickly delete it from the database.
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("DELETE FROM `items` WHERE `id` = @ItemId LIMIT 1");
             dbClient.AddParameter("ItemId", item.Id);

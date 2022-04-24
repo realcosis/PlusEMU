@@ -1,17 +1,28 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Plus.Communication.Packets.Outgoing.Users;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Rooms.Chat.Filter;
 
 namespace Plus.Communication.Packets.Incoming.Users;
 
 internal class CheckValidNameEvent : IPacketEvent
 {
+    private readonly IWordFilterManager _wordFilterManager;
+    private readonly IDatabase _database;
+
+    public CheckValidNameEvent(IWordFilterManager wordFilterManager, IDatabase database)
+    {
+        _wordFilterManager = wordFilterManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         bool inUse;
         var name = packet.PopString();
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT COUNT(0) FROM `users` WHERE `username` = @name LIMIT 1");
             dbClient.AddParameter("name", name);
@@ -24,7 +35,7 @@ internal class CheckValidNameEvent : IPacketEvent
             session.SendPacket(new NameChangeUpdateComposer(name, 4));
             return;
         }
-        if (PlusEnvironment.GetGame().GetChatManager().GetFilter().IsFiltered(name))
+        if (_wordFilterManager.IsFiltered(name))
         {
             session.SendPacket(new NameChangeUpdateComposer(name, 4));
             return;

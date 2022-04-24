@@ -1,15 +1,26 @@
 ﻿using Plus.Communication.Packets.Outgoing.Rooms.Permissions;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Action;
 
 internal class RemoveMyRightsEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+    private readonly IDatabase _database;
+
+    public RemoveMyRightsEvent(IRoomManager roomManager, IDatabase database)
+    {
+        _roomManager = roomManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
         if (!room.CheckRights(session, false))
             return;
@@ -22,7 +33,7 @@ internal class RemoveMyRightsEvent : IPacketEvent
                 user.UpdateNeeded = true;
                 user.GetClient().SendPacket(new YouAreNotControllerComposer());
             }
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.SetQuery("DELETE FROM `room_rights` WHERE `user_id` = @uid AND `room_id` = @rid LIMIT 1");
                 dbClient.AddParameter("uid", session.GetHabbo().Id);

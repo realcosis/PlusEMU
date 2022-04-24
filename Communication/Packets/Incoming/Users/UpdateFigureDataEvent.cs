@@ -3,6 +3,9 @@ using System.Linq;
 using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+using Plus.Core.FigureData;
+using Plus.Database;
+using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
 
@@ -10,10 +13,23 @@ namespace Plus.Communication.Packets.Incoming.Users;
 
 internal class UpdateFigureDataEvent : IPacketEvent
 {
+    private readonly IFigureDataManager _figureManager;
+    private readonly IAchievementManager _achievementManager;
+    private readonly IQuestManager _questManager;
+    private readonly IDatabase _database;
+
+    public UpdateFigureDataEvent(IFigureDataManager figureDataManager, IAchievementManager achievementManager, IQuestManager questManager, IDatabase database)
+    {
+        _figureManager = figureDataManager;
+        _achievementManager = achievementManager;
+        _questManager = questManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         var gender = packet.PopString().ToUpper();
-        var look = PlusEnvironment.GetFigureManager().ProcessFigure(packet.PopString(), gender, session.GetHabbo().GetClothing().GetClothingParts, true);
+        var look = _figureManager.ProcessFigure(packet.PopString(), gender, session.GetHabbo().GetClothing().GetClothingParts, true);
         if (look == session.GetHabbo().Look)
             return;
         if ((DateTime.Now - session.GetHabbo().LastClothingUpdateTime).TotalSeconds <= 2.0)

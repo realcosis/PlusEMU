@@ -1,10 +1,21 @@
 ﻿using Plus.Communication.Packets.Outgoing.Rooms.Action;
+using Plus.Database;
+using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Action;
 
 internal class IgnoreUserEvent : IPacketEvent
 {
+    private readonly IAchievementManager _achievementManager;
+    private readonly IDatabase _database;
+
+    public IgnoreUserEvent(IAchievementManager achievementManager, IDatabase database)
+    {
+        _achievementManager = achievementManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
@@ -20,7 +31,7 @@ internal class IgnoreUserEvent : IPacketEvent
             return;
         if (session.GetHabbo().GetIgnores().TryAdd(player.Id))
         {
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.SetQuery("INSERT INTO `user_ignores` (`user_id`,`ignore_id`) VALUES(@uid,@ignoreId);");
                 dbClient.AddParameter("uid", session.GetHabbo().Id);
@@ -28,7 +39,7 @@ internal class IgnoreUserEvent : IPacketEvent
                 dbClient.RunQuery();
             }
             session.SendPacket(new IgnoreStatusComposer(1, player.Username));
-            PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_SelfModIgnoreSeen", 1);
+            _achievementManager.ProgressAchievement(session, "ACH_SelfModIgnoreSeen", 1);
         }
     }
 }

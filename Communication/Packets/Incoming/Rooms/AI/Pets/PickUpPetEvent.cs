@@ -1,18 +1,33 @@
 ﻿using System.Drawing;
 using Plus.Communication.Packets.Outgoing.Inventory.Pets;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets;
 
 internal class PickUpPetEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+    private readonly IGameClientManager _clientManager;
+    private readonly IDatabase _database;
+
+    public PickUpPetEvent(IRoomManager roomManager, IGameClientManager _clientManager, IDatabase database)
+    {
+        _roomManager = roomManager;
+        _clientManager = _clientManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+     
+        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
+            
         var petId = packet.PopInt();
         if (!room.GetRoomUserManager().TryGetPet(petId, out var pet))
         {
@@ -59,14 +74,14 @@ internal class PickUpPetEvent : IPacketEvent
         var data = pet.PetData;
         if (data != null)
         {
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = _database.GetQueryReactor();
             dbClient.RunQuery("UPDATE `bots` SET `room_id` = '0', `x` = '0', `Y` = '0', `Z` = '0' WHERE `id` = '" + data.PetId + "' LIMIT 1");
             dbClient.RunQuery("UPDATE `bots_petdata` SET `experience` = '" + data.Experience + "', `energy` = '" + data.Energy + "', `nutrition` = '" + data.Nutrition + "', `respect` = '" +
                               data.Respect + "' WHERE `id` = '" + data.PetId + "' LIMIT 1");
         }
         if (data.OwnerId != session.GetHabbo().Id)
         {
-            var target = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(data.OwnerId);
+            var target = _clientManager.GetClientByUserId(data.OwnerId);
             if (target != null)
             {
                 if (target.GetHabbo().GetInventoryComponent().TryAddPet(pet.PetData))

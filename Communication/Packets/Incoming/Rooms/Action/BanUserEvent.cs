@@ -1,10 +1,18 @@
 ﻿using System;
+using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Action;
 
 internal class BanUserEvent : IPacketEvent
 {
+    private readonly IAchievementManager _achievementManager;
+
+    public BanUserEvent(IAchievementManager achievementManager)
+    {
+        _achievementManager = achievementManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         var room = session.GetHabbo().CurrentRoom;
@@ -31,6 +39,6 @@ internal class BanUserEvent : IPacketEvent
         else if (r.ToLower().Contains("perm"))
             time = 78892200;
         room.GetBans().Ban(user, time);
-        PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_SelfModBanSeen", 1);
+        _achievementManager.ProgressAchievement(session, "ACH_SelfModBanSeen", 1);
     }
 }
