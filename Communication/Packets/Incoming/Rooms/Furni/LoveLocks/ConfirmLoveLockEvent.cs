@@ -8,7 +8,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.LoveLocks;
 
 internal class ConfirmLoveLockEvent : IPacketEvent
 {
-    private readonly IDatabase _database; 
+    private readonly IDatabase _database;
 
     public ConfirmLoveLockEvent(IDatabase database)
     {

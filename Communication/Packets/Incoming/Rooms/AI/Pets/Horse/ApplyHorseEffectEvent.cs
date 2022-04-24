@@ -42,7 +42,7 @@ internal class ApplyHorseEffectEvent : IPacketEvent
                 dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
             }
 
-            //We only want to use this if we're successful. 
+            //We only want to use this if we're successful.
             room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
         }
         else if (item.Data.InteractionType == InteractionType.HorseSaddle2)
@@ -54,7 +54,7 @@ internal class ApplyHorseEffectEvent : IPacketEvent
                 dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
             }
 
-            //We only want to use this if we're successful. 
+            //We only want to use this if we're successful.
             room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
         }
         else if (item.Data.InteractionType == InteractionType.HorseHairstyle)
@@ -69,7 +69,7 @@ internal class ApplyHorseEffectEvent : IPacketEvent
                 dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
             }
 
-            //We only want to use this if we're successful. 
+            //We only want to use this if we're successful.
             room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
         }
         else if (item.Data.InteractionType == InteractionType.HorseHairDye)
@@ -84,7 +84,7 @@ internal class ApplyHorseEffectEvent : IPacketEvent
                 dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
             }
 
-            //We only want to use this if we're successful. 
+            //We only want to use this if we're successful.
             room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
         }
         else if (item.Data.InteractionType == InteractionType.HorseBodyDye)
@@ -107,7 +107,7 @@ internal class ApplyHorseEffectEvent : IPacketEvent
                 dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
             }
 
-            //We only want to use this if we're successful. 
+            //We only want to use this if we're successful.
             room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
         }
 

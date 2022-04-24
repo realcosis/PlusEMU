@@ -7,5 +7,5 @@ namespace Plus.Communication.Attributes;
 /// </summary>
 public class NoAuth : Attribute
 {
-    
+
 }

@@ -80,7 +80,7 @@ public class InventoryComponent
         UpdateItems(true);
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
-            dbClient.RunQuery("DELETE FROM items WHERE room_id='0' AND user_id = " + _userId); //Do join 
+            dbClient.RunQuery("DELETE FROM items WHERE room_id='0' AND user_id = " + _userId); //Do join
         }
         _floorItems.Clear();
         _wallItems.Clear();

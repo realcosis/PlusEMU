@@ -12,7 +12,7 @@ namespace Plus.Communication.Packets.Incoming.Moderation;
 
 internal class GetModeratorRoomChatlogEvent : IPacketEvent
 {
-    private readonly IRoomManager _roomManager; 
+    private readonly IRoomManager _roomManager;
     private readonly IChatlogManager _chatlogManager;
     private readonly IDatabase _database;
 

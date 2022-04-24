@@ -26,7 +26,7 @@ internal class ModeratorRoomChatlogComposer : ServerPacket
             WriteString(UnixTimestamp.FromUnixTimestamp(entry.Timestamp).ToShortTimeString()); // time?
             WriteInteger(entry.PlayerId); // User Id
             WriteString(username); // Username
-            WriteString(!string.IsNullOrEmpty(entry.Message) ? entry.Message : "** user sent a blank message **"); // Message        
+            WriteString(!string.IsNullOrEmpty(entry.Message) ? entry.Message : "** user sent a blank message **"); // Message
             WriteBoolean(false); //TODO, AI's?
         }
     }

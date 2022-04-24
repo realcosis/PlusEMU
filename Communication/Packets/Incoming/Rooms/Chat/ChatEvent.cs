@@ -24,12 +24,12 @@ public class ChatEvent : IPacketEvent
     private readonly IQuestManager _questManager;
 
     public ChatEvent(
-        IChatStyleManager chatStyleManager, 
-        IChatlogManager chatlogManager, 
-        IWordFilterManager wordFilterManager, 
-        ICommandManager commandManager, 
-        IModerationManager moderationManager, 
-        ISettingsManager settingsManager, 
+        IChatStyleManager chatStyleManager,
+        IChatlogManager chatlogManager,
+        IWordFilterManager wordFilterManager,
+        ICommandManager commandManager,
+        IModerationManager moderationManager,
+        ISettingsManager settingsManager,
         IQuestManager questManager)
     {
         _chatStyleManager = chatStyleManager;

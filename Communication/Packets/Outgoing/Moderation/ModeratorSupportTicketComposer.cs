@@ -12,7 +12,7 @@ internal class ModeratorSupportTicketComposer : ServerPacket
         WriteInteger(ticket.Id); // Id
         WriteInteger(ticket.GetStatus(id)); // Tab ID
         WriteInteger(ticket.Type); // Type
-        WriteInteger(ticket.Category); // Category 
+        WriteInteger(ticket.Category); // Category
         WriteInteger(Convert.ToInt32((DateTime.Now - UnixTimestamp.FromUnixTimestamp(ticket.Timestamp)).TotalMilliseconds)); // This should fix the overflow?
         WriteInteger(ticket.Priority); // Priority
         WriteInteger(0); //??

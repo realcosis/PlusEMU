@@ -950,7 +950,7 @@ public class RoomUserManager
                                 user.Team = Team.None;
                             }
                             //Item.ExtraData = usersOnTeam.ToString();
-                            //Item.UpdateState(false, true);                                
+                            //Item.UpdateState(false, true);
                         }
                         break;
                     }
@@ -990,7 +990,7 @@ public class RoomUserManager
                                 user.Team = Team.None;
                             }
                             //Item.ExtraData = usersOnTeam.ToString();
-                            //Item.UpdateState(false, true);                                
+                            //Item.UpdateState(false, true);
                         }
                         break;
                     }
