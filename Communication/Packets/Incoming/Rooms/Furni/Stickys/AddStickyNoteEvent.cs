@@ -1,18 +1,26 @@
 ﻿using System;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni.Stickys;
 
 internal class AddStickyNoteEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+
+    public AddStickyNoteEvent(IRoomManager roomManager)
+    {
+        _roomManager = roomManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         var itemId = packet.PopInt();
         var locationData = packet.PopString();
         if (!session.GetHabbo().InRoom)
             return;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
         if (!room.CheckRights(session))
             return;

@@ -1,9 +1,17 @@
-﻿using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.Achievements;
+using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Action;
 
 internal class KickUserEvent : IPacketEvent
 {
+    private readonly IAchievementManager _achievementManager;
+
+    public KickUserEvent(IAchievementManager achievementManager)
+    {
+        _achievementManager = achievementManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         var room = session.GetHabbo().CurrentRoom;
@@ -22,6 +30,6 @@ internal class KickUserEvent : IPacketEvent
         if (room.CheckRights(user.GetClient(), true) || user.GetClient().GetHabbo().GetPermissions().HasRight("mod_tool"))
             return;
         room.GetRoomUserManager().RemoveUserFromRoom(user.GetClient(), true, true);
-        PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_SelfModKickSeen", 1);
+        _achievementManager.ProgressAchievement(session, "ACH_SelfModKickSeen", 1);
     }
 }

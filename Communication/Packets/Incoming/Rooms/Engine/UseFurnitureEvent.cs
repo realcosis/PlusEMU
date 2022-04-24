@@ -1,5 +1,6 @@
 ﻿using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Communication.Packets.Outgoing.Rooms.Furni;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Items.Wired;
@@ -10,11 +11,22 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Engine;
 
 internal class UseFurnitureEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+    private readonly IQuestManager _questManager;
+    private readonly IDatabase _database;
+
+    public UseFurnitureEvent(IRoomManager roomManager, IQuestManager questManager, IDatabase database)
+    {
+        _roomManager = roomManager;
+        _questManager = questManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
             return;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
         var itemId = packet.PopInt();
         var item = room.GetRoomItemHandler().GetItem(itemId);
@@ -30,7 +42,7 @@ internal class UseFurnitureEvent : IPacketEvent
             room.TonerData.Enabled = room.TonerData.Enabled == 0 ? 1 : 0;
             room.SendPacket(new ObjectUpdateComposer(item, room.OwnerId));
             item.UpdateState();
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = _database.GetQueryReactor();
             dbClient.RunQuery("UPDATE `room_items_toner` SET `enabled` = '" + room.TonerData.Enabled + "' LIMIT 1");
             return;
         }
@@ -47,6 +59,6 @@ internal class UseFurnitureEvent : IPacketEvent
         item.Interactor.OnTrigger(session, item, request, hasRights);
         if (toggle)
             item.GetRoom().GetWired().TriggerEvent(WiredBoxType.TriggerStateChanges, session.GetHabbo(), item);
-        PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.ExploreFindItem, item.GetBaseItem().Id);
+        _questManager.ProgressUserQuest(session, QuestType.ExploreFindItem, item.GetBaseItem().Id);
     }
 }

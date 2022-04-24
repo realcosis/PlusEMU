@@ -3,6 +3,7 @@ using System.Data;
 using Plus.Communication.Packets.Outgoing;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms.AI.Speech;
 
@@ -10,6 +11,11 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots;
 
 internal class SaveBotActionEvent : IPacketEvent
 {
+    private readonly IDatabase _database;
+    public SaveBotActionEvent(IDatabase database) { 
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
@@ -50,7 +56,7 @@ internal class SaveBotActionEvent : IPacketEvent
                 //Change the defaults
                 bot.BotData.Look = session.GetHabbo().Look;
                 bot.BotData.Gender = session.GetHabbo().Gender;
-                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = _database.GetQueryReactor();
                 dbClient.SetQuery("UPDATE `bots` SET `look` = @look, `gender` = '" + session.GetHabbo().Gender + "' WHERE `id` = '" + bot.BotData.Id + "' LIMIT 1");
                 dbClient.AddParameter("look", session.GetHabbo().Look);
                 dbClient.RunQuery();
@@ -77,7 +83,7 @@ internal class SaveBotActionEvent : IPacketEvent
                 roomBot.AutomaticChat = Convert.ToBoolean(automaticChat);
                 roomBot.SpeakingInterval = Convert.ToInt32(speakingInterval);
                 roomBot.MixSentences = Convert.ToBoolean(mixChat);
-                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = _database.GetQueryReactor();
                 dbClient.RunQuery("DELETE FROM `bots_speech` WHERE `bot_id` = '" + bot.BotData.Id + "'");
                 for (var i = 0; i <= speechData.Length - 1; i++)
                 {
@@ -105,7 +111,7 @@ internal class SaveBotActionEvent : IPacketEvent
                     bot.BotData.WalkingMode = "freeroam";
                 else
                     bot.BotData.WalkingMode = "stand";
-                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+                using var dbClient = _database.GetQueryReactor();
                 dbClient.RunQuery("UPDATE `bots` SET `walk_mode` = '" + bot.BotData.WalkingMode + "' WHERE `id` = '" + bot.BotData.Id + "' LIMIT 1");
                 break;
             }
@@ -139,7 +145,7 @@ internal class SaveBotActionEvent : IPacketEvent
                     return;
                 }
                 bot.BotData.Name = dataString;
-                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = _database.GetQueryReactor())
                 {
                     dbClient.SetQuery("UPDATE `bots` SET `name` = @name WHERE `id` = '" + bot.BotData.Id + "' LIMIT 1");
                     dbClient.AddParameter("name", dataString);

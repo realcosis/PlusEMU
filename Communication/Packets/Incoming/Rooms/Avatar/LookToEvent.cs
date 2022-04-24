@@ -1,13 +1,21 @@
 ﻿using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Rooms.PathFinding;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Avatar;
 
 internal class LookToEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+
+    public LookToEvent(IRoomManager roomManager)
+    {
+        _roomManager = roomManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (user == null)

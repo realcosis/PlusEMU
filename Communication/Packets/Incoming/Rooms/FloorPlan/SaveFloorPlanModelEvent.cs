@@ -1,12 +1,23 @@
 ﻿using System.Linq;
 using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
 using Plus.Communication.Packets.Outgoing.Rooms.Session;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.FloorPlan;
 
 internal class SaveFloorPlanModelEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+    private readonly IDatabase _database;
+
+    public SaveFloorPlanModelEvent(IRoomManager roomManager, IDatabase database)
+    {
+        _roomManager = roomManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
@@ -83,7 +94,7 @@ internal class SaveFloorPlanModelEvent : IPacketEvent
             wallHeight = 15;
         var modelName = "model_bc_" + room.Id;
         map += '\r' + new string('x', sizeX);
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `room_models` WHERE `id` = @model AND `custom` = '1' LIMIT 1");
             dbClient.AddParameter("model", "model_bc_" + room.Id);
@@ -125,8 +136,8 @@ internal class SaveFloorPlanModelEvent : IPacketEvent
         room.WallThickness = wallThick;
         room.FloorThickness = floorThick;
         var usersToReturn = room.GetRoomUserManager().GetRoomUsers().ToList();
-        PlusEnvironment.GetGame().GetRoomManager().ReloadModel(modelName);
-        PlusEnvironment.GetGame().GetRoomManager().UnloadRoom(room.Id);
+        _roomManager.ReloadModel(modelName);
+        _roomManager.UnloadRoom(room.Id);
         foreach (var user in usersToReturn)
         {
             if (user == null || user.GetClient() == null)
