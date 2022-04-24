@@ -2,6 +2,7 @@
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Users;
 
@@ -28,11 +29,9 @@ internal class OpenPlayerProfileEvent : IPacketEvent
         }
         var groups = _groupManager.GetGroupsForUser(targetData.Id);
         int friendCount;
-        using (var dbClient = _database.GetQueryReactor())
+        using (var connection = _database.Connection())
         {
-            dbClient.SetQuery("SELECT COUNT(0) FROM `messenger_friendships` WHERE (`user_one_id` = @userid OR `user_two_id` = @userid)");
-            dbClient.AddParameter("userid", userId);
-            friendCount = dbClient.GetInteger();
+            friendCount = connection.ExecuteScalar<int>("SELECT count(0) FROM messenger_friendships WHERE user_one_id = @userid OR user_two_id = @userid", new { userid = userId });
         }
         session.SendPacket(new ProfileInformationComposer(targetData, session, groups, friendCount));
     }
