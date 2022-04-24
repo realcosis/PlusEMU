@@ -208,6 +208,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
                 receiver.SendPacket(new FurniListAddComposer(giveItem));
                 receiver.SendPacket(new FurniListUpdateComposer());
             }
+            //How does OG Habbo handle this? Achievement should progress even if no message is left IMO
             if (habbo.Id != session.GetHabbo().Id && !string.IsNullOrWhiteSpace(giftMessage))
             {
                 _achievementManager.ProgressAchievement(session, "ACH_GiftGiver", 1);
