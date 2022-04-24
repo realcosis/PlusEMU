@@ -2,18 +2,32 @@
 using System.Collections.Generic;
 using System.Linq;
 using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
+using Plus.Core.Settings;
+using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Engine;
 
 internal class PlaceObjectEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+    private readonly ISettingsManager _settingsManager;
+    private readonly IAchievementManager _achievementManager;
+
+    public PlaceObjectEvent(IRoomManager roomManager, ISettingsManager settingsManager, IAchievementManager achievementManager)
+    {
+        _roomManager = roomManager;
+        _settingsManager = settingsManager;
+        _achievementManager = achievementManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
+        if (!session.GetHabbo().InRoom)
             return;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
         var rawData = packet.PopString();
         var data = rawData.Split(' ');
@@ -28,9 +42,9 @@ internal class PlaceObjectEvent : IPacketEvent
         var item = session.GetHabbo().GetInventoryComponent().GetItem(itemId);
         if (item == null)
             return;
-        if (room.GetRoomItemHandler().GetWallAndFloor.Count() > Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("room.item.placement_limit")))
+        if (room.GetRoomItemHandler().GetWallAndFloor.Count() > Convert.ToInt32(_settingsManager.TryGetValue("room.item.placement_limit")))
         {
-            session.SendNotification("You cannot have more than " + Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("room.item.placement_limit")) + " items in a room!");
+            session.SendNotification("You cannot have more than " + Convert.ToInt32(_settingsManager.TryGetValue("room.item.placement_limit")) + " items in a room!");
             return;
         }
         if (item.Data.InteractionType == InteractionType.Exchange && room.OwnerId != session.GetHabbo().Id && !session.GetHabbo().GetPermissions().HasRight("room_item_place_exchange_anywhere"))
@@ -90,7 +104,7 @@ internal class PlaceObjectEvent : IPacketEvent
             {
                 session.GetHabbo().GetInventoryComponent().RemoveItem(itemId);
                 if (session.GetHabbo().Id == room.OwnerId)
-                    PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_RoomDecoFurniCount", 1);
+                    _achievementManager.ProgressAchievement(session, "ACH_RoomDecoFurniCount", 1);
                 if (roomItem.IsWired)
                 {
                     try
@@ -119,7 +133,7 @@ internal class PlaceObjectEvent : IPacketEvent
                     {
                         session.GetHabbo().GetInventoryComponent().RemoveItem(itemId);
                         if (session.GetHabbo().Id == room.OwnerId)
-                            PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_RoomDecoFurniCount", 1);
+                            _achievementManager.ProgressAchievement(session, "ACH_RoomDecoFurniCount", 1);
                     }
                 }
                 catch

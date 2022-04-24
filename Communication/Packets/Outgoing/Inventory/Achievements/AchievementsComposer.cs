@@ -21,14 +21,14 @@ internal class AchievementsComposer : ServerPacket
             WriteInteger(targetLevel); // Target level
             WriteString(achievement.GroupName + targetLevel); // Target name/desc/badge
             WriteInteger(1);
-            WriteInteger(targetLevelData.Requirement); // Progress req/target          
+            WriteInteger(targetLevelData.Requirement); // Progress req/target
             WriteInteger(targetLevelData.RewardPixels);
             WriteInteger(0); // Type of reward
             WriteInteger(userData?.Progress ?? 0); // Current progress
             WriteBoolean(userData != null ? userData.Level >= totalLevels : false); // Set 100% completed(??)
             WriteString(achievement.Category); // Category
             WriteString(string.Empty);
-            WriteInteger(totalLevels); // Total amount of levels 
+            WriteInteger(totalLevels); // Total amount of levels
             WriteInteger(0);
         }
         WriteString("");

@@ -16,7 +16,7 @@ internal class ModerationCautionEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || !session.GetHabbo().GetPermissions().HasRight("mod_caution"))
+        if (!session.GetHabbo().GetPermissions().HasRight("mod_caution"))
             return;
         var userId = packet.PopInt();
         var message = packet.PopString();

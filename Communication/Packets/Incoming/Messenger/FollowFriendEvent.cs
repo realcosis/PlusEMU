@@ -15,8 +15,6 @@ internal class FollowFriendEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
-            return;
         var buddyId = packet.PopInt();
         if (buddyId == 0 || buddyId == session.GetHabbo().Id)
             return;

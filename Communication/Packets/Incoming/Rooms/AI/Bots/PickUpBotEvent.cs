@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using Plus.Communication.Packets.Outgoing.Inventory.Bots;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Inventory.Bots;
 
@@ -8,6 +9,13 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots;
 
 internal class PickUpBotEvent : IPacketEvent
 {
+    public readonly IDatabase _database;
+
+    public PickUpBotEvent(IDatabase database)
+    {
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
@@ -25,7 +33,7 @@ internal class PickUpBotEvent : IPacketEvent
             session.SendWhisper("You can only pick up your own bots!");
             return;
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `bots` SET `room_id` = '0' WHERE `id` = @id LIMIT 1");
             dbClient.AddParameter("id", botId);

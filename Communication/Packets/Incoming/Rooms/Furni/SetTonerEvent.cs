@@ -1,14 +1,24 @@
 ﻿using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni;
 
 internal class SetTonerEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+    private readonly IDatabase _database;
+    public SetTonerEvent(IRoomManager roomManager, IDatabase database)
+    {
+        _roomManager = roomManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
         if (!room.CheckRights(session, true))
             return;
@@ -23,7 +33,7 @@ internal class SetTonerEvent : IPacketEvent
         var int3 = packet.PopInt();
         if (int1 > 255 || int2 > 255 || int3 > 255)
             return;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `room_items_toner` SET `enabled` = '1', `data1` = @data1, `data2` = @data2, `data3` = @data3 WHERE `id` = @itemId LIMIT 1");
             dbClient.AddParameter("itemId", item.Id);

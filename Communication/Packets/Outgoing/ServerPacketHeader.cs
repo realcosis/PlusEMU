@@ -2,7 +2,7 @@
 
 public static class ServerPacketHeader
 {
-    // Handshake 
+    // Handshake
     public const int InitCryptoMessageComposer = 3531; //675
     public const int SecretKeyMessageComposer = 696; //3179
     public const int AuthenticationOkMessageComposer = 1079; //1442
@@ -221,7 +221,7 @@ public static class ServerPacketHeader
     public const int HabboSearchResultMessageComposer = 2823; //214
     public const int PetHorseFigureInformationMessageComposer = 2926; //560
     public const int PetInventoryMessageComposer = 1988; //3528
-    public const int PongMessageComposer = 1240; //624        
+    public const int PongMessageComposer = 1240; //624
     public const int RentableSpaceMessageComposer = 2323; //2660
     public const int GetYouTubePlaylistMessageComposer = 1354; //763
     public const int RespectNotificationMessageComposer = 1818; //474
@@ -296,7 +296,7 @@ public static class ServerPacketHeader
     public const int MarketplaceMakeOfferResultMessageComposer = 480; //3960
     public const int FlatCreatedMessageComposer = 3001; //1621
     public const int BotInventoryMessageComposer = 3692; //2620
-    public const int LoadGameMessageComposer = 652; //1403        
+    public const int LoadGameMessageComposer = 652; //1403
     public const int UpdateMagicTileMessageComposer = 2811; //2641
     public const int MaintenanceStatusMessageComposer = 3465; //3198
     public const int Game3WeeklyLeaderboardMessageComposer = 1326; //2194

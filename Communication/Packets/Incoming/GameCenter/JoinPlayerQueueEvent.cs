@@ -16,8 +16,6 @@ internal class JoinPlayerQueueEvent : IPacketEvent
     }
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
         var gameId = packet.PopInt();
         GameData gameData = null;
         if (_gameDataManager.TryGetGame(gameId, out gameData))

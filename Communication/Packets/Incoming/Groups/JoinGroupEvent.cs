@@ -20,8 +20,6 @@ internal class JoinGroupEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
         if (!_groupManager.TryGetGroup(packet.PopInt(), out var group))
             return;
         if (group.IsMember(session.GetHabbo().Id) || group.IsAdmin(session.GetHabbo().Id) || group.HasRequest(session.GetHabbo().Id) && group.Type == GroupType.Private)
@@ -43,7 +41,7 @@ internal class JoinGroupEvent : IPacketEvent
         }
         else
         {
-            session.SendPacket(new GroupFurniConfigComposer(PlusEnvironment.GetGame().GetGroupManager().GetGroupsForUser(session.GetHabbo().Id)));
+            session.SendPacket(new GroupFurniConfigComposer(_groupManager.GetGroupsForUser(session.GetHabbo().Id)));
             session.SendPacket(new GroupInfoComposer(group, session));
             if (session.GetHabbo().CurrentRoom != null)
                 session.GetHabbo().CurrentRoom.SendPacket(new RefreshFavouriteGroupComposer(session.GetHabbo().Id));

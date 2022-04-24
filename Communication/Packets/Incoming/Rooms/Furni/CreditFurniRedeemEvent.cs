@@ -1,21 +1,35 @@
 ﻿using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
+using Plus.Core.Settings;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni;
 
 internal class CreditFurniRedeemEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+    private readonly ISettingsManager _settingsManager;
+    private readonly IDatabase _database;
+
+    public CreditFurniRedeemEvent(IRoomManager roomManager, ISettingsManager settingsManager, IDatabase database)
+    {
+        _roomManager = roomManager;
+        _settingsManager = settingsManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
         if (!room.CheckRights(session, true))
             return;
-        if (PlusEnvironment.GetSettingsManager().TryGetValue("room.item.exchangeables.enabled") != "1")
+        if (_settingsManager.TryGetValue("room.item.exchangeables.enabled") != "1")
         {
             session.SendNotification("The hotel managers have temporarilly disabled exchanging!");
             return;
@@ -31,7 +45,7 @@ internal class CreditFurniRedeemEvent : IPacketEvent
             session.GetHabbo().Credits += value;
             session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("DELETE FROM `items` WHERE `id` = @exchangeId LIMIT 1");
             dbClient.AddParameter("exchangeId", exchange.Id);

@@ -20,8 +20,6 @@ internal class CancelOfferEvent : IPacketEvent
     }
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
         DataRow row;
         var offerId = packet.PopInt();
         using (var dbClient = _database.GetQueryReactor())

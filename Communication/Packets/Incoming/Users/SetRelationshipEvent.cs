@@ -1,6 +1,7 @@
 ﻿using System;
 using Plus.Communication.Packets.Outgoing.Messenger;
 using Plus.Communication.Packets.Outgoing.Moderation;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Relationships;
 
@@ -8,10 +9,17 @@ namespace Plus.Communication.Packets.Incoming.Users;
 
 internal class SetRelationshipEvent : IPacketEvent
 {
+    private readonly IGameClientManager _clientManager;
+    private readonly IDatabase _database;
+
+    public SetRelationshipEvent(IGameClientManager clientManager, IDatabase database)
+    {
+        _clientManager = clientManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
-            return;
         var user = packet.PopInt();
         var type = packet.PopInt();
         if (!session.GetHabbo().GetMessenger().FriendshipExists(user))
@@ -29,7 +37,7 @@ internal class SetRelationshipEvent : IPacketEvent
             session.SendPacket(new BroadcastMessageAlertComposer("Sorry, you're limited to a total of 2000 relationships."));
             return;
         }
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         if (type == 0)
         {
             dbClient.SetQuery("SELECT `id` FROM `user_relationships` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND `target` = @target LIMIT 1");
@@ -60,7 +68,7 @@ internal class SetRelationshipEvent : IPacketEvent
             if (!session.GetHabbo().Relationships.ContainsKey(user))
                 session.GetHabbo().Relationships.Add(user, new Relationship(newId, user, type));
         }
-        var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(user);
+        var client = _clientManager.GetClientByUserId(user);
         if (client != null)
             session.GetHabbo().GetMessenger().UpdateFriend(user, client, true);
         else

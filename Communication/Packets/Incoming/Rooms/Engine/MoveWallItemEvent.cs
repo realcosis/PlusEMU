@@ -1,13 +1,21 @@
 ﻿using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Engine;
 
 internal class MoveWallItemEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+
+    public MoveWallItemEvent(IRoomManager roomManager)
+    {
+        _roomManager = roomManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
         if (!room.CheckRights(session))
             return;

@@ -1,10 +1,18 @@
 ﻿using Plus.Communication.Packets.Outgoing.Rooms.Action;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Action;
 
 internal class UnIgnoreUserEvent : IPacketEvent
 {
+    private readonly IDatabase _database;
+
+    public UnIgnoreUserEvent(IDatabase database)
+    {
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
@@ -20,7 +28,7 @@ internal class UnIgnoreUserEvent : IPacketEvent
             return;
         if (session.GetHabbo().GetIgnores().TryRemove(player.Id))
         {
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.SetQuery("DELETE FROM `user_ignores` WHERE `user_id` = @uid AND `ignore_id` = @ignoreId");
                 dbClient.AddParameter("uid", session.GetHabbo().Id);

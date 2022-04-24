@@ -1,5 +1,6 @@
 ﻿using System;
 using Plus.Communication.Packets.Outgoing.Rooms.Furni.LoveLocks;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 
@@ -7,6 +8,13 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.LoveLocks;
 
 internal class ConfirmLoveLockEvent : IPacketEvent
 {
+    private readonly IDatabase _database;
+
+    public ConfirmLoveLockEvent(IDatabase database)
+    {
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         var pId = packet.PopInt();
@@ -94,7 +102,7 @@ internal class ConfirmLoveLockEvent : IPacketEvent
         userOne.LlPartner = 0;
         userTwo.LlPartner = 0;
         item.UpdateState(true, true);
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `items` SET `extra_data` = @extraData WHERE `id` = @ID LIMIT 1");
             dbClient.AddParameter("extraData", item.ExtraData);

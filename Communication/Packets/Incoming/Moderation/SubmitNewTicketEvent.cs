@@ -22,9 +22,6 @@ internal class SubmitNewTicketEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
-
         // Run a quick check to see if we have any existing tickets.
         if (_moderationManager.UserHasTickets(session.GetHabbo().Id))
         {

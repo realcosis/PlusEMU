@@ -2,16 +2,27 @@
 using System.Drawing;
 using Plus.Communication.Packets.Outgoing.Rooms.AI.Pets;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Rooms;
+using Plus.HabboHotel.Rooms.Chat.Pets.Locale;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse;
 
 internal class RideHorseEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+    private readonly IPetLocale _petLocale;
+
+    public RideHorseEvent(IRoomManager roomManager, IPetLocale petLocale)
+    {
+        _roomManager = roomManager;
+        _petLocale = petLocale;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (user == null)
@@ -32,7 +43,7 @@ internal class RideHorseEvent : IPacketEvent
         {
             if (pet.RidingHorse)
             {
-                var speech2 = PlusEnvironment.GetGame().GetChatManager().GetPetLocale().GetValue("pet.alreadymounted");
+                var speech2 = _petLocale.GetValue("pet.alreadymounted");
                 var randomSpeech2 = new Random();
                 pet.Chat(speech2[randomSpeech2.Next(0, speech2.Length - 1)]);
             }

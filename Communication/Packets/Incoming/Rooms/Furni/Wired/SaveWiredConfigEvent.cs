@@ -4,12 +4,10 @@ using Plus.HabboHotel.Items.Wired;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni.Wired;
 
-internal class SaveWiredConfigEvent : IPacketEvent
+internal abstract class SaveWiredConfigEvent : IPacketEvent
 {
-    public void Parse(GameClient session, ClientPacket packet)
+    public virtual void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
         if (!session.GetHabbo().InRoom)
             return;
         var room = session.GetHabbo().CurrentRoom;

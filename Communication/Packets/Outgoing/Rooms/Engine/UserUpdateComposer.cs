@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using Plus.HabboHotel.Rooms;
@@ -16,7 +17,7 @@ internal class UserUpdateComposer : ServerPacket
             WriteInteger(user.VirtualId);
             WriteInteger(user.X);
             WriteInteger(user.Y);
-            WriteString(user.Z.ToString("0.00"));
+            WriteString(user.Z.ToString(CultureInfo.InvariantCulture));
             WriteInteger(user.RotHead);
             WriteInteger(user.RotBody);
             var statusComposer = new StringBuilder();

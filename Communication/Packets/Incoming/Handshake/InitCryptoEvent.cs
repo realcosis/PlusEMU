@@ -1,9 +1,11 @@
-﻿using Plus.Communication.Encryption;
+﻿using Plus.Communication.Attributes;
+using Plus.Communication.Encryption;
 using Plus.Communication.Packets.Outgoing.Handshake;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Handshake;
 
+[NoAuthenticationRequired]
 public class InitCryptoEvent : IPacketEvent
 {
     public void Parse(GameClient session, ClientPacket packet)

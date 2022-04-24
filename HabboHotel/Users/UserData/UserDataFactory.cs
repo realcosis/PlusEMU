@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.Users.Authenticator;
 using Plus.HabboHotel.Users.Badges;
@@ -78,7 +79,9 @@ public static class UserDataFactory
                 dbClient.SetQuery("SELECT * FROM `user_info` WHERE `user_id` = '" + userId + "' LIMIT 1");
                 userInfo = dbClient.GetRow();
             }
-            dbClient.RunQuery("UPDATE `users` SET `online` = '1', `auth_ticket` = '' WHERE `id` = '" + userId + "' LIMIT 1");
+
+            if (!Debugger.IsAttached)
+                dbClient.RunQuery("UPDATE `users` SET `online` = '1', `auth_ticket` = '' WHERE `id` = '" + userId + "' LIMIT 1");
         }
         var achievements = new ConcurrentDictionary<string, UserAchievement>();
         foreach (DataRow dRow in dAchievements.Rows)

@@ -2,26 +2,27 @@
 using Plus.Communication.Packets.Outgoing.Users;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Groups;
 
 namespace Plus.Communication.Packets.Incoming.Groups;
 
 internal class SetGroupFavouriteEvent : IPacketEvent
 {
+    private readonly IGroupManager _groupManager;
     private readonly IDatabase _database;
 
-    public SetGroupFavouriteEvent(IDatabase database)
+    public SetGroupFavouriteEvent(IGroupManager groupManager,IDatabase database)
     {
+        _groupManager = groupManager;
         _database = database;
     }
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null)
-            return;
         var groupId = packet.PopInt();
         if (groupId == 0)
             return;
-        if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out var group))
+        if (!_groupManager.TryGetGroup(groupId, out var group))
             return;
         session.GetHabbo().GetStats().FavouriteGroupId = group.Id;
         using (var dbClient = _database.GetQueryReactor())

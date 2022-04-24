@@ -14,8 +14,6 @@ internal class SendMsgEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
-            return;
         var userId = packet.PopInt();
         if (userId == 0 || userId == session.GetHabbo().Id)
             return;

@@ -21,8 +21,6 @@ internal class CreateFlatEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
         var rooms = RoomFactory.GetRoomsDataByOwnerSortByName(session.GetHabbo().Id);
         if (rooms.Count >= 500)
         {

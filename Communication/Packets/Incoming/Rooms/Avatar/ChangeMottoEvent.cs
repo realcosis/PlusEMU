@@ -1,13 +1,29 @@
 ﻿using System;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+using Plus.Database;
+using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
+using Plus.HabboHotel.Rooms.Chat.Filter;
 using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Avatar;
 
 internal class ChangeMottoEvent : IPacketEvent
 {
+    private readonly IWordFilterManager _wordFilterManager;
+    private readonly IAchievementManager _achievementManager;
+    private readonly IQuestManager _questManager;
+    private readonly IDatabase _database;
+
+    public ChangeMottoEvent(IWordFilterManager wordFilterManager, IAchievementManager achievementManager, IQuestManager questManager, IDatabase database)
+    {
+        _wordFilterManager = wordFilterManager;
+        _achievementManager = achievementManager;
+        _questManager = questManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session.GetHabbo().TimeMuted > 0)
@@ -31,17 +47,17 @@ internal class ChangeMottoEvent : IPacketEvent
         if (newMotto == session.GetHabbo().Motto)
             return;
         if (!session.GetHabbo().GetPermissions().HasRight("word_filter_override"))
-            newMotto = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(newMotto);
+            newMotto = _wordFilterManager.CheckMessage(newMotto);
         session.GetHabbo().Motto = newMotto;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `users` SET `motto` = @motto WHERE `id` = @userId LIMIT 1");
             dbClient.AddParameter("userId", session.GetHabbo().Id);
             dbClient.AddParameter("motto", newMotto);
             dbClient.RunQuery();
         }
-        PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.ProfileChangeMotto);
-        PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_Motto", 1);
+        _questManager.ProgressUserQuest(session, QuestType.ProfileChangeMotto);
+        _achievementManager.ProgressAchievement(session, "ACH_Motto", 1);
         if (session.GetHabbo().InRoom)
         {
             var room = session.GetHabbo().CurrentRoom;

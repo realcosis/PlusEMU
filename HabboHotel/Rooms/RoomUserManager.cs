@@ -148,7 +148,7 @@ public class RoomUserManager
                 var square = _room.GetGameMap().GetRandomWalkableSquare();
                 model.DoorX = square.X;
                 model.DoorY = square.Y;
-                model.DoorZ = _room.GetGameMap().GetHeightForSquareFromData(square);
+                model.DoorZ = (int)_room.GetGameMap().GetHeightForSquareFromData(square);
             }
             user.SetPos(model.DoorX, model.DoorY, model.DoorZ);
             user.SetRot(model.DoorOrientation, false);
@@ -950,7 +950,7 @@ public class RoomUserManager
                                 user.Team = Team.None;
                             }
                             //Item.ExtraData = usersOnTeam.ToString();
-                            //Item.UpdateState(false, true);                                
+                            //Item.UpdateState(false, true);
                         }
                         break;
                     }
@@ -990,7 +990,7 @@ public class RoomUserManager
                                 user.Team = Team.None;
                             }
                             //Item.ExtraData = usersOnTeam.ToString();
-                            //Item.UpdateState(false, true);                                
+                            //Item.UpdateState(false, true);
                         }
                         break;
                     }

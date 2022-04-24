@@ -1,10 +1,18 @@
 ﻿using Plus.Communication.Packets.Outgoing.Rooms.Settings;
+using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Settings;
 
 internal class GetRoomFilterListEvent : IPacketEvent
 {
+    private readonly IAchievementManager _achievementManager;
+
+    public GetRoomFilterListEvent(IAchievementManager achievementManager)
+    {
+        _achievementManager = achievementManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
@@ -15,6 +23,6 @@ internal class GetRoomFilterListEvent : IPacketEvent
         if (!instance.CheckRights(session))
             return;
         session.SendPacket(new GetRoomFilterListComposer(instance));
-        PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_SelfModRoomFilterSeen", 1);
+        _achievementManager.ProgressAchievement(session, "ACH_SelfModRoomFilterSeen", 1);
     }
 }

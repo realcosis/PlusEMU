@@ -17,7 +17,7 @@ internal class ReleaseTicketEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || !session.GetHabbo().GetPermissions().HasRight("mod_tool"))
+        if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
             return;
         var amount = packet.PopInt();
         for (var i = 0; i < amount; i++)

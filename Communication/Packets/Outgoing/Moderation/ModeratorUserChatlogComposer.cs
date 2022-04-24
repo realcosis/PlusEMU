@@ -32,7 +32,7 @@ internal class ModeratorUserChatlogComposer : ServerPacket
                 WriteString(UnixTimestamp.FromUnixTimestamp(entry.Timestamp).ToShortTimeString());
                 WriteInteger(entry.PlayerId); // UserId of message
                 WriteString(username); // Username of message
-                WriteString(!string.IsNullOrEmpty(entry.Message) ? entry.Message : "** user sent a blank message **"); // Message        
+                WriteString(!string.IsNullOrEmpty(entry.Message) ? entry.Message : "** user sent a blank message **"); // Message
                 WriteBoolean(habbo.Id == entry.PlayerId);
             }
         }

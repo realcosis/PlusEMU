@@ -10,7 +10,7 @@ internal class AchievementProgressedComposer : ServerPacket
         WriteInteger(achievement.Id); // Unknown (ID?)
         WriteInteger(targetLevel); // Target level
         WriteString(achievement.GroupName + targetLevel); // Target name/desc/badge
-        WriteInteger(1); // Progress req/target 
+        WriteInteger(1); // Progress req/target
         WriteInteger(targetLevelData.Requirement); // Reward in Pixels
         WriteInteger(targetLevelData.RewardPixels); // Reward Ach Score
         WriteInteger(0); // ?
@@ -18,7 +18,7 @@ internal class AchievementProgressedComposer : ServerPacket
         WriteBoolean(userData != null ? userData.Level >= totalLevels : false); // Set 100% completed(??)
         WriteString(achievement.Category); // Category
         WriteString(string.Empty);
-        WriteInteger(totalLevels); // Total amount of levels 
+        WriteInteger(totalLevels); // Total amount of levels
         WriteInteger(0);
     }
 }

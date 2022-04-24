@@ -522,7 +522,7 @@ public class Item
                             }
                             else
                             {
-                                // Invalid user, do nothing and move on for the next user. 
+                                // Invalid user, do nothing and move on for the next user.
                                 InteractingUser = 0;
                             }
                         }
@@ -685,7 +685,7 @@ public class Item
                             }
                             else
                             {
-                                // Invalid user, do nothing and move on for the next user. 
+                                // Invalid user, do nothing and move on for the next user.
                                 InteractingUser = 0;
                             }
                         }

@@ -16,8 +16,6 @@ public class AddFavouriteRoomEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null)
-            return;
         var roomId = packet.PopInt();
         if (!RoomFactory.TryGetData(roomId, out var data))
             return;

@@ -9,7 +9,7 @@ internal class AvatarEffectActivatedEvent : IPacketEvent
     {
         var effectId = packet.PopInt();
         var effect = session.GetHabbo().Effects().GetEffectNullable(effectId, false, true);
-        if (effect == null || session.GetHabbo().Effects().HasEffect(effectId, true)) return;
+        if (session.GetHabbo().Effects().HasEffect(effectId, true)) return;
         if (effect.Activate()) session.SendPacket(new AvatarEffectActivatedComposer(effect));
     }
 }

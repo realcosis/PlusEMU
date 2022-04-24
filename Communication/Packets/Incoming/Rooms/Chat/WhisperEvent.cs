@@ -1,16 +1,46 @@
 ﻿using System;
 using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Communication.Packets.Outgoing.Rooms.Chat;
+using Plus.HabboHotel.Rooms.Chat.Commands;
+using Plus.Core.Settings;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
 using Plus.HabboHotel.Quests;
+using Plus.HabboHotel.Rooms.Chat.Filter;
 using Plus.HabboHotel.Rooms.Chat.Logs;
+using Plus.HabboHotel.Rooms.Chat.Styles;
 using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Chat;
 
 public class WhisperEvent : IPacketEvent
 {
+    private readonly IChatStyleManager _chatStyleManager;
+    private readonly IChatlogManager _chatlogManager;
+    private readonly IWordFilterManager _wordFilterManager;
+    private readonly ICommandManager _commandManager;
+    private readonly IModerationManager _moderationManager;
+    private readonly ISettingsManager _settingsManager;
+    private readonly IQuestManager _questManager;
+
+    public WhisperEvent(
+        IChatStyleManager chatStyleManager,
+        IChatlogManager chatlogManager,
+        IWordFilterManager wordFilterManager,
+        ICommandManager commandManager,
+        IModerationManager moderationManager,
+        ISettingsManager settingsManager,
+        IQuestManager questManager)
+    {
+        _chatStyleManager = chatStyleManager;
+        _chatlogManager = chatlogManager;
+        _wordFilterManager = wordFilterManager;
+        _commandManager = commandManager;
+        _moderationManager = moderationManager;
+        _settingsManager = settingsManager;
+        _questManager = questManager;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
@@ -41,8 +71,8 @@ public class WhisperEvent : IPacketEvent
             return;
         }
         if (!session.GetHabbo().GetPermissions().HasRight("word_filter_override"))
-            message = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(message);
-        if (!PlusEnvironment.GetGame().GetChatManager().GetChatStyles().TryGetStyle(colour, out var style) ||
+            message = _wordFilterManager.CheckMessage(message);
+        if (!_chatStyleManager.TryGetStyle(colour, out var style) ||
             style.RequiredRight.Length > 0 && !session.GetHabbo().GetPermissions().HasRight(style.RequiredRight))
             colour = 0;
         user.LastBubble = session.GetHabbo().CustomBubbleId == 0 ? colour : session.GetHabbo().CustomBubbleId;
@@ -59,14 +89,13 @@ public class WhisperEvent : IPacketEvent
             session.SendWhisper("Oops, this user has their whispers disabled!");
             return;
         }
-        PlusEnvironment.GetGame().GetChatManager().GetLogs()
-            .StoreChatlog(new ChatlogEntry(session.GetHabbo().Id, room.Id, "<Whisper to " + toUser + ">: " + message, UnixTimestamp.GetNow(), session.GetHabbo(), room));
-        if (PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckBannedWords(message))
+        _chatlogManager.StoreChatlog(new ChatlogEntry(session.GetHabbo().Id, room.Id, "<Whisper to " + toUser + ">: " + message, UnixTimestamp.GetNow(), session.GetHabbo(), room));
+        if (_wordFilterManager.CheckBannedWords(message))
         {
             session.GetHabbo().BannedPhraseCount++;
-            if (session.GetHabbo().BannedPhraseCount >= Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("room.chat.filter.banned_phrases.chances")))
+            if (session.GetHabbo().BannedPhraseCount >= Convert.ToInt32(_settingsManager.TryGetValue("room.chat.filter.banned_phrases.chances")))
             {
-                PlusEnvironment.GetGame().GetModerationManager().BanUser("System", ModerationBanType.Username, session.GetHabbo().Username, "Spamming banned phrases (" + message + ")",
+                _moderationManager.GetGame().GetModerationManager().BanUser("System", ModerationBanType.Username, session.GetHabbo().Username, "Spamming banned phrases (" + message + ")",
                     UnixTimestamp.GetNow() + 78892200);
                 session.Disconnect();
                 return;
@@ -74,7 +103,7 @@ public class WhisperEvent : IPacketEvent
             session.SendPacket(new WhisperComposer(user.VirtualId, message, 0, user.LastBubble));
             return;
         }
-        PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.SocialChat);
+        _questManager.ProgressUserQuest(session, QuestType.SocialChat);
         user.UnIdle();
         user.GetClient().SendPacket(new WhisperComposer(user.VirtualId, message, 0, user.LastBubble));
         if (!user2.IsBot && user2.UserId != user.UserId)

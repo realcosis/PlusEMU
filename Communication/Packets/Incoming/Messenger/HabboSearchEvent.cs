@@ -11,8 +11,6 @@ internal class HabboSearchEvent : IPacketEvent
 {
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
-            return;
         var query = StringCharFilter.Escape(packet.PopString().Replace("%", ""));
         if (query.Length < 1 || query.Length > 100)
             return;

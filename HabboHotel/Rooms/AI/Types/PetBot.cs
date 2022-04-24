@@ -222,7 +222,7 @@ public class PetBot : BotAi
                         // Remove Status
                         RemovePetStatus();
 
-                        // Add Status 
+                        // Add Status
                         pet.Statusses.Add("ded", TextHandling.GetString(pet.Z));
                         pet.UpdateNeeded = true;
                         pet.PetData.Addexperience(10); // Give XP
@@ -248,7 +248,7 @@ public class PetBot : BotAi
                         // Remove Status
                         RemovePetStatus();
 
-                        // Add Status 
+                        // Add Status
                         pet.Statusses.Add("jmp", TextHandling.GetString(pet.Z));
                         pet.UpdateNeeded = true;
                         pet.PetData.Addexperience(10); // Give XP

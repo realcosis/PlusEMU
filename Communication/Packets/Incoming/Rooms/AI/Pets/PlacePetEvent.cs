@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using NLog;
 using Plus.Communication.Packets.Outgoing.Inventory.Pets;
 using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
+using Plus.Core.Settings;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Rooms.AI;
 using Plus.HabboHotel.Rooms.AI.Speech;
 
@@ -12,19 +14,27 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets;
 internal class PlacePetEvent : IPacketEvent
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.Communication.Packets.Incoming.Rooms.AI.Pets.PlacePetEvent");
+    private readonly IRoomManager _roomManager;
+    private readonly ISettingsManager _settingsManager;
+
+    public PlacePetEvent(IRoomManager roomManager, ISettingsManager settingsManager)
+    {
+        _roomManager = roomManager;
+        _settingsManager = settingsManager;
+    }
 
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
         if (room.AllowPets == 0 && !room.CheckRights(session, true) || !room.CheckRights(session, true))
         {
             session.SendPacket(new RoomErrorNotifComposer(1));
             return;
         }
-        if (room.GetRoomUserManager().PetCount > Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("room.pets.placement_limit")))
+        if (room.GetRoomUserManager().PetCount > Convert.ToInt32(_settingsManager.TryGetValue("room.pets.placement_limit")))
         {
             session.SendPacket(new RoomErrorNotifComposer(2)); //5 = I have too many.
             return;

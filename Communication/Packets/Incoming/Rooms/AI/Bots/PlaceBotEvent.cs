@@ -4,7 +4,9 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using Plus.Communication.Packets.Outgoing.Inventory.Bots;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Rooms.AI;
 using Plus.HabboHotel.Rooms.AI.Speech;
 using Plus.Utilities;
@@ -13,11 +15,20 @@ namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots;
 
 internal class PlaceBotEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+    private readonly IDatabase _database;
+
+    public PlaceBotEvent(IRoomManager roomManager, IDatabase database)
+    {
+        _roomManager = roomManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
         if (!room.CheckRights(session, true))
             return;
@@ -45,7 +56,7 @@ internal class PlaceBotEvent : IPacketEvent
         }
 
         //TODO: Hmm, maybe not????
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `bots` SET `room_id` = @roomId, `x` = @CoordX, `y` = @CoordY WHERE `id` = @BotId LIMIT 1");
             dbClient.AddParameter("roomId", room.RoomId);
@@ -58,7 +69,7 @@ internal class PlaceBotEvent : IPacketEvent
 
         //TODO: Grab data?
         DataRow getData;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `ai_type`,`rotation`,`walk_mode`,`automatic_chat`,`speaking_interval`,`mix_sentences`,`chat_bubble` FROM `bots` WHERE `id` = @BotId LIMIT 1");
             dbClient.AddParameter("BotId", bot.Id);

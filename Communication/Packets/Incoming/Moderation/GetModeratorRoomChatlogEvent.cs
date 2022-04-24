@@ -12,7 +12,7 @@ namespace Plus.Communication.Packets.Incoming.Moderation;
 
 internal class GetModeratorRoomChatlogEvent : IPacketEvent
 {
-    private readonly IRoomManager _roomManager; 
+    private readonly IRoomManager _roomManager;
     private readonly IChatlogManager _chatlogManager;
     private readonly IDatabase _database;
 
@@ -25,8 +25,6 @@ internal class GetModeratorRoomChatlogEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
         if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
             return;
         packet.PopInt(); //junk

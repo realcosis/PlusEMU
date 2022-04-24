@@ -16,7 +16,7 @@ internal class GetModeratorTicketChatlogsEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || !session.GetHabbo().GetPermissions().HasRight("mod_tickets"))
+        if (!session.GetHabbo().GetPermissions().HasRight("mod_tickets"))
             return;
         var ticketId = packet.PopInt();
         if (!_moderationManager.TryGetTicket(ticketId, out var ticket) || ticket.Room == null)
