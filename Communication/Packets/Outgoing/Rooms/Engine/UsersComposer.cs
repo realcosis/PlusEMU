@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Rooms;
@@ -40,8 +41,8 @@ internal class UsersComposer : ServerPacket
                     }
                 }
             }
-            if (habbo.PetId == 0)
-            {
+            //if (habbo.PetId == 0)
+            //{
                 WriteInteger(habbo.Id);
                 WriteString(habbo.Username);
                 WriteString(habbo.Motto);
@@ -49,8 +50,8 @@ internal class UsersComposer : ServerPacket
                 WriteInteger(user.VirtualId);
                 WriteInteger(user.X);
                 WriteInteger(user.Y);
-                WriteDouble(user.Z);
-                WriteInteger(0); //2 for user, 4 for bot.
+                WriteString(user.Z.ToString(CultureInfo.InvariantCulture));
+                WriteInteger(user.RotBody); //2 for user, 4 for bot.
                 WriteInteger(1); //1 for user, 2 for pet, 3 for bot.
                 WriteString(habbo.Gender.ToLower());
                 if (group != null)
@@ -65,49 +66,49 @@ internal class UsersComposer : ServerPacket
                     WriteInteger(0);
                     WriteString("");
                 }
-                WriteString(""); //Whats this?
+                WriteString(""); //Whats this? TG: Swim Figure
                 WriteInteger(habbo.GetStats().AchievementPoints); //Achievement score
-                WriteBoolean(false); //Builders club?
-            }
-            else if (habbo.PetId > 0 && habbo.PetId != 100)
-            {
-                WriteInteger(habbo.Id);
-                WriteString(habbo.Username);
-                WriteString(habbo.Motto);
-                WriteString(PetFigureForType(habbo.PetId));
-                WriteInteger(user.VirtualId);
-                WriteInteger(user.X);
-                WriteInteger(user.Y);
-                WriteDouble(user.Z);
-                WriteInteger(0);
-                WriteInteger(2); //Pet.
-                WriteInteger(habbo.PetId); //pet type.
-                WriteInteger(habbo.Id); //UserId of the owner.
-                WriteString(habbo.Username); //Username of the owner.
-                WriteInteger(1);
-                WriteBoolean(false); //Has saddle.
-                WriteBoolean(false); //Is someone riding this horse?
-                WriteInteger(0);
-                WriteInteger(0);
-                WriteString("");
-            }
-            else if (habbo.PetId > 0 && habbo.PetId == 100)
-            {
-                WriteInteger(habbo.Id);
-                WriteString(habbo.Username);
-                WriteString(habbo.Motto);
-                WriteString(habbo.Look.ToLower());
-                WriteInteger(user.VirtualId);
-                WriteInteger(user.X);
-                WriteInteger(user.Y);
-                WriteDouble(user.Z);
-                WriteInteger(0);
-                WriteInteger(4);
-                WriteString(habbo.Gender.ToLower()); // ?
-                WriteInteger(habbo.Id); //Owner Id
-                WriteString(habbo.Username); // Owner name
-                WriteInteger(0); //Action Count
-            }
+                WriteBoolean(false); //Builders club? TG: Is Moderator
+            //}
+            //else if (habbo.PetId > 0 && habbo.PetId != 100)
+            //{
+            //    WriteInteger(habbo.Id);
+            //    WriteString(habbo.Username);
+            //    WriteString(habbo.Motto);
+            //    WriteString(PetFigureForType(habbo.PetId));
+            //    WriteInteger(user.VirtualId);
+            //    WriteInteger(user.X);
+            //    WriteInteger(user.Y);
+            //    WriteDouble(user.Z);
+            //    WriteInteger(user.RotBody);
+            //    WriteInteger(2); //Pet.
+            //    WriteInteger(habbo.PetId); //pet type.
+            //    WriteInteger(habbo.Id); //UserId of the owner.
+            //    WriteString(habbo.Username); //Username of the owner.
+            //    WriteInteger(1);
+            //    WriteBoolean(false); //Has saddle.
+            //    WriteBoolean(false); //Is someone riding this horse?
+            //    WriteInteger(0);
+            //    WriteInteger(0);
+            //    WriteString("");
+            //}
+            //else if (habbo.PetId > 0 && habbo.PetId == 100)
+            //{
+            //    WriteInteger(habbo.Id);
+            //    WriteString(habbo.Username);
+            //    WriteString(habbo.Motto);
+            //    WriteString(habbo.Look.ToLower());
+            //    WriteInteger(user.VirtualId);
+            //    WriteInteger(user.X);
+            //    WriteInteger(user.Y);
+            //    WriteDouble(user.Z);
+            //    WriteInteger(0);
+            //    WriteInteger(4);
+            //    WriteString(habbo.Gender.ToLower()); // ?
+            //    WriteInteger(habbo.Id); //Owner Id
+            //    WriteString(habbo.Username); // Owner name
+            //    WriteInteger(0); //Action Count
+            //}
         }
         else if (user.IsPet)
         {
@@ -122,7 +123,7 @@ internal class UsersComposer : ServerPacket
             WriteInteger(user.VirtualId);
             WriteInteger(user.X);
             WriteInteger(user.Y);
-            WriteDouble(user.Z);
+            WriteString(user.Z.ToString(CultureInfo.InvariantCulture));
             WriteInteger(0);
             WriteInteger(user.BotData.AiType == BotAiType.Pet ? 2 : 4);
             WriteInteger(user.PetData.Type);
@@ -144,7 +145,7 @@ internal class UsersComposer : ServerPacket
             WriteInteger(user.VirtualId);
             WriteInteger(user.X);
             WriteInteger(user.Y);
-            WriteDouble(user.Z);
+            WriteString(user.Z.ToString(CultureInfo.InvariantCulture));
             WriteInteger(0);
             WriteInteger(user.BotData.AiType == BotAiType.Pet ? 2 : 4);
             WriteString(user.BotData.Gender.ToLower()); // ?

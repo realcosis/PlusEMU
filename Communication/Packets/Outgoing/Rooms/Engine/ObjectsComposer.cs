@@ -24,7 +24,7 @@ internal class ObjectsComposer : ServerPacket
         WriteInteger(item.GetX);
         WriteInteger(item.GetY);
         WriteInteger(item.Rotation);
-        WriteString(string.Format("{0:0.00}", TextHandling.GetString(item.GetZ)));
+        WriteString(TextHandling.GetString(item.GetZ));
         WriteString(string.Empty);
         if (item.LimitedNo > 0)
         {

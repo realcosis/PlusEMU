@@ -11,7 +11,7 @@ public class DynamicRoomModel
     public int DoorOrientation;
     public int DoorX;
     public int DoorY;
-    public double DoorZ;
+    public int DoorZ;
 
     public string Heightmap;
 
@@ -26,7 +26,7 @@ public class DynamicRoomModel
         _staticModel = model;
         DoorX = _staticModel.DoorX;
         DoorY = _staticModel.DoorY;
-        DoorZ = _staticModel.DoorZ;
+        DoorZ = (int)_staticModel.DoorZ;
         DoorOrientation = _staticModel.DoorOrientation;
         Heightmap = _staticModel.Heightmap;
         MapSizeX = _staticModel.MapSizeX;
@@ -65,7 +65,7 @@ public class DynamicRoomModel
                     floorMap.Append('x');
                     continue;
                 }
-                double height = SqFloorHeight[x, y];
+                var height = SqFloorHeight[x, y];
                 var val = height > 9 ? ((char)(87 + height)).ToString() : height.ToString();
                 floorMap.Append(val);
             }

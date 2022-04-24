@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 using System.Threading;
@@ -98,7 +99,7 @@ public class PlusEnvironment : IPlusEnvironment
         _defaultEncoding = Encoding.Default;
         Console.WriteLine("");
         Console.WriteLine("");
-        CultureInfo = CultureInfo.CreateSpecificCulture("en-GB");
+        CultureInfo = CultureInfo.InvariantCulture;
         try
         {
             if (!_database.IsConnected())
@@ -314,12 +315,15 @@ public class PlusEnvironment : IPlusEnvironment
         GetGame().GetPacketManager().WaitForAllToComplete();
         GetGame().GetClientManager().CloseAll(); //Close all connections
         GetGame().GetRoomManager().Dispose(); //Stop the game loop.
-        using (var dbClient = _database.GetQueryReactor())
+        if (!Debugger.IsAttached)
         {
-            dbClient.RunQuery("TRUNCATE `catalog_marketplace_data`");
-            dbClient.RunQuery("UPDATE `users` SET `online` = '0', `auth_ticket` = NULL");
-            dbClient.RunQuery("UPDATE `rooms` SET `users_now` = '0' WHERE `users_now` > '0'");
-            dbClient.RunQuery("UPDATE `server_status` SET `users_online` = '0', `loaded_rooms` = '0'");
+            using (var dbClient = _database.GetQueryReactor())
+            {
+                dbClient.RunQuery("TRUNCATE `catalog_marketplace_data`");
+                dbClient.RunQuery("UPDATE `users` SET `online` = '0', `auth_ticket` = NULL");
+                dbClient.RunQuery("UPDATE `rooms` SET `users_now` = '0' WHERE `users_now` > '0'");
+                dbClient.RunQuery("UPDATE `server_status` SET `users_online` = '0', `loaded_rooms` = '0'");
+            }
         }
         Log.Info("Plus Emulator has successfully shutdown.");
         Thread.Sleep(1000);

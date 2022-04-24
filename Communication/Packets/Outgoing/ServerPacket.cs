@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using Plus.Communication.Interfaces;
 
@@ -49,9 +50,10 @@ public class ServerPacket : IServerPacket
 
     public void WriteDouble(double d) // d
     {
-        var raw = Math.Round(d, 1).ToString(CultureInfo.CurrentCulture);
-        if (raw.Length == 1) raw += ".0";
-        WriteString(raw.Replace(',', '.'));
+        WriteBytes(BitConverter.GetBytes(d).Reverse().ToArray(), false);
+        //var raw = Math.Round(d, 1).ToString(CultureInfo.CurrentCulture);
+        //if (raw.Length == 1) raw += ".0";
+        //WriteString(d.ToString(CultureInfo.InvariantCulture));
     }
 
     public void WriteString(string s) // d
