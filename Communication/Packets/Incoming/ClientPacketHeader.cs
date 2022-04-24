@@ -168,7 +168,7 @@ public static class ClientPacketHeader
     public const int JoinPlayerQueueEvent = 167; //951
     public const int CanCreateRoomEvent = 2411; //361
     public const int SetTonerEvent = 1389; //1061
-    public const int SaveWiredTriggeRconfigEvent = 3877; //1897
+    public const int SaveWiredTriggerConfigEvent = 3877; //1897
     public const int PlaceBotEvent = 3770; //2321
     public const int GetRelationshipsEvent = 3046; //866
     public const int SetMessengerInviteStatusEvent = 1663; //1379
@@ -180,7 +180,7 @@ public static class ClientPacketHeader
     public const int OpenPlayerProfileEvent = 3053; //3591
     public const int GetSanctionStatusEvent = 3209; //2883
     public const int CreditFurniRedeemEvent = 3945; //1676
-    public const int DisconnectionEvent = 1474; //2391
+    public const int DisconnectEvent = 1474; //2391
     public const int PickupObjectEvent = 1766; //636
     public const int FindRandomFriendingRoomEvent = 2189; //1874
     public const int UseSellableClothingEvent = 2849; //818
@@ -235,7 +235,7 @@ public static class ClientPacketHeader
     public const int RemoveGroupMemberEvent = 1590; //649
     public const int DiceOffEvent = 1124; //191
     public const int YouTubeGetNextVideo = 2618; //1843
-    public const int DeleteFavouriteRoomEvent = 3223; //855
+    public const int RemoveFavouriteRoomEvent = 3223; //855
     public const int RespectUserEvent = 3812; //1955
     public const int AddFavouriteRoomEvent = 3251; //3092
     public const int DeclineBuddyEvent = 3484; //835
@@ -308,5 +308,5 @@ public static class ClientPacketHeader
     public const int UpdateForumSettingsEvent = 3295; //931
     public const int GetRoomRightsEvent = 3937; //2734
     public const int SendMsgEvent = 2409; //1981
-    public const int CloseTicketMesageEvent = 1080; //50
+    public const int CloseTicketEvent = 1080; //50
 }
