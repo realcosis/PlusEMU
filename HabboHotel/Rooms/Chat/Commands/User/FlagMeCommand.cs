@@ -25,7 +25,7 @@ internal class FlagMeCommand : IChatCommand
         session.SendPacket(new UserObjectComposer(session.GetHabbo()));
     }
 
-    private bool CanChangeName(Habbo habbo)
+    private static bool CanChangeName(Habbo habbo)
     {
         if (habbo.Rank == 1 && habbo.VipRank == 0 && habbo.LastNameChange == 0)
             return true;

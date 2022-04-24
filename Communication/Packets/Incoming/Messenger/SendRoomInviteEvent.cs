@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Plus.Communication.Packets.Outgoing.Messenger;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.Utilities;
 
@@ -7,6 +8,15 @@ namespace Plus.Communication.Packets.Incoming.Messenger;
 
 internal class SendRoomInviteEvent : IPacketEvent
 {
+    private readonly IGameClientManager _clientManager;
+    private readonly IDatabase _database;
+
+    public SendRoomInviteEvent(IGameClientManager clientManager, IDatabase database)
+    {
+        _clientManager = clientManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session.GetHabbo().TimeMuted > 0)
@@ -31,12 +41,12 @@ internal class SendRoomInviteEvent : IPacketEvent
         {
             if (!session.GetHabbo().GetMessenger().FriendshipExists(userId))
                 continue;
-            var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
+            var client = _clientManager.GetClientByUserId(userId);
             if (client == null || client.GetHabbo() == null || client.GetHabbo().AllowMessengerInvites || client.GetHabbo().AllowConsoleMessages == false)
                 continue;
             client.SendPacket(new RoomInviteComposer(session.GetHabbo().Id, message));
         }
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("INSERT INTO `chatlogs_console_invitations` (`user_id`,`message`,`timestamp`) VALUES (@userId, @message, UNIX_TIMESTAMP())");
         dbClient.AddParameter("userId", session.GetHabbo().Id);
         dbClient.AddParameter("message", message);

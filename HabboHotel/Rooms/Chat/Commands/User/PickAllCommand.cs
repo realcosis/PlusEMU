@@ -1,11 +1,13 @@
 ﻿using System.Linq;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class PickAllCommand : IChatCommand
 {
+    private readonly IDatabase _database;
     public string Key => "pickall";
     public string PermissionRequired => "command_pickall";
 
@@ -13,13 +15,18 @@ internal class PickAllCommand : IChatCommand
 
     public string Description => "Picks up all of the furniture from your room.";
 
+    public PickAllCommand(IDatabase database)
+    {
+        _database = database;
+    }
+
     public void Execute(GameClient session, Room room, string[] @params)
     {
         if (!room.CheckRights(session, true))
             return;
         room.GetRoomItemHandler().RemoveItems(session);
         room.GetGameMap().GenerateMaps();
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `items` SET `room_id` = '0' WHERE `room_id` = @RoomId AND `user_id` = @UserId");
             dbClient.AddParameter("RoomId", room.Id);

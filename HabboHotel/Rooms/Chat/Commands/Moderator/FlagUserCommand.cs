@@ -5,12 +5,18 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class FlagUserCommand : IChatCommand
 {
+    private readonly IGameClientManager _gameClientManager;
     public string Key => "flaguser";
     public string PermissionRequired => "command_flaguser";
 
     public string Parameters => "%username%";
 
     public string Description => "Forces the specified user to change their name.";
+
+    public FlagUserCommand(IGameClientManager gameClientManager)
+    {
+        _gameClientManager = gameClientManager;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -19,7 +25,7 @@ internal class FlagUserCommand : IChatCommand
             session.SendWhisper("Please enter the username you wish to flag.");
             return;
         }
-        var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+        var targetClient = _gameClientManager.GetClientByUsername(@params[1]);
         if (targetClient == null)
         {
             session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");

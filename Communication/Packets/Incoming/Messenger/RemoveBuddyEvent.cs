@@ -1,10 +1,20 @@
 ﻿using System.Linq;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Messenger;
 
 internal class RemoveBuddyEvent : IPacketEvent
 {
+    private readonly IGameClientManager _clientManager;
+    private readonly IDatabase _database;
+
+    public RemoveBuddyEvent(IGameClientManager clientManager, IDatabase database)
+    {
+        _clientManager = clientManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
@@ -14,7 +24,7 @@ internal class RemoveBuddyEvent : IPacketEvent
             amount = 100;
         else if (amount < 0)
             return;
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         for (var i = 0; i < amount; i++)
         {
             var id = packet.PopInt();
@@ -27,7 +37,7 @@ internal class RemoveBuddyEvent : IPacketEvent
             }
             if (session.GetHabbo().Relationships.ContainsKey(id))
                 session.GetHabbo().Relationships.Remove(id);
-            var target = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(id);
+            var target = _clientManager.GetClientByUserId(id);
             if (target != null)
             {
                 if (target.GetHabbo().Relationships.ContainsKey(session.GetHabbo().Id))

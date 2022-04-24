@@ -1,15 +1,22 @@
-﻿using Plus.HabboHotel.GameClients;
+﻿using Plus.Database;
+using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class MuteCommand : IChatCommand
 {
+    private readonly IDatabase _database;
     public string Key => "mute";
     public string PermissionRequired => "command_mute";
 
     public string Parameters => "%username% %time%";
 
     public string Description => "Mute another user for a certain amount of time.";
+
+    public MuteCommand(IDatabase database)
+    {
+        _database = database;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -34,7 +41,7 @@ internal class MuteCommand : IChatCommand
         {
             if (time > 600 && !session.GetHabbo().GetPermissions().HasRight("mod_mute_limit_override"))
                 time = 600;
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = _database.GetQueryReactor())
             {
                 dbClient.RunQuery("UPDATE `users` SET `time_muted` = '" + time + "' WHERE `id` = '" + habbo.Id + "' LIMIT 1");
             }

@@ -80,7 +80,9 @@ public class ChatEvent : IPacketEvent
                 return;
             }
         }
+        
         _chatlogManager.StoreChatlog(new ChatlogEntry(session.GetHabbo().Id, room.Id, message, UnixTimestamp.GetNow(), session.GetHabbo(), room));
+        
         if (message.StartsWith(":", StringComparison.CurrentCulture) && _commandManager.Parse(session, message))
             return;
         if (_wordFilterManager.CheckBannedWords(message))

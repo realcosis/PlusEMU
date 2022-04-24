@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Plus.Communication.Packets.Outgoing.Navigator;
 using Plus.Communication.Packets.Outgoing.Rooms.Settings;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
@@ -8,11 +9,20 @@ namespace Plus.Communication.Packets.Incoming.Moderation;
 
 internal class ModerateRoomEvent : IPacketEvent
 {
+    private readonly IRoomManager _roomManager;
+    private readonly IDatabase _database;
+
+    public ModerateRoomEvent(IRoomManager roomManager, IDatabase database)
+    {
+        _roomManager = roomManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
             return;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(packet.PopInt(), out var room))
+        if (!_roomManager.TryGetRoom(packet.PopInt(), out var room))
             return;
         var setLock = packet.PopInt() == 1;
         var setName = packet.PopInt() == 1;
@@ -28,7 +38,7 @@ internal class ModerateRoomEvent : IPacketEvent
             room.ClearTags();
         if (room.HasActivePromotion)
             room.EndPromotion();
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             if (setName && setLock)
             {

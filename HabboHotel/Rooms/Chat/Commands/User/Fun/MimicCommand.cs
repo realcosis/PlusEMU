@@ -1,17 +1,24 @@
 ﻿using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User.Fun;
 
 internal class MimicCommand : IChatCommand
 {
+    private readonly IDatabase _database;
     public string Key => "mimic";
     public string PermissionRequired => "command_mimic";
 
     public string Parameters => "%username%";
 
     public string Description => "Liking someone elses swag? Copy it!";
+
+    public MimicCommand(IDatabase database)
+    {
+        _database = database;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -39,7 +46,7 @@ internal class MimicCommand : IChatCommand
         }
         session.GetHabbo().Gender = targetUser.GetClient().GetHabbo().Gender;
         session.GetHabbo().Look = targetUser.GetClient().GetHabbo().Look;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `users` SET `gender` = @gender, `look` = @look WHERE `id` = @id LIMIT 1");
             dbClient.AddParameter("gender", session.GetHabbo().Gender);

@@ -1,16 +1,27 @@
-﻿using Plus.HabboHotel.GameClients;
+﻿using Plus.Database;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class IpBanCommand : IChatCommand
 {
+    private readonly IDatabase _database;
+    private readonly IModerationManager _moderationManager;
+    private readonly IGameClientManager _gameClientManager;
     public string Key => "ipban";
     public string PermissionRequired => "command_ip_ban";
 
     public string Parameters => "%username%";
 
     public string Description => "IP and account ban another user.";
+
+    public IpBanCommand(IDatabase database, IModerationManager moderationManager, IGameClientManager gameClientManager)
+    {
+        _database = database;
+        _moderationManager = moderationManager;
+        _gameClientManager = gameClientManager;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -33,7 +44,7 @@ internal class IpBanCommand : IChatCommand
         var ipAddress = string.Empty;
         var expire = PlusEnvironment.GetUnixTimestamp() + 78892200;
         var username = habbo.Username;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.RunQuery("UPDATE `user_info` SET `bans` = `bans` + '1' WHERE `user_id` = '" + habbo.Id + "' LIMIT 1");
             dbClient.SetQuery("SELECT `ip_last` FROM `users` WHERE `id` = '" + habbo.Id + "' LIMIT 1");
@@ -45,9 +56,9 @@ internal class IpBanCommand : IChatCommand
         else
             reason = "No reason specified.";
         if (!string.IsNullOrEmpty(ipAddress))
-            PlusEnvironment.GetGame().GetModerationManager().BanUser(session.GetHabbo().Username, ModerationBanType.Ip, ipAddress, reason, expire);
-        PlusEnvironment.GetGame().GetModerationManager().BanUser(session.GetHabbo().Username, ModerationBanType.Username, habbo.Username, reason, expire);
-        var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(username);
+            _moderationManager.BanUser(session.GetHabbo().Username, ModerationBanType.Ip, ipAddress, reason, expire);
+        _moderationManager.BanUser(session.GetHabbo().Username, ModerationBanType.Username, habbo.Username, reason, expire);
+        var targetClient =_gameClientManager.GetClientByUsername(username);
         if (targetClient != null)
             targetClient.Disconnect();
         session.SendWhisper("Success, you have IP and account banned the user '" + username + "' for '" + reason + "'!");

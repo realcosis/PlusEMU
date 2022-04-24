@@ -1,18 +1,27 @@
 ﻿using System;
 using System.Data;
 using System.Text;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class UserInfoCommand : IChatCommand
 {
+    private readonly IDatabase _database;
+    private readonly IGameClientManager _gameClientManager;
     public string Key => "userinfo";
     public string PermissionRequired => "command_user_info";
 
     public string Parameters => "%username%";
 
     public string Description => "View another users profile information.";
+
+    public UserInfoCommand(IDatabase database, IGameClientManager gameClientManager)
+    {
+        _database = database;
+        _gameClientManager = gameClientManager;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -24,7 +33,7 @@ internal class UserInfoCommand : IChatCommand
         DataRow userData = null;
         DataRow userInfo = null;
         var username = @params[1];
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery(
                 "SELECT `id`,`username`,`mail`,`rank`,`motto`,`credits`,`activity_points`,`vip_points`,`gotw_points`,`online`,`rank_vip` FROM users WHERE `username` = @Username LIMIT 1");
@@ -36,7 +45,7 @@ internal class UserInfoCommand : IChatCommand
             session.SendNotification("Oops, there is no user in the database with that username (" + username + ")!");
             return;
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `user_info` WHERE `user_id` = '" + Convert.ToInt32(userData["id"]) + "' LIMIT 1");
             userInfo = dbClient.GetRow();
@@ -47,7 +56,7 @@ internal class UserInfoCommand : IChatCommand
                 userInfo = dbClient.GetRow();
             }
         }
-        var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(username);
+        var targetClient = _gameClientManager.GetClientByUsername(username);
         var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0).AddSeconds(Convert.ToDouble(userInfo["trading_locked"]));
         var habboInfo = new StringBuilder();
         habboInfo.Append(Convert.ToString(userData["username"]) + "'s account:\r\r");

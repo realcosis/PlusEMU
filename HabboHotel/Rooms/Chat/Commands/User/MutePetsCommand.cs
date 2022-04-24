@@ -1,9 +1,11 @@
-﻿using Plus.HabboHotel.GameClients;
+﻿using Plus.Database;
+using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
 internal class MutePetsCommand : IChatCommand
 {
+    private readonly IDatabase _database;
     public string Key => "mutepets";
     public string PermissionRequired => "command_mute_pets";
 
@@ -11,10 +13,15 @@ internal class MutePetsCommand : IChatCommand
 
     public string Description => "Ignore bot chat or enable it again.";
 
+    public MutePetsCommand(IDatabase database)
+    {
+        _database = database;
+    }
+
     public void Execute(GameClient session, Room room, string[] @params)
     {
         session.GetHabbo().AllowPetSpeech = !session.GetHabbo().AllowPetSpeech;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.RunQuery("UPDATE `users` SET `pets_muted` = '" + (session.GetHabbo().AllowPetSpeech ? 1 : 0) + "' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
         }

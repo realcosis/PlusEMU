@@ -5,12 +5,18 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator.Fun;
 
 internal class SummonCommand : IChatCommand
 {
+    private readonly IGameClientManager _gameClientManager;
     public string Key => "summon";
     public string PermissionRequired => "command_summon";
 
     public string Parameters => "%username%";
 
     public string Description => "Bring another user to your current room.";
+
+    public SummonCommand(IGameClientManager gameClientManager)
+    {
+        _gameClientManager = gameClientManager;
+    }
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
@@ -19,7 +25,7 @@ internal class SummonCommand : IChatCommand
             session.SendWhisper("Please enter the username of the user you wish to summon.");
             return;
         }
-        var targetClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1]);
+        var targetClient = _gameClientManager.GetClientByUsername(@params[1]);
         if (targetClient == null)
         {
             session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");

@@ -1,11 +1,22 @@
 ﻿using System.Data;
 using Plus.Communication.Packets.Outgoing.Moderation;
+using Plus.Core.Language;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Moderation;
 
 internal class GetModeratorUserInfoEvent : IPacketEvent
 {
+    private readonly ILanguageManager _languageManager;
+    private readonly IDatabase _database;
+
+    public GetModeratorUserInfoEvent(ILanguageManager languageManager, IDatabase database)
+    {
+        _languageManager = languageManager;
+        _database = database;
+    }
+
     public void Parse(GameClient session, ClientPacket packet)
     {
         if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
@@ -13,13 +24,13 @@ internal class GetModeratorUserInfoEvent : IPacketEvent
         var userId = packet.PopInt();
         DataRow user;
         DataRow info;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `id`,`username`,`online`,`mail`,`ip_last`,`look`,`account_created`,`last_online` FROM `users` WHERE `id` = '" + userId + "' LIMIT 1");
             user = dbClient.GetRow();
             if (user == null)
             {
-                session.SendNotification(PlusEnvironment.GetLanguageManager().TryGetValue("user.not_found"));
+                session.SendNotification(_languageManager.TryGetValue("user.not_found"));
                 return;
             }
             dbClient.SetQuery("SELECT `cfhs`,`cfhs_abusive`,`cautions`,`bans`,`trading_locked`,`trading_locks_count` FROM `user_info` WHERE `user_id` = '" + userId + "' LIMIT 1");
