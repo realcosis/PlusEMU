@@ -84,7 +84,7 @@ public sealed class PacketManager : IPacketManager
                 Log.Debug("Handled Packet: [" + packet.Id + "] UnnamedPacketEvent");
         }
 
-        if (!_handshakePackets.Contains(packet.GetType()) && session.GetHabbo() == null)
+        if (!_handshakePackets.Contains(pak.GetType()) && session.GetHabbo() == null)
         {
             Log.Debug($"Session {session.ConnectionId} tried execute packet {packet.Id} but didn't handshake yet.");
             return;
