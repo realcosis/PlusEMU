@@ -9,7 +9,6 @@ using Plus.Communication.Packets.Outgoing.Navigator;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Communication.Packets.Outgoing.Rooms.Session;
 using Plus.Core;
-using Plus.Core.FigureData;
 using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
@@ -88,7 +87,7 @@ public class Habbo
         Motto = motto;
         Look = look;
         Gender = gender.ToLower();
-        FootballLook = IFigureDataManager.FilterFigure(look.ToLower());
+        FootballLook = PlusEnvironment.GetFigureManager().FilterFigure(look.ToLower());
         FootballGender = gender.ToLower();
         Credits = credits;
         Duckets = activityPoints;
