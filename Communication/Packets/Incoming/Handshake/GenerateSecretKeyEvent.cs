@@ -6,7 +6,7 @@ using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Handshake;
 
-[NoAuth]
+[NoAuthenticationRequired]
 public class GenerateSecretKeyEvent : IPacketEvent
 {
     public void Parse(GameClient session, ClientPacket packet)

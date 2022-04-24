@@ -3,7 +3,7 @@ using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Handshake;
 
-[NoAuth]
+[NoAuthenticationRequired]
 public class GetClientVersionEvent : IPacketEvent
 {
     public void Parse(GameClient session, ClientPacket packet)

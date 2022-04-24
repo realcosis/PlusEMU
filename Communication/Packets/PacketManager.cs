@@ -62,7 +62,7 @@ public sealed class PacketManager : IPacketManager
             var header = (int) field.GetValue(null);
             _incomingPackets.Add(header, packet);
             _packetNames.Add(header, packet.GetType().Name);
-            if (packet.GetType().GetCustomAttribute<NoAuth>() != null)
+            if (packet.GetType().GetCustomAttribute<NoAuthenticationRequiredAttribute>() != null)
                 _handshakePackets.Add(packet.GetType());
         }
     }
