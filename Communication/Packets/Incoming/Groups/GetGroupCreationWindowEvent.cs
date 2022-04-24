@@ -9,8 +9,6 @@ internal class GetGroupCreationWindowEvent : IPacketEvent
 {
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null)
-            return;
         var rooms = RoomFactory.GetRoomsDataByOwnerSortByName(session.GetHabbo().Id).Where(x => x.Group == null).ToList();
         session.SendPacket(new GroupCreationWindowComposer(rooms));
     }

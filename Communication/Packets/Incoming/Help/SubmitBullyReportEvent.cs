@@ -16,8 +16,6 @@ internal class SubmitBullyReportEvent : IPacketEvent
     public void Parse(GameClient session, ClientPacket packet)
     {
         //0 = sent, 1 = blocked, 2 = no chat, 3 = already reported.
-        if (session == null)
-            return;
         var userId = packet.PopInt();
         if (userId == session.GetHabbo().Id) //Hax
             return;

@@ -16,11 +16,12 @@ internal class InitTradeEvent : IPacketEvent
     public void Parse(GameClient session, ClientPacket packet)
     {
         var userId = packet.PopInt();
-        if (session == null || session.GetHabbo() == null || !session.GetHabbo().InRoom)
+        if (!session.GetHabbo().InRoom)
             return;
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
             return;
+        
         var roomUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (roomUser == null)
             return;

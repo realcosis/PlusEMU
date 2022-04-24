@@ -19,7 +19,7 @@ internal class ModerationKickEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null || !session.GetHabbo().GetPermissions().HasRight("mod_kick"))
+        if (!session.GetHabbo().GetPermissions().HasRight("mod_kick"))
             return;
         var userId = packet.PopInt();
         packet.PopString(); //message

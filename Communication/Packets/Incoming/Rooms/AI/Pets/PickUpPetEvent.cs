@@ -11,8 +11,6 @@ internal class PickUpPetEvent : IPacketEvent
     {
         if (!session.GetHabbo().InRoom)
             return;
-        if (session.GetHabbo() == null || session.GetHabbo().GetInventoryComponent() == null)
-            return;
         if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return;
         var petId = packet.PopInt();

@@ -17,8 +17,6 @@ internal class CallForHelpPendingCallsDeletedEvent : IPacketEvent
 
     public void Parse(GameClient session, ClientPacket packet)
     {
-        if (session == null || session.GetHabbo() == null)
-            return;
         if (_moderationManager.UserHasTickets(session.GetHabbo().Id))
         {
             var pendingTicket = _moderationManager.GetTicketBySenderId(session.GetHabbo().Id);
