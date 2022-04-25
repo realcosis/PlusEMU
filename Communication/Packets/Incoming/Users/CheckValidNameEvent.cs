@@ -4,6 +4,7 @@ using Plus.Communication.Packets.Outgoing.Users;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms.Chat.Filter;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Users;
 
@@ -22,11 +23,10 @@ internal class CheckValidNameEvent : IPacketEvent
     {
         bool inUse;
         var name = packet.PopString();
-        using (var dbClient = _database.GetQueryReactor())
+        using (var connection = _database.Connection())
         {
-            dbClient.SetQuery("SELECT COUNT(0) FROM `users` WHERE `username` = @name LIMIT 1");
-            dbClient.AddParameter("name", name);
-            inUse = dbClient.GetInteger() == 1;
+            var checkUser = connection.ExecuteScalar<int>("SELECT COUNT(0) FROM `users` WHERE `username` = @name LIMIT 1", new { name = name });
+            inUse = checkUser == 1;
         }
         var letters = name.ToLower().ToCharArray();
         const string allowedCharacters = "abcdefghijklmnopqrstuvwxyz.,_-;:?!1234567890";

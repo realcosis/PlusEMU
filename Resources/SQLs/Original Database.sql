@@ -24904,8 +24904,6 @@ CREATE TABLE `user_roomvisits` (
   `room_id` int(10) unsigned NOT NULL,
   `entry_timestamp` double NOT NULL,
   `exit_timestamp` double NOT NULL,
-  `hour` int(11) NOT NULL,
-  `minute` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `entry_timestamp` (`entry_timestamp`),

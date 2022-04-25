@@ -9,6 +9,7 @@ using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 using Plus.Utilities;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Users;
 
@@ -49,11 +50,10 @@ internal class ChangeNameEvent : IPacketEvent
             return;
         }
         bool inUse;
-        using (var dbClient = _database.GetQueryReactor())
+        using (var connection = _database.Connection())
         {
-            dbClient.SetQuery("SELECT COUNT(0) FROM `users` WHERE `username` = @name LIMIT 1");
-            dbClient.AddParameter("name", newName);
-            inUse = dbClient.GetInteger() == 1;
+            var checkUser = connection.ExecuteScalar<int>("SELECT COUNT(0) FROM `users` WHERE `username` = @name LIMIT 1", new { name = newName });
+            inUse = checkUser == 1;
         }
         var letters = newName.ToLower().ToCharArray();
         const string allowedCharacters = "abcdefghijklmnopqrstuvwxyz.,_-;:?!1234567890";
@@ -81,12 +81,10 @@ internal class ChangeNameEvent : IPacketEvent
         session.GetHabbo().GetMessenger().OnStatusChanged(true);
         session.SendPacket(new UpdateUsernameComposer(newName));
         room.SendPacket(new UserNameChangeComposer(room.Id, user.VirtualId, newName));
-        using (var dbClient = _database.GetQueryReactor())
+        using (var connection = _database.Connection())
         {
-            dbClient.SetQuery("INSERT INTO `logs_client_namechange` (`user_id`,`new_name`,`old_name`,`timestamp`) VALUES ('" + session.GetHabbo().Id + "', @name, '" + oldName + "', '" +
-                              UnixTimestamp.GetNow() + "')");
-            dbClient.AddParameter("name", newName);
-            dbClient.RunQuery();
+            connection.Execute("INSERT INTO `logs_client_namechange` (`user_id`,`new_name`,`old_name`,`timestamp`) VALUES (@id,@new_name,@old_name,@timestamp)",
+                    new { id = session.GetHabbo().Id, new_name = newName, old_name = oldName, timestamp = UnixTimestamp.GetNow() });
         }
         foreach (var ownRooms in _roomManager.GetRooms().ToList())
         {

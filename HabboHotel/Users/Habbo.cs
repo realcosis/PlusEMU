@@ -726,15 +726,13 @@ public class Habbo
 
         using (var dbClient = PlusEnvironment.GetDatabaseManager().Connection())
         {
-            dbClient.Execute("INSERT INTO user_roomvisits (user_id,room_id,entry_timestamp,exit_timestamp,hour,minute) VALUES (@userId, @roomId, @entryTimestamp, @exitTimestamp, @hour, @minute)",
+            dbClient.Execute("INSERT INTO user_roomvisits (user_id,room_id,entry_timestamp,exit_timestamp) VALUES (@userId, @roomId, @entryTimestamp, @exitTimestamp)",
                 new
                 {
                     userId = GetClient().GetHabbo().Id,
                     roomId = GetClient().GetHabbo().CurrentRoomId,
                     entryTimestamp = UnixTimestamp.GetNow(),
                     exitTimestamp = 0,
-                    hour = DateTime.Now.Hour,
-                    minute = DateTime.Now.Minute
                 });
         }
 
