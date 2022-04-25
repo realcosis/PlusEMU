@@ -6,6 +6,7 @@ using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Items;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Groups;
 
@@ -28,13 +29,10 @@ internal class UpdateGroupColoursEvent : IPacketEvent
             return;
         if (group.CreatorId != session.GetHabbo().Id)
             return;
-        using (var dbClient = _database.GetQueryReactor())
+        using (var connection = _database.Connection())
         {
-            dbClient.SetQuery("UPDATE `groups` SET `colour1` = @colour1, `colour2` = @colour2 WHERE `id` = @groupId LIMIT 1");
-            dbClient.AddParameter("colour1", mainColour);
-            dbClient.AddParameter("colour2", secondaryColour);
-            dbClient.AddParameter("groupId", group.Id);
-            dbClient.RunQuery();
+            connection.Execute("UPDATE `groups` SET `colour1` = @colour1, `colour2` = @colour2 WHERE `id` = @groupId LIMIT 1",
+                new { colour1 = mainColour, colour2 = secondaryColour, groupId = group.Id });
         }
         group.Colour1 = mainColour;
         group.Colour2 = secondaryColour;
