@@ -286,6 +286,13 @@ public class RoomUserManager
                             roomId = session.GetHabbo().CurrentRoomId,
                             exitTimestamp = PlusEnvironment.GetUnixTimestamp(),
                         });
+
+                    dbClient.Execute("UPDATE `rooms` SET `users_now` = @usersNow WHERE `id` = @roomId LIMIT 1",
+                        new
+                        {
+                            usersNow = _room.UsersNow,
+                            roomId = _room.RoomId
+                        });
                 }
                 if (user != null)
                     user.Dispose();
