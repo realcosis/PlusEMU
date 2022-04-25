@@ -61,28 +61,27 @@ internal class PullCommand : IChatCommand
             session.SendWhisper("Please don't pull that user out of the room :(!");
             return;
         }
-        var pushDirection = "down";
         if (targetClient.GetHabbo().CurrentRoomId == session.GetHabbo().CurrentRoomId && Math.Abs(thisUser.X - targetUser.X) < 3 && Math.Abs(thisUser.Y - targetUser.Y) < 3)
         {
             room.SendPacket(new ChatComposer(thisUser.VirtualId, "*pulls " + @params[1] + " to them*", 0, thisUser.LastBubble));
-            if (thisUser.RotBody == 0)
-                pushDirection = "up";
-            if (thisUser.RotBody == 2)
-                pushDirection = "right";
-            if (thisUser.RotBody == 4)
-                pushDirection = "down";
-            if (thisUser.RotBody == 6)
-                pushDirection = "left";
-            if (pushDirection == "up")
-                targetUser.MoveTo(thisUser.X, thisUser.Y - 1);
-            if (pushDirection == "right")
-                targetUser.MoveTo(thisUser.X + 1, thisUser.Y);
-            if (pushDirection == "down")
-                targetUser.MoveTo(thisUser.X, thisUser.Y + 1);
-            if (pushDirection == "left")
-                targetUser.MoveTo(thisUser.X - 1, thisUser.Y);
+            if (thisUser.RotBody % 2 != 0) 
+                PushTarget(targetUser, thisUser.X, thisUser.Y, thisUser.direction-1);
+            else
+                PushTarget(targetUser, thisUser.X, thisUser.Y, thisUser.direction);
             return;
         }
         session.SendWhisper("That user is not close enough to you to be pulled, try getting closer!");
+    }
+
+    private void PushTarget(RoomUser targetUser, int X, int Y, int direction)
+    {
+        if (direction == 0)
+            targetUser.MoveTo(X, Y-1);
+        else if (direction == 2)
+            targetUser.MoveTo(X+1, Y);
+        else if (direction == 4)
+            targetUser.MoveTo(X, Y+1);
+        else if (direction == 6)
+            targetUser.MoveTo(X-1, Y);
     }
 }
