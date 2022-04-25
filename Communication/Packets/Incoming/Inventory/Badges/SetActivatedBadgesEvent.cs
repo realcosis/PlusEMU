@@ -3,6 +3,7 @@ using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
 using Plus.HabboHotel.Rooms;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Inventory.Badges;
 
@@ -22,11 +23,10 @@ internal class SetActivatedBadgesEvent : IPacketEvent
     public void Parse(GameClient session, ClientPacket packet)
     {
         session.GetHabbo().GetBadgeComponent().ResetSlots();
-        using (var dbClient = _database.GetQueryReactor())
+        using (var connection = _database.Connection())
         {
-            dbClient.SetQuery("UPDATE `user_badges` SET `badge_slot` = '0' WHERE `user_id` = @userId");
-            dbClient.AddParameter("userId", session.GetHabbo().Id);
-            dbClient.RunQuery();
+            connection.Execute("UPDATE `user_badges` SET `badge_slot` = '0' WHERE `user_id` = @userId",
+                    new { userId = session.GetHabbo().Id });
         }
         for (var i = 0; i < 5; i++)
         {
@@ -37,12 +37,10 @@ internal class SetActivatedBadgesEvent : IPacketEvent
             if (!session.GetHabbo().GetBadgeComponent().HasBadge(badge) || slot < 1 || slot > 5)
                 return;
             session.GetHabbo().GetBadgeComponent().GetBadge(badge).Slot = slot;
-            using var dbClient = _database.GetQueryReactor();
-            dbClient.SetQuery("UPDATE `user_badges` SET `badge_slot` = @slot WHERE `badge_id` = @badge AND `user_id` = @userId LIMIT 1");
-            dbClient.AddParameter("slot", slot);
-            dbClient.AddParameter("badge", badge);
-            dbClient.AddParameter("userId", session.GetHabbo().Id);
-            dbClient.RunQuery();
+            using var connection = _database.Connection();
+
+            connection.Execute("UPDATE `user_badges` SET `badge_slot` = @slot WHERE `badge_id` = @badge AND `user_id` = @userId LIMIT 1",
+                        new { slot = slot, badge = badge, userId = session.GetHabbo().Id });
         }
         _questManager.ProgressUserQuest(session, QuestType.ProfileBadge);
         if (session.GetHabbo().InRoom && _roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
