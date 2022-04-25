@@ -3,6 +3,7 @@ using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Rooms.Chat.Filter;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Groups;
 
@@ -28,13 +29,10 @@ internal class UpdateGroupIdentityEvent : IPacketEvent
             return;
         if (group.CreatorId != session.GetHabbo().Id)
             return;
-        using (var dbClient = _database.GetQueryReactor())
+        using (var connection = _database.Connection())
         {
-            dbClient.SetQuery("UPDATE `groups` SET `name`= @name, `desc` = @desc WHERE `id` = @groupId LIMIT 1");
-            dbClient.AddParameter("name", name);
-            dbClient.AddParameter("desc", description);
-            dbClient.AddParameter("groupId", groupId);
-            dbClient.RunQuery();
+            connection.Execute("UPDATE `groups` SET `name`= @name, `desc` = @desc WHERE `id` = @groupId LIMIT 1",
+                new { name = name, desc = description, groupId = groupId });
         }
         group.Name = name;
         group.Description = description;
