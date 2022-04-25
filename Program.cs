@@ -7,6 +7,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Plus.Communication.Rcon.Commands;
+using Scrutor;
 
 namespace Plus;
 
@@ -18,8 +19,9 @@ public static class Program
 
         var collection = new ServiceCollection();
         collection.Scan(scan => scan.FromAssemblies(typeof(Program).Assembly)
-            .AddClasses()
-            .AsMatchingInterface()
+            .AddClasses(classes => classes.Where(c => c.GetInterface($"I{c.Name}") != null))
+            .UsingRegistrationStrategy(RegistrationStrategy.Throw)
+            .AsSelfWithInterfaces()
             .WithSingletonLifetime());
         collection.AddAssignableTo<IChatCommand>();
         collection.AddAssignableTo<IPacketEvent>();
@@ -63,7 +65,9 @@ public static class Program
     public static IServiceCollection AddAssignableTo<T>(this IServiceCollection services) =>
         services.Scan(scan => scan.FromAssemblies(typeof(Program).Assembly)
             .AddClasses(classes => classes.Where(t => t.IsAssignableTo(typeof(T)) && !t.IsAbstract && !t.IsInterface))
-            .As<T>().WithTransientLifetime());
+            .UsingRegistrationStrategy(RegistrationStrategy.Append)
+            .AsSelf()
+            .WithSingletonLifetime());
 
     private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs args)
     {
