@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using NLog;
 using Plus.Core;
 using Plus.HabboHotel.GameClients;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms;
 
@@ -81,7 +82,7 @@ public class RoomManager : IRoomManager
         {
             var model = Convert.ToString(row["id"]);
             _roomModels.Add(model, new RoomModel(model, Convert.ToInt32(row["door_x"]), Convert.ToInt32(row["door_y"]), (double)row["door_z"], Convert.ToInt32(row["door_dir"]),
-                Convert.ToString(row["heightmap"]), PlusEnvironment.EnumToBool(row["club_only"].ToString()), Convert.ToInt32(row["wall_height"]), false));
+                Convert.ToString(row["heightmap"]), ConvertExtensions.EnumToBool(row["club_only"].ToString()), Convert.ToInt32(row["wall_height"]), false));
         }
     }
 
@@ -98,7 +99,7 @@ public class RoomManager : IRoomManager
         if (!_roomModels.ContainsKey(model))
         {
             _roomModels.Add(model, new RoomModel(model, Convert.ToInt32(row["door_x"]), Convert.ToInt32(row["door_y"]), Convert.ToDouble(row["door_z"]), Convert.ToInt32(row["door_dir"]),
-                Convert.ToString(row["heightmap"]), PlusEnvironment.EnumToBool(row["club_only"].ToString()), Convert.ToInt32(row["wall_height"]), true));
+                Convert.ToString(row["heightmap"]), ConvertExtensions.EnumToBool(row["club_only"].ToString()), Convert.ToInt32(row["wall_height"]), true));
         }
         return true;
     }

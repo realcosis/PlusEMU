@@ -40,7 +40,7 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
     {
         if (Instance == null || !_requested || _next == 0)
             return false;
-        var now = PlusEnvironment.Now();
+        var now = DateTime.UtcNow.Ticks;
         if (_next < now)
         {
             foreach (var item in SetItems.Values.ToList())
@@ -129,8 +129,8 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
     {
         if (SetItems.Count == 0)
             return false;
-        if (_next == 0 || _next < PlusEnvironment.Now())
-            _next = PlusEnvironment.Now() + Delay;
+        if (_next == 0 || _next < DateTime.UtcNow.Ticks)
+            _next = DateTime.UtcNow.Ticks + Delay;
         if (!_requested)
         {
             TickCount = Delay;
@@ -157,7 +157,7 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
             }
             case 3:
             {
-                if (RandomNumber.GenerateRandom(0, 2) == 0)
+                if (Random.Shared.Next(0, 3) == 0)
                 {
                     rotation += 2;
                     if (rotation > 6) rotation = 0;
@@ -185,7 +185,7 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
             }
             case 1:
             {
-                switch (RandomNumber.GenerateRandom(1, 4))
+                switch (Random.Shared.Next(1, 5))
                 {
                     case 1:
                         newPos = new Point(position.X + 1, position.Y);
@@ -204,7 +204,7 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
             }
             case 2:
             {
-                if (RandomNumber.GenerateRandom(0, 2) == 1)
+                if (Random.Shared.Next(0, 3) == 1)
                     newPos = new Point(position.X - 1, position.Y);
                 else
                     newPos = new Point(position.X + 1, position.Y);
@@ -212,7 +212,7 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
             }
             case 3:
             {
-                if (RandomNumber.GenerateRandom(0, 2) == 1)
+                if (Random.Shared.Next(0, 3) == 1)
                     newPos = new Point(position.X, position.Y - 1);
                 else
                     newPos = new Point(position.X, position.Y + 1);

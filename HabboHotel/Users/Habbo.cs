@@ -26,6 +26,7 @@ using Plus.HabboHotel.Users.Navigator.SavedSearches;
 using Plus.HabboHotel.Users.Permissions;
 using Plus.HabboHotel.Users.Process;
 using Plus.HabboHotel.Users.Relationships;
+using Plus.Utilities;
 
 using Dapper;
 
@@ -88,7 +89,7 @@ public class Habbo
         Motto = motto;
         Look = look;
         Gender = gender.ToLower();
-        FootballLook = PlusEnvironment.FilterFigure(look.ToLower());
+        FootballLook = PlusEnvironment.GetFigureManager().FilterFigure(look.ToLower());
         FootballGender = gender.ToLower();
         Credits = credits;
         Duckets = activityPoints;
@@ -139,14 +140,14 @@ public class Habbo
         TimeMuted = timeMuted;
         _timeCached = DateTime.Now;
         TradingLockExpiry = tradingLock;
-        if (TradingLockExpiry > 0 && PlusEnvironment.GetUnixTimestamp() > TradingLockExpiry)
+        if (TradingLockExpiry > 0 && UnixTimestamp.GetNow() > TradingLockExpiry)
         {
             TradingLockExpiry = 0;
             using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '0' WHERE `user_id` = '" + id + "' LIMIT 1");
         }
         BannedPhraseCount = 0;
-        SessionStart = PlusEnvironment.GetUnixTimestamp();
+        SessionStart = UnixTimestamp.GetNow();
         MessengerSpamCount = 0;
         MessengerSpamTime = 0;
         CreditsUpdateTick = Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("user.currency_scheduler.tick"));
@@ -425,10 +426,10 @@ public class Habbo
         get
         {
             _habboSaved = true;
-            return "UPDATE `users` SET `online` = '0', `last_online` = '" + PlusEnvironment.GetUnixTimestamp() + "', `activity_points` = '" + Duckets + "', `credits` = '" + Credits +
+            return "UPDATE `users` SET `online` = '0', `last_online` = '" + UnixTimestamp.GetNow() + "', `activity_points` = '" + Duckets + "', `credits` = '" + Credits +
                    "', `vip_points` = '" + Diamonds + "', `home_room` = '" + HomeRoom + "', `gotw_points` = '" + GotwPoints + "', `time_muted` = '" + TimeMuted + "',`friend_bar_state` = '" +
                    FriendBarStateUtility.GetInt(FriendbarState) + "' WHERE id = '" + Id + "' LIMIT 1;UPDATE `user_stats` SET `roomvisits` = '" + _habboStats.RoomVisits + "', `onlineTime` = '" +
-                   (PlusEnvironment.GetUnixTimestamp() - SessionStart + _habboStats.OnlineTime) + "', `respect` = '" + _habboStats.Respect + "', `respectGiven` = '" + _habboStats.RespectGiven +
+                   (UnixTimestamp.GetNow() - SessionStart + _habboStats.OnlineTime) + "', `respect` = '" + _habboStats.Respect + "', `respectGiven` = '" + _habboStats.RespectGiven +
                    "', `giftsGiven` = '" + _habboStats.GiftsGiven + "', `giftsReceived` = '" + _habboStats.GiftsReceived + "', `dailyRespectPoints` = '" + _habboStats.DailyRespectPoints +
                    "', `dailyPetRespectPoints` = '" + _habboStats.DailyPetRespectPoints + "', `AchievementScore` = '" + _habboStats.AchievementPoints + "', `quest_id` = '" + _habboStats.QuestId +
                    "', `quest_progress` = '" + _habboStats.QuestProgress + "', `groupid` = '" + _habboStats.FavouriteGroupId + "',`forum_posts` = '" + _habboStats.ForumPosts + "' WHERE `id` = '" +
@@ -527,10 +528,10 @@ public class Habbo
         {
             _habboSaved = true;
             using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-            dbClient.RunQuery("UPDATE `users` SET `online` = '0', `last_online` = '" + PlusEnvironment.GetUnixTimestamp() + "', `activity_points` = '" + Duckets + "', `credits` = '" + Credits +
+            dbClient.RunQuery("UPDATE `users` SET `online` = '0', `last_online` = '" + UnixTimestamp.GetNow() + "', `activity_points` = '" + Duckets + "', `credits` = '" + Credits +
                               "', `vip_points` = '" + Diamonds + "', `home_room` = '" + HomeRoom + "', `gotw_points` = '" + GotwPoints + "', `time_muted` = '" + TimeMuted +
                               "',`friend_bar_state` = '" + FriendBarStateUtility.GetInt(FriendbarState) + "' WHERE id = '" + Id + "' LIMIT 1;UPDATE `user_stats` SET `roomvisits` = '" +
-                              _habboStats.RoomVisits + "', `onlineTime` = '" + (PlusEnvironment.GetUnixTimestamp() - SessionStart + _habboStats.OnlineTime) + "', `respect` = '" + _habboStats.Respect +
+                              _habboStats.RoomVisits + "', `onlineTime` = '" + (UnixTimestamp.GetNow() - SessionStart + _habboStats.OnlineTime) + "', `respect` = '" + _habboStats.Respect +
                               "', `respectGiven` = '" + _habboStats.RespectGiven + "', `giftsGiven` = '" + _habboStats.GiftsGiven + "', `giftsReceived` = '" + _habboStats.GiftsReceived +
                               "', `dailyRespectPoints` = '" + _habboStats.DailyRespectPoints + "', `dailyPetRespectPoints` = '" + _habboStats.DailyPetRespectPoints + "', `AchievementScore` = '" +
                               _habboStats.AchievementPoints + "', `quest_id` = '" + _habboStats.QuestId + "', `quest_progress` = '" + _habboStats.QuestProgress + "', `groupid` = '" +
@@ -623,7 +624,7 @@ public class Habbo
 
     public void ChangeName(string username)
     {
-        LastNameChange = PlusEnvironment.GetUnixTimestamp();
+        LastNameChange = UnixTimestamp.GetNow();
         Username = username;
         SaveKey("username", username);
         SaveKey("last_change", LastNameChange.ToString());
@@ -725,13 +726,12 @@ public class Habbo
 
         using (var dbClient = PlusEnvironment.GetDatabaseManager().Connection())
         {
-
             dbClient.Execute("INSERT INTO user_roomvisits (user_id,room_id,entry_timestamp,exit_timestamp,hour,minute) VALUES (@userId, @roomId, @entryTimestamp, @exitTimestamp, @hour, @minute)",
                 new
                 {
                     userId = GetClient().GetHabbo().Id,
                     roomId = GetClient().GetHabbo().CurrentRoomId,
-                    entryTimestamp = PlusEnvironment.GetUnixTimestamp(),
+                    entryTimestamp = UnixTimestamp.GetNow(),
                     exitTimestamp = 0,
                     hour = DateTime.Now.Hour,
                     minute = DateTime.Now.Minute

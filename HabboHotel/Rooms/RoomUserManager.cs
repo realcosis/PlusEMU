@@ -284,7 +284,7 @@ public class RoomUserManager
                         {
                             userId = session.GetHabbo().Id,
                             roomId = session.GetHabbo().CurrentRoomId,
-                            exitTimestamp = PlusEnvironment.GetUnixTimestamp(),
+                            exitTimestamp = UnixTimestamp.GetNow(),
                         });
 
                     dbClient.Execute("UPDATE `rooms` SET `users_now` = @usersNow WHERE `id` = @roomId LIMIT 1",
@@ -852,7 +852,7 @@ public class RoomUserManager
             var isBot = user.IsBot;
             if (isBot)
                 cyclegameitems = false;
-            if (PlusEnvironment.GetUnixTimestamp() > PlusEnvironment.GetUnixTimestamp() + user.SignTime)
+            if (UnixTimestamp.GetNow() > UnixTimestamp.GetNow() + user.SignTime)
             {
                 if (user.Statusses.ContainsKey("sign"))
                 {

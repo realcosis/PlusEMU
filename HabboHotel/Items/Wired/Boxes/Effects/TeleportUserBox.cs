@@ -102,9 +102,8 @@ internal class TeleportUserBox : IWiredItem, IWiredCycle
             return;
         if (player.IsTeleporting || player.IsHopping || player.TeleporterId != 0)
             return;
-        var rand = new Random();
         var items = SetItems.Values.ToList();
-        items = items.OrderBy(x => rand.Next()).ToList();
+        items = items.OrderBy(x => Random.Shared.Next()).ToList();
         if (items.Count == 0)
             return;
         var item = items.First();

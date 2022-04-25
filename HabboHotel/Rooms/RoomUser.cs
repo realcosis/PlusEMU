@@ -11,6 +11,7 @@ using Plus.HabboHotel.Rooms.AI;
 using Plus.HabboHotel.Rooms.Games.Freeze;
 using Plus.HabboHotel.Rooms.Games.Teams;
 using Plus.HabboHotel.Rooms.PathFinding;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms;
 
@@ -339,7 +340,7 @@ public class RoomUser
                 muteTime = 10;
             else
                 muteTime = 20;
-            GetClient().GetHabbo().FloodTime = PlusEnvironment.GetUnixTimestamp() + muteTime;
+            GetClient().GetHabbo().FloodTime = UnixTimestamp.GetNow() + muteTime;
             ChatSpamCount = 0;
             return true;
         }

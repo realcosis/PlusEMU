@@ -8,6 +8,7 @@ using Plus.Communication.Packets.Outgoing.Rooms.Freeze;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Items.Wired;
 using Plus.HabboHotel.Rooms.Games.Teams;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.Games.Freeze;
 
@@ -15,7 +16,6 @@ public class Freeze
 {
     private readonly ConcurrentDictionary<int, Item> _freezeBlocks;
     private readonly ConcurrentDictionary<int, Item> _freezeTiles;
-    private Random _random;
     private Room _room;
 
     public Freeze(Room room)
@@ -23,7 +23,6 @@ public class Freeze
         _room = room;
         GameIsStarted = false;
         ExitTeleports = new ConcurrentDictionary<int, Item>();
-        _random = new Random();
         _freezeTiles = new ConcurrentDictionary<int, Item>();
         _freezeBlocks = new ConcurrentDictionary<int, Item>();
     }
@@ -45,7 +44,7 @@ public class Freeze
             ExitTeleports.TryRemove(id, out temp);
     }
 
-    public Item GetRandomExitTile() => ExitTeleports.Values.ToList()[PlusEnvironment.GetRandomNumber(0, ExitTeleports.Count - 1)];
+    public Item GetRandomExitTile() => ExitTeleports.Values.ToList()[Random.Shared.Next(0, ExitTeleports.Count)];
 
     public void StartGame()
     {
@@ -277,7 +276,7 @@ public class Freeze
     {
         if (!string.IsNullOrEmpty(item.ExtraData))
             return;
-        var next = _random.Next(1, 14);
+        var next = Random.Shared.Next(1, 14);
         switch (next)
         {
             case 2:
@@ -561,7 +560,6 @@ public class Freeze
     public void Dispose()
     {
         _room = null;
-        _random = null;
         ExitTeleports.Clear();
         _freezeTiles.Clear();
         _freezeBlocks.Clear();

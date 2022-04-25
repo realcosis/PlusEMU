@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.Chat.Filter;
 
@@ -27,8 +28,14 @@ public sealed class WordFilterManager : IWordFilterManager
         {
             foreach (DataRow row in data.Rows)
             {
-                _filteredWords.Add(new WordFilter(Convert.ToString(row["word"]), Convert.ToString(row["replacement"]), PlusEnvironment.EnumToBool(row["strict"].ToString()),
-                    PlusEnvironment.EnumToBool(row["bannable"].ToString())));
+                var isStrict = ConvertExtensions.EnumToBool(row["strict"].ToString());
+                var isBannable = ConvertExtensions.EnumToBool(row["bannable"].ToString());
+                _filteredWords.Add(new WordFilter(
+                    row["word"].ToString(), 
+                    row["replacement"].ToString(), 
+                    isStrict,
+                    isBannable)
+                );
             }
         }
     }

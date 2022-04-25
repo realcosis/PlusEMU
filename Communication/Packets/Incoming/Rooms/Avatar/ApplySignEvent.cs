@@ -1,5 +1,6 @@
 ﻿using System;
 using Plus.HabboHotel.GameClients;
+using Plus.Utilities;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Avatar;
@@ -24,6 +25,6 @@ internal class ApplySignEvent : IPacketEvent
         user.UnIdle();
         user.SetStatus("sign", Convert.ToString(signId));
         user.UpdateNeeded = true;
-        user.SignTime = PlusEnvironment.GetUnixTimestamp() + 5;
+        user.SignTime = UnixTimestamp.GetNow() + 5;
     }
 }

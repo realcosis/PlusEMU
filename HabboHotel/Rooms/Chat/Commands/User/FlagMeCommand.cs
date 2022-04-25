@@ -1,6 +1,7 @@
 ﻿using Plus.Communication.Packets.Outgoing.Handshake;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
@@ -29,9 +30,9 @@ internal class FlagMeCommand : IChatCommand
     {
         if (habbo.Rank == 1 && habbo.VipRank == 0 && habbo.LastNameChange == 0)
             return true;
-        if (habbo.Rank == 1 && habbo.VipRank == 1 && (habbo.LastNameChange == 0 || PlusEnvironment.GetUnixTimestamp() + 604800 > habbo.LastNameChange))
+        if (habbo.Rank == 1 && habbo.VipRank == 1 && (habbo.LastNameChange == 0 || UnixTimestamp.GetNow() + 604800 > habbo.LastNameChange))
             return true;
-        if (habbo.Rank == 1 && habbo.VipRank == 2 && (habbo.LastNameChange == 0 || PlusEnvironment.GetUnixTimestamp() + 86400 > habbo.LastNameChange))
+        if (habbo.Rank == 1 && habbo.VipRank == 2 && (habbo.LastNameChange == 0 || UnixTimestamp.GetNow() + 86400 > habbo.LastNameChange))
             return true;
         if (habbo.Rank == 1 && habbo.VipRank == 3)
             return true;

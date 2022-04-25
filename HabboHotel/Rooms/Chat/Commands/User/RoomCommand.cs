@@ -2,6 +2,7 @@
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
 
@@ -55,8 +56,9 @@ internal class RoomCommand : IChatCommand
                 room.PushEnabled = !room.PushEnabled;
                 using (var dbClient = _database.GetQueryReactor())
                 {
-                    dbClient.SetQuery("UPDATE `rooms` SET `push_enabled` = @PushEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
-                    dbClient.AddParameter("PushEnabled", PlusEnvironment.BoolToEnum(room.PushEnabled));
+                    dbClient.SetQuery("UPDATE `rooms` SET `push_enabled` = @pushEnabled WHERE `id` = @roomId LIMIT 1");
+                    dbClient.AddParameter("roomId", room.Id);
+                    dbClient.AddParameter("pushEnabled", ConvertExtensions.ToStringEnumValue(room.PushEnabled));
                     dbClient.RunQuery();
                 }
                 session.SendWhisper("Push mode is now " + (room.PushEnabled ? "enabled!" : "disabled!"));
@@ -67,8 +69,9 @@ internal class RoomCommand : IChatCommand
                 room.SuperPushEnabled = !room.SuperPushEnabled;
                 using (var dbClient = _database.GetQueryReactor())
                 {
-                    dbClient.SetQuery("UPDATE `rooms` SET `spush_enabled` = @PushEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
-                    dbClient.AddParameter("PushEnabled", PlusEnvironment.BoolToEnum(room.SuperPushEnabled));
+                    dbClient.SetQuery("UPDATE `rooms` SET `spush_enabled` = @sPushEnabled WHERE `id` = @roomId LIMIT 1");
+                    dbClient.AddParameter("roomId", room.Id);
+                    dbClient.AddParameter("sPushEnabled", ConvertExtensions.ToStringEnumValue(room.SuperPushEnabled));
                     dbClient.RunQuery();
                 }
                 session.SendWhisper("Super Push mode is now " + (room.SuperPushEnabled ? "enabled!" : "disabled!"));
@@ -79,8 +82,9 @@ internal class RoomCommand : IChatCommand
                 room.SuperPullEnabled = !room.SuperPullEnabled;
                 using (var dbClient = _database.GetQueryReactor())
                 {
-                    dbClient.SetQuery("UPDATE `rooms` SET `spull_enabled` = @PullEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
-                    dbClient.AddParameter("PullEnabled", PlusEnvironment.BoolToEnum(room.SuperPullEnabled));
+                    dbClient.SetQuery("UPDATE `rooms` SET `spull_enabled` = @sPullEnabled WHERE `id` = @roomId LIMIT 1");
+                    dbClient.AddParameter("roomId", room.Id);
+                    dbClient.AddParameter("sPullEnabled", ConvertExtensions.ToStringEnumValue(room.SuperPullEnabled));
                     dbClient.RunQuery();
                 }
                 session.SendWhisper("Super Pull mode is now " + (room.SuperPullEnabled ? "enabled!" : "disabled!"));
@@ -91,8 +95,9 @@ internal class RoomCommand : IChatCommand
                 room.PullEnabled = !room.PullEnabled;
                 using (var dbClient = _database.GetQueryReactor())
                 {
-                    dbClient.SetQuery("UPDATE `rooms` SET `pull_enabled` = @PullEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
-                    dbClient.AddParameter("PullEnabled", PlusEnvironment.BoolToEnum(room.PullEnabled));
+                    dbClient.SetQuery("UPDATE `rooms` SET `pull_enabled` = @pullEnabled WHERE `id` = @roomId LIMIT 1");
+                    dbClient.AddParameter("roomId", room.Id);
+                    dbClient.AddParameter("pullEnabled", ConvertExtensions.ToStringEnumValue(room.PullEnabled));
                     dbClient.RunQuery();
                 }
                 session.SendWhisper("Pull mode is now " + (room.PullEnabled ? "enabled!" : "disabled!"));
@@ -104,8 +109,9 @@ internal class RoomCommand : IChatCommand
                 room.EnablesEnabled = !room.EnablesEnabled;
                 using (var dbClient = _database.GetQueryReactor())
                 {
-                    dbClient.SetQuery("UPDATE `rooms` SET `enables_enabled` = @EnablesEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
-                    dbClient.AddParameter("EnablesEnabled", PlusEnvironment.BoolToEnum(room.EnablesEnabled));
+                    dbClient.SetQuery("UPDATE `rooms` SET `enables_enabled` = @enablesEnabled WHERE `id` = @roomId LIMIT 1");
+                    dbClient.AddParameter("roomId", room.Id);
+                    dbClient.AddParameter("enablesEnabled", ConvertExtensions.ToStringEnumValue(room.EnablesEnabled));
                     dbClient.RunQuery();
                 }
                 session.SendWhisper("Enables mode set to " + (room.EnablesEnabled ? "enabled!" : "disabled!"));
@@ -116,8 +122,9 @@ internal class RoomCommand : IChatCommand
                 room.RespectNotificationsEnabled = !room.RespectNotificationsEnabled;
                 using (var dbClient = _database.GetQueryReactor())
                 {
-                    dbClient.SetQuery("UPDATE `rooms` SET `respect_notifications_enabled` = @RespectNotificationsEnabled WHERE `id` = '" + room.Id + "' LIMIT 1");
-                    dbClient.AddParameter("RespectNotificationsEnabled", PlusEnvironment.BoolToEnum(room.RespectNotificationsEnabled));
+                    dbClient.SetQuery("UPDATE `rooms` SET `respect_notifications_enabled` = @respectNotificationsEnabled WHERE `id` = @roomId LIMIT 1");
+                    dbClient.AddParameter("roomId", room.Id);
+                    dbClient.AddParameter("respectNotificationsEnabled", ConvertExtensions.ToStringEnumValue(room.RespectNotificationsEnabled));
                     dbClient.RunQuery();
                 }
                 session.SendWhisper("Respect notifications mode set to " + (room.RespectNotificationsEnabled ? "enabled!" : "disabled!"));
@@ -129,8 +136,9 @@ internal class RoomCommand : IChatCommand
                 room.PetMorphsAllowed = !room.PetMorphsAllowed;
                 using (var dbClient = _database.GetQueryReactor())
                 {
-                    dbClient.SetQuery("UPDATE `rooms` SET `pet_morphs_allowed` = @PetMorphsAllowed WHERE `id` = '" + room.Id + "' LIMIT 1");
-                    dbClient.AddParameter("PetMorphsAllowed", PlusEnvironment.BoolToEnum(room.PetMorphsAllowed));
+                    dbClient.SetQuery("UPDATE `rooms` SET `pet_morphs_allowed` = @petMorphsAllowed WHERE `id` = @roomId LIMIT 1");
+                    dbClient.AddParameter("roomId", room.Id);
+                    dbClient.AddParameter("petMorphsAllowed", ConvertExtensions.ToStringEnumValue(room.PetMorphsAllowed));
                     dbClient.RunQuery();
                 }
                 session.SendWhisper("Human pet morphs notifications mode set to " + (room.PetMorphsAllowed ? "enabled!" : "disabled!"));

@@ -33,22 +33,22 @@ public class ItemDataManager : IItemDataManager
                         var width = Convert.ToInt32(row["width"]);
                         var length = Convert.ToInt32(row["length"]);
                         var height = Convert.ToDouble(row["stack_height"]);
-                        var allowStack = PlusEnvironment.EnumToBool(row["can_stack"].ToString());
-                        var allowWalk = PlusEnvironment.EnumToBool(row["is_walkable"].ToString());
-                        var allowSit = PlusEnvironment.EnumToBool(row["can_sit"].ToString());
-                        var allowRecycle = PlusEnvironment.EnumToBool(row["allow_recycle"].ToString());
-                        var allowTrade = PlusEnvironment.EnumToBool(row["allow_trade"].ToString());
-                        var allowMarketplace = Convert.ToInt32(row["allow_marketplace_sell"]) == 1;
-                        var allowGift = Convert.ToInt32(row["allow_gift"]) == 1;
-                        var allowInventoryStack = PlusEnvironment.EnumToBool(row["allow_inventory_stack"].ToString());
-                        var interactionType = InteractionTypes.GetTypeFromString(Convert.ToString(row["interaction_type"]));
+                        var allowStack = row["can_stack"].ToString() == "1";
+                        var allowWalk = row["is_walkable"].ToString() == "1";
+                        var allowSit =row["can_sit"].ToString() == "1";
+                        var allowRecycle = row["allow_recycle"].ToString() == "1";
+                        var allowTrade = row["allow_trade"].ToString() == "1";
+                        var allowMarketplace = row["allow_marketplace_sell"].ToString() == "1";
+                        var allowGift = row["allow_gift"].ToString()    == "1";
+                        var allowInventoryStack = row["allow_inventory_stack"].ToString() == "1";
+                        var interactionType = InteractionTypes.GetTypeFromString(row["interaction_type"].ToString());
                         var behaviourData = Convert.ToInt32(row["behaviour_data"]);
                         var cycleCount = Convert.ToInt32(row["interaction_modes_count"]);
                         var vendingIds = Convert.ToString(row["vending_ids"]);
                         var heightAdjustable = Convert.ToString(row["height_adjustable"]);
                         var effectId = Convert.ToInt32(row["effect_id"]);
-                        var isRare = PlusEnvironment.EnumToBool(row["is_rare"].ToString());
-                        var extraRot = PlusEnvironment.EnumToBool(row["extra_rot"].ToString());
+                        var isRare = row["is_rare"].ToString() == "1";
+                        var extraRot = row["extra_rot"].ToString() == "1";
                         if (!Gifts.ContainsKey(spriteId))
                         {
                             Gifts.Add(spriteId,

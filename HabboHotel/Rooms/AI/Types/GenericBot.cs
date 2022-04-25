@@ -96,7 +96,7 @@ public class GenericBot : BotAi
                 case "specified_range":
                     break;
             }
-            _actionTimer = new Random((DateTime.Now.Millisecond + _virtualId) ^ 2).Next(5, 15);
+            _actionTimer = Random.Shared.Next(5, 15);
         }
         else
             _actionTimer--;

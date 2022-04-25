@@ -49,7 +49,7 @@ internal class BartenderBot : BotAi
                 user.GetClient().SendPacket(new WhisperComposer(GetRoomUser().VirtualId, response.ResponseText.Replace("{username}", user.GetClient().GetHabbo().Username), 0, 0));
                 break;
         }
-        if (response.BeverageIds.Count > 0) user.CarryItem(response.BeverageIds[RandomNumber.GenerateRandom(0, response.BeverageIds.Count - 1)]);
+        if (response.BeverageIds.Count > 0) user.CarryItem(response.BeverageIds[Random.Shared.Next(0, response.BeverageIds.Count)]);
     }
 
     public override void OnUserShout(RoomUser user, string message)
@@ -73,7 +73,7 @@ internal class BartenderBot : BotAi
                 user.GetClient().SendPacket(new WhisperComposer(GetRoomUser().VirtualId, response.ResponseText.Replace("{username}", user.GetClient().GetHabbo().Username), 0, 0));
                 break;
         }
-        if (response.BeverageIds.Count > 0) user.CarryItem(response.BeverageIds[RandomNumber.GenerateRandom(0, response.BeverageIds.Count - 1)]);
+        if (response.BeverageIds.Count > 0) user.CarryItem(response.BeverageIds[Random.Shared.Next(0, response.BeverageIds.Count)]);
     }
 
     public override void OnTimerTick()
@@ -145,7 +145,7 @@ internal class BartenderBot : BotAi
                 case "specified_range":
                     break;
             }
-            _actionTimer = new Random((DateTime.Now.Millisecond + _virtualId) ^ 2).Next(5, 15);
+            _actionTimer = Random.Shared.Next(5, 15);
         }
         else
             _actionTimer--;
