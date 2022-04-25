@@ -739,7 +739,7 @@ public class Item
                         break;
                     }
                     case InteractionType.Bottle:
-                        ExtraData = RandomNumber.GenerateNewRandom(0, 7).ToString();
+                        ExtraData = Random.Shared.Next(0, 8).ToString();
                         UpdateState();
                         break;
                     case InteractionType.Dice:
@@ -751,13 +751,13 @@ public class Item
                     }
                         break;
                     case InteractionType.HabboWheel:
-                        ExtraData = RandomNumber.GenerateRandom(1, 10).ToString();
+                        ExtraData = Random.Shared.Next(1, 10).ToString();
                         UpdateState();
                         break;
                     case InteractionType.LoveShuffler:
                         if (ExtraData == "0")
                         {
-                            ExtraData = RandomNumber.GenerateNewRandom(1, 4).ToString();
+                            ExtraData = Random.Shared.Next(1, 5).ToString();
                             RequestUpdate(20, false);
                         }
                         else if (ExtraData != "-1") ExtraData = "-1";
@@ -779,7 +779,7 @@ public class Item
                             user.UnlockWalking();
                             if (GetBaseItem().VendingIds.Count > 0)
                             {
-                                var randomDrink = GetBaseItem().VendingIds[RandomNumber.GenerateRandom(0, GetBaseItem().VendingIds.Count - 1)];
+                                var randomDrink = GetBaseItem().VendingIds[Random.Shared.Next(0, GetBaseItem().VendingIds.Count)];
                                 user.CarryItem(randomDrink);
                             }
                             InteractingUser = 0;

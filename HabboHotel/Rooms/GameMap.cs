@@ -105,7 +105,7 @@ public class Gamemap
                     walkableSquares.Add(new Point(x, y));
             }
         }
-        var randomNumber = RandomNumber.GenerateNewRandom(0, walkableSquares.Count);
+        var randomNumber = Random.Shared.Next(0, walkableSquares.Count + 1);
         var i = 0;
         foreach (var coord in walkableSquares.ToList())
         {

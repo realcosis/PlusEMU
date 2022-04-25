@@ -46,7 +46,7 @@ public class Freeze
             ExitTeleports.TryRemove(id, out temp);
     }
 
-    public Item GetRandomExitTile() => ExitTeleports.Values.ToList()[RandomNumber.GenerateNewRandom(0, ExitTeleports.Count - 1)];
+    public Item GetRandomExitTile() => ExitTeleports.Values.ToList()[Random.Shared.Next(0, ExitTeleports.Count)];
 
     public void StartGame()
     {
