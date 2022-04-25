@@ -279,11 +279,6 @@ public class RoomUserManager
                     session.GetHabbo().GetMessenger().OnStatusChanged(true);
                 using (var dbClient = PlusEnvironment.GetDatabaseManager().Connection())
                 {
-                    /*
-                    dbClient.RunQuery("UPDATE user_roomvisits SET exit_timestamp = '" + PlusEnvironment.GetUnixTimestamp() + "' WHERE room_id = '" + _room.RoomId + "' AND user_id = '" +
-                                      session.GetHabbo().Id + "' ORDER BY exit_timestamp DESC LIMIT 1");
-                    dbClient.RunQuery("UPDATE `rooms` SET `users_now` = '" + _room.UsersNow + "' WHERE `id` = '" + _room.RoomId + "' LIMIT 1");
-                    */
                     dbClient.Execute("UPDATE user_roomvisits SET exit_timestamp = @exitTimestamp WHERE room_id = @roomId AND user_id = @userId ORDER BY exit_timestamp DESC LIMIT 1",
                         new
                         {
