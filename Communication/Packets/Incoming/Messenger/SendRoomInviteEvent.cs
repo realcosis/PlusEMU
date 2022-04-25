@@ -3,6 +3,7 @@ using Plus.Communication.Packets.Outgoing.Messenger;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.Utilities;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Messenger;
 
@@ -46,10 +47,8 @@ internal class SendRoomInviteEvent : IPacketEvent
                 continue;
             client.SendPacket(new RoomInviteComposer(session.GetHabbo().Id, message));
         }
-        using var dbClient = _database.GetQueryReactor();
-        dbClient.SetQuery("INSERT INTO `chatlogs_console_invitations` (`user_id`,`message`,`timestamp`) VALUES (@userId, @message, UNIX_TIMESTAMP())");
-        dbClient.AddParameter("userId", session.GetHabbo().Id);
-        dbClient.AddParameter("message", message);
-        dbClient.RunQuery();
+        using var connection = _database.Connection();
+        connection.Execute("INSERT INTO `chatlogs_console_invitations` (`user_id`,`message`,`timestamp`) VALUES (@userId, @message, UNIX_TIMESTAMP())",
+            new { userId = session.GetHabbo().Id, message = message });
     }
 }
