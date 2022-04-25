@@ -18,15 +18,15 @@ public static class Program
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
         var collection = new ServiceCollection();
-        collection.Scan(scan => scan.FromAssemblies(typeof(Program).Assembly)
-            .AddClasses(classes => classes.Where(c => c.GetInterface($"I{c.Name}") != null))
-            .UsingRegistrationStrategy(RegistrationStrategy.Throw)
-            .AsSelfWithInterfaces()
-            .WithSingletonLifetime());
         collection.AddAssignableTo<IChatCommand>();
         collection.AddAssignableTo<IPacketEvent>();
         collection.AddAssignableTo<IStartable>();
         collection.AddAssignableTo<IRconCommand>();
+        collection.Scan(scan => scan.FromAssemblies(typeof(Program).Assembly)
+            .AddClasses(classes => classes.Where(c => c.GetInterface($"I{c.Name}") != null))
+            .UsingRegistrationStrategy(RegistrationStrategy.Skip)
+            .AsSelfWithInterfaces()
+            .WithSingletonLifetime());
 
         var projectSolutionPath = Directory.GetCurrentDirectory();
         var configuration = new ConfigurationData(projectSolutionPath + "//Config//config.ini");
@@ -66,7 +66,7 @@ public static class Program
         services.Scan(scan => scan.FromAssemblies(typeof(Program).Assembly)
             .AddClasses(classes => classes.Where(t => t.IsAssignableTo(typeof(T)) && !t.IsAbstract && !t.IsInterface))
             .UsingRegistrationStrategy(RegistrationStrategy.Append)
-            .AsSelf()
+            .AsSelfWithInterfaces()
             .WithSingletonLifetime());
 
     private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs args)
