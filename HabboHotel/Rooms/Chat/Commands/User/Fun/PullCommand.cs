@@ -45,12 +45,12 @@ internal class PullCommand : IChatCommand
         }
         if (targetClient.GetHabbo().Username == session.GetHabbo().Username)
         {
-            session.SendWhisper("Come on, surely you don't want to push yourself!");
+            session.SendWhisper("Come on, surely you don't want to pull yourself!");
             return;
         }
         if (targetUser.TeleportEnabled)
         {
-            session.SendWhisper("Oops, you cannot push a user whilst they have their teleport mode enabled.");
+            session.SendWhisper("Oops, you cannot pull a user whilst they have their teleport mode enabled.");
             return;
         }
         var thisUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
@@ -65,15 +65,15 @@ internal class PullCommand : IChatCommand
         {
             room.SendPacket(new ChatComposer(thisUser.VirtualId, "*pulls " + @params[1] + " to them*", 0, thisUser.LastBubble));
             if (thisUser.RotBody % 2 != 0) 
-                PushTarget(targetUser, thisUser.X, thisUser.Y, thisUser.direction-1);
+                PullTarget(targetUser, thisUser.X, thisUser.Y, thisUser.direction-1);
             else
-                PushTarget(targetUser, thisUser.X, thisUser.Y, thisUser.direction);
+                PullTarget(targetUser, thisUser.X, thisUser.Y, thisUser.direction);
             return;
         }
         session.SendWhisper("That user is not close enough to you to be pulled, try getting closer!");
     }
 
-    private void PushTarget(RoomUser targetUser, int X, int Y, int direction)
+    private void PullTarget(RoomUser targetUser, int X, int Y, int direction)
     {
         if (direction == 0)
             targetUser.MoveTo(X, Y-1);
