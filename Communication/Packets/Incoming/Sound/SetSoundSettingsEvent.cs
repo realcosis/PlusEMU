@@ -16,7 +16,7 @@ internal class SetSoundSettingsEvent : IPacketEvent
     public void Parse(GameClient session, ClientPacket packet)
     {
         var volume = "";
-        for (int i = 0; i < 3; i++)
+        for (var i = 0; i < 3; i++)
         {
             var vol = packet.PopInt();
             if (vol < 0 || vol > 100) vol = 100;
