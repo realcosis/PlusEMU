@@ -8,6 +8,7 @@ using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Rooms.AI;
 using Plus.HabboHotel.Rooms.AI.Speech;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Catalog;
 
@@ -48,11 +49,9 @@ internal class CheckGnomeNameEvent : IPacketEvent
         var y = item.GetY;
 
         //Quickly delete it from the database.
-        using (var dbClient = _database.GetQueryReactor())
+        using (var connection = _database.Connection())
         {
-            dbClient.SetQuery("DELETE FROM `items` WHERE `id` = @ItemId LIMIT 1");
-            dbClient.AddParameter("ItemId", item.Id);
-            dbClient.RunQuery();
+            connection.Execute("DELETE FROM `items` WHERE `id` = @ItemId LIMIT 1", new { ItemId = item.Id});
         }
 
         //Remove the item.
@@ -73,12 +72,9 @@ internal class CheckGnomeNameEvent : IPacketEvent
         pet.GnomeClothing = RandomClothing();
 
         //Update the pets gnome clothing.
-        using (var dbClient = _database.GetQueryReactor())
+        using (var connection = _database.Connection())
         {
-            dbClient.SetQuery("UPDATE `bots_petdata` SET `gnome_clothing` = @GnomeClothing WHERE `id` = @PetId LIMIT 1");
-            dbClient.AddParameter("GnomeClothing", pet.GnomeClothing);
-            dbClient.AddParameter("PetId", pet.PetId);
-            dbClient.RunQuery();
+            connection.Execute("UPDATE `bots_petdata` SET `gnome_clothing` = @GnomeClothing WHERE `id` = @PetId LIMIT 1", new { GnomeClothing = pet.GnomeClothing, PetId = pet.PetId });
         }
 
         //Make a RoomUser of the pet.
