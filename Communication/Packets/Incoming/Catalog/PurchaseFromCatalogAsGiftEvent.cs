@@ -13,6 +13,7 @@ using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Quests;
 using Plus.Utilities;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Catalog;
 
@@ -108,17 +109,15 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
         }
         if (session.GetHabbo().SessionGiftBlocked)
             return;
-        var ed = giftUser + Convert.ToChar(5) + giftMessage + Convert.ToChar(5) + session.GetHabbo().Id + Convert.ToChar(5) + item.Data.Id + Convert.ToChar(5) + spriteId + Convert.ToChar(5) + ribbon +
+        var extra_data = giftUser + Convert.ToChar(5) + giftMessage + Convert.ToChar(5) + session.GetHabbo().Id + Convert.ToChar(5) + item.Data.Id + Convert.ToChar(5) + spriteId + Convert.ToChar(5) + ribbon +
                  Convert.ToChar(5) + colour;
         int newItemId;
-        using (var dbClient = _database.GetQueryReactor())
+        using (var connection = _database.Connection())
         {
             //Insert the dummy item.
-            dbClient.SetQuery("INSERT INTO `items` (`base_item`,`user_id`,`extra_data`) VALUES (@baseId, @habboId, @extra_data)");
-            dbClient.AddParameter("baseId", presentData.Id);
-            dbClient.AddParameter("habboId", habbo.Id);
-            dbClient.AddParameter("extra_data", ed);
-            newItemId = Convert.ToInt32(dbClient.InsertQuery());
+            var InsertQuery = connection.Execute("INSERT INTO `items` (`base_item`,`user_id`,`extra_data`) VALUES (@baseId, @habboId, @extra_data)",
+                new { baseId = presentData.Id, habboId = habbo.Id, extra_data = extra_data });
+            newItemId = Convert.ToInt32(InsertQuery);
             string itemExtraData = null;
             switch (item.Data.InteractionType)
             {
@@ -185,18 +184,13 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
             }
 
             //Insert the present, forever.
-            dbClient.SetQuery("INSERT INTO `user_presents` (`item_id`,`base_id`,`extra_data`) VALUES (@itemId, @baseId, @extra_data)");
-            dbClient.AddParameter("itemId", newItemId);
-            dbClient.AddParameter("baseId", item.Data.Id);
-            dbClient.AddParameter("extra_data", string.IsNullOrEmpty(itemExtraData) ? "" : itemExtraData);
-            dbClient.RunQuery();
+            connection.Execute("INSERT INTO `user_presents` (`item_id`,`base_id`,`extra_data`) VALUES (@itemId, @baseId, @extra_data)",
+                new {itemId = newItemId, baseId = item.Data.Id, extra_data = string.IsNullOrEmpty(itemExtraData) ? "" : itemExtraData });
 
             //Here we're clearing up a record, this is dumb, but okay.
-            dbClient.SetQuery("DELETE FROM `items` WHERE `id` = @deleteId LIMIT 1");
-            dbClient.AddParameter("deleteId", newItemId);
-            dbClient.RunQuery();
+            connection.Execute("DELETE FROM `items` WHERE `id` = @deleteId LIMIT 1", new { deleteId = newItemId});
         }
-        var giveItem = ItemFactory.CreateGiftItem(presentData, habbo, ed, ed, newItemId);
+        var giveItem = ItemFactory.CreateGiftItem(presentData, habbo, extra_data, extra_data, newItemId);
         if (giveItem != null)
         {
             var receiver = _gameClientManager.GetClientByUserId(habbo.Id);
