@@ -86,7 +86,7 @@ public class PetBot : BotAi
                 else
                     pet.Statusses.Add(rSpeech, TextHandling.GetString(pet.Z));
             }
-            _speechTimer = PlusEnvironment.GetRandomNumber(20, 120);
+            _speechTimer = RandomNumber.GenerateNewRandom(20, 120);
         }
         else
             _speechTimer--;

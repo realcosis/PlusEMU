@@ -7,6 +7,7 @@ using Plus.Core;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Rooms.Games.Teams;
 using Plus.HabboHotel.Rooms.PathFinding;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms;
 
@@ -104,7 +105,7 @@ public class Gamemap
                     walkableSquares.Add(new Point(x, y));
             }
         }
-        var randomNumber = PlusEnvironment.GetRandomNumber(0, walkableSquares.Count);
+        var randomNumber = RandomNumber.GenerateNewRandom(0, walkableSquares.Count);
         var i = 0;
         foreach (var coord in walkableSquares.ToList())
         {

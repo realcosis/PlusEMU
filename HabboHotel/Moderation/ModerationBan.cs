@@ -1,4 +1,6 @@
-﻿namespace Plus.HabboHotel.Moderation;
+﻿using Plus.Utilities;
+
+namespace Plus.HabboHotel.Moderation;
 
 public class ModerationBan
 {
@@ -19,7 +21,7 @@ public class ModerationBan
     {
         get
         {
-            if (PlusEnvironment.GetUnixTimestamp() >= Expire)
+            if (UnixTimestamp.GetNow() >= Expire)
                 return true;
             return false;
         }

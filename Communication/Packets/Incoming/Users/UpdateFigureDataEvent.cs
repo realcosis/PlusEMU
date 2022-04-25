@@ -4,10 +4,12 @@ using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Core.FigureData;
+using Plus.Core.FigureData;
 using Plus.Database;
 using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
+using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Users;
 
@@ -48,20 +50,20 @@ internal class UpdateFigureDataEvent : IPacketEvent
             session.SendPacket(new BroadcastMessageAlertComposer("Sorry, you chose an invalid gender."));
             return;
         }
-        PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.ProfileChangeLook);
-        session.GetHabbo().Look = PlusEnvironment.FilterFigure(look);
+        _questManager.ProgressUserQuest(session, QuestType.ProfileChangeLook);
+        session.GetHabbo().Look = _figureManager.FilterFigure(look);
         session.GetHabbo().Gender = gender.ToLower();
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `users` SET `look` = @look, `gender` = @gender WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
             dbClient.AddParameter("look", look);
             dbClient.AddParameter("gender", gender);
             dbClient.RunQuery();
         }
-        PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(session, "ACH_AvatarLooks", 1);
+        _achievementManager.ProgressAchievement(session, "ACH_AvatarLooks", 1);
         session.SendPacket(new AvatarAspectUpdateComposer(look, gender));
         if (session.GetHabbo().Look.Contains("ha-1006"))
-            PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.WearHat);
+            _questManager.ProgressUserQuest(session, QuestType.WearHat);
         if (session.GetHabbo().InRoom)
         {
             var roomUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);

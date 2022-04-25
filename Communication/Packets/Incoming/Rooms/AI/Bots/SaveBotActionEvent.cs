@@ -6,6 +6,7 @@ using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms.AI.Speech;
+using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots;
 
@@ -95,7 +96,7 @@ internal class SaveBotActionEvent : IPacketEvent
                     dbClient.AddParameter("id", botId);
                     dbClient.AddParameter("AutomaticChat", automaticChat.ToLower());
                     dbClient.AddParameter("SpeakingInterval", Convert.ToInt32(speakingInterval));
-                    dbClient.AddParameter("MixChat", PlusEnvironment.BoolToEnum(Convert.ToBoolean(mixChat)));
+                    dbClient.AddParameter("MixChat", ConvertExtensions.ToStringEnumValue(roomBot.MixSentences));
                     dbClient.RunQuery();
                 }
                 roomBot.RandomSpeech.Clear();

@@ -277,7 +277,7 @@ public class RoomUserManager
                     session.GetHabbo().GetMessenger().OnStatusChanged(true);
                 using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
-                    dbClient.RunQuery("UPDATE user_roomvisits SET exit_timestamp = '" + PlusEnvironment.GetUnixTimestamp() + "' WHERE room_id = '" + _room.RoomId + "' AND user_id = '" +
+                    dbClient.RunQuery("UPDATE user_roomvisits SET exit_timestamp = '" + UnixTimestamp.GetNow() + "' WHERE room_id = '" + _room.RoomId + "' AND user_id = '" +
                                       session.GetHabbo().Id + "' ORDER BY exit_timestamp DESC LIMIT 1");
                     dbClient.RunQuery("UPDATE `rooms` SET `users_now` = '" + _room.UsersNow + "' WHERE `id` = '" + _room.RoomId + "' LIMIT 1");
                 }
@@ -839,7 +839,7 @@ public class RoomUserManager
             var isBot = user.IsBot;
             if (isBot)
                 cyclegameitems = false;
-            if (PlusEnvironment.GetUnixTimestamp() > PlusEnvironment.GetUnixTimestamp() + user.SignTime)
+            if (UnixTimestamp.GetNow() > UnixTimestamp.GetNow() + user.SignTime)
             {
                 if (user.Statusses.ContainsKey("sign"))
                 {

@@ -1,5 +1,6 @@
 ﻿using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
+using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Action;
 
@@ -32,12 +33,12 @@ internal class MuteUserEvent : IPacketEvent
             return;
         if (room.MutedUsers.ContainsKey(userId))
         {
-            if (room.MutedUsers[userId] < PlusEnvironment.GetUnixTimestamp())
+            if (room.MutedUsers[userId] < UnixTimestamp.GetNow())
                 room.MutedUsers.Remove(userId);
             else
                 return;
         }
-        room.MutedUsers.Add(userId, PlusEnvironment.GetUnixTimestamp() + time * 60);
+        room.MutedUsers.Add(userId, UnixTimestamp.GetNow() + time * 60);
         target.GetClient().SendWhisper("The room owner has muted you for " + time + " minutes!");
         _achievementManager.ProgressAchievement(session, "ACH_SelfModMuteSeen", 1);
     }

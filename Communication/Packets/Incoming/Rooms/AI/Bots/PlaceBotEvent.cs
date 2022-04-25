@@ -9,6 +9,7 @@ using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Rooms.AI;
 using Plus.HabboHotel.Rooms.AI.Speech;
+using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots;
 
@@ -80,8 +81,8 @@ internal class PlaceBotEvent : IPacketEvent
         }
         var botUser = room.GetRoomUserManager().DeployBot(
             new RoomBot(bot.Id, session.GetHabbo().CurrentRoomId, Convert.ToString(getData["ai_type"]), Convert.ToString(getData["walk_mode"]), bot.Name, "", bot.Figure, x, y, 0, 4, 0, 0, 0, 0,
-                ref botSpeechList, "", 0, bot.OwnerId, PlusEnvironment.EnumToBool(getData["automatic_chat"].ToString()), Convert.ToInt32(getData["speaking_interval"]),
-                PlusEnvironment.EnumToBool(getData["mix_sentences"].ToString()), Convert.ToInt32(getData["chat_bubble"])), null);
+                ref botSpeechList, "", 0, bot.OwnerId, ConvertExtensions.EnumToBool(getData["automatic_chat"].ToString()), Convert.ToInt32(getData["speaking_interval"]),
+                ConvertExtensions.EnumToBool(getData["mix_sentences"].ToString()), Convert.ToInt32(getData["chat_bubble"])), null);
         botUser.Chat("Hello!");
         room.GetGameMap().UpdateUserMovement(new Point(x, y), new Point(x, y), botUser);
         if (!session.GetHabbo().GetInventoryComponent().TryRemoveBot(botId, out var toRemove))

@@ -1,4 +1,5 @@
 ﻿using Plus.HabboHotel.GameClients;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Items.Interactor;
 
@@ -53,7 +54,7 @@ public class InteractorOneWayGate : IFurniInteractor
                 !item.GetRoom().GetGameMap().CanWalk(item.SquareBehind.X, item.SquareBehind.Y, false)
                 || !item.GetRoom().GetGameMap().SquareIsOpen(item.SquareBehind.X, item.SquareBehind.Y, false))
                 return;
-            if (user.LastInteraction - PlusEnvironment.GetUnixTimestamp() < 0 && user.InteractingGate &&
+            if (user.LastInteraction - UnixTimestamp.GetNow() < 0 && user.InteractingGate &&
                 user.GateId == item.Id)
             {
                 user.InteractingGate = false;

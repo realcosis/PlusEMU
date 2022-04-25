@@ -1,7 +1,9 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using Plus.Communication.Packets.Incoming;
 using Plus.HabboHotel.Rooms;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Items.Wired.Boxes.Effects;
 
@@ -35,7 +37,7 @@ internal class ToggleFurniBox : IWiredItem, IWiredCycle
     {
         if (SetItems.Count == 0 || !_requested)
             return false;
-        var now = PlusEnvironment.Now();
+        var now = DateTime.UtcNow.Ticks;
         if (_next < now)
         {
             foreach (var item in SetItems.Values.ToList())
@@ -83,8 +85,8 @@ internal class ToggleFurniBox : IWiredItem, IWiredCycle
 
     public bool Execute(params object[] @params)
     {
-        if (_next == 0 || _next < PlusEnvironment.Now())
-            _next = PlusEnvironment.Now() + Delay;
+        if (_next == 0 || _next < DateTime.UtcNow.Ticks)
+            _next = DateTime.UtcNow.Ticks + Delay;
         _requested = true;
         TickCount = Delay;
         return true;

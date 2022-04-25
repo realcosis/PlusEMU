@@ -87,7 +87,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
             session.SendPacket(new PresentDeliverErrorMessageComposer(false, true));
             return;
         }
-        var habbo = PlusEnvironment.GetHabboByUsername(giftUser);
+        var habbo = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(giftUser)?.GetHabbo();
         if (habbo == null)
         {
             session.SendPacket(new GiftWrappingErrorComposer());

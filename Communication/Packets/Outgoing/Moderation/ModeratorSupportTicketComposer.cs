@@ -40,7 +40,7 @@ internal class ModeratorSupportTicketComposer : ServerPacket
          base.WriteInteger(Ticket.TabId);
          base.WriteInteger(1); // Type
          base.WriteInteger(114); // Category
-         base.WriteInteger(((int)PlusEnvironment.GetUnixTimestamp() - (int)Ticket.Timestamp) * 1000);
+         base.WriteInteger(((int)PlusEnvironment.GetNow() - (int)Ticket.Timestamp) * 1000);
          base.WriteInteger(Ticket.Score);
          base.WriteInteger(0);
          base.WriteInteger(Ticket.SenderId);

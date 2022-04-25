@@ -1,8 +1,10 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using Plus.Communication.Packets.Incoming;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.HabboHotel.Rooms;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Items.Wired.Boxes.Effects;
 
@@ -37,7 +39,7 @@ internal class MoveFurniToUserBox : IWiredItem, IWiredCycle
     {
         if (Instance == null || !_requested || _next == 0)
             return false;
-        var now = PlusEnvironment.Now();
+        var now = DateTime.UtcNow.Ticks;
         if (_next < now)
         {
             foreach (var item in SetItems.Values.ToList())
@@ -118,8 +120,8 @@ internal class MoveFurniToUserBox : IWiredItem, IWiredCycle
     {
         if (SetItems.Count == 0)
             return false;
-        if (_next == 0 || _next < PlusEnvironment.Now())
-            _next = PlusEnvironment.Now() + Delay;
+        if (_next == 0 || _next < DateTime.UtcNow.Ticks)
+            _next = DateTime.UtcNow.Ticks + Delay;
         if (!_requested)
         {
             TickCount = Delay;
