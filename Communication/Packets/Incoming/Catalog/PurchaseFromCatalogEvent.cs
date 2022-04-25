@@ -20,6 +20,7 @@ using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Quests;
 using Plus.HabboHotel.Users.Effects;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Catalog;
 
@@ -174,11 +175,10 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                 return;
             }
             item.LimitedEditionSells++;
-            using var dbClient = _database.GetQueryReactor();
-            dbClient.SetQuery("UPDATE `catalog_items` SET `limited_sells` = @limitSells WHERE `id` = @itemId LIMIT 1");
-            dbClient.AddParameter("limitSells", item.LimitedEditionSells);
-            dbClient.AddParameter("itemId", item.Id);
-            dbClient.RunQuery();
+            using var connection = _database.Connection();
+            connection.Execute("UPDATE `catalog_items` SET `limited_sells` = @limitedSells WHERE `id` = @itemId LIMIT 1",
+                new { limitedSells = item.LimitedEditionSells, itemId = item.Id });
+
             limitedEditionSells = item.LimitedEditionSells;
             limitedEditionStack = item.LimitedEditionStack;
         }
