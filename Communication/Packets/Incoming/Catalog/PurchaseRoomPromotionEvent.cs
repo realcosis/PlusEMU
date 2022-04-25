@@ -44,8 +44,8 @@ public class PurchaseRoomPromotionEvent : IPacketEvent
         using (var connection = _database.Connection())
         {
             connection.Execute(
-                "REPLACE INTO `room_promotions` (`room_id`,`title`,`description`,`timestamp_start`,`timestamp_expire`,`category_id`) VALUES (@room_id, @title, @description, @start, @expires, @CategoryId)",
-                new { room_id = roomId, title = name, description = desc, start = data.Promotion.TimestampStarted, expires = data.Promotion.TimestampExpires, CategoryId = categoryId });
+                "REPLACE INTO `room_promotions` (`room_id`,`title`,`description`,`timestamp_start`,`timestamp_expire`,`category_id`) VALUES (@roomId, @title, @description, @start, @expires, @categoryId)",
+                new { roomId = roomId, title = name, description = desc, start = data.Promotion.TimestampStarted, expires = data.Promotion.TimestampExpires, categoryId = categoryId });
         }
         if (!session.GetHabbo().GetBadgeComponent().HasBadge("RADZZ"))
             session.GetHabbo().GetBadgeComponent().GiveBadge("RADZZ", true, session);
