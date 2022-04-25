@@ -12,8 +12,7 @@ internal class GetRelationshipsEvent : IPacketEvent
         var habbo = PlusEnvironment.GetHabboById(packet.PopInt());
         if (habbo == null)
             return;
-        var rand = new Random();
-        habbo.Relationships = habbo.Relationships.OrderBy(x => rand.Next()).ToDictionary(item => item.Key, item => item.Value);
+        habbo.Relationships = habbo.Relationships.OrderBy(x => Random.Shared.Next()).ToDictionary(item => item.Key, item => item.Value);
         session.SendPacket(new GetRelationshipsComposer(habbo));
     }
 }

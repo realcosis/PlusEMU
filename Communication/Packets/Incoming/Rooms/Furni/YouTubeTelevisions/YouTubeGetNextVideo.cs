@@ -41,9 +41,8 @@ internal class YouTubeGetNextVideo : IPacketEvent
 
     private static IEnumerable<TValue> RandomValues<TKey, TValue>(IDictionary<TKey, TValue> dict)
     {
-        var rand = new Random();
         var values = dict.Values.ToList();
         var size = dict.Count;
-        while (true) yield return values[rand.Next(size)];
+        while (true) yield return values[Random.Shared.Next(size)];
     }
 }

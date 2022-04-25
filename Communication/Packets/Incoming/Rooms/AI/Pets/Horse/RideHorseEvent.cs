@@ -44,8 +44,7 @@ internal class RideHorseEvent : IPacketEvent
             if (pet.RidingHorse)
             {
                 var speech2 = _petLocale.GetValue("pet.alreadymounted");
-                var randomSpeech2 = new Random();
-                pet.Chat(speech2[randomSpeech2.Next(0, speech2.Length - 1)]);
+                pet.Chat(speech2[Random.Shared.Next(0, speech2.Length)]);
             }
             else if (user.RidingHorse)
                 session.SendNotification("You are already riding a horse!");

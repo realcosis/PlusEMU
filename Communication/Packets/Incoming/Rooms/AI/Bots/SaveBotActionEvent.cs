@@ -122,8 +122,7 @@ internal class SaveBotActionEvent : IPacketEvent
                     bot.BotData.DanceId = 0;
                 else
                 {
-                    var randomDance = new Random();
-                    bot.BotData.DanceId = randomDance.Next(1, 4);
+                    bot.BotData.DanceId = Random.Shared.Next(1, 4);
                 }
                 room.SendPacket(new DanceComposer(bot, bot.BotData.DanceId));
                 break;

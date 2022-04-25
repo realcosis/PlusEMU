@@ -99,8 +99,7 @@ internal class CheckGnomeNameEvent : IPacketEvent
 
     private static string RandomClothing()
     {
-        var random = new Random();
-        var randomNumber = random.Next(1, 6);
+        var randomNumber = Random.Shared.Next(1, 7);
         switch (randomNumber)
         {
             default:

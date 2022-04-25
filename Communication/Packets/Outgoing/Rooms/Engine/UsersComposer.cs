@@ -162,13 +162,12 @@ internal class UsersComposer : ServerPacket
 
     public string PetFigureForType(int type)
     {
-        var random = new Random();
         switch (type)
         {
             default:
             case 60:
             {
-                var randomNumber = random.Next(1, 4);
+                var randomNumber = Random.Shared.Next(1, 5);
                 switch (randomNumber)
                 {
                     default:
@@ -184,7 +183,7 @@ internal class UsersComposer : ServerPacket
             }
             case 1:
             {
-                var randomNumber = random.Next(1, 5);
+                var randomNumber = Random.Shared.Next(1, 6);
                 switch (randomNumber)
                 {
                     default:
@@ -202,7 +201,7 @@ internal class UsersComposer : ServerPacket
             }
             case 2:
             {
-                var randomNumber = random.Next(1, 6);
+                var randomNumber = Random.Shared.Next(1, 7);
                 switch (randomNumber)
                 {
                     default:
@@ -222,7 +221,7 @@ internal class UsersComposer : ServerPacket
             }
             case 3:
             {
-                var randomNumber = random.Next(1, 5);
+                var randomNumber = Random.Shared.Next(1, 6);
                 switch (randomNumber)
                 {
                     default:
@@ -240,7 +239,7 @@ internal class UsersComposer : ServerPacket
             }
             case 4:
             {
-                var randomNumber = random.Next(1, 4);
+                var randomNumber = Random.Shared.Next(1, 5);
                 switch (randomNumber)
                 {
                     default:
@@ -256,7 +255,7 @@ internal class UsersComposer : ServerPacket
             }
             case 5:
             {
-                var randomNumber = random.Next(1, 7);
+                var randomNumber = Random.Shared.Next(1, 8);
                 switch (randomNumber)
                 {
                     default:
@@ -278,7 +277,7 @@ internal class UsersComposer : ServerPacket
             }
             case 6:
             {
-                var randomNumber = random.Next(1, 11);
+                var randomNumber = Random.Shared.Next(1, 12);
                 switch (randomNumber)
                 {
                     default:
@@ -308,7 +307,7 @@ internal class UsersComposer : ServerPacket
             }
             case 7:
             {
-                var randomNumber = random.Next(1, 7);
+                var randomNumber = Random.Shared.Next(1, 8);
                 switch (randomNumber)
                 {
                     default:
@@ -330,7 +329,7 @@ internal class UsersComposer : ServerPacket
             }
             case 8:
             {
-                var randomNumber = random.Next(1, 13);
+                var randomNumber = Random.Shared.Next(1, 14);
                 switch (randomNumber)
                 {
                     default:
@@ -364,7 +363,7 @@ internal class UsersComposer : ServerPacket
             }
             case 9:
             {
-                var randomNumber = random.Next(1, 9);
+                var randomNumber = Random.Shared.Next(1, 10);
                 switch (randomNumber)
                 {
                     default:
@@ -390,17 +389,11 @@ internal class UsersComposer : ServerPacket
             }
             case 10:
             {
-                var randomNumber = random.Next(1, 1);
-                switch (randomNumber)
-                {
-                    default:
-                    case 1:
                         return "10 0 ffffff 2 2 -1 0 3 -1 0";
-                }
             }
             case 11:
             {
-                var randomNumber = random.Next(1, 13);
+                var randomNumber = Random.Shared.Next(1, 14);
                 switch (randomNumber)
                 {
                     default:
@@ -434,7 +427,7 @@ internal class UsersComposer : ServerPacket
             }
             case 12:
             {
-                var randomNumber = random.Next(1, 6);
+                var randomNumber = Random.Shared.Next(1, 7);
                 switch (randomNumber)
                 {
                     default:
@@ -454,7 +447,7 @@ internal class UsersComposer : ServerPacket
             }
             case 14:
             {
-                var randomNumber = random.Next(1, 14);
+                var randomNumber = Random.Shared.Next(1, 15);
                 switch (randomNumber)
                 {
                     default:
@@ -490,7 +483,7 @@ internal class UsersComposer : ServerPacket
             }
             case 15:
             {
-                var randomNumber = random.Next(1, 20);
+                var randomNumber = Random.Shared.Next(1, 21);
                 switch (randomNumber)
                 {
                     default:
@@ -538,7 +531,7 @@ internal class UsersComposer : ServerPacket
             }
             case 17:
             {
-                var randomNumber = random.Next(1, 8);
+                var randomNumber = Random.Shared.Next(1, 9);
                 switch (randomNumber)
                 {
                     default:
@@ -562,7 +555,7 @@ internal class UsersComposer : ServerPacket
             }
             case 21:
             {
-                var randomNumber = random.Next(1, 3);
+                var randomNumber = Random.Shared.Next(1, 3);
                 switch (randomNumber)
                 {
                     default:
@@ -574,7 +567,7 @@ internal class UsersComposer : ServerPacket
             }
             case 23:
             {
-                var randomNumber = random.Next(1, 3);
+                var randomNumber = Random.Shared.Next(1, 4);
                 switch (randomNumber)
                 {
                     default:
@@ -588,7 +581,7 @@ internal class UsersComposer : ServerPacket
             }
             case 26:
             {
-                var randomNumber = random.Next(1, 4);
+                var randomNumber = Random.Shared.Next(1, 5);
                 switch (randomNumber)
                 {
                     default:

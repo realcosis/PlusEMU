@@ -17,9 +17,6 @@ namespace Plus.HabboHotel.Items;
 
 public class Item
 {
-    private static readonly Random _random = new();
-
-
     private Room _room;
     private bool _updateNeeded;
     public int BaseItem;
@@ -1114,7 +1111,7 @@ public class Item
         var list = new List<KeyValuePair<int, string>>();
         // Add all strings from array
         // Add new random int each time
-        foreach (var s in arr) list.Add(new KeyValuePair<int, string>(_random.Next(), s));
+        foreach (var s in arr) list.Add(new KeyValuePair<int, string>(Random.Shared.Next(), s));
         // Sort the list by the random number
         var sorted = from item in list
             orderby item.Key
