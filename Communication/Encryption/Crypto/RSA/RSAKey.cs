@@ -47,12 +47,12 @@ public class RsaKey
         {
             while (true)
             {
-                P = BigInteger.genPseudoPrime(b - qs, 1, new Random());
+                P = BigInteger.genPseudoPrime(b - qs, 1, Random.Shared);
                 if ((P - 1).gcd(this.e) == 1 && P.isProbablePrime(10)) break;
             }
             while (true)
             {
-                Q = BigInteger.genPseudoPrime(qs, 1, new Random());
+                Q = BigInteger.genPseudoPrime(qs, 1, Random.Shared);
                 if ((Q - 1).gcd(this.e) == 1 && P.isProbablePrime(10)) break;
             }
             if (P < Q)

@@ -9,13 +9,11 @@ public class GameItemHandler
 {
     private ConcurrentDictionary<int, Item> _banzaiPyramids;
     private ConcurrentDictionary<int, Item> _banzaiTeleports;
-    private Random _rnd;
     private Room _room;
 
     public GameItemHandler(Room room)
     {
         _room = room;
-        _rnd = new Random();
         _banzaiPyramids = new ConcurrentDictionary<int, Item>();
         _banzaiTeleports = new ConcurrentDictionary<int, Item>();
     }
@@ -27,7 +25,6 @@ public class GameItemHandler
 
     private void CyclePyramids()
     {
-        var rnd = new Random();
         foreach (var item in _banzaiPyramids.Values.ToList())
         {
             if (item == null)
@@ -39,7 +36,7 @@ public class GameItemHandler
             }
             if (string.IsNullOrEmpty(item.ExtraData))
                 item.ExtraData = "0";
-            var randomNumber = rnd.Next(0, 30);
+            var randomNumber = Random.Shared.Next(0, 30);
             if (randomNumber == 15)
             {
                 if (item.ExtraData == "0")
@@ -91,7 +88,7 @@ public class GameItemHandler
     {
         var items = _banzaiTeleports.Values.Where(p => p.Id != item.Id);
         var count = items.Count();
-        var countId = _rnd.Next(0, count);
+        var countId = Random.Shared.Next(0, count);
         var countAmount = 0;
         if (count == 0)
             return;
@@ -122,6 +119,5 @@ public class GameItemHandler
         _banzaiPyramids = null;
         _banzaiTeleports = null;
         _room = null;
-        _rnd = null;
     }
 }

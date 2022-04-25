@@ -1,6 +1,7 @@
 ﻿using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
+using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Moderation;
 
@@ -23,7 +24,7 @@ internal class ModerationBanEvent : IPacketEvent
             return;
         var userId = packet.PopInt();
         var message = packet.PopString();
-        var length = packet.PopInt() * 3600 + PlusEnvironment.GetUnixTimestamp();
+        var length = packet.PopInt() * 3600 + UnixTimestamp.GetNow();
         packet.PopString(); //unk1
         packet.PopString(); //unk2
         var ipBan = packet.PopBoolean();

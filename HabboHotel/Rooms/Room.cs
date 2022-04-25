@@ -21,6 +21,7 @@ using Plus.HabboHotel.Rooms.Games.Football;
 using Plus.HabboHotel.Rooms.Games.Freeze;
 using Plus.HabboHotel.Rooms.Games.Teams;
 using Plus.HabboHotel.Rooms.Instance;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms;
 
@@ -194,7 +195,7 @@ public class Room : RoomData
                 new RoomBot(Convert.ToInt32(bot["id"]), Convert.ToInt32(bot["room_id"]), Convert.ToString(bot["ai_type"]), Convert.ToString(bot["walk_mode"]), Convert.ToString(bot["name"]),
                     Convert.ToString(bot["motto"]), Convert.ToString(bot["look"]), int.Parse(bot["x"].ToString()), int.Parse(bot["y"].ToString()), int.Parse(bot["z"].ToString()),
                     int.Parse(bot["rotation"].ToString()), 0, 0, 0, 0, ref speeches, "M", 0, Convert.ToInt32(bot["user_id"].ToString()), Convert.ToBoolean(bot["automatic_chat"]),
-                    Convert.ToInt32(bot["speaking_interval"]), PlusEnvironment.EnumToBool(bot["mix_sentences"].ToString()), Convert.ToInt32(bot["chat_bubble"])), null);
+                    Convert.ToInt32(bot["speaking_interval"]), ConvertExtensions.EnumToBool(bot["mix_sentences"].ToString()), Convert.ToInt32(bot["chat_bubble"])), null);
         }
     }
 
@@ -434,7 +435,7 @@ public class Room : RoomData
     {
         if (MutedUsers.ContainsKey(session.GetHabbo().Id))
         {
-            if (MutedUsers[session.GetHabbo().Id] < PlusEnvironment.GetUnixTimestamp())
+            if (MutedUsers[session.GetHabbo().Id] < UnixTimestamp.GetNow())
                 MutedUsers.Remove(session.GetHabbo().Id);
             else
                 return true;

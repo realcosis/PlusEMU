@@ -101,10 +101,9 @@ public class RoomBot
 
     public RandomSpeech GetRandomSpeech()
     {
-        var rand = new Random();
         if (RandomSpeech.Count < 1)
             return new RandomSpeech("", 0);
-        return RandomSpeech[rand.Next(0, RandomSpeech.Count - 1)];
+        return RandomSpeech[Random.Shared.Next(0, RandomSpeech.Count)];
     }
 
     public BotAi GenerateBotAi(int virtualId)

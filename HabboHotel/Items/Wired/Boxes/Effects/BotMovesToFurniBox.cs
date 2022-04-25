@@ -47,11 +47,10 @@ internal class BotMovesToFurniBox : IWiredItem
         var user = Instance.GetRoomUserManager().GetBotByName(StringData);
         if (user == null)
             return false;
-        var rand = new Random();
         var items = SetItems.Values.ToList();
-        items = items.OrderBy(x => rand.Next()).ToList();
         if (items.Count == 0)
             return false;
+        items = items.OrderBy(x => Random.Shared.Next()).ToList();
         var item = items.First();
         if (item == null)
             return false;

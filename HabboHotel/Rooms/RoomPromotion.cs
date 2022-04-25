@@ -1,4 +1,5 @@
 ﻿using System;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms;
 
@@ -8,8 +9,8 @@ public class RoomPromotion
     {
         Name = name;
         Description = description;
-        TimestampStarted = PlusEnvironment.GetUnixTimestamp();
-        TimestampExpires = PlusEnvironment.GetUnixTimestamp() + Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("room.promotion.lifespan")) * 60;
+        TimestampStarted = UnixTimestamp.GetNow();
+        TimestampExpires = UnixTimestamp.GetNow() + Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("room.promotion.lifespan")) * 60;
         CategoryId = categoryId;
     }
 
@@ -30,9 +31,9 @@ public class RoomPromotion
 
     public double TimestampExpires { get; set; }
 
-    public bool HasExpired => TimestampExpires - PlusEnvironment.GetUnixTimestamp() < 0;
+    public bool HasExpired => TimestampExpires - UnixTimestamp.GetNow() < 0;
 
-    public int MinutesLeft => Convert.ToInt32(Math.Ceiling((TimestampExpires - PlusEnvironment.GetUnixTimestamp()) / 60));
+    public int MinutesLeft => Convert.ToInt32(Math.Ceiling((TimestampExpires - UnixTimestamp.GetNow()) / 60));
 
     public int CategoryId { get; set; }
 }

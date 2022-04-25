@@ -1,6 +1,7 @@
 ﻿using System;
 using Plus.Communication.Packets.Outgoing.Help;
 using Plus.HabboHotel.GameClients;
+using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Help;
 
@@ -30,7 +31,7 @@ internal class SubmitBullyReportEvent : IPacketEvent
             session.SendPacket(new SubmitBullyReportComposer(0)); //Just say it's sent, the user isn't found.
             return;
         }
-        if (session.GetHabbo().LastAdvertiseReport > PlusEnvironment.GetUnixTimestamp())
+        if (session.GetHabbo().LastAdvertiseReport > UnixTimestamp.GetNow())
         {
             session.SendNotification("Reports can only be sent per 5 minutes!");
             return;
@@ -55,9 +56,9 @@ internal class SubmitBullyReportEvent : IPacketEvent
             return;
         }
         if (session.GetHabbo().Rank <= 1)
-            session.GetHabbo().LastAdvertiseReport = PlusEnvironment.GetUnixTimestamp() + 300;
+            session.GetHabbo().LastAdvertiseReport = UnixTimestamp.GetNow() + 300;
         else
-            session.GetHabbo().LastAdvertiseReport = PlusEnvironment.GetUnixTimestamp();
+            session.GetHabbo().LastAdvertiseReport = UnixTimestamp.GetNow();
         client.GetHabbo().AdvertisingReported = true;
         session.SendPacket(new SubmitBullyReportComposer(0));
         //_clientManager.ModAlert("New advertising report! " + Client.GetHabbo().Username + " has been reported for advertising by " + Session.GetHabbo().Username +".");

@@ -2,6 +2,7 @@
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
@@ -31,7 +32,7 @@ internal class BanCommand : IChatCommand
             session.SendWhisper("Please enter the username of the user you'd like to IP ban & account ban.");
             return;
         }
-        var habbo = PlusEnvironment.GetHabboByUsername(@params[1]);
+        var habbo = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1])?.GetHabbo();
         if (habbo == null)
         {
             session.SendWhisper("An error occoured whilst finding that user in the database.");
@@ -45,9 +46,9 @@ internal class BanCommand : IChatCommand
         double expire = 0;
         var hours = @params[2];
         if (string.IsNullOrEmpty(hours) || hours == "perm")
-            expire = PlusEnvironment.GetUnixTimestamp() + 78892200;
+            expire = UnixTimestamp.GetNow() + 78892200;
         else
-            expire = PlusEnvironment.GetUnixTimestamp() + Convert.ToDouble(hours) * 3600;
+            expire = UnixTimestamp.GetNow() + Convert.ToDouble(hours) * 3600;
         string reason = null;
         if (@params.Length >= 4)
             reason = CommandManager.MergeParams(@params, 3);

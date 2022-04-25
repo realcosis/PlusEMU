@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
@@ -12,8 +13,8 @@ internal class ModeratorUserInfoComposer : ServerPacket
         WriteInteger(user != null ? Convert.ToInt32(user["id"]) : 0);
         WriteString(user != null ? Convert.ToString(user["username"]) : "Unknown");
         WriteString(user != null ? Convert.ToString(user["look"]) : "Unknown");
-        WriteInteger(user != null ? Convert.ToInt32(Math.Ceiling((PlusEnvironment.GetUnixTimestamp() - Convert.ToDouble(user["account_created"])) / 60)) : 0);
-        WriteInteger(user != null ? Convert.ToInt32(Math.Ceiling((PlusEnvironment.GetUnixTimestamp() - Convert.ToDouble(user["last_online"])) / 60)) : 0);
+        WriteInteger(user != null ? Convert.ToInt32(Math.Ceiling((UnixTimestamp.GetNow() - Convert.ToDouble(user["account_created"])) / 60)) : 0);
+        WriteInteger(user != null ? Convert.ToInt32(Math.Ceiling((UnixTimestamp.GetNow() - Convert.ToDouble(user["last_online"])) / 60)) : 0);
         WriteBoolean(user != null ? PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(Convert.ToInt32(user["id"])) != null : false);
         WriteInteger(info != null ? Convert.ToInt32(info["cfhs"]) : 0);
         WriteInteger(info != null ? Convert.ToInt32(info["cfhs_abusive"]) : 0);

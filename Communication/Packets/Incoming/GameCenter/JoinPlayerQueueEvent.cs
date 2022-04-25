@@ -28,10 +28,9 @@ internal class JoinPlayerQueueEvent : IPacketEvent
 
     private string GenerateSso(int length)
     {
-        var random = new Random();
         var characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         var result = new StringBuilder(length);
-        for (var i = 0; i < length; i++) result.Append(characters[random.Next(characters.Length)]);
+        for (var i = 0; i < length; i++) result.Append(characters[Random.Shared.Next(characters.Length)]);
         return result.ToString();
     }
 }

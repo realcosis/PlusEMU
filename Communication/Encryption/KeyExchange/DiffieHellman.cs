@@ -34,13 +34,12 @@ public class DiffieHellman
     private void Initialize(bool ignoreBaseKeys = false)
     {
         PublicKey = 0;
-        var rand = new Random();
         while (PublicKey == 0)
         {
             if (!ignoreBaseKeys)
             {
-                Prime = BigInteger.genPseudoPrime(Bitlength, 10, rand);
-                Generator = BigInteger.genPseudoPrime(Bitlength, 10, rand);
+                Prime = BigInteger.genPseudoPrime(Bitlength, 10, Random.Shared);
+                Generator = BigInteger.genPseudoPrime(Bitlength, 10, Random.Shared);
             }
             var bytes = new byte[Bitlength / 8];
             Randomizer.NextBytes(bytes);

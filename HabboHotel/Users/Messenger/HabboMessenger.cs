@@ -166,7 +166,7 @@ public class HabboMessenger
                 dRow = dbClient.GetRow();
             }
             newFriend = new MessengerBuddy(friendId, Convert.ToString(dRow["username"]), Convert.ToString(dRow["look"]), Convert.ToString(dRow["motto"]), Convert.ToInt32(dRow["last_online"]),
-                PlusEnvironment.EnumToBool(dRow["hide_online"].ToString()), PlusEnvironment.EnumToBool(dRow["hide_inroom"].ToString()));
+                ConvertExtensions.EnumToBool(dRow["hide_online"].ToString()), ConvertExtensions.EnumToBool(dRow["hide_inroom"].ToString()));
         }
         else
         {
@@ -217,7 +217,7 @@ public class HabboMessenger
             if (row == null)
                 return false;
             userId = Convert.ToInt32(row["id"]);
-            hasFqDisabled = PlusEnvironment.EnumToBool(row["block_newfriends"].ToString());
+            hasFqDisabled = ConvertExtensions.EnumToBool(row["block_newfriends"].ToString());
         }
         else
         {
@@ -270,14 +270,14 @@ public class HabboMessenger
         }
         if (GetClient().GetHabbo().MessengerSpamCount >= 12)
         {
-            GetClient().GetHabbo().MessengerSpamTime = PlusEnvironment.GetUnixTimestamp() + 60;
+            GetClient().GetHabbo().MessengerSpamTime = UnixTimestamp.GetNow() + 60;
             GetClient().GetHabbo().MessengerSpamCount = 0;
             GetClient().SendNotification("You cannot send a message, you have flooded the console.\n\nYou can send a message in 60 seconds.");
             return;
         }
-        if (GetClient().GetHabbo().MessengerSpamTime > PlusEnvironment.GetUnixTimestamp())
+        if (GetClient().GetHabbo().MessengerSpamTime > UnixTimestamp.GetNow())
         {
-            var time = GetClient().GetHabbo().MessengerSpamTime - PlusEnvironment.GetUnixTimestamp();
+            var time = GetClient().GetHabbo().MessengerSpamTime - UnixTimestamp.GetNow();
             GetClient().SendNotification("You cannot send a message, you have flooded the console.\n\nYou can send a message in " + time + " seconds.");
             return;
         }

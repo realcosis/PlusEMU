@@ -2,6 +2,7 @@
 using Plus.Communication.Packets.Outgoing.Pets;
 using Plus.Communication.Packets.Outgoing.Rooms.AI.Pets;
 using Plus.Communication.Packets.Outgoing.Rooms.Chat;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.AI;
 
@@ -100,7 +101,7 @@ public class Pet
 
     public static int MaxNutrition => 150;
 
-    public int Age => Convert.ToInt32(Math.Floor((PlusEnvironment.GetUnixTimestamp() - CreationStamp) / 86400));
+    public int Age => Convert.ToInt32(Math.Floor((UnixTimestamp.GetNow() - CreationStamp) / 86400));
 
     public string Look => Type + " " + Race + " " + Color + " " + GnomeClothing;
 
@@ -152,7 +153,7 @@ public class Pet
             maxE = 15; // Remove Max Energy as 15
         if (maxE <= 4)
             maxE = 15;
-        var r = PlusEnvironment.GetRandomNumber(4, maxE);
+        var r = Random.Shared.Next(4, maxE + 1);
         if (!add)
         {
             Energy = Energy - r;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Users;
+using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Users;
 
@@ -35,7 +36,7 @@ internal class ProfileInformationComposer : ServerPacket
             WriteInteger(0); //what the fuck
             WriteBoolean(group?.ForumEnabled ?? true); //HabboTalk
         }
-        WriteInteger(Convert.ToInt32(PlusEnvironment.GetUnixTimestamp() - habbo.LastOnline)); // Last online
+        WriteInteger(Convert.ToInt32(UnixTimestamp.GetNow() - habbo.LastOnline)); // Last online
         WriteBoolean(true); // Show the profile
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Plus.HabboHotel.GameClients;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Items.Interactor;
 
@@ -55,7 +56,7 @@ public class InteractorTeleport : IFurniInteractor
         var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (user == null)
             return;
-        user.LastInteraction = PlusEnvironment.GetUnixTimestamp();
+        user.LastInteraction = UnixTimestamp.GetNow();
 
         // Alright. But is this user in the right position?
         if (user.Coordinate == item.Coordinate || user.Coordinate == item.SquareInFront)
@@ -63,7 +64,7 @@ public class InteractorTeleport : IFurniInteractor
             // Fine. But is this tele even free?
             if (item.InteractingUser != 0) return;
             if (!user.CanWalk || session.GetHabbo().IsTeleporting || session.GetHabbo().TeleporterId != 0 ||
-                user.LastInteraction + 2 - PlusEnvironment.GetUnixTimestamp() < 0)
+                user.LastInteraction + 2 - UnixTimestamp.GetNow() < 0)
                 return;
             user.TeleDelay = 2;
             item.InteractingUser = user.GetClient().GetHabbo().Id;

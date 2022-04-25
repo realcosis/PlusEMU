@@ -8,6 +8,7 @@ using Plus.HabboHotel.Users.Authenticator;
 using Plus.HabboHotel.Users.Badges;
 using Plus.HabboHotel.Users.Messenger;
 using Plus.HabboHotel.Users.Relationships;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Users.UserData;
 
@@ -97,8 +98,8 @@ public static class UserDataFactory
             var friendLook = Convert.ToString(dRow["look"]);
             var friendMotto = Convert.ToString(dRow["motto"]);
             var friendLastOnline = Convert.ToInt32(dRow["last_online"]);
-            var friendHideOnline = PlusEnvironment.EnumToBool(dRow["hide_online"].ToString());
-            var friendHideRoom = PlusEnvironment.EnumToBool(dRow["hide_inroom"].ToString());
+            var friendHideOnline = ConvertExtensions.EnumToBool(dRow["hide_online"].ToString());
+            var friendHideRoom = ConvertExtensions.EnumToBool(dRow["hide_inroom"].ToString());
             if (friendId == userId)
                 continue;
             if (!friends.ContainsKey(friendId))

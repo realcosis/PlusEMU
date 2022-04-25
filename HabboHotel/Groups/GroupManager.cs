@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using NLog;
 using Plus.HabboHotel.Users;
+using Plus.Utilities;
 
 namespace Plus.HabboHotel.Groups;
 
@@ -104,7 +105,7 @@ public class GroupManager : IGroupManager
 
     public bool TryCreateGroup(Habbo player, string name, string description, int roomId, string badge, int colour1, int colour2, out Group group)
     {
-        group = new Group(0, name, description, badge, roomId, player.Id, (int)PlusEnvironment.GetUnixTimestamp(), 0, colour1, colour2, 0, false);
+        group = new Group(0, name, description, badge, roomId, player.Id, (int)UnixTimestamp.GetNow(), 0, colour1, colour2, 0, false);
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(badge))
             return false;
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();

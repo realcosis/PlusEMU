@@ -178,8 +178,6 @@ public class PlusEnvironment : IPlusEnvironment
 
     public static string BoolToEnum(bool @bool) => @bool ? "1" : "0";
 
-    public static int GetRandomNumber(int min, int max) => RandomNumber.GenerateNewRandom(min, max);
-
     public static double GetUnixTimestamp()
     {
         var ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0);
