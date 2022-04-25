@@ -28,6 +28,8 @@ using Plus.HabboHotel.Users.Process;
 using Plus.HabboHotel.Users.Relationships;
 using Plus.Utilities;
 
+using Dapper;
+
 namespace Plus.HabboHotel.Users;
 
 public class Habbo
@@ -720,11 +722,22 @@ public class Habbo
             GetClient().SendPacket(new RoomPropertyComposer("floor", room.Floor));
         GetClient().SendPacket(new RoomPropertyComposer("landscape", room.Landscape));
         GetClient().SendPacket(new RoomRatingComposer(room.Score, !(GetClient().GetHabbo().RatedRooms.Contains(room.RoomId) || room.OwnerId == GetClient().GetHabbo().Id)));
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+
+
+        using (var dbClient = PlusEnvironment.GetDatabaseManager().Connection())
         {
-            dbClient.RunQuery("INSERT INTO user_roomvisits (user_id,room_id,entry_timestamp,exit_timestamp,hour,minute) VALUES ('" + GetClient().GetHabbo().Id + "','" +
-                              GetClient().GetHabbo().CurrentRoomId + "','" + UnixTimestamp.GetNow() + "','0','" + DateTime.Now.Hour + "','" + DateTime.Now.Minute + "');"); // +
+            dbClient.Execute("INSERT INTO user_roomvisits (user_id,room_id,entry_timestamp,exit_timestamp,hour,minute) VALUES (@userId, @roomId, @entryTimestamp, @exitTimestamp, @hour, @minute)",
+                new
+                {
+                    userId = GetClient().GetHabbo().Id,
+                    roomId = GetClient().GetHabbo().CurrentRoomId,
+                    entryTimestamp = UnixTimestamp.GetNow(),
+                    exitTimestamp = 0,
+                    hour = DateTime.Now.Hour,
+                    minute = DateTime.Now.Minute
+                });
         }
+
         if (room.OwnerId != Id)
         {
             GetClient().GetHabbo().GetStats().RoomVisits += 1;
