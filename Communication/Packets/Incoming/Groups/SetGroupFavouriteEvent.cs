@@ -3,6 +3,7 @@ using Plus.Communication.Packets.Outgoing.Users;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Groups;
 
@@ -25,12 +26,10 @@ internal class SetGroupFavouriteEvent : IPacketEvent
         if (!_groupManager.TryGetGroup(groupId, out var group))
             return;
         session.GetHabbo().GetStats().FavouriteGroupId = group.Id;
-        using (var dbClient = _database.GetQueryReactor())
+        using (var connection = _database.Connection())
         {
-            dbClient.SetQuery("UPDATE `user_stats` SET `groupid` = @groupId WHERE `id` = @userId LIMIT 1");
-            dbClient.AddParameter("groupId", session.GetHabbo().GetStats().FavouriteGroupId);
-            dbClient.AddParameter("userId", session.GetHabbo().Id);
-            dbClient.RunQuery();
+            connection.Execute("UPDATE `user_stats` SET `groupid` = @groupId WHERE `id` = @userId LIMIT 1",
+                new { groupId = session.GetHabbo().GetStats().FavouriteGroupId, userId = session.GetHabbo().Id });
         }
         if (session.GetHabbo().InRoom && session.GetHabbo().CurrentRoom != null)
         {
