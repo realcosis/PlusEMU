@@ -74,14 +74,6 @@ public class AchievementManager : IAchievementManager
             session.SendPacket(new AchievementUnlockedComposer(data, targetLevel, level.RewardPoints, level.RewardPixels));
             session.GetHabbo().GetMessenger().BroadcastAchievement(session.GetHabbo().Id, MessengerEventTypes.AchievementUnlocked, group + targetLevel);
 
-            /*
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-            {
-                dbClient.SetQuery("REPLACE INTO `user_achievements` VALUES ('" + session.GetHabbo().Id + "', @group, '" + newLevel + "', '" + newProgress + "')");
-                dbClient.AddParameter("group", group);
-                dbClient.RunQuery();
-            }*/
-
             using (var connection = _database.Connection())
             {
                 connection.Execute("REPLACE INTO `user_achievements` VALUES (@habboId, @group, @newLevel, @newProgress)", 
@@ -100,13 +92,7 @@ public class AchievementManager : IAchievementManager
         }
         userData.Level = newLevel;
         userData.Progress = newProgress;
-        /*
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-        {
-            dbClient.SetQuery("REPLACE INTO `user_achievements` VALUES ('" + session.GetHabbo().Id + "', @group, '" + newLevel + "', '" + newProgress + "')");
-            dbClient.AddParameter("group", group);
-            dbClient.RunQuery();
-        }*/
+
         using (var connection = _database.Connection())
         {
             connection.Execute("REPLACE INTO `user_achievements` VALUES (@habboId, @group, @newLevel, @newProgress)",
