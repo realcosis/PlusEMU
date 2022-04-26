@@ -5,6 +5,7 @@ using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Rooms;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Groups;
 
@@ -50,13 +51,10 @@ internal class UpdateGroupSettingsEvent : IPacketEvent
                 group.ClearRequests();
             }
         }
-        using (var dbClient = _database.GetQueryReactor())
+        using (var connection = _database.Connection())
         {
-            dbClient.SetQuery("UPDATE `groups` SET `state` = @GroupState, `admindeco` = @AdminDeco WHERE `id` = @groupId LIMIT 1");
-            dbClient.AddParameter("GroupState", (group.Type == GroupType.Open ? 0 : group.Type == GroupType.Locked ? 1 : 2).ToString());
-            dbClient.AddParameter("AdminDeco", (furniOptions == 1 ? 1 : 0).ToString());
-            dbClient.AddParameter("groupId", group.Id);
-            dbClient.RunQuery();
+            connection.Execute("UPDATE `groups` SET `state` = @groupState, `admindeco` = @adminDeco WHERE `id` = @groupId LIMIT 1",
+                new { groupState = (group.Type == GroupType.Open ? 0 : group.Type == GroupType.Locked ? 1 : 2).ToString(), adminDeco = (furniOptions == 1 ? 1 : 0).ToString(), groupId = group.Id });
         }
         group.AdminOnlyDeco = furniOptions;
         if (!_roomManager.TryGetRoom(group.RoomId, out var room))

@@ -4,6 +4,7 @@ using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Rooms;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Groups;
 
@@ -50,14 +51,14 @@ internal class DeleteGroupEvent : IPacketEvent
         _groupManager.DeleteGroup(group.Id);
 
         //Now the :S stuff.
-        using (var dbClient = _database.GetQueryReactor())
+        using (var connection = _database.Connection())
         {
-            dbClient.RunQuery("DELETE FROM `groups` WHERE `id` = '" + group.Id + "'");
-            dbClient.RunQuery("DELETE FROM `group_memberships` WHERE `group_id` = '" + group.Id + "'");
-            dbClient.RunQuery("DELETE FROM `group_requests` WHERE `group_id` = '" + group.Id + "'");
-            dbClient.RunQuery("UPDATE `rooms` SET `group_id` = '0' WHERE `group_id` = '" + group.Id + "' LIMIT 1");
-            dbClient.RunQuery("UPDATE `user_stats` SET `groupid` = '0' WHERE `groupid` = '" + group.Id + "' LIMIT 1");
-            dbClient.RunQuery("DELETE FROM `items_groups` WHERE `group_id` = '" + group.Id + "'");
+            connection.Execute("DELETE FROM `groups` WHERE `id` = @groupId", new { groupId = group.Id });
+            connection.Execute("DELETE FROM `group_memberships` WHERE `group_id` = @groupId", new { groupId = group.Id });
+            connection.Execute("DELETE FROM `group_requests` WHERE `group_id` = @groupId", new { groupId = group.Id });
+            connection.Execute("UPDATE `rooms` SET `group_id` = 0 WHERE `group_id` = @groupId LIMIT 1", new { groupId = group.Id });
+            connection.Execute("UPDATE `user_stats` SET `groupid` = 0 WHERE `groupid` = @groupId LIMIT 1", new { groupId = group.Id });
+            connection.Execute("DELETE FROM `items_groups` WHERE `group_id` = @groupId", new { groupId = group.Id });
         }
 
         //Unload it last.

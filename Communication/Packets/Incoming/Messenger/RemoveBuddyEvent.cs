@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Messenger;
 
@@ -22,16 +23,14 @@ internal class RemoveBuddyEvent : IPacketEvent
             amount = 100;
         else if (amount < 0)
             return;
-        using var dbClient = _database.GetQueryReactor();
+        using var connection = _database.Connection();
         for (var i = 0; i < amount; i++)
         {
             var id = packet.PopInt();
             if (session.GetHabbo().Relationships.Count(x => x.Value.UserId == id) > 0)
             {
-                dbClient.SetQuery("DELETE FROM `user_relationships` WHERE `user_id` = @id AND `target` = @target OR `target` = @id AND `user_id` = @target");
-                dbClient.AddParameter("id", session.GetHabbo().Id);
-                dbClient.AddParameter("target", id);
-                dbClient.RunQuery();
+                connection.Execute("DELETE FROM `user_relationships` WHERE `user_id` = @id AND `target` = @target OR `target` = @id AND `user_id` = @target",
+                    new { id = session.GetHabbo().Id, target  = id });
             }
             if (session.GetHabbo().Relationships.ContainsKey(id))
                 session.GetHabbo().Relationships.Remove(id);

@@ -8,6 +8,7 @@ using Plus.HabboHotel.Cache.Type;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Rooms;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Groups;
 
@@ -51,23 +52,18 @@ internal class RemoveGroupMemberEvent : IPacketEvent
                         user.GetClient().SendPacket(new YouAreControllerComposer(0));
                 }
             }
-            using (var dbClient = _database.GetQueryReactor())
+            using (var connection = _database.Connection())
             {
-                dbClient.SetQuery(
-                    "DELETE FROM `group_memberships` WHERE `group_id` = @GroupId AND `user_id` = @UserId");
-                dbClient.AddParameter("GroupId", groupId);
-                dbClient.AddParameter("UserId", userId);
-                dbClient.RunQuery();
+                connection.Execute(
+                    "DELETE FROM `group_memberships` WHERE `group_id` = @groupId AND `user_id` = @userId", new { groupId = groupId, userId = userId});
             }
             session.SendPacket(new GroupInfoComposer(group, session));
             if (session.GetHabbo().GetStats().FavouriteGroupId == groupId)
             {
                 session.GetHabbo().GetStats().FavouriteGroupId = 0;
-                using (var dbClient = _database.GetQueryReactor())
+                using (var connection = _database.Connection())
                 {
-                    dbClient.SetQuery("UPDATE `user_stats` SET `groupid` = '0' WHERE `id` = @userId LIMIT 1");
-                    dbClient.AddParameter("userId", userId);
-                    dbClient.RunQuery();
+                    connection.Execute("UPDATE `user_stats` SET `groupid` = '0' WHERE `id` = @userId LIMIT 1", new { userId = userId });
                 }
                 if (group.AdminOnlyDeco == 0)
                 {
