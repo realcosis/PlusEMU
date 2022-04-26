@@ -173,11 +173,12 @@ public static class UserDataFactory
                 dbClient.SetQuery("SELECT * FROM `user_info` WHERE `user_id` = '" + userId + "' LIMIT 1");
                 userInfo = dbClient.GetRow();
             }
-            dbClient.SetQuery("SELECT group_id,rank FROM group_memberships WHERE user_id=@id");
-            dbClient.AddParameter("id", userId);
+
+            dbClient.SetQuery("SELECT `group_id`, `rank` FROM `group_memberships` WHERE `user_id` = @userId");
+            dbClient.AddParameter("userId", userId);
             dGroups = dbClient.GetTable();
-            dbClient.SetQuery("SELECT `id`,`target`,`type` FROM user_relationships WHERE user_id=@id");
-            dbClient.AddParameter("id", userId);
+            dbClient.SetQuery("SELECT `id`,`target`,`type` FROM `user_relationships` WHERE `user_id` = @userId");
+            dbClient.AddParameter("userId", userId);
             dRelations = dbClient.GetTable();
         }
         var achievements = new ConcurrentDictionary<string, UserAchievement>();
