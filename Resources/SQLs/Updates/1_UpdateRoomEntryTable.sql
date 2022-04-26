@@ -1,3 +1,3 @@
-ALTER TABLE `user_roomvisits`
-  DROP `hour`,
-  DROP `minute`;
+ALTER TABLE `user_roomvisits` 
+	DROP COLUMN `minute`,
+	DROP COLUMN `hour`;
