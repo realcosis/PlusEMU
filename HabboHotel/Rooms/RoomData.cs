@@ -33,7 +33,11 @@ public class RoomData
         Category = category;
         Description = description;
         Tags = new List<string>();
-        foreach (var tag in tags.Split(',')) Tags.Add(tag);
+        foreach (var tag in tags.Split(','))
+        {
+            if (!String.IsNullOrEmpty(tag))
+                Tags.Add(tag);
+        }
         Floor = floor;
         Landscape = landscape;
         AllowPets = allowPets;
