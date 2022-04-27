@@ -6,7 +6,7 @@ namespace Plus.HabboHotel.Users.UserData
     {
         /// <summary>
         /// Decorate the Habbo object.
-        /// UserId as well as username is set.
+        /// UserId as well as username is guaranteed to be set.
         /// </summary>
         /// <param name="habbo"></param>
         /// <returns></returns>

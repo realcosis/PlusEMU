@@ -26,7 +26,7 @@ namespace Plus.HabboHotel.Users.Authentication
         private readonly IUserDataFactory _userDataFactory;
         private readonly IDatabase _database;
 
-        public event EventHandler<HabboEventArgs> HabboLoggedIn;
+        public event EventHandler<HabboEventArgs>? HabboLoggedIn;
 
         public Authenticator(IEnumerable<IAuthenticationTask> authenticationTasks, IGameClientManager gameClientManager, IUserDataFactory userDataFactory, IDatabase database)
         {
@@ -64,7 +64,6 @@ namespace Plus.HabboHotel.Users.Authentication
 
             // TODO: Remove after splitting up
             habbo.Init(session);
-
             _gameClientManager.RegisterClient(session, habbo.Id, habbo.Username);
             await RaiseHabboLoggedIn(habbo);
             return null;
@@ -98,19 +97,5 @@ namespace Plus.HabboHotel.Users.Authentication
                 await task.UserLoggedIn(habbo);
             HabboLoggedIn?.Invoke(this, new(habbo));
         }
-
-        //private bool TryAuthenticate(GameClient session, string authTicket)
-        //{
-            //try
-            //{
-            //    _habbo = userData.User;
-            //    
-            //}
-            //catch (Exception e)
-            //{
-            //    ExceptionLogger.LogException(e);
-            //}
-            //return false;
-        //}
     }
 }
