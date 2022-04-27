@@ -52,6 +52,8 @@ public static class ClientPacketHeader
 
     // Room Furniture
 
+    public const int OneWayGateEvent = 1970;
+
     // Room Settings
 
     // Room Action

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using Plus.HabboHotel.Groups;
 using Plus.Utilities;
 
@@ -32,8 +33,7 @@ public class RoomData
         UsersMax = usersMax;
         Category = category;
         Description = description;
-        Tags = new List<string>();
-        foreach (var tag in tags.Split(',')) Tags.Add(tag);
+        Tags = tags.Split(',').Where(s => !string.IsNullOrEmpty(s)).ToList();
         Floor = floor;
         Landscape = landscape;
         AllowPets = allowPets;
