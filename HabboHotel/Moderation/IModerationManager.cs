@@ -29,7 +29,7 @@ public interface IModerationManager
     /// </summary>
     /// <param name="machineId">The value of the ban.</param>
     /// <returns></returns>
-    bool MachineBanCheck(string machineId);
+    bool HasMachineBanCheck(string machineId);
 
     /// <summary>
     /// Run a quick database check to see if this ban exists in the database.

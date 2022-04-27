@@ -11,19 +11,19 @@ public class BadgeComponent
     private readonly Dictionary<string, Badge> _badges;
     private readonly Habbo _player;
 
-    public BadgeComponent(Habbo player, UserData.UserData data)
+    public BadgeComponent(Habbo player)
     {
         _player = player;
         _badges = new Dictionary<string, Badge>();
-        foreach (var badge in data.Badges)
-        {
-            BadgeDefinition badgeDefinition = null;
-            if (!PlusEnvironment.GetGame().GetBadgeManager().TryGetBadge(badge.Code, out badgeDefinition) ||
-                badgeDefinition.RequiredRight.Length > 0 && !player.GetPermissions().HasRight(badgeDefinition.RequiredRight))
-                continue;
-            if (!_badges.ContainsKey(badge.Code))
-                _badges.Add(badge.Code, badge);
-        }
+        //foreach (var badge in data.Badges)
+        //{
+        //    BadgeDefinition badgeDefinition = null;
+        //    if (!PlusEnvironment.GetGame().GetBadgeManager().TryGetBadge(badge.Code, out badgeDefinition) ||
+        //        badgeDefinition.RequiredRight.Length > 0 && !player.GetPermissions().HasRight(badgeDefinition.RequiredRight))
+        //        continue;
+        //    if (!_badges.ContainsKey(badge.Code))
+        //        _badges.Add(badge.Code, badge);
+        //}
     }
 
     public int Count => _badges.Count;
