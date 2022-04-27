@@ -47,7 +47,7 @@ public class CommandManager : ICommandManager
                 var param = data.Split(Convert.ToChar(1))[1];
                 parameters = param.Split(':');
             }
-            return command.TryExecute(parameters);
+            return command.TryExecute(parameters).Result;
         }
         return false;
     }
