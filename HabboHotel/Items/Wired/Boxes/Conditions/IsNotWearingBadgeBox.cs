@@ -39,15 +39,11 @@ internal class IsNotWearingBadgeBox : IWiredItem
         var player = (Habbo)@params[0];
         if (player == null)
             return false;
-        if (!player.GetBadgeComponent().GetBadges().Contains(player.GetBadgeComponent().GetBadge(StringData)))
+        if (!player.Inventory.Badges.HasBadge(StringData))
             return true;
-        foreach (var badge in player.GetBadgeComponent().GetBadges().ToList())
-        {
-            if (badge.Slot <= 0)
-                continue;
-            if (badge.Code == StringData)
-                return false;
-        }
-        return true;
+        if (!player.Inventory.Badges.EquippedBadges.Any())
+            return true;
+
+        return player.Inventory.Badges.EquippedBadges.All(badge => !badge.Code.Equals(StringData));
     }
 }

@@ -173,7 +173,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
                     itemExtraData = "m" + Convert.ToChar(5) + ".ch-210-1321.lg-285-92" + Convert.ToChar(5) + "Default Mannequin";
                     break;
                 case InteractionType.BadgeDisplay:
-                    if (!session.GetHabbo().GetBadgeComponent().HasBadge(data))
+                    if (!session.GetHabbo().Inventory.Badges.HasBadge(data))
                     {
                         session.SendPacket(new BroadcastMessageAlertComposer("Oops, it appears that you do not own this badge."));
                         return Task.CompletedTask;
@@ -198,7 +198,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
             var receiver = _gameClientManager.GetClientByUserId(habbo.Id);
             if (receiver != null)
             {
-                receiver.GetHabbo().GetInventoryComponent().TryAddItem(giveItem);
+                receiver.GetHabbo().Inventory.Furniture.AddItem(giveItem);
                 receiver.SendPacket(new FurniListNotificationComposer(giveItem.Id, 1));
                 receiver.SendPacket(new PurchaseOkComposer());
                 receiver.SendPacket(new FurniListAddComposer(giveItem));

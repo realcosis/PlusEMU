@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
@@ -43,12 +44,13 @@ internal class ConvertCreditsCommand : IChatCommand
                 using var dbClient = _database.GetQueryReactor();
                 foreach (DataRow row in table.Rows)
                 {
-                    var item = session.GetHabbo().GetInventoryComponent().GetItem(Convert.ToInt32(row[0]));
+                    var item = session.GetHabbo().Inventory.Furniture.GetItem(Convert.ToInt32(row[0]));
                     if (item == null || item.RoomId > 0 || item.Data.InteractionType != InteractionType.Exchange)
                         continue;
                     var value = item.Data.BehaviourData;
                     dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
-                    session.GetHabbo().GetInventoryComponent().RemoveItem(item.Id);
+                    session.GetHabbo().Inventory.Furniture.RemoveItem(item.Id);
+                    session.SendPacket(new FurniListRemoveComposer(item.Id));
                     totalValue += value;
                     if (value > 0)
                     {

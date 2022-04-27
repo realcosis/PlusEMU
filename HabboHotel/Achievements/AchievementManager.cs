@@ -9,6 +9,7 @@ using Plus.HabboHotel.Users.Messenger;
 
 using Plus.Database;
 using Dapper;
+using Plus.HabboHotel.Badges;
 
 namespace Plus.HabboHotel.Achievements;
 
@@ -19,14 +20,17 @@ public class AchievementManager : IAchievementManager
     public Dictionary<string, Achievement> Achievements { get; private set; }
 
     private readonly IDatabase _database;
-    public AchievementManager(IDatabase database)
+    private readonly IBadgeManager _badgeManager;
+
+    public AchievementManager(IDatabase database, IBadgeManager badgeManager)
     {
         Achievements = new Dictionary<string, Achievement>();
         _database = database;
+        _badgeManager = badgeManager;
     }
 
     public void Init()
-    { 
+    {
         Achievements = AchievementLevelFactory.GetAchievementLevels();
     }
 
@@ -63,24 +67,20 @@ public class AchievementManager : IAchievementManager
             newLevel++;
             newTarget++;
             newProgress = 0;
-            if (targetLevel == 1)
-                session.GetHabbo().GetBadgeComponent().GiveBadge(group + targetLevel, true, session);
-            else
-            {
-                session.GetHabbo().GetBadgeComponent().RemoveBadge(Convert.ToString(group + (targetLevel - 1)));
-                session.GetHabbo().GetBadgeComponent().GiveBadge(group + targetLevel, true, session);
-            }
+            if (targetLevel != 1)
+                session.GetHabbo().Inventory.Badges.RemoveBadge(Convert.ToString(group + (targetLevel - 1)));
+            _badgeManager.GiveBadge(session.GetHabbo(), group + targetLevel).Wait();
             if (newTarget > totalLevels) newTarget = totalLevels;
             session.SendPacket(new AchievementUnlockedComposer(data, targetLevel, level.RewardPoints, level.RewardPixels));
             session.GetHabbo().GetMessenger().BroadcastAchievement(session.GetHabbo().Id, MessengerEventTypes.AchievementUnlocked, group + targetLevel);
 
             using (var connection = _database.Connection())
             {
-                connection.Execute("REPLACE INTO `user_achievements` VALUES (@habboId, @group, @newLevel, @newProgress)", 
+                connection.Execute("REPLACE INTO `user_achievements` VALUES (@habboId, @group, @newLevel, @newProgress)",
                     new { habboId = session.GetHabbo().Id, group, newLevel, newProgress });
             }
-            
-           userData.Level = newLevel;
+
+            userData.Level = newLevel;
             userData.Progress = newProgress;
             session.GetHabbo().Duckets += level.RewardPixels;
             session.GetHabbo().GetStats().AchievementPoints += level.RewardPoints;

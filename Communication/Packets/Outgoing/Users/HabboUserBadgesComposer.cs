@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using Plus.HabboHotel.Users;
+﻿using Plus.HabboHotel.Users;
+using System.Linq;
 
 namespace Plus.Communication.Packets.Outgoing.Users;
 
@@ -9,8 +9,9 @@ internal class HabboUserBadgesComposer : ServerPacket
         : base(ServerPacketHeader.HabboUserBadgesMessageComposer)
     {
         WriteInteger(habbo.Id);
-        WriteInteger(habbo.GetBadgeComponent().EquippedCount);
-        foreach (var badge in habbo.GetBadgeComponent().GetBadges().Where(b => b.Slot > 0).ToList())
+        var badges = habbo.Inventory.Badges.EquippedBadges;
+        WriteInteger(badges.Count());
+        foreach (var badge in badges)
         {
             WriteInteger(badge.Slot);
             WriteString(badge.Code);

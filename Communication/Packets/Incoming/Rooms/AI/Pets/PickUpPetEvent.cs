@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Linq;
 using System.Threading.Tasks;
 using Plus.Communication.Packets.Outgoing.Inventory.Pets;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
@@ -85,12 +86,12 @@ internal class PickUpPetEvent : IPacketEvent
             var target = _clientManager.GetClientByUserId(data.OwnerId);
             if (target != null)
             {
-                if (target.GetHabbo().GetInventoryComponent().TryAddPet(pet.PetData))
+                if (target.GetHabbo().Inventory.Pets.AddPet(pet.PetData))
                 {
                     pet.PetData.RoomId = 0;
                     pet.PetData.PlacedInRoom = false;
                     room.GetRoomUserManager().RemoveBot(pet.VirtualId, false);
-                    target.SendPacket(new PetInventoryComposer(target.GetHabbo().GetInventoryComponent().GetPets()));
+                    target.SendPacket(new PetInventoryComposer(target.GetHabbo().Inventory.Pets.Pets.Values.ToList()));
                     return Task.CompletedTask;
                 }
             }

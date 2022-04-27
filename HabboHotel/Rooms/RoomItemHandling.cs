@@ -134,8 +134,8 @@ public class RoomItemHandling
                     var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(item.UserId);
                     if (client != null)
                     {
-                        client.GetHabbo().GetInventoryComponent().AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
-                        client.GetHabbo().GetInventoryComponent().UpdateItems(false);
+                        client.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
+                        client.SendPacket(new FurniListUpdateComposer());
                     }
                     continue;
                 }
@@ -710,13 +710,13 @@ public class RoomItemHandling
             if (item.IsFloorItem)
             {
                 _floorItems.TryRemove(item.Id, out var I);
-                session.GetHabbo().GetInventoryComponent().TryAddFloorItem(item.Id, I);
+                session.GetHabbo().Inventory.Furniture.AddItem(I);
                 _room.SendPacket(new ObjectRemoveComposer(item, item.UserId));
             }
             else if (item.IsWallItem)
             {
                 _wallItems.TryRemove(item.Id, out var I);
-                session.GetHabbo().GetInventoryComponent().TryAddWallItem(item.Id, I);
+                session.GetHabbo().Inventory.Furniture.AddItem(I);
                 _room.SendPacket(new ItemRemoveComposer(item, item.UserId));
             }
             session.SendPacket(new FurniListAddComposer(item));

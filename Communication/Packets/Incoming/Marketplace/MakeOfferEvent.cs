@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Marketplace;
 using Plus.Database;
 using Plus.HabboHotel.Catalog.Marketplace;
@@ -24,7 +25,7 @@ internal class MakeOfferEvent : IPacketEvent
         var sellingPrice = packet.PopInt();
         packet.PopInt(); //comission
         var itemId = packet.PopInt();
-        var item = session.GetHabbo().GetInventoryComponent().GetItem(itemId);
+        var item = session.GetHabbo().Inventory.Furniture.GetItem(itemId);
         if (item == null)
         {
             session.SendPacket(new MarketplaceMakeOfferResultComposer(0));
@@ -56,7 +57,8 @@ internal class MakeOfferEvent : IPacketEvent
             dbClient.RunQuery();
             dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + itemId + "' AND `user_id` = '" + session.GetHabbo().Id + "' LIMIT 1");
         }
-        session.GetHabbo().GetInventoryComponent().RemoveItem(itemId);
+        session.GetHabbo().Inventory.Furniture.RemoveItem(itemId);
+        session.SendPacket(new FurniListRemoveComposer(itemId));
         session.SendPacket(new MarketplaceMakeOfferResultComposer(1));
         return Task.CompletedTask;
     }

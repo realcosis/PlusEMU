@@ -58,7 +58,6 @@ internal class CancelOfferEvent : IPacketEvent
             dbClient.AddParameter("UserId", session.GetHabbo().Id);
             dbClient.RunQuery();
         }
-        session.GetHabbo().GetInventoryComponent().UpdateItems(true);
         session.SendPacket(new MarketplaceCancelOfferResultComposer(offerId, true));
         return Task.CompletedTask;
     }

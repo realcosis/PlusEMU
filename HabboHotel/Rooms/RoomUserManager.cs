@@ -342,9 +342,9 @@ public class RoomUserManager
             {
                 if (toRemove == null)
                     continue;
-                if (user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().GetInventoryComponent() == null)
+                if (user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().Inventory == null)
                     continue;
-                if (user.GetClient().GetHabbo().GetInventoryComponent().TryAddPet(toRemove.PetData))
+                if (user.GetClient().GetHabbo().Inventory.Pets.AddPet(toRemove.PetData))
                 {
                     toRemove.PetData.RoomId = 0;
                     toRemove.PetData.PlacedInRoom = false;

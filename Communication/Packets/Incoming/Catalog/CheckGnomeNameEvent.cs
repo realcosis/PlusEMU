@@ -88,7 +88,7 @@ internal class CheckGnomeNameEvent : IPacketEvent
             var food = ItemFactory.CreateSingleItemNullable(petFood, session.GetHabbo(), "", "");
             if (food != null)
             {
-                session.GetHabbo().GetInventoryComponent().TryAddItem(food);
+                session.GetHabbo().Inventory.Furniture.AddItem(food);
                 session.SendPacket(new FurniListNotificationComposer(food.Id, 1));
             }
         }

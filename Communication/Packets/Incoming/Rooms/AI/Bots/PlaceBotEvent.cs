@@ -41,7 +41,7 @@ internal class PlaceBotEvent : IPacketEvent
             session.SendNotification("You cannot place a bot here!");
             return Task.CompletedTask;
         }
-        if (!session.GetHabbo().GetInventoryComponent().TryGetBot(botId, out var bot))
+        if (!session.GetHabbo().Inventory.Bots.Bots.TryGetValue(botId, out var bot))
             return Task.CompletedTask;
         var botCount = 0;
         foreach (var user in room.GetRoomUserManager().GetUserList().ToList())
@@ -86,12 +86,12 @@ internal class PlaceBotEvent : IPacketEvent
                 ConvertExtensions.EnumToBool(getData["mix_sentences"].ToString()), Convert.ToInt32(getData["chat_bubble"])), null);
         botUser.Chat("Hello!");
         room.GetGameMap().UpdateUserMovement(new Point(x, y), new Point(x, y), botUser);
-        if (!session.GetHabbo().GetInventoryComponent().TryRemoveBot(botId, out var toRemove))
+        if (!session.GetHabbo().Inventory.Bots.RemoveBot(botId))
         {
-            Console.WriteLine("Error whilst removing Bot: " + toRemove.Id);
+            Console.WriteLine("Error whilst removing Bot: " + bot.Id);
             return Task.CompletedTask;
         }
-        session.SendPacket(new BotInventoryComposer(session.GetHabbo().GetInventoryComponent().GetBots()));
+        session.SendPacket(new BotInventoryComposer(session.GetHabbo().Inventory.Bots.Bots.Values.ToList()));
         return Task.CompletedTask;
     }
 }

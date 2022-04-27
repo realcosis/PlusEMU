@@ -110,13 +110,13 @@ public sealed class Trade
         var roomUserTwo = Users[1].RoomUser;
         var logUserOne = "";
         var logUserTwo = "";
-        if (roomUserOne == null || roomUserOne.GetClient() == null || roomUserOne.GetClient().GetHabbo() == null || roomUserOne.GetClient().GetHabbo().GetInventoryComponent() == null)
+        if (roomUserOne == null || roomUserOne.GetClient() == null || roomUserOne.GetClient().GetHabbo() == null || roomUserOne.GetClient().GetHabbo().Inventory == null)
             return;
-        if (roomUserTwo == null || roomUserTwo.GetClient() == null || roomUserTwo.GetClient().GetHabbo() == null || roomUserTwo.GetClient().GetHabbo().GetInventoryComponent() == null)
+        if (roomUserTwo == null || roomUserTwo.GetClient() == null || roomUserTwo.GetClient().GetHabbo() == null || roomUserTwo.GetClient().GetHabbo().Inventory == null)
             return;
         foreach (var item in userOne)
         {
-            var I = roomUserOne.GetClient().GetHabbo().GetInventoryComponent().GetItem(item.Id);
+            var I = roomUserOne.GetClient().GetHabbo().Inventory.Furniture.GetItem(item.Id);
             if (I == null)
             {
                 SendPacket(new BroadcastMessageAlertComposer("Error! Trading Failed!"));
@@ -125,7 +125,7 @@ public sealed class Trade
         }
         foreach (var item in userTwo)
         {
-            var I = roomUserTwo.GetClient().GetHabbo().GetInventoryComponent().GetItem(item.Id);
+            var I = roomUserTwo.GetClient().GetHabbo().Inventory.Furniture.GetItem(item.Id);
             if (I == null)
             {
                 SendPacket(new BroadcastMessageAlertComposer("Error! Trading Failed!"));
@@ -136,7 +136,8 @@ public sealed class Trade
         foreach (var item in userOne)
         {
             logUserOne += item.Id + ";";
-            roomUserOne.GetClient().GetHabbo().GetInventoryComponent().RemoveItem(item.Id);
+            roomUserOne.GetClient().GetHabbo().Inventory.Furniture.RemoveItem(item.Id);
+            roomUserOne.GetClient().SendPacket(new FurniListRemoveComposer(item.Id));
             if (item.Data.InteractionType == InteractionType.Exchange && PlusEnvironment.GetSettingsManager().TryGetValue("trading.auto_exchange_redeemables") == "1")
             {
                 roomUserTwo.GetClient().GetHabbo().Credits += item.Data.BehaviourData;
@@ -147,7 +148,7 @@ public sealed class Trade
             }
             else
             {
-                if (roomUserTwo.GetClient().GetHabbo().GetInventoryComponent().TryAddItem(item))
+                if (roomUserTwo.GetClient().GetHabbo().Inventory.Furniture.AddItem(item))
                 {
                     roomUserTwo.GetClient().SendPacket(new FurniListAddComposer(item));
                     roomUserTwo.GetClient().SendPacket(new FurniListNotificationComposer(item.Id, 1));
@@ -161,7 +162,8 @@ public sealed class Trade
         foreach (var item in userTwo)
         {
             logUserTwo += item.Id + ";";
-            roomUserTwo.GetClient().GetHabbo().GetInventoryComponent().RemoveItem(item.Id);
+            roomUserTwo.GetClient().GetHabbo().Inventory.Furniture.RemoveItem(item.Id);
+            roomUserTwo.GetClient().SendPacket(new FurniListRemoveComposer(item.Id));
             if (item.Data.InteractionType == InteractionType.Exchange && PlusEnvironment.GetSettingsManager().TryGetValue("trading.auto_exchange_redeemables") == "1")
             {
                 roomUserOne.GetClient().GetHabbo().Credits += item.Data.BehaviourData;
@@ -172,7 +174,7 @@ public sealed class Trade
             }
             else
             {
-                if (roomUserOne.GetClient().GetHabbo().GetInventoryComponent().TryAddItem(item))
+                if (roomUserOne.GetClient().GetHabbo().Inventory.Furniture.AddItem(item))
                 {
                     roomUserOne.GetClient().SendPacket(new FurniListAddComposer(item));
                     roomUserOne.GetClient().SendPacket(new FurniListNotificationComposer(item.Id, 1));

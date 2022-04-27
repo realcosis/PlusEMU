@@ -8,6 +8,7 @@ using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Communication.Packets.Outgoing.Navigator;
 using Plus.Communication.Packets.Outgoing.Notifications;
 using Plus.Communication.Packets.Outgoing.Sound;
+using Plus.HabboHotel.Badges;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Authentication;
 using Plus.HabboHotel.Users.Messenger.FriendBar;
@@ -18,10 +19,12 @@ namespace Plus.Communication.Packets.Incoming.Handshake;
 public class SsoTicketEvent : IPacketEvent
 {
     private readonly IAuthenticator _authenticate;
+    private readonly IBadgeManager _badgeManager;
 
-    public SsoTicketEvent(IAuthenticator authenticate)
+    public SsoTicketEvent(IAuthenticator authenticate, IBadgeManager badgeManager)
     {
         _authenticate = authenticate;
+        _badgeManager = badgeManager;
     }
 
     public async Task Parse(GameClient session, ClientPacket packet)
@@ -55,16 +58,16 @@ public class SsoTicketEvent : IPacketEvent
             {
                 if (!string.IsNullOrEmpty(group.Badge))
                 {
-                    if (!session.GetHabbo().GetBadgeComponent().HasBadge(group.Badge))
-                        session.GetHabbo().GetBadgeComponent().GiveBadge(group.Badge, true, session);
+                    if (!session.GetHabbo().Inventory.Badges.HasBadge(group.Badge))
+                        await _badgeManager.GiveBadge(session.GetHabbo(), group.Badge);
                 }
             }
             if (PlusEnvironment.GetGame().GetSubscriptionManager().TryGetSubscriptionData(session.GetHabbo().VipRank, out var subData))
             {
                 if (!string.IsNullOrEmpty(subData.Badge))
                 {
-                    if (!session.GetHabbo().GetBadgeComponent().HasBadge(subData.Badge))
-                        session.GetHabbo().GetBadgeComponent().GiveBadge(subData.Badge, true, session);
+                    if (!session.GetHabbo().Inventory.Badges.HasBadge(subData.Badge))
+                        await _badgeManager.GiveBadge(session.GetHabbo(), subData.Badge);
                 }
             }
             if (!PlusEnvironment.GetGame().GetCacheManager().ContainsUser(session.GetHabbo().Id))
@@ -80,7 +83,7 @@ public class SsoTicketEvent : IPacketEvent
             }
             if (PlusEnvironment.GetSettingsManager().TryGetValue("user.login.message.enabled") == "1")
                 session.SendPacket(new MotdNotificationComposer(PlusEnvironment.GetLanguageManager().TryGetValue("user.login.message")));
-            PlusEnvironment.GetGame().GetRewardManager().CheckRewards(session);
+            await PlusEnvironment.GetGame().GetRewardManager().CheckRewards(session);
         }
     }
 }

@@ -54,31 +54,31 @@ public class PurchaseFromCatalogEvent : IPacketEvent
         _itemManager = itemManager;
         _badgeManager = badgeManager;
     }
-    public Task Parse(GameClient session, ClientPacket packet)
+    public async Task Parse(GameClient session, ClientPacket packet)
     {
         if (_settingsManager.TryGetValue("catalog.enabled") != "1")
         {
             session.SendNotification("The hotel managers have disabled the catalogue");
-            return Task.CompletedTask;
+            return;
         }
         var pageId = packet.PopInt();
         var itemId = packet.PopInt();
         var extraData = packet.PopString();
         var amount = packet.PopInt();
         if (!_catalogManager.TryGetPage(pageId, out var page))
-            return Task.CompletedTask;
+            return;
         if (!page.Enabled || !page.Visible || page.MinimumRank > session.GetHabbo().Rank || page.MinimumVip > session.GetHabbo().VipRank && session.GetHabbo().Rank == 1)
-            return Task.CompletedTask;
+            return;
         if (!page.Items.TryGetValue(itemId, out var item))
         {
             if (page.ItemOffers.ContainsKey(itemId))
             {
                 item = page.ItemOffers[itemId];
                 if (item == null)
-                    return Task.CompletedTask;
+                    return;
             }
             else
-                return Task.CompletedTask;
+                return;
         }
         if (amount < 1 || amount > 100 || !item.HaveOffer)
             amount = 1;
@@ -87,7 +87,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
         var totalPixelCost = amount > 1 ? item.CostPixels * amount - (int)Math.Floor((double)amount / 6) * item.CostPixels : item.CostPixels;
         var totalDiamondCost = amount > 1 ? item.CostDiamonds * amount - (int)Math.Floor((double)amount / 6) * item.CostDiamonds : item.CostDiamonds;
         if (session.GetHabbo().Credits < totalCreditsCost || session.GetHabbo().Duckets < totalPixelCost || session.GetHabbo().Diamonds < totalDiamondCost)
-            return Task.CompletedTask;
+            return;
         var limitedEditionSells = 0;
         var limitedEditionStack = 0;
         switch (item.Data.InteractionType)
@@ -106,17 +106,17 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                     var race = bits[1];
                     var color = bits[2];
                     if (!PetUtility.CheckPetName(petName))
-                        return Task.CompletedTask;
+                        return;
                     if (race.Length > 2)
-                        return Task.CompletedTask;
+                        return;
                     if (color.Length != 6)
-                        return Task.CompletedTask;
+                        return;
                     _achievementManager.ProgressAchievement(session, "ACH_PetLover", 1);
                 }
                 catch (Exception e)
                 {
                     ExceptionLogger.LogException(e);
-                    return Task.CompletedTask;
+                    return;
                 }
                 break;
             case InteractionType.Floor:
@@ -146,19 +146,19 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                 extraData = "m" + Convert.ToChar(5) + ".ch-210-1321.lg-285-92" + Convert.ToChar(5) + "Default Mannequin";
                 break;
             case InteractionType.BadgeDisplay:
-                if (!session.GetHabbo().GetBadgeComponent().HasBadge(extraData))
+                if (!session.GetHabbo().Inventory.Badges.HasBadge(extraData))
                 {
                     session.SendPacket(new BroadcastMessageAlertComposer("Oops, it appears that you do not own this badge."));
-                    return Task.CompletedTask;
+                    return;
                 }
                 extraData = extraData + Convert.ToChar(9) + session.GetHabbo().Username + Convert.ToChar(9) + DateTime.Now.Day + "-" + DateTime.Now.Month + "-" + DateTime.Now.Year;
                 break;
             case InteractionType.Badge:
             {
-                if (session.GetHabbo().GetBadgeComponent().HasBadge(item.Data.ItemName))
+                if (session.GetHabbo().Inventory.Badges.HasBadge(item.Data.ItemName))
                 {
                     session.SendPacket(new PurchaseErrorComposer(1));
-                    return Task.CompletedTask;
+                    return;
                 }
                 break;
             }
@@ -173,7 +173,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                 session.SendNotification("This item has sold out!\n\n" + "Please note, you have not recieved another item (You have also not been charged for it!)");
                 session.SendPacket(new CatalogUpdatedComposer());
                 session.SendPacket(new PurchaseOkComposer());
-                return Task.CompletedTask;
+                return;
             }
             item.LimitedEditionSells++;
             using var connection = _database.Connection();
@@ -298,7 +298,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                 }
                 foreach (var purchasedItem in generatedGenericItems)
                 {
-                    if (session.GetHabbo().GetInventoryComponent().TryAddItem(purchasedItem))
+                    if (session.GetHabbo().Inventory.Furniture.AddItem(purchasedItem))
                     {
                         //Session.SendMessage(new FurniListAddComposer(PurchasedItem));
                         session.SendPacket(new FurniListNotificationComposer(purchasedItem.Id, 1));
@@ -321,8 +321,8 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                 var bot = BotUtility.CreateBot(item.Data, session.GetHabbo().Id);
                 if (bot != null)
                 {
-                    session.GetHabbo().GetInventoryComponent().TryAddBot(bot);
-                    session.SendPacket(new BotInventoryComposer(session.GetHabbo().GetInventoryComponent().GetBots()));
+                    session.GetHabbo().Inventory.Bots.AddBot(bot);
+                    session.SendPacket(new BotInventoryComposer(session.GetHabbo().Inventory.Bots.Bots.Values.ToList()));
                     session.SendPacket(new FurniListNotificationComposer(bot.Id, 5));
                 }
                 else
@@ -330,7 +330,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                 break;
             case "b":
             {
-                session.GetHabbo().GetBadgeComponent().GiveBadge(item.Data.ItemName, true, session);
+                await _badgeManager.GiveBadge(session.GetHabbo(), item.Data.ItemName);
                 session.SendPacket(new FurniListNotificationComposer(0, 4));
                 break;
             }
@@ -340,18 +340,18 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                 var pet = PetUtility.CreatePet(session.GetHabbo().Id, petData[0], item.Data.BehaviourData, petData[1], petData[2]);
                 if (pet != null)
                 {
-                    if (session.GetHabbo().GetInventoryComponent().TryAddPet(pet))
+                    if (session.GetHabbo().Inventory.Pets.AddPet(pet))
                     {
                         pet.RoomId = 0;
                         pet.PlacedInRoom = false;
                         session.SendPacket(new FurniListNotificationComposer(pet.PetId, 3));
-                        session.SendPacket(new PetInventoryComposer(session.GetHabbo().GetInventoryComponent().GetPets()));
+                        session.SendPacket(new PetInventoryComposer(session.GetHabbo().Inventory.Pets.Pets.Values.ToList()));
                         if (_itemManager.GetItem(320, out var petFood))
                         {
                             var food = ItemFactory.CreateSingleItemNullable(petFood, session.GetHabbo(), "", "");
                             if (food != null)
                             {
-                                session.GetHabbo().GetInventoryComponent().TryAddItem(food);
+                                session.GetHabbo().Inventory.Furniture.AddItem(food);
                                 session.SendPacket(new FurniListNotificationComposer(food.Id, 1));
                             }
                         }
@@ -363,9 +363,8 @@ public class PurchaseFromCatalogEvent : IPacketEvent
         if (!string.IsNullOrEmpty(item.Badge) &&
             _badgeManager.TryGetBadge(item.Badge, out var badge) &&
             (string.IsNullOrEmpty(badge.RequiredRight) || session.GetHabbo().GetPermissions().HasRight(badge.RequiredRight)))
-            session.GetHabbo().GetBadgeComponent().GiveBadge(badge.Code, true, session);
+            await _badgeManager.GiveBadge(session.GetHabbo(), badge.Code);
         session.SendPacket(new PurchaseOkComposer(item, item.Data));
         session.SendPacket(new FurniListUpdateComposer());
-        return Task.CompletedTask;
     }
 }

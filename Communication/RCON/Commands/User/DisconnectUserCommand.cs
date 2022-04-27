@@ -1,4 +1,6 @@
-﻿namespace Plus.Communication.Rcon.Commands.User;
+﻿using System.Threading.Tasks;
+
+namespace Plus.Communication.Rcon.Commands.User;
 
 internal class DisconnectUserCommand : IRconCommand
 {
@@ -7,14 +9,14 @@ internal class DisconnectUserCommand : IRconCommand
     public string Key => "disconnect_user";
     public string Parameters => "%userId%";
 
-    public bool TryExecute(string[] parameters)
+    public Task<bool> TryExecute(string[] parameters)
     {
         if (!int.TryParse(parameters[0], out var userId))
-            return false;
+            return Task.FromResult(false);
         var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
         if (client == null || client.GetHabbo() == null)
-            return false;
+            return Task.FromResult(false);
         client.Disconnect();
-        return true;
+        return Task.FromResult(true);
     }
 }

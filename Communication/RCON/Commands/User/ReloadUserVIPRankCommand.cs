@@ -1,4 +1,6 @@
-﻿namespace Plus.Communication.Rcon.Commands.User;
+﻿using System.Threading.Tasks;
+
+namespace Plus.Communication.Rcon.Commands.User;
 
 internal class ReloadUserVipRankCommand : IRconCommand
 {
@@ -7,13 +9,13 @@ internal class ReloadUserVipRankCommand : IRconCommand
     public string Key => "reload_user_vip_rank";
     public string Parameters => "%userId%";
 
-    public bool TryExecute(string[] parameters)
+    public Task<bool> TryExecute(string[] parameters)
     {
         if (!int.TryParse(parameters[0], out var userId))
-            return false;
+            return Task.FromResult(false);
         var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
         if (client == null || client.GetHabbo() == null)
-            return false;
+            return Task.FromResult(false);
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `rank_vip` FROM `users` WHERE `id` = @userId LIMIT 1");
@@ -21,6 +23,6 @@ internal class ReloadUserVipRankCommand : IRconCommand
             client.GetHabbo().VipRank = dbClient.GetInteger();
         }
         client.GetHabbo().GetPermissions().Init(client.GetHabbo());
-        return true;
+        return Task.FromResult(true);
     }
 }

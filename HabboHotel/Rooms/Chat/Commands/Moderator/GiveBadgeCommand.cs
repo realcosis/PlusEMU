@@ -1,10 +1,12 @@
-﻿using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.Badges;
+using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
 internal class GiveBadgeCommand : IChatCommand
 {
     private readonly IGameClientManager _gameClientManager;
+    private readonly IBadgeManager _badgeManager;
     public string Key => "givebadge";
     public string PermissionRequired => "command_give_badge";
 
@@ -12,9 +14,10 @@ internal class GiveBadgeCommand : IChatCommand
 
     public string Description => "Give a badge to another user.";
 
-    public GiveBadgeCommand(IGameClientManager gameClientManager)
+    public GiveBadgeCommand(IGameClientManager gameClientManager, IBadgeManager badgeManager)
     {
         _gameClientManager = gameClientManager;
+        _badgeManager = badgeManager;
     }
 
     public void Execute(GameClient session, Room room, string[] @params)
@@ -27,9 +30,9 @@ internal class GiveBadgeCommand : IChatCommand
         var targetClient = _gameClientManager.GetClientByUsername(@params[1]);
         if (targetClient != null)
         {
-            if (!targetClient.GetHabbo().GetBadgeComponent().HasBadge(@params[2]))
+            if (!targetClient.GetHabbo().Inventory.Badges.HasBadge(@params[2]))
             {
-                targetClient.GetHabbo().GetBadgeComponent().GiveBadge(@params[2], true, targetClient);
+                _badgeManager.GiveBadge(targetClient.GetHabbo(), @params[2]).Wait();
                 if (targetClient.GetHabbo().Id != session.GetHabbo().Id)
                     targetClient.SendNotification("You have just been given a badge!");
                 else

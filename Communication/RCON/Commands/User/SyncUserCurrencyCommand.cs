@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Plus.Communication.Rcon.Commands.User;
 
@@ -9,22 +10,22 @@ internal class SyncUserCurrencyCommand : IRconCommand
     public string Key => "sync_user_currency";
     public string Parameters => "%userId% %currency%";
 
-    public bool TryExecute(string[] parameters)
+    public Task<bool> TryExecute(string[] parameters)
     {
         if (!int.TryParse(parameters[0], out var userId))
-            return false;
+            return Task.FromResult(false);
         var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
         if (client == null || client.GetHabbo() == null)
-            return false;
+            return Task.FromResult(false);
 
         // Validate the currency type
         if (string.IsNullOrEmpty(Convert.ToString(parameters[1])))
-            return false;
+            return Task.FromResult(false);
         var currency = Convert.ToString(parameters[1]);
         switch (currency)
         {
             default:
-                return false;
+                return Task.FromResult(false);
             case "coins":
             case "credits":
             {
@@ -64,6 +65,6 @@ internal class SyncUserCurrencyCommand : IRconCommand
                 break;
             }
         }
-        return true;
+        return Task.FromResult(true);
     }
 }

@@ -29,6 +29,7 @@ using Plus.HabboHotel.Users.Relationships;
 using Plus.Utilities;
 
 using Dapper;
+using Plus.HabboHotel.Users.Navigator;
 
 namespace Plus.HabboHotel.Users;
 
@@ -39,8 +40,6 @@ public class Habbo
     //Room related
 
     private readonly DateTime _timeCached;
-    //Abilitys triggered by generic events.
-    private BadgeComponent _badgeComponent;
 
     private GameClient _client;
     private ClothingComponent _clothing;
@@ -59,12 +58,12 @@ public class Habbo
 
     //Generic player values.
     private IgnoresComponent _ignores;
-    private InventoryComponent _inventoryComponent;
+    public InventoryComponent Inventory { get; private set; }
 
     //Anti-script placeholders.
     private HabboMessenger _messenger;
 
-    private SearchesComponent _navigatorSearches;
+    private NavigatorPreferences _navigatorPreferences;
     private PermissionComponent _permissions;
 
     //Just random fun stuff.
@@ -77,123 +76,6 @@ public class Habbo
 
     public List<int> RatedRooms = new();
     public Dictionary<int, Relationship> Relationships = new();
-
-    //public Habbo(int id, string username, int rank, string motto, string look, string gender, int credits, int activityPoints, int homeRoom,
-    //    bool hasFriendRequestsDisabled, int lastOnline, bool appearOffline, bool hideInRoom, double createDate, int diamonds,
-    //    string machineId, string clientVolume, bool chatPreference, bool focusPreference, bool petsMuted, bool botsMuted, bool advertisingReportBlocked, double lastNameChange,
-    //    int gotwPoints, bool ignoreInvites, double timeMuted, double tradingLock, bool allowGifts, int friendBarState, bool disableForcedEffects, bool allowMimic, int vipRank)
-    //{
-    //    Id = id;
-    //    Username = username;
-    //    Rank = rank;
-    //    Motto = motto;
-    //    Look = look;
-    //    Gender = gender.ToLower();
-    //    FootballLook = PlusEnvironment.GetFigureManager().FilterFigure(look.ToLower());
-    //    FootballGender = gender.ToLower();
-    //    Credits = credits;
-    //    Duckets = activityPoints;
-    //    Diamonds = diamonds;
-    //    GotwPoints = gotwPoints;
-    //    HomeRoom = homeRoom;
-    //    LastOnline = lastOnline;
-    //    AccountCreated = createDate;
-    //    ClientVolume = new List<int>();
-    //    foreach (var str in clientVolume.Split(','))
-    //    {
-    //        var val = 0;
-    //        if (int.TryParse(str, out val))
-    //            ClientVolume.Add(int.Parse(str));
-    //        else
-    //            ClientVolume.Add(100);
-    //    }
-    //    LastNameChange = lastNameChange;
-    //    MachineId = machineId;
-    //    ChatPreference = chatPreference;
-    //    FocusPreference = focusPreference;
-    //    IsExpert = IsExpert;
-    //    AppearOffline = appearOffline;
-    //    AllowTradingRequests = true; //TODO
-    //    AllowUserFollowing = true; //TODO
-    //    AllowFriendRequests = hasFriendRequestsDisabled; //TODO
-    //    AllowMessengerInvites = ignoreInvites;
-    //    AllowPetSpeech = petsMuted;
-    //    AllowBotSpeech = botsMuted;
-    //    AllowPublicRoomStatus = hideInRoom;
-    //    AllowConsoleMessages = true;
-    //    AllowGifts = allowGifts;
-    //    AllowMimic = allowMimic;
-    //    ReceiveWhispers = true;
-    //    IgnorePublicWhispers = false;
-    //    PlayingFastFood = false;
-    //    FriendbarState = FriendBarStateUtility.GetEnum(friendBarState);
-    //    ChristmasDay = ChristmasDay;
-    //    WantsToRideHorse = 0;
-    //    TimeAfk = 0;
-    //    DisableForcedEffects = disableForcedEffects;
-    //    VipRank = vipRank;
-    //    _disconnected = false;
-    //    _habboSaved = false;
-    //    ChangingName = false;
-    //    FloodTime = 0;
-    //    FriendCount = 0;
-    //    TimeMuted = timeMuted;
-    //    _timeCached = DateTime.Now;
-    //    TradingLockExpiry = tradingLock;
-
-    //    // TODO: 80O: Convert to IUserDataLoadingTask
-    //    if (TradingLockExpiry > 0 && UnixTimestamp.GetNow() > TradingLockExpiry)
-    //    {
-    //        TradingLockExpiry = 0;
-    //        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-    //        dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '0' WHERE `user_id` = '" + id + "' LIMIT 1");
-    //    }
-    //    BannedPhraseCount = 0;
-    //    SessionStart = UnixTimestamp.GetNow();
-    //    MessengerSpamCount = 0;
-    //    MessengerSpamTime = 0;
-    //    CreditsUpdateTick = Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("user.currency_scheduler.tick"));
-    //    TentId = 0;
-    //    HopperId = 0;
-    //    IsHopping = false;
-    //    TeleporterId = 0;
-    //    IsTeleporting = false;
-    //    TeleportingRoomId = 0;
-    //    RoomAuthOk = false;
-    //    CurrentRoomId = 0;
-    //    HasSpoken = false;
-    //    LastAdvertiseReport = 0;
-    //    AdvertisingReported = false;
-    //    AdvertisingReportedBlocked = advertisingReportBlocked;
-    //    WiredInteraction = false;
-    //    QuestLastCompleted = 0;
-    //    InventoryAlert = false;
-    //    IgnoreBobbaFilter = false;
-    //    WiredTeleporting = false;
-    //    CustomBubbleId = 0;
-    //    OnHelperDuty = false;
-    //    FastfoodScore = 0;
-    //    PetId = 0;
-    //    TempInt = 0;
-    //    LastGiftPurchaseTime = DateTime.Now;
-    //    LastMottoUpdateTime = DateTime.Now;
-    //    LastClothingUpdateTime = DateTime.Now;
-    //    LastForumMessageUpdateTime = DateTime.Now;
-    //    GiftPurchasingWarnings = 0;
-    //    MottoUpdateWarnings = 0;
-    //    ClothingUpdateWarnings = 0;
-    //    SessionGiftBlocked = false;
-    //    SessionMottoBlocked = false;
-    //    SessionClothingBlocked = false;
-    //    FavoriteRooms = new ArrayList();
-    //    Achievements = new ConcurrentDictionary<string, UserAchievement>();
-    //    Relationships = new Dictionary<int, Relationship>();
-    //    RatedRooms = new List<int>();
-
-    //    InitPermissions();
-    //    DataRow statRow = null;
-    //    
-    //}
 
     public int Id { get; set; }
 
@@ -408,12 +290,6 @@ public class Habbo
         return _process.Init(this);
     }
 
-    public bool InitSearches()
-    {
-        _navigatorSearches = new SearchesComponent();
-        return _navigatorSearches.Init(this);
-    }
-
     public bool InitFx()
     {
         _fx = new EffectsComponent();
@@ -437,18 +313,13 @@ public class Habbo
         // Move each of these loading tasks to their own IUserDataLoadingTask implementation.
         //foreach (var id in data.FavouritedRooms) FavoriteRooms.Add(id);
         _client = client;
-        _badgeComponent = new BadgeComponent(this);
-        _inventoryComponent = new InventoryComponent(Id, client);
         //Quests = data.Quests;
         _messenger = new(Id);
         _messenger.Init(new Dictionary<int, MessengerBuddy>(), new Dictionary<int, MessengerRequest>());
         _disconnected = false;
-        InitSearches();
         InitFx();
         InitClothing();
         InitIgnores();
-        _permissions = new PermissionComponent();
-        _permissions.Init(this);
     }
 
 
@@ -489,8 +360,6 @@ public class Habbo
 
     public void Dispose()
     {
-        if (_inventoryComponent != null)
-            _inventoryComponent.SetIdleState();
         if (InRoom && CurrentRoom != null)
             CurrentRoom.GetRoomUserManager().RemoveUserFromRoom(_client, false);
         if (_messenger != null)
@@ -542,11 +411,17 @@ public class Habbo
 
     public HabboMessenger GetMessenger() => _messenger;
 
-    public BadgeComponent GetBadgeComponent() => _badgeComponent;
+    public void SetInventoryComponent(InventoryComponent inventory)
+    {
+        Inventory = inventory;
+    }
 
-    public InventoryComponent GetInventoryComponent() => _inventoryComponent;
+    public NavigatorPreferences GetNavigatorSearches() => _navigatorPreferences;
 
-    public SearchesComponent GetNavigatorSearches() => _navigatorSearches;
+    public void SetNavigatorPreferences(NavigatorPreferences navigatorPreferences)
+    {
+        _navigatorPreferences = navigatorPreferences;
+    }
 
     public EffectsComponent Effects() => _fx;
 
@@ -691,5 +566,10 @@ public class Habbo
     public void SetStats(HabboStats stats)
     {
         _habboStats = stats;
+    }
+
+    public void SetPermissions(PermissionComponent permissions)
+    {
+        _permissions = permissions;
     }
 }

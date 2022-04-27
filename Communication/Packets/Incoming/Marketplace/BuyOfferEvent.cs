@@ -78,7 +78,7 @@ internal class BuyOfferEvent : IPacketEvent
                 Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]));
             if (giveItem != null)
             {
-                session.GetHabbo().GetInventoryComponent().TryAddItem(giveItem);
+                session.GetHabbo().Inventory.Furniture.AddItem(giveItem);
                 session.SendPacket(new FurniListNotificationComposer(giveItem.Id, 1));
                 session.SendPacket(new PurchaseOkComposer());
                 session.SendPacket(new FurniListAddComposer(giveItem));

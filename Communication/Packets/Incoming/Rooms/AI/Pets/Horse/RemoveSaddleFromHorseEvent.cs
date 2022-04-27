@@ -51,7 +51,7 @@ internal class RemoveSaddleFromHorseEvent : IPacketEvent
         var item = ItemFactory.CreateSingleItemNullable(itemData, session.GetHabbo(), "", "");
         if (item != null)
         {
-            session.GetHabbo().GetInventoryComponent().TryAddItem(item);
+            session.GetHabbo().Inventory.Furniture.AddItem(item);
             session.SendPacket(new FurniListNotificationComposer(item.Id, 1));
             session.SendPacket(new PurchaseOkComposer());
             session.SendPacket(new FurniListAddComposer(item));

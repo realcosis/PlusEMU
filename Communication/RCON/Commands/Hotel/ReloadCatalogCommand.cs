@@ -1,4 +1,5 @@
-﻿using Plus.Communication.Packets.Outgoing.Catalog;
+﻿using System.Threading.Tasks;
+using Plus.Communication.Packets.Outgoing.Catalog;
 
 namespace Plus.Communication.Rcon.Commands.Hotel;
 
@@ -9,10 +10,10 @@ internal class ReloadCatalogCommand : IRconCommand
     public string Key => "reload_catalog";
     public string Parameters => "";
 
-    public bool TryExecute(string[] parameters)
+    public Task<bool> TryExecute(string[] parameters)
     {
         PlusEnvironment.GetGame().GetCatalog().Init(PlusEnvironment.GetGame().GetItemManager());
         PlusEnvironment.GetGame().GetClientManager().SendPacket(new CatalogUpdatedComposer());
-        return true;
+        return Task.FromResult(true);
     }
 }

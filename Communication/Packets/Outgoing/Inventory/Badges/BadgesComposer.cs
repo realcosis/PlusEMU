@@ -11,8 +11,9 @@ internal class BadgesComposer : ServerPacket
         : base(ServerPacketHeader.BadgesMessageComposer)
     {
         var equippedBadges = new List<Badge>();
-        WriteInteger(session.GetHabbo().GetBadgeComponent().Count);
-        foreach (var badge in session.GetHabbo().GetBadgeComponent().GetBadges().ToList())
+        var badges = session.GetHabbo().Inventory.Badges.Badges;
+        WriteInteger(badges.Count);
+        foreach (var (_, badge) in badges)
         {
             WriteInteger(1);
             WriteString(badge.Code);

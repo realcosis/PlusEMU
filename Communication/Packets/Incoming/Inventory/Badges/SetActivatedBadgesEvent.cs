@@ -23,7 +23,7 @@ internal class SetActivatedBadgesEvent : IPacketEvent
 
     public Task Parse(GameClient session, ClientPacket packet)
     {
-        session.GetHabbo().GetBadgeComponent().ResetSlots();
+        session.GetHabbo().Inventory.Badges.ClearWearingBadges();
         using (var connection = _database.Connection())
         {
             connection.Execute("UPDATE `user_badges` SET `badge_slot` = '0' WHERE `user_id` = @userId",
@@ -35,9 +35,9 @@ internal class SetActivatedBadgesEvent : IPacketEvent
             var badge = packet.PopString();
             if (badge.Length == 0)
                 continue;
-            if (!session.GetHabbo().GetBadgeComponent().HasBadge(badge) || slot < 1 || slot > 5)
+            if (!session.GetHabbo().Inventory.Badges.HasBadge(badge) || slot < 1 || slot > 5)
                 return Task.CompletedTask;
-            session.GetHabbo().GetBadgeComponent().GetBadge(badge).Slot = slot;
+            session.GetHabbo().Inventory.Badges.GetBadge(badge).Slot = slot;
             using var connection = _database.Connection();
 
             connection.Execute("UPDATE `user_badges` SET `badge_slot` = @slot WHERE `badge_id` = @badge AND `user_id` = @userId LIMIT 1",
