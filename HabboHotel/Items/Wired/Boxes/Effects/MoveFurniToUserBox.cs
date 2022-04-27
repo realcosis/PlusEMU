@@ -4,7 +4,6 @@ using System.Linq;
 using Plus.Communication.Packets.Incoming;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.HabboHotel.Rooms;
-using Plus.Utilities;
 
 namespace Plus.HabboHotel.Items.Wired.Boxes.Effects;
 

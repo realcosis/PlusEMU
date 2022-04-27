@@ -1,21 +1,11 @@
-﻿using System;
+﻿using Dapper;
+using Plus.Database;
+using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Users.UserData;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Plus.HabboHotel.GameClients;
 using System.Threading.Tasks;
-using Dapper;
-using Plus.Communication.Packets.Outgoing.BuildersClub;
-using Plus.Communication.Packets.Outgoing.Handshake;
-using Plus.Communication.Packets.Outgoing.Inventory.Achievements;
-using Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
-using Plus.Communication.Packets.Outgoing.Moderation;
-using Plus.Communication.Packets.Outgoing.Navigator;
-using Plus.Communication.Packets.Outgoing.Notifications;
-using Plus.Communication.Packets.Outgoing.Sound;
-using Plus.Core;
-using Plus.Database;
-using Plus.HabboHotel.Users.Messenger.FriendBar;
-using Plus.HabboHotel.Users.UserData;
 
 namespace Plus.HabboHotel.Users.Authentication
 {
