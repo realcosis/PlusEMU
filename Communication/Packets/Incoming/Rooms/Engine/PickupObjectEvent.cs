@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
@@ -57,14 +58,14 @@ internal class PickupObjectEvent : IPacketEvent
             if (item.UserId == session.GetHabbo().Id)
             {
                 room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
-                session.GetHabbo().GetInventoryComponent().AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
-                session.GetHabbo().GetInventoryComponent().UpdateItems(false);
+                session.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
+                session.SendPacket(new FurniListUpdateComposer());
             }
             else if (session.GetHabbo().GetPermissions().HasRight("room_item_take")) //Staff are taking this item
             {
                 room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
-                session.GetHabbo().GetInventoryComponent().AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
-                session.GetHabbo().GetInventoryComponent().UpdateItems(false);
+                session.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
+                session.SendPacket(new FurniListUpdateComposer());
             }
             else //Item is being ejected.
             {
@@ -72,8 +73,8 @@ internal class PickupObjectEvent : IPacketEvent
                 if (targetClient != null && targetClient.GetHabbo() != null) //Again, do we have an active client?
                 {
                     room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
-                    targetClient.GetHabbo().GetInventoryComponent().AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
-                    targetClient.GetHabbo().GetInventoryComponent().UpdateItems(false);
+                    targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
+                    targetClient.SendPacket(new FurniListUpdateComposer());
                 }
                 else //No, query time.
                 {

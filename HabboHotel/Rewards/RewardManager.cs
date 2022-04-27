@@ -2,8 +2,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Database;
+using Plus.HabboHotel.Badges;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rewards;
@@ -11,12 +13,14 @@ namespace Plus.HabboHotel.Rewards;
 public class RewardManager : IRewardManager
 {
     private readonly IDatabase _database;
+    private readonly IBadgeManager _badgeManager;
     private readonly ConcurrentDictionary<int, List<int>> _rewardLogs;
     private readonly ConcurrentDictionary<int, Reward> _rewards;
 
-    public RewardManager(IDatabase database)
+    public RewardManager(IDatabase database, IBadgeManager badgeManager)
     {
         _database = database;
+        _badgeManager = badgeManager;
         _rewards = new ConcurrentDictionary<int, Reward>();
         _rewardLogs = new ConcurrentDictionary<int, List<int>>();
     }
@@ -51,7 +55,7 @@ public class RewardManager : IRewardManager
         }
     }
 
-    public bool HasReward(int id, int rewardId)
+    private bool HasReward(int id, int rewardId)
     {
         if (!_rewardLogs.ContainsKey(id))
             return false;
@@ -60,7 +64,7 @@ public class RewardManager : IRewardManager
         return false;
     }
 
-    public void LogReward(int id, int rewardId)
+    private void LogReward(int id, int rewardId)
     {
         if (!_rewardLogs.ContainsKey(id))
             _rewardLogs.TryAdd(id, new List<int>());
@@ -73,7 +77,7 @@ public class RewardManager : IRewardManager
         dbClient.RunQuery();
     }
 
-    public void CheckRewards(GameClient session)
+    public async Task CheckRewards(GameClient session)
     {
         if (session == null || session.GetHabbo() == null)
             return;
@@ -89,8 +93,8 @@ public class RewardManager : IRewardManager
                 {
                     case RewardType.Badge:
                     {
-                        if (!session.GetHabbo().GetBadgeComponent().HasBadge(reward.RewardData))
-                            session.GetHabbo().GetBadgeComponent().GiveBadge(reward.RewardData, true, session);
+                        if (!session.GetHabbo().Inventory.Badges.HasBadge(reward.RewardData))
+                            await _badgeManager.GiveBadge(session.GetHabbo(), reward.RewardData);
                         break;
                     }
                     case RewardType.Credits:

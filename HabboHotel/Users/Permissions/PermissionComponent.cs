@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Plus.HabboHotel.Users.Permissions;
 
@@ -13,24 +14,19 @@ public sealed class PermissionComponent
     /// </summary>
     private readonly List<string> _permissions;
 
-    public PermissionComponent()
+    public PermissionComponent(List<string> permissions, List<string> commands)
     {
-        _permissions = new List<string>();
-        _commands = new List<string>();
+        _permissions = permissions;
+        _commands = commands;
     }
 
     /// <summary>
     /// Initialize the PermissionComponent.
     /// </summary>
     /// <param name="habbo"></param>
+    [Obsolete]
     public bool Init(Habbo habbo)
     {
-        if (_permissions.Count > 0)
-            _permissions.Clear();
-        if (_commands.Count > 0)
-            _commands.Clear();
-        _permissions.AddRange(PlusEnvironment.GetGame().GetPermissionManager().GetPermissionsForPlayer(habbo));
-        _commands.AddRange(PlusEnvironment.GetGame().GetPermissionManager().GetCommandsForPlayer(habbo));
         return true;
     }
 

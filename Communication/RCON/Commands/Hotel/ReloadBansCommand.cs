@@ -1,4 +1,6 @@
-﻿namespace Plus.Communication.Rcon.Commands.Hotel;
+﻿using System.Threading.Tasks;
+
+namespace Plus.Communication.Rcon.Commands.Hotel;
 
 internal class ReloadBansCommand : IRconCommand
 {
@@ -7,9 +9,9 @@ internal class ReloadBansCommand : IRconCommand
     public string Key => "reload_bans";
     public string Parameters => "";
 
-    public bool TryExecute(string[] parameters)
+    public Task<bool> TryExecute(string[] parameters)
     {
         PlusEnvironment.GetGame().GetModerationManager().ReCacheBans();
-        return true;
+        return Task.FromResult(true);
     }
 }

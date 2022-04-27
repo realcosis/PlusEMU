@@ -1,4 +1,6 @@
-﻿namespace Plus.Communication.Rcon.Commands.Hotel;
+﻿using System.Threading.Tasks;
+
+namespace Plus.Communication.Rcon.Commands.Hotel;
 
 internal class ReloadItemsCommand : IRconCommand
 {
@@ -7,9 +9,9 @@ internal class ReloadItemsCommand : IRconCommand
     public string Key => "reload_items";
     public string Parameters => "";
 
-    public bool TryExecute(string[] parameters)
+    public Task<bool> TryExecute(string[] parameters)
     {
         PlusEnvironment.GetGame().GetItemManager().Init();
-        return true;
+        return Task.FromResult(true);
     }
 }

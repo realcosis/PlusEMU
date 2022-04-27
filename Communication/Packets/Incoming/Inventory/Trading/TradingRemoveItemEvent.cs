@@ -22,7 +22,7 @@ internal class TradingRemoveItemEvent : IPacketEvent
             session.SendPacket(new TradingClosedComposer(session.GetHabbo().Id));
             return Task.CompletedTask;
         }
-        var item = session.GetHabbo().GetInventoryComponent().GetItem(itemId);
+        var item = session.GetHabbo().Inventory.Furniture.GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
         if (!trade.CanChange)

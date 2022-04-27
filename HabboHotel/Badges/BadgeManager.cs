@@ -1,8 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
+using Dapper;
 using NLog;
+using Plus.Communication.Packets.Outgoing.Inventory.Badges;
+using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Database;
+using Plus.HabboHotel.Users;
+using Plus.HabboHotel.Users.Badges;
 
 namespace Plus.HabboHotel.Badges;
 
@@ -37,4 +44,41 @@ public class BadgeManager : IBadgeManager
     }
 
     public bool TryGetBadge(string code, out BadgeDefinition badge) => _badges.TryGetValue(code.ToUpper(), out badge);
+
+    public async Task GiveBadge(Habbo habbo, string code)
+    {
+        if (habbo.Inventory.Badges.HasBadge(code))
+            return;
+        BadgeDefinition badge = null;
+        if (!TryGetBadge(code.ToUpper(), out badge) || badge.RequiredRight.Length > 0 && !habbo.GetPermissions().HasRight(badge.RequiredRight))
+            return;
+
+        using var connection = _database.Connection();
+        await connection.ExecuteScalarAsync<int>("REPLACE INTO `user_badges` (`user_id`,`badge_id`,`badge_slot`) VALUES (@userId, @badge, '0');", new
+        {
+            userId = habbo.Id,
+            badge
+        });
+        habbo.Inventory.Badges.AddBadge(new Badge(code, 0));
+            habbo.GetClient().SendPacket(new BadgesComposer(habbo.GetClient()));
+            habbo.GetClient().SendPacket(new FurniListNotificationComposer(1, 4));
+    }
+
+    public async Task RemoveBadge(Habbo habbo, string badge)
+    {
+        if (!habbo.Inventory.Badges.HasBadge(badge)) return;
+        using var connection = _database.Connection();
+        await connection.ExecuteAsync("DELETE FROM user_badges WHERE badge_id = @badge AND user_id = @userId LIMIT 1", new
+        {
+            badge,
+            userId = habbo.Id
+        });
+        habbo.Inventory.Badges.RemoveBadge(badge);
+    }
+
+    public async Task<List<Badge>> LoadBadgesForHabbo(int userId)
+    {
+        using var connection = _database.Connection();
+        return (await connection.QueryAsync<Badge>("SELECT badge_id as code, badge_slot as slot FROM user_badges WHERE user_id = @userId", new { userId })).ToList();
+    }
 }

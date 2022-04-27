@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
 using Plus.Core.Settings;
 using Plus.HabboHotel.Achievements;
@@ -40,7 +41,7 @@ internal class PlaceObjectEvent : IPacketEvent
             session.SendPacket(new RoomNotificationComposer("furni_placement_error", "message", "${room.error.cant_set_not_owner}"));
             return Task.CompletedTask;
         }
-        var item = session.GetHabbo().GetInventoryComponent().GetItem(itemId);
+        var item = session.GetHabbo().Inventory.Furniture.GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
         if (room.GetRoomItemHandler().GetWallAndFloor.Count() > Convert.ToInt32(_settingsManager.TryGetValue("room.item.placement_limit")))
@@ -103,7 +104,8 @@ internal class PlaceObjectEvent : IPacketEvent
             var roomItem = new Item(item.Id, room.RoomId, item.BaseItem, item.ExtraData, x, y, 0, rotation, session.GetHabbo().Id, item.GroupId, item.LimitedNo, item.LimitedTot, string.Empty, room);
             if (room.GetRoomItemHandler().SetFloorItem(session, roomItem, x, y, rotation, true, false, true))
             {
-                session.GetHabbo().GetInventoryComponent().RemoveItem(itemId);
+                session.GetHabbo().Inventory.Furniture.RemoveItem(itemId);
+                session.SendPacket(new FurniListRemoveComposer(itemId));
                 if (session.GetHabbo().Id == room.OwnerId)
                     _achievementManager.ProgressAchievement(session, "ACH_RoomDecoFurniCount", 1);
                 if (roomItem.IsWired)
@@ -132,7 +134,8 @@ internal class PlaceObjectEvent : IPacketEvent
                     var roomItem = new Item(item.Id, room.RoomId, item.BaseItem, item.ExtraData, 0, 0, 0, 0, session.GetHabbo().Id, item.GroupId, item.LimitedNo, item.LimitedTot, wallPos, room);
                     if (room.GetRoomItemHandler().SetWallItem(session, roomItem))
                     {
-                        session.GetHabbo().GetInventoryComponent().RemoveItem(itemId);
+                        session.GetHabbo().Inventory.Furniture.RemoveItem(itemId);
+                        session.SendPacket(new FurniListRemoveComposer(itemId));
                         if (session.GetHabbo().Id == room.OwnerId)
                             _achievementManager.ProgressAchievement(session, "ACH_RoomDecoFurniCount", 1);
                     }

@@ -167,14 +167,14 @@ public class ConnectionInformation : IDisposable
             //The amount of bytes received in the packet
             bytesReceived = _dataSocket.EndReceive(iAr);
         }
-        catch //(Exception e)
+        catch (Exception)
         {
             Disconnect();
             return;
         }
         if (bytesReceived == 0)
         {
-            Disconnect();
+         //   Disconnect();
             return;
         }
         try

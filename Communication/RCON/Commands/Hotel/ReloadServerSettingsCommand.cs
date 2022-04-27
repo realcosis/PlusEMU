@@ -1,4 +1,6 @@
-﻿namespace Plus.Communication.Rcon.Commands.Hotel;
+﻿using System.Threading.Tasks;
+
+namespace Plus.Communication.Rcon.Commands.Hotel;
 
 internal class ReloadServerSettingsCommand : IRconCommand
 {
@@ -7,9 +9,9 @@ internal class ReloadServerSettingsCommand : IRconCommand
     public string Key => "reload_server_settings";
     public string Parameters => "";
 
-    public bool TryExecute(string[] parameters)
+    public Task<bool> TryExecute(string[] parameters)
     {
         PlusEnvironment.GetSettingsManager().Reload();
-        return true;
+        return Task.FromResult(true);
     }
 }

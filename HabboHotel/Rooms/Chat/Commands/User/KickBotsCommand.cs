@@ -42,9 +42,9 @@ internal class KickBotsCommand : IChatCommand
                 dbClient.AddParameter("id", user.BotData.Id);
                 dbClient.RunQuery();
             }
-            session.GetHabbo().GetInventoryComponent().TryAddBot(new Bot(Convert.ToInt32(botUser.BotData.Id), Convert.ToInt32(botUser.BotData.OwnerId), botUser.BotData.Name, botUser.BotData.Motto,
+            session.GetHabbo().Inventory.Bots.AddBot(new Bot(Convert.ToInt32(botUser.BotData.Id), Convert.ToInt32(botUser.BotData.OwnerId), botUser.BotData.Name, botUser.BotData.Motto,
                 botUser.BotData.Look, botUser.BotData.Gender));
-            session.SendPacket(new BotInventoryComposer(session.GetHabbo().GetInventoryComponent().GetBots()));
+            session.SendPacket(new BotInventoryComposer(session.GetHabbo().Inventory.Bots.Bots.Values.ToList()));
             room.GetRoomUserManager().RemoveBot(botUser.VirtualId, false);
         }
         session.SendWhisper("Success, removed all bots.");

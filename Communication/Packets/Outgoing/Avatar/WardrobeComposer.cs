@@ -5,8 +5,7 @@ namespace Plus.Communication.Packets.Outgoing.Avatar;
 
 internal class WardrobeComposer : ServerPacket
 {
-    public WardrobeComposer(int userId)
-        : base(ServerPacketHeader.WardrobeMessageComposer)
+    public WardrobeComposer(int userId) : base(ServerPacketHeader.WardrobeMessageComposer)
     {
         WriteInteger(1);
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();

@@ -21,7 +21,6 @@ using Plus.Database;
 using Plus.HabboHotel;
 using Plus.HabboHotel.Users;
 using Plus.HabboHotel.Users.UserData;
-using Plus.Utilities;
 
 namespace Plus;
 
@@ -215,6 +214,7 @@ public class PlusEnvironment : IPlusEnvironment
         return true;
     }
 
+    [Obsolete($"Use {nameof(IUserDataFactory.GetUsernameForHabboById)}")]
     public static string GetUsernameById(int userId)
     {
         var name = "Unknown User";
@@ -235,6 +235,7 @@ public class PlusEnvironment : IPlusEnvironment
         return name;
     }
 
+    [Obsolete]
     public static Habbo GetHabboById(int userId)
     {
         try
@@ -256,17 +257,17 @@ public class PlusEnvironment : IPlusEnvironment
                 {
                     if (_usersCached.ContainsKey(userId))
                         return _usersCached[userId];
-                    var data = UserDataFactory.GetUserData(userId);
-                    if (data != null)
-                    {
-                        var generated = data.User;
-                        if (generated != null)
-                        {
-                            generated.InitInformation(data);
-                            _usersCached.TryAdd(userId, generated);
-                            return generated;
-                        }
-                    }
+                    //var data = UserDataFactory.GetUserData(userId);
+                    //if (data != null)
+                    //{
+                    //    var generated = data.User;
+                    //    if (generated != null)
+                    //    {
+                    //        generated.InitInformation(data);
+                    //        _usersCached.TryAdd(userId, generated);
+                    //        return generated;
+                    //    }
+                    //}
                 }
                 catch
                 {

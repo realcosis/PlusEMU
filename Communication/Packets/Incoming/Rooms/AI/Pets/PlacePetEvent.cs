@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NLog;
 using Plus.Communication.Packets.Outgoing.Inventory.Pets;
@@ -40,9 +41,7 @@ internal class PlacePetEvent : IPacketEvent
             session.SendPacket(new RoomErrorNotifComposer(2)); //5 = I have too many.
             return Task.CompletedTask;
         }
-        if (!session.GetHabbo().GetInventoryComponent().TryGetPet(packet.PopInt(), out var pet))
-            return Task.CompletedTask;
-        if (pet == null)
+        if (!session.GetHabbo().Inventory.Pets.Pets.TryGetValue(packet.PopInt(), out var pet))
             return Task.CompletedTask;
         if (pet.PlacedInRoom)
         {
@@ -66,12 +65,8 @@ internal class PlacePetEvent : IPacketEvent
         room.GetRoomUserManager().DeployBot(roomBot, pet);
         pet.DbState = PetDatabaseUpdateState.NeedsUpdate;
         room.GetRoomUserManager().UpdatePets();
-        if (!session.GetHabbo().GetInventoryComponent().TryRemovePet(pet.PetId, out var toRemove))
-        {
-            Log.Error("Error whilst removing pet: " + toRemove.PetId);
-            return Task.CompletedTask;
-        }
-        session.SendPacket(new PetInventoryComposer(session.GetHabbo().GetInventoryComponent().GetPets()));
+        session.GetHabbo().Inventory.Pets.RemovePet(pet.PetId);
+        session.SendPacket(new PetInventoryComposer(session.GetHabbo().Inventory.Pets.Pets.Values.ToList()));
         return Task.CompletedTask;
     }
 }

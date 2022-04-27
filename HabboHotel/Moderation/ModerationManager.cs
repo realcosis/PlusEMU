@@ -287,7 +287,7 @@ public sealed class ModerationManager : IModerationManager
     /// </summary>
     /// <param name="machineId">The value of the ban.</param>
     /// <returns></returns>
-    public bool MachineBanCheck(string machineId)
+    public bool HasMachineBanCheck(string machineId)
     {
         ModerationBan machineBanRecord = null;
         if (IsBanned(machineId, out machineBanRecord))
@@ -304,8 +304,9 @@ public sealed class ModerationManager : IModerationManager
                 RemoveBan(machineId);
                 return false;
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
     /// <summary>
@@ -330,8 +331,9 @@ public sealed class ModerationManager : IModerationManager
                 RemoveBan(username);
                 return false;
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
     /// <summary>

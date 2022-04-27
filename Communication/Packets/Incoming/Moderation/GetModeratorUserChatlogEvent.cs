@@ -6,7 +6,6 @@ using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
-using Plus.HabboHotel.Rooms.Chat;
 using Plus.HabboHotel.Rooms.Chat.Logs;
 using Plus.Utilities;
 

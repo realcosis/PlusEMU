@@ -11,11 +11,11 @@ internal class RequestFurniInventoryEvent : IPacketEvent
 {
     public Task Parse(GameClient session, ClientPacket packet)
     {
-        var items = session.GetHabbo().GetInventoryComponent().GetWallAndFloor;
+        var items = session.GetHabbo().Inventory.Furniture.AllItems.ToList();
         var page = 0;
         var pages = (items.Count() - 1) / 700 + 1;
         if (!items.Any())
-            session.SendPacket(new FurniListComposer(items.ToList(), 1, 0));
+            session.SendPacket(new FurniListComposer(items.ToList(), 1, 1));
         else
         {
             foreach (ICollection<Item> batch in items.Chunk(700))

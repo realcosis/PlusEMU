@@ -1,12 +1,6 @@
-# PlusEMU
-Continuing to work on Plus Emulator, on and off.
+# PlusEMU++
+Community continuation of PlusEMU By Sledmore (et al)
 
-This is technically revision 3, I am working from Revision #2. SQLs etc, should all be uptodate. The goals of this project are as follows:
+Focus is mostly on improving the code quality & emulator architecture so that implemented new features will be easy.
 
-* Basic refactor (correcting naming conventions).
-* Improve the complexity in methods.
-* Improve emulator code.
-* Keep the emulator up to date.
-* Finish missing features.
-
-Lots of work to be done, mostly will be refactoring for a while.
+Want to join the discussion? Head over to https://arcturus.pw

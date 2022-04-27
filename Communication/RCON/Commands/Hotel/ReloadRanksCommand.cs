@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 
 namespace Plus.Communication.Rcon.Commands.Hotel;
 
@@ -9,7 +10,7 @@ internal class ReloadRanksCommand : IRconCommand
     public string Key => "reload_ranks";
     public string Parameters => "";
 
-    public bool TryExecute(string[] parameters)
+    public Task<bool> TryExecute(string[] parameters)
     {
         PlusEnvironment.GetGame().GetPermissionManager().Init();
         foreach (var client in PlusEnvironment.GetGame().GetClientManager().GetClients.ToList())
@@ -18,6 +19,6 @@ internal class ReloadRanksCommand : IRconCommand
                 continue;
             client.GetHabbo().GetPermissions().Init(client.GetHabbo());
         }
-        return true;
+        return Task.FromResult(true);
     }
 }

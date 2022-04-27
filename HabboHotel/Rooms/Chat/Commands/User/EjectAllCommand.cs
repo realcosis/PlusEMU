@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
@@ -36,8 +37,8 @@ internal class EjectAllCommand : IChatCommand
                 if (targetClient != null && targetClient.GetHabbo() != null)
                 {
                     room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
-                    targetClient.GetHabbo().GetInventoryComponent().AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
-                    targetClient.GetHabbo().GetInventoryComponent().UpdateItems(false);
+                    targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
+                    targetClient.SendPacket(new FurniListUpdateComposer());
                 }
                 else
                 {
@@ -57,8 +58,8 @@ internal class EjectAllCommand : IChatCommand
                 if (targetClient != null && targetClient.GetHabbo() != null)
                 {
                     room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
-                    targetClient.GetHabbo().GetInventoryComponent().AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
-                    targetClient.GetHabbo().GetInventoryComponent().UpdateItems(false);
+                    targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
+                    targetClient.SendPacket(new FurniListUpdateComposer());
                 }
                 else
                 {

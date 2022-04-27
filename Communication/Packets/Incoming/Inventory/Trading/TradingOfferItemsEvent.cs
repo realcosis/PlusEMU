@@ -29,7 +29,7 @@ internal class TradingOfferItemsEvent : IPacketEvent
             session.SendPacket(new TradingClosedComposer(session.GetHabbo().Id));
             return Task.CompletedTask;
         }
-        var item = session.GetHabbo().GetInventoryComponent().GetItem(itemId);
+        var item = session.GetHabbo().Inventory.Furniture.GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
         if (!trade.CanChange)
@@ -37,7 +37,7 @@ internal class TradingOfferItemsEvent : IPacketEvent
         var tradeUser = trade.Users[0];
         if (tradeUser.RoomUser != roomUser)
             tradeUser = trade.Users[1];
-        var allItems = session.GetHabbo().GetInventoryComponent().GetItems.Where(x => x.Data.Id == item.Data.Id).Take(amount).ToList();
+        var allItems = session.GetHabbo().Inventory.Furniture.AllItems.Where(x => x.Data.Id == item.Data.Id).Take(amount).ToList();
         foreach (var I in allItems)
         {
             if (tradeUser.OfferedItems.ContainsKey(I.Id))

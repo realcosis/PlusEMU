@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Plus.HabboHotel.Badges;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
@@ -6,6 +7,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 internal class MassBadgeCommand : IChatCommand
 {
     private readonly IGameClientManager _gameClientManager;
+    private readonly IBadgeManager _badgeManager;
     public string Key => "massbadge";
     public string PermissionRequired => "command_mass_badge";
 
@@ -13,9 +15,10 @@ internal class MassBadgeCommand : IChatCommand
 
     public string Description => "Give a badge to the entire hotel.";
 
-    public MassBadgeCommand(IGameClientManager gameClientManager)
+    public MassBadgeCommand(IGameClientManager gameClientManager, IBadgeManager badgeManager)
     {
         _gameClientManager = gameClientManager;
+        _badgeManager = badgeManager;
     }
 
     public void Execute(GameClient session, Room room, string[] @params)
@@ -29,9 +32,9 @@ internal class MassBadgeCommand : IChatCommand
         {
             if (client == null || client.GetHabbo() == null || client.GetHabbo().Username == session.GetHabbo().Username)
                 continue;
-            if (!client.GetHabbo().GetBadgeComponent().HasBadge(@params[1]))
+            if (!client.GetHabbo().Inventory.Badges.HasBadge(@params[1]))
             {
-                client.GetHabbo().GetBadgeComponent().GiveBadge(@params[1], true, client);
+                _badgeManager.GiveBadge(client.GetHabbo(), @params[1]).Wait();
                 client.SendNotification("You have just been given a badge!");
             }
             else

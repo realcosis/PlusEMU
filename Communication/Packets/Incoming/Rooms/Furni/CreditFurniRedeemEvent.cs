@@ -54,7 +54,8 @@ internal class CreditFurniRedeemEvent : IPacketEvent
         }
         session.SendPacket(new FurniListUpdateComposer());
         room.GetRoomItemHandler().RemoveFurniture(null, exchange.Id);
-        session.GetHabbo().GetInventoryComponent().RemoveItem(exchange.Id);
+        session.GetHabbo().Inventory.Furniture.RemoveItem(exchange.Id);
+        session.SendPacket(new FurniListRemoveComposer(exchange.Id));
         return Task.CompletedTask;
     }
 }

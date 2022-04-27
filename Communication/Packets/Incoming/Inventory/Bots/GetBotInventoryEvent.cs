@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Plus.Communication.Packets.Outgoing.Inventory.Bots;
 using Plus.HabboHotel.GameClients;
 
@@ -8,9 +9,9 @@ internal class GetBotInventoryEvent : IPacketEvent
 {
     public Task Parse(GameClient session, ClientPacket packet)
     {
-        if (session.GetHabbo().GetInventoryComponent() == null)
+        if (session.GetHabbo().Inventory == null)
             return Task.CompletedTask;
-        var bots = session.GetHabbo().GetInventoryComponent().GetBots();
+        var bots = session.GetHabbo().Inventory.Bots.Bots.Values.ToList();
         session.SendPacket(new BotInventoryComposer(bots));
         return Task.CompletedTask;
     }

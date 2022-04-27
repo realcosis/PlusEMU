@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
@@ -50,8 +51,8 @@ internal class DeleteRoomEvent : IPacketEvent
             if (targetClient != null && targetClient.GetHabbo() != null) //Again, do we have an active client?
             {
                 room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
-                targetClient.GetHabbo().GetInventoryComponent().AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
-                targetClient.GetHabbo().GetInventoryComponent().UpdateItems(false);
+                targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
+                targetClient.SendPacket(new FurniListUpdateComposer());
             }
             else //No, query time.
             {

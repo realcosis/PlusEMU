@@ -51,11 +51,12 @@ internal class GiveUserBadgeBox : IWiredItem
             return false;
         if (string.IsNullOrEmpty(StringData))
             return false;
-        if (player.GetBadgeComponent().HasBadge(StringData))
+        if (player.Inventory.Badges.HasBadge(StringData))
             player.GetClient().SendPacket(new WhisperComposer(user.VirtualId, "Oops, it appears you have already recieved this badge!", 0, user.LastBubble));
         else
         {
-            player.GetBadgeComponent().GiveBadge(StringData, true, player.GetClient());
+            //player.Inventory.Badges.GiveBadge(StringData, true, player.GetClient());
+            // TODO: 80O Inject BadgeManager
             player.GetClient().SendNotification("You have recieved a badge!");
         }
         return true;

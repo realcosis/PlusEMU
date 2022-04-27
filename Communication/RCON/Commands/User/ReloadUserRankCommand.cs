@@ -1,4 +1,5 @@
-﻿using Plus.Communication.Packets.Outgoing.Moderation;
+﻿using System.Threading.Tasks;
+using Plus.Communication.Packets.Outgoing.Moderation;
 
 namespace Plus.Communication.Rcon.Commands.User;
 
@@ -9,13 +10,13 @@ internal class ReloadUserRankCommand : IRconCommand
     public string Key => "reload_user_rank";
     public string Parameters => "%userId%";
 
-    public bool TryExecute(string[] parameters)
+    public Task<bool> TryExecute(string[] parameters)
     {
         if (!int.TryParse(parameters[0], out var userId))
-            return false;
+            return Task.FromResult(false);
         var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userId);
         if (client == null || client.GetHabbo() == null)
-            return false;
+            return Task.FromResult(false);
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `rank` FROM `users` WHERE `id` = @userId LIMIT 1");
@@ -30,6 +31,6 @@ internal class ReloadUserRankCommand : IRconCommand
                 PlusEnvironment.GetGame().GetModerationManager().RoomMessagePresets,
                 PlusEnvironment.GetGame().GetModerationManager().GetTickets));
         }
-        return true;
+        return Task.FromResult(true);
     }
 }

@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
+using Dapper;
 using NLog;
 using Plus.Database;
+using Plus.HabboHotel.Users.Navigator.SavedSearches;
 
 namespace Plus.HabboHotel.Navigator;
 
@@ -128,4 +131,14 @@ public sealed class NavigatorManager : INavigatorManager
     public bool TryGetFeaturedRoom(int roomId, out FeaturedRoom publicRoom) => _featuredRooms.TryGetValue(roomId, out publicRoom);
 
     public ICollection<FeaturedRoom> GetFeaturedRooms() => _featuredRooms.Values;
+
+    public async Task<Dictionary<int, SavedSearch>> LoadUserNavigatorPreferences(int userId)
+    {
+        using var connection = _database.Connection();
+        return (await connection.QueryAsync<SavedSearch>("SELECT `id`,`filter`,`search_code` as search FROM `user_saved_searches` WHERE `user_id` = @userId",
+            new
+            {
+                userId
+            })).ToDictionary(search => search.Id);
+    }
 }

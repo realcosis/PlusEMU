@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Plus.Communication.Packets.Outgoing.Inventory.Pets;
 using Plus.HabboHotel.GameClients;
 
@@ -8,9 +9,9 @@ internal class GetPetInventoryEvent : IPacketEvent
 {
     public Task Parse(GameClient session, ClientPacket packet)
     {
-        if (session.GetHabbo().GetInventoryComponent() == null)
+        if (session.GetHabbo().Inventory == null)
             return Task.CompletedTask;
-        var pets = session.GetHabbo().GetInventoryComponent().GetPets();
+        var pets = session.GetHabbo().Inventory.Pets.Pets.Values.ToList();
         session.SendPacket(new PetInventoryComposer(pets));
         return Task.CompletedTask;
     }

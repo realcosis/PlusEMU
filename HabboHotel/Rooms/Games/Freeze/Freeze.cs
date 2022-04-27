@@ -8,7 +8,6 @@ using Plus.Communication.Packets.Outgoing.Rooms.Freeze;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Items.Wired;
 using Plus.HabboHotel.Rooms.Games.Teams;
-using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.Games.Freeze;
 
