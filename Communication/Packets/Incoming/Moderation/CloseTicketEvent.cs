@@ -3,6 +3,7 @@ using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Moderation;
 
@@ -34,8 +35,9 @@ internal class CloseTicketEvent : IPacketEvent
         if (client != null) client.SendPacket(new ModeratorSupportTicketResponseComposer(result));
         if (result == 2)
         {
-            using var dbClient = _database.GetQueryReactor();
-            dbClient.RunQuery("UPDATE `user_info` SET `cfhs_abusive` = `cfhs_abusive` + 1 WHERE `user_id` = '" + ticket.Sender.Id + "' LIMIT 1");
+            using var connection = _database.Connection();
+            connection.Execute("UPDATE `user_info` SET `cfhs_abusive` = `cfhs_abusive` + 1 WHERE `user_id` = @senderId LIMIT 1",
+                new { senderId = ticket.Sender.Id });
         }
         ticket.Answered = true;
         _clientManager.SendPacket(new ModeratorSupportTicketComposer(session.GetHabbo().Id, ticket), "mod_tool");
