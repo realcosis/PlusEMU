@@ -12,9 +12,9 @@ internal class BuddyRequestsComposer : ServerPacket
         WriteInteger(requests.Count);
         foreach (var request in requests)
         {
-            WriteInteger(request.From);
+            WriteInteger(request.FromId);
             WriteString(request.Username);
-            var user = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(request.From);
+            var user = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(request.FromId);
             WriteString(user != null ? user.Look : "");
         }
     }

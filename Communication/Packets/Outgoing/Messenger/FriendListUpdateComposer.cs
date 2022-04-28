@@ -22,22 +22,22 @@ internal class FriendListUpdateComposer : ServerPacket
         WriteInteger(0); //Category Count
         WriteInteger(1); //Updates Count
         WriteInteger(0); //Update
-        var relationship = session.GetHabbo().Relationships.FirstOrDefault(x => x.Value.UserId == Convert.ToInt32(buddy.UserId)).Value;
+        var relationship = session.GetHabbo().Relationships.FirstOrDefault(x => x.Value.UserId == Convert.ToInt32(buddy.Id)).Value;
         var y = relationship?.Type ?? 0;
-        WriteInteger(buddy.UserId);
-        WriteString(buddy.MUsername);
+        WriteInteger(buddy.Id);
+        WriteString(buddy.Username);
         WriteInteger(1);
-        if (!buddy.MAppearOffline || session.GetHabbo().GetPermissions().HasRight("mod_tool"))
+        if (!buddy.AppearOffline || session.GetHabbo().GetPermissions().HasRight("mod_tool"))
             WriteBoolean(buddy.IsOnline);
         else
             WriteBoolean(false);
-        if (!buddy.MHideInroom || session.GetHabbo().GetPermissions().HasRight("mod_tool"))
+        if (!buddy.HideInRoom || session.GetHabbo().GetPermissions().HasRight("mod_tool"))
             WriteBoolean(buddy.InRoom);
         else
             WriteBoolean(false);
         WriteString(""); //Habbo.IsOnline ? Habbo.Look : "");
         WriteInteger(0); // categoryid
-        WriteString(buddy.MMotto);
+        WriteString(buddy.Motto);
         WriteString(string.Empty); // Facebook username
         WriteString(string.Empty);
         WriteBoolean(true); // Allows offline messaging

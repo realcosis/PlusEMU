@@ -165,13 +165,17 @@ public class HabboMessenger
                 dbClient.AddParameter("friendid", friendId);
                 dRow = dbClient.GetRow();
             }
-            newFriend = new MessengerBuddy(friendId, Convert.ToString(dRow["username"]), Convert.ToString(dRow["look"]), Convert.ToString(dRow["motto"]), Convert.ToInt32(dRow["last_online"]),
-                ConvertExtensions.EnumToBool(dRow["hide_online"].ToString()), ConvertExtensions.EnumToBool(dRow["hide_inroom"].ToString()));
+            newFriend = new MessengerBuddy
+            {
+                Id = friendId, Username = Convert.ToString(dRow["username"]), Look = Convert.ToString(dRow["look"]), Motto = Convert.ToString(dRow["motto"]),
+                LastOnline = Convert.ToInt32(dRow["last_online"]), AppearOffline = ConvertExtensions.EnumToBool(dRow["hide_online"].ToString()),
+                HideInRoom = ConvertExtensions.EnumToBool(dRow["hide_inroom"].ToString())
+            };
         }
         else
         {
             var user = friend.GetHabbo();
-            newFriend = new MessengerBuddy(friendId, user.Username, user.Look, user.Motto, 0, user.AppearOffline, user.AllowPublicRoomStatus);
+            newFriend = new MessengerBuddy { Id = friendId, Username = user.Username, Look = user.Look, Motto = user.Motto, LastOnline = 0, AppearOffline = user.AppearOffline, HideInRoom = user.AllowPublicRoomStatus };
             newFriend.UpdateUser(friend);
         }
         if (!_friends.ContainsKey(friendId))
@@ -240,7 +244,7 @@ public class HabboMessenger
         var toUser = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(toId);
         if (toUser == null || toUser.GetHabbo() == null)
             return true;
-        var request = new MessengerRequest(toId, _userId, PlusEnvironment.GetGame().GetClientManager().GetNameById(_userId));
+        var request = new MessengerRequest { ToId = toId, FromId = _userId, Username =PlusEnvironment.GetGame().GetClientManager().GetNameById(_userId)};
         toUser.GetHabbo().GetMessenger().OnNewRequest(_userId);
         var thisUser = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(_userId);
         if (thisUser != null)
@@ -252,7 +256,7 @@ public class HabboMessenger
     public void OnNewRequest(int friendId)
     {
         if (!_requests.ContainsKey(friendId))
-            _requests.Add(friendId, new MessengerRequest(_userId, friendId, PlusEnvironment.GetGame().GetClientManager().GetNameById(friendId)));
+            _requests.Add(friendId, new MessengerRequest { ToId = _userId, FromId = friendId, Username = PlusEnvironment.GetGame().GetClientManager().GetNameById(friendId)});
     }
 
     public void SendInstantMessage(int toId, string message)

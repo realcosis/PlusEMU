@@ -17,10 +17,10 @@ internal class AcceptBuddyEvent : IPacketEvent
             var requestId = packet.PopInt();
             if (!session.GetHabbo().GetMessenger().TryGetRequest(requestId, out var request))
                 continue;
-            if (request.To != session.GetHabbo().Id)
+            if (request.ToId != session.GetHabbo().Id)
                 return Task.CompletedTask;
-            if (!session.GetHabbo().GetMessenger().FriendshipExists(request.To))
-                session.GetHabbo().GetMessenger().CreateFriendship(request.From);
+            if (!session.GetHabbo().GetMessenger().FriendshipExists(request.ToId))
+                session.GetHabbo().GetMessenger().CreateFriendship(request.FromId);
             session.GetHabbo().GetMessenger().HandleRequest(requestId);
         }
         return Task.CompletedTask;

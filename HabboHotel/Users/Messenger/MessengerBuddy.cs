@@ -10,27 +10,14 @@ namespace Plus.HabboHotel.Users.Messenger;
 public class MessengerBuddy
 {
     public GameClient? Client;
-    public bool MAppearOffline;
-    public bool MHideInroom;
-    public int MLastOnline;
-    public string MLook;
-    public string MMotto;
-    public string MUsername;
-    public int UserId;
+    public bool AppearOffline { get; set; }
+    public bool HideInRoom { get; set; }
+    public int LastOnline { get; set; }
+    public string Look { get; set; }
+    public string Motto { get; set; }
+    public string Username { get; set; }
 
-    public MessengerBuddy(int userId, string username, string look, string motto, int pLastOnline,
-        bool pAppearOffline, bool pHideInroom)
-    {
-        UserId = userId;
-        MUsername = username;
-        MLook = look;
-        MMotto = motto;
-        MLastOnline = pLastOnline;
-        MAppearOffline = pAppearOffline;
-        MHideInroom = pHideInroom;
-    }
-
-    public int Id => UserId;
+    public int Id { get; set; }
 
     public bool IsOnline =>
         Client != null && Client.GetHabbo() != null && Client.GetHabbo().GetMessenger() != null &&
@@ -51,16 +38,16 @@ public class MessengerBuddy
     {
         Relationship relationship = null;
         if (session.GetHabbo() != null && session.GetHabbo().Relationships != null)
-            relationship = session.GetHabbo().Relationships.FirstOrDefault(x => x.Value.UserId == Convert.ToInt32(UserId)).Value;
+            relationship = session.GetHabbo().Relationships.FirstOrDefault(x => x.Value.UserId == Convert.ToInt32(Id)).Value;
         var y = relationship?.Type ?? 0;
-        message.WriteInteger(UserId);
-        message.WriteString(MUsername);
+        message.WriteInteger(Id);
+        message.WriteString(Username);
         message.WriteInteger(1);
-        message.WriteBoolean(!MAppearOffline || session.GetHabbo().GetPermissions().HasRight("mod_tool") ? IsOnline : false);
-        message.WriteBoolean(!MHideInroom || session.GetHabbo().GetPermissions().HasRight("mod_tool") ? InRoom : false);
-        message.WriteString(IsOnline ? MLook : "");
+        message.WriteBoolean(!AppearOffline || session.GetHabbo().GetPermissions().HasRight("mod_tool") ? IsOnline : false);
+        message.WriteBoolean(!HideInRoom || session.GetHabbo().GetPermissions().HasRight("mod_tool") ? InRoom : false);
+        message.WriteString(IsOnline ? Look : "");
         message.WriteInteger(0); // categoryid
-        message.WriteString(MMotto);
+        message.WriteString(Motto);
         message.WriteString(string.Empty); // Facebook username
         message.WriteString(string.Empty);
         message.WriteBoolean(true); // Allows offline messaging

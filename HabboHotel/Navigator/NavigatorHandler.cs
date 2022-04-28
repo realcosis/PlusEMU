@@ -181,7 +181,7 @@ internal static class NavigatorHandler
                     return;
                 foreach (var buddy in session.GetHabbo().GetMessenger().GetFriends().Where(p => p.InRoom))
                 {
-                    if (buddy == null || !buddy.InRoom || buddy.UserId == session.GetHabbo().Id)
+                    if (buddy == null || !buddy.InRoom || buddy.Id == session.GetHabbo().Id)
                         continue;
                     if (!roomIds.Contains(buddy.CurrentRoom.Id))
                         roomIds.Add(buddy.CurrentRoom.Id);

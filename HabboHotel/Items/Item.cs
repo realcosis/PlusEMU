@@ -16,11 +16,11 @@ namespace Plus.HabboHotel.Items;
 
 public class Item
 {
-    private Room _room;
+    private Room? _room;
     private bool _updateNeeded;
     public int BaseItem;
-    public string ExtraData;
-    public string Figure;
+    public string ExtraData = string.Empty;
+    public string Figure = string.Empty;
     public FreezePowerUp FreezePowerUp;
     public string Gender;
     public int GroupId;
@@ -40,11 +40,11 @@ public class Item
     public Team Team;
     public int UpdateCounter;
     public int UserId;
-    public string Username;
+    public string Username = string.Empty;
 
 
     public int Value;
-    public string WallCoord;
+    public string WallCoord = string.Empty;
 
     public Item(int id, int roomId, int baseItem, string extraData, int x, int y, double z, int rot, int userid, int group, int limitedNumber, int limitedStack, string wallCoord, Room room = null)
     {

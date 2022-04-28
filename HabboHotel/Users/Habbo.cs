@@ -303,14 +303,13 @@ public class Habbo
         return _ignores.Init(this);
     }
 
+    [Obsolete("Each loading task should be moved to their own IUserDataLoadingTask")]
     public void Init(GameClient client)
     {
         // Move each of these loading tasks to their own IUserDataLoadingTask implementation.
         //foreach (var id in data.FavouritedRooms) FavoriteRooms.Add(id);
         _client = client;
         //Quests = data.Quests;
-        _messenger = new(Id);
-        _messenger.Init(new Dictionary<int, MessengerBuddy>(), new Dictionary<int, MessengerRequest>());
         _disconnected = false;
         InitFx();
         InitClothing();
@@ -566,5 +565,10 @@ public class Habbo
     public void SetPermissions(PermissionComponent permissions)
     {
         _permissions = permissions;
+    }
+
+    public void SetMessenger(HabboMessenger messenger)
+    {
+        _messenger = messenger;
     }
 }

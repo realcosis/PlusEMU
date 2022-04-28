@@ -52,7 +52,7 @@ namespace Plus.HabboHotel.Users.Authentication
 
             session.SetHabbo(habbo);
 
-            // TODO: Remove after splitting up
+            // TODO: 80O: Remove after splitting up
             habbo.Init(session);
             _gameClientManager.RegisterClient(session, habbo.Id, habbo.Username);
             await RaiseHabboLoggedIn(habbo);

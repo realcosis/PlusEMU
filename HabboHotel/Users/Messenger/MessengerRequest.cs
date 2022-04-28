@@ -2,16 +2,9 @@
 
 public class MessengerRequest
 {
-    public MessengerRequest(int toUser, int fromUser, string username)
-    {
-        To = toUser;
-        From = fromUser;
-        Username = username;
-    }
+    public string Username { get; set; }
 
-    public string Username { get; }
+    public int ToId { get; set; }
 
-    public int To { get; }
-
-    public int From { get; }
+    public int FromId { get; set; }
 }
