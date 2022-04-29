@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Plus.HabboHotel.Users;
 
 namespace Plus.HabboHotel.Catalog.Marketplace;
 
@@ -13,4 +15,6 @@ public interface IMarketplaceManager
     double FormatTimestamp();
     int OfferCountForSprite(int spriteId);
     int CalculateComissionPrice(float price);
+
+    Task<bool> TryCancelOffer(Habbo habbo, int offerId);
 }

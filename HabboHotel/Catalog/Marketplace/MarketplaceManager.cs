@@ -1,16 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
+using Plus.Communication.Packets.Outgoing.Inventory.Furni;
+using Plus.Database;
+using Plus.HabboHotel.Items;
+using Plus.HabboHotel.Users;
 using Plus.Utilities;
 
 namespace Plus.HabboHotel.Catalog.Marketplace;
 
 public class MarketplaceManager : IMarketplaceManager
 {
+    private readonly IDatabase _database;
+    private readonly IItemDataManager _itemDataManager;
     public Dictionary<int, int> MarketAverages { get; } = new();
     public Dictionary<int, int> MarketCounts { get; } = new();
     public List<int> MarketItemKeys { get; } = new();
     public List<MarketOffer> MarketItems { get; } = new();
 
+    public MarketplaceManager(IDatabase database, IItemDataManager itemDataManager)
+    {
+        _database = database;
+        _itemDataManager = itemDataManager;
+    }
     public int AvgPriceForSprite(int spriteId)
     {
         var num = 0;
@@ -69,4 +82,43 @@ public class MarketplaceManager : IMarketplaceManager
     }
 
     public int CalculateComissionPrice(float price) => Convert.ToInt32(Math.Ceiling(price / 100 * 1));
+
+    public Task<bool> TryCancelOffer(Habbo habbo, int offerId)
+    {
+        DataRow row;
+        using (var dbClient = _database.GetQueryReactor())
+        {
+            dbClient.SetQuery(
+                "SELECT `furni_id`, `item_id`, `user_id`, `extra_data`, `offer_id`, `state`, `timestamp`, `limited_number`, `limited_stack` FROM `catalog_marketplace_offers` WHERE `offer_id` = @OfferId LIMIT 1");
+            dbClient.AddParameter("OfferId", offerId);
+            row = dbClient.GetRow();
+        }
+
+        if (row == null)
+        {
+            return Task.FromResult(false);
+        }
+        if (Convert.ToInt32(row["user_id"]) != habbo.Id)
+        {
+            return Task.FromResult(false);
+        }
+        if (!_itemDataManager.GetItem(Convert.ToInt32(row["item_id"]), out var item))
+        {
+            return Task.FromResult(false);
+        }
+
+        //PlusEnvironment.GetGame().GetCatalog().DeliverItems(Session, Item, 1, Convert.ToString(Row["extra_data"]), Convert.ToInt32(Row["limited_number"]), Convert.ToInt32(Row["limited_stack"]), Convert.ToInt32(Row["furni_id"]));
+        var giveItem = ItemFactory.CreateSingleItem(item, habbo, Convert.ToString(row["extra_data"]), Convert.ToString(row["extra_data"]), Convert.ToInt32(row["furni_id"]),
+            Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]));
+        habbo.GetClient().SendPacket(new FurniListNotificationComposer(giveItem.Id, 1));
+        habbo.GetClient().SendPacket(new FurniListUpdateComposer());
+        using (var dbClient = _database.GetQueryReactor())
+        {
+            dbClient.SetQuery("DELETE FROM `catalog_marketplace_offers` WHERE `offer_id` = @OfferId AND `user_id` = @UserId LIMIT 1");
+            dbClient.AddParameter("OfferId", offerId);
+            dbClient.AddParameter("UserId", habbo.Id);
+            dbClient.RunQuery();
+        }
+        return Task.FromResult(true);
+    }
 }
