@@ -21,7 +21,7 @@ internal class CancelOfferEvent : IPacketEvent
     public async Task Parse(GameClient session, ClientPacket packet)
     {
         var offerId = packet.PopInt();
-        var success = await _marketplaceManager.TryCancelOffer(session.GetHabbo().Id, offerId);
+        var success = await _marketplaceManager.TryCancelOffer(session.GetHabbo(), offerId);
         session.SendPacket(new MarketplaceCancelOfferResultComposer(offerId, success));
     }
 }
