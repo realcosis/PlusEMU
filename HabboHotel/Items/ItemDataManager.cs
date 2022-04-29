@@ -74,11 +74,19 @@ public class ItemDataManager : IItemDataManager
         Log.Info("Item Manager -> LOADED");
     }
 
+    [Obsolete("Cannot use this in an async context!")]
     public bool GetItem(int id, out ItemData item)
     {
         if (Items.TryGetValue(id, out item))
             return true;
         return false;
+    }
+
+    public ItemData? GetItemData(int id)
+    {
+        if (Items.TryGetValue(id, out var item))
+            return item;
+        return null;
     }
 
     public ItemData GetItemByName(string name)

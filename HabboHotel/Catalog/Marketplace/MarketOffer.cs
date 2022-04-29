@@ -12,10 +12,18 @@ public class MarketOffer
         LimitedStack = limitedStack;
     }
 
-    public int OfferId { get; }
-    public int ItemType { get; }
-    public int SpriteId { get; }
-    public int TotalPrice { get; }
-    public int LimitedNumber { get; }
-    public int LimitedStack { get; }
+    public MarketOffer()
+    {
+    }
+
+    public int OfferId { get; set;  }
+    public int ItemType { get; set; }
+    public int SpriteId { get; set; }
+    public int TotalPrice { get; set; }
+    public int LimitedNumber { get; set; }
+    public int LimitedStack { get; set; }
+    public int ItemId { get; set; }
+    public int UserId { get; set; }
+    public string ExtraData { get; set; } = string.Empty;
+    public int FurniId { get; set; }
 }

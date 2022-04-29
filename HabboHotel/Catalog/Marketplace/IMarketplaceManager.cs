@@ -17,4 +17,6 @@ public interface IMarketplaceManager
     int CalculateComissionPrice(float price);
 
     Task<bool> TryCancelOffer(Habbo habbo, int offerId);
+    Task<MarketOffer?> GetOffer(int offerId);
+    Task DeleteOffer(int offerId);
 }

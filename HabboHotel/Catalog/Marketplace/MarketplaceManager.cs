@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using Dapper;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Database;
 using Plus.HabboHotel.Items;
@@ -83,42 +84,32 @@ public class MarketplaceManager : IMarketplaceManager
 
     public int CalculateComissionPrice(float price) => Convert.ToInt32(Math.Ceiling(price / 100 * 1));
 
-    public Task<bool> TryCancelOffer(Habbo habbo, int offerId)
+    public async Task<bool> TryCancelOffer(Habbo habbo, int offerId)
     {
-        DataRow row;
-        using (var dbClient = _database.GetQueryReactor())
-        {
-            dbClient.SetQuery(
-                "SELECT `furni_id`, `item_id`, `user_id`, `extra_data`, `offer_id`, `state`, `timestamp`, `limited_number`, `limited_stack` FROM `catalog_marketplace_offers` WHERE `offer_id` = @OfferId LIMIT 1");
-            dbClient.AddParameter("OfferId", offerId);
-            row = dbClient.GetRow();
-        }
+        var offer = await GetOffer(offerId);
+        if (offer?.UserId != habbo.Id) return false;
 
-        if (row == null)
-        {
-            return Task.FromResult(false);
-        }
-        if (Convert.ToInt32(row["user_id"]) != habbo.Id)
-        {
-            return Task.FromResult(false);
-        }
-        if (!_itemDataManager.GetItem(Convert.ToInt32(row["item_id"]), out var item))
-        {
-            return Task.FromResult(false);
-        }
+        var item = _itemDataManager.GetItemData(offer.ItemId);
+        if (item == null) return false;
 
-        //PlusEnvironment.GetGame().GetCatalog().DeliverItems(Session, Item, 1, Convert.ToString(Row["extra_data"]), Convert.ToInt32(Row["limited_number"]), Convert.ToInt32(Row["limited_stack"]), Convert.ToInt32(Row["furni_id"]));
-        var giveItem = ItemFactory.CreateSingleItem(item, habbo, Convert.ToString(row["extra_data"]), Convert.ToString(row["extra_data"]), Convert.ToInt32(row["furni_id"]),
-            Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]));
+        var giveItem = ItemFactory.CreateSingleItem(item, habbo, offer.ExtraData, offer.ExtraData, offer.FurniId,offer.LimitedNumber, offer.LimitedStack);
         habbo.GetClient().SendPacket(new FurniListNotificationComposer(giveItem.Id, 1));
         habbo.GetClient().SendPacket(new FurniListUpdateComposer());
-        using (var dbClient = _database.GetQueryReactor())
-        {
-            dbClient.SetQuery("DELETE FROM `catalog_marketplace_offers` WHERE `offer_id` = @OfferId AND `user_id` = @UserId LIMIT 1");
-            dbClient.AddParameter("OfferId", offerId);
-            dbClient.AddParameter("UserId", habbo.Id);
-            dbClient.RunQuery();
-        }
-        return Task.FromResult(true);
+        await DeleteOffer(offerId);
+        return true;
+    }
+
+    public async Task<MarketOffer?> GetOffer(int offerId)
+    {
+        using var connection = _database.Connection();
+        return await connection.QuerySingleOrDefaultAsync<MarketOffer>(
+            "SELECT `furni_id`, `sprite_id`, `item_id`, `user_id`, `extra_data`, `offer_id`, `state`, `timestamp`, `limited_number`, `limited_stack` FROM `catalog_marketplace_offers` WHERE `offer_id` = @offerId LIMIT 1",
+            new { offerId });
+    }
+
+    public async Task DeleteOffer(int offerId)
+    {
+        using var connection = _database.Connection();
+        await connection.ExecuteAsync("DELETE FROM `catalog_marketplace_offers` WHERE `offer_id` = @offerId LIMIT 1", new { offerId });
     }
 }
