@@ -1,4 +1,5 @@
 ﻿using System;
+using NLog;
 using Plus.Communication;
 using Plus.Communication.ConnectionManager;
 using Plus.Communication.Encryption.Crypto.Prng;
@@ -13,6 +14,7 @@ namespace Plus.HabboHotel.GameClients;
 
 public class GameClient
 {
+    private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.GameClients.GameClient");
     private ConnectionInformation _connection;
     private bool _disconnected;
     private Habbo? _habbo;
@@ -84,7 +86,13 @@ public class GameClient
 
     public void SendNotification(string message) => SendPacket(new BroadcastMessageAlertComposer(message));
 
-    public void SendPacket(IServerPacket message) => GetConnection().SendData(message.GetBytes());
+    public void SendPacket(IServerPacket message)
+    {
+        #if DEBUG
+            Log.Debug("Sending Packet [{packetId}]({name}) to user [{userId}]", message.Id, message.GetType().Name, GetHabbo()?.Id);
+        #endif
+        GetConnection().SendData(message.GetBytes());
+    }
 
     public ConnectionInformation GetConnection() => _connection;
 
