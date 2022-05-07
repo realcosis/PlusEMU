@@ -16,14 +16,17 @@ internal class GetHabboGroupBadgesEvent : IPacketEvent
         _groupManager = groupManager;
     }
 
-    public async Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, ClientPacket packet)
     {
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
-            return;
-        var badges = await _groupManager.GetHabboGroupBadges(session.GetHabbo());
-        room.SendPacket(new HabboGroupBadgesComposer(badges));
-        session.SendPacket(new HabboGroupBadgesComposer(badges));
-        return;
+            return Task.CompletedTask;
+        var badges = _groupManager.GetHabboGroupBadges(session.GetHabbo());
+        if(badges != null)
+        {
+            room.SendPacket(new HabboGroupBadgesComposer(badges));
+            session.SendPacket(new HabboGroupBadgesComposer(badges));
+        }
+        return Task.CompletedTask;
     }
 }

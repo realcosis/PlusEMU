@@ -172,7 +172,7 @@ public class GroupManager : IGroupManager
         return groups;
     }
 
-    public async Task<Dictionary<int, string>> GetHabboGroupBadges(Habbo habbo)
+    public Dictionary<int, string>? GetHabboGroupBadges(Habbo habbo)
     {
         if (!habbo.GetClient().GetHabbo().InRoom)
             return null;

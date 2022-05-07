@@ -17,5 +17,5 @@ public interface IGroupManager
     string GetColourCode(int id, bool colourOne);
     void DeleteGroup(int id);
     List<Group> GetGroupsForUser(int userId);
-    Task<Dictionary<int, string>> GetHabboGroupBadges(Habbo habbo);
+    Dictionary<int, string>? GetHabboGroupBadges(Habbo habbo);
 }
