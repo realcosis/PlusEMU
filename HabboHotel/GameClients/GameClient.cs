@@ -14,7 +14,7 @@ namespace Plus.HabboHotel.GameClients;
 
 public class GameClient
 {
-    private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.GameClients.GameClient");
+    private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
     private ConnectionInformation _connection;
     private bool _disconnected;
     private Habbo? _habbo;
@@ -88,9 +88,7 @@ public class GameClient
 
     public void SendPacket(IServerPacket message)
     {
-        #if DEBUG
-            Log.Debug("Sending Packet [{packetId}]({name}) to user [{userId}]", message.Id, message.GetType().Name, GetHabbo()?.Id);
-        #endif
+        Log.Debug("Sending Packet [{packetId}]({name}) to user [{userId}]", message.Id, message.GetType().Name, GetHabbo()?.Id);
         GetConnection().SendData(message.GetBytes());
     }
 
