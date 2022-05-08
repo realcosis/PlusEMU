@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
+using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 using Plus.Utilities;
 
@@ -172,32 +173,20 @@ public class GroupManager : IGroupManager
         return groups;
     }
 
-    public Dictionary<int, string>? GetHabboGroupBadges(Habbo habbo)
+    public Dictionary<int, string> GetAllBadgesInRoom(Room room)
     {
-        if (!habbo.GetClient().GetHabbo().InRoom)
-            return null;
-        var room = habbo.GetClient().GetHabbo().CurrentRoom;
-        if (room == null)
-            return null;
         var badges = new Dictionary<int, string>();
         foreach (var user in room.GetRoomUserManager().GetRoomUsers().ToList())
         {
+            var favoriteGroupId = user.GetClient().GetHabbo().GetStats().FavouriteGroupId;
             if (user.IsBot || user.IsPet || user.GetClient() == null || user.GetClient().GetHabbo() == null)
                 continue;
-            if (user.GetClient().GetHabbo().GetStats().FavouriteGroupId == 0 || badges.ContainsKey(user.GetClient().GetHabbo().GetStats().FavouriteGroupId))
+            if (favoriteGroupId == 0 || badges.ContainsKey(favoriteGroupId))
                 continue;
-            if (!TryGetGroup(user.GetClient().GetHabbo().GetStats().FavouriteGroupId, out var group))
+            if (!TryGetGroup(favoriteGroupId, out var group))
                 continue;
             if (!badges.ContainsKey(group.Id))
                 badges.Add(group.Id, group.Badge);
-        }
-        if (habbo.GetClient().GetHabbo().GetStats().FavouriteGroupId > 0)
-        {
-            if (TryGetGroup(habbo.GetClient().GetHabbo().GetStats().FavouriteGroupId, out var group))
-            {
-                if (!badges.ContainsKey(group.Id))
-                    badges.Add(group.Id, group.Badge);
-            }
         }
         return badges;
     }

@@ -11,17 +11,16 @@ internal class GetHabboGroupBadgesEvent : IPacketEvent
 {
     private readonly IGroupManager _groupManager;
 
-    public GetHabboGroupBadgesEvent(IGroupManager groupManager)
-    {
-        _groupManager = groupManager;
-    }
+    public GetHabboGroupBadgesEvent(IGroupManager groupManager) => _groupManager = groupManager;
 
     public Task Parse(GameClient session, ClientPacket packet)
     {
+        if (!session.GetHabbo().InRoom)
+            return Task.CompletedTask;
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
             return Task.CompletedTask;
-        var badges = _groupManager.GetHabboGroupBadges(session.GetHabbo());
+        var badges = _groupManager.GetAllBadgesInRoom(room);
         if(badges != null)
         {
             room.SendPacket(new HabboGroupBadgesComposer(badges));
