@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Plus.Communication.Packets.Outgoing;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
@@ -90,6 +91,7 @@ internal class SaveBotActionEvent : IPacketEvent
                 dbClient.RunQuery("DELETE FROM `bots_speech` WHERE `bot_id` = '" + bot.BotData.Id + "'");
                 for (var i = 0; i <= speechData.Length - 1; i++)
                 {
+                    speechData[i] = Regex.Replace(speechData[i], "<(.|\\n)*?>", string.Empty);
                     dbClient.SetQuery("INSERT INTO `bots_speech` (`bot_id`, `text`) VALUES (@id, @data)");
                     dbClient.AddParameter("id", botId);
                     dbClient.AddParameter("data", speechData[i]);
