@@ -120,6 +120,10 @@ public static class ClientPacketHeader
     // Sound
 
 
+    // Ambassador
+
+    public const int AmbassadorSendAlertEvent = 560;
+
     public const int RemoveMyRightsEvent = 111; //879
     public const int GiveHandItemEvent = 2523; //3315
     public const int GetClubGiftsEvent = 3127; //3302
