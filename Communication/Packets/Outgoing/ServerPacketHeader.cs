@@ -100,7 +100,7 @@ public static class ServerPacketHeader
     // Messenger
     public const int BuddyListMessageComposer = 2900; //3394
     public const int BuddyRequestsMessageComposer = 177; //2757
-    public const int NewBuddyRequestMessageComposer = 1525; //298
+    public const int NewBuddyRequestMessageComposer = 1525; //2981
 
     // Moderation
     public const int ModeratorInitMessageComposer = 2120; //2545
