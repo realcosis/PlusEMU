@@ -22,5 +22,6 @@ namespace Plus.HabboHotel.Friends
         Task RegisterFriendRequest(int fromUserId, int toUserId);
         Task<(int userId, bool blockFriendRequests)> CanReceiveFriendRequests(string name);
         Task<Dictionary<int, List<(string Message, int SecondsAgo)>>> GetAndDeleteOfflineMessages(int userId);
+        Task<int> GetFriendCount(int userId);
     }
 }

@@ -100,6 +100,12 @@ namespace Plus.HabboHotel.Friends
             return messages;
         }
 
+        public async Task<int> GetFriendCount(int userId)
+        {
+            using var connection = _database.Connection();
+            return await connection.ExecuteScalarAsync<int>("SELECT count(0) FROM messenger_friendships WHERE user_one_id = @userid OR user_two_id = @userid", new { userid = userId });
+        }
+
         public async Task DeleteFriendship(int userOneId, int userTwoId)
         {
             using var connection = _database.Connection();

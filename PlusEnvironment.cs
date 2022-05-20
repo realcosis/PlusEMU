@@ -235,7 +235,7 @@ public class PlusEnvironment : IPlusEnvironment
         return name;
     }
 
-    [Obsolete]
+    [Obsolete("Use GameClientManager instead")]
     public static Habbo GetHabboById(int userId)
     {
         try

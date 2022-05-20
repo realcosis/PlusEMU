@@ -1,24 +1,23 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Users;
-using Plus.Database;
+﻿using Plus.Communication.Packets.Outgoing.Users;
+using Plus.HabboHotel.Friends;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
-using Dapper;
+using System.Threading.Tasks;
 
 namespace Plus.Communication.Packets.Incoming.Users;
 
 internal class OpenPlayerProfileEvent : IPacketEvent
 {
     private readonly IGroupManager _groupManager;
-    private readonly IDatabase _database;
+    private readonly IMessengerDataLoader _messengerDataLoader;
 
-    public OpenPlayerProfileEvent(IGroupManager groupManager, IDatabase database)
+    public OpenPlayerProfileEvent(IGroupManager groupManager, IMessengerDataLoader messengerDataLoader)
     {
         _groupManager = groupManager;
-        _database = database;
+        _messengerDataLoader = messengerDataLoader;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public async Task Parse(GameClient session, ClientPacket packet)
     {
         var userId = packet.PopInt();
         packet.PopBoolean(); //IsMe?
@@ -26,15 +25,12 @@ internal class OpenPlayerProfileEvent : IPacketEvent
         if (targetData == null)
         {
             session.SendNotification("An error occured whilst finding that user's profile.");
-            return Task.CompletedTask;
+            return;
         }
         var groups = _groupManager.GetGroupsForUser(targetData.Id);
-        int friendCount;
-        using (var connection = _database.Connection())
-        {
-            friendCount = connection.ExecuteScalar<int>("SELECT count(0) FROM messenger_friendships WHERE user_one_id = @userid OR user_two_id = @userid", new { userid = userId });
-        }
+
+
+        var friendCount = await _messengerDataLoader.GetFriendCount(userId);
         session.SendPacket(new ProfileInformationComposer(targetData, session, groups, friendCount));
-        return Task.CompletedTask;
     }
 }
