@@ -35,8 +35,8 @@ internal class MessengerInitEvent : IPacketEvent
         }
 
         var messages = await _messengerDataLoader.GetAndDeleteOfflineMessages(session.GetHabbo().Id);
-        foreach (var (userId, message) in messages)
-            foreach (var (message, secondsAgo) in message)
+        foreach (var (userId, (report)) in messages)
+            foreach (var (message, secondsAgo) in report)
                 session.SendPacket(new NewConsoleMessageComposer(userId, message, secondsAgo));
         return;
     }
