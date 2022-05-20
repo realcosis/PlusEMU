@@ -40,7 +40,7 @@ public class SsoTicketEvent : IPacketEvent
             session.SendPacket(new NavigatorSettingsComposer(session.GetHabbo().HomeRoom));
             session.SendPacket(new FavouritesComposer(session.GetHabbo().FavoriteRooms));
             session.SendPacket(new FigureSetIdsComposer(session.GetHabbo().GetClothing().GetClothingParts));
-            session.SendPacket(new UserRightsComposer(session.GetHabbo().Rank));
+            session.SendPacket(new UserRightsComposer(session.GetHabbo().Rank, session.GetHabbo().IsAmbassador));
             session.SendPacket(new AvailabilityStatusComposer());
             session.SendPacket(new AchievementScoreComposer(session.GetHabbo().GetStats().AchievementPoints));
             session.SendPacket(new BuildersClubMembershipComposer());

@@ -214,6 +214,8 @@ public class RoomUserManager
         user.UpdateNeeded = true;
         if (session.GetHabbo().GetPermissions().HasRight("mod_tool") && !session.GetHabbo().DisableForcedEffects)
             session.GetHabbo().Effects().ApplyEffect(102);
+        if (session.GetHabbo().IsAmbassador && !session.GetHabbo().DisableForcedEffects && !session.GetHabbo().GetPermissions().HasRight("mod_tool"))
+            session.GetHabbo().Effects().ApplyEffect(178);
         foreach (var bot in _bots.Values.ToList())
         {
             if (bot == null || bot.BotAi == null)

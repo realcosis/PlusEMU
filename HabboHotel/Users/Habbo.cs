@@ -76,6 +76,8 @@ public class Habbo
 
     public int Rank { get; set; }
 
+    public bool IsAmbassador { get; set; }
+
     public string Motto { get; set; } = string.Empty;
 
     public string Look { get; set; } = string.Empty;
