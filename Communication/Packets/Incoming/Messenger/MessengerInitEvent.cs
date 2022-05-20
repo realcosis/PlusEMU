@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Messenger;
+﻿using Plus.Communication.Packets.Outgoing.Messenger;
 using Plus.HabboHotel.Friends;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Messenger;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Plus.Communication.Packets.Incoming.Messenger;
 
@@ -19,7 +19,7 @@ internal class MessengerInitEvent : IPacketEvent
 
     public async Task Parse(GameClient session, ClientPacket packet)
     {
-        ICollection<MessengerBuddy> friends = session.GetHabbo().GetMessenger().Friends.Values.ToList();
+        var friends = session.GetHabbo().GetMessenger().Friends.Values.ToList();
         session.SendPacket(new MessengerInitComposer());
         var page = 0;
         if (!friends.Any())
@@ -36,8 +36,8 @@ internal class MessengerInitEvent : IPacketEvent
 
         var messages = await _messengerDataLoader.GetAndDeleteOfflineMessages(session.GetHabbo().Id);
         foreach (var (userId, message) in messages)
-            foreach (var (m, s) in message)
-                session.SendPacket(new NewConsoleMessageComposer(userId, m, s));
+            foreach (var (message, secondsAgo) in message)
+                session.SendPacket(new NewConsoleMessageComposer(userId, message, secondsAgo));
         return;
     }
 }

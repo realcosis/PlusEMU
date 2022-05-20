@@ -1,12 +1,7 @@
-﻿using System;
-using System.Data;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Inventory.Furni;
+﻿using System.Threading.Tasks;
 using Plus.Communication.Packets.Outgoing.Marketplace;
-using Plus.Database;
 using Plus.HabboHotel.Catalog.Marketplace;
 using Plus.HabboHotel.GameClients;
-using Plus.HabboHotel.Items;
 
 namespace Plus.Communication.Packets.Incoming.Marketplace;
 
