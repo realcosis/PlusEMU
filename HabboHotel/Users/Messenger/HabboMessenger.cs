@@ -225,12 +225,7 @@ namespace Plus.HabboHotel.Users.Messenger
 
         public MessengerBuddy? GetFriend(int userId) => _friends.TryGetValue(userId, out var friend) ? friend : null;
 
-        public bool FriendshipExists(int userId)
-        {
-            var friend = GetFriend(userId);
-            if (friend == null) return false;
-            return friend.Relationship > 0;
-        }
+        public bool FriendshipExists(int userId) => _friends.ContainsKey(userId);
 
         public void NotifyChangesToFriends() => StatusUpdated?.Invoke(this, EventArgs.Empty);
     }

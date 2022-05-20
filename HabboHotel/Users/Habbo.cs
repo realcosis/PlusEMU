@@ -20,7 +20,6 @@ using Plus.HabboHotel.Users.Messenger;
 using Plus.HabboHotel.Users.Messenger.FriendBar;
 using Plus.HabboHotel.Users.Permissions;
 using Plus.HabboHotel.Users.Process;
-using Plus.HabboHotel.Users.Relationships;
 using Plus.Utilities;
 
 using Dapper;
@@ -70,7 +69,6 @@ public class Habbo
     public Dictionary<int, int> Quests = new();
 
     public List<int> RatedRooms = new();
-    public Dictionary<int, Relationship> Relationships = new();
 
     public int Id { get; set; }
 
