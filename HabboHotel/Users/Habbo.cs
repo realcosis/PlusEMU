@@ -114,8 +114,6 @@ public class Habbo
 
     public bool IsExpert { get; set; }
 
-    public bool AppearOffline { get; set; }
-
     public int VipRank { get; set; }
 
     public int TempInt { get; set; }

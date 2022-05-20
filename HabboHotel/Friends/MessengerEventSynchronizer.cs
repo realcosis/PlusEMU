@@ -27,7 +27,7 @@ namespace Plus.HabboHotel.Friends
             habbo.GetMessenger().MessageSend += async (_, args) => await OnMessageSend(habbo, args);
             habbo.GetMessenger().MessageReceived += (_, args) => OnMessageReceived(habbo, args);
             habbo.GetMessenger().RoomInviteReceived += (_, args) => OnRoomInviteReceived(habbo, args);
-            habbo.GetMessenger().StatusUpdated += (_, args) => OnStatusUpdated(habbo);
+            habbo.GetMessenger().StatusUpdated += (_, _) => OnStatusUpdated(habbo);
             NotifyOnlineStatus(habbo);
             return Task.CompletedTask;
         }

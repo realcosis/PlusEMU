@@ -112,8 +112,6 @@ namespace Plus.HabboHotel.Users.Messenger
 
         public event EventHandler? StatusUpdated;
 
-        public bool AppearOffline { get; set; }
-
         public HabboMessenger(Dictionary<int, MessengerBuddy> friends, Dictionary<int, MessengerRequest> requests, List<int> outstandingFriendRequests)
         {
             _requests = new(requests);

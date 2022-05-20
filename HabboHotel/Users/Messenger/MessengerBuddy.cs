@@ -26,7 +26,8 @@ public class MessengerBuddy
         }
     }
 
-    public bool AppearOffline => _habbo?.AppearOffline ?? true;
+    public bool AppearOffline => _habbo == null;
+
     public bool HideInRoom => _habbo?.AllowUserFollowing ?? true;
     public int LastOnline { get; set; }
     public string Look { get; set; } = string.Empty;
@@ -35,7 +36,6 @@ public class MessengerBuddy
     public int Relationship { get; set; }
     public int Gender { get; set; }
     public int Id { get; set; }
-    public bool IsOnline => _habbo?.GetMessenger().AppearOffline ?? false;
 
     public bool InRoom => CurrentRoom != null;
 
