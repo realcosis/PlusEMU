@@ -51,7 +51,7 @@ public class Habbo
     //Advertising reporting system.
 
     //Generic player values.
-    private IgnoresComponent _ignores;
+    public IgnoresComponent IgnoresComponent { get; set; }
     public InventoryComponent Inventory { get; private set; }
 
     //Anti-script placeholders.
@@ -293,12 +293,6 @@ public class Habbo
         return _clothing.Init(this);
     }
 
-    public bool InitIgnores()
-    {
-        _ignores = new IgnoresComponent();
-        return _ignores.Init(this);
-    }
-
     [Obsolete("Each loading task should be moved to their own IUserDataLoadingTask")]
     public void Init(GameClient client)
     {
@@ -309,13 +303,10 @@ public class Habbo
         _disconnected = false;
         InitFx();
         InitClothing();
-        InitIgnores();
     }
 
 
     public PermissionComponent GetPermissions() => _permissions;
-
-    public IgnoresComponent GetIgnores() => _ignores;
 
     public event EventHandler? Disconnected;
     public void OnDisconnect()
@@ -362,8 +353,6 @@ public class Habbo
             _clothing.Dispose();
         if (_permissions != null)
             _permissions.Dispose();
-        if (_ignores != null)
-            _ignores.Dispose();
     }
 
     public void CheckCreditsTimer()

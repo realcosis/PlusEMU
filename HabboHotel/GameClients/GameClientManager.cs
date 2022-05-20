@@ -6,18 +6,22 @@ using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using Dapper;
 using NLog;
 using Plus.Communication.ConnectionManager;
 using Plus.Communication.Packets.Outgoing;
 using Plus.Communication.Packets.Outgoing.Handshake;
 using Plus.Communication.Packets.Outgoing.Notifications;
 using Plus.Core;
+using Plus.Database;
 using Plus.HabboHotel.Users.Messenger;
 
 namespace Plus.HabboHotel.GameClients;
 
 public class GameClientManager : IGameClientManager
 {
+    private readonly IDatabase _database;
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.GameClients.GameClientManager");
 
     private readonly Stopwatch _clientPingStopwatch;
@@ -28,8 +32,9 @@ public class GameClientManager : IGameClientManager
     private readonly ConcurrentDictionary<int, GameClient> _userIdRegister;
     private readonly ConcurrentDictionary<string, GameClient> _usernameRegister;
 
-    public GameClientManager()
+    public GameClientManager(IDatabase database)
     {
+        _database = database;
         _clients = new ConcurrentDictionary<int, GameClient>();
         _userIdRegister = new ConcurrentDictionary<int, GameClient>();
         _usernameRegister = new ConcurrentDictionary<string, GameClient>();
@@ -63,17 +68,13 @@ public class GameClientManager : IGameClientManager
         return true;
     }
 
-    public string GetNameById(int id)
+    public async Task<string> GetNameById(int id)
     {
         var client = GetClientByUserId(id);
         if (client != null)
             return client.GetHabbo().Username;
-        string username;
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-        dbClient.SetQuery("SELECT username FROM users WHERE id = @id LIMIT 1");
-        dbClient.AddParameter("id", id);
-        username = dbClient.GetString();
-        return username;
+        using var connection = _database.Connection();
+        return await connection.QuerySingleOrDefaultAsync<string>("SELECT username FROM users WHERE id = @id LIMIT 1", new { id });
     }
 
     public IEnumerable<GameClient> GetClientsById(Dictionary<int, MessengerBuddy>.KeyCollection users)

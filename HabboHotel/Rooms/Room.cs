@@ -522,7 +522,7 @@ public class Room : RoomData
             return;
         foreach (var user in _tents[tentId].ToList())
         {
-            if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().GetIgnores().IgnoredUserIds().Contains(id) ||
+            if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().IgnoresComponent.IsIgnored(id) ||
                 user.GetClient().GetHabbo().TentId != tentId)
                 continue;
             user.GetClient().SendPacket(packet);

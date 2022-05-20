@@ -25,19 +25,7 @@ internal class UnIgnoreUserEvent : IPacketEvent
         var player = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(username)?.GetHabbo();
         if (player == null)
             return Task.CompletedTask;
-        if (!session.GetHabbo().GetIgnores().TryGet(player.Id))
-            return Task.CompletedTask;
-        if (session.GetHabbo().GetIgnores().TryRemove(player.Id))
-        {
-            using (var dbClient = _database.GetQueryReactor())
-            {
-                dbClient.SetQuery("DELETE FROM `user_ignores` WHERE `user_id` = @uid AND `ignore_id` = @ignoreId");
-                dbClient.AddParameter("uid", session.GetHabbo().Id);
-                dbClient.AddParameter("ignoreId", player.Id);
-                dbClient.RunQuery();
-            }
-            session.SendPacket(new IgnoreStatusComposer(3, player.Username));
-        }
+        session.GetHabbo().IgnoresComponent.Unignore(player.Id);
         return Task.CompletedTask;
     }
 }

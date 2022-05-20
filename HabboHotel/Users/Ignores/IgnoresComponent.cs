@@ -1,33 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace Plus.HabboHotel.Users.Ignores;
+
+public class IgnoreStatusUpdatedEventArgs : EventArgs
+{
+    public IgnoreStatusUpdatedEventArgs(int userId)
+    {
+        UserId = userId;
+    }
+    public int UserId { get; }
+}
 
 public sealed class IgnoresComponent
 {
     private readonly List<int> _ignoredUsers;
+    public IReadOnlyCollection<int> IgnoredUsers => _ignoredUsers;
 
-    public IgnoresComponent()
+    public event EventHandler<IgnoreStatusUpdatedEventArgs>? UserIgnored;
+    public event EventHandler<IgnoreStatusUpdatedEventArgs>? UserUnignored;
+
+    public IgnoresComponent(List<int> ignoredUsers)
     {
-        _ignoredUsers = new List<int>();
+        _ignoredUsers = ignoredUsers;
     }
-
-    public bool Init(Habbo player)
-    {
-        if (_ignoredUsers.Count > 0)
-            return false;
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-        dbClient.SetQuery("SELECT * FROM `user_ignores` WHERE `user_id` = @uid;");
-        dbClient.AddParameter("uid", player.Id);
-        var getIgnores = dbClient.GetTable();
-        if (getIgnores != null)
-            foreach (DataRow row in getIgnores.Rows)
-                _ignoredUsers.Add(Convert.ToInt32(row["ignore_id"]));
-        return true;
-    }
-
-    public bool TryGet(int userId) => _ignoredUsers.Contains(userId);
 
     public bool TryAdd(int userId)
     {
@@ -37,12 +33,20 @@ public sealed class IgnoresComponent
         return true;
     }
 
-    public bool TryRemove(int userId) => _ignoredUsers.Remove(userId);
+    public bool IsIgnored(int userId) => _ignoredUsers.Contains(userId);
 
-    public ICollection<int> IgnoredUserIds() => _ignoredUsers;
-
-    public void Dispose()
+    public bool Ignore(int userId)
     {
-        _ignoredUsers.Clear();
+        if (_ignoredUsers.Contains(userId)) return false;
+        _ignoredUsers.Add(userId);
+        UserIgnored?.Invoke(this, new(userId));
+        return true;
+    }
+
+    public bool Unignore(int userId)
+    {
+        if (!_ignoredUsers.Remove(userId)) return false;
+        UserUnignored?.Invoke(this, new(userId));
+        return true;
     }
 }

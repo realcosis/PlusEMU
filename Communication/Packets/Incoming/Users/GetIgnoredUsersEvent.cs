@@ -10,7 +10,7 @@ internal class GetIgnoredUsersEvent : IPacketEvent
     public Task Parse(GameClient session, ClientPacket packet)
     {
         var ignoredUsers = new List<string>();
-        foreach (var userId in new List<int>(session.GetHabbo().GetIgnores().IgnoredUserIds()))
+        foreach (var userId in new List<int>(session.GetHabbo().IgnoresComponent.IgnoredUsers))
         {
             var player = PlusEnvironment.GetHabboById(userId);
             if (player != null)

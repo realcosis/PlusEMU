@@ -77,7 +77,7 @@ namespace Plus.HabboHotel.Friends
                 return;
             }
 
-            if (!target.GetHabbo().AllowConsoleMessages || target.GetHabbo().GetIgnores().IgnoredUserIds().Contains(habbo.Id))
+            if (!target.GetHabbo().AllowConsoleMessages || target.GetHabbo().IgnoresComponent.IsIgnored(habbo.Id))
             {
                 habbo.GetClient().SendPacket(new InstantMessageErrorComposer(MessengerMessageErrors.FriendBusy, args.Friend.Id));
                 return;
@@ -122,7 +122,7 @@ namespace Plus.HabboHotel.Friends
                     from.GetHabbo().GetMessenger().AddFriend(me);
                 }
                 habbo.GetMessenger().AddFriend(friend);
-            } 
+            }
             else if (args.FriendRequestModificationType == FriendRequestModificationType.Declined)
             {
                 await _messengerDataLoader.DeleteFriendRequest(args.Request.FromId, habbo.Id);

@@ -28,20 +28,10 @@ internal class IgnoreUserEvent : IPacketEvent
         var player = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(username)?.GetHabbo();
         if (player == null || player.GetPermissions().HasRight("mod_tool"))
             return Task.CompletedTask;
-        if (session.GetHabbo().GetIgnores().TryGet(player.Id))
+        if (session.GetHabbo().IgnoresComponent.IsIgnored(player.Id))
             return Task.CompletedTask;
-        if (session.GetHabbo().GetIgnores().TryAdd(player.Id))
-        {
-            using (var dbClient = _database.GetQueryReactor())
-            {
-                dbClient.SetQuery("INSERT INTO `user_ignores` (`user_id`,`ignore_id`) VALUES(@uid,@ignoreId);");
-                dbClient.AddParameter("uid", session.GetHabbo().Id);
-                dbClient.AddParameter("ignoreId", player.Id);
-                dbClient.RunQuery();
-            }
-            session.SendPacket(new IgnoreStatusComposer(1, player.Username));
-            _achievementManager.ProgressAchievement(session, "ACH_SelfModIgnoreSeen", 1);
-        }
+        session.GetHabbo().IgnoresComponent.Ignore(player.Id);
+        _achievementManager.ProgressAchievement(session, "ACH_SelfModIgnoreSeen", 1);
         return Task.CompletedTask;
     }
 }

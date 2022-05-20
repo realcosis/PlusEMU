@@ -62,6 +62,9 @@ public class Pet
         PetHair = petHer;
         HairDye = dye;
         GnomeClothing = gnomeClothing;
+
+        /// TODO: pass by constructor
+        OwnerName = PlusEnvironment.GetGame().GetClientManager().GetNameById(OwnerId).Result;
     }
 
     public Room Room
@@ -105,7 +108,7 @@ public class Pet
 
     public string Look => Type + " " + Race + " " + Color + " " + GnomeClothing;
 
-    public string OwnerName => PlusEnvironment.GetGame().GetClientManager().GetNameById(OwnerId);
+    public string OwnerName { get; set; }
 
     public void OnRespect()
     {
