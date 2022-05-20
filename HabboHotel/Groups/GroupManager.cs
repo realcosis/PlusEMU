@@ -176,17 +176,11 @@ public class GroupManager : IGroupManager
     public Dictionary<int, string> GetAllBadgesInRoom(Room room)
     {
         var badges = new Dictionary<int, string>();
-        foreach (var user in room.GetRoomUserManager().GetRoomUsers().ToList())
+        foreach (var groupIds in room.GetRoomUserManager().GetRoomUsers().Select(user => user.GetClient()?.GetHabbo()?.GetStats().FavouriteGroupId ?? 0).Where(g => g > 0).Distinct())
         {
-            var favoriteGroupId = user.GetClient().GetHabbo().GetStats().FavouriteGroupId;
-            if (user.IsBot || user.IsPet || user.GetClient() == null || user.GetClient().GetHabbo() == null)
+            if (!TryGetGroup(groupIds, out var group))
                 continue;
-            if (favoriteGroupId == 0 || badges.ContainsKey(favoriteGroupId))
-                continue;
-            if (!TryGetGroup(favoriteGroupId, out var group))
-                continue;
-            if (!badges.ContainsKey(group.Id))
-                badges.Add(group.Id, group.Badge);
+            badges.Add(group.Id, group.Badge);
         }
         return badges;
     }
