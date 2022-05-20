@@ -2,7 +2,10 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
 using NLog;
+using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 using Plus.Utilities;
 
@@ -168,5 +171,23 @@ public class GroupManager : IGroupManager
             }
         }
         return groups;
+    }
+
+    public Dictionary<int, string> GetAllBadgesInRoom(Room room)
+    {
+        var badges = new Dictionary<int, string>();
+        foreach (var user in room.GetRoomUserManager().GetRoomUsers().ToList())
+        {
+            var favoriteGroupId = user.GetClient().GetHabbo().GetStats().FavouriteGroupId;
+            if (user.IsBot || user.IsPet || user.GetClient() == null || user.GetClient().GetHabbo() == null)
+                continue;
+            if (favoriteGroupId == 0 || badges.ContainsKey(favoriteGroupId))
+                continue;
+            if (!TryGetGroup(favoriteGroupId, out var group))
+                continue;
+            if (!badges.ContainsKey(group.Id))
+                badges.Add(group.Id, group.Badge);
+        }
+        return badges;
     }
 }

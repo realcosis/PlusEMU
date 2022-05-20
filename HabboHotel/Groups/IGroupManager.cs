@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 
 namespace Plus.HabboHotel.Groups;
@@ -16,4 +18,5 @@ public interface IGroupManager
     string GetColourCode(int id, bool colourOne);
     void DeleteGroup(int id);
     List<Group> GetGroupsForUser(int userId);
+    Dictionary<int, string> GetAllBadgesInRoom(Room room);
 }
