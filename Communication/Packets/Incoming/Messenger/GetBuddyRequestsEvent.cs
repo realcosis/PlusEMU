@@ -11,7 +11,7 @@ internal class GetBuddyRequestsEvent : IPacketEvent
 {
     public Task Parse(GameClient session, ClientPacket packet)
     {
-        ICollection<MessengerRequest> requests = session.GetHabbo().GetMessenger().GetRequests().ToList();
+        ICollection<MessengerRequest> requests = session.GetHabbo().GetMessenger().Requests.Values.ToList();
         session.SendPacket(new BuddyRequestsComposer(requests));
         return Task.CompletedTask;
     }

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Plus.HabboHotel.Friends;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Messenger;
@@ -12,16 +13,13 @@ internal class AcceptBuddyEvent : IPacketEvent
             amount = 50;
         else if (amount < 0)
             return Task.CompletedTask;
+
+        var messenger = session.GetHabbo().GetMessenger();
+
         for (var i = 0; i < amount; i++)
         {
             var requestId = packet.PopInt();
-            if (!session.GetHabbo().GetMessenger().TryGetRequest(requestId, out var request))
-                continue;
-            if (request.ToId != session.GetHabbo().Id)
-                return Task.CompletedTask;
-            if (!session.GetHabbo().GetMessenger().FriendshipExists(request.ToId))
-                session.GetHabbo().GetMessenger().CreateFriendship(request.FromId);
-            session.GetHabbo().GetMessenger().HandleRequest(requestId);
+            messenger.AcceptFriendRequest(requestId);
         }
         return Task.CompletedTask;
     }

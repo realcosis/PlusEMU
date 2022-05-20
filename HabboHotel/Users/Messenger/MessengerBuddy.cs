@@ -1,51 +1,54 @@
-﻿using System;
-using System.Linq;
-using Plus.Communication.Packets.Outgoing;
+﻿using Plus.Communication.Packets.Outgoing;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
-using Plus.HabboHotel.Users.Relationships;
+using System;
 
 namespace Plus.HabboHotel.Users.Messenger;
 
 public class MessengerBuddy
 {
+    [Obsolete("Should be removed")]
     public GameClient? Client;
-    public bool AppearOffline { get; set; }
-    public bool HideInRoom { get; set; }
+    private Habbo? _habbo;
+
+    public Habbo? Habbo
+    {
+        get => _habbo;
+        set
+        {
+            _habbo = value;
+            if (_habbo != null)
+            {
+                Look = _habbo.Look;
+                Motto = _habbo.Motto;
+                Gender = _habbo.Gender.Equals("M", StringComparison.OrdinalIgnoreCase) ? 1 : 0;
+            }
+        }
+    }
+
+    public bool AppearOffline => _habbo?.AppearOffline ?? true;
+    public bool HideInRoom => _habbo?.AllowUserFollowing ?? true;
     public int LastOnline { get; set; }
-    public string Look { get; set; }
-    public string Motto { get; set; }
-    public string Username { get; set; }
-
+    public string Look { get; set; } = string.Empty;
+    public string Motto { get; set; } = string.Empty;
+    public string Username { get; set; } = string.Empty;
+    public int Relationship { get; set; }
+    public int Gender { get; set; }
     public int Id { get; set; }
-
-    public bool IsOnline =>
-        Client != null && Client.GetHabbo() != null && Client.GetHabbo().GetMessenger() != null &&
-        !Client.GetHabbo().GetMessenger().AppearOffline;
+    public bool IsOnline => _habbo?.GetMessenger().AppearOffline ?? false;
 
     public bool InRoom => CurrentRoom != null;
 
-    public Room CurrentRoom { get; set; }
+    public Room? CurrentRoom { get; set; }
 
-    public void UpdateUser(GameClient client)
+    public void Serialize(ServerPacket message)
     {
-        Client = client;
-        if (client != null && client.GetHabbo() != null)
-            CurrentRoom = client.GetHabbo().CurrentRoom;
-    }
-
-    public void Serialize(ServerPacket message, GameClient session)
-    {
-        Relationship relationship = null;
-        if (session.GetHabbo() != null && session.GetHabbo().Relationships != null)
-            relationship = session.GetHabbo().Relationships.FirstOrDefault(x => x.Value.UserId == Convert.ToInt32(Id)).Value;
-        var y = relationship?.Type ?? 0;
         message.WriteInteger(Id);
         message.WriteString(Username);
-        message.WriteInteger(1);
-        message.WriteBoolean(!AppearOffline || session.GetHabbo().GetPermissions().HasRight("mod_tool") ? IsOnline : false);
-        message.WriteBoolean(!HideInRoom || session.GetHabbo().GetPermissions().HasRight("mod_tool") ? InRoom : false);
-        message.WriteString(IsOnline ? Look : "");
+        message.WriteInteger(Gender);
+        message.WriteBoolean(!AppearOffline);
+        message.WriteBoolean(!HideInRoom);
+        message.WriteString(Look);
         message.WriteInteger(0); // categoryid
         message.WriteString(Motto);
         message.WriteString(string.Empty); // Facebook username
@@ -53,6 +56,6 @@ public class MessengerBuddy
         message.WriteBoolean(true); // Allows offline messaging
         message.WriteBoolean(false); // ?
         message.WriteBoolean(false); // Uses phone
-        message.WriteShort(y);
+        message.WriteShort(Relationship);
     }
 }

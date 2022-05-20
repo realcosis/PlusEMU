@@ -10,8 +10,8 @@ public interface IGameClientManager
     int Count { get; }
     ICollection<GameClient> GetClients { get; }
     void OnCycle();
-    GameClient GetClientByUserId(int userId);
-    GameClient GetClientByUsername(string username);
+    GameClient? GetClientByUserId(int userId);
+    GameClient? GetClientByUsername(string username);
     bool TryGetClient(int clientId, out GameClient client);
     bool UpdateClientUsername(GameClient client, string oldUsername, string newUsername);
     string GetNameById(int id);

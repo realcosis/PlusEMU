@@ -50,8 +50,8 @@ internal class CreateFlatEvent : IPacketEvent
             tradeSettings = 0;
         var newRoom = _roomManager.CreateRoom(session, name, description, category, maxVisitors, tradeSettings, model);
         if (newRoom != null) session.SendPacket(new FlatCreatedComposer(newRoom.Id, name));
-        if (session.GetHabbo() != null && session.GetHabbo().GetMessenger() != null)
-            session.GetHabbo().GetMessenger().OnStatusChanged(true);
+
+        session.GetHabbo().GetMessenger().NotifyChangesToFriends();
         return Task.CompletedTask;
     }
 }

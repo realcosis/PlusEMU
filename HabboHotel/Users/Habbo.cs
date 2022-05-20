@@ -134,7 +134,7 @@ public class Habbo
 
     public bool AllowPublicRoomStatus { get; set; }
 
-    public bool AllowConsoleMessages { get; set; }
+    public bool AllowConsoleMessages { get; set; } = true;
 
     public bool AllowGifts { get; set; }
 
@@ -321,10 +321,14 @@ public class Habbo
 
     public IgnoresComponent GetIgnores() => _ignores;
 
+    public event EventHandler? Disconnected;
     public void OnDisconnect()
     {
         if (_disconnected)
             return;
+
+        Disconnected?.Invoke(this, EventArgs.Empty);
+
         try
         {
             if (_process != null)
@@ -356,11 +360,6 @@ public class Habbo
     {
         if (InRoom && CurrentRoom != null)
             CurrentRoom.GetRoomUserManager().RemoveUserFromRoom(_client, false);
-        if (_messenger != null)
-        {
-            _messenger.AppearOffline = true;
-            _messenger.Destroy();
-        }
         if (_fx != null)
             _fx.Dispose();
         if (_clothing != null)

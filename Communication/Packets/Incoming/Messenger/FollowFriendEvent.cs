@@ -25,14 +25,10 @@ internal class FollowFriendEvent : IPacketEvent
         if (!client.GetHabbo().InRoom)
         {
             session.SendPacket(new FollowFriendFailedComposer(2));
-            session.GetHabbo().GetMessenger().UpdateFriend(client.GetHabbo().Id, client, true);
             return Task.CompletedTask;
         }
-        if (session.GetHabbo().CurrentRoom != null && client.GetHabbo().CurrentRoom != null)
-        {
-            if (session.GetHabbo().CurrentRoom.RoomId == client.GetHabbo().CurrentRoom.RoomId)
-                return Task.CompletedTask;
-        }
+        if (session.GetHabbo().CurrentRoom?.RoomId == client.GetHabbo().CurrentRoom?.RoomId)
+            return Task.CompletedTask;
         session.SendPacket(new RoomForwardComposer(client.GetHabbo().CurrentRoomId));
         return Task.CompletedTask;
     }

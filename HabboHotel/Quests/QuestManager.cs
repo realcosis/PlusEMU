@@ -7,6 +7,7 @@ using Plus.Communication.Packets.Incoming;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Communication.Packets.Outgoing.Quests;
 using Plus.Database;
+using Plus.HabboHotel.Friends;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Messenger;
 
@@ -15,14 +16,16 @@ namespace Plus.HabboHotel.Quests;
 public class QuestManager : IQuestManager
 {
     private readonly IDatabase _database;
+    private readonly IMessengerDataLoader _messengerDataLoader;
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Quests.QuestManager");
     private readonly Dictionary<string, int> _questCount;
 
     private readonly Dictionary<int, Quest> _quests;
 
-    public QuestManager(IDatabase database)
+    public QuestManager(IDatabase database, IMessengerDataLoader messengerDataLoader)
     {
         _database = database;
+        _messengerDataLoader = messengerDataLoader;
         _quests = new Dictionary<int, Quest>();
         _questCount = new Dictionary<string, int>();
     }
@@ -127,7 +130,7 @@ public class QuestManager : IQuestManager
         session.SendPacket(new QuestStartedComposer(session, quest));
         if (completeQuest)
         {
-            session.GetHabbo().GetMessenger().BroadcastAchievement(session.GetHabbo().Id, MessengerEventTypes.QuestCompleted, quest.Category + "." + quest.Name);
+            _messengerDataLoader.BroadcastStatusUpdate(session.GetHabbo(), MessengerEventTypes.QuestCompleted, quest.Category + "." + quest.Name);
             session.GetHabbo().GetStats().QuestId = 0;
             session.GetHabbo().QuestLastCompleted = quest.Id;
             session.SendPacket(new QuestCompletedComposer(session, quest));

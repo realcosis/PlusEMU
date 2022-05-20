@@ -177,9 +177,9 @@ internal static class NavigatorHandler
             case NavigatorCategoryType.MyFriendsRooms:
             {
                 var roomIds = new List<int>();
-                if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null || session.GetHabbo().GetMessenger().GetFriends() == null)
+                if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
                     return;
-                foreach (var buddy in session.GetHabbo().GetMessenger().GetFriends().Where(p => p.InRoom))
+                foreach (var buddy in session.GetHabbo().GetMessenger().Friends.Values.Where(p => p.InRoom))
                 {
                     if (buddy == null || !buddy.InRoom || buddy.Id == session.GetHabbo().Id)
                         continue;

@@ -8,6 +8,7 @@ using Plus.HabboHotel.Rooms.Chat.Filter;
 using Plus.HabboHotel.Users.Messenger;
 using Dapper;
 using Plus.HabboHotel.Badges;
+using Plus.HabboHotel.Friends;
 
 namespace Plus.Communication.Packets.Incoming.Catalog;
 
@@ -16,12 +17,14 @@ public class PurchaseRoomPromotionEvent : IPacketEvent
     private readonly IWordFilterManager _wordFilterManager;
     private readonly IDatabase _database;
     private readonly IBadgeManager _badgeManager;
+    private readonly IMessengerDataLoader _messengerDataLoader;
 
-    public PurchaseRoomPromotionEvent(IWordFilterManager wordFilterManager, IDatabase database, IBadgeManager badgeManager)
+    public PurchaseRoomPromotionEvent(IWordFilterManager wordFilterManager, IDatabase database, IBadgeManager badgeManager, IMessengerDataLoader messengerDataLoader)
     {
         _wordFilterManager = wordFilterManager;
         _database = database;
         _badgeManager = badgeManager;
+        _messengerDataLoader = messengerDataLoader;
     }
 
     public async Task Parse(GameClient session, ClientPacket packet)
@@ -56,6 +59,6 @@ public class PurchaseRoomPromotionEvent : IPacketEvent
         session.SendPacket(new PurchaseOkComposer());
         if (session.GetHabbo().InRoom && session.GetHabbo().CurrentRoomId == roomId)
             session.GetHabbo().CurrentRoom?.SendPacket(new RoomEventComposer(data, data.Promotion));
-        session.GetHabbo().GetMessenger().BroadcastAchievement(session.GetHabbo().Id, MessengerEventTypes.EventStarted, name);
+        _messengerDataLoader.BroadcastStatusUpdate(session.GetHabbo(), MessengerEventTypes.EventStarted, name);
     }
 }

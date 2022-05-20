@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
+using Plus.Communication.Packets.Outgoing.Messenger;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms.Chat.Filter;
+using Plus.HabboHotel.Users.Messenger;
 
 namespace Plus.Communication.Packets.Incoming.Messenger;
 
@@ -16,8 +18,9 @@ internal class SendMsgEvent : IPacketEvent
     public Task Parse(GameClient session, ClientPacket packet)
     {
         var userId = packet.PopInt();
-        if (userId == 0 || userId == session.GetHabbo().Id)
-            return Task.CompletedTask;
+        var friend = session.GetHabbo().GetMessenger().GetFriend(userId);
+        if (friend == null)
+            session.SendPacket(new InstantMessageErrorComposer(MessengerMessageErrors.NotFriends, userId));
         var message = _wordFilterManager.CheckMessage(packet.PopString());
         if (string.IsNullOrWhiteSpace(message))
             return Task.CompletedTask;
@@ -26,7 +29,11 @@ internal class SendMsgEvent : IPacketEvent
             session.SendNotification("Oops, you're currently muted - you cannot send messages.");
             return Task.CompletedTask;
         }
-        session.GetHabbo().GetMessenger().SendInstantMessage(userId, message);
+
+        var error = session.GetHabbo().GetMessenger().SendMessage(friend, message);
+        if (error == MessageError.Flooding)
+            session.SendNotification("You cannot send a message, you have flooded the console.\n\nYou can send a message in 60 seconds.");
+
         return Task.CompletedTask;
     }
 }

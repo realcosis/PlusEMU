@@ -50,6 +50,8 @@ namespace Plus.HabboHotel.Users.Authentication
             if (habbo == null)
                 return AuthenticationError.NoAccountFound;
 
+            habbo.Disconnected += async (_, _) => await OnHabboDisconnected(habbo);
+
             session.SetHabbo(habbo);
 
             // TODO: 80O: Remove after splitting up
@@ -86,6 +88,12 @@ namespace Plus.HabboHotel.Users.Authentication
             foreach (var task in _authenticationTasks)
                 await task.UserLoggedIn(habbo);
             HabboLoggedIn?.Invoke(this, new(habbo));
+        }
+
+        private async Task OnHabboDisconnected(Habbo habbo)
+        {
+            foreach (var task in _authenticationTasks)
+                await task.UserLoggedOut(habbo);
         }
     }
 }

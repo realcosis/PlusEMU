@@ -12,10 +12,13 @@ internal class DeclineBuddyEvent : IPacketEvent
         if (!declineAll)
         {
             var requestId = packet.PopInt();
-            session.GetHabbo().GetMessenger().HandleRequest(requestId);
+            session.GetHabbo().GetMessenger().DeclineFriendRequest(requestId);
         }
         else
-            session.GetHabbo().GetMessenger().HandleAllRequests();
+        {
+            foreach (var request in session.GetHabbo().GetMessenger().Requests.Values)
+                session.GetHabbo().GetMessenger().DeclineFriendRequest(request.FromId);
+        }
         return Task.CompletedTask;
     }
 }

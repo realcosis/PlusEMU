@@ -10,6 +10,7 @@ using Plus.HabboHotel.Users.Messenger;
 using Plus.Database;
 using Dapper;
 using Plus.HabboHotel.Badges;
+using Plus.HabboHotel.Users;
 
 namespace Plus.HabboHotel.Achievements;
 
@@ -72,7 +73,7 @@ public class AchievementManager : IAchievementManager
             _badgeManager.GiveBadge(session.GetHabbo(), group + targetLevel).Wait();
             if (newTarget > totalLevels) newTarget = totalLevels;
             session.SendPacket(new AchievementUnlockedComposer(data, targetLevel, level.RewardPoints, level.RewardPixels));
-            session.GetHabbo().GetMessenger().BroadcastAchievement(session.GetHabbo().Id, MessengerEventTypes.AchievementUnlocked, group + targetLevel);
+            BroadcastAchievement(session.GetHabbo(), MessengerEventTypes.AchievementUnlocked, group + targetLevel);
 
             using (var connection = _database.Connection())
             {
@@ -112,5 +113,9 @@ public class AchievementManager : IAchievementManager
                 achievements.Add(achievement);
         }
         return achievements;
+    }
+
+    public void BroadcastAchievement(Habbo habbo, MessengerEventTypes eventType, string level)
+    {
     }
 }

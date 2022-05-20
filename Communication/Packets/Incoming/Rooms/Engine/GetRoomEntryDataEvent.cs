@@ -30,7 +30,7 @@ internal class GetRoomEntryDataEvent : IPacketEvent
         }
         room.SendObjects(session);
         if (session.GetHabbo().GetMessenger() != null)
-            session.GetHabbo().GetMessenger().OnStatusChanged(true);
+            session.GetHabbo().GetMessenger().NotifyChangesToFriends();
         if (session.GetHabbo().GetStats().QuestId > 0)
             _questManager.QuestReminder(session, session.GetHabbo().GetStats().QuestId);
         session.SendPacket(new RoomEntryInfoComposer(room.RoomId, room.CheckRights(session, true)));

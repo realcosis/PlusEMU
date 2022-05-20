@@ -50,8 +50,6 @@ public class SsoTicketEvent : IPacketEvent
                 session.GetHabbo().FocusPreference,
                 FriendBarStateUtility.GetInt(session.GetHabbo().FriendbarState)));
             //SendMessage(new TalentTrackLevelComposer());
-            if (session.GetHabbo().GetMessenger() != null)
-                session.GetHabbo().GetMessenger().OnStatusChanged(true);
 
 
             if (PlusEnvironment.GetGame().GetPermissionManager().TryGetGroup(session.GetHabbo().Rank, out var group))

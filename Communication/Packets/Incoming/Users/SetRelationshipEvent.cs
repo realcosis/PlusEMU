@@ -69,18 +69,18 @@ internal class SetRelationshipEvent : IPacketEvent
             if (!session.GetHabbo().Relationships.ContainsKey(user))
                 session.GetHabbo().Relationships.Add(user, new Relationship(newId, user, type));
         }
-        var client = _clientManager.GetClientByUserId(user);
-        if (client != null)
-            session.GetHabbo().GetMessenger().UpdateFriend(user, client, true);
-        else
-        {
-            var habbo = PlusEnvironment.GetHabboById(user);
-            if (habbo != null)
-            {
-                if (session.GetHabbo().GetMessenger().TryGetFriend(user, out var buddy))
-                    session.SendPacket(new FriendListUpdateComposer(session, buddy));
-            }
-        }
+        //var client = _clientManager.GetClientByUserId(user);
+        //if (client != null)
+        //    session.GetHabbo().GetMessenger().UpdateFriend(user, client, true);
+        //else
+        //{
+        //    var habbo = PlusEnvironment.GetHabboById(user);
+        //    if (habbo != null)
+        //    {
+        //        if (session.GetHabbo().GetMessenger().TryGetFriend(user, out var buddy))
+        //            session.SendPacket(new FriendListUpdateComposer(session, buddy));
+        //    }
+        //}
         return Task.CompletedTask;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Messenger;
@@ -44,5 +45,32 @@ internal class FriendListUpdateComposer : ServerPacket
         WriteBoolean(false); // ?
         WriteBoolean(false); // Uses phone
         WriteShort(y);
+    }
+
+    public FriendListUpdateComposer(MessengerBuddy friend, BuddyModificationType modificationType)
+        : base(ServerPacketHeader.FriendListUpdateMessageComposer)
+    {
+        WriteInteger(0);
+        WriteInteger(1);
+        WriteInteger((int)modificationType);
+        if (modificationType == BuddyModificationType.Added || modificationType == BuddyModificationType.Updated)
+            friend.Serialize(this);
+        else
+            WriteInteger(friend.Id);
+    }
+
+    public FriendListUpdateComposer(Dictionary<MessengerBuddy, BuddyModificationType> friends)
+        : base(ServerPacketHeader.FriendListUpdateMessageComposer)
+    {
+        WriteInteger(0);
+        WriteInteger(friends.Count);
+        foreach (var (friend, modificationType) in friends)
+        {
+            WriteInteger((int)modificationType);
+            if (modificationType == BuddyModificationType.Added || modificationType == BuddyModificationType.Updated)
+                friend.Serialize(this);
+            else
+                WriteInteger(friend.Id);
+        }
     }
 }

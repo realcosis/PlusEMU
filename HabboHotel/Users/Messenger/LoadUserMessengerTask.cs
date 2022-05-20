@@ -7,17 +7,19 @@ namespace Plus.HabboHotel.Users.Messenger
 {
     public class LoadUserMessengerTask : IUserDataLoadingTask
     {
-        private readonly IFriendsService _friendsService;
+        private readonly IMessengerDataLoader _messengerDataLoader;
 
-        public LoadUserMessengerTask(IFriendsService friendsService)
+        public LoadUserMessengerTask(IMessengerDataLoader messengerDataLoader)
         {
-            _friendsService = friendsService;
+            _messengerDataLoader = messengerDataLoader;
         }
 
         public async Task Load(Habbo habbo)
         {
-            var messenger = new HabboMessenger(habbo.Id);
-            messenger.Init((await _friendsService.GetBuddiesForUser(habbo.Id)).ToDictionary(buddy => buddy.Id), (await _friendsService.GetRequestsForUser(habbo.Id)).ToDictionary(request => request.FromId));
+            var messenger = new HabboMessenger(
+                (await _messengerDataLoader.GetBuddiesForUser(habbo.Id)).ToDictionary(buddy => buddy.Id),
+                (await _messengerDataLoader.GetRequestsForUser(habbo.Id)).ToDictionary(request => request.FromId),
+                await _messengerDataLoader.GetOutstandingRequestsForUser(habbo.Id));
             habbo.SetMessenger(messenger);
         }
     }

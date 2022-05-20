@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Users;
@@ -22,7 +23,7 @@ internal class ProfileInformationComposer : ServerPacket
         WriteInteger(friendCount); // Friend Count
         WriteBoolean(habbo.Id != session.GetHabbo().Id && session.GetHabbo().GetMessenger().FriendshipExists(habbo.Id)); //  Is friend
         WriteBoolean(habbo.Id != session.GetHabbo().Id && !session.GetHabbo().GetMessenger().FriendshipExists(habbo.Id) &&
-                     session.GetHabbo().GetMessenger().RequestExists(habbo.Id)); // Sent friend request
+                     session.GetHabbo().GetMessenger().OutstandingFriendRequests.Contains(habbo.Id)); // Sent friend request
         WriteBoolean(PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(habbo.Id) != null);
         WriteInteger(groups.Count);
         foreach (var group in groups)
