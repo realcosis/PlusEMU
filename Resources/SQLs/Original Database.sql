@@ -25066,5 +25066,7 @@ ALTER TABLE `user_ignores` DROP `id`;
 ALTER TABLE `user_ignores` ADD PRIMARY KEY(`user_id`, `ignore_id`);
 
 -- 5_RenameUserStatsTable
-ALTER TABLE user_stats
-RENAME TO user_statistics;
+ALTER TABLE user_stats RENAME TO user_statistics;
+
+-- 6_AddIsAmbassadorUsersColums
+ALTER TABLE `users` ADD `is_ambassador` BOOLEAN NOT NULL DEFAULT FALSE AFTER `allow_mimic`;
