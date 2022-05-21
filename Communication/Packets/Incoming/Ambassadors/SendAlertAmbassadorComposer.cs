@@ -23,6 +23,7 @@ namespace Plus.Communication.Packets.Incoming.Ambassadors
                 return Task.CompletedTask;
 
             _ambassadorsManager.AddLogs(session.GetHabbo().Id, habbo.Username, "Alert");
+            session.SendWhisper("You have successfully warned " + habbo.Username + ".");
             habbo.GetClient().SendPacket(new RoomNotificationComposer("ambassador.alert.warning", "message", "${notification.ambassador.alert.warning.message}"));
             return Task.CompletedTask;
         }
