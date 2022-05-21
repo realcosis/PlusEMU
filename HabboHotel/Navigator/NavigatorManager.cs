@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Dapper;
 using NLog;
 using Plus.Database;
+using Plus.HabboHotel.Rooms;
+using Plus.HabboHotel.Users;
 using Plus.HabboHotel.Users.Navigator.SavedSearches;
 
 namespace Plus.HabboHotel.Navigator;
@@ -143,10 +145,15 @@ public sealed class NavigatorManager : INavigatorManager
             })).ToDictionary(search => search.Id);
     }
 
-    public async Task SaveHomeRoom(int roomId, int userId)
+    public async Task SaveHomeRoom(Habbo habbo, int roomId)
     {
+        habbo.HomeRoom = roomId;
+        if (roomId == 0)
+            return;
+        if (!RoomFactory.TryGetData(roomId, out var _))
+            return;
         using var connection = _database.Connection();
         await connection.ExecuteScalarAsync<int>("UPDATE users SET home_room = @roomid WHERE id = @userid LIMIT 1",
-            new { roomid = roomId, userid = userId });
+            new { roomid = roomId, userid = habbo.Id });
     }
 }
