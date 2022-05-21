@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Dapper;
 using NLog;
@@ -140,5 +141,12 @@ public sealed class NavigatorManager : INavigatorManager
             {
                 userId
             })).ToDictionary(search => search.Id);
+    }
+
+    public async Task SaveHomeRoom(int userId, int roomId)
+    {
+        using var connection = _database.Connection();
+        await connection.ExecuteScalarAsync<int>("UPDATE users SET home_room = @roomid WHERE id = @userid LIMIT 1",
+            new { roomid = roomId, userid = userId });
     }
 }

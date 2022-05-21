@@ -18,4 +18,5 @@ public interface INavigatorManager
     bool TryGetFeaturedRoom(int roomId, out FeaturedRoom publicRoom);
     ICollection<FeaturedRoom> GetFeaturedRooms();
     Task<Dictionary<int, SavedSearch>> LoadUserNavigatorPreferences(int habboId);
+    Task SaveHomeRoom(int userId, int roomId);
 }
