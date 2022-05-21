@@ -8,11 +8,11 @@ namespace Plus.Communication.Packets.Incoming.Navigator;
 
 internal class UpdateNavigatorSettingsEvent : IPacketEvent
 {
-    INavigatorManager _navigationManager;
+    INavigatorManager _navigatorManager;
 
     public UpdateNavigatorSettingsEvent(NavigatorManager navigatorManager)
     {
-        _navigationManager = navigatorManager;
+        _navigatorManager = navigatorManager;
     }
 
     public Task Parse(GameClient session, ClientPacket packet)
@@ -23,7 +23,7 @@ internal class UpdateNavigatorSettingsEvent : IPacketEvent
         if (!RoomFactory.TryGetData(roomId, out var _))
             return Task.CompletedTask;
         session.GetHabbo().HomeRoom = roomId;
-        _navigationManager.SaveHomeRoom(session.GetHabbo().Id, roomId);
+        _navigatorManager.SaveHomeRoom(session.GetHabbo().Id, roomId);
         session.SendPacket(new NavigatorSettingsComposer(roomId));
         return Task.CompletedTask;
     }
