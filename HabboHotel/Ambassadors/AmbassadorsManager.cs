@@ -20,12 +20,11 @@ namespace Plus.HabboHotel.Ambassadors
             _database = database;
         }
 
-        public Task AddLogs(int userid, string target, string type)
+        public async Task AddLogs(int userid, string target, string type)
         {
             using var connection = _database.Connection();
-            connection.Execute("INSERT INTO `ambassador_logs` (`user_id`,`target`,`sanctions_type`,`timestamp`) VALUES (@user_id,@target_name,@sanctions_type,@timestamp)",
+            await connection.ExecuteAsync("INSERT INTO `ambassador_logs` (`user_id`,`target`,`sanctions_type`,`timestamp`) VALUES (@user_id,@target_name,@sanctions_type,@timestamp)",
                 new { user_id = userid, target_name = target, sanctions_type = type, timestamp = UnixTimestamp.GetNow() });
-            return Task.CompletedTask;
         }
     }
 }
