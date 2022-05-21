@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Dapper;
 using Plus.Database;
+using Plus.HabboHotel.Users;
 using Plus.Utilities;
 
 namespace Plus.HabboHotel.Ambassadors
@@ -15,11 +16,19 @@ namespace Plus.HabboHotel.Ambassadors
             _database = database;
         }
 
-        public async Task AddLogs(int userid, string target, string type)
+        public async Task Warn(Habbo ambassador, Habbo target, string message)
         {
+            if (!ambassador.GetClient().GetHabbo().IsAmbassador)
+                return;
+
+            if (target == null)
+                return;
+
             using var connection = _database.Connection();
             await connection.ExecuteAsync("INSERT INTO `ambassador_logs` (`user_id`,`target`,`sanctions_type`,`timestamp`) VALUES (@user_id,@target_name,@sanctions_type,@timestamp)",
-                new { user_id = userid, target_name = target, sanctions_type = type, timestamp = UnixTimestamp.GetNow() });
+                new { user_id = ambassador.Id, target_name = target.Username, sanctions_type = message, timestamp = UnixTimestamp.GetNow() });
+
+            ambassador.GetClient().SendWhisper("You have successfully warned " + target.Username + ".");
         }
     }
 }

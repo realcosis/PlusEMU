@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using Plus.HabboHotel.Users;
+using System.Threading.Tasks;
 
 namespace Plus.HabboHotel.Ambassadors
 {
     public interface IAmbassadorsManager
     {
-        Task AddLogs(int userid, string target, string type);
+        Task Warn(Habbo ambassador, Habbo target, string message);
     }
 }

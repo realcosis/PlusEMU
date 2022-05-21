@@ -13,18 +13,12 @@ namespace Plus.Communication.Packets.Incoming.Ambassadors
 
         public Task Parse(GameClient session, ClientPacket packet)
         {
-            if (!session.GetHabbo().IsAmbassador)
-                return Task.CompletedTask;
 
             var userid = packet.PopInt();
-            var habbo = PlusEnvironment.GetHabboById(userid);
+            var target = PlusEnvironment.GetHabboById(userid);
 
-            if(habbo == null)
-                return Task.CompletedTask;
-
-            _ambassadorsManager.AddLogs(session.GetHabbo().Id, habbo.Username, "Alert");
-            session.SendWhisper("You have successfully warned " + habbo.Username + ".");
-            habbo.GetClient().SendPacket(new RoomNotificationComposer("ambassador.alert.warning", "message", "${notification.ambassador.alert.warning.message}"));
+            _ambassadorsManager.Warn(session.GetHabbo(), target, "Alert");
+            target.GetClient().SendPacket(new RoomNotificationComposer("ambassador.alert.warning", "message", "${notification.ambassador.alert.warning.message}"));
             return Task.CompletedTask;
         }
     }
