@@ -23,7 +23,7 @@ internal class UpdateNavigatorSettingsEvent : IPacketEvent
         if (!RoomFactory.TryGetData(roomId, out var _))
             return Task.CompletedTask;
         session.GetHabbo().HomeRoom = roomId;
-        _navigatorManager.SaveHomeRoom(session.GetHabbo().Id, roomId);
+        _navigatorManager.SaveHomeRoom(roomId, session.GetHabbo().Id);
         session.SendPacket(new NavigatorSettingsComposer(roomId));
         return Task.CompletedTask;
     }

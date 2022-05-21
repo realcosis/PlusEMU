@@ -143,7 +143,7 @@ public sealed class NavigatorManager : INavigatorManager
             })).ToDictionary(search => search.Id);
     }
 
-    public async Task SaveHomeRoom(int userId, int roomId)
+    public async Task SaveHomeRoom(int roomId, int userId)
     {
         using var connection = _database.Connection();
         await connection.ExecuteScalarAsync<int>("UPDATE users SET home_room = @roomid WHERE id = @userid LIMIT 1",
