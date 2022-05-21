@@ -7,7 +7,7 @@ namespace Plus.Communication.Packets.Incoming.Navigator;
 
 internal class UpdateNavigatorSettingsEvent : IPacketEvent
 {
-    INavigatorManager _navigatorManager;
+    private readonly INavigatorManager _navigatorManager;
 
     public UpdateNavigatorSettingsEvent(NavigatorManager navigatorManager)
     {
