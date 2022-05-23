@@ -1,29 +1,28 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using NLog;
-using Plus.Communication.Packets;
 using Plus.Core;
-using Plus.HabboHotel.Rooms.Chat.Commands;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Plus.Communication.Rcon.Commands;
-using Plus.HabboHotel.Users.Authentication;
-using Plus.HabboHotel.Users.UserData;
 using Plus.Plugins;
+using Plus.Utilities.DependencyInjection;
 using Scrutor;
 
 namespace Plus;
 
 public static class Program
 {
+    private static IEnumerable<Type> _transientTypes;
+
     public static async Task Main(string[] args)
     {
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
         var services = new ServiceCollection();
+        _transientTypes = typeof(Program).Assembly.GetTypes().Where(t => t.IsInterface && t.GetCustomAttributes<TransientAttribute>().Any());
 
         // Plugins
         Directory.CreateDirectory("plugins");
@@ -75,24 +74,24 @@ public static class Program
         }
     }
 
-    public static IServiceCollection AddAssignableTo<T>(this IServiceCollection services, Assembly assembly) => services.AddAssignableTo<T>(new[] { assembly });
+    public static IServiceCollection AddAssignableTo<T>(this IServiceCollection services, Assembly assembly) => services.AddAssignableTo(new[] { assembly }, typeof(T));
 
-    public static IServiceCollection AddAssignableTo<T>(this IServiceCollection services, IEnumerable<Assembly> assemblies) =>
+    public static IServiceCollection AddAssignableTo<T>(this IServiceCollection services, IEnumerable<Assembly> assemblies) => services.AddAssignableTo(assemblies, typeof(T));
+
+    public static IServiceCollection AddAssignableTo(this IServiceCollection services, Assembly assembly, Type type) => services.AddAssignableTo(new[] { assembly }, type);
+
+    public static IServiceCollection AddAssignableTo(this IServiceCollection services, IEnumerable<Assembly> assemblies, Type type) =>
         services.Scan(scan => scan.FromAssemblies(assemblies)
-            .AddClasses(classes => classes.Where(t => t.IsAssignableTo(typeof(T)) && !t.IsAbstract && !t.IsInterface))
+            .AddClasses(classes => classes.Where(t => t.IsAssignableTo(type) && !t.IsAbstract && !t.IsInterface))
             .UsingRegistrationStrategy(RegistrationStrategy.Append)
             .AsSelfWithInterfaces()
             .WithSingletonLifetime());
 
     private static IServiceCollection AddDefaultRules(this IServiceCollection services, Assembly assembly)
     {
-        services.AddAssignableTo<IChatCommand>(assembly);
-        services.AddAssignableTo<IPacketEvent>(assembly);
-        services.AddAssignableTo<IStartable>(assembly);
-        services.AddAssignableTo<IRconCommand>(assembly);
-        services.AddAssignableTo<IAuthenticationTask>(assembly);
-        services.AddAssignableTo<IUserDataLoadingTask>(assembly);
-        services.AddAssignableTo<IPlugin>(assembly);
+        foreach (var type in _transientTypes)
+            services.AddAssignableTo(assembly, type);
+
         services.Scan(scan => scan.FromAssemblies(assembly)
             .AddClasses(classes => classes.Where(c => c.GetInterface($"I{c.Name}") != null))
             .UsingRegistrationStrategy(RegistrationStrategy.Skip)

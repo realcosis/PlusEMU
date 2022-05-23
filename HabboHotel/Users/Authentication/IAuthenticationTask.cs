@@ -1,7 +1,9 @@
 ﻿using System.Threading.Tasks;
+using Plus.Utilities.DependencyInjection;
 
 namespace Plus.HabboHotel.Users.Authentication
 {
+    [Transient]
     public interface IAuthenticationTask
     {
         /// <summary>

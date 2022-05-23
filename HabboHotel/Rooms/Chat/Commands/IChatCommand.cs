@@ -1,7 +1,9 @@
 ﻿using Plus.HabboHotel.GameClients;
+using Plus.Utilities.DependencyInjection;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands;
 
+[Transient]
 public interface IChatCommand
 {
     string Key { get; }
