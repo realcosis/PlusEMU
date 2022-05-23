@@ -1,25 +1,22 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Users;
+﻿using Plus.Communication.Packets.Outgoing.Users;
 using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Users.Ignores;
+using System.Threading.Tasks;
 
 namespace Plus.Communication.Packets.Incoming.Users;
 
 internal class GetIgnoredUsersEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    private readonly IIgnoredUsersService _ignoredUsersService;
+
+    public GetIgnoredUsersEvent(IIgnoredUsersService ignoredUsersService)
     {
-        var ignoredUsers = new List<string>();
-        foreach (var userId in new List<int>(session.GetHabbo().IgnoresComponent.IgnoredUsers))
-        {
-            var player = PlusEnvironment.GetHabboById(userId);
-            if (player != null)
-            {
-                if (!ignoredUsers.Contains(player.Username))
-                    ignoredUsers.Add(player.Username);
-            }
-        }
+        _ignoredUsersService = ignoredUsersService;
+    }
+
+    public async Task Parse(GameClient session, ClientPacket packet)
+    {
+        var ignoredUsers = await _ignoredUsersService.GetIgnoredUsersByName(session.GetHabbo().IgnoresComponent.IgnoredUsers);
         session.SendPacket(new IgnoredUsersComposer(ignoredUsers));
-        return Task.CompletedTask;
     }
 }
