@@ -3,15 +3,6 @@ using System.Collections.Generic;
 
 namespace Plus.HabboHotel.Users.Ignores;
 
-public class IgnoreStatusUpdatedEventArgs : EventArgs
-{
-    public IgnoreStatusUpdatedEventArgs(int userId)
-    {
-        UserId = userId;
-    }
-    public int UserId { get; }
-}
-
 public sealed class IgnoresComponent
 {
     private readonly List<int> _ignoredUsers;
