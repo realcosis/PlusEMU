@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Dapper;
+using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
 using Plus.Database;
 using Plus.HabboHotel.Users;
 using Plus.Utilities;
@@ -29,6 +30,8 @@ namespace Plus.HabboHotel.Ambassadors
                 new { user_id = ambassador.Id, target_name = target.Username, sanctions_type = message, timestamp = UnixTimestamp.GetNow() });
 
             ambassador.GetClient().SendWhisper("You have successfully warned " + target.Username + ".");
+
+            target.GetClient().SendPacket(new RoomNotificationComposer("ambassador.alert.warning", "message", "${notification.ambassador.alert.warning.message}"));
         }
     }
 }

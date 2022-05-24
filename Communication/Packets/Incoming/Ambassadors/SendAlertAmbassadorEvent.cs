@@ -18,7 +18,6 @@ namespace Plus.Communication.Packets.Incoming.Ambassadors
             var target = PlusEnvironment.GetHabboById(userid);
 
             _ambassadorsManager.Warn(session.GetHabbo(), target, "Alert");
-            target.GetClient().SendPacket(new RoomNotificationComposer("ambassador.alert.warning", "message", "${notification.ambassador.alert.warning.message}"));
             return Task.CompletedTask;
         }
     }
