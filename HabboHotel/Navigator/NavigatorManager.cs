@@ -148,12 +148,12 @@ public sealed class NavigatorManager : INavigatorManager
     public async Task SaveHomeRoom(Habbo habbo, int roomId)
     {
         habbo.HomeRoom = roomId;
-        if (roomId == 0)
-            return;
+
         if (!RoomFactory.TryGetData(roomId, out var _))
             return;
+
         using var connection = _database.Connection();
-        await connection.ExecuteScalarAsync<int>("UPDATE users SET home_room = @roomid WHERE id = @userid LIMIT 1",
+        await connection.ExecuteAsync("UPDATE users SET home_room = @roomid WHERE id = @userid LIMIT 1",
             new { roomid = roomId, userid = habbo.Id });
     }
 }
