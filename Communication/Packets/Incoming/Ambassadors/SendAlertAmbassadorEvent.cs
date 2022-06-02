@@ -11,14 +11,14 @@ namespace Plus.Communication.Packets.Incoming.Ambassadors
 
         public AmbassadorSendAlertEvent(IAmbassadorsManager ambassadorsManager) => _ambassadorsManager = ambassadorsManager;
 
-        public Task Parse(GameClient session, ClientPacket packet)
+        public async Task Parse(GameClient session, ClientPacket packet)
         {
 
             var userid = packet.PopInt();
             var target = PlusEnvironment.GetHabboById(userid);
 
-            _ambassadorsManager.Warn(session.GetHabbo(), target, "Alert");
-            return Task.CompletedTask;
+            await _ambassadorsManager.Warn(session.GetHabbo(), target, "Alert");
+            
         }
     }
 }
