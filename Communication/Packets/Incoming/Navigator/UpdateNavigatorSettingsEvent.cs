@@ -14,11 +14,10 @@ internal class UpdateNavigatorSettingsEvent : IPacketEvent
         _navigatorManager = navigatorManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public async Task Parse(GameClient session, ClientPacket packet)
     {
         var roomId = packet.PopInt();
-        _navigatorManager.SaveHomeRoom(session.GetHabbo(), roomId);
+        await _navigatorManager.SaveHomeRoom(session.GetHabbo(), roomId);
         session.SendPacket(new NavigatorSettingsComposer(roomId));
-        return Task.CompletedTask;
     }
 }
