@@ -24693,8 +24693,6 @@ CREATE TABLE `users` (
   `friend_bar_state` enum('0','1') NOT NULL DEFAULT '1',
   `disable_forced_effects` enum('0','1') NOT NULL DEFAULT '0',
   `allow_mimic` enum('1','0') NOT NULL DEFAULT '1',
-  `is_ambassador` tinyint(1) NOT NULL DEFAULT 0,
-  `bubble_id` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`,`auth_ticket`),
   UNIQUE KEY `id` (`id`) USING HASH,
   UNIQUE KEY `username` (`username`) USING BTREE,
@@ -25083,3 +25081,6 @@ CREATE TABLE `ambassador_logs` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- 8_AddBubbleIDToUsersTable
+ALTER TABLE `users` ADD COLUMN `bubble_id` TINYINT NOT_NULL DEFAULT '0' AFTER `is_ambassador`;
