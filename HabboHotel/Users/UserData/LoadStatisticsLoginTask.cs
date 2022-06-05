@@ -11,13 +11,12 @@ namespace Plus.HabboHotel.Users.UserData
     {
         public Task Load(Habbo habbo)
         {
-            DataRow statRow = null;
             using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
             {
                 dbClient.SetQuery(
                     "SELECT `id`,`roomvisits`,`onlinetime`,`respect`,`respectgiven`,`giftsgiven`,`giftsreceived`,`dailyrespectpoints`,`dailypetrespectpoints`,`achievementscore`,`quest_id`,`quest_progress`,`groupid`,`tickets_answered`,`respectstimestamp`,`forum_posts` FROM `user_statistics` WHERE `id` = @user_id LIMIT 1");
                 dbClient.AddParameter("user_id", habbo.Id);
-                statRow = dbClient.GetRow();
+                DataRow? statRow = dbClient.GetRow();
                 if (statRow == null) //No row, add it yo
                 {
                     dbClient.RunQuery("INSERT INTO `user_statistics` (`id`) VALUES ('" + habbo.Id + "')");
@@ -37,19 +36,13 @@ namespace Plus.HabboHotel.Users.UserData
                     if (Convert.ToString(statRow["respectsTimestamp"]) != DateTime.Today.ToString("MM/dd"))
                     {
                         stats.RespectsTimestamp = DateTime.Today.ToString("MM/dd");
-                        SubscriptionData subData = null;
                         var dailyRespects = 10;
-                        //if (_permissions.HasRight("mod_tool"))
-                        //    dailyRespects = 20;
-                        //else if (PlusEnvironment.GetGame().GetSubscriptionManager().TryGetSubscriptionData(vipRank, out subData))
-                        //    dailyRespects = subData.Respects;
                         stats.DailyRespectPoints = dailyRespects;
                         stats.DailyPetRespectPoints = dailyRespects;
                         dbClient.RunQuery("UPDATE `user_statistics` SET `dailyRespectPoints` = '" + dailyRespects + "', `dailyPetRespectPoints` = '" + dailyRespects + "', `respectsTimestamp` = '" +
                                           DateTime.Today.ToString("MM/dd") + "' WHERE `id` = '" + habbo.Id + "' LIMIT 1");
                     }
-                    Group g = null;
-                    if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(stats.FavouriteGroupId, out g))
+                    if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(stats.FavouriteGroupId, out Group? g))
                         stats.FavouriteGroupId = 0;
 
                     habbo.SetStats(stats);

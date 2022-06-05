@@ -13,9 +13,6 @@ namespace Plus.HabboHotel.Users.Navigator
             _navigatorManager = navigatorManager;
         }
 
-        public async Task Load(Habbo habbo)
-        {
-            habbo.SetNavigatorPreferences(new(new(await _navigatorManager.LoadUserNavigatorPreferences(habbo.Id))));
-        }
+        public async Task Load(Habbo habbo) => habbo.SetNavigatorPreferences(new(new(await _navigatorManager.LoadUserNavigatorPreferences(habbo.Id))));
     }
 }

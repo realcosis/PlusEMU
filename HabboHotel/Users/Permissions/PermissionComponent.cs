@@ -25,10 +25,7 @@ public sealed class PermissionComponent
     /// </summary>
     /// <param name="habbo"></param>
     [Obsolete]
-    public bool Init(Habbo habbo)
-    {
-        return true;
-    }
+    public bool Init(Habbo habbo) => true;
 
     /// <summary>
     /// Checks if the user has the specified right.
@@ -47,8 +44,5 @@ public sealed class PermissionComponent
     /// <summary>
     /// Dispose of the permissions list.
     /// </summary>
-    public void Dispose()
-    {
-        _permissions.Clear();
-    }
+    public void Dispose() => _permissions.Clear();
 }

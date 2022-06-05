@@ -9,10 +9,7 @@ namespace Plus.HabboHotel.Users.Messenger
     {
         private readonly IMessengerDataLoader _messengerDataLoader;
 
-        public LoadUserMessengerTask(IMessengerDataLoader messengerDataLoader)
-        {
-            _messengerDataLoader = messengerDataLoader;
-        }
+        public LoadUserMessengerTask(IMessengerDataLoader messengerDataLoader) => _messengerDataLoader = messengerDataLoader;
 
         public async Task Load(Habbo habbo)
         {

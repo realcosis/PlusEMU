@@ -11,16 +11,16 @@ namespace Plus.HabboHotel.Users.Inventory;
 
 public class InventoryComponent
 {
-    public BadgesInventoryComponent Badges { get; set; }
-    public FurnitureInventoryComponent Furniture { get; set; }
-    public PetsInventoryComponent Pets { get; set; }
-    public BotInventoryComponent Bots { get; set; }
+    public BadgesInventoryComponent? Badges { get; set; }
+    public FurnitureInventoryComponent? Furniture { get; set; }
+    public PetsInventoryComponent? Pets { get; set; }
+    public BotInventoryComponent? Bots { get; set; }
 
     [Obsolete("Should be removed when the mess below is refactored")]
     public int UserId { get; set; }
 
     [Obsolete("Should be removed when the mess below is refactored")]
-    public GameClient Client { get; set; }
+    public GameClient? Client { get; set; }
 
     [Obsolete]
     public Item AddNewItem(int id, int baseItem, string extraData, int group, bool toInsert, bool fromRoom, int limitedNumber, int limitedStack)
@@ -64,8 +64,5 @@ public class InventoryComponent
         return itemToAdd;
     }
 
-    public void SendNewItems(int id)
-    {
-        Client.SendPacket(new FurniListNotificationComposer(id, 1));
-    }
+    public void SendNewItems(int id) => Client.SendPacket(new FurniListNotificationComposer(id, 1));
 }
