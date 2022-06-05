@@ -29,34 +29,39 @@ namespace Plus.HabboHotel.Users;
 
 public class Habbo
 {
-    private HabboStats? _habboStats;
+    private HabboStats _habboStats;
 
     //Room related
 
     private readonly DateTime _timeCached;
 
-    private GameClient? _client;
-    private ClothingComponent? _clothing;
+    private GameClient _client;
+    private ClothingComponent _clothing;
 
     //Player saving.
     private bool _disconnected;
 
+    //Fastfood
+
     //Counters
-    private EffectsComponent? _fx;
+    private EffectsComponent _fx;
 
     private bool _habboSaved;
 
+    //Advertising reporting system.
+
     //Generic player values.
-    public IgnoresComponent? IgnoresComponent { get; set; }
-    public InventoryComponent? Inventory { get; private set; }
+    public IgnoresComponent IgnoresComponent { get; set; }
+    public InventoryComponent Inventory { get; private set; }
 
     //Anti-script placeholders.
-    private HabboMessenger? _messenger;
-    private NavigatorPreferences? _navigatorPreferences;
-    private PermissionComponent? _permissions;
+    private HabboMessenger _messenger;
+
+    private NavigatorPreferences _navigatorPreferences;
+    private PermissionComponent _permissions;
 
     //Just random fun stuff.
-    private ProcessComponent? _process;
+    private ProcessComponent _process;
 
     //Values generated within the game.
     public ConcurrentDictionary<string, UserAchievement> Achievements = new();
@@ -101,7 +106,7 @@ public class Habbo
 
     public double LastNameChange { get; set; }
 
-    public string? MachineId { get; set; }
+    public string MachineId { get; set; }
 
     public bool ChatPreference { get; set; }
 
@@ -211,7 +216,7 @@ public class Habbo
 
     public int CreditsUpdateTick { get; set; }
 
-    public IChatCommand? ChatCommand { get; set; }
+    public IChatCommand ChatCommand { get; set; }
 
     public DateTime LastGiftPurchaseTime { get; set; }
 
@@ -361,7 +366,8 @@ public class Habbo
             {
                 var creditUpdate = Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("user.currency_scheduler.credit_reward"));
                 var ducketUpdate = Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("user.currency_scheduler.ducket_reward"));
-                if (PlusEnvironment.GetGame().GetSubscriptionManager().TryGetSubscriptionData(VipRank, out SubscriptionData subData))
+                SubscriptionData subData = null;
+                if (PlusEnvironment.GetGame().GetSubscriptionManager().TryGetSubscriptionData(VipRank, out subData))
                 {
                     creditUpdate += subData.Credits;
                     ducketUpdate += subData.Duckets;
@@ -385,11 +391,17 @@ public class Habbo
 
     public HabboMessenger GetMessenger() => _messenger;
 
-    public void SetInventoryComponent(InventoryComponent inventory) => Inventory = inventory;
+    public void SetInventoryComponent(InventoryComponent inventory)
+    {
+        Inventory = inventory;
+    }
 
     public NavigatorPreferences GetNavigatorSearches() => _navigatorPreferences;
 
-    public void SetNavigatorPreferences(NavigatorPreferences navigatorPreferences) => _navigatorPreferences = navigatorPreferences;
+    public void SetNavigatorPreferences(NavigatorPreferences navigatorPreferences)
+    {
+        _navigatorPreferences = navigatorPreferences;
+    }
 
     public EffectsComponent Effects() => _fx;
 
@@ -397,13 +409,14 @@ public class Habbo
 
     public int GetQuestProgress(int p)
     {
-        Quests.TryGetValue(p, out int progress);
+        var progress = 0;
+        Quests.TryGetValue(p, out progress);
         return progress;
     }
 
     public UserAchievement GetAchievementData(string p)
     {
-        UserAchievement achievement;
+        UserAchievement achievement = null;
         Achievements.TryGetValue(p, out achievement);
         return achievement;
     }
@@ -432,7 +445,8 @@ public class Habbo
             return;
         if (GetClient().GetHabbo().InRoom)
         {
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(GetClient().GetHabbo().CurrentRoomId, out Room oldRoom))
+            Room oldRoom = null;
+            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(GetClient().GetHabbo().CurrentRoomId, out oldRoom))
                 return;
             if (oldRoom.GetRoomUserManager() != null)
                 oldRoom.GetRoomUserManager().RemoveUserFromRoom(GetClient(), false);
@@ -442,7 +456,8 @@ public class Habbo
             GetClient().SendPacket(new CloseConnectionComposer());
             return;
         }
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryLoadRoom(id, out Room room))
+        Room room = null;
+        if (!PlusEnvironment.GetGame().GetRoomManager().TryLoadRoom(id, out room))
         {
             GetClient().SendPacket(new CloseConnectionComposer());
             return;
@@ -530,9 +545,18 @@ public class Habbo
         return true;
     }
 
-    public void SetStats(HabboStats stats) => _habboStats = stats;
+    public void SetStats(HabboStats stats)
+    {
+        _habboStats = stats;
+    }
 
-    public void SetPermissions(PermissionComponent permissions) => _permissions = permissions;
+    public void SetPermissions(PermissionComponent permissions)
+    {
+        _permissions = permissions;
+    }
 
-    public void SetMessenger(HabboMessenger messenger) => _messenger = messenger;
+    public void SetMessenger(HabboMessenger messenger)
+    {
+        _messenger = messenger;
+    }
 }

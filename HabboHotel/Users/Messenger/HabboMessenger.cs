@@ -72,7 +72,7 @@ namespace Plus.HabboHotel.Users.Messenger
 
         private int _messengerSpamCount = 0;
         private DateTime? _messengerSpamTime = null;
-        private DateTime? _lastMessage = DateTime.Now;
+        private DateTime _lastMessage = DateTime.Now;
 
         private bool IncrementFloodCounter()
         {

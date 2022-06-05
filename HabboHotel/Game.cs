@@ -44,16 +44,16 @@ public class Game : IGame
     private readonly IQuestManager _questManager;
     private readonly IAchievementManager _achievementManager;
 
-    private readonly IBadgeManager _badgeManager;
-    private readonly IBotManager _botManager;
-    private readonly ICacheManager _cacheManager;
+    private IBadgeManager _badgeManager;
+    private IBotManager _botManager;
+    private ICacheManager _cacheManager;
     private readonly int _cycleSleepTime = 25;
-    private readonly IGameDataManager _gameDataManager;
-    private readonly IServerStatusUpdater _globalUpdater;
-    private readonly IPermissionManager _permissionManager;
-    private readonly IRewardManager _rewardManager;
-    private readonly ISubscriptionManager _subscriptionManager;
-    private readonly ITalentTrackManager _talentTrackManager;
+    private IGameDataManager _gameDataManager;
+    private IServerStatusUpdater _globalUpdater;
+    private IPermissionManager _permissionManager;
+    private IRewardManager _rewardManager;
+    private ISubscriptionManager _subscriptionManager;
+    private ITalentTrackManager _talentTrackManager;
     private bool _cycleActive;
 
     private bool _cycleEnded;

@@ -12,7 +12,10 @@ namespace Plus.HabboHotel.Users.Inventory
     {
         private readonly IBadgeManager _badgeManager;
 
-        public LoadUserInventoryTask(IBadgeManager badgeManager) => _badgeManager = badgeManager;
+        public LoadUserInventoryTask(IBadgeManager badgeManager)
+        {
+            _badgeManager = badgeManager;
+        }
 
         public async Task Load(Habbo habbo)
         {
