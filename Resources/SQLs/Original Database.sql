@@ -25081,3 +25081,6 @@ CREATE TABLE `ambassador_logs` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- 8_AddBubbleIDToUsersTable
+ALTER TABLE `users` ADD COLUMN `bubble_id` TINYINT NOT_NULL DEFAULT '0' AFTER `is_ambassador`;
