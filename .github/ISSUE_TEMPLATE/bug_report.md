@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve
+about: For bugs, sudden crashes or disconnects.
 title: ''
 labels: bug
 assignees: ''
@@ -23,5 +23,8 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Console Error**
-If the bug is related to a disconnect, paste any errors from the browsers dev console.
+**Browser Console Error**
+If the bug is related to a disconnect, paste the possible related errors from the browsers dev console.
+
+**Emulator Error**
+If the bug is related to an exception thrown, paste the possible related exceptions.
