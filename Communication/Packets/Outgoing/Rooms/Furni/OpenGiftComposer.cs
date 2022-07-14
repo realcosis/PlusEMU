@@ -1,18 +1,33 @@
-﻿using Plus.HabboHotel.Items;
+﻿using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Items;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni;
 
-internal class OpenGiftComposer : ServerPacket
+internal class OpenGiftComposer : IServerPacket
 {
+    private readonly ItemData _data;
+    private readonly string _text;
+    private readonly Item _item;
+    private readonly bool _itemIsInRoom;
+
+    public int MessageId => ServerPacketHeader.OpenGiftMessageComposer;
+
     public OpenGiftComposer(ItemData data, string text, Item item, bool itemIsInRoom)
-        : base(ServerPacketHeader.OpenGiftMessageComposer)
     {
-        WriteString(data.Type.ToString());
-        WriteInteger(data.SpriteId);
-        WriteString(data.ItemName);
-        WriteInteger(item.Id);
-        WriteString(data.Type.ToString());
-        WriteBoolean(itemIsInRoom); //Is it in the room?
-        WriteString(text);
+        _data = data;
+        _text = text;
+        _item = item;
+        _itemIsInRoom = itemIsInRoom;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteString(_data.Type.ToString());
+        packet.WriteInteger(_data.SpriteId);
+        packet.WriteString(_data.ItemName);
+        packet.WriteInteger(_item.Id);
+        packet.WriteString(_data.Type.ToString());
+        packet.WriteBoolean(_itemIsInRoom); //Is it in the room?
+        packet.WriteString(_text);
     }
 }

@@ -1,14 +1,11 @@
-﻿using System;
-using System.IO;
-using NLog;
-using Plus.Communication.ConnectionManager;
+﻿using NLog;
 using Plus.Communication.Packets.Incoming;
 using Plus.HabboHotel.GameClients;
 using Plus.Utilities;
 
 namespace Plus.Communication;
 
-public class GamePacketParser : IDataParser
+public class GamePacketParser
 {
     public delegate void HandlePacket(ClientPacket message);
 
@@ -55,6 +52,7 @@ public class GamePacketParser : IDataParser
             }
             if (msgLen < 0 || msgLen > 5120) //TODO: Const somewhere.
                 return;
+
             var packet = reader.ReadBytes(msgLen);
             using (var r = new BinaryReader(new MemoryStream(packet)))
             {
@@ -62,7 +60,6 @@ public class GamePacketParser : IDataParser
                 var content = new byte[packet.Length - 2];
                 Buffer.BlockCopy(packet, 2, content, 0, packet.Length - 2);
                 var message = new ClientPacket(header, content);
-                OnNewPacket.Invoke(message);
                 _deciphered = false;
             }
             if (reader.BaseStream.Length - 4 > msgLen)
@@ -73,27 +70,9 @@ public class GamePacketParser : IDataParser
                 HandlePacketData(extra);
             }
         }
-#pragma warning disable CS0168 // The variable 'e' is declared but never used
         catch (Exception e)
-#pragma warning restore CS0168 // The variable 'e' is declared but never used
         {
             //log.Error("Packet Error!", e);
         }
-    }
-
-    public void Dispose()
-    {
-        OnNewPacket = null;
-        GC.SuppressFinalize(this);
-    }
-
-    public object Clone() => new GamePacketParser(_client);
-
-    public event HandlePacket OnNewPacket;
-
-    public void SetConnection(ConnectionInformation con)
-    {
-        // Connection information passes through, but we seemingly do nothing?
-        OnNewPacket = null;
     }
 }

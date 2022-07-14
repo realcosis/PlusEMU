@@ -1,12 +1,23 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Catalog;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class CheckGnomeNameComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Catalog;
+
+public class CheckGnomeNameComposer : IServerPacket
 {
+    private readonly string _petName;
+    private readonly int _errorId;
+    public int MessageId => ServerPacketHeader.CheckGnomeNameMessageComposer;
+
     public CheckGnomeNameComposer(string petName, int errorId)
-        : base(ServerPacketHeader.CheckGnomeNameMessageComposer)
     {
-        WriteInteger(0);
-        WriteInteger(errorId);
-        WriteString(petName);
+        _petName = petName;
+        _errorId = errorId;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(0);
+        packet.WriteInteger(_errorId);
+        packet.WriteString(_petName);
     }
 }

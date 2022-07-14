@@ -1,11 +1,20 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Navigator;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class NavigatorSettingsComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Navigator;
+
+internal class NavigatorSettingsComposer : IServerPacket
 {
+    private readonly int _homeroom;
+    public int MessageId => ServerPacketHeader.NavigatorSettingsMessageComposer;
+
     public NavigatorSettingsComposer(int homeroom)
-        : base(ServerPacketHeader.NavigatorSettingsMessageComposer)
     {
-        WriteInteger(homeroom);
-        WriteInteger(homeroom);
+        _homeroom = homeroom;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_homeroom);
+        packet.WriteInteger(_homeroom);
     }
 }

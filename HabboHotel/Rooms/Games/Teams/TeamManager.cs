@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
+﻿using System.Drawing;
 using Plus.HabboHotel.Items;
 
 namespace Plus.HabboHotel.Rooms.Games.Teams;

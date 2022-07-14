@@ -1,6 +1,4 @@
 ﻿using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
 using Plus.Communication.Packets.Outgoing.Inventory.Pets;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Database;
@@ -22,7 +20,7 @@ internal class PickUpPetEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -30,7 +28,7 @@ internal class PickUpPetEvent : IPacketEvent
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return Task.CompletedTask;
             
-        var petId = packet.PopInt();
+        var petId = packet.ReadInt();
         if (!room.GetRoomUserManager().TryGetPet(petId, out var pet))
         {
             //Check kick rights, just because it seems most appropriate.
@@ -91,7 +89,7 @@ internal class PickUpPetEvent : IPacketEvent
                     pet.PetData.RoomId = 0;
                     pet.PetData.PlacedInRoom = false;
                     room.GetRoomUserManager().RemoveBot(pet.VirtualId, false);
-                    target.SendPacket(new PetInventoryComposer(target.GetHabbo().Inventory.Pets.Pets.Values.ToList()));
+                    target.Send(new PetInventoryComposer(target.GetHabbo().Inventory.Pets.Pets.Values.ToList()));
                     return Task.CompletedTask;
                 }
             }

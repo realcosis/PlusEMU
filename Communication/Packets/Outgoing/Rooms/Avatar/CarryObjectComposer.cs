@@ -1,11 +1,23 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Avatar;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class CarryObjectComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Avatar;
+
+internal class CarryObjectComposer : IServerPacket
 {
+    private readonly int _virtualId;
+    private readonly int _itemId;
+
+    public int MessageId => ServerPacketHeader.CarryObjectMessageComposer;
+
     public CarryObjectComposer(int virtualId, int itemId)
-        : base(ServerPacketHeader.CarryObjectMessageComposer)
     {
-        WriteInteger(virtualId);
-        WriteInteger(itemId);
+        _virtualId = virtualId;
+        _itemId = itemId;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_virtualId);
+        packet.WriteInteger(_itemId);
     }
 }

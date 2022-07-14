@@ -1,15 +1,31 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Chat;
+﻿using Plus.HabboHotel.GameClients;
 
-public class ShoutComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Chat;
+
+public class ShoutComposer : IServerPacket
 {
+    private readonly int _virtualId;
+    private readonly string _message;
+    private readonly int _emotion;
+    private readonly int _colour;
+
+    public int MessageId => ServerPacketHeader.ShoutMessageComposer;
+
     public ShoutComposer(int virtualId, string message, int emotion, int colour)
-        : base(ServerPacketHeader.ShoutMessageComposer)
     {
-        WriteInteger(virtualId);
-        WriteString(message);
-        WriteInteger(emotion);
-        WriteInteger(colour);
-        WriteInteger(0);
-        WriteInteger(-1);
+        _virtualId = virtualId;
+        _message = message;
+        _emotion = emotion;
+        _colour = colour;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_virtualId);
+        packet.WriteString(_message);
+        packet.WriteInteger(_emotion);
+        packet.WriteInteger(_colour);
+        packet.WriteInteger(0);
+        packet.WriteInteger(-1);
     }
 }

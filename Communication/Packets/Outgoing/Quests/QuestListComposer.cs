@@ -1,35 +1,45 @@
-﻿using System.Collections.Generic;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
 
 namespace Plus.Communication.Packets.Outgoing.Quests;
 
-public class QuestListComposer : ServerPacket
+public class QuestListComposer : IServerPacket
 {
+    private readonly GameClient _session;
+    private readonly bool _send;
+    private readonly Dictionary<string, Quest> _userQuests;
+    public int MessageId => ServerPacketHeader.QuestListMessageComposer;
+
     public QuestListComposer(GameClient session, bool send, Dictionary<string, Quest> userQuests)
-        : base(ServerPacketHeader.QuestListMessageComposer)
     {
-        WriteInteger(userQuests.Count);
+        _session = session;
+        _send = send;
+        _userQuests = userQuests;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_userQuests.Count);
 
         // Active ones first
-        foreach (var userQuest in userQuests)
+        foreach (var userQuest in _userQuests)
         {
             if (userQuest.Value == null)
                 continue;
-            SerializeQuest(this, session, userQuest.Value, userQuest.Key);
+            SerializeQuest(packet, _session, userQuest.Value, userQuest.Key);
         }
 
         // Dead ones last
-        foreach (var userQuest in userQuests)
+        foreach (var userQuest in _userQuests)
         {
             if (userQuest.Value != null)
                 continue;
-            SerializeQuest(this, session, userQuest.Value, userQuest.Key);
+            SerializeQuest(packet, _session, userQuest.Value, userQuest.Key);
         }
-        WriteBoolean(send);
+        packet.WriteBoolean(_send);
     }
 
-    private void SerializeQuest(ServerPacket message, GameClient session, Quest quest, string category)
+    private void SerializeQuest(IOutgoingPacket message, GameClient session, Quest quest, string category)
     {
         if (message == null || session == null)
             return;
@@ -43,7 +53,7 @@ public class QuestListComposer : ServerPacket
         message.WriteInteger(quest == null ? 0 : quest.Category.Contains("xmas2012") ? 0 : amountInCat); // Total quests in this cat
         message.WriteInteger(quest?.RewardType ?? 3); // Reward type (1 = Snowflakes, 2 = Love hearts, 3 = Pixels, 4 = Seashells, everything else is pixels
         message.WriteInteger(quest?.Id ?? 0); // Quest id
-        message.WriteBoolean(quest == null ? false : session.GetHabbo().GetStats().QuestId == quest.Id); // Quest started
+        message.WriteBoolean(quest != null && session.GetHabbo().GetStats().QuestId == quest.Id); // Quest started
         message.WriteString(quest == null ? string.Empty : quest.ActionName);
         message.WriteString(quest == null ? string.Empty : quest.DataBit);
         message.WriteInteger(quest?.Reward ?? 0);

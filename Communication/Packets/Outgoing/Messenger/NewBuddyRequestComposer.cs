@@ -1,12 +1,25 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Messenger;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class NewBuddyRequestComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Messenger;
+
+internal class NewBuddyRequestComposer : IServerPacket
 {
+    private readonly int _id;
+    private readonly string _name;
+    private readonly string _figure;
+    public int MessageId => ServerPacketHeader.NewBuddyRequestMessageComposer;
+
     public NewBuddyRequestComposer(int id, string name, string figure)
-        : base(ServerPacketHeader.NewBuddyRequestMessageComposer)
     {
-        WriteInteger(id);
-        WriteString(name);
-        WriteString(figure);
+        _id = id;
+        _name = name;
+        _figure = figure;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_id);
+        packet.WriteString(_name);
+        packet.WriteString(_figure);
     }
 }

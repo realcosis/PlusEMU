@@ -2,7 +2,6 @@
 using Plus.HabboHotel.Users;
 using Plus.HabboHotel.Users.Authentication;
 using Plus.HabboHotel.Users.Messenger;
-using System.Threading.Tasks;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Friends
@@ -51,15 +50,15 @@ namespace Plus.HabboHotel.Friends
         }
 
 
-        private void OnRoomInviteReceived(Habbo habbo, MessengerMessageEventArgs args) => habbo.GetClient().SendPacket(new RoomInviteComposer(args.Friend.Id, args.Message));
+        private void OnRoomInviteReceived(Habbo habbo, MessengerMessageEventArgs args) => habbo.GetClient().Send(new RoomInviteComposer(args.Friend.Id, args.Message));
 
-        private void OnMessageReceived(Habbo habbo, MessengerMessageEventArgs args) => habbo.GetClient().SendPacket(new NewConsoleMessageComposer(args.Friend.Id, args.Message));
+        private void OnMessageReceived(Habbo habbo, MessengerMessageEventArgs args) => habbo.GetClient().Send(new NewConsoleMessageComposer(args.Friend.Id, args.Message));
 
         private async Task OnMessageSend(Habbo habbo, MessengerMessageEventArgs args)
         {
             if (habbo.TimeMuted > 0)
             {
-                habbo.GetClient().SendPacket(new InstantMessageErrorComposer(MessengerMessageErrors.YourMuted, args.Friend.Id));
+                habbo.GetClient().Send(new InstantMessageErrorComposer(MessengerMessageErrors.YourMuted, args.Friend.Id));
                 return;
             }
 
@@ -73,13 +72,13 @@ namespace Plus.HabboHotel.Friends
 
             if (target.GetHabbo().TimeMuted > 0)
             {
-                habbo.GetClient().SendPacket(new InstantMessageErrorComposer(MessengerMessageErrors.FriendMuted, args.Friend.Id));
+                habbo.GetClient().Send(new InstantMessageErrorComposer(MessengerMessageErrors.FriendMuted, args.Friend.Id));
                 return;
             }
 
             if (!target.GetHabbo().AllowConsoleMessages || target.GetHabbo().IgnoresComponent.IsIgnored(habbo.Id))
             {
-                habbo.GetClient().SendPacket(new InstantMessageErrorComposer(MessengerMessageErrors.FriendBusy, args.Friend.Id));
+                habbo.GetClient().Send(new InstantMessageErrorComposer(MessengerMessageErrors.FriendBusy, args.Friend.Id));
                 return;
             }
 
@@ -96,17 +95,17 @@ namespace Plus.HabboHotel.Friends
                 if (change == BuddyModificationType.Removed)
                     await RemoveFriend(habbo, friend);
             }
-            habbo.GetClient().SendPacket(new FriendListUpdateComposer(args.Changes));
+            habbo.GetClient().Send(new FriendListUpdateComposer(args.Changes));
         }
 
         private async Task OnFriendUpdated(Habbo habbo, MessengerBuddyModifiedEventArgs args)
         {
             if (args.BuddyModificationType == BuddyModificationType.Removed)
                 await RemoveFriend(habbo, args.Buddy);
-            habbo.GetClient().SendPacket(new FriendListUpdateComposer(args.Buddy, args.BuddyModificationType));
+            habbo.GetClient().Send(new FriendListUpdateComposer(args.Buddy, args.BuddyModificationType));
         }
 
-        private void OnFriendStatusUpdated(Habbo habbo, FriendStatusUpdatedEventArgs args) => habbo.GetClient().SendPacket(new FriendNotificationComposer(args.Friend.Id, args.EventType, args.Value));
+        private void OnFriendStatusUpdated(Habbo habbo, FriendStatusUpdatedEventArgs args) => habbo.GetClient().Send(new FriendNotificationComposer(args.Friend.Id, args.EventType, args.Value));
 
         private async Task OnFriendRequestUpdated(Habbo habbo, FriendRequestModifiedEventArgs args)
         {
@@ -129,7 +128,7 @@ namespace Plus.HabboHotel.Friends
             }
             else if (args.FriendRequestModificationType == FriendRequestModificationType.Received)
             {
-                habbo.GetClient().SendPacket(new NewBuddyRequestComposer(args.Request.FromId, args.Request.Username, args.Request.Figure));
+                habbo.GetClient().Send(new NewBuddyRequestComposer(args.Request.FromId, args.Request.Username, args.Request.Figure));
             }
             else if (args.FriendRequestModificationType == FriendRequestModificationType.Sent)
             {

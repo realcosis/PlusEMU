@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
 using Plus.Communication.Packets.Outgoing.Inventory.Bots;
@@ -54,17 +50,17 @@ public class PurchaseFromCatalogEvent : IPacketEvent
         _itemManager = itemManager;
         _badgeManager = badgeManager;
     }
-    public async Task Parse(GameClient session, ClientPacket packet)
+    public async Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (_settingsManager.TryGetValue("catalog.enabled") != "1")
         {
             session.SendNotification("The hotel managers have disabled the catalogue");
             return;
         }
-        var pageId = packet.PopInt();
-        var itemId = packet.PopInt();
-        var extraData = packet.PopString();
-        var amount = packet.PopInt();
+        var pageId = packet.ReadInt();
+        var itemId = packet.ReadInt();
+        var extraData = packet.ReadString();
+        var amount = packet.ReadInt();
         if (!_catalogManager.TryGetPage(pageId, out var page))
             return;
         if (!page.Enabled || !page.Visible || page.MinimumRank > session.GetHabbo().Rank || page.MinimumVip > session.GetHabbo().VipRank && session.GetHabbo().Rank == 1)
@@ -148,7 +144,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
             case InteractionType.BadgeDisplay:
                 if (!session.GetHabbo().Inventory.Badges.HasBadge(extraData))
                 {
-                    session.SendPacket(new BroadcastMessageAlertComposer("Oops, it appears that you do not own this badge."));
+                    session.Send(new BroadcastMessageAlertComposer("Oops, it appears that you do not own this badge."));
                     return;
                 }
                 extraData = extraData + Convert.ToChar(9) + session.GetHabbo().Username + Convert.ToChar(9) + DateTime.Now.Day + "-" + DateTime.Now.Month + "-" + DateTime.Now.Year;
@@ -157,7 +153,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
             {
                 if (session.GetHabbo().Inventory.Badges.HasBadge(item.Data.ItemName))
                 {
-                    session.SendPacket(new PurchaseErrorComposer(1));
+                    session.Send(new PurchaseErrorComposer(1));
                     return;
                 }
                 break;
@@ -171,8 +167,8 @@ public class PurchaseFromCatalogEvent : IPacketEvent
             if (item.LimitedEditionStack <= item.LimitedEditionSells)
             {
                 session.SendNotification("This item has sold out!\n\n" + "Please note, you have not recieved another item (You have also not been charged for it!)");
-                session.SendPacket(new CatalogUpdatedComposer());
-                session.SendPacket(new PurchaseOkComposer());
+                session.Send(new CatalogUpdatedComposer());
+                session.Send(new PurchaseOkComposer());
                 return;
             }
             item.LimitedEditionSells++;
@@ -186,17 +182,17 @@ public class PurchaseFromCatalogEvent : IPacketEvent
         if (item.CostCredits > 0)
         {
             session.GetHabbo().Credits -= totalCreditsCost;
-            session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
+            session.Send(new CreditBalanceComposer(session.GetHabbo().Credits));
         }
         if (item.CostPixels > 0)
         {
             session.GetHabbo().Duckets -= totalPixelCost;
-            session.SendPacket(new HabboActivityPointNotificationComposer(session.GetHabbo().Duckets, session.GetHabbo().Duckets)); //Love you, Tom.
+            session.Send(new HabboActivityPointNotificationComposer(session.GetHabbo().Duckets, session.GetHabbo().Duckets)); //Love you, Tom.
         }
         if (item.CostDiamonds > 0)
         {
             session.GetHabbo().Diamonds -= totalDiamondCost;
-            session.SendPacket(new HabboActivityPointNotificationComposer(session.GetHabbo().Diamonds, 0, 5));
+            session.Send(new HabboActivityPointNotificationComposer(session.GetHabbo().Diamonds, 0, 5));
         }
         switch (item.Data.Type.ToString().ToLower())
         {
@@ -301,7 +297,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                     if (session.GetHabbo().Inventory.Furniture.AddItem(purchasedItem))
                     {
                         //Session.SendMessage(new FurniListAddComposer(PurchasedItem));
-                        session.SendPacket(new FurniListNotificationComposer(purchasedItem.Id, 1));
+                        session.Send(new FurniListNotificationComposer(purchasedItem.Id, 1));
                     }
                 }
                 break;
@@ -315,15 +311,15 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                 else
                     effect = AvatarEffectFactory.CreateNullable(session.GetHabbo(), item.Data.SpriteId, 3600);
                 if (effect != null) // && Session.GetHabbo().Effects().TryAdd(Effect))
-                    session.SendPacket(new AvatarEffectAddedComposer(item.Data.SpriteId, 3600));
+                    session.Send(new AvatarEffectAddedComposer(item.Data.SpriteId, 3600));
                 break;
             case "r":
                 var bot = BotUtility.CreateBot(item.Data, session.GetHabbo().Id);
                 if (bot != null)
                 {
                     session.GetHabbo().Inventory.Bots.AddBot(bot);
-                    session.SendPacket(new BotInventoryComposer(session.GetHabbo().Inventory.Bots.Bots.Values.ToList()));
-                    session.SendPacket(new FurniListNotificationComposer(bot.Id, 5));
+                    session.Send(new BotInventoryComposer(session.GetHabbo().Inventory.Bots.Bots.Values.ToList()));
+                    session.Send(new FurniListNotificationComposer(bot.Id, 5));
                 }
                 else
                     session.SendNotification("Oops! There was an error whilst purchasing this bot. It seems that there is no bot data for the bot!");
@@ -331,7 +327,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
             case "b":
             {
                 await _badgeManager.GiveBadge(session.GetHabbo(), item.Data.ItemName);
-                session.SendPacket(new FurniListNotificationComposer(0, 4));
+                session.Send(new FurniListNotificationComposer(0, 4));
                 break;
             }
             case "p":
@@ -344,15 +340,15 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                     {
                         pet.RoomId = 0;
                         pet.PlacedInRoom = false;
-                        session.SendPacket(new FurniListNotificationComposer(pet.PetId, 3));
-                        session.SendPacket(new PetInventoryComposer(session.GetHabbo().Inventory.Pets.Pets.Values.ToList()));
+                        session.Send(new FurniListNotificationComposer(pet.PetId, 3));
+                        session.Send(new PetInventoryComposer(session.GetHabbo().Inventory.Pets.Pets.Values.ToList()));
                         if (_itemManager.GetItem(320, out var petFood))
                         {
                             var food = ItemFactory.CreateSingleItemNullable(petFood, session.GetHabbo(), "", "");
                             if (food != null)
                             {
                                 session.GetHabbo().Inventory.Furniture.AddItem(food);
-                                session.SendPacket(new FurniListNotificationComposer(food.Id, 1));
+                                session.Send(new FurniListNotificationComposer(food.Id, 1));
                             }
                         }
                     }
@@ -364,7 +360,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
             _badgeManager.TryGetBadge(item.Badge, out var badge) &&
             (string.IsNullOrEmpty(badge.RequiredRight) || session.GetHabbo().GetPermissions().HasRight(badge.RequiredRight)))
             await _badgeManager.GiveBadge(session.GetHabbo(), badge.Code);
-        session.SendPacket(new PurchaseOkComposer(item, item.Data));
-        session.SendPacket(new FurniListUpdateComposer());
+        session.Send(new PurchaseOkComposer(item, item.Data));
+        session.Send(new FurniListUpdateComposer());
     }
 }

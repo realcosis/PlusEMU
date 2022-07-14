@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Inventory.Furni;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
@@ -22,9 +19,9 @@ internal class DeleteRoomEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var roomId = packet.PopInt();
+        var roomId = packet.ReadInt();
         if (roomId == 0)
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(roomId, out var room))
@@ -52,7 +49,7 @@ internal class DeleteRoomEvent : IPacketEvent
             {
                 room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
                 targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
-                targetClient.SendPacket(new FurniListUpdateComposer());
+                targetClient.Send(new FurniListUpdateComposer());
             }
             else //No, query time.
             {

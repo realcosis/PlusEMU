@@ -1,29 +1,36 @@
-﻿using System.Collections.Generic;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Badges;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Badges;
 
-internal class BadgesComposer : ServerPacket
+internal class BadgesComposer : IServerPacket
 {
+    private readonly GameClient _session;
+    public int MessageId => ServerPacketHeader.BadgesMessageComposer;
+
     public BadgesComposer(GameClient session)
-        : base(ServerPacketHeader.BadgesMessageComposer)
+    {
+        _session = session;
+        // TODO @80O: Pass badges instead of whole session object.
+    }
+
+    public void Compose(IOutgoingPacket packet)
     {
         var equippedBadges = new List<Badge>();
-        var badges = session.GetHabbo().Inventory.Badges.Badges;
-        WriteInteger(badges.Count);
+        var badges = _session.GetHabbo().Inventory.Badges.Badges;
+        packet.WriteInteger(badges.Count);
         foreach (var (_, badge) in badges)
         {
-            WriteInteger(1);
-            WriteString(badge.Code);
+            packet.WriteInteger(1);
+            packet.WriteString(badge.Code);
             if (badge.Slot > 0)
                 equippedBadges.Add(badge);
         }
-        WriteInteger(equippedBadges.Count);
+        packet.WriteInteger(equippedBadges.Count);
         foreach (var badge in equippedBadges)
         {
-            WriteInteger(badge.Slot);
-            WriteString(badge.Code);
+            packet.WriteInteger(badge.Slot);
+            packet.WriteString(badge.Code);
         }
     }
 }

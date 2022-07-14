@@ -1,19 +1,27 @@
-﻿using Plus.HabboHotel.Items;
+﻿using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Items;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class ItemAddComposer : ServerPacket
+internal class ItemAddComposer : IServerPacket
 {
+    private readonly Item _item;
+    public int MessageId => ServerPacketHeader.ItemAddMessageComposer;
+
     public ItemAddComposer(Item item)
-        : base(ServerPacketHeader.ItemAddMessageComposer)
     {
-        WriteString(item.Id.ToString());
-        WriteInteger(item.GetBaseItem().SpriteId);
-        WriteString(item.WallCoord != null ? item.WallCoord : string.Empty);
-        ItemBehaviourUtility.GenerateWallExtradata(item, this);
-        WriteInteger(-1);
-        WriteInteger(item.GetBaseItem().Modes > 1 ? 1 : 0); // Type New R63 ('use bottom')
-        WriteInteger(item.UserId);
-        WriteString(item.Username);
+        _item = item;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteString(_item.Id.ToString());
+        packet.WriteInteger(_item.GetBaseItem().SpriteId);
+        packet.WriteString(_item.WallCoord != null ? _item.WallCoord : string.Empty);
+        ItemBehaviourUtility.GenerateWallExtradata(_item, packet);
+        packet.WriteInteger(-1);
+        packet.WriteInteger(_item.GetBaseItem().Modes > 1 ? 1 : 0); // Type New R63 ('use bottom')
+        packet.WriteInteger(_item.UserId);
+        packet.WriteString(_item.Username);
     }
 }

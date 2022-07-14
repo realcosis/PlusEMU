@@ -1,10 +1,16 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Purse;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class CreditBalanceComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Inventory.Purse;
+
+internal class CreditBalanceComposer : IServerPacket
 {
+    private readonly int _creditsBalance;
+    public int MessageId => ServerPacketHeader.CreditBalanceMessageComposer;
+
     public CreditBalanceComposer(int creditsBalance)
-        : base(ServerPacketHeader.CreditBalanceMessageComposer)
     {
-        WriteString(creditsBalance + ".0");
+        _creditsBalance = creditsBalance;
     }
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteString(_creditsBalance + ".0");
 }

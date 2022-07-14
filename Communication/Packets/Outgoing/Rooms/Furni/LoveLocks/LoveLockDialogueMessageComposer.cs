@@ -1,11 +1,21 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.LoveLocks;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class LoveLockDialogueMessageComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.LoveLocks;
+
+internal class LoveLockDialogueMessageComposer : IServerPacket
 {
+    private readonly int _itemId;
+
+    public int MessageId => ServerPacketHeader.LoveLockDialogueMessageComposer;
+
     public LoveLockDialogueMessageComposer(int itemId)
-        : base(ServerPacketHeader.LoveLockDialogueMessageComposer)
     {
-        WriteInteger(itemId);
-        WriteBoolean(true);
+        _itemId = itemId;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_itemId);
+        packet.WriteBoolean(true);
     }
 }

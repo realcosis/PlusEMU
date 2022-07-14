@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Database;
+﻿using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Moderation;
@@ -15,12 +14,12 @@ internal class ModerationCautionEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().GetPermissions().HasRight("mod_caution"))
             return Task.CompletedTask;
-        var userId = packet.PopInt();
-        var message = packet.PopString();
+        var userId = packet.ReadInt();
+        var message = packet.ReadString();
         var client = _clientManager.GetClientByUserId(userId);
         if (client == null || client.GetHabbo() == null)
             return Task.CompletedTask;

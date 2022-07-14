@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Groups;
+﻿using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 
@@ -14,14 +13,14 @@ internal class ManageGroupEvent : IPacketEvent
         _groupManager = groupManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var groupId = packet.PopInt();
+        var groupId = packet.ReadInt();
         if (!_groupManager.TryGetGroup(groupId, out var group))
             return Task.CompletedTask;
         if (group.CreatorId != session.GetHabbo().Id && !session.GetHabbo().GetPermissions().HasRight("group_management_override"))
             return Task.CompletedTask;
-        session.SendPacket(new ManageGroupComposer(group, group.Badge.Replace("b", "").Split('s')));
+        session.Send(new ManageGroupComposer(group, group.Badge.Replace("b", "").Split('s')));
         return Task.CompletedTask;
     }
 }

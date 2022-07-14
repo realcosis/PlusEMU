@@ -1,11 +1,23 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Catalog;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class PresentDeliverErrorMessageComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Catalog;
+
+internal class PresentDeliverErrorMessageComposer : IServerPacket
 {
+    private readonly bool _creditError;
+    private readonly bool _ducketError;
+
+    public int MessageId => ServerPacketHeader.PresentDeliverErrorMessageComposer;
+
     public PresentDeliverErrorMessageComposer(bool creditError, bool ducketError)
-        : base(ServerPacketHeader.PresentDeliverErrorMessageComposer)
     {
-        WriteBoolean(creditError); //Do we have enough credits?
-        WriteBoolean(ducketError); //Do we have enough duckets?
+        _creditError = creditError;
+        _ducketError = ducketError;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteBoolean(_creditError);
+        packet.WriteBoolean(_ducketError);
     }
 }

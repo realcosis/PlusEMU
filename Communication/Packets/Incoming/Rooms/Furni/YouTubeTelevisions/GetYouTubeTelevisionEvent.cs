@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Furni.YouTubeTelevisions;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Furni.YouTubeTelevisions;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items.Televisions;
 
@@ -17,11 +13,11 @@ internal class GetYouTubeTelevisionEvent : IPacketEvent
         _televisionManager = televisionManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
-        var itemId = packet.PopInt();
+        var itemId = packet.ReadInt();
         var videos = _televisionManager.TelevisionList;
         if (videos.Count == 0)
         {
@@ -29,8 +25,8 @@ internal class GetYouTubeTelevisionEvent : IPacketEvent
             return Task.CompletedTask;
         }
         var dict = _televisionManager.Televisions;
-        foreach (var value in RandomValues(dict).Take(1)) session.SendPacket(new GetYouTubeVideoComposer(itemId, value.YouTubeId));
-        session.SendPacket(new GetYouTubePlaylistComposer(itemId, videos));
+        foreach (var value in RandomValues(dict).Take(1)) session.Send(new GetYouTubeVideoComposer(itemId, value.YouTubeId));
+        session.Send(new GetYouTubePlaylistComposer(itemId, videos));
         return Task.CompletedTask;
     }
 

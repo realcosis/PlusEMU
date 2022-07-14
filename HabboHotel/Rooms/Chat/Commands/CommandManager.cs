@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using Plus.Communication.Packets.Outgoing.Notifications;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items.Wired;
@@ -51,7 +49,7 @@ public class CommandManager : ICommandManager
                 }
                 list.Append(":" + cmdList.Key + " " + cmdList.Value.Parameters + " - " + cmdList.Value.Description + "\n");
             }
-            session.SendPacket(new MotdNotificationComposer(list.ToString()));
+            session.Send(new MotdNotificationComposer(list.ToString()));
             return true;
         }
         message = message.Substring(1);

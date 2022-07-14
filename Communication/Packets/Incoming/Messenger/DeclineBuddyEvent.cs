@@ -1,17 +1,16 @@
-﻿using System.Threading.Tasks;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Messenger;
 
 internal class DeclineBuddyEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var declineAll = packet.PopBoolean();
-        packet.PopInt(); //amount
+        var declineAll = packet.ReadBool();
+        packet.ReadInt(); //amount
         if (!declineAll)
         {
-            var requestId = packet.PopInt();
+            var requestId = packet.ReadInt();
             session.GetHabbo().GetMessenger().DeclineFriendRequest(requestId);
         }
         else

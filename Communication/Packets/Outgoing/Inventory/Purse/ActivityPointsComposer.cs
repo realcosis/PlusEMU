@@ -1,34 +1,47 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Purse;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class ActivityPointsComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Inventory.Purse;
+
+internal class ActivityPointsComposer : IServerPacket
 {
+    private readonly int _pixelsBalance;
+    private readonly int _seasionalCurrency;
+    private readonly int _gotwPoints;
+    public int MessageId => ServerPacketHeader.ActivityPointsMessageComposer;
+
     public ActivityPointsComposer(int pixelsBalance, int seasionalCurrency, int gotwPoints)
-        : base(ServerPacketHeader.ActivityPointsMessageComposer)
     {
-        WriteInteger(11); //Count
+        _pixelsBalance = pixelsBalance;
+        _seasionalCurrency = seasionalCurrency;
+        _gotwPoints = gotwPoints;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(11); //Count
         {
-            WriteInteger(0); //Pixels
-            WriteInteger(pixelsBalance);
-            WriteInteger(1); //Snowflakes
-            WriteInteger(16);
-            WriteInteger(2); //Hearts
-            WriteInteger(15);
-            WriteInteger(3); //Gift points
-            WriteInteger(14);
-            WriteInteger(4); //Shells
-            WriteInteger(13);
-            WriteInteger(5); //Diamonds
-            WriteInteger(seasionalCurrency);
-            WriteInteger(101); //Snowflakes
-            WriteInteger(10);
-            WriteInteger(102);
-            WriteInteger(0);
-            WriteInteger(103); //Stars
-            WriteInteger(gotwPoints);
-            WriteInteger(104); //Clouds
-            WriteInteger(0);
-            WriteInteger(105); //Diamonds
-            WriteInteger(0);
+            packet.WriteInteger(0); //Pixels
+            packet.WriteInteger(_pixelsBalance);
+            packet.WriteInteger(1); //Snowflakes
+            packet.WriteInteger(16);
+            packet.WriteInteger(2); //Hearts
+            packet.WriteInteger(15);
+            packet.WriteInteger(3); //Gift points
+            packet.WriteInteger(14);
+            packet.WriteInteger(4); //Shells
+            packet.WriteInteger(13);
+            packet.WriteInteger(5); //Diamonds
+            packet.WriteInteger(_seasionalCurrency);
+            packet.WriteInteger(101); //Snowflakes
+            packet.WriteInteger(10);
+            packet.WriteInteger(102);
+            packet.WriteInteger(0);
+            packet.WriteInteger(103); //Stars
+            packet.WriteInteger(_gotwPoints);
+            packet.WriteInteger(104); //Clouds
+            packet.WriteInteger(0);
+            packet.WriteInteger(105); //Diamonds
+            packet.WriteInteger(0);
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Action;
-using Plus.Database;
+﻿using Plus.Database;
 using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 
@@ -17,14 +15,14 @@ internal class IgnoreUserEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
             return Task.CompletedTask;
-        var username = packet.PopString();
+        var username = packet.ReadString();
         var player = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(username)?.GetHabbo();
         if (player == null || player.GetPermissions().HasRight("mod_tool"))
             return Task.CompletedTask;

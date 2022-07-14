@@ -1,12 +1,16 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Handshake;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class AvailabilityStatusComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Handshake;
+
+internal class AvailabilityStatusComposer : IServerPacket
 {
-    public AvailabilityStatusComposer()
-        : base(ServerPacketHeader.AvailabilityStatusMessageComposer)
+    public int MessageId => ServerPacketHeader.AvailabilityStatusMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
     {
-        WriteBoolean(true);
-        WriteBoolean(false);
-        WriteBoolean(true);
+        // TODO @80O: Pass variables via constructor.
+        packet.WriteBoolean(true);
+        packet.WriteBoolean(false);
+        packet.WriteBoolean(true);
     }
 }

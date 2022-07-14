@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+﻿using System.Data;
 using Plus.HabboHotel.Groups;
 using Plus.Utilities;
 
@@ -131,9 +128,13 @@ public class RoomData
     public string Description { get; set; }
     public string Floor { get; set; }
     public string Landscape { get; set; }
+    // TODO @80O: Convert to bool
     public int AllowPets { get; set; }
+    // TODO @80O: Convert to bool
     public int AllowPetsEating { get; set; }
+    // TODO @80O: Convert to bool
     public int RoomBlockingEnabled { get; set; }
+    // TODO @80O: Convert to bool
     public int Hidewall { get; set; }
     public int WallThickness { get; set; }
     public int FloorThickness { get; set; }

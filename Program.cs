@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using NLog;
 using Plus.Core;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
+using Plus.Communication.Flash;
+using Plus.Communication.RCON;
+using Plus.Database;
 using Plus.Plugins;
 using Plus.Utilities.DependencyInjection;
 using Scrutor;
@@ -21,6 +20,7 @@ public static class Program
     {
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
 
+
         var services = new ServiceCollection();
         _transientTypes = typeof(Program).Assembly.GetTypes().Where(t => t.IsInterface && t.GetCustomAttributes<TransientAttribute>().Any());
 
@@ -30,6 +30,16 @@ public static class Program
         pluginAssemblies.AddRange(new DirectoryInfo("plugins").GetFiles().Where(f => Path.GetExtension(f.Name).Equals(".dll")).Select(f => PluginLoadContext.LoadPlugin(Path.Join("plugins"), Path.GetFileNameWithoutExtension(f.Name))));
         var pluginDefinitions = pluginAssemblies.SelectMany(pluginAssembly => AddPlugin(services, pluginAssembly)).ToList();
 
+        // Configuration
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Path.Join(Directory.GetCurrentDirectory(), "Config"))
+            .AddJsonFile("config.json")
+            .Build();
+
+        services.AddConfiguration<FlashServerConfiguration>(configuration.GetSection("Flash"));
+        services.AddConfiguration<DatabaseConfiguration>(configuration.GetSection("Database"));
+        services.AddConfiguration<RconConfiguration>(configuration.GetSection("Rcon"));
+
         // Dependency Injection
         services.AddDefaultRules(typeof(Program).Assembly);
 
@@ -38,10 +48,7 @@ public static class Program
 
 
         // Configuration
-        var projectSolutionPath = Directory.GetCurrentDirectory();
-        var configuration = new ConfigurationData(projectSolutionPath + "//Config//config.ini");
-        services.AddSingleton(configuration);
-        LogManager.LoadConfiguration("Config/nlog.config");
+        LogManager.LoadConfiguration(Path.Join(Directory.GetCurrentDirectory(), "Config", "nlog.config"));
 
         var serviceProvider = services.BuildServiceProvider();
         foreach (var plugin in pluginDefinitions)
@@ -124,6 +131,12 @@ public static class Program
             Console.WriteLine($"Failed to load plugin assembly { pluginAssembly.FullName}. Possibly outdated. {e.Message}");
         }
         return pluginDefinitions;
+    }
+    public static IServiceCollection AddConfiguration<T>(this IServiceCollection services, IConfigurationSection section)
+        where T : class
+    {
+        services.Configure<T>(section);
+        return services;
     }
 
     private static void OnUnhandledException(object sender, UnhandledExceptionEventArgs args)

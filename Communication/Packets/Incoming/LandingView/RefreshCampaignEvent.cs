@@ -1,16 +1,15 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.LandingView;
+﻿using Plus.Communication.Packets.Outgoing.LandingView;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.LandingView;
 
 internal class RefreshCampaignEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         try
         {
-            var parseCampaings = packet.PopString();
+            var parseCampaings = packet.ReadString();
             if (parseCampaings.Contains("gamesmaker"))
                 return Task.CompletedTask;
             var campaingName = "";
@@ -22,7 +21,7 @@ internal class RefreshCampaignEvent : IPacketEvent
                 var data = value.Split(',');
                 campaingName = data[1];
             }
-            session.SendPacket(new CampaignComposer(parseCampaings, campaingName));
+            session.Send(new CampaignComposer(parseCampaings, campaingName));
         }
         catch
         {

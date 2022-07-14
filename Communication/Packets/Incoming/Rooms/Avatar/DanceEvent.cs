@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
 using Plus.HabboHotel.Rooms;
@@ -17,7 +16,7 @@ internal class DanceEvent : IPacketEvent
         _questManager = questManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -27,7 +26,7 @@ internal class DanceEvent : IPacketEvent
         if (user == null)
             return Task.CompletedTask;
         user.UnIdle();
-        var danceId = packet.PopInt();
+        var danceId = packet.ReadInt();
         if (danceId < 0 || danceId > 4)
             danceId = 0;
         if (danceId > 0 && user.CarryItemId > 0)

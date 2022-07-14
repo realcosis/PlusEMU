@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Inventory.Furni;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Rooms;
@@ -16,10 +14,10 @@ internal class AddStickyNoteEvent : IPacketEvent
         _roomManager = roomManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var itemId = packet.PopInt();
-        var locationData = packet.PopString();
+        var itemId = packet.ReadInt();
+        var locationData = packet.ReadString();
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
@@ -36,7 +34,7 @@ internal class AddStickyNoteEvent : IPacketEvent
             if (room.GetRoomItemHandler().SetWallItem(session, roomItem))
             {
                 session.GetHabbo().Inventory.Furniture.RemoveItem(itemId);
-                session.SendPacket(new FurniListRemoveComposer(itemId));
+                session.Send(new FurniListRemoveComposer(itemId));
             }
         }
         catch

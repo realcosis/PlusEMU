@@ -1,26 +1,53 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
+﻿using Plus.HabboHotel.GameClients;
+using Plus.Utilities;
 
-internal class SlideObjectBundleComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
+
+internal class SlideObjectBundleComposer : IServerPacket
 {
+    private readonly int _fromX;
+    private readonly int _fromY;
+    private readonly double _fromZ;
+    private readonly int _toX;
+    private readonly int _toY;
+    private readonly double _toZ;
+    private readonly int _rollerId;
+    private readonly int _avatarId;
+    private readonly int _itemId;
+
+    public int MessageId => ServerPacketHeader.SlideObjectBundleMessageComposer;
+
     public SlideObjectBundleComposer(int fromX, int fromY, double fromZ, int toX, int toY, double toZ, int rollerId, int avatarId, int itemId)
-        : base(ServerPacketHeader.SlideObjectBundleMessageComposer)
     {
-        var isItem = itemId > 0;
-        WriteInteger(fromX);
-        WriteInteger(fromY);
-        WriteInteger(toX);
-        WriteInteger(toY);
-        WriteInteger(isItem ? 1 : 0);
+        _fromX = fromX;
+        _fromY = fromY;
+        _fromZ = fromZ;
+        _toX = toX;
+        _toY = toY;
+        _toZ = toZ;
+        _rollerId = rollerId;
+        _avatarId = avatarId;
+        _itemId = itemId;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        var isItem = _itemId > 0;
+        packet.WriteInteger(_fromX);
+        packet.WriteInteger(_fromY);
+        packet.WriteInteger(_toX);
+        packet.WriteInteger(_toY);
+        packet.WriteInteger(isItem ? 1 : 0);
         if (isItem)
-            WriteInteger(itemId);
+            packet.WriteInteger(_itemId);
         else
         {
-            WriteInteger(rollerId);
-            WriteInteger(2);
-            WriteInteger(avatarId);
+            packet.WriteInteger(_rollerId);
+            packet.WriteInteger(2);
+            packet.WriteInteger(_avatarId);
         }
-        WriteDouble(fromZ);
-        WriteDouble(toZ);
-        if (isItem) WriteInteger(rollerId);
+        packet.WriteString(TextHandling.GetString(_fromZ));
+        packet.WriteString(TextHandling.GetString(_toZ));
+        if (isItem) packet.WriteInteger(_rollerId);
     }
 }

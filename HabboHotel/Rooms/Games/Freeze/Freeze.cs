@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Drawing;
-using System.Linq;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.Communication.Packets.Outgoing.Rooms.Freeze;
 using Plus.HabboHotel.Items;
@@ -204,7 +201,7 @@ public class Freeze
             user.ShieldActive = false;
             user.ShieldCounter = 11;
             _room.GetGameManager().AddPointToTeam(user.Team, 30);
-            user.GetClient().SendPacket(new UpdateFreezeLivesComposer(user.InternalRoomId, user.FreezeLives));
+            user.GetClient().Send(new UpdateFreezeLivesComposer(user.InternalRoomId, user.FreezeLives));
         }
     }
 
@@ -336,7 +333,7 @@ public class Freeze
                     user.FreezeLives++;
                     _room.GetGameManager().AddPointToTeam(user.Team, 10);
                 }
-                user.GetClient().SendPacket(new UpdateFreezeLivesComposer(user.InternalRoomId, user.FreezeLives));
+                user.GetClient().Send(new UpdateFreezeLivesComposer(user.InternalRoomId, user.FreezeLives));
                 break;
             }
             case FreezePowerUp.Shield:
@@ -404,7 +401,7 @@ public class Freeze
         user.FreezeLives--;
         if (user.FreezeLives <= 0)
         {
-            user.GetClient().SendPacket(new UpdateFreezeLivesComposer(user.InternalRoomId, user.FreezeLives));
+            user.GetClient().Send(new UpdateFreezeLivesComposer(user.InternalRoomId, user.FreezeLives));
             user.ApplyEffect(-1);
             _room.GetGameManager().AddPointToTeam(user.Team, -10);
             var t = _room.GetTeamManagerForFreeze();
@@ -431,7 +428,7 @@ public class Freeze
         }
         _room.GetGameManager().AddPointToTeam(user.Team, -10);
         user.ApplyEffect(12);
-        user.GetClient().SendPacket(new UpdateFreezeLivesComposer(user.InternalRoomId, user.FreezeLives));
+        user.GetClient().Send(new UpdateFreezeLivesComposer(user.InternalRoomId, user.FreezeLives));
     }
 
     private List<Item> GetVerticalItems(int x, int y, int length)

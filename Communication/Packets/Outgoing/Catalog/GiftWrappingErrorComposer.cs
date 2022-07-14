@@ -1,7 +1,13 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Catalog;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class GiftWrappingErrorComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Catalog;
+
+internal class GiftWrappingErrorComposer : IServerPacket
 {
-    public GiftWrappingErrorComposer()
-        : base(ServerPacketHeader.GiftWrappingErrorMessageComposer) { }
+    public int MessageId => ServerPacketHeader.GiftWrappingErrorMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        // TODO @80O: Verify empty body?
+    }
 }

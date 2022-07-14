@@ -1,5 +1,4 @@
-﻿using System;
-using NLog;
+﻿using NLog;
 using Plus.Communication.Packets.Outgoing.Moderation;
 
 namespace Plus.Core;

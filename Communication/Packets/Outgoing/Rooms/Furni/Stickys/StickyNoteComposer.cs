@@ -1,11 +1,23 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Stickys;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class StickyNoteComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Stickys;
+
+internal class StickyNoteComposer : IServerPacket
 {
+    private readonly string _itemId;
+    private readonly string _extradata;
+
+    public int MessageId => ServerPacketHeader.StickyNoteMessageComposer;
+
     public StickyNoteComposer(string itemId, string extradata)
-        : base(ServerPacketHeader.StickyNoteMessageComposer)
     {
-        WriteString(itemId);
-        WriteString(extradata);
+        _itemId = itemId;
+        _extradata = extradata;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteString(_itemId);
+        packet.WriteString(_extradata);
     }
 }

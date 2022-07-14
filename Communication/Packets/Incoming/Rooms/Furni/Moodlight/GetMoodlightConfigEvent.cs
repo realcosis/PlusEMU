@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Furni.Moodlight;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Furni.Moodlight;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Items.Data.Moodlight;
@@ -17,7 +15,7 @@ internal class GetMoodlightConfigEvent : IPacketEvent
         _roomManager = roomManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -35,7 +33,7 @@ internal class GetMoodlightConfigEvent : IPacketEvent
         }
         if (room.MoodlightData == null)
             return Task.CompletedTask;
-        session.SendPacket(new MoodlightConfigComposer(room.MoodlightData));
+        session.Send(new MoodlightConfigComposer(room.MoodlightData));
         return Task.CompletedTask;
     }
 }

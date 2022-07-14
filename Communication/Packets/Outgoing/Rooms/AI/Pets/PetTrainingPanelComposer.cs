@@ -1,36 +1,48 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.AI.Pets;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class PetTrainingPanelComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.AI.Pets;
+
+internal class PetTrainingPanelComposer : IServerPacket
 {
+    private readonly int _petId;
+    private readonly int _level;
+
+    public int MessageId => ServerPacketHeader.PetTrainingPanelMessageComposer;
+
     public PetTrainingPanelComposer(int petId, int level)
-        : base(ServerPacketHeader.PetTrainingPanelMessageComposer)
     {
-        WriteInteger(petId); //Pet Id for sure.
+        _petId = petId;
+        _level = level;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_petId); //Pet Id for sure.
 
         //Commands available to be done.
-        WriteInteger(8); //Count
+        packet.WriteInteger(8); //Count
         {
-            WriteInteger(46); //Breed?
-            WriteInteger(0); //Command Id
-            WriteInteger(1);
-            WriteInteger(2);
-            WriteInteger(3);
-            WriteInteger(4);
-            WriteInteger(5);
-            WriteInteger(6);
+            packet.WriteInteger(46); //Breed?
+            packet.WriteInteger(0); //Command Id
+            packet.WriteInteger(1);
+            packet.WriteInteger(2);
+            packet.WriteInteger(3);
+            packet.WriteInteger(4);
+            packet.WriteInteger(5);
+            packet.WriteInteger(6);
         }
 
         //Commands that can be used NOW. (Level ups give you new commands etc).
-        WriteInteger(GetCount(level)); //Count
+        packet.WriteInteger(GetCount(_level)); //Count
         {
-            WriteInteger(46); //Breed?
-            WriteInteger(0); //Command Id
-            WriteInteger(1);
-            WriteInteger(2);
-            WriteInteger(3);
-            WriteInteger(4);
-            WriteInteger(5);
-            WriteInteger(6);
+            packet.WriteInteger(46); //Breed?
+            packet.WriteInteger(0); //Command Id
+            packet.WriteInteger(1);
+            packet.WriteInteger(2);
+            packet.WriteInteger(3);
+            packet.WriteInteger(4);
+            packet.WriteInteger(5);
+            packet.WriteInteger(6);
         }
     }
 

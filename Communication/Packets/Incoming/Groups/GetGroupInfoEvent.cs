@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Groups;
+﻿using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 
@@ -14,13 +13,13 @@ internal class GetGroupInfoEvent : IPacketEvent
         _groupManager = groupManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var groupId = packet.PopInt();
-        var newWindow = packet.PopBoolean();
+        var groupId = packet.ReadInt();
+        var newWindow = packet.ReadBool();
         if (!_groupManager.TryGetGroup(groupId, out var group))
             return Task.CompletedTask;
-        session.SendPacket(new GroupInfoComposer(group, session, newWindow));
+        session.Send(new GroupInfoComposer(group, session, newWindow));
         return Task.CompletedTask;
     }
 }

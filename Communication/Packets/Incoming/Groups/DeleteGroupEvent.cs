@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plus.Core.Settings;
+﻿using Plus.Core.Settings;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
@@ -23,9 +21,9 @@ internal class DeleteGroupEvent : IPacketEvent
         _roomManager = roomManager;
         _settingsManager = settingsManager;
     }
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        if (!_groupManager.TryGetGroup(packet.PopInt(), out var group))
+        if (!_groupManager.TryGetGroup(packet.ReadInt(), out var group))
         {
             session.SendNotification("Oops, we couldn't find that group!");
             return Task.CompletedTask;

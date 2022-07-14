@@ -1,7 +1,13 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Furni;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class FurniListUpdateComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Inventory.Furni;
+
+internal class FurniListUpdateComposer : IServerPacket
 {
-    public FurniListUpdateComposer()
-        : base(ServerPacketHeader.FurniListUpdateMessageComposer) { }
+    public int MessageId => ServerPacketHeader.FurniListUpdateMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        // Empty Body
+    }
 }

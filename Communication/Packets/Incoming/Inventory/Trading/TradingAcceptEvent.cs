@@ -1,12 +1,11 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Inventory.Trading;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Trading;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Inventory.Trading;
 
 internal class TradingAcceptEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -18,7 +17,7 @@ internal class TradingAcceptEvent : IPacketEvent
             return Task.CompletedTask;
         if (!room.GetTrading().TryGetTrade(roomUser.TradeId, out var trade))
         {
-            session.SendPacket(new TradingClosedComposer(session.GetHabbo().Id));
+            session.Send(new TradingClosedComposer(session.GetHabbo().Id));
             return Task.CompletedTask;
         }
         var tradeUser = trade.Users[0];

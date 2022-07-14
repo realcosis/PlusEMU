@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Quests;
+﻿using Plus.Communication.Packets.Outgoing.Quests;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
@@ -17,7 +16,7 @@ internal class CancelQuestEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         var quest = _questManager.GetQuest(session.GetHabbo().GetStats().QuestId);
         if (quest == null)
@@ -28,7 +27,7 @@ internal class CancelQuestEvent : IPacketEvent
                               "UPDATE `user_statistics` SET `quest_id` = '0' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
         }
         session.GetHabbo().GetStats().QuestId = 0;
-        session.SendPacket(new QuestAbortedComposer());
+        session.Send(new QuestAbortedComposer());
         _questManager.GetList(session, null);
         return Task.CompletedTask;
     }

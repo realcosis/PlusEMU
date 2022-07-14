@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Linq;
-using Plus.Communication.Packets.Incoming;
+﻿using System.Collections.Concurrent;
 using Plus.Communication.Packets.Outgoing.Rooms.Chat;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 
@@ -26,11 +24,11 @@ internal class UserSaysBox : IWiredItem
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet)
+    public void HandleSave(IIncomingPacket packet)
     {
-        var unknown = packet.PopInt();
-        var ownerOnly = packet.PopInt();
-        var message = packet.PopString();
+        var unknown = packet.ReadInt();
+        var ownerOnly = packet.ReadInt();
+        var message = packet.ReadString();
         BoolData = ownerOnly == 1;
         StringData = message;
     }
@@ -57,7 +55,7 @@ internal class UserSaysBox : IWiredItem
                     return false;
                 Instance.GetWired().OnEvent(condition.Item);
             }
-            player.GetClient().SendPacket(new WhisperComposer(user.VirtualId, message, 0, 0));
+            player.GetClient().Send(new WhisperComposer(user.VirtualId, message, 0, 0));
             //Check the ICollection to find the random addon effect.
             var hasRandomEffectAddon = effects.Count(x => x.Type == WiredBoxType.AddonRandomEffect) > 0;
             if (hasRandomEffectAddon)

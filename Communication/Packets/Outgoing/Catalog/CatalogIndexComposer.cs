@@ -1,80 +1,89 @@
-﻿using System.Collections.Generic;
-using Plus.HabboHotel.Catalog;
+﻿using Plus.HabboHotel.Catalog;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Outgoing.Catalog;
 
-public class CatalogIndexComposer : ServerPacket
+public class CatalogIndexComposer : IServerPacket
 {
-    public CatalogIndexComposer(GameClient sesion, ICollection<CatalogPage> pages)
-        : base(ServerPacketHeader.CatalogIndexMessageComposer)
+    private readonly GameClient _session;
+    private readonly ICollection<CatalogPage> _pages;
+
+    public int MessageId => ServerPacketHeader.CatalogIndexMessageComposer;
+
+    public CatalogIndexComposer(GameClient session, ICollection<CatalogPage> pages)
     {
-        WriteRootIndex(sesion, pages);
-        foreach (var parent in pages)
+        _session = session;
+        _pages = pages;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        WriteRootIndex(packet);
+        foreach (var parent in _pages)
         {
-            if (parent.ParentId != -1 || parent.MinimumRank > sesion.GetHabbo().Rank || parent.MinimumVip > sesion.GetHabbo().VipRank && sesion.GetHabbo().Rank == 1)
+            if (parent.ParentId != -1 || parent.MinimumRank > _session.GetHabbo().Rank || parent.MinimumVip > _session.GetHabbo().VipRank && _session.GetHabbo().Rank == 1)
                 continue;
-            WritePage(parent, CalcTreeSize(sesion, pages, parent.Id));
-            foreach (var child in pages)
+            WritePage(packet, parent, CalcTreeSize(_pages, parent.Id));
+            foreach (var child in _pages)
             {
-                if (child.ParentId != parent.Id || child.MinimumRank > sesion.GetHabbo().Rank || child.MinimumVip > sesion.GetHabbo().VipRank && sesion.GetHabbo().Rank == 1)
+                if (child.ParentId != parent.Id || child.MinimumRank > _session.GetHabbo().Rank || child.MinimumVip > _session.GetHabbo().VipRank && _session.GetHabbo().Rank == 1)
                     continue;
                 if (child.Enabled)
-                    WritePage(child, CalcTreeSize(sesion, pages, child.Id));
+                    WritePage(packet, child, CalcTreeSize(_pages, child.Id));
                 else
-                    WriteNodeIndex(child, CalcTreeSize(sesion, pages, child.Id));
-                foreach (var subChild in pages)
+                    WriteNodeIndex(packet, child, CalcTreeSize(_pages, child.Id));
+                foreach (var subChild in _pages)
                 {
-                    if (subChild.ParentId != child.Id || subChild.MinimumRank > sesion.GetHabbo().Rank)
+                    if (subChild.ParentId != child.Id || subChild.MinimumRank > _session.GetHabbo().Rank)
                         continue;
-                    WritePage(subChild, 0);
+                    WritePage(packet, subChild, 0);
                 }
             }
         }
-        WriteBoolean(false);
-        WriteString("NORMAL");
+        packet.WriteBoolean(false);
+        packet.WriteString("NORMAL");
     }
 
-    public void WriteRootIndex(GameClient session, ICollection<CatalogPage> pages)
+    public void WriteRootIndex(IOutgoingPacket packet)
     {
-        WriteBoolean(true);
-        WriteInteger(0);
-        WriteInteger(-1);
-        WriteString("root");
-        WriteString(string.Empty);
-        WriteInteger(0);
-        WriteInteger(CalcTreeSize(session, pages, -1));
+        packet.WriteBoolean(true);
+        packet.WriteInteger(0);
+        packet.WriteInteger(-1);
+        packet.WriteString("root");
+        packet.WriteString(string.Empty);
+        packet.WriteInteger(0);
+        packet.WriteInteger(CalcTreeSize(_pages, -1));
     }
 
-    public void WriteNodeIndex(CatalogPage page, int treeSize)
+    public void WriteNodeIndex(IOutgoingPacket packet, CatalogPage page, int treeSize)
     {
-        WriteBoolean(page.Visible);
-        WriteInteger(page.Icon);
-        WriteInteger(-1);
-        WriteString(page.PageLink);
-        WriteString(page.Caption);
-        WriteInteger(0);
-        WriteInteger(treeSize);
+        packet.WriteBoolean(page.Visible);
+        packet.WriteInteger(page.Icon);
+        packet.WriteInteger(-1);
+        packet.WriteString(page.PageLink);
+        packet.WriteString(page.Caption);
+        packet.WriteInteger(0);
+        packet.WriteInteger(treeSize);
     }
 
-    public void WritePage(CatalogPage page, int treeSize)
+    public void WritePage(IOutgoingPacket packet, CatalogPage page, int treeSize)
     {
-        WriteBoolean(page.Visible);
-        WriteInteger(page.Icon);
-        WriteInteger(page.Id);
-        WriteString(page.PageLink);
-        WriteString(page.Caption);
-        WriteInteger(page.ItemOffers.Count);
-        foreach (var i in page.ItemOffers.Keys) WriteInteger(i);
-        WriteInteger(treeSize);
+        packet.WriteBoolean(page.Visible);
+        packet.WriteInteger(page.Icon);
+        packet.WriteInteger(page.Id);
+        packet.WriteString(page.PageLink);
+        packet.WriteString(page.Caption);
+        packet.WriteInteger(page.ItemOffers.Count);
+        foreach (var i in page.ItemOffers.Keys) packet.WriteInteger(i);
+        packet.WriteInteger(treeSize);
     }
 
-    public int CalcTreeSize(GameClient session, ICollection<CatalogPage> pages, int parentId)
+    public int CalcTreeSize(ICollection<CatalogPage> pages, int parentId)
     {
         var i = 0;
         foreach (var page in pages)
         {
-            if (page.MinimumRank > session.GetHabbo().Rank || page.MinimumVip > session.GetHabbo().VipRank && session.GetHabbo().Rank == 1 || page.ParentId != parentId)
+            if (page.MinimumRank > _session.GetHabbo().Rank || page.MinimumVip > _session.GetHabbo().VipRank && _session.GetHabbo().Rank == 1 || page.ParentId != parentId)
                 continue;
             if (page.ParentId == parentId)
                 i++;

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.HabboHotel.Achievements;
+﻿using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Action;
@@ -13,7 +12,7 @@ internal class KickUserEvent : IPacketEvent
         _achievementManager = achievementManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
@@ -22,7 +21,7 @@ internal class KickUserEvent : IPacketEvent
             return Task.CompletedTask;
         if (room.Group != null && !room.CheckRights(session, false, true))
             return Task.CompletedTask;
-        var userId = packet.PopInt();
+        var userId = packet.ReadInt();
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(userId);
         if (user == null || user.IsBot)
             return Task.CompletedTask;

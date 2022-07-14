@@ -1,43 +1,54 @@
-﻿using System;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Rooms;
 using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class ObjectsComposer : ServerPacket
+internal class ObjectsComposer : IServerPacket
 {
+    private readonly Item[] _objects;
+    private readonly Room _room;
+    public int MessageId => ServerPacketHeader.ObjectsMessageComposer;
+
     public ObjectsComposer(Item[] objects, Room room)
-        : base(ServerPacketHeader.ObjectsMessageComposer)
     {
-        WriteInteger(1);
-        WriteInteger(room.OwnerId);
-        WriteString(room.OwnerName);
-        WriteInteger(objects.Length);
-        foreach (var item in objects) WriteFloorItem(item, Convert.ToInt32(item.UserId));
+        _objects = objects;
+        _room = room;
     }
 
-    private void WriteFloorItem(Item item, int userId)
+    public void Compose(IOutgoingPacket packet)
     {
-        WriteInteger(item.Id);
-        WriteInteger(item.GetBaseItem().SpriteId);
-        WriteInteger(item.GetX);
-        WriteInteger(item.GetY);
-        WriteInteger(item.Rotation);
-        WriteString(TextHandling.GetString(item.GetZ));
-        WriteString(string.Empty);
+        packet.WriteInteger(1);
+        packet.WriteInteger(_room.OwnerId);
+        packet.WriteString(_room.OwnerName);
+        packet.WriteInteger(_objects.Length);
+        foreach (var item in _objects)
+            WriteFloorItem(packet, item, Convert.ToInt32(item.UserId));
+
+    }
+
+    private void WriteFloorItem(IOutgoingPacket packet, Item item, int userId)
+    {
+        packet.WriteInteger(item.Id);
+        packet.WriteInteger(item.GetBaseItem().SpriteId);
+        packet.WriteInteger(item.GetX);
+        packet.WriteInteger(item.GetY);
+        packet.WriteInteger(item.Rotation);
+        packet.WriteString(TextHandling.GetString(item.GetZ));
+        packet.WriteString(string.Empty);
         if (item.LimitedNo > 0)
         {
-            WriteInteger(1);
-            WriteInteger(256);
-            WriteString(item.ExtraData);
-            WriteInteger(item.LimitedNo);
-            WriteInteger(item.LimitedTot);
+            packet.WriteInteger(1);
+            packet.WriteInteger(256);
+            packet.WriteString(item.ExtraData);
+            packet.WriteInteger(item.LimitedNo);
+            packet.WriteInteger(item.LimitedTot);
         }
         else
-            ItemBehaviourUtility.GenerateExtradata(item, this);
-        WriteInteger(-1); // to-do: check
-        WriteInteger(item.GetBaseItem().Modes > 1 ? 1 : 0);
-        WriteInteger(userId);
+            ItemBehaviourUtility.GenerateExtradata(item, packet);
+        packet.WriteInteger(-1); // to-do: check
+        packet.WriteInteger(item.GetBaseItem().Modes > 1 ? 1 : 0);
+        packet.WriteInteger(userId);
     }
 }

@@ -1,7 +1,13 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Handshake;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class PongComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Handshake;
+
+public class PongComposer : IServerPacket
 {
-    public PongComposer()
-        : base(ServerPacketHeader.PongMessageComposer) { }
+    public int MessageId => ServerPacketHeader.PongMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        // Empty Body
+    }
 }

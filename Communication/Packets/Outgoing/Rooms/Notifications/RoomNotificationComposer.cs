@@ -1,40 +1,48 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Notifications;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class RoomNotificationComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Notifications;
+
+internal class RoomNotificationComposer : IServerPacket
 {
+    private string _type;
+    private Dictionary<string, string> _values;
+
+    public int MessageId => ServerPacketHeader.RoomNotificationMessageComposer;
+
     public RoomNotificationComposer(string type, string key, string value)
-        : base(ServerPacketHeader.RoomNotificationMessageComposer)
     {
-        WriteString(type);
-        WriteInteger(1); //Count
-        {
-            WriteString(key); //Type of message
-            WriteString(value);
-        }
+        _type = type;
+        _values = new() { { key, value } };
     }
 
     public RoomNotificationComposer(string type)
-        : base(ServerPacketHeader.RoomNotificationMessageComposer)
     {
-        WriteString(type);
-        WriteInteger(0); //Count
+        _type = type;
+        _values = new();
     }
 
-    public RoomNotificationComposer(string title, string message, string image, string hotelName = "", string hotelUrl = "")
-        : base(ServerPacketHeader.RoomNotificationMessageComposer)
+    public RoomNotificationComposer(string title, string message, string type, string hotelName = "", string hotelUrl = "")
     {
-        WriteString(image);
-        WriteInteger(string.IsNullOrEmpty(hotelName) ? 2 : 4);
-        WriteString("title");
-        WriteString(title);
-        WriteString("message");
-        WriteString(message);
-        if (!string.IsNullOrEmpty(hotelName))
+        _type = type;
+        _values = new()
         {
-            WriteString("linkUrl");
-            WriteString(hotelUrl);
-            WriteString("linkTitle");
-            WriteString(hotelName);
+            { "title", title },
+            { "message", message },
+            { "linkUrl", hotelUrl },
+            { "linkTitle", hotelName }
+        };
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+
+        packet.WriteString(_type);
+        var values = _values.Where(kvp => !string.IsNullOrWhiteSpace(kvp.Value)).ToList();
+        packet.WriteInteger(values.Count);
+        foreach (var (key, value) in values)
+        {
+            packet.WriteString(key);
+            packet.WriteString(value);
         }
     }
 }

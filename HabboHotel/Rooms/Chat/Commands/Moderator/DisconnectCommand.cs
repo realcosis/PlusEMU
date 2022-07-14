@@ -34,6 +34,6 @@ internal class DisconnectCommand : IChatCommand
             session.SendWhisper("You are not allowed to Disconnect that user.");
             return;
         }
-        targetClient.GetConnection().Dispose();
+        targetClient.Disconnect();
     }
 }

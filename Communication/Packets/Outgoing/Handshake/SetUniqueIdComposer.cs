@@ -1,10 +1,16 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Handshake;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class SetUniqueIdComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Handshake;
+
+public class SetUniqueIdComposer : IServerPacket
 {
+    private readonly string _id;
+    public int MessageId => ServerPacketHeader.SetUniqueIdMessageComposer;
+
     public SetUniqueIdComposer(string id)
-        : base(ServerPacketHeader.SetUniqueIdMessageComposer)
     {
-        WriteString(id);
+        _id = id;
     }
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteString(_id);
 }

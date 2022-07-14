@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Database;
 using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
@@ -25,7 +23,7 @@ internal class ChangeMottoEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (session.GetHabbo().TimeMuted > 0)
         {
@@ -42,7 +40,7 @@ internal class ChangeMottoEvent : IPacketEvent
         if (session.GetHabbo().SessionMottoBlocked)
             return Task.CompletedTask;
         session.GetHabbo().LastMottoUpdateTime = DateTime.Now;
-        var newMotto = StringCharFilter.Escape(packet.PopString().Trim());
+        var newMotto = StringCharFilter.Escape(packet.ReadString().Trim());
         if (newMotto.Length > 38)
             newMotto = newMotto.Substring(0, 38);
         if (newMotto == session.GetHabbo().Motto)

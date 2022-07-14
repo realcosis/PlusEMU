@@ -1,11 +1,10 @@
-﻿using System.Threading.Tasks;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Avatar;
 
 internal class SitEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;

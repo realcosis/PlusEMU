@@ -1,12 +1,21 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Users;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class UserTagsComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Users;
+
+internal class UserTagsComposer : IServerPacket
 {
+    private readonly int _userId;
+    public int MessageId => ServerPacketHeader.UserTagsMessageComposer;
+
     public UserTagsComposer(int userId)
-        : base(ServerPacketHeader.UserTagsMessageComposer)
     {
-        WriteInteger(userId);
-        WriteInteger(0); //Count of the tags.
+        _userId = userId;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_userId);
+        packet.WriteInteger(0); //Count of the tags.
         {
             //Append a string.
         }

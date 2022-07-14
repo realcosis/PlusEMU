@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Groups;
+﻿using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.Communication.Packets.Outgoing.Users;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
@@ -19,9 +18,9 @@ internal class SetGroupFavouriteEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var groupId = packet.PopInt();
+        var groupId = packet.ReadInt();
         if (groupId == 0)
             return Task.CompletedTask;
         if (!_groupManager.TryGetGroup(groupId, out var group))
@@ -42,7 +41,7 @@ internal class SetGroupFavouriteEvent : IPacketEvent
                 session.GetHabbo().CurrentRoom.SendPacket(new UpdateFavouriteGroupComposer(group, user.VirtualId));
         }
         else
-            session.SendPacket(new RefreshFavouriteGroupComposer(session.GetHabbo().Id));
+            session.Send(new RefreshFavouriteGroupComposer(session.GetHabbo().Id));
         return Task.CompletedTask;
     }
 }

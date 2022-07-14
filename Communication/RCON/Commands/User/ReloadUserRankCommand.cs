@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Moderation;
+﻿using Plus.Communication.Packets.Outgoing.Moderation;
 
 namespace Plus.Communication.Rcon.Commands.User;
 
@@ -26,7 +25,7 @@ internal class ReloadUserRankCommand : IRconCommand
         client.GetHabbo().GetPermissions().Init(client.GetHabbo());
         if (client.GetHabbo().GetPermissions().HasRight("mod_tickets"))
         {
-            client.SendPacket(new ModeratorInitComposer(
+            client.Send(new ModeratorInitComposer(
                 PlusEnvironment.GetGame().GetModerationManager().UserMessagePresets,
                 PlusEnvironment.GetGame().GetModerationManager().RoomMessagePresets,
                 PlusEnvironment.GetGame().GetModerationManager().GetTickets));

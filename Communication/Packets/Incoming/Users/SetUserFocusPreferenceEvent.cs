@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Database;
+﻿using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.Utilities;
 
@@ -14,9 +13,9 @@ internal class SetUserFocusPreferenceEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var focusPreference = packet.PopBoolean();
+        var focusPreference = packet.ReadBool();
         session.GetHabbo().FocusPreference = focusPreference;
         using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("UPDATE `users` SET `focus_preference` = @focusPreference WHERE `id` = @habboId LIMIT 1");

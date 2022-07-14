@@ -1,10 +1,20 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Navigator;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class RoomInfoUpdatedComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Navigator;
+
+internal class RoomInfoUpdatedComposer : IServerPacket
 {
+    private readonly int _roomId;
+
+    public int MessageId => ServerPacketHeader.RoomInfoUpdatedMessageComposer;
+
     public RoomInfoUpdatedComposer(int roomId)
-        : base(ServerPacketHeader.RoomInfoUpdatedMessageComposer)
     {
-        WriteInteger(roomId);
+        _roomId = roomId;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_roomId);
     }
 }

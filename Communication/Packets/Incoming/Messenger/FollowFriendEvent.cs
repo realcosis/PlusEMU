@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Messenger;
+﻿using Plus.Communication.Packets.Outgoing.Messenger;
 using Plus.Communication.Packets.Outgoing.Rooms.Session;
 using Plus.HabboHotel.GameClients;
 
@@ -14,9 +13,9 @@ internal class FollowFriendEvent : IPacketEvent
         _clientManager = clientManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var buddyId = packet.PopInt();
+        var buddyId = packet.ReadInt();
         if (buddyId == 0 || buddyId == session.GetHabbo().Id)
             return Task.CompletedTask;
         var client = _clientManager.GetClientByUserId(buddyId);
@@ -24,12 +23,12 @@ internal class FollowFriendEvent : IPacketEvent
             return Task.CompletedTask;
         if (!client.GetHabbo().InRoom)
         {
-            session.SendPacket(new FollowFriendFailedComposer(2));
+            session.Send(new FollowFriendFailedComposer(2));
             return Task.CompletedTask;
         }
         if (session.GetHabbo().CurrentRoom?.RoomId == client.GetHabbo().CurrentRoom?.RoomId)
             return Task.CompletedTask;
-        session.SendPacket(new RoomForwardComposer(client.GetHabbo().CurrentRoomId));
+        session.Send(new RoomForwardComposer(client.GetHabbo().CurrentRoomId));
         return Task.CompletedTask;
     }
 }

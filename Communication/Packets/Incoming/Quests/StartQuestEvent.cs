@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Quests;
+﻿using Plus.Communication.Packets.Outgoing.Quests;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
@@ -17,9 +16,9 @@ internal class StartQuestEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var questId = packet.PopInt();
+        var questId = packet.ReadInt();
         var quest = _questManager.GetQuest(questId);
         if (quest == null)
             return Task.CompletedTask;
@@ -30,7 +29,7 @@ internal class StartQuestEvent : IPacketEvent
         }
         session.GetHabbo().GetStats().QuestId = quest.Id;
         _questManager.GetList(session, null);
-        session.SendPacket(new QuestStartedComposer(session, quest));
+        session.Send(new QuestStartedComposer(session, quest));
         return Task.CompletedTask;
     }
 }

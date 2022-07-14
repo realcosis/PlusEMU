@@ -1,17 +1,16 @@
 ﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
-using System.Threading.Tasks;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni
 {
     internal class OneWayGateEvent : IPacketEvent
     {
-        public Task Parse(GameClient session, ClientPacket packet)
+        public Task Parse(GameClient session, IIncomingPacket packet)
         {
             var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return Task.CompletedTask;
-            var item = room.GetRoomItemHandler().GetItem(packet.PopInt());
+            var item = room.GetRoomItemHandler().GetItem(packet.ReadInt());
             if (item == null)
                 return Task.CompletedTask;
             var hasRights = room.CheckRights(session);

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Settings;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Settings;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
@@ -14,14 +13,14 @@ internal class GetRoomSettingsEvent : IPacketEvent
         _roomManager = roomManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var roomId = packet.PopInt();
+        var roomId = packet.ReadInt();
         if (!_roomManager.TryLoadRoom(roomId, out var room))
             return Task.CompletedTask;
         if (!room.CheckRights(session, true))
             return Task.CompletedTask;
-        session.SendPacket(new RoomSettingsDataComposer(room));
+        session.Send(new RoomSettingsDataComposer(room));
         return Task.CompletedTask;
     }
 }

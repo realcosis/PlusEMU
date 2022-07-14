@@ -1,11 +1,22 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Handshake;
+﻿using Plus.HabboHotel.GameClients;
 
-public class InitCryptoComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Handshake;
+
+public class InitCryptoComposer : IServerPacket
 {
+    private readonly string _prime;
+    private readonly string _generator;
+    public int MessageId => ServerPacketHeader.InitCryptoMessageComposer;
+
     public InitCryptoComposer(string prime, string generator)
-        : base(ServerPacketHeader.InitCryptoMessageComposer)
     {
-        WriteString(prime);
-        WriteString(generator);
+        _prime = prime;
+        _generator = generator;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteString(_prime);
+        packet.WriteString(_generator);
     }
 }

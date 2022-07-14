@@ -1,10 +1,16 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Furni;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class GnomeBoxComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Furni;
+
+internal class GnomeBoxComposer : IServerPacket
 {
+    private readonly int _itemId;
+    public int MessageId => ServerPacketHeader.GnomeBoxMessageComposer;
+
     public GnomeBoxComposer(int itemId)
-        : base(ServerPacketHeader.GnomeBoxMessageComposer)
     {
-        WriteInteger(itemId);
+        _itemId = itemId;
     }
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteInteger(_itemId);
 }

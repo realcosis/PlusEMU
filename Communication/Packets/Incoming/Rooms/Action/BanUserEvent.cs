@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plus.HabboHotel.Achievements;
+﻿using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Action;
@@ -14,7 +12,7 @@ internal class BanUserEvent : IPacketEvent
         _achievementManager = achievementManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
@@ -22,9 +20,9 @@ internal class BanUserEvent : IPacketEvent
         if (room.WhoCanBan == 0 && !room.CheckRights(session, true) && room.Group == null || room.WhoCanBan == 1 && !room.CheckRights(session) && room.Group == null ||
             room.Group != null && !room.CheckRights(session, false, true))
             return Task.CompletedTask;
-        var userId = packet.PopInt();
-        packet.PopInt(); //roomId
-        var r = packet.PopString();
+        var userId = packet.ReadInt();
+        packet.ReadInt(); //roomId
+        var r = packet.ReadString();
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(Convert.ToInt32(userId));
         if (user == null || user.IsBot)
             return Task.CompletedTask;

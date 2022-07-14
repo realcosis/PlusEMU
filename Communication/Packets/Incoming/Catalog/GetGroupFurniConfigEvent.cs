@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Catalog;
+﻿using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 
@@ -14,9 +13,9 @@ internal class GetGroupFurniConfigEvent : IPacketEvent
         _groupManager = groupManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        session.SendPacket(new GroupFurniConfigComposer(_groupManager.GetGroupsForUser(session.GetHabbo().Id)));
+        session.Send(new GroupFurniConfigComposer(_groupManager.GetGroupsForUser(session.GetHabbo().Id)));
         return Task.CompletedTask;
     }
 }

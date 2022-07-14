@@ -1,14 +1,13 @@
-﻿using System.Threading.Tasks;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Connection;
 
 public class OpenFlatConnectionEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var roomId = packet.PopInt();
-        var password = packet.PopString();
+        var roomId = packet.ReadInt();
+        var password = packet.ReadString();
         session.GetHabbo().PrepareRoom(roomId, password);
         return Task.CompletedTask;
     }

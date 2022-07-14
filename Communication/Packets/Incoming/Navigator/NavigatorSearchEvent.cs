@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Navigator.New;
+﻿using Plus.Communication.Packets.Outgoing.Navigator.New;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Navigator;
 
@@ -15,10 +13,10 @@ internal class NavigatorSearchEvent : IPacketEvent
         _navigatorManager = navigatorManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var category = packet.PopString();
-        var search = packet.PopString();
+        var category = packet.ReadString();
+        var search = packet.ReadString();
         ICollection<SearchResultList> categories = new List<SearchResultList>();
         if (!string.IsNullOrEmpty(search))
         {
@@ -33,12 +31,12 @@ internal class NavigatorSearchEvent : IPacketEvent
                 categories = _navigatorManager.GetResultByIdentifier(category);
                 if (categories.Count > 0)
                 {
-                    session.SendPacket(new NavigatorSearchResultSetComposer(category, search, categories, session, 2, 100));
+                    session.Send(new NavigatorSearchResultSetComposer(category, search, categories, session, 2, 100));
                     return Task.CompletedTask;
                 }
             }
         }
-        session.SendPacket(new NavigatorSearchResultSetComposer(category, search, categories, session));
+        session.Send(new NavigatorSearchResultSetComposer(category, search, categories, session));
         return Task.CompletedTask;
     }
 }

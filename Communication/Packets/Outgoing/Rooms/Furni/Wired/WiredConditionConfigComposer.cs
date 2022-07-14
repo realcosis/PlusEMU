@@ -1,48 +1,57 @@
-﻿using System.Linq;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items.Wired;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired;
 
-internal class WiredConditionConfigComposer : ServerPacket
+internal class WiredConditionConfigComposer : IServerPacket
 {
+    private readonly IWiredItem _box;
+
+    public int MessageId => ServerPacketHeader.WiredConditionConfigMessageComposer;
+
     public WiredConditionConfigComposer(IWiredItem box)
-        : base(ServerPacketHeader.WiredConditionConfigMessageComposer)
     {
-        WriteBoolean(false);
-        WriteInteger(5);
-        WriteInteger(box.SetItems.Count);
-        foreach (var item in box.SetItems.Values.ToList()) WriteInteger(item.Id);
-        WriteInteger(box.Item.GetBaseItem().SpriteId);
-        WriteInteger(box.Item.Id);
-        WriteString(box.StringData);
-        if (box.Type == WiredBoxType.ConditionMatchStateAndPosition || box.Type == WiredBoxType.ConditionDontMatchStateAndPosition)
+        _box = box;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteBoolean(false);
+        packet.WriteInteger(5);
+        packet.WriteInteger(_box.SetItems.Count);
+        foreach (var item in _box.SetItems.Values.ToList()) packet.WriteInteger(item.Id);
+        packet.WriteInteger(_box.Item.GetBaseItem().SpriteId);
+        packet.WriteInteger(_box.Item.Id);
+        packet.WriteString(_box.StringData);
+        if (_box.Type == WiredBoxType.ConditionMatchStateAndPosition || _box.Type == WiredBoxType.ConditionDontMatchStateAndPosition)
         {
-            if (string.IsNullOrEmpty(box.StringData))
-                box.StringData = "0;0;0";
-            WriteInteger(3); //Loop
-            WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[0]) : 0);
-            WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[1]) : 0);
-            WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[2]) : 0);
+            if (string.IsNullOrEmpty(_box.StringData))
+                _box.StringData = "0;0;0";
+            packet.WriteInteger(3); //Loop
+            packet.WriteInteger(_box.StringData != null ? int.Parse(_box.StringData.Split(';')[0]) : 0);
+            packet.WriteInteger(_box.StringData != null ? int.Parse(_box.StringData.Split(';')[1]) : 0);
+            packet.WriteInteger(_box.StringData != null ? int.Parse(_box.StringData.Split(';')[2]) : 0);
         }
-        else if (box.Type == WiredBoxType.ConditionUserCountInRoom || box.Type == WiredBoxType.ConditionUserCountDoesntInRoom)
+        else if (_box.Type == WiredBoxType.ConditionUserCountInRoom || _box.Type == WiredBoxType.ConditionUserCountDoesntInRoom)
         {
-            if (string.IsNullOrEmpty(box.StringData))
-                box.StringData = "0;0";
-            WriteInteger(2); //Loop
-            WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[0]) : 1);
-            WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[1]) : 50);
+            if (string.IsNullOrEmpty(_box.StringData))
+                _box.StringData = "0;0";
+            packet.WriteInteger(2); //Loop
+            packet.WriteInteger(_box.StringData != null ? int.Parse(_box.StringData.Split(';')[0]) : 1);
+            packet.WriteInteger(_box.StringData != null ? int.Parse(_box.StringData.Split(';')[1]) : 50);
         }
-        if (box.Type == WiredBoxType.ConditionFurniHasNoFurni)
-            WriteInteger(1);
-        if (box.Type != WiredBoxType.ConditionUserCountInRoom && box.Type != WiredBoxType.ConditionUserCountDoesntInRoom && box.Type != WiredBoxType.ConditionFurniHasNoFurni)
-            WriteInteger(0);
-        else if (box.Type == WiredBoxType.ConditionFurniHasNoFurni)
+        if (_box.Type == WiredBoxType.ConditionFurniHasNoFurni)
+            packet.WriteInteger(1);
+        if (_box.Type != WiredBoxType.ConditionUserCountInRoom && _box.Type != WiredBoxType.ConditionUserCountDoesntInRoom && _box.Type != WiredBoxType.ConditionFurniHasNoFurni)
+            packet.WriteInteger(0);
+        else if (_box.Type == WiredBoxType.ConditionFurniHasNoFurni)
         {
-            if (string.IsNullOrEmpty(box.StringData))
-                box.StringData = "0";
-            WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[0]) : 50);
+            if (string.IsNullOrEmpty(_box.StringData))
+                _box.StringData = "0";
+            packet.WriteInteger(_box.StringData != null ? int.Parse(_box.StringData.Split(';')[0]) : 50);
         }
-        WriteInteger(0);
-        WriteInteger(WiredBoxTypeUtility.GetWiredId(box.Type));
+        packet.WriteInteger(0);
+        packet.WriteInteger(WiredBoxTypeUtility.GetWiredId(_box.Type));
+
     }
 }

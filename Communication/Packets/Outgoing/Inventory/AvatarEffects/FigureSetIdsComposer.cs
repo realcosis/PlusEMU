@@ -1,17 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Clothing.Parts;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
 
-internal class FigureSetIdsComposer : ServerPacket
+internal class FigureSetIdsComposer : IServerPacket
 {
+    private readonly ICollection<ClothingParts> _clothingParts;
+    public int MessageId => ServerPacketHeader.FigureSetIdsMessageComposer;
+
     public FigureSetIdsComposer(ICollection<ClothingParts> clothingParts)
-        : base(ServerPacketHeader.FigureSetIdsMessageComposer)
     {
-        WriteInteger(clothingParts.Count);
-        foreach (var part in clothingParts.ToList()) WriteInteger(part.PartId);
-        WriteInteger(clothingParts.Count);
-        foreach (var part in clothingParts.ToList()) WriteString(part.Part);
+        _clothingParts = clothingParts;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_clothingParts.Count);
+        foreach (var part in _clothingParts.ToList())
+            packet.WriteInteger(part.PartId);
+        packet.WriteInteger(_clothingParts.Count);
+        foreach (var part in _clothingParts.ToList())
+            packet.WriteString(part.Part);
+
     }
 }

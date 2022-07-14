@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Moderation;
+﻿using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
@@ -14,16 +13,16 @@ internal class GetModeratorRoomInfoEvent : IPacketEvent
         _roomManager = roomManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
             return Task.CompletedTask;
-        var roomId = packet.PopInt();
+        var roomId = packet.ReadInt();
         if (!RoomFactory.TryGetData(roomId, out var data))
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(roomId, out var room))
             return Task.CompletedTask;
-        session.SendPacket(new ModeratorRoomInfoComposer(data, room.GetRoomUserManager().GetRoomUserByHabbo(data.OwnerName) != null));
+        session.Send(new ModeratorRoomInfoComposer(data, room.GetRoomUserManager().GetRoomUserByHabbo(data.OwnerName) != null));
         return Task.CompletedTask;
     }
 }

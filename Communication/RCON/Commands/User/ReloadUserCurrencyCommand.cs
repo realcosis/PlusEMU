@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Inventory.Purse;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 
 namespace Plus.Communication.Rcon.Commands.User;
 
@@ -38,7 +36,7 @@ internal class ReloadUserCurrencyCommand : IRconCommand
                     credits = dbClient.GetInteger();
                 }
                 client.GetHabbo().Credits = credits;
-                client.SendPacket(new CreditBalanceComposer(client.GetHabbo().Credits));
+                client.Send(new CreditBalanceComposer(client.GetHabbo().Credits));
                 break;
             }
             case "pixels":
@@ -52,7 +50,7 @@ internal class ReloadUserCurrencyCommand : IRconCommand
                     duckets = dbClient.GetInteger();
                 }
                 client.GetHabbo().Duckets = duckets;
-                client.SendPacket(new HabboActivityPointNotificationComposer(client.GetHabbo().Duckets, duckets));
+                client.Send(new HabboActivityPointNotificationComposer(client.GetHabbo().Duckets, duckets));
                 break;
             }
             case "diamonds":
@@ -65,7 +63,7 @@ internal class ReloadUserCurrencyCommand : IRconCommand
                     diamonds = dbClient.GetInteger();
                 }
                 client.GetHabbo().Diamonds = diamonds;
-                client.SendPacket(new HabboActivityPointNotificationComposer(diamonds, 0, 5));
+                client.Send(new HabboActivityPointNotificationComposer(diamonds, 0, 5));
                 break;
             }
             case "gotw":
@@ -78,7 +76,7 @@ internal class ReloadUserCurrencyCommand : IRconCommand
                     gotw = dbClient.GetInteger();
                 }
                 client.GetHabbo().GotwPoints = gotw;
-                client.SendPacket(new HabboActivityPointNotificationComposer(gotw, 0, 103));
+                client.Send(new HabboActivityPointNotificationComposer(gotw, 0, 103));
                 break;
             }
         }

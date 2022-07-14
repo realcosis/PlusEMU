@@ -1,10 +1,16 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Groups;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class RefreshFavouriteGroupComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Groups;
+
+internal class RefreshFavouriteGroupComposer : IServerPacket
 {
+    private readonly int _id;
+    public int MessageId => ServerPacketHeader.RefreshFavouriteGroupMessageComposer;
+
     public RefreshFavouriteGroupComposer(int id)
-        : base(ServerPacketHeader.RefreshFavouriteGroupMessageComposer)
     {
-        WriteInteger(id);
+        _id = id;
     }
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteInteger(_id);
 }

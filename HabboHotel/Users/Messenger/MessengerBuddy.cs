@@ -1,7 +1,5 @@
-﻿using Plus.Communication.Packets.Outgoing;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
-using System;
 
 namespace Plus.HabboHotel.Users.Messenger;
 
@@ -41,7 +39,7 @@ public class MessengerBuddy
 
     public Room? CurrentRoom { get; set; }
 
-    public void Serialize(ServerPacket message)
+    public void Serialize(IOutgoingPacket message)
     {
         message.WriteInteger(Id);
         message.WriteString(Username);
@@ -56,6 +54,6 @@ public class MessengerBuddy
         message.WriteBoolean(true); // Allows offline messaging
         message.WriteBoolean(false); // ?
         message.WriteBoolean(false); // Uses phone
-        message.WriteShort(Relationship);
+        message.WriteShort((short)Relationship);
     }
 }

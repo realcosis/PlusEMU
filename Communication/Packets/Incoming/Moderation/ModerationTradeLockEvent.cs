@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Database;
+﻿using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Moderation;
@@ -13,15 +12,15 @@ internal class ModerationTradeLockEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().GetPermissions().HasRight("mod_trade_lock"))
             return Task.CompletedTask;
-        var userId = packet.PopInt();
-        var message = packet.PopString();
-        var days = packet.PopInt() / 1440.0;
-        packet.PopString(); //unk1
-        packet.PopString(); //unk2
+        var userId = packet.ReadInt();
+        var message = packet.ReadString();
+        var days = packet.ReadInt() / 1440.0;
+        packet.ReadString(); //unk1
+        packet.ReadString(); //unk2
         var length = PlusEnvironment.GetUnixTimestamp() + days * 86400;
         var habbo = PlusEnvironment.GetHabboById(userId);
         if (habbo == null)

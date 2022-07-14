@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using Plus.Communication.Packets.Incoming;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.HabboHotel.Items.Wired.Boxes.Conditions;
@@ -21,11 +21,11 @@ internal class UserCountInRoomBox : IWiredItem
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet)
+    public void HandleSave(IIncomingPacket packet)
     {
-        var unknown = packet.PopInt();
-        var countOne = packet.PopInt();
-        var countTwo = packet.PopInt();
+        var unknown = packet.ReadInt();
+        var countOne = packet.ReadInt();
+        var countTwo = packet.ReadInt();
         StringData = countOne + ";" + countTwo;
     }
 

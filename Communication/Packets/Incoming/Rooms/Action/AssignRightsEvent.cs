@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Permissions;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Permissions;
 using Plus.Communication.Packets.Outgoing.Rooms.Settings;
 using Plus.Core.Language;
 using Plus.Database;
@@ -24,9 +23,9 @@ internal class AssignRightsEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var userId = packet.PopInt();
+        var userId = packet.ReadInt();
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return Task.CompletedTask;
         if (!room.CheckRights(session, true))
@@ -47,14 +46,14 @@ internal class AssignRightsEvent : IPacketEvent
             roomUser.SetStatus("flatctrl 1");
             roomUser.UpdateNeeded = true;
             if (roomUser.GetClient() != null)
-                roomUser.GetClient().SendPacket(new YouAreControllerComposer(1));
-            session.SendPacket(new FlatControllerAddedComposer(room.RoomId, roomUser.GetClient().GetHabbo().Id, roomUser.GetClient().GetHabbo().Username));
+                roomUser.GetClient().Send(new YouAreControllerComposer(1));
+            session.Send(new FlatControllerAddedComposer(room.RoomId, roomUser.GetClient().GetHabbo().Id, roomUser.GetClient().GetHabbo().Username));
         }
         else
         {
             var user =  _chacheManager.GenerateUser(userId);
             if (user != null)
-                session.SendPacket(new FlatControllerAddedComposer(room.RoomId, user.Id, user.Username));
+                session.Send(new FlatControllerAddedComposer(room.RoomId, user.Id, user.Username));
         }
         return Task.CompletedTask;
     }

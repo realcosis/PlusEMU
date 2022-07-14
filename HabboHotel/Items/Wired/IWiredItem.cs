@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using Plus.Communication.Packets.Incoming;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.HabboHotel.Items.Wired;
@@ -13,6 +13,6 @@ public interface IWiredItem
     string StringData { get; set; }
     bool BoolData { get; set; }
     string ItemsData { get; set; }
-    void HandleSave(ClientPacket packet);
+    void HandleSave(IIncomingPacket packet);
     bool Execute(params object[] @params);
 }

@@ -1,10 +1,20 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Settings;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class RoomSettingsSavedComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Settings;
+
+internal class RoomSettingsSavedComposer : IServerPacket
 {
+    private readonly int _roomId;
+
+    public int MessageId => ServerPacketHeader.RoomSettingsSavedMessageComposer;
+
     public RoomSettingsSavedComposer(int roomId)
-        : base(ServerPacketHeader.RoomSettingsSavedMessageComposer)
     {
-        WriteInteger(roomId);
+        _roomId = roomId;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_roomId);
     }
 }

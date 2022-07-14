@@ -2,9 +2,6 @@
 using Plus.HabboHotel.Friends;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Messenger;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Plus.Communication.Packets.Incoming.Messenger;
 
@@ -17,19 +14,19 @@ internal class MessengerInitEvent : IPacketEvent
         _messengerDataLoader = messengerDataLoader;
     }
 
-    public async Task Parse(GameClient session, ClientPacket packet)
+    public async Task Parse(GameClient session, IIncomingPacket packet)
     {
         var friends = session.GetHabbo().GetMessenger().Friends.Values.ToList();
-        session.SendPacket(new MessengerInitComposer());
+        session.Send(new MessengerInitComposer());
         var page = 0;
         if (!friends.Any())
-            session.SendPacket(new BuddyListComposer(friends, session.GetHabbo(), 1, 0));
+            session.Send(new BuddyListComposer(friends, session.GetHabbo(), 1, 0));
         else
         {
             var pages = (friends.Count() - 1) / 500 + 1;
             foreach (ICollection<MessengerBuddy> batch in friends.Chunk(500))
             {
-                session.SendPacket(new BuddyListComposer(batch.ToList(), session.GetHabbo(), pages, page));
+                session.Send(new BuddyListComposer(batch.ToList(), session.GetHabbo(), pages, page));
                 page++;
             }
         }
@@ -37,7 +34,7 @@ internal class MessengerInitEvent : IPacketEvent
         var messages = await _messengerDataLoader.GetAndDeleteOfflineMessages(session.GetHabbo().Id);
         foreach (var (userId, report) in messages)
             foreach (var (message, secondsAgo) in report)
-                session.SendPacket(new NewConsoleMessageComposer(userId, message, secondsAgo));
+                session.Send(new NewConsoleMessageComposer(userId, message, secondsAgo));
         return;
     }
 }

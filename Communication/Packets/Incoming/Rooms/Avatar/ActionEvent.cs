@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
 using Plus.HabboHotel.Rooms;
@@ -17,11 +16,11 @@ public class ActionEvent : IPacketEvent
         _questManager = questManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
-        var action = packet.PopInt();
+        var action = packet.ReadInt();
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return Task.CompletedTask;
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Groups;
+﻿using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 
@@ -13,9 +12,9 @@ internal class GetBadgeEditorPartsEvent : IPacketEvent
     {
         _groupManager = groupManager;
     }
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        session.SendPacket(new BadgeEditorPartsComposer(
+        session.Send(new BadgeEditorPartsComposer(
             _groupManager.BadgeBases,
             _groupManager.BadgeSymbols,
             _groupManager.BadgeBaseColours,

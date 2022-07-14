@@ -1,18 +1,15 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni;
 
 internal class SetMannequinFigureEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         var room = session.GetHabbo().CurrentRoom;
         if (room == null || !room.CheckRights(session, true))
             return Task.CompletedTask;
-        var itemId = packet.PopInt();
+        var itemId = packet.ReadInt();
         var item = session.GetHabbo().CurrentRoom.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;

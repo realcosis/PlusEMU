@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Inventory.Achievements;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Achievements;
 using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 
@@ -15,9 +13,9 @@ internal class GetAchievementsEvent : IPacketEvent
         _achievementManager = achievementManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        session.SendPacket(new AchievementsComposer(session, _achievementManager.Achievements.Values.ToList()));
+        session.Send(new AchievementsComposer(session, _achievementManager.Achievements.Values.ToList()));
         return Task.CompletedTask;
     }
 }

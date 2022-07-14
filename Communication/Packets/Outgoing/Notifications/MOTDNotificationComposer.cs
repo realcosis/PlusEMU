@@ -1,11 +1,21 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Notifications;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class MotdNotificationComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Notifications;
+
+internal class MotdNotificationComposer : IServerPacket
 {
+    private readonly string _message;
+
+    public int MessageId => ServerPacketHeader.MotdNotificationMessageComposer;
+
     public MotdNotificationComposer(string message)
-        : base(ServerPacketHeader.MotdNotificationMessageComposer)
     {
-        WriteInteger(1);
-        WriteString(message);
+        _message = message;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(1);
+        packet.WriteString(_message);
     }
 }

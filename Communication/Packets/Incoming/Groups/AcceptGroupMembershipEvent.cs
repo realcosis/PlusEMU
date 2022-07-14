@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Groups;
+﻿using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 
@@ -14,10 +13,10 @@ internal class AcceptGroupMembershipEvent : IPacketEvent
         _groupManager = groupManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var groupId = packet.PopInt();
-        var userId = packet.PopInt();
+        var groupId = packet.ReadInt();
+        var userId = packet.ReadInt();
         if (!_groupManager.TryGetGroup(groupId, out var group))
             return Task.CompletedTask;
         if (session.GetHabbo().Id != group.CreatorId && !group.IsAdmin(session.GetHabbo().Id) && !session.GetHabbo().GetPermissions().HasRight("fuse_group_accept_any"))
@@ -31,7 +30,7 @@ internal class AcceptGroupMembershipEvent : IPacketEvent
             return Task.CompletedTask;
         }
         group.HandleRequest(userId, true);
-        session.SendPacket(new GroupMemberUpdatedComposer(groupId, habbo, 4));
+        session.Send(new GroupMemberUpdatedComposer(groupId, habbo, 4));
         return Task.CompletedTask;
     }
 }

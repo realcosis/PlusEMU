@@ -1,7 +1,13 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Trading;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class TradingCompleteComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Inventory.Trading;
+
+internal class TradingCompleteComposer : IServerPacket
 {
-    public TradingCompleteComposer()
-        : base(ServerPacketHeader.TradingCompleteMessageComposer) { }
+    public int MessageId => ServerPacketHeader.TradingCompleteMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        // Empty Body
+    }
 }

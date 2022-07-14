@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Extensions.Options;
 using NLog;
-using Plus.Communication.ConnectionManager;
 using Plus.Communication.Encryption;
 using Plus.Communication.Encryption.Keys;
+using Plus.Communication.Flash;
 using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Communication.Rcon;
+using Plus.Communication.RCON;
 using Plus.Core;
 using Plus.Core.FigureData;
 using Plus.Core.Language;
@@ -34,12 +32,11 @@ public class PlusEnvironment : IPlusEnvironment
     public static CultureInfo CultureInfo;
 
     private static IGame _game;
-    private static ConfigurationData _configuration;
-    private static IConnectionHandling _connectionManager;
     private static ILanguageManager _languageManager;
     private static ISettingsManager _settingsManager;
     private static IDatabase _database;
     private static IRconSocket _rcon;
+    private static IFlashServer _flashServer;
     private static IFigureDataManager _figureManager;
 
     // TODO: Get rid?
@@ -58,26 +55,27 @@ public class PlusEnvironment : IPlusEnvironment
 
     public static string SwfRevision = "";
     private readonly IEnumerable<IStartable> _startableTasks;
+    private readonly RconConfiguration _rconConfiguration;
 
-    public PlusEnvironment(ConfigurationData configurationData,
-        IDatabase database,
+    public PlusEnvironment(IDatabase database,
         ILanguageManager languageManager,
         ISettingsManager settingsManager,
         IFigureDataManager figureDataManager,
         IGame game,
         IEnumerable<IStartable> startableTasks,
-        IConnectionHandling connectionHandling,
-        IRconSocket rconSocket)
+        IRconSocket rconSocket,
+        IOptions<RconConfiguration> rconConfiguration,
+        IFlashServer flashServer)
     {
         _database = database;
-        _configuration = configurationData;
         _languageManager = languageManager;
         _settingsManager = settingsManager;
         _figureManager = figureDataManager;
         _game = game;
         _startableTasks = startableTasks;
-        _connectionManager = connectionHandling;
         _rcon = rconSocket;
+        _flashServer = flashServer;
+        _rconConfiguration = rconConfiguration.Value;
     }
 
     public async Task<bool> Start()
@@ -121,11 +119,10 @@ public class PlusEnvironment : IPlusEnvironment
             HabboEncryptionV2.Initialize(new RsaKeys());
 
             //Make sure Rcon is connected before we allow clients to Connect.
-            _rcon.Init(GetConfig().Data["rcon.tcp.bindip"], int.Parse(GetConfig().Data["rcon.tcp.port"]), GetConfig().Data["rcon.tcp.allowedaddr"].Split(Convert.ToChar(";")));
+            _rcon.Init(_rconConfiguration.Hostname, _rconConfiguration.Port, _rconConfiguration.AllowedAddresses);
 
             //Accept connections.
-            _connectionManager.Init(int.Parse(GetConfig().Data["game.tcp.port"]), int.Parse(GetConfig().Data["game.tcp.conlimit"]),
-                int.Parse(GetConfig().Data["game.tcp.conperip"]), GetConfig().Data["game.tcp.enablenagles"].ToLower() == "true");
+            _flashServer.Start();
 
             // Allow services to self initialize
             foreach (var task in _startableTasks)
@@ -309,7 +306,7 @@ public class PlusEnvironment : IPlusEnvironment
         GetGame().GetClientManager().SendPacket(new BroadcastMessageAlertComposer(GetLanguageManager().TryGetValue("server.shutdown.message")));
         GetGame().StopGameLoop();
         Thread.Sleep(2500);
-        _connectionManager.Destroy(); //Stop listening.
+        _flashServer.Stop();
         if (GetGame().GetPacketManager() is IDisposable disposable)
             disposable.Dispose();
         GetGame().GetClientManager().CloseAll(); //Close all connections
@@ -329,16 +326,16 @@ public class PlusEnvironment : IPlusEnvironment
         Environment.Exit(0);
     }
 
-    public static ConfigurationData GetConfig() => _configuration;
-
     public static Encoding GetDefaultEncoding() => _defaultEncoding;
 
+    [Obsolete("Use dependency injection instead and inject required services.")]
     public static IGame GetGame() => _game;
 
     public static IRconSocket GetRconSocket() => _rcon;
 
     public static IFigureDataManager GetFigureManager() => _figureManager;
 
+    [Obsolete("Inject IDatabase instead")]
     public static IDatabase GetDatabaseManager() => _database;
 
     public static ILanguageManager GetLanguageManager() => _languageManager;

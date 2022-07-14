@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using MySqlConnector;
 using Plus.Database.Adapter;
 using Plus.Database.Interfaces;

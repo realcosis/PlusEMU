@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Interfaces;
-using Plus.Communication.Packets.Outgoing;
+﻿using System.Data;
+using Plus.Communication.Packets;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Communication.Packets.Outgoing.Rooms.Session;
@@ -447,27 +442,27 @@ public class Room : RoomData
 
     public void SendObjects(GameClient session)
     {
-        session.SendPacket(new HeightMapComposer(GetGameMap().Model.Heightmap));
-        session.SendPacket(new FloorHeightMapComposer(GetGameMap().Model.GetRelativeHeightmap(), GetGameMap().StaticModel.WallHeight));
+        session.Send(new HeightMapComposer(GetGameMap().Model.Heightmap));
+        session.Send(new FloorHeightMapComposer(GetGameMap().Model.GetRelativeHeightmap(), GetGameMap().StaticModel.WallHeight));
         foreach (var user in _roomUserManager.GetUserList().ToList())
         {
             if (user == null)
                 continue;
-            session.SendPacket(new UsersComposer(user));
+            session.Send(new UsersComposer(user));
             if (user.IsBot && user.BotData.DanceId > 0)
-                session.SendPacket(new DanceComposer(user, user.BotData.DanceId));
+                session.Send(new DanceComposer(user, user.BotData.DanceId));
             else if (!user.IsBot && !user.IsPet && user.IsDancing)
-                session.SendPacket(new DanceComposer(user, user.DanceId));
+                session.Send(new DanceComposer(user, user.DanceId));
             if (user.IsAsleep)
-                session.SendPacket(new SleepComposer(user, true));
+                session.Send(new SleepComposer(user, true));
             if (user.CarryItemId > 0 && user.CarryTimer > 0)
-                session.SendPacket(new CarryObjectComposer(user.VirtualId, user.CarryItemId));
+                session.Send(new CarryObjectComposer(user.VirtualId, user.CarryItemId));
             if (!user.IsBot && !user.IsPet && user.CurrentEffect > 0)
-                session.SendPacket(new AvatarEffectComposer(user.VirtualId, user.CurrentEffect));
+                session.Send(new AvatarEffectComposer(user.VirtualId, user.CurrentEffect));
         }
-        session.SendPacket(new UserUpdateComposer(_roomUserManager.GetUserList().ToList()));
-        session.SendPacket(new ObjectsComposer(GetRoomItemHandler().GetFloor.ToArray(), this));
-        session.SendPacket(new ItemsComposer(GetRoomItemHandler().GetWall.ToArray(), this));
+        session.Send(new UserUpdateComposer(_roomUserManager.GetUserList().ToList()));
+        session.Send(new ObjectsComposer(GetRoomItemHandler().GetFloor.ToArray(), this));
+        session.Send(new ItemsComposer(GetRoomItemHandler().GetWall.ToArray(), this));
     }
 
     public void AddTent(int tentId)
@@ -525,7 +520,7 @@ public class Room : RoomData
             if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().IgnoresComponent.IsIgnored(id) ||
                 user.GetClient().GetHabbo().TentId != tentId)
                 continue;
-            user.GetClient().SendPacket(packet);
+            user.GetClient().Send(packet);
         }
     }
 
@@ -540,13 +535,11 @@ public class Room : RoomData
                 return;
             foreach (var user in users)
             {
-                if (user == null || user.IsBot)
-                    continue;
-                if (user.GetClient() == null || user.GetClient().GetConnection() == null)
+                if (user?.GetClient() == null || user.IsBot)
                     continue;
                 if (withRightsOnly && !CheckRights(user.GetClient()))
                     continue;
-                user.GetClient().SendPacket(packet);
+                user.GetClient().Send(packet);
             }
         }
         catch (Exception e)
@@ -555,43 +548,10 @@ public class Room : RoomData
         }
     }
 
-    public void BroadcastPacket(byte[] packet)
+    public void SendPacket(List<IServerPacket> packets)
     {
-        foreach (var user in _roomUserManager.GetUserList().ToList())
-        {
-            if (user == null || user.IsBot)
-                continue;
-            if (user.GetClient() == null || user.GetClient().GetConnection() == null)
-                continue;
-            user.GetClient().GetConnection().SendData(packet);
-        }
-    }
-
-    public void SendPacket(List<ServerPacket> packets)
-    {
-        if (packets.Count == 0)
-            return;
-        try
-        {
-            var totalBytes = new byte[0];
-            var current = 0;
-            foreach (var packet in packets.ToList())
-            {
-                var toAdd = packet.GetBytes();
-                var newLen = totalBytes.Length + toAdd.Length;
-                Array.Resize(ref totalBytes, newLen);
-                for (var i = 0; i < toAdd.Length; i++)
-                {
-                    totalBytes[current] = toAdd[i];
-                    current++;
-                }
-            }
-            BroadcastPacket(totalBytes);
-        }
-        catch (Exception e)
-        {
-            ExceptionLogger.LogException(e);
-        }
+        foreach (var packet in packets)
+            SendPacket(packet);
     }
 
     public void Dispose()

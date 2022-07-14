@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Groups;
+﻿using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 
@@ -14,10 +13,10 @@ internal class DeclineGroupMembershipEvent : IPacketEvent
         _groupManager = groupManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var groupId = packet.PopInt();
-        var userId = packet.PopInt();
+        var groupId = packet.ReadInt();
+        var userId = packet.ReadInt();
         if (!_groupManager.TryGetGroup(groupId, out var group))
             return Task.CompletedTask;
         if (session.GetHabbo().Id != group.CreatorId && !group.IsAdmin(session.GetHabbo().Id))
@@ -25,7 +24,7 @@ internal class DeclineGroupMembershipEvent : IPacketEvent
         if (!group.HasRequest(userId))
             return Task.CompletedTask;
         group.HandleRequest(userId, false);
-        session.SendPacket(new UnknownGroupComposer(group.Id, userId));
+        session.Send(new UnknownGroupComposer(group.Id, userId));
         return Task.CompletedTask;
     }
 }

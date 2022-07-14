@@ -1,10 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Catalog;
+﻿using Plus.HabboHotel.GameClients;
 
-public class RecyclerRewardsComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Catalog;
+
+// TODO @80O: Implement Recycler
+public class RecyclerRewardsComposer : IServerPacket
 {
-    public RecyclerRewardsComposer()
-        : base(ServerPacketHeader.RecyclerRewardsMessageComposer)
-    {
-        WriteInteger(0); // Count of items
-    }
+    public int MessageId => ServerPacketHeader.RecyclerRewardsMessageComposer;
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteInteger(0); // Count of items
 }

@@ -1,0 +1,23 @@
+﻿{
+    "Database": {
+        "Hostname": "127.0.0.1",
+        "Port": 3306,
+        "Username": "root",
+        "Password": "",
+        "Name": "plus",
+        "MinimumPoolSize": 5,
+        "MaximumPoolSize": 65 
+    },
+    "Flash": {
+        "Hostname": "127.0.0.1",
+        "Port": 1232
+    },
+    "Rcon": {
+        "Hostname": "127.0.0.1",
+        "Port": 30001,
+        "AllowedAddresses": [
+            "127.0.0.1",
+            "localhost"
+        ]
+    }
+}

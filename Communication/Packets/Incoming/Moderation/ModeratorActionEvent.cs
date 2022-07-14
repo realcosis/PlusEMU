@@ -1,12 +1,11 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Moderation;
+﻿using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Moderation;
 
 internal class ModeratorActionEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().GetPermissions().HasRight("mod_caution"))
             return Task.CompletedTask;
@@ -15,8 +14,8 @@ internal class ModeratorActionEvent : IPacketEvent
         var currentRoom = session.GetHabbo().CurrentRoom;
         if (currentRoom == null)
             return Task.CompletedTask;
-        var alertMode = packet.PopInt();
-        var alertMessage = packet.PopString();
+        var alertMode = packet.ReadInt();
+        var alertMessage = packet.ReadString();
         var isCaution = alertMode != 3;
         alertMessage = isCaution ? "Caution from Moderator:\n\n" + alertMessage : "Message from Moderator:\n\n" + alertMessage;
         session.GetHabbo().CurrentRoom.SendPacket(new BroadcastMessageAlertComposer(alertMessage));

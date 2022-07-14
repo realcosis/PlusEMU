@@ -1,21 +1,27 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Navigator;
 
 namespace Plus.Communication.Packets.Outgoing.Navigator.New;
 
-internal class NavigatorMetaDataParserComposer : ServerPacket
+// TODO @80O: Implement
+internal class NavigatorMetaDataParserComposer : IServerPacket
 {
+    private readonly ICollection<TopLevelItem> _topLevelItems;
+    public int MessageId => ServerPacketHeader.NavigatorMetaDataParserMessageComposer;
+
     public NavigatorMetaDataParserComposer(ICollection<TopLevelItem> topLevelItems)
-        : base(ServerPacketHeader.NavigatorMetaDataParserMessageComposer)
     {
-        //TODO: HMU here too, if you want saved searches to be fixed
-        WriteInteger(topLevelItems.Count); //Count
-        foreach (var topLevelItem in topLevelItems.ToList())
+        _topLevelItems = topLevelItems;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_topLevelItems.Count); //Count
+        foreach (var topLevelItem in _topLevelItems.ToList())
         {
             //TopLevelContext
-            WriteString(topLevelItem.SearchCode); //Search code
-            WriteInteger(0); //Count of saved searches?
+            packet.WriteString(topLevelItem.SearchCode); //Search code
+            packet.WriteInteger(0); //Count of saved searches?
             /*{
                 //SavedSearch
                 base.WriteInteger(TopLevelItem.Id);//Id

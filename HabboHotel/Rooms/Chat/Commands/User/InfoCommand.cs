@@ -1,5 +1,4 @@
-﻿using System;
-using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
@@ -25,7 +24,7 @@ internal class InfoCommand : IChatCommand
         var uptime = DateTime.Now - PlusEnvironment.ServerStarted;
         var onlineUsers = _gameClientManager.Count;
         var roomCount = _roomManager.Count;
-        session.SendPacket(new RoomNotificationComposer("Powered by PlusEmulator",
+        session.Send(new RoomNotificationComposer("Powered by PlusEmulator",
             "<b>Credits</b>:\n" +
             "DevBest Community\n\n" +
             "<b>Current run time information</b>:\n" +

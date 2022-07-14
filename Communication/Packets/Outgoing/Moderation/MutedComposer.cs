@@ -1,12 +1,17 @@
-﻿using System;
+﻿using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class MutedComposer : ServerPacket
+internal class MutedComposer : IServerPacket
 {
+    private readonly double _timeMuted;
+
+    public int MessageId => ServerPacketHeader.MutedMessageComposer;
+
     public MutedComposer(double timeMuted)
-        : base(ServerPacketHeader.MutedMessageComposer)
     {
-        WriteInteger(Convert.ToInt32(timeMuted));
+        _timeMuted = timeMuted;
     }
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteInteger(Convert.ToInt32(_timeMuted));
 }

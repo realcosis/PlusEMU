@@ -1,35 +1,44 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Games;
 using Plus.HabboHotel.Users;
 
 namespace Plus.Communication.Packets.Outgoing.GameCenter;
 
-public class Game3WeeklyLeaderboardComposer : ServerPacket
+public class Game3WeeklyLeaderboardComposer : IServerPacket
 {
+    private readonly GameData _gameData;
+    private readonly ICollection<Habbo> _habbos;
+    public int MessageId => ServerPacketHeader.Game3WeeklyLeaderboardMessageComposer;
+
     public Game3WeeklyLeaderboardComposer(GameData gameData, ICollection<Habbo> habbos)
-        : base(ServerPacketHeader.Game3WeeklyLeaderboardMessageComposer)
     {
-        WriteInteger(2014);
-        WriteInteger(41);
-        WriteInteger(0);
-        WriteInteger(1);
-        WriteInteger(1581);
+        _gameData = gameData;
+        _habbos = habbos;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(2014);
+        packet.WriteInteger(41);
+        packet.WriteInteger(0);
+        packet.WriteInteger(1);
+        packet.WriteInteger(1581);
 
         //Used to generate the ranking numbers.
         var num = 0;
-        WriteInteger(habbos.Count); //Count
-        foreach (var habbo in habbos.ToList())
+        packet.WriteInteger(_habbos.Count); //Count
+        foreach (var habbo in _habbos.ToList())
         {
             num++;
-            WriteInteger(habbo.Id); //Id
-            WriteInteger(habbo.FastfoodScore); //Score
-            WriteInteger(num); //Rank
-            WriteString(habbo.Username); //Username
-            WriteString(habbo.Look); //Figure
-            WriteString(habbo.Gender.ToLower()); //Gender .ToLower()
+            packet.WriteInteger(habbo.Id); //Id
+            packet.WriteInteger(habbo.FastfoodScore); //Score
+            packet.WriteInteger(num); //Rank
+            packet.WriteString(habbo.Username); //Username
+            packet.WriteString(habbo.Look); //Figure
+            packet.WriteString(habbo.Gender.ToLower()); //Gender .ToLower()
         }
-        WriteInteger(0); //
-        WriteInteger(gameData.Id); //Game Id?
+        packet.WriteInteger(0); //
+        packet.WriteInteger(_gameData.Id); //Game Id?
+
     }
 }

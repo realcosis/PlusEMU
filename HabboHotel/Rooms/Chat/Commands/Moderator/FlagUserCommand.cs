@@ -40,6 +40,6 @@ internal class FlagUserCommand : IChatCommand
         targetClient.GetHabbo().ChangingName = true;
         targetClient.SendNotification(
             "Please be aware that if your username is deemed as inappropriate, you will be banned without question.\r\rAlso note that Staff will NOT allow you to change your username again should you have an issue with what you have chosen.\r\rClose this window and click yourself to begin choosing a new username!");
-        targetClient.SendPacket(new UserObjectComposer(targetClient.GetHabbo()));
+        targetClient.Send(new UserObjectComposer(targetClient.GetHabbo()));
     }
 }

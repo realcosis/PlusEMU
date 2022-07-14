@@ -1,11 +1,20 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Trading;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class TradingClosedComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Inventory.Trading;
+
+internal class TradingClosedComposer : IServerPacket
 {
+    private readonly int _userId;
+    public int MessageId => ServerPacketHeader.TradingClosedMessageComposer;
+
     public TradingClosedComposer(int userId)
-        : base(ServerPacketHeader.TradingClosedMessageComposer)
     {
-        WriteInteger(userId);
-        WriteInteger(0);
+        _userId = userId;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_userId);
+        packet.WriteInteger(0);
     }
 }

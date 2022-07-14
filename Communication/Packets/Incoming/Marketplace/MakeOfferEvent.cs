@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Inventory.Furni;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Marketplace;
 using Plus.Database;
 using Plus.HabboHotel.Catalog.Marketplace;
@@ -20,15 +19,15 @@ internal class MakeOfferEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var sellingPrice = packet.PopInt();
-        packet.PopInt(); //comission
-        var itemId = packet.PopInt();
+        var sellingPrice = packet.ReadInt();
+        packet.ReadInt(); //comission
+        var itemId = packet.ReadInt();
         var item = session.GetHabbo().Inventory.Furniture.GetItem(itemId);
         if (item == null)
         {
-            session.SendPacket(new MarketplaceMakeOfferResultComposer(0));
+            session.Send(new MarketplaceMakeOfferResultComposer(0));
             return Task.CompletedTask;
         }
         if (!ItemUtility.IsRare(item))
@@ -38,7 +37,7 @@ internal class MakeOfferEvent : IPacketEvent
         }
         if (sellingPrice > 70000000 || sellingPrice == 0)
         {
-            session.SendPacket(new MarketplaceMakeOfferResultComposer(0));
+            session.Send(new MarketplaceMakeOfferResultComposer(0));
             return Task.CompletedTask;
         }
         var comission = _marketplaceManager.CalculateComissionPrice(sellingPrice);
@@ -58,8 +57,8 @@ internal class MakeOfferEvent : IPacketEvent
             dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + itemId + "' AND `user_id` = '" + session.GetHabbo().Id + "' LIMIT 1");
         }
         session.GetHabbo().Inventory.Furniture.RemoveItem(itemId);
-        session.SendPacket(new FurniListRemoveComposer(itemId));
-        session.SendPacket(new MarketplaceMakeOfferResultComposer(1));
+        session.Send(new FurniListRemoveComposer(itemId));
+        session.Send(new MarketplaceMakeOfferResultComposer(1));
         return Task.CompletedTask;
     }
 }

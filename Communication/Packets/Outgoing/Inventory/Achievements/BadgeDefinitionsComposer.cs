@@ -1,22 +1,29 @@
-﻿using System.Collections.Generic;
-using Plus.HabboHotel.Achievements;
+﻿using Plus.HabboHotel.Achievements;
+using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Achievements;
 
-internal class BadgeDefinitionsComposer : ServerPacket
+internal class BadgeDefinitionsComposer : IServerPacket
 {
+    private readonly Dictionary<string, Achievement> _achievements;
+    public int MessageId => ServerPacketHeader.BadgeDefinitionsMessageComposer;
+
     public BadgeDefinitionsComposer(Dictionary<string, Achievement> achievements)
-        : base(ServerPacketHeader.BadgeDefinitionsMessageComposer)
     {
-        WriteInteger(achievements.Count);
-        foreach (var achievement in achievements.Values)
+        _achievements = achievements;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_achievements.Count);
+        foreach (var achievement in _achievements.Values)
         {
-            WriteString(achievement.GroupName.Replace("ACH_", ""));
-            WriteInteger(achievement.Levels.Count);
+            packet.WriteString(achievement.GroupName.Replace("ACH_", ""));
+            packet.WriteInteger(achievement.Levels.Count);
             foreach (var level in achievement.Levels.Values)
             {
-                WriteInteger(level.Level);
-                WriteInteger(level.Requirement);
+                packet.WriteInteger(level.Level);
+                packet.WriteInteger(level.Requirement);
             }
         }
     }

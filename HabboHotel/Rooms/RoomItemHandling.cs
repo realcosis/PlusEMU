@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Drawing;
-using System.Linq;
-using Plus.Communication.Packets.Outgoing;
+using Plus.Communication.Packets;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Core;
@@ -13,7 +10,6 @@ using Plus.HabboHotel.Items.Data.Moodlight;
 using Plus.HabboHotel.Items.Data.Toner;
 using Plus.HabboHotel.Items.Wired;
 using Plus.HabboHotel.Rooms.PathFinding;
-using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms;
 
@@ -23,7 +19,7 @@ public class RoomItemHandling
 
     private readonly ConcurrentDictionary<int, Item> _movedItems;
     private readonly List<int> _rollerItemsMoved;
-    private readonly List<ServerPacket> _rollerMessages;
+    private readonly List<IServerPacket> _rollerMessages;
 
     private readonly ConcurrentDictionary<int, Item> _rollers;
     private readonly List<int> _rollerUsersMoved;
@@ -49,7 +45,7 @@ public class RoomItemHandling
         _floorItems = new ConcurrentDictionary<int, Item>();
         _rollerItemsMoved = new List<int>();
         _rollerUsersMoved = new List<int>();
-        _rollerMessages = new List<ServerPacket>();
+        _rollerMessages = new List<IServerPacket>();
         _roomItemUpdateQueue = new ConcurrentQueue<Item>();
     }
 
@@ -135,7 +131,7 @@ public class RoomItemHandling
                     if (client != null)
                     {
                         client.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
-                        client.SendPacket(new FurniListUpdateComposer());
+                        client.Send(new FurniListUpdateComposer());
                     }
                     continue;
                 }
@@ -254,10 +250,10 @@ public class RoomItemHandling
         _room.GetRoomUserManager().UpdateUserStatusses();
     }
 
-    private List<ServerPacket> CycleRollers()
+    private List<IServerPacket> CycleRollers()
     {
         if (!GotRollers)
-            return new List<ServerPacket>();
+            return new List<IServerPacket>();
         if (_mRollerCycle >= _mRollerSpeed || _mRollerSpeed == 0)
         {
             _rollerItemsMoved.Clear();
@@ -335,38 +331,19 @@ public class RoomItemHandling
             return _rollerMessages;
         }
         _mRollerCycle++;
-        return new List<ServerPacket>();
+        return new List<IServerPacket>();
     }
 
-    public ServerPacket UpdateItemOnRoller(Item pItem, Point nextCoord, int pRolledId, double nextZ)
+    public IServerPacket UpdateItemOnRoller(Item pItem, Point nextCoord, int pRolledId, double nextZ)
     {
-        var mMessage = new ServerPacket(ServerPacketHeader.SlideObjectBundleMessageComposer);
-        mMessage.WriteInteger(pItem.GetX);
-        mMessage.WriteInteger(pItem.GetY);
-        mMessage.WriteInteger(nextCoord.X);
-        mMessage.WriteInteger(nextCoord.Y);
-        mMessage.WriteInteger(1);
-        mMessage.WriteInteger(pItem.Id);
-        mMessage.WriteString(TextHandling.GetString(pItem.GetZ));
-        mMessage.WriteString(TextHandling.GetString(nextZ));
-        mMessage.WriteInteger(pRolledId);
+        var mMessage = new SlideObjectBundleComposer(pItem.GetX, pItem.GetY, pItem.GetZ, nextCoord.X, nextCoord.Y, nextZ, pRolledId, 0, pItem.Id);
         SetFloorItem(pItem, nextCoord.X, nextCoord.Y, nextZ);
         return mMessage;
     }
 
-    public ServerPacket UpdateUserOnRoller(RoomUser pUser, Point pNextCoord, int pRollerId, double nextZ)
+    public IServerPacket UpdateUserOnRoller(RoomUser pUser, Point pNextCoord, int pRollerId, double nextZ)
     {
-        var mMessage = new ServerPacket(ServerPacketHeader.SlideObjectBundleMessageComposer);
-        mMessage.WriteInteger(pUser.X);
-        mMessage.WriteInteger(pUser.Y);
-        mMessage.WriteInteger(pNextCoord.X);
-        mMessage.WriteInteger(pNextCoord.Y);
-        mMessage.WriteInteger(0);
-        mMessage.WriteInteger(pRollerId);
-        mMessage.WriteInteger(2);
-        mMessage.WriteInteger(pUser.VirtualId);
-        mMessage.WriteString(TextHandling.GetString(pUser.Z));
-        mMessage.WriteString(TextHandling.GetString(nextZ));
+        var mMessage = new SlideObjectBundleComposer(pUser.X, pUser.Y, pUser.Z, pNextCoord.X, pNextCoord.Y, nextZ, pRollerId, pUser.VirtualId, 0);
         _room.GetGameMap().UpdateUserMovement(new Point(pUser.X, pUser.Y), new Point(pNextCoord.X, pNextCoord.Y), pUser);
         _room.GetGameMap().GameMap[pUser.X, pUser.Y] = 1;
         pUser.X = pNextCoord.X;
@@ -719,7 +696,7 @@ public class RoomItemHandling
                 session.GetHabbo().Inventory.Furniture.AddItem(I);
                 _room.SendPacket(new ItemRemoveComposer(item, item.UserId));
             }
-            session.SendPacket(new FurniListAddComposer(item));
+            session.Send(new FurniListAddComposer(item));
         }
         _rollers.Clear();
         return items;

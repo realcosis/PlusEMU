@@ -1,19 +1,23 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Users;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class ScrSendUserInfoComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Users;
+
+// TODO @80O: Implement
+internal class ScrSendUserInfoComposer : IServerPacket
 {
-    public ScrSendUserInfoComposer()
-        : base(ServerPacketHeader.ScrSendUserInfoMessageComposer)
+    public int MessageId => ServerPacketHeader.ScrSendUserInfoMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
     {
-        WriteString("habbo_club");
-        WriteInteger(0); //display days
-        WriteInteger(2);
-        WriteInteger(0); //display months
-        WriteInteger(1);
-        WriteBoolean(true); // hc
-        WriteBoolean(true); // vip
-        WriteInteger(0);
-        WriteInteger(0);
-        WriteInteger(495);
+        packet.WriteString("habbo_club");
+        packet.WriteInteger(0); //display days
+        packet.WriteInteger(2);
+        packet.WriteInteger(0); //display months
+        packet.WriteInteger(1);
+        packet.WriteBoolean(true); // hc
+        packet.WriteBoolean(true); // vip
+        packet.WriteInteger(0);
+        packet.WriteInteger(0);
+        packet.WriteInteger(495);
     }
 }

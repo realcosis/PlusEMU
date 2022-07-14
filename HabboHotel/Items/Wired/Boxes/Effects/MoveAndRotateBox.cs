@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Drawing;
-using System.Linq;
-using Plus.Communication.Packets.Incoming;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.HabboHotel.Items.Wired.Boxes.Effects;
@@ -105,23 +103,23 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet)
+    public void HandleSave(IIncomingPacket packet)
     {
         if (SetItems.Count > 0)
             SetItems.Clear();
-        var unknown = packet.PopInt();
-        var movement = packet.PopInt();
-        var rotation = packet.PopInt();
-        var unknown1 = packet.PopString();
-        var furniCount = packet.PopInt();
+        var unknown = packet.ReadInt();
+        var movement = packet.ReadInt();
+        var rotation = packet.ReadInt();
+        var unknown1 = packet.ReadString();
+        var furniCount = packet.ReadInt();
         for (var i = 0; i < furniCount; i++)
         {
-            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadInt());
             if (selectedItem != null && !Instance.GetWired().OtherBoxHasItem(this, selectedItem.Id))
                 SetItems.TryAdd(selectedItem.Id, selectedItem);
         }
         StringData = movement + ";" + rotation;
-        Delay = packet.PopInt();
+        Delay = packet.ReadInt();
     }
 
     public bool Execute(params object[] @params)

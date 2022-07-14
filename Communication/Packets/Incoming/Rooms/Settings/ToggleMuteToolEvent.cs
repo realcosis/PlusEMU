@@ -1,13 +1,11 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Settings;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Settings;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Settings;
 
 internal class ToggleMuteToolEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;

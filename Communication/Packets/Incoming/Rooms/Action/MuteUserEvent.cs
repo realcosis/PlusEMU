@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.HabboHotel.Achievements;
+﻿using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 using Plus.Utilities;
 
@@ -14,13 +13,13 @@ internal class MuteUserEvent : IPacketEvent
         _achievementManager = achievementManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
-        var userId = packet.PopInt();
-        packet.PopInt(); //roomId
-        var time = packet.PopInt();
+        var userId = packet.ReadInt();
+        packet.ReadInt(); //roomId
+        var time = packet.ReadInt();
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
             return Task.CompletedTask;

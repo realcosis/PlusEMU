@@ -1,7 +1,13 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class HideWiredConfigComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired;
+
+internal class HideWiredConfigComposer : IServerPacket
 {
-    public HideWiredConfigComposer()
-        : base(ServerPacketHeader.HideWiredConfigMessageComposer) { }
+    public int MessageId => ServerPacketHeader.HideWiredConfigMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        // Empty Body
+    }
 }

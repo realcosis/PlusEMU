@@ -1,10 +1,17 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Chat;
+﻿using Plus.HabboHotel.GameClients;
 
-public class FloodControlComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Chat;
+
+public class FloodControlComposer : IServerPacket
 {
+    private readonly int _floodTime;
+
+    public int MessageId => ServerPacketHeader.FloodControlMessageComposer;
+
     public FloodControlComposer(int floodTime)
-        : base(ServerPacketHeader.FloodControlMessageComposer)
     {
-        WriteInteger(floodTime);
+        _floodTime = floodTime;
     }
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteInteger(_floodTime);
 }

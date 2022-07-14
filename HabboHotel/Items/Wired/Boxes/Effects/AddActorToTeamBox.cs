@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Concurrent;
-using Plus.Communication.Packets.Incoming;
+﻿using System.Collections.Concurrent;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Rooms.Games.Teams;
 using Plus.HabboHotel.Users;
@@ -24,10 +23,10 @@ internal class AddActorToTeamBox : IWiredItem
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet)
+    public void HandleSave(IIncomingPacket packet)
     {
-        var unknown = packet.PopInt();
-        var team = packet.PopInt();
+        var unknown = packet.ReadInt();
+        var team = packet.ReadInt();
         StringData = team.ToString();
     }
 

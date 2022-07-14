@@ -1,11 +1,23 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class RoomPropertyComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
+
+internal class RoomPropertyComposer : IServerPacket
 {
-    public RoomPropertyComposer(string name, string val)
-        : base(ServerPacketHeader.RoomPropertyMessageComposer)
+    private readonly string _name;
+    private readonly string _value;
+
+    public int MessageId => ServerPacketHeader.RoomPropertyMessageComposer;
+
+    public RoomPropertyComposer(string name, string value)
     {
-        WriteString(name);
-        WriteString(val);
+        _name = name;
+        _value = value;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteString(_name);
+        packet.WriteString(_value);
     }
 }

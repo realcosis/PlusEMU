@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Permissions;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Permissions;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
@@ -17,7 +16,7 @@ internal class RemoveMyRightsEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -32,7 +31,7 @@ internal class RemoveMyRightsEvent : IPacketEvent
             {
                 user.RemoveStatus("flatctrl 1");
                 user.UpdateNeeded = true;
-                user.GetClient().SendPacket(new YouAreNotControllerComposer());
+                user.GetClient().Send(new YouAreNotControllerComposer());
             }
             using (var dbClient = _database.GetQueryReactor())
             {

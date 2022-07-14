@@ -1,6 +1,4 @@
-﻿using System;
-using System.Data;
-using System.Threading.Tasks;
+﻿using System.Data;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
@@ -16,7 +14,7 @@ internal class RedeemOfferCreditsEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         var creditsOwed = 0;
         DataTable table;
@@ -31,7 +29,7 @@ internal class RedeemOfferCreditsEvent : IPacketEvent
             if (creditsOwed >= 1)
             {
                 session.GetHabbo().Credits += creditsOwed;
-                session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
+                session.Send(new CreditBalanceComposer(session.GetHabbo().Credits));
             }
             using var dbClient = _database.GetQueryReactor();
             dbClient.RunQuery("DELETE FROM `catalog_marketplace_offers` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND `state` = '2'");

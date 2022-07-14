@@ -1,27 +1,34 @@
-﻿using System.Linq;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Settings;
 
-internal class GetRoomBannedUsersComposer : ServerPacket
+internal class GetRoomBannedUsersComposer : IServerPacket
 {
+    private readonly Room _instance;
+    public int MessageId => ServerPacketHeader.GetRoomBannedUsersMessageComposer;
+
     public GetRoomBannedUsersComposer(Room instance)
-        : base(ServerPacketHeader.GetRoomBannedUsersMessageComposer)
     {
-        WriteInteger(instance.Id);
-        WriteInteger(instance.GetBans().BannedUsers().Count); //Count
-        foreach (var id in instance.GetBans().BannedUsers().ToList())
+        _instance = instance;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_instance.Id);
+        packet.WriteInteger(_instance.GetBans().BannedUsers().Count); //Count
+        foreach (var id in _instance.GetBans().BannedUsers().ToList())
         {
             var data = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
             if (data == null)
             {
-                WriteInteger(0);
-                WriteString("Unknown Error");
+                packet.WriteInteger(0);
+                packet.WriteString("Unknown Error");
             }
             else
             {
-                WriteInteger(data.Id);
-                WriteString(data.Username);
+                packet.WriteInteger(data.Id);
+                packet.WriteString(data.Username);
             }
         }
     }

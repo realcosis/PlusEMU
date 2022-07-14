@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
-using Plus.Communication.Packets.Incoming;
-using Plus.Communication.Packets.Outgoing;
+using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.HabboHotel.Items.Wired.Boxes.Effects;
@@ -22,10 +22,10 @@ internal class BotChangesClothesBox : IWiredItem
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet)
+    public void HandleSave(IIncomingPacket packet)
     {
-        var unknown = packet.PopInt();
-        var botConfiguration = packet.PopString();
+        var unknown = packet.ReadInt();
+        var botConfiguration = packet.ReadString();
         if (SetItems.Count > 0)
             SetItems.Clear();
         StringData = botConfiguration;
@@ -45,12 +45,7 @@ internal class BotChangesClothesBox : IWiredItem
         if (user == null)
             return false;
         var figure = stuff[1];
-        var userChangeComposer = new ServerPacket(ServerPacketHeader.UserChangeMessageComposer);
-        userChangeComposer.WriteInteger(user.VirtualId);
-        userChangeComposer.WriteString(figure);
-        userChangeComposer.WriteString("M");
-        userChangeComposer.WriteString(user.BotData.Motto);
-        userChangeComposer.WriteInteger(0);
+        var userChangeComposer = new UserChangeComposer(user.BotData);
         Instance.SendPacket(userChangeComposer);
         user.BotData.Look = figure;
         user.BotData.Gender = "M";

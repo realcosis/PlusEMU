@@ -1,41 +1,52 @@
-﻿using Plus.HabboHotel.Groups;
+﻿using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Groups;
 
 namespace Plus.Communication.Packets.Outgoing.Groups;
 
-internal class ManageGroupComposer : ServerPacket
+internal class ManageGroupComposer : IServerPacket
 {
+    private readonly Group _group;
+    private readonly string[] _badgeParts;
+
+    public int MessageId => ServerPacketHeader.ManageGroupMessageComposer;
+
     public ManageGroupComposer(Group group, string[] badgeParts)
-        : base(ServerPacketHeader.ManageGroupMessageComposer)
     {
-        WriteInteger(0);
-        WriteBoolean(true);
-        WriteInteger(group.Id);
-        WriteString(group.Name);
-        WriteString(group.Description);
-        WriteInteger(1);
-        WriteInteger(group.Colour1);
-        WriteInteger(group.Colour2);
-        WriteInteger(group.Type == GroupType.Open ? 0 : group.Type == GroupType.Locked ? 1 : 2);
-        WriteInteger(group.AdminOnlyDeco);
-        WriteBoolean(false);
-        WriteString("");
-        WriteInteger(5);
-        for (var x = 0; x < badgeParts.Length; x++)
+        _group = group;
+        _badgeParts = badgeParts;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(0);
+        packet.WriteBoolean(true);
+        packet.WriteInteger(_group.Id);
+        packet.WriteString(_group.Name);
+        packet.WriteString(_group.Description);
+        packet.WriteInteger(1);
+        packet.WriteInteger(_group.Colour1);
+        packet.WriteInteger(_group.Colour2);
+        packet.WriteInteger(_group.Type == GroupType.Open ? 0 : _group.Type == GroupType.Locked ? 1 : 2);
+        packet.WriteInteger(_group.AdminOnlyDeco);
+        packet.WriteBoolean(false);
+        packet.WriteString("");
+        packet.WriteInteger(5);
+        for (var x = 0; x < _badgeParts.Length; x++)
         {
-            var symbol = badgeParts[x];
-            WriteInteger(symbol.Length >= 6 ? int.Parse(symbol.Substring(0, 3)) : int.Parse(symbol.Substring(0, 2)));
-            WriteInteger(symbol.Length >= 6 ? int.Parse(symbol.Substring(3, 2)) : int.Parse(symbol.Substring(2, 2)));
-            WriteInteger(symbol.Length < 5 ? 0 : symbol.Length >= 6 ? int.Parse(symbol.Substring(5, 1)) : int.Parse(symbol.Substring(4, 1)));
+            var symbol = _badgeParts[x];
+            packet.WriteInteger(symbol.Length >= 6 ? int.Parse(symbol.Substring(0, 3)) : int.Parse(symbol.Substring(0, 2)));
+            packet.WriteInteger(symbol.Length >= 6 ? int.Parse(symbol.Substring(3, 2)) : int.Parse(symbol.Substring(2, 2)));
+            packet.WriteInteger(symbol.Length < 5 ? 0 : symbol.Length >= 6 ? int.Parse(symbol.Substring(5, 1)) : int.Parse(symbol.Substring(4, 1)));
         }
         var i = 0;
-        while (i < 5 - badgeParts.Length)
+        while (i < 5 - _badgeParts.Length)
         {
-            WriteInteger(0);
-            WriteInteger(0);
-            WriteInteger(0);
+            packet.WriteInteger(0);
+            packet.WriteInteger(0);
+            packet.WriteInteger(0);
             i++;
         }
-        WriteString(group.Badge);
-        WriteInteger(group.MemberCount);
+        packet.WriteString(_group.Badge);
+        packet.WriteInteger(_group.MemberCount);
     }
 }

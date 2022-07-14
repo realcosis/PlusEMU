@@ -1,12 +1,26 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.FloorPlan;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class FloorPlanSendDoorComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.FloorPlan;
+
+internal class FloorPlanSendDoorComposer : IServerPacket
 {
+    private readonly int _doorX;
+    private readonly int _doorY;
+    private readonly int _doorDirection;
+
+    public int MessageId => ServerPacketHeader.FloorPlanSendDoorMessageComposer;
+
     public FloorPlanSendDoorComposer(int doorX, int doorY, int doorDirection)
-        : base(ServerPacketHeader.FloorPlanSendDoorMessageComposer)
     {
-        WriteInteger(doorX);
-        WriteInteger(doorY);
-        WriteInteger(doorDirection);
+        _doorX = doorX;
+        _doorY = doorY;
+        _doorDirection = doorDirection;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_doorX);
+        packet.WriteInteger(_doorY);
+        packet.WriteInteger(_doorDirection);
     }
 }

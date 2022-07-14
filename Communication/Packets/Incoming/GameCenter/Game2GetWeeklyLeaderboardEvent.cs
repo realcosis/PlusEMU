@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Games;
 
 namespace Plus.Communication.Packets.Incoming.GameCenter;
@@ -14,9 +13,9 @@ internal class Game2GetWeeklyLeaderboardEvent : IPacketEvent
     }
 
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var gameId = packet.PopInt();
+        var gameId = packet.ReadInt();
         if (_gameDataManager.TryGetGame(gameId, out var gameData))
         {
             //Code

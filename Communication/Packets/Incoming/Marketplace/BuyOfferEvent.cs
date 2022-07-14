@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Text;
-using System.Threading.Tasks;
 using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
@@ -27,9 +24,9 @@ internal class BuyOfferEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var offerId = packet.PopInt();
+        var offerId = packet.ReadInt();
         DataRow row;
         using (var dbClient = _database.GetQueryReactor())
         {
@@ -73,16 +70,16 @@ internal class BuyOfferEvent : IPacketEvent
                 return Task.CompletedTask;
             }
             session.GetHabbo().Credits -= Convert.ToInt32(row["total_price"]);
-            session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
+            session.Send(new CreditBalanceComposer(session.GetHabbo().Credits));
             var giveItem = ItemFactory.CreateSingleItem(item, session.GetHabbo(), Convert.ToString(row["extra_data"]), Convert.ToString(row["extra_data"]), Convert.ToInt32(row["furni_id"]),
                 Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]));
             if (giveItem != null)
             {
                 session.GetHabbo().Inventory.Furniture.AddItem(giveItem);
-                session.SendPacket(new FurniListNotificationComposer(giveItem.Id, 1));
-                session.SendPacket(new PurchaseOkComposer());
-                session.SendPacket(new FurniListAddComposer(giveItem));
-                session.SendPacket(new FurniListUpdateComposer());
+                session.Send(new FurniListNotificationComposer(giveItem.Id, 1));
+                session.Send(new PurchaseOkComposer());
+                session.Send(new FurniListAddComposer(giveItem));
+                session.Send(new FurniListUpdateComposer());
             }
             using var dbClient = _database.GetQueryReactor();
             dbClient.RunQuery("UPDATE `catalog_marketplace_offers` SET `state` = '2' WHERE `offer_id` = '" + offerId + "' LIMIT 1");
@@ -180,6 +177,6 @@ internal class BuyOfferEvent : IPacketEvent
                 dictionary2.Add(item.SpriteId, 1);
             }
         }
-        session.SendPacket(new MarketPlaceOffersComposer(dictionary, dictionary2));
+        session.Send(new MarketPlaceOffersComposer(dictionary, dictionary2));
     }
 }

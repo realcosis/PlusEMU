@@ -1,11 +1,21 @@
-﻿namespace Plus.Communication.Packets.Outgoing.GameCenter;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class PlayableGamesComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.GameCenter;
+
+internal class PlayableGamesComposer : IServerPacket
 {
+    private readonly int _gameId;
+
     public PlayableGamesComposer(int gameId)
-        : base(ServerPacketHeader.PlayableGamesMessageComposer)
     {
-        WriteInteger(gameId);
-        WriteInteger(0);
+        _gameId = gameId;
+    }
+
+    public int MessageId => ServerPacketHeader.PlayableGamesMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_gameId);
+        packet.WriteInteger(0);
     }
 }

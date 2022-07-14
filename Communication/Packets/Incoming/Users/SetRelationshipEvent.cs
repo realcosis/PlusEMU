@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Moderation;
+﻿using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Database;
 using Plus.HabboHotel.Friends;
 using Plus.HabboHotel.GameClients;
@@ -19,19 +18,19 @@ internal class SetRelationshipEvent : IPacketEvent
         _messengerDataLoader = messengerDataLoader;
     }
 
-    public async Task Parse(GameClient session, ClientPacket packet)
+    public async Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var user = packet.PopInt();
-        var type = packet.PopInt();
+        var user = packet.ReadInt();
+        var type = packet.ReadInt();
         var friend = session.GetHabbo().GetMessenger().GetFriend(user);
         if (friend == null)
         {
-            session.SendPacket(new BroadcastMessageAlertComposer("Oops, you can only set a relationship where a friendship exists."));
+            session.Send(new BroadcastMessageAlertComposer("Oops, you can only set a relationship where a friendship exists."));
             return;
         }
         if (type < 0 || type > 3)
         {
-            session.SendPacket(new BroadcastMessageAlertComposer("Oops, you've chosen an invalid relationship type."));
+            session.Send(new BroadcastMessageAlertComposer("Oops, you've chosen an invalid relationship type."));
             return;
         }
 

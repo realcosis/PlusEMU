@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Database;
 using Plus.HabboHotel.Items;
@@ -92,8 +89,8 @@ public class MarketplaceManager : IMarketplaceManager
         if (item == null) return false;
 
         var giveItem = ItemFactory.CreateSingleItem(item, habbo, offer.ExtraData, offer.ExtraData, offer.FurniId,offer.LimitedNumber, offer.LimitedStack);
-        habbo.GetClient().SendPacket(new FurniListNotificationComposer(giveItem.Id, 1));
-        habbo.GetClient().SendPacket(new FurniListUpdateComposer());
+        habbo.GetClient().Send(new FurniListNotificationComposer(giveItem.Id, 1));
+        habbo.GetClient().Send(new FurniListUpdateComposer());
         await DeleteOffer(offerId);
         return true;
     }

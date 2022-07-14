@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Navigator;
+﻿using Plus.Communication.Packets.Outgoing.Navigator;
 using Plus.Communication.Packets.Outgoing.Rooms.Settings;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
@@ -19,15 +17,15 @@ internal class ModerateRoomEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
             return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(packet.PopInt(), out var room))
+        if (!_roomManager.TryGetRoom(packet.ReadInt(), out var room))
             return Task.CompletedTask;
-        var setLock = packet.PopInt() == 1;
-        var setName = packet.PopInt() == 1;
-        var kickAll = packet.PopInt() == 1;
+        var setLock = packet.ReadInt() == 1;
+        var setName = packet.ReadInt() == 1;
+        var kickAll = packet.ReadInt() == 1;
         if (setName)
         {
             room.Name = "Inappropriate to Hotel Management";

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.Database;
 using Plus.Utilities;
 
@@ -14,9 +13,9 @@ internal class SetChatPreferenceEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var chatPreference = packet.PopBoolean();
+        var chatPreference = packet.ReadBool();
         session.GetHabbo().ChatPreference = chatPreference;
         using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("UPDATE `users` SET `chat_preference` = @chatPreference WHERE `id` = @habboId LIMIT 1");

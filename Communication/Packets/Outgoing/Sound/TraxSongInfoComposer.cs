@@ -1,10 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Sound;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class TraxSongInfoComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Sound;
+
+// TODO @80O: Implement
+internal class TraxSongInfoComposer : IServerPacket
 {
-    public TraxSongInfoComposer()
-        : base(ServerPacketHeader.TraxSongInfoMessageComposer)
-    {
-        WriteInteger(0); //Count
-    }
+    public int MessageId => ServerPacketHeader.TraxSongInfoMessageComposer;
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteInteger(0); //Count;
 }

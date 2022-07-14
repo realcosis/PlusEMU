@@ -2,12 +2,8 @@
 using Plus.Communication.Attributes;
 using Plus.Communication.Packets.Incoming;
 using Plus.HabboHotel.GameClients;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Plus.Communication.Packets;
 
@@ -15,9 +11,9 @@ public sealed class PacketManager : IPacketManager, IDisposable
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.Communication.Packets");
 
-    private readonly Dictionary<int, IPacketEvent> _incomingPackets = new();
+    private readonly Dictionary<uint, IPacketEvent> _incomingPackets = new();
     private readonly HashSet<Type> _handshakePackets = new();
-    private readonly Dictionary<int, string> _packetNames = new();
+    private readonly Dictionary<uint, string> _packetNames = new();
 
     /// <summary>
     ///     The maximum time a task can run for before it is considered dead
@@ -37,7 +33,7 @@ public sealed class PacketManager : IPacketManager, IDisposable
                 Log.Warn("No incoming header defined for {packet}", packet.GetType().Name);
                 continue;
             }
-            var header = (int) field.GetValue(null);
+            var header = (uint) field.GetValue(null);
             _incomingPackets.Add(header, packet);
             _packetNames.Add(header, packet.GetType().Name);
             if (packet.GetType().GetCustomAttribute<NoAuthenticationRequiredAttribute>() != null)
@@ -45,38 +41,38 @@ public sealed class PacketManager : IPacketManager, IDisposable
         }
     }
 
-    public void TryExecutePacket(GameClient session, ClientPacket packet)
+    public async Task TryExecutePacket(GameClient session, uint messageId, IIncomingPacket packet)
     {
-        if (!_incomingPackets.TryGetValue(packet.Id, out var pak))
+        if (!_incomingPackets.TryGetValue(messageId, out var pak))
         {
             if (Debugger.IsAttached)
-                Log.Debug("Unhandled Packet: " + packet);
+                Log.Debug("Unhandled Packet: " + messageId);
             return;
         }
 
         if (Debugger.IsAttached)
         {
-            if (_packetNames.ContainsKey(packet.Id))
-                Log.Debug("Handled Packet: [" + packet.Id + "] " + _packetNames[packet.Id]);
+            if (_packetNames.ContainsKey(messageId))
+                Log.Debug("Handled Packet: [" + messageId + "] " + _packetNames[messageId]);
             else
-                Log.Debug("Handled Packet: [" + packet.Id + "] UnnamedPacketEvent");
+                Log.Debug("Handled Packet: [" + messageId + "] UnnamedPacketEvent");
         }
 
         if (!_handshakePackets.Contains(pak.GetType()) && session.GetHabbo() == null)
         {
-            Log.Debug($"Session {session.ConnectionId} tried execute packet {packet.Id} but didn't handshake yet.");
+            Log.Debug($"Session {session.Id} tried execute packet {messageId} but didn't handshake yet.");
             return;
         }
 
-        ExecutePacketAsync(session, packet, pak);
+        await ExecutePacketAsync(session, packet, pak);
     }
 
-    private void ExecutePacketAsync(GameClient session, ClientPacket packet, IPacketEvent pak)
+    private async Task ExecutePacketAsync(GameClient session, IIncomingPacket packet, IPacketEvent pak)
     {
         if (_cancellationTokenSource.IsCancellationRequested)
             return;
 
-        Task.Run(async () =>
+        await Task.Run(async () =>
         {
             var task = pak.Parse(session, packet);
             await task.WaitAsync(_maximumRunTimeInSec, _cancellationTokenSource.Token);
@@ -86,7 +82,7 @@ public sealed class PacketManager : IPacketManager, IDisposable
             {
                 foreach (var e in t.Exception.Flatten().InnerExceptions)
                 {
-                    Log.Error("Error handling packet {packetId} for session {session} @ Habbo  {username}: {message} {stacktrace}", packet.Id, session.ConnectionId, session.GetHabbo()?.Username ?? string.Empty, e.Message, e.StackTrace);
+                    Log.Error("Error handling packet {packetId} for session {session} @ Habbo  {username}: {message} {stacktrace}", pak.GetType().Name, session.Id, session.GetHabbo()?.Username ?? string.Empty, e.Message, e.StackTrace);
                     session.Disconnect();
                 }
             }

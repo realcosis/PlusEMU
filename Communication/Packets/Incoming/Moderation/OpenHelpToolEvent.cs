@@ -1,14 +1,13 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Moderation;
+﻿using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Moderation;
 
 internal class OpenHelpToolEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        session.SendPacket(new OpenHelpToolComposer());
+        session.Send(new OpenHelpToolComposer());
         return Task.CompletedTask;
     }
 }

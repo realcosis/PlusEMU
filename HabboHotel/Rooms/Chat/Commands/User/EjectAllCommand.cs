@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Plus.Communication.Packets.Outgoing.Inventory.Furni;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
@@ -38,7 +37,7 @@ internal class EjectAllCommand : IChatCommand
                 {
                     room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
                     targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
-                    targetClient.SendPacket(new FurniListUpdateComposer());
+                    targetClient.Send(new FurniListUpdateComposer());
                 }
                 else
                 {
@@ -59,7 +58,7 @@ internal class EjectAllCommand : IChatCommand
                 {
                     room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
                     targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
-                    targetClient.SendPacket(new FurniListUpdateComposer());
+                    targetClient.Send(new FurniListUpdateComposer());
                 }
                 else
                 {

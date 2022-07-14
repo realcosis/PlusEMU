@@ -1,28 +1,38 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items.Wired;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired;
 
-internal class WiredTriggeRconfigComposer : ServerPacket
+internal class WiredTriggeRconfigComposer : IServerPacket
 {
+    private readonly IWiredItem _box;
+    private readonly List<int> _blockedItems;
+
+    public int MessageId => ServerPacketHeader.WiredTriggeRconfigMessageComposer;
+
     public WiredTriggeRconfigComposer(IWiredItem box, List<int> blockedItems)
-        : base(ServerPacketHeader.WiredTriggeRconfigMessageComposer)
     {
-        WriteBoolean(false);
-        WriteInteger(5);
-        WriteInteger(box.SetItems.Count);
-        foreach (var item in box.SetItems.Values.ToList()) WriteInteger(item.Id);
-        WriteInteger(box.Item.GetBaseItem().SpriteId);
-        WriteInteger(box.Item.Id);
-        WriteString(box.StringData);
-        WriteInteger(box is IWiredCycle ? 1 : 0);
-        if (box is IWiredCycle cycle) WriteInteger(cycle.Delay);
-        WriteInteger(0);
-        WriteInteger(WiredBoxTypeUtility.GetWiredId(box.Type));
-        WriteInteger(blockedItems.Count());
-        if (blockedItems.Count() > 0)
-            foreach (var itemId in blockedItems.ToList())
-                WriteInteger(itemId);
+        _box = box;
+        _blockedItems = blockedItems;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteBoolean(false);
+        packet.WriteInteger(5);
+        packet.WriteInteger(_box.SetItems.Count);
+        foreach (var item in _box.SetItems.Values.ToList()) packet.WriteInteger(item.Id);
+        packet.WriteInteger(_box.Item.GetBaseItem().SpriteId);
+        packet.WriteInteger(_box.Item.Id);
+        packet.WriteString(_box.StringData);
+        packet.WriteInteger(_box is IWiredCycle ? 1 : 0);
+        if (_box is IWiredCycle cycle) packet.WriteInteger(cycle.Delay);
+        packet.WriteInteger(0);
+        packet.WriteInteger(WiredBoxTypeUtility.GetWiredId(_box.Type));
+        packet.WriteInteger(_blockedItems.Count());
+        if (_blockedItems.Count() > 0)
+            foreach (var itemId in _blockedItems.ToList())
+                packet.WriteInteger(itemId);
+
     }
 }

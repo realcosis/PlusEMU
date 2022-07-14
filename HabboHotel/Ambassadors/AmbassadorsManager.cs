@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
 using Plus.Database;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users;
 using Plus.Utilities;
 
@@ -31,7 +31,7 @@ namespace Plus.HabboHotel.Ambassadors
 
             ambassador.GetClient().SendWhisper("You have successfully warned " + target.Username + ".");
 
-            target.GetClient().SendPacket(new RoomNotificationComposer("ambassador.alert.warning", "message", "${notification.ambassador.alert.warning.message}"));
+            target.GetClient().Send(new RoomNotificationComposer("ambassador.alert.warning", "message", "${notification.ambassador.alert.warning.message}"));
         }
     }
 }

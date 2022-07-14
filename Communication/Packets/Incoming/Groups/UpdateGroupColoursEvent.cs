@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Groups;
+﻿using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
@@ -21,11 +18,11 @@ internal class UpdateGroupColoursEvent : IPacketEvent
         _groupManager = groupManager;
         _database = database;
     }
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var groupId = packet.PopInt();
-        var mainColour = packet.PopInt();
-        var secondaryColour = packet.PopInt();
+        var groupId = packet.ReadInt();
+        var mainColour = packet.ReadInt();
+        var secondaryColour = packet.ReadInt();
         if (!_groupManager.TryGetGroup(groupId, out var group))
             return Task.CompletedTask;
         if (group.CreatorId != session.GetHabbo().Id)
@@ -37,7 +34,7 @@ internal class UpdateGroupColoursEvent : IPacketEvent
         }
         group.Colour1 = mainColour;
         group.Colour2 = secondaryColour;
-        session.SendPacket(new GroupInfoComposer(group, session));
+        session.Send(new GroupInfoComposer(group, session));
         if (session.GetHabbo().CurrentRoom != null)
         {
             foreach (var item in session.GetHabbo().CurrentRoom.GetRoomItemHandler().GetFloor.ToList())

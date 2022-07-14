@@ -1,22 +1,32 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items.Televisions;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.YouTubeTelevisions;
 
-internal class GetYouTubePlaylistComposer : ServerPacket
+internal class GetYouTubePlaylistComposer : IServerPacket
 {
+    private readonly int _itemId;
+    private readonly ICollection<TelevisionItem> _videos;
+
+    public int MessageId => ServerPacketHeader.GetYouTubePlaylistMessageComposer;
+
     public GetYouTubePlaylistComposer(int itemId, ICollection<TelevisionItem> videos)
-        : base(ServerPacketHeader.GetYouTubePlaylistMessageComposer)
     {
-        WriteInteger(itemId);
-        WriteInteger(videos.Count);
-        foreach (var video in videos.ToList())
+        _itemId = itemId;
+        _videos = videos;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_itemId);
+        packet.WriteInteger(_videos.Count);
+        foreach (var video in _videos.ToList())
         {
-            WriteString(video.YouTubeId);
-            WriteString(video.Title); //Title
-            WriteString(video.Description); //Description
+            packet.WriteString(video.YouTubeId);
+            packet.WriteString(video.Title); //Title
+            packet.WriteString(video.Description); //Description
         }
-        WriteString("");
+        packet.WriteString("");
+
     }
 }

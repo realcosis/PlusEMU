@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using System.Linq;
-using Plus.Communication.Packets.Incoming;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 
@@ -23,10 +22,10 @@ internal class IsNotWearingBadgeBox : IWiredItem
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet)
+    public void HandleSave(IIncomingPacket packet)
     {
-        var unknown = packet.PopInt();
-        var badgeCode = packet.PopString();
+        var unknown = packet.ReadInt();
+        var badgeCode = packet.ReadString();
         StringData = badgeCode;
     }
 

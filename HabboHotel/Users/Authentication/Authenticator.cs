@@ -2,10 +2,7 @@
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.UserData;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace Plus.HabboHotel.Users.Authentication
 {
@@ -54,7 +51,7 @@ namespace Plus.HabboHotel.Users.Authentication
 
             session.SetHabbo(habbo);
 
-            // TODO: 80O: Remove after splitting up
+            // TODO @80O: Remove after splitting up
             habbo.Init(session);
             _gameClientManager.RegisterClient(session, habbo.Id, habbo.Username);
             await RaiseHabboLoggedIn(habbo);

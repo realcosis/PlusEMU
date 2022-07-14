@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Database;
+﻿using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Moderation;
@@ -13,15 +12,15 @@ internal class ModerationMuteEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().GetPermissions().HasRight("mod_mute"))
             return Task.CompletedTask;
-        var userId = packet.PopInt();
-        packet.PopString(); //message
-        double length = packet.PopInt() * 60;
-        packet.PopString(); //unk1
-        packet.PopString(); //unk2
+        var userId = packet.ReadInt();
+        packet.ReadString(); //message
+        double length = packet.ReadInt() * 60;
+        packet.ReadString(); //unk1
+        packet.ReadString(); //unk2
         var habbo = PlusEnvironment.GetHabboById(userId);
         if (habbo == null)
         {

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.HabboHotel.Friends;
+﻿using Plus.HabboHotel.Friends;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
 
@@ -16,9 +15,9 @@ internal class RequestBuddyEvent : IPacketEvent
         _messengerDataLoader = messengerDataLoader;
     }
 
-    public async Task Parse(GameClient session, ClientPacket packet)
+    public async Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var (userId, blocked) = await _messengerDataLoader.CanReceiveFriendRequests(packet.PopString());
+        var (userId, blocked) = await _messengerDataLoader.CanReceiveFriendRequests(packet.ReadString());
         if (userId == 0 || blocked)
             return;
 

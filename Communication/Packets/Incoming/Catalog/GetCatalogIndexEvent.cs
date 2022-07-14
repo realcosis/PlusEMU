@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.BuildersClub;
+﻿using Plus.Communication.Packets.Outgoing.BuildersClub;
 using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.HabboHotel.Catalog;
 using Plus.HabboHotel.GameClients;
@@ -15,11 +14,11 @@ public class GetCatalogIndexEvent : IPacketEvent
         _catalogManager = catalogManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        session.SendPacket(new CatalogIndexComposer(session, _catalogManager.GetPages()));
-        session.SendPacket(new CatalogItemDiscountComposer());
-        session.SendPacket(new BcBorrowedItemsComposer());
+        session.Send(new CatalogIndexComposer(session, _catalogManager.GetPages()));
+        session.Send(new CatalogItemDiscountComposer());
+        session.Send(new BcBorrowedItemsComposer());
         return Task.CompletedTask;
     }
 }

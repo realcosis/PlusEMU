@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Plus.Communication.Packets.Outgoing;
+﻿using Plus.Communication.Packets;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Communication.Packets.Outgoing.Inventory.Trading;
@@ -46,13 +45,13 @@ public sealed class Trade
         }
     }
 
-    public void SendPacket(ServerPacket packet)
+    public void SendPacket(IServerPacket packet)
     {
         foreach (var user in Users)
         {
             if (user == null || user.RoomUser == null || user.RoomUser.GetClient() == null)
                 continue;
-            user.RoomUser.GetClient().SendPacket(packet);
+            user.RoomUser.GetClient().Send(packet);
         }
     }
 
@@ -137,11 +136,11 @@ public sealed class Trade
         {
             logUserOne += item.Id + ";";
             roomUserOne.GetClient().GetHabbo().Inventory.Furniture.RemoveItem(item.Id);
-            roomUserOne.GetClient().SendPacket(new FurniListRemoveComposer(item.Id));
+            roomUserOne.GetClient().Send(new FurniListRemoveComposer(item.Id));
             if (item.Data.InteractionType == InteractionType.Exchange && PlusEnvironment.GetSettingsManager().TryGetValue("trading.auto_exchange_redeemables") == "1")
             {
                 roomUserTwo.GetClient().GetHabbo().Credits += item.Data.BehaviourData;
-                roomUserTwo.GetClient().SendPacket(new CreditBalanceComposer(roomUserTwo.GetClient().GetHabbo().Credits));
+                roomUserTwo.GetClient().Send(new CreditBalanceComposer(roomUserTwo.GetClient().GetHabbo().Credits));
                 dbClient.SetQuery("DELETE FROM `items` WHERE `id` = @id LIMIT 1");
                 dbClient.AddParameter("id", item.Id);
                 dbClient.RunQuery();
@@ -150,8 +149,8 @@ public sealed class Trade
             {
                 if (roomUserTwo.GetClient().GetHabbo().Inventory.Furniture.AddItem(item))
                 {
-                    roomUserTwo.GetClient().SendPacket(new FurniListAddComposer(item));
-                    roomUserTwo.GetClient().SendPacket(new FurniListNotificationComposer(item.Id, 1));
+                    roomUserTwo.GetClient().Send(new FurniListAddComposer(item));
+                    roomUserTwo.GetClient().Send(new FurniListNotificationComposer(item.Id, 1));
                     dbClient.SetQuery("UPDATE `items` SET `user_id` = @user WHERE id=@id LIMIT 1");
                     dbClient.AddParameter("user", roomUserTwo.UserId);
                     dbClient.AddParameter("id", item.Id);
@@ -163,11 +162,11 @@ public sealed class Trade
         {
             logUserTwo += item.Id + ";";
             roomUserTwo.GetClient().GetHabbo().Inventory.Furniture.RemoveItem(item.Id);
-            roomUserTwo.GetClient().SendPacket(new FurniListRemoveComposer(item.Id));
+            roomUserTwo.GetClient().Send(new FurniListRemoveComposer(item.Id));
             if (item.Data.InteractionType == InteractionType.Exchange && PlusEnvironment.GetSettingsManager().TryGetValue("trading.auto_exchange_redeemables") == "1")
             {
                 roomUserOne.GetClient().GetHabbo().Credits += item.Data.BehaviourData;
-                roomUserOne.GetClient().SendPacket(new CreditBalanceComposer(roomUserOne.GetClient().GetHabbo().Credits));
+                roomUserOne.GetClient().Send(new CreditBalanceComposer(roomUserOne.GetClient().GetHabbo().Credits));
                 dbClient.SetQuery("DELETE FROM `items` WHERE `id` = @id LIMIT 1");
                 dbClient.AddParameter("id", item.Id);
                 dbClient.RunQuery();
@@ -176,8 +175,8 @@ public sealed class Trade
             {
                 if (roomUserOne.GetClient().GetHabbo().Inventory.Furniture.AddItem(item))
                 {
-                    roomUserOne.GetClient().SendPacket(new FurniListAddComposer(item));
-                    roomUserOne.GetClient().SendPacket(new FurniListNotificationComposer(item.Id, 1));
+                    roomUserOne.GetClient().Send(new FurniListAddComposer(item));
+                    roomUserOne.GetClient().Send(new FurniListNotificationComposer(item.Id, 1));
                     dbClient.SetQuery("UPDATE `items` SET `user_id` = @user WHERE id=@id LIMIT 1");
                     dbClient.AddParameter("user", roomUserOne.UserId);
                     dbClient.AddParameter("id", item.Id);

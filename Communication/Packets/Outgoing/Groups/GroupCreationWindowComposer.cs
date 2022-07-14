@@ -1,37 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Groups;
 
-internal class GroupCreationWindowComposer : ServerPacket
+internal class GroupCreationWindowComposer : IServerPacket
 {
+    private readonly ICollection<RoomData> _rooms;
+    public int MessageId => ServerPacketHeader.GroupCreationWindowMessageComposer;
+
     public GroupCreationWindowComposer(ICollection<RoomData> rooms)
-        : base(ServerPacketHeader.GroupCreationWindowMessageComposer)
     {
-        WriteInteger(Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("catalog.group.purchase.cost"))); //Price
-        WriteInteger(rooms.Count); //Room count that the user has.
-        foreach (var room in rooms)
+        _rooms = rooms;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("catalog.group.purchase.cost"))); //Price // TODO @80O: Pass via constructor
+        packet.WriteInteger(_rooms.Count); //Room count that the user has.
+        foreach (var room in _rooms)
         {
-            WriteInteger(room.Id); //Room Id
-            WriteString(room.Name); //Room Name
-            WriteBoolean(false); //What?
+            packet.WriteInteger(room.Id); //Room Id
+            packet.WriteString(room.Name); //Room Name
+            packet.WriteBoolean(false); //What?
         }
-        WriteInteger(5);
-        WriteInteger(5);
-        WriteInteger(11);
-        WriteInteger(4);
-        WriteInteger(6);
-        WriteInteger(11);
-        WriteInteger(4);
-        WriteInteger(0);
-        WriteInteger(0);
-        WriteInteger(0);
-        WriteInteger(0);
-        WriteInteger(0);
-        WriteInteger(0);
-        WriteInteger(0);
-        WriteInteger(0);
-        WriteInteger(0);
+        packet.WriteInteger(5);
+        packet.WriteInteger(5);
+        packet.WriteInteger(11);
+        packet.WriteInteger(4);
+        packet.WriteInteger(6);
+        packet.WriteInteger(11);
+        packet.WriteInteger(4);
+        packet.WriteInteger(0);
+        packet.WriteInteger(0);
+        packet.WriteInteger(0);
+        packet.WriteInteger(0);
+        packet.WriteInteger(0);
+        packet.WriteInteger(0);
+        packet.WriteInteger(0);
+        packet.WriteInteger(0);
+        packet.WriteInteger(0);
     }
 }

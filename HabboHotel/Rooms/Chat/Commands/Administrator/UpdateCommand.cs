@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Plus.Communication.Packets.Outgoing.Catalog;
+﻿using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.Core.FigureData;
 using Plus.Core.Settings;
 using Plus.HabboHotel.Achievements;

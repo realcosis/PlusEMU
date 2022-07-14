@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Rooms;
 
@@ -14,17 +13,17 @@ internal class UpdateStickyNoteEvent : IPacketEvent
         _roomManager = roomManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return Task.CompletedTask;
-        var item = room.GetRoomItemHandler().GetItem(packet.PopInt());
+        var item = room.GetRoomItemHandler().GetItem(packet.ReadInt());
         if (item == null || item.GetBaseItem().InteractionType != InteractionType.Postit)
             return Task.CompletedTask;
-        var color = packet.PopString();
-        var text = packet.PopString();
+        var color = packet.ReadString();
+        var text = packet.ReadString();
         if (!room.CheckRights(session))
         {
             if (!text.StartsWith(item.ExtraData))

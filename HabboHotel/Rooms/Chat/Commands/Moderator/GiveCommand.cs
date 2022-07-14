@@ -46,7 +46,7 @@ internal class GiveCommand : IChatCommand
                 if (int.TryParse(@params[3], out amount))
                 {
                     target.GetHabbo().Credits = target.GetHabbo().Credits += amount;
-                    target.SendPacket(new CreditBalanceComposer(target.GetHabbo().Credits));
+                    target.Send(new CreditBalanceComposer(target.GetHabbo().Credits));
                     if (target.GetHabbo().Id != session.GetHabbo().Id)
                         target.SendNotification(session.GetHabbo().Username + " has given you " + amount + " Credit(s)!");
                     session.SendWhisper("Successfully given " + amount + " Credit(s) to " + target.GetHabbo().Username + "!");
@@ -67,7 +67,7 @@ internal class GiveCommand : IChatCommand
                 if (int.TryParse(@params[3], out amount))
                 {
                     target.GetHabbo().Duckets += amount;
-                    target.SendPacket(new HabboActivityPointNotificationComposer(target.GetHabbo().Duckets, amount));
+                    target.Send(new HabboActivityPointNotificationComposer(target.GetHabbo().Duckets, amount));
                     if (target.GetHabbo().Id != session.GetHabbo().Id)
                         target.SendNotification(session.GetHabbo().Username + " has given you " + amount + " Ducket(s)!");
                     session.SendWhisper("Successfully given " + amount + " Ducket(s) to " + target.GetHabbo().Username + "!");
@@ -87,7 +87,7 @@ internal class GiveCommand : IChatCommand
                 if (int.TryParse(@params[3], out amount))
                 {
                     target.GetHabbo().Diamonds += amount;
-                    target.SendPacket(new HabboActivityPointNotificationComposer(target.GetHabbo().Diamonds, amount, 5));
+                    target.Send(new HabboActivityPointNotificationComposer(target.GetHabbo().Diamonds, amount, 5));
                     if (target.GetHabbo().Id != session.GetHabbo().Id)
                         target.SendNotification(session.GetHabbo().Username + " has given you " + amount + " Diamond(s)!");
                     session.SendWhisper("Successfully given " + amount + " Diamond(s) to " + target.GetHabbo().Username + "!");
@@ -108,7 +108,7 @@ internal class GiveCommand : IChatCommand
                 if (int.TryParse(@params[3], out amount))
                 {
                     target.GetHabbo().GotwPoints = target.GetHabbo().GotwPoints + amount;
-                    target.SendPacket(new HabboActivityPointNotificationComposer(target.GetHabbo().GotwPoints, amount, 103));
+                    target.Send(new HabboActivityPointNotificationComposer(target.GetHabbo().GotwPoints, amount, 103));
                     if (target.GetHabbo().Id != session.GetHabbo().Id)
                         target.SendNotification(session.GetHabbo().Username + " has given you " + amount + " GOTW Point(s)!");
                     session.SendWhisper("Successfully given " + amount + " GOTW point(s) to " + target.GetHabbo().Username + "!");

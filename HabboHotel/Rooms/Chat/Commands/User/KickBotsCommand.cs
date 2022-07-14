@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Plus.Communication.Packets.Outgoing.Inventory.Bots;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Bots;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Inventory.Bots;
@@ -44,7 +42,7 @@ internal class KickBotsCommand : IChatCommand
             }
             session.GetHabbo().Inventory.Bots.AddBot(new Bot(Convert.ToInt32(botUser.BotData.Id), Convert.ToInt32(botUser.BotData.OwnerId), botUser.BotData.Name, botUser.BotData.Motto,
                 botUser.BotData.Look, botUser.BotData.Gender));
-            session.SendPacket(new BotInventoryComposer(session.GetHabbo().Inventory.Bots.Bots.Values.ToList()));
+            session.Send(new BotInventoryComposer(session.GetHabbo().Inventory.Bots.Bots.Values.ToList()));
             room.GetRoomUserManager().RemoveBot(botUser.VirtualId, false);
         }
         session.SendWhisper("Success, removed all bots.");

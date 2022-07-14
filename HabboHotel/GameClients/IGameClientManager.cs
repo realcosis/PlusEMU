@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Plus.Communication.ConnectionManager;
-using Plus.Communication.Packets.Outgoing;
+﻿using Plus.Communication.Packets;
 using Plus.HabboHotel.Users.Messenger;
 
 namespace Plus.HabboHotel.GameClients;
@@ -17,11 +14,10 @@ public interface IGameClientManager
     bool UpdateClientUsername(GameClient client, string oldUsername, string newUsername);
     Task<string> GetNameById(int id);
     IEnumerable<GameClient> GetClientsById(Dictionary<int, MessengerBuddy>.KeyCollection users);
-    void StaffAlert(ServerPacket message, int exclude = 0);
+    void StaffAlert(IServerPacket message, int exclude = 0);
     void ModAlert(string message);
     void DoAdvertisingReport(GameClient reporter, GameClient target);
-    void SendPacket(ServerPacket packet, string fuse = "");
-    void CreateAndStartClient(int clientId, ConnectionInformation connection);
+    void SendPacket(IServerPacket packet, string fuse = "");
     void DisposeConnection(int clientId);
     void LogClonesOut(int userId);
     void RegisterClient(GameClient client, int userId, string username);

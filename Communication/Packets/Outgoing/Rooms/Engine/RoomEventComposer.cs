@@ -1,22 +1,33 @@
-﻿using System;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class RoomEventComposer : ServerPacket
+internal class RoomEventComposer : IServerPacket
 {
-    public RoomEventComposer(RoomData data, RoomPromotion promotion)
-        : base(ServerPacketHeader.RoomEventMessageComposer)
+    private readonly RoomData _data;
+    private readonly RoomPromotion? _promotion;
+
+    public int MessageId => ServerPacketHeader.RoomEventMessageComposer;
+
+    public RoomEventComposer(RoomData data, RoomPromotion? promotion)
     {
-        WriteInteger(promotion == null ? -1 : Convert.ToInt32(data.Id));
-        WriteInteger(promotion == null ? -1 : data.OwnerId);
-        WriteString(promotion == null ? "" : data.OwnerName);
-        WriteInteger(promotion == null ? 0 : 1);
-        WriteInteger(0);
-        WriteString(promotion == null ? "" : promotion.Name);
-        WriteString(promotion == null ? "" : promotion.Description);
-        WriteInteger(0);
-        WriteInteger(0);
-        WriteInteger(0); //Unknown, came in build RELEASE63-201411181343-400753188
+        _data = data;
+        _promotion = promotion;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_promotion == null ? -1 : Convert.ToInt32(_data.Id));
+        packet.WriteInteger(_promotion == null ? -1 : _data.OwnerId);
+        packet.WriteString(_promotion == null ? "" : _data.OwnerName);
+        packet.WriteInteger(_promotion == null ? 0 : 1);
+        packet.WriteInteger(0);
+        packet.WriteString(_promotion == null ? "" : _promotion.Name);
+        packet.WriteString(_promotion == null ? "" : _promotion.Description);
+        packet.WriteInteger(0);
+        packet.WriteInteger(0);
+        packet.WriteInteger(0); //Unknown, came in build RELEASE63-201411181343-400753188
+
     }
 }

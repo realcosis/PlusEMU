@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Moderation;
+﻿using Plus.Communication.Packets.Outgoing.Moderation;
 
 namespace Plus.Communication.Rcon.Commands.User;
 
@@ -23,7 +21,7 @@ internal class AlertUserCommand : IRconCommand
         if (string.IsNullOrEmpty(Convert.ToString(parameters[1])))
             return Task.FromResult(false);
         var message = Convert.ToString(parameters[1]);
-        client.SendPacket(new BroadcastMessageAlertComposer(message));
+        client.Send(new BroadcastMessageAlertComposer(message));
         return Task.FromResult(true);
     }
 }

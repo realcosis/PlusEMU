@@ -1,31 +1,41 @@
-﻿using Plus.HabboHotel.Items;
+﻿using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Items;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class ItemUpdateComposer : ServerPacket
+internal class ItemUpdateComposer : IServerPacket
 {
+    private readonly Item _item;
+    private readonly int _userId;
+    public int MessageId => ServerPacketHeader.ItemUpdateMessageComposer;
+
     public ItemUpdateComposer(Item item, int userId)
-        : base(ServerPacketHeader.ItemUpdateMessageComposer)
     {
-        WriteWallItem(item, userId);
+        _item = item;
+        _userId = userId;
     }
 
-    private void WriteWallItem(Item item, int userId)
+    public void Compose(IOutgoingPacket packet)
     {
-        WriteString(item.Id.ToString());
-        WriteInteger(item.GetBaseItem().SpriteId);
-        WriteString(item.WallCoord);
+        WriteWallItem(packet, _item, _userId);
+    }
+
+    private void WriteWallItem(IOutgoingPacket packet, Item item, int userId)
+    {
+        packet.WriteString(item.Id.ToString());
+        packet.WriteInteger(item.GetBaseItem().SpriteId);
+        packet.WriteString(item.WallCoord);
         switch (item.GetBaseItem().InteractionType)
         {
             case InteractionType.Postit:
-                WriteString(item.ExtraData.Split(' ')[0]);
+                packet.WriteString(item.ExtraData.Split(' ')[0]);
                 break;
             default:
-                WriteString(item.ExtraData);
+                packet.WriteString(item.ExtraData);
                 break;
         }
-        WriteInteger(-1);
-        WriteInteger(item.GetBaseItem().Modes > 1 ? 1 : 0);
-        WriteInteger(userId);
+        packet.WriteInteger(-1);
+        packet.WriteInteger(item.GetBaseItem().Modes > 1 ? 1 : 0);
+        packet.WriteInteger(userId);
     }
 }

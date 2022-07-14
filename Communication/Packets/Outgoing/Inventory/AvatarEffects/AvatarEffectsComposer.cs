@@ -1,22 +1,31 @@
-﻿using System.Collections.Generic;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Effects;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
 
-internal class AvatarEffectsComposer : ServerPacket
+internal class AvatarEffectsComposer : IServerPacket
 {
+    private readonly ICollection<AvatarEffect> _effects;
+
+    public int MessageId => ServerPacketHeader.AvatarEffectsMessageComposer;
+
     public AvatarEffectsComposer(ICollection<AvatarEffect> effects)
-        : base(ServerPacketHeader.AvatarEffectsMessageComposer)
     {
-        WriteInteger(effects.Count);
-        foreach (var effect in effects)
+        _effects = effects;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_effects.Count);
+        foreach (var effect in _effects)
         {
-            WriteInteger(effect.SpriteId); //Effect Id
-            WriteInteger(0); //Type, 0 = Hand, 1 = Full
-            WriteInteger((int)effect.Duration);
-            WriteInteger(effect.Activated ? effect.Quantity - 1 : effect.Quantity);
-            WriteInteger(effect.Activated ? (int)effect.TimeLeft : -1);
-            WriteBoolean(false); //Permanent
+            packet.WriteInteger(effect.SpriteId); //Effect Id
+            packet.WriteInteger(0); //Type, 0 = Hand, 1 = Full
+            packet.WriteInteger((int)effect.Duration);
+            packet.WriteInteger(effect.Activated ? effect.Quantity - 1 : effect.Quantity);
+            packet.WriteInteger(effect.Activated ? (int)effect.TimeLeft : -1);
+            packet.WriteBoolean(false); //Permanent
         }
+
     }
 }

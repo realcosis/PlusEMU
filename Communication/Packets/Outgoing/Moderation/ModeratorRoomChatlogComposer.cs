@@ -1,33 +1,42 @@
-﻿using System.Collections.Generic;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Rooms.Chat.Logs;
 using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class ModeratorRoomChatlogComposer : ServerPacket
+internal class ModeratorRoomChatlogComposer : IServerPacket
 {
+    private readonly Room _room;
+    private readonly ICollection<ChatlogEntry> _chats;
+    public int MessageId => ServerPacketHeader.ModeratorRoomChatlogMessageComposer;
+
     public ModeratorRoomChatlogComposer(Room room, ICollection<ChatlogEntry> chats)
-        : base(ServerPacketHeader.ModeratorRoomChatlogMessageComposer)
     {
-        WriteByte(1);
-        WriteShort(2); //Count
-        WriteString("roomName");
-        WriteByte(2);
-        WriteString(room.Name);
-        WriteString("roomId");
-        WriteByte(1);
-        WriteInteger(room.Id);
-        WriteShort(chats.Count);
-        foreach (var entry in chats)
+        _room = room;
+        _chats = chats;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteByte(1);
+        packet.WriteShort(2); //Count
+        packet.WriteString("roomName");
+        packet.WriteByte(2);
+        packet.WriteString(_room.Name);
+        packet.WriteString("roomId");
+        packet.WriteByte(1);
+        packet.WriteInteger(_room.Id);
+        packet.WriteShort((short)_chats.Count);
+        foreach (var entry in _chats)
         {
             var username = "Unknown";
             if (entry.PlayerNullable() != null) username = entry.PlayerNullable().Username;
-            WriteString(UnixTimestamp.FromUnixTimestamp(entry.Timestamp).ToShortTimeString()); // time?
-            WriteInteger(entry.PlayerId); // User Id
-            WriteString(username); // Username
-            WriteString(!string.IsNullOrEmpty(entry.Message) ? entry.Message : "** user sent a blank message **"); // Message
-            WriteBoolean(false); //TODO, AI's?
+            packet.WriteString(UnixTimestamp.FromUnixTimestamp(entry.Timestamp).ToShortTimeString()); // time?
+            packet.WriteInteger(entry.PlayerId); // User Id
+            packet.WriteString(username); // Username
+            packet.WriteString(!string.IsNullOrEmpty(entry.Message) ? entry.Message : "** user sent a blank message **"); // Message
+            packet.WriteBoolean(false); //TODO, AI's?
         }
     }
 }

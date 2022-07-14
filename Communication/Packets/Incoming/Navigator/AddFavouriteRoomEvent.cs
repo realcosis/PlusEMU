@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Navigator;
+﻿using Plus.Communication.Packets.Outgoing.Navigator;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
@@ -15,9 +14,9 @@ public class AddFavouriteRoomEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var roomId = packet.PopInt();
+        var roomId = packet.ReadInt();
         if (!RoomFactory.TryGetData(roomId, out var data))
             return Task.CompletedTask;
         if (data == null || session.GetHabbo().FavoriteRooms.Count >= 30 || session.GetHabbo().FavoriteRooms.Contains(roomId))
@@ -26,7 +25,7 @@ public class AddFavouriteRoomEvent : IPacketEvent
             return Task.CompletedTask;
         }
         session.GetHabbo().FavoriteRooms.Add(roomId);
-        session.SendPacket(new UpdateFavouriteRoomComposer(roomId, true));
+        session.Send(new UpdateFavouriteRoomComposer(roomId, true));
         using var dbClient = _database.GetQueryReactor();
         dbClient.RunQuery("INSERT INTO user_favorites (user_id,room_id) VALUES (" + session.GetHabbo().Id + "," + roomId + ")");
         return Task.CompletedTask;

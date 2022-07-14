@@ -1,21 +1,28 @@
-﻿using System.Collections.Generic;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Messenger;
 
 namespace Plus.Communication.Packets.Outgoing.Messenger;
 
-internal class BuddyRequestsComposer : ServerPacket
+internal class BuddyRequestsComposer : IServerPacket
 {
+    private readonly ICollection<MessengerRequest> _requests;
+    public int MessageId => ServerPacketHeader.BuddyRequestsMessageComposer;
+
     public BuddyRequestsComposer(ICollection<MessengerRequest> requests)
-        : base(ServerPacketHeader.BuddyRequestsMessageComposer)
     {
-        WriteInteger(requests.Count);
-        WriteInteger(requests.Count);
-        foreach (var request in requests)
+        _requests = requests;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_requests.Count);
+        packet.WriteInteger(_requests.Count);
+        foreach (var request in _requests)
         {
-            WriteInteger(request.FromId);
-            WriteString(request.Username);
+            packet.WriteInteger(request.FromId);
+            packet.WriteString(request.Username);
             var user = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(request.FromId);
-            WriteString(user != null ? user.Look : "");
+            packet.WriteString(user != null ? user.Look : "");
         }
     }
 }

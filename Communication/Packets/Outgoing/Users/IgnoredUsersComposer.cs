@@ -1,13 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Outgoing.Users;
 
-public class IgnoredUsersComposer : ServerPacket
+public class IgnoredUsersComposer : IServerPacket
 {
+    private readonly IReadOnlyCollection<string> _ignoredUsers;
+
+    public int MessageId => ServerPacketHeader.IgnoredUsersMessageComposer;
+
     public IgnoredUsersComposer(IReadOnlyCollection<string> ignoredUsers)
-        : base(ServerPacketHeader.IgnoredUsersMessageComposer)
     {
-        WriteInteger(ignoredUsers.Count);
-        foreach (var username in ignoredUsers) WriteString(username);
+        _ignoredUsers = ignoredUsers;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_ignoredUsers.Count);
+        foreach (var username in _ignoredUsers)
+            packet.WriteString(username);
     }
 }

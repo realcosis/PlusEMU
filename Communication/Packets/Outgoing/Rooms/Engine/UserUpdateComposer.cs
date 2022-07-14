@@ -1,25 +1,31 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Text;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class UserUpdateComposer : ServerPacket
+internal class UserUpdateComposer : IServerPacket
 {
+    private readonly ICollection<RoomUser> _users;
+    public int MessageId => ServerPacketHeader.UserUpdateMessageComposer;
+
     public UserUpdateComposer(ICollection<RoomUser> users)
-        : base(ServerPacketHeader.UserUpdateMessageComposer)
     {
-        WriteInteger(users.Count);
-        foreach (var user in users.ToList())
+        _users = users;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_users.Count);
+        foreach (var user in _users.ToList())
         {
-            WriteInteger(user.VirtualId);
-            WriteInteger(user.X);
-            WriteInteger(user.Y);
-            WriteString(user.Z.ToString(CultureInfo.InvariantCulture));
-            WriteInteger(user.RotHead);
-            WriteInteger(user.RotBody);
+            packet.WriteInteger(user.VirtualId);
+            packet.WriteInteger(user.X);
+            packet.WriteInteger(user.Y);
+            packet.WriteString(user.Z.ToString(CultureInfo.InvariantCulture));
+            packet.WriteInteger(user.RotHead);
+            packet.WriteInteger(user.RotBody);
             var statusComposer = new StringBuilder();
             statusComposer.Append("/");
             foreach (var status in user.Statusses.ToList())
@@ -33,7 +39,7 @@ internal class UserUpdateComposer : ServerPacket
                 statusComposer.Append("/");
             }
             statusComposer.Append("/");
-            WriteString(statusComposer.ToString());
+            packet.WriteString(statusComposer.ToString());
         }
     }
 }

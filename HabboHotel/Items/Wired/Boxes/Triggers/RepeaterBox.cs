@@ -1,7 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using Plus.Communication.Packets.Incoming;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.HabboHotel.Items.Wired.Boxes.Triggers;
@@ -98,10 +96,10 @@ internal class RepeaterBox : IWiredItem, IWiredCycle
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet)
+    public void HandleSave(IIncomingPacket packet)
     {
-        var unknown = packet.PopInt();
-        var delay = packet.PopInt();
+        var unknown = packet.ReadInt();
+        var delay = packet.ReadInt();
         Delay = delay;
         TickCount = delay;
     }

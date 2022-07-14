@@ -1,14 +1,22 @@
-﻿using Plus.HabboHotel.Users.Effects;
+﻿using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Users.Effects;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
 
-internal class AvatarEffectActivatedComposer : ServerPacket
+internal class AvatarEffectActivatedComposer : IServerPacket
 {
+    private readonly AvatarEffect _effect;
+    public int MessageId => ServerPacketHeader.AvatarEffectActivatedMessageComposer;
+
     public AvatarEffectActivatedComposer(AvatarEffect effect)
-        : base(ServerPacketHeader.AvatarEffectActivatedMessageComposer)
     {
-        WriteInteger(effect.SpriteId);
-        WriteInteger((int)effect.Duration);
-        WriteBoolean(false); //Permanent
+        _effect = effect;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_effect.SpriteId);
+        packet.WriteInteger((int)_effect.Duration);
+        packet.WriteBoolean(false); //Permanent
     }
 }

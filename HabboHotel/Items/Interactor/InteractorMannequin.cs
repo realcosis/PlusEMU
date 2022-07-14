@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Items.Interactor;
@@ -54,7 +52,7 @@ internal class InteractorMannequin : IFurniInteractor
                 var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Username);
                 if (user != null)
                 {
-                    session.SendPacket(new UserChangeComposer(user, true));
+                    session.Send(new UserChangeComposer(user, true));
                     session.GetHabbo().CurrentRoom.SendPacket(new UserChangeComposer(user, false));
                 }
             }

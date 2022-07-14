@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
 using Plus.Communication.Packets.Outgoing.Rooms.Session;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
@@ -19,7 +17,7 @@ internal class SaveFloorPlanModelEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -31,15 +29,15 @@ internal class SaveFloorPlanModelEvent : IPacketEvent
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g',
             'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', '\r'
         };
-        var map = packet.PopString().ToLower().TrimEnd();
+        var map = packet.ReadString().ToLower().TrimEnd();
         if (map.Length > 4159) //4096 + New Lines = 4159
         {
-            session.SendPacket(new RoomNotificationComposer("floorplan_editor.error", "errors", "(%%%general%%%): %%%too_large_area%%% (%%%max%%% 2048 %%%tiles%%%)"));
+            session.Send(new RoomNotificationComposer("floorplan_editor.error", "errors", "(%%%general%%%): %%%too_large_area%%% (%%%max%%% 2048 %%%tiles%%%)"));
             return Task.CompletedTask;
         }
         if (map.Any(letter => !validLetters.Contains(letter)) || string.IsNullOrEmpty(map))
         {
-            session.SendPacket(new RoomNotificationComposer("floorplan_editor.error", "errors", "Oops, it appears that you have entered an invalid floor map!"));
+            session.Send(new RoomNotificationComposer("floorplan_editor.error", "errors", "Oops, it appears that you have entered an invalid floor map!"));
             return Task.CompletedTask;
         }
         var modelData = map.Split('\r');
@@ -47,7 +45,7 @@ internal class SaveFloorPlanModelEvent : IPacketEvent
         var sizeX = modelData[0].Length;
         if (sizeY > 64 || sizeX > 64)
         {
-            session.SendPacket(new RoomNotificationComposer("floorplan_editor.error", "errors", "The maximum height and width of a model is 64x64!"));
+            session.Send(new RoomNotificationComposer("floorplan_editor.error", "errors", "The maximum height and width of a model is 64x64!"));
             return Task.CompletedTask;
         }
         var lastLineLength = 0;
@@ -63,15 +61,15 @@ internal class SaveFloorPlanModelEvent : IPacketEvent
         }
         if (!isValid)
         {
-            session.SendPacket(new RoomNotificationComposer("floorplan_editor.error", "errors", "Oops, it appears that you have entered an invalid floor map!"));
+            session.Send(new RoomNotificationComposer("floorplan_editor.error", "errors", "Oops, it appears that you have entered an invalid floor map!"));
             return Task.CompletedTask;
         }
-        var doorX = packet.PopInt();
-        var doorY = packet.PopInt();
-        var doorDirection = packet.PopInt();
-        var wallThick = packet.PopInt();
-        var floorThick = packet.PopInt();
-        var wallHeight = packet.PopInt();
+        var doorX = packet.ReadInt();
+        var doorY = packet.ReadInt();
+        var doorDirection = packet.ReadInt();
+        var wallThick = packet.ReadInt();
+        var floorThick = packet.ReadInt();
+        var wallHeight = packet.ReadInt();
         var doorZ = 0;
         try
         {
@@ -143,7 +141,7 @@ internal class SaveFloorPlanModelEvent : IPacketEvent
         {
             if (user == null || user.GetClient() == null)
                 continue;
-            user.GetClient().SendPacket(new RoomForwardComposer(room.Id));
+            user.GetClient().Send(new RoomForwardComposer(room.Id));
         }
         return Task.CompletedTask;
     }

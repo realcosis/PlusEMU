@@ -1,10 +1,16 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Achievements;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class AchievementScoreComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Inventory.Achievements;
+
+internal class AchievementScoreComposer : IServerPacket
 {
-    public AchievementScoreComposer(int achScore)
-        : base(ServerPacketHeader.AchievementScoreMessageComposer)
+    private readonly int _score;
+    public int MessageId => ServerPacketHeader.AchievementScoreMessageComposer;
+
+    public AchievementScoreComposer(int score)
     {
-        WriteInteger(achScore);
+        _score = score;
     }
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteInteger(_score);
 }

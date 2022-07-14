@@ -57,8 +57,8 @@ internal class MimicCommand : IChatCommand
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (user != null)
         {
-            session.SendPacket(new AvatarAspectUpdateComposer(session.GetHabbo().Look, session.GetHabbo().Gender));
-            session.SendPacket(new UserChangeComposer(user, true));
+            session.Send(new AvatarAspectUpdateComposer(session.GetHabbo().Look, session.GetHabbo().Gender));
+            session.Send(new UserChangeComposer(user, true));
             room.SendPacket(new UserChangeComposer(user, false));
         }
     }

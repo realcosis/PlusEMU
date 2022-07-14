@@ -43,7 +43,7 @@ internal class SummonCommand : IChatCommand
         }
         targetClient.SendNotification("You have been summoned to " + session.GetHabbo().Username + "!");
         if (!targetClient.GetHabbo().InRoom)
-            targetClient.SendPacket(new RoomForwardComposer(session.GetHabbo().CurrentRoomId));
+            targetClient.Send(new RoomForwardComposer(session.GetHabbo().CurrentRoomId));
         else
             targetClient.GetHabbo().PrepareRoom(session.GetHabbo().CurrentRoomId, "");
     }

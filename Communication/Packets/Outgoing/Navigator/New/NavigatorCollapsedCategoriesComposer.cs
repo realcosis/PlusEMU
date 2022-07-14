@@ -1,10 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Navigator.New;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class NavigatorCollapsedCategoriesComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Navigator.New;
+
+// TODO @80O: Implement
+internal class NavigatorCollapsedCategoriesComposer : IServerPacket
 {
-    public NavigatorCollapsedCategoriesComposer()
-        : base(ServerPacketHeader.NavigatorCollapsedCategoriesMessageComposer)
-    {
-        WriteInteger(0);
-    }
+    public int MessageId => ServerPacketHeader.NavigatorCollapsedCategoriesMessageComposer;
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteInteger(0);
 }

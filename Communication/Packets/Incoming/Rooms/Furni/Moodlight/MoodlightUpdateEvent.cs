@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Rooms;
 
@@ -14,7 +13,7 @@ internal class MoodlightUpdateEvent : IPacketEvent
         _roomManager = roomManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -25,10 +24,10 @@ internal class MoodlightUpdateEvent : IPacketEvent
         var item = room.GetRoomItemHandler().GetItem(room.MoodlightData.ItemId);
         if (item == null || item.GetBaseItem().InteractionType != InteractionType.Moodlight)
             return Task.CompletedTask;
-        var preset = packet.PopInt();
-        var backgroundMode = packet.PopInt();
-        var colorCode = packet.PopString();
-        var intensity = packet.PopInt();
+        var preset = packet.ReadInt();
+        var backgroundMode = packet.ReadInt();
+        var colorCode = packet.ReadString();
+        var intensity = packet.ReadInt();
         var backgroundOnly = backgroundMode >= 2;
         room.MoodlightData.Enabled = true;
         room.MoodlightData.CurrentPreset = preset;

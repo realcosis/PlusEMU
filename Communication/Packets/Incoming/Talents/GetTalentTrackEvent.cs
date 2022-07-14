@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Talents;
+﻿using Plus.Communication.Packets.Outgoing.Talents;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Talents;
 
@@ -14,11 +13,11 @@ internal class GetTalentTrackEvent : IPacketEvent
         _talentTrackManager = talentTrackManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var type = packet.PopString();
+        var type = packet.ReadString();
         var levels = _talentTrackManager.GetLevels();
-        session.SendPacket(new TalentTrackComposer(levels, type));
+        session.Send(new TalentTrackComposer(levels, type));
         return Task.CompletedTask;
     }
 }

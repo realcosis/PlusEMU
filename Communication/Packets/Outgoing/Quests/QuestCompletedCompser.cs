@@ -1,7 +1,13 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Quests;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class QuestCompletedCompser : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Quests;
+
+internal class QuestCompletedCompser : IServerPacket
 {
-    public QuestCompletedCompser()
-        : base(ServerPacketHeader.QuestCompletedMessageComposer) { }
+    public int MessageId => ServerPacketHeader.QuestCompletedMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        // Empty Body
+    }
 }

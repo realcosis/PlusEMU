@@ -1,7 +1,13 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Session;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class CloseConnectionComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Session;
+
+internal class CloseConnectionComposer : IServerPacket
 {
-    public CloseConnectionComposer()
-        : base(ServerPacketHeader.CloseConnectionMessageComposer) { }
+    public int MessageId => ServerPacketHeader.CloseConnectionMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        // Empty Body
+    }
 }

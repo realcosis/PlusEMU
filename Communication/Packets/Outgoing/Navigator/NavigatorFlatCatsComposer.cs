@@ -1,20 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Navigator;
 
 namespace Plus.Communication.Packets.Outgoing.Navigator;
 
-internal class NavigatorFlatCatsComposer : ServerPacket
+internal class NavigatorFlatCatsComposer : IServerPacket
 {
+    private readonly ICollection<SearchResultList> _categories;
+    public int MessageId => ServerPacketHeader.NavigatorFlatCatsMessageComposer;
+
     public NavigatorFlatCatsComposer(ICollection<SearchResultList> categories)
-        : base(ServerPacketHeader.NavigatorFlatCatsMessageComposer)
     {
-        WriteInteger(categories.Count);
-        foreach (var category in categories.ToList())
+        _categories = categories;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_categories.Count);
+        foreach (var category in _categories.ToList())
         {
-            WriteInteger(category.Id);
-            WriteString(category.PublicName);
-            WriteBoolean(true); // TODO
+            packet.WriteInteger(category.Id);
+            packet.WriteString(category.PublicName);
+            packet.WriteBoolean(true); // TODO
         }
     }
 }

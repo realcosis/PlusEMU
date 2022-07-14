@@ -3,30 +3,40 @@ using Plus.HabboHotel.Quests;
 
 namespace Plus.Communication.Packets.Outgoing.Quests;
 
-internal class QuestCompletedComposer : ServerPacket
+internal class QuestCompletedComposer : IServerPacket
 {
+    private readonly GameClient _session;
+    private readonly Quest _quest;
+
+    public int MessageId => ServerPacketHeader.QuestCompletedMessageComposer;
+
     public QuestCompletedComposer(GameClient session, Quest quest)
-        : base(ServerPacketHeader.QuestCompletedMessageComposer)
     {
-        var amountInCat = PlusEnvironment.GetGame().GetQuestManager().GetAmountOfQuestsInCategory(quest.Category);
-        var number = quest?.Number ?? amountInCat;
-        var userProgress = quest == null ? 0 : session.GetHabbo().GetQuestProgress(quest.Id);
-        WriteString(quest.Category);
-        WriteInteger(number); // Quest progress in this cat
-        WriteInteger(quest.Name.Contains("xmas2012") ? 1 : amountInCat); // Total quests in this cat
-        WriteInteger(quest?.RewardType ?? 3); // Reward type (1 = Snowflakes, 2 = Love hearts, 3 = Pixels, 4 = Seashells, everything else is pixels
-        WriteInteger(quest?.Id ?? 0); // Quest id
-        WriteBoolean(quest == null ? false : session.GetHabbo().GetStats().QuestId == quest.Id); // Quest started
-        WriteString(quest == null ? string.Empty : quest.ActionName);
-        WriteString(quest == null ? string.Empty : quest.DataBit);
-        WriteInteger(quest?.Reward ?? 0);
-        WriteString(quest == null ? string.Empty : quest.Name);
-        WriteInteger(userProgress); // Current progress
-        WriteInteger(quest?.GoalData ?? 0); // Target progress
-        WriteInteger(quest?.TimeUnlock ?? 0); // "Next quest available countdown" in seconds
-        WriteString("");
-        WriteString("");
-        WriteBoolean(true); // ?
-        WriteBoolean(true); // Activate next quest..
+        _session = session;
+        _quest = quest;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        var amountInCat = PlusEnvironment.GetGame().GetQuestManager().GetAmountOfQuestsInCategory(_quest.Category);
+        var number = _quest?.Number ?? amountInCat;
+        var userProgress = _quest == null ? 0 : _session.GetHabbo().GetQuestProgress(_quest.Id);
+        packet.WriteString(_quest.Category);
+        packet.WriteInteger(number); // Quest progress in this cat
+        packet.WriteInteger(_quest.Name.Contains("xmas2012") ? 1 : amountInCat); // Total quests in this cat
+        packet.WriteInteger(_quest?.RewardType ?? 3); // Reward type (1 = Snowflakes, 2 = Love hearts, 3 = Pixels, 4 = Seashells, everything else is pixels
+        packet.WriteInteger(_quest?.Id ?? 0); // Quest id
+        packet.WriteBoolean(_quest == null ? false : _session.GetHabbo().GetStats().QuestId == _quest.Id); // Quest started
+        packet.WriteString(_quest == null ? string.Empty : _quest.ActionName);
+        packet.WriteString(_quest == null ? string.Empty : _quest.DataBit);
+        packet.WriteInteger(_quest?.Reward ?? 0);
+        packet.WriteString(_quest == null ? string.Empty : _quest.Name);
+        packet.WriteInteger(userProgress); // Current progress
+        packet.WriteInteger(_quest?.GoalData ?? 0); // Target progress
+        packet.WriteInteger(_quest?.TimeUnlock ?? 0); // "Next quest available countdown" in seconds
+        packet.WriteString("");
+        packet.WriteString("");
+        packet.WriteBoolean(true); // ?
+        packet.WriteBoolean(true); // Activate next quest..
     }
 }

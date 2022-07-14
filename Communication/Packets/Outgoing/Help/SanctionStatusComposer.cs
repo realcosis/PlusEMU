@@ -1,21 +1,25 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Help;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class SanctionStatusComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Help;
+
+// TODO @80O: Implement
+public class SanctionStatusComposer : IServerPacket
 {
-    public SanctionStatusComposer()
-        : base(ServerPacketHeader.SanctionStatusMessageComposer)
+    public int MessageId => ServerPacketHeader.SanctionStatusMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
     {
-        WriteBoolean(false);
-        WriteBoolean(false);
-        WriteString("aaaaaaaaaaaaa");
-        WriteInteger(1); //Hours
-        WriteInteger(10);
-        WriteString("ccccc");
-        WriteString("bbb");
-        WriteInteger(0);
-        WriteString("abb");
-        WriteInteger(0);
-        WriteInteger(0);
-        WriteBoolean(true); //if true and second boolean is false it does something. - if false, we got banned, so true is mute
+        packet.WriteBoolean(false);
+        packet.WriteBoolean(false);
+        packet.WriteString("The General was here");
+        packet.WriteInteger(1); //Hours
+        packet.WriteInteger(10);
+        packet.WriteString("ccccc");
+        packet.WriteString("bbb");
+        packet.WriteInteger(0);
+        packet.WriteString("abb");
+        packet.WriteInteger(0);
+        packet.WriteInteger(0);
+        packet.WriteBoolean(true); //if true and second boolean is false it does something. - if false, we got banned, so true is mute
     }
 }

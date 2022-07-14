@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Data;
-using System.Threading.Tasks;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Database;
 using Plus.HabboHotel.Badges;
@@ -100,19 +97,19 @@ public class RewardManager : IRewardManager
                     case RewardType.Credits:
                     {
                         session.GetHabbo().Credits += Convert.ToInt32(reward.RewardData);
-                        session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
+                        session.Send(new CreditBalanceComposer(session.GetHabbo().Credits));
                         break;
                     }
                     case RewardType.Duckets:
                     {
                         session.GetHabbo().Duckets += Convert.ToInt32(reward.RewardData);
-                        session.SendPacket(new HabboActivityPointNotificationComposer(session.GetHabbo().Duckets, Convert.ToInt32(reward.RewardData)));
+                        session.Send(new HabboActivityPointNotificationComposer(session.GetHabbo().Duckets, Convert.ToInt32(reward.RewardData)));
                         break;
                     }
                     case RewardType.Diamonds:
                     {
                         session.GetHabbo().Diamonds += Convert.ToInt32(reward.RewardData);
-                        session.SendPacket(new HabboActivityPointNotificationComposer(session.GetHabbo().Diamonds, Convert.ToInt32(reward.RewardData), 5));
+                        session.Send(new HabboActivityPointNotificationComposer(session.GetHabbo().Diamonds, Convert.ToInt32(reward.RewardData), 5));
                         break;
                     }
                 }

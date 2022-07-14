@@ -1,20 +1,19 @@
-﻿using System.Threading.Tasks;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Messenger;
 
 internal class RemoveBuddyEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var amount = packet.PopInt();
+        var amount = packet.ReadInt();
         if (amount > 100)
             amount = 100;
         else if (amount < 0)
             return Task.CompletedTask;
         for (var i = 0; i < amount; i++)
         {
-            var id = packet.PopInt();
+            var id = packet.ReadInt();
             var friend = session.GetHabbo().GetMessenger().GetFriend(id);
             if (friend == null) continue;
             session.GetHabbo().GetMessenger().RemoveFriend(friend);

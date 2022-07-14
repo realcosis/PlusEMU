@@ -1,13 +1,23 @@
-﻿using System;
+﻿using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni;
 
-internal class UpdateMagicTileComposer : ServerPacket
+internal class UpdateMagicTileComposer : IServerPacket
 {
-    public UpdateMagicTileComposer(int itemId, int @decimal)
-        : base(ServerPacketHeader.UpdateMagicTileMessageComposer)
+    private readonly int _itemId;
+    private readonly int _height;
+
+    public int MessageId => ServerPacketHeader.UpdateMagicTileMessageComposer;
+
+    public UpdateMagicTileComposer(int itemId, int height)
     {
-        WriteInteger(Convert.ToInt32(itemId));
-        WriteInteger(@decimal);
+        _itemId = itemId;
+        _height = height;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(Convert.ToInt32(_itemId));
+        packet.WriteInteger(_height);
     }
 }

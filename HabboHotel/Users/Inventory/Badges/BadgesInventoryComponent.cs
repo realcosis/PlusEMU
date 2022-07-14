@@ -1,7 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using Plus.HabboHotel.Users.Badges;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Plus.HabboHotel.Users.Inventory.Badges
 {

@@ -1,10 +1,16 @@
-﻿namespace Plus.Communication.Packets.Outgoing.GameCenter;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class JoinQueueComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.GameCenter;
+
+internal class JoinQueueComposer : IServerPacket
 {
+    private readonly int _gameId;
+    public int MessageId => ServerPacketHeader.JoinQueueMessageComposer;
+
     public JoinQueueComposer(int gameId)
-        : base(ServerPacketHeader.JoinQueueMessageComposer)
     {
-        WriteInteger(gameId);
+        _gameId = gameId;
     }
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteInteger(_gameId);
 }

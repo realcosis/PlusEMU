@@ -1,15 +1,18 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.RentableSpaces;
+﻿using Plus.HabboHotel.GameClients;
 
-public class RentableSpaceComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.RentableSpaces;
+
+public class RentableSpaceComposer : IServerPacket
 {
-    public RentableSpaceComposer()
-        : base(ServerPacketHeader.RentableSpaceMessageComposer)
+    public int MessageId => ServerPacketHeader.RentableSpaceMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
     {
-        WriteBoolean(true); //Is rented y/n
-        WriteInteger(-1); //No fucking clue
-        WriteInteger(-1); //No fucking clue
-        WriteString("Tyler-Retros"); //Username of who owns.
-        WriteInteger(360); //Time to expire.
-        WriteInteger(-1); //No fucking clue
+        packet.WriteBoolean(true); //Is rented y/n
+        packet.WriteInteger(-1); //No fucking clue
+        packet.WriteInteger(-1); //No fucking clue
+        packet.WriteString(""); //Username of who owns.
+        packet.WriteInteger(360); //Time to expire.
+        packet.WriteInteger(-1); //No fucking clue
     }
 }

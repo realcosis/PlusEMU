@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using Plus.Communication.Packets.Outgoing;
+﻿using System.Data;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
@@ -10,7 +6,7 @@ namespace Plus.HabboHotel.Navigator;
 
 internal static class NavigatorHandler
 {
-    public static void Search(ServerPacket packet, SearchResultList result, string query, GameClient session, int limit)
+    public static void Search(IOutgoingPacket packet, SearchResultList result, string query, GameClient session, int limit)
     {
         if (session == null)
             return;

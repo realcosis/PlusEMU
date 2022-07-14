@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
-using Plus.Communication.Packets.Incoming;
 using Plus.Communication.Packets.Outgoing.Rooms.Chat;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 using Plus.Utilities;
@@ -26,13 +26,13 @@ internal class MuteTriggererBox : IWiredItem
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet)
+    public void HandleSave(IIncomingPacket packet)
     {
         if (SetItems.Count > 0)
             SetItems.Clear();
-        var unknown = packet.PopInt();
-        var time = packet.PopInt();
-        var message = packet.PopString();
+        var unknown = packet.ReadInt();
+        var time = packet.ReadInt();
+        var message = packet.ReadString();
         StringData = time + ";" + message;
     }
 
@@ -48,14 +48,14 @@ internal class MuteTriggererBox : IWiredItem
             return false;
         if (player.GetPermissions().HasRight("mod_tool") || Instance.OwnerId == player.Id)
         {
-            player.GetClient().SendPacket(new WhisperComposer(user.VirtualId, "Wired Mute Exception: Unmutable Player", 0, 0));
+            player.GetClient().Send(new WhisperComposer(user.VirtualId, "Wired Mute Exception: Unmutable Player", 0, 0));
             return false;
         }
         var time = StringData != null ? int.Parse(StringData.Split(';')[0]) : 0;
         var message = StringData != null ? StringData.Split(';')[1] : "No message!";
         if (time > 0)
         {
-            player.GetClient().SendPacket(new WhisperComposer(user.VirtualId, "Wired Mute: Muted for " + time + "! Message: " + message, 0, 0));
+            player.GetClient().Send(new WhisperComposer(user.VirtualId, "Wired Mute: Muted for " + time + "! Message: " + message, 0, 0));
             if (!Instance.MutedUsers.ContainsKey(player.Id))
                 Instance.MutedUsers.Add(player.Id, UnixTimestamp.GetNow() + time * 60);
             else

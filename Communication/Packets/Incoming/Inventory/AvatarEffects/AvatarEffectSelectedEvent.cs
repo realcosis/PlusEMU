@@ -1,13 +1,12 @@
-﻿using System.Threading.Tasks;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Inventory.AvatarEffects;
 
 internal class AvatarEffectSelectedEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var effectId = packet.PopInt();
+        var effectId = packet.ReadInt();
         if (effectId < 0)
             effectId = 0;
         if (!session.GetHabbo().InRoom)

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Database;
+﻿using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.Utilities;
 
@@ -14,9 +13,9 @@ internal class SetMessengerInviteStatusEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var allowMessengerInvites = packet.PopBoolean();
+        var allowMessengerInvites = packet.ReadBool();
         session.GetHabbo().AllowMessengerInvites = allowMessengerInvites;
         using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("UPDATE `users` SET `ignore_invites` = @ignoreInvites WHERE `id` = @habboId LIMIT 1");

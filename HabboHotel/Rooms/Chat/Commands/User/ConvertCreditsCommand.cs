@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Database;
@@ -50,12 +49,12 @@ internal class ConvertCreditsCommand : IChatCommand
                     var value = item.Data.BehaviourData;
                     dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
                     session.GetHabbo().Inventory.Furniture.RemoveItem(item.Id);
-                    session.SendPacket(new FurniListRemoveComposer(item.Id));
+                    session.Send(new FurniListRemoveComposer(item.Id));
                     totalValue += value;
                     if (value > 0)
                     {
                         session.GetHabbo().Credits += value;
-                        session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
+                        session.Send(new CreditBalanceComposer(session.GetHabbo().Credits));
                     }
                 }
             }

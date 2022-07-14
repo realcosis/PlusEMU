@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using System.Linq;
-using Plus.Communication.Packets.Incoming;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.HabboHotel.Items.Wired.Boxes.Triggers;
@@ -22,7 +21,7 @@ internal class GameStartsBox : IWiredItem
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet) { }
+    public void HandleSave(IIncomingPacket packet) { }
 
     public bool Execute(params object[] @params)
     {

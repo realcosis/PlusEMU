@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
@@ -21,11 +19,11 @@ internal class EditRoomPromotionEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var roomId = packet.PopInt();
-        var name = _wordFilterManager.CheckMessage(packet.PopString());
-        var desc = _wordFilterManager.CheckMessage(packet.PopString());
+        var roomId = packet.ReadInt();
+        var name = _wordFilterManager.CheckMessage(packet.ReadString());
+        var desc = _wordFilterManager.CheckMessage(packet.ReadString());
         if (!RoomFactory.TryGetData(roomId, out var data))
             return Task.CompletedTask;
         if (data.OwnerId != session.GetHabbo().Id)

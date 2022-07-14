@@ -1,34 +1,46 @@
-﻿using Plus.HabboHotel.Moderation;
+﻿using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Moderation;
 using Plus.HabboHotel.Rooms;
 using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class ModeratorTicketChatlogComposer : ServerPacket
+internal class ModeratorTicketChatlogComposer : IServerPacket
 {
+    private readonly ModerationTicket _ticket;
+    private readonly RoomData _roomData;
+    private readonly double _timestamp;
+    public int MessageId => ServerPacketHeader.ModeratorTicketChatlogMessageComposer;
+
     public ModeratorTicketChatlogComposer(ModerationTicket ticket, RoomData roomData, double timestamp)
-        : base(ServerPacketHeader.ModeratorTicketChatlogMessageComposer)
     {
-        WriteInteger(ticket.Id);
-        WriteInteger(ticket.Sender?.Id ?? 0);
-        WriteInteger(ticket.Reported?.Id ?? 0);
-        WriteInteger(roomData.Id);
-        WriteByte(1);
-        WriteShort(2); //Count
-        WriteString("roomName");
-        WriteByte(2);
-        WriteString(roomData.Name);
-        WriteString("roomId");
-        WriteByte(1);
-        WriteInteger(roomData.Id);
-        WriteShort(ticket.ReportedChats.Count);
-        foreach (var chat in ticket.ReportedChats)
+        _ticket = ticket;
+        _roomData = roomData;
+        _timestamp = timestamp;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_ticket.Id);
+        packet.WriteInteger(_ticket.Sender?.Id ?? 0);
+        packet.WriteInteger(_ticket.Reported?.Id ?? 0);
+        packet.WriteInteger(_roomData.Id);
+        packet.WriteByte(1);
+        packet.WriteShort(2); //Count
+        packet.WriteString("roomName");
+        packet.WriteByte(2);
+        packet.WriteString(_roomData.Name);
+        packet.WriteString("roomId");
+        packet.WriteByte(1);
+        packet.WriteInteger(_roomData.Id);
+        packet.WriteShort((short)_ticket.ReportedChats.Count);
+        foreach (var chat in _ticket.ReportedChats)
         {
-            WriteString(UnixTimestamp.FromUnixTimestamp(timestamp).ToShortTimeString());
-            WriteInteger(ticket.Id);
-            WriteString(ticket.Reported != null ? ticket.Reported.Username : "No username");
-            WriteString(chat);
-            WriteBoolean(false);
+            packet.WriteString(UnixTimestamp.FromUnixTimestamp(_timestamp).ToShortTimeString());
+            packet.WriteInteger(_ticket.Id);
+            packet.WriteString(_ticket.Reported != null ? _ticket.Reported.Username : "No username");
+            packet.WriteString(chat);
+            packet.WriteBoolean(false);
         }
     }
 }

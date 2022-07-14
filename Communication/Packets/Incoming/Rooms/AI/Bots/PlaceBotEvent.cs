@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
 using Plus.Communication.Packets.Outgoing.Inventory.Bots;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
@@ -25,7 +21,7 @@ internal class PlaceBotEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -33,9 +29,9 @@ internal class PlaceBotEvent : IPacketEvent
             return Task.CompletedTask;
         if (!room.CheckRights(session, true))
             return Task.CompletedTask;
-        var botId = packet.PopInt();
-        var x = packet.PopInt();
-        var y = packet.PopInt();
+        var botId = packet.ReadInt();
+        var x = packet.ReadInt();
+        var y = packet.ReadInt();
         if (!room.GetGameMap().CanWalk(x, y, false) || !room.GetGameMap().ValidTile(x, y))
         {
             session.SendNotification("You cannot place a bot here!");
@@ -91,7 +87,7 @@ internal class PlaceBotEvent : IPacketEvent
             Console.WriteLine("Error whilst removing Bot: " + bot.Id);
             return Task.CompletedTask;
         }
-        session.SendPacket(new BotInventoryComposer(session.GetHabbo().Inventory.Bots.Bots.Values.ToList()));
+        session.Send(new BotInventoryComposer(session.GetHabbo().Inventory.Bots.Bots.Values.ToList()));
         return Task.CompletedTask;
     }
 }

@@ -31,15 +31,15 @@ public class InteractorWired : IFurniInteractor
         if (item.GetRoom().GetWired().IsTrigger(item))
         {
             var blockedItems = WiredBoxTypeUtility.ContainsBlockedEffect(box, item.GetRoom().GetWired().GetEffects(box));
-            session.SendPacket(new WiredTriggeRconfigComposer(box, blockedItems));
+            session.Send(new WiredTriggeRconfigComposer(box, blockedItems));
         }
         else if (item.GetRoom().GetWired().IsEffect(item))
         {
             var blockedItems = WiredBoxTypeUtility.ContainsBlockedTrigger(box, item.GetRoom().GetWired().GetTriggers(box));
-            session.SendPacket(new WiredEffectConfigComposer(box, blockedItems));
+            session.Send(new WiredEffectConfigComposer(box, blockedItems));
         }
         else if (item.GetRoom().GetWired().IsCondition(item))
-            session.SendPacket(new WiredConditionConfigComposer(box));
+            session.Send(new WiredConditionConfigComposer(box));
     }
 
 

@@ -1,11 +1,22 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Moderation;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class BroadcastMessageAlertComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Moderation;
+
+internal class BroadcastMessageAlertComposer : IServerPacket
 {
+    private readonly string _message;
+    private readonly string _url;
+    public int MessageId => ServerPacketHeader.BroadcastMessageAlertMessageComposer;
+
     public BroadcastMessageAlertComposer(string message, string url = "")
-        : base(ServerPacketHeader.BroadcastMessageAlertMessageComposer)
     {
-        WriteString(message);
-        WriteString(url);
+        _message = message;
+        _url = url;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteString(_message);
+        packet.WriteString(_url);
     }
 }

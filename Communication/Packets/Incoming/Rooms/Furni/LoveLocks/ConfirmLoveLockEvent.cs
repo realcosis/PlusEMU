@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Furni.LoveLocks;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Furni.LoveLocks;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
@@ -16,10 +14,10 @@ internal class ConfirmLoveLockEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var pId = packet.PopInt();
-        var isConfirmed = packet.PopBoolean();
+        var pId = packet.ReadInt();
+        var isConfirmed = packet.ReadBool();
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
             return Task.CompletedTask;
@@ -86,12 +84,12 @@ internal class ConfirmLoveLockEvent : IPacketEvent
         }
         if (userOneId == session.GetHabbo().Id)
         {
-            session.SendPacket(new LoveLockDialogueSetLockedMessageComposer(pId));
+            session.Send(new LoveLockDialogueSetLockedMessageComposer(pId));
             userOne.LlPartner = userTwoId;
         }
         else if (userTwoId == session.GetHabbo().Id)
         {
-            session.SendPacket(new LoveLockDialogueSetLockedMessageComposer(pId));
+            session.Send(new LoveLockDialogueSetLockedMessageComposer(pId));
             userTwo.LlPartner = userOneId;
         }
         if (userOne.LlPartner == 0 || userTwo.LlPartner == 0)
@@ -110,8 +108,8 @@ internal class ConfirmLoveLockEvent : IPacketEvent
             dbClient.AddParameter("ID", item.Id);
             dbClient.RunQuery();
         }
-        userOne.GetClient().SendPacket(new LoveLockDialogueCloseMessageComposer(pId));
-        userTwo.GetClient().SendPacket(new LoveLockDialogueCloseMessageComposer(pId));
+        userOne.GetClient().Send(new LoveLockDialogueCloseMessageComposer(pId));
+        userTwo.GetClient().Send(new LoveLockDialogueCloseMessageComposer(pId));
         userOne.CanWalk = true;
         userTwo.CanWalk = true;
         userOne = null;

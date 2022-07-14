@@ -1,19 +1,32 @@
-﻿using Plus.HabboHotel.Users;
+﻿using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Users;
 
 namespace Plus.Communication.Packets.Outgoing.Groups;
 
-internal class GroupMembershipRequestedComposer : ServerPacket
+internal class GroupMembershipRequestedComposer : IServerPacket
 {
+    private readonly int _groupId;
+    private readonly Habbo _habbo;
+    private readonly int _type;
+
+    public int MessageId => ServerPacketHeader.GroupMembershipRequestedMessageComposer;
+
     public GroupMembershipRequestedComposer(int groupId, Habbo habbo, int type)
-        : base(ServerPacketHeader.GroupMembershipRequestedMessageComposer)
     {
-        WriteInteger(groupId); //GroupId
-        WriteInteger(type); //Type?
+        _groupId = groupId;
+        _habbo = habbo;
+        _type = type;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_groupId); //GroupId
+        packet.WriteInteger(_type); //Type?
         {
-            WriteInteger(habbo.Id); //UserId
-            WriteString(habbo.Username);
-            WriteString(habbo.Look);
-            WriteString(string.Empty);
+            packet.WriteInteger(_habbo.Id); //UserId
+            packet.WriteString(_habbo.Username);
+            packet.WriteString(_habbo.Look);
+            packet.WriteString(string.Empty);
         }
     }
 }

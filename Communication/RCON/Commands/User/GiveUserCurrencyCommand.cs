@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Inventory.Purse;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 
 namespace Plus.Communication.Rcon.Commands.User;
 
@@ -40,7 +38,7 @@ internal class GiveUserCurrencyCommand : IRconCommand
                     dbClient.AddParameter("id", userId);
                     dbClient.RunQuery();
                 }
-                client.SendPacket(new CreditBalanceComposer(client.GetHabbo().Credits));
+                client.Send(new CreditBalanceComposer(client.GetHabbo().Credits));
                 break;
             }
             case "pixels":
@@ -54,7 +52,7 @@ internal class GiveUserCurrencyCommand : IRconCommand
                     dbClient.AddParameter("id", userId);
                     dbClient.RunQuery();
                 }
-                client.SendPacket(new HabboActivityPointNotificationComposer(client.GetHabbo().Duckets, amount));
+                client.Send(new HabboActivityPointNotificationComposer(client.GetHabbo().Duckets, amount));
                 break;
             }
             case "diamonds":
@@ -67,7 +65,7 @@ internal class GiveUserCurrencyCommand : IRconCommand
                     dbClient.AddParameter("id", userId);
                     dbClient.RunQuery();
                 }
-                client.SendPacket(new HabboActivityPointNotificationComposer(client.GetHabbo().Diamonds, 0, 5));
+                client.Send(new HabboActivityPointNotificationComposer(client.GetHabbo().Diamonds, 0, 5));
                 break;
             }
             case "gotw":
@@ -80,7 +78,7 @@ internal class GiveUserCurrencyCommand : IRconCommand
                     dbClient.AddParameter("id", userId);
                     dbClient.RunQuery();
                 }
-                client.SendPacket(new HabboActivityPointNotificationComposer(client.GetHabbo().GotwPoints, 0, 103));
+                client.Send(new HabboActivityPointNotificationComposer(client.GetHabbo().GotwPoints, 0, 103));
                 break;
             }
         }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Plus.Communication.Packets.Outgoing.Navigator;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Communication.Packets.Outgoing.Rooms.Settings;
@@ -10,7 +7,6 @@ using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Navigator;
 using Plus.HabboHotel.Rooms;
-using Plus.Utilities;
 using Plus.HabboHotel.Rooms.Chat.Filter;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Settings;
@@ -32,42 +28,42 @@ internal class SaveRoomSettingsEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var roomId = packet.PopInt();
+        var roomId = packet.ReadInt();
         if (!_roomManager.TryLoadRoom(roomId, out var room))
             return Task.CompletedTask;
-        var name = _wordFilterManager.CheckMessage(packet.PopString());
-        var description = _wordFilterManager.CheckMessage(packet.PopString());
-        var access = RoomAccessUtility.ToRoomAccess(packet.PopInt());
-        var password = packet.PopString();
-        var maxUsers = packet.PopInt();
-        var categoryId = packet.PopInt();
-        var tagCount = packet.PopInt();
+        var name = _wordFilterManager.CheckMessage(packet.ReadString());
+        var description = _wordFilterManager.CheckMessage(packet.ReadString());
+        var access = RoomAccessUtility.ToRoomAccess(packet.ReadInt());
+        var password = packet.ReadString();
+        var maxUsers = packet.ReadInt();
+        var categoryId = packet.ReadInt();
+        var tagCount = packet.ReadInt();
         var tags = new List<string>();
         var formattedTags = new StringBuilder();
         for (var i = 0; i < tagCount; i++)
         {
             if (i > 0) formattedTags.Append(",");
-            var tag = packet.PopString().ToLower();
+            var tag = packet.ReadString().ToLower();
             tags.Add(tag);
             formattedTags.Append(tag);
         }
-        var tradeSettings = packet.PopInt(); //2 = All can trade, 1 = owner only, 0 = no trading.
-        var allowPets = packet.PopBoolean().ToInt32();
-        var allowPetsEat = packet.PopBoolean().ToInt32();
-        var roomBlockingEnabled = packet.PopBoolean().ToInt32();
-        var hidewall = packet.PopBoolean().ToInt32();
-        var wallThickness = packet.PopInt();
-        var floorThickness = packet.PopInt();
-        var whoMute = packet.PopInt(); // mute
-        var whoKick = packet.PopInt(); // kick
-        var whoBan = packet.PopInt(); // ban
-        var chatMode = packet.PopInt();
-        var chatSize = packet.PopInt();
-        var chatSpeed = packet.PopInt();
-        var chatDistance = packet.PopInt();
-        var extraFlood = packet.PopInt();
+        var tradeSettings = packet.ReadInt(); //2 = All can trade, 1 = owner only, 0 = no trading.
+        var allowPets = packet.ReadBool() ? 1 : 0;
+        var allowPetsEat = packet.ReadBool() ? 1 : 0;
+        var roomBlockingEnabled = packet.ReadBool() ? 1 : 0;
+        var hidewall = packet.ReadBool() ? 1 : 0;
+        var wallThickness = packet.ReadInt();
+        var floorThickness = packet.ReadInt();
+        var whoMute = packet.ReadInt(); // mute
+        var whoKick = packet.ReadInt(); // kick
+        var whoBan = packet.ReadInt(); // ban
+        var chatMode = packet.ReadInt();
+        var chatSize = packet.ReadInt();
+        var chatSpeed = packet.ReadInt();
+        var chatDistance = packet.ReadInt();
+        var extraFlood = packet.ReadInt();
         if (chatMode < 0 || chatMode > 1)
             chatMode = 0;
         if (chatSize < 0 || chatSize > 2)
@@ -180,9 +176,9 @@ internal class SaveRoomSettingsEvent : IPacketEvent
         room.GetGameMap().GenerateMaps();
         if (session.GetHabbo().CurrentRoom == null)
         {
-            session.SendPacket(new RoomSettingsSavedComposer(room.RoomId));
-            session.SendPacket(new RoomInfoUpdatedComposer(room.RoomId));
-            session.SendPacket(new RoomVisualizationSettingsComposer(room.WallThickness, room.FloorThickness, Convert.ToBoolean(room.Hidewall)));
+            session.Send(new RoomSettingsSavedComposer(room.RoomId));
+            session.Send(new RoomInfoUpdatedComposer(room.RoomId));
+            session.Send(new RoomVisualizationSettingsComposer(room.WallThickness, room.FloorThickness, Convert.ToBoolean(room.Hidewall)));
         }
         else
         {

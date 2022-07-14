@@ -1,12 +1,23 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Handshake;
+﻿using Plus.HabboHotel.GameClients;
 
-public class UserRightsComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Handshake;
+
+public class UserRightsComposer : IServerPacket
 {
+    private readonly int _rank;
+    private readonly bool _isAmbassador;
+    public int MessageId => ServerPacketHeader.UserRightsMessageComposer;
+
     public UserRightsComposer(int rank, bool isAmbassador)
-        : base(ServerPacketHeader.UserRightsMessageComposer)
     {
-        WriteInteger(2); //Club level
-        WriteInteger(rank);
-        WriteBoolean(isAmbassador); //Is an ambassador
+        _rank = rank;
+        _isAmbassador = isAmbassador;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(2); //Club level
+        packet.WriteInteger(_rank);
+        packet.WriteBoolean(_isAmbassador); //Is an ambassador
     }
 }

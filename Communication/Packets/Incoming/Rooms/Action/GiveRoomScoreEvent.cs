@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Navigator;
+﻿using Plus.Communication.Packets.Outgoing.Navigator;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
@@ -16,7 +15,7 @@ internal class GiveRoomScoreEvent : IPacketEvent
         _roomManager = roomManager;
         _database = database;
     }
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -24,7 +23,7 @@ internal class GiveRoomScoreEvent : IPacketEvent
             return Task.CompletedTask;
         if (session.GetHabbo().RatedRooms.Contains(room.RoomId) || room.CheckRights(session, true))
             return Task.CompletedTask;
-        var rating = packet.PopInt();
+        var rating = packet.ReadInt();
         switch (rating)
         {
             case -1:
@@ -41,7 +40,7 @@ internal class GiveRoomScoreEvent : IPacketEvent
             dbClient.RunQuery("UPDATE rooms SET score = '" + room.Score + "' WHERE id = '" + room.RoomId + "' LIMIT 1");
         }
         session.GetHabbo().RatedRooms.Add(room.RoomId);
-        session.SendPacket(new RoomRatingComposer(room.Score, !(session.GetHabbo().RatedRooms.Contains(room.RoomId) || room.CheckRights(session, true))));
+        session.Send(new RoomRatingComposer(room.Score, !(session.GetHabbo().RatedRooms.Contains(room.RoomId) || room.CheckRights(session, true))));
         return Task.CompletedTask;
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using System.Linq;
-using Plus.Communication.Packets.Incoming;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 
@@ -23,16 +22,16 @@ internal class TriggererOnFurniBox : IWiredItem
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet)
+    public void HandleSave(IIncomingPacket packet)
     {
-        var unknown = packet.PopInt();
-        var unknown2 = packet.PopString();
+        var unknown = packet.ReadInt();
+        var unknown2 = packet.ReadString();
         if (SetItems.Count > 0)
             SetItems.Clear();
-        var furniCount = packet.PopInt();
+        var furniCount = packet.ReadInt();
         for (var i = 0; i < furniCount; i++)
         {
-            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadInt());
             if (selectedItem != null)
                 SetItems.TryAdd(selectedItem.Id, selectedItem);
         }

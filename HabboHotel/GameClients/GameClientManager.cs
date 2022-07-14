@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Dapper;
 using NLog;
-using Plus.Communication.ConnectionManager;
-using Plus.Communication.Packets.Outgoing;
+using Plus.Communication.Packets;
 using Plus.Communication.Packets.Outgoing.Handshake;
 using Plus.Communication.Packets.Outgoing.Notifications;
 using Plus.Core;
@@ -87,7 +82,7 @@ public class GameClientManager : IGameClientManager
         }
     }
 
-    public void StaffAlert(ServerPacket message, int exclude = 0)
+    public void StaffAlert(IServerPacket message, int exclude = 0)
     {
         foreach (var client in GetClients.ToList())
         {
@@ -95,7 +90,7 @@ public class GameClientManager : IGameClientManager
                 continue;
             if (client.GetHabbo().Rank < 2 || client.GetHabbo().Id == exclude)
                 continue;
-            client.SendPacket(message);
+            client.Send(message);
         }
     }
 
@@ -109,7 +104,7 @@ public class GameClientManager : IGameClientManager
             {
                 try
                 {
-                    client.SendWhisper(message, 5);
+                    //client.SendWhisper(message, 5);
                 }
                 catch { }
             }
@@ -144,12 +139,12 @@ public class GameClientManager : IGameClientManager
             if (client == null || client.GetHabbo() == null)
                 continue;
             if (client.GetHabbo().GetPermissions().HasRight("mod_tool") && !client.GetHabbo().GetPermissions().HasRight("staff_ignore_advertisement_reports"))
-                client.SendPacket(new MotdNotificationComposer(builder.ToString()));
+                client.Send(new MotdNotificationComposer(builder.ToString()));
         }
     }
 
 
-    public void SendPacket(ServerPacket packet, string fuse = "")
+    public void SendPacket(IServerPacket packet, string fuse = "")
     {
         foreach (var client in _clients.Values.ToList())
         {
@@ -160,17 +155,8 @@ public class GameClientManager : IGameClientManager
                 if (!client.GetHabbo().GetPermissions().HasRight(fuse))
                     continue;
             }
-            client.SendPacket(packet);
+            client.Send(packet);
         }
-    }
-
-    public void CreateAndStartClient(int clientId, ConnectionInformation connection)
-    {
-        var client = new GameClient(clientId, connection);
-        if (_clients.TryAdd(client.ConnectionId, client))
-            client.StartConnection();
-        else
-            connection.Dispose();
     }
 
     public void DisposeConnection(int clientId)
@@ -212,8 +198,6 @@ public class GameClientManager : IGameClientManager
     {
         foreach (var client in GetClients.ToList())
         {
-            if (client == null)
-                continue;
             if (client.GetHabbo() != null)
             {
                 try
@@ -234,11 +218,9 @@ public class GameClientManager : IGameClientManager
         {
             foreach (var client in GetClients.ToList())
             {
-                if (client == null || client.GetConnection() == null)
-                    continue;
                 try
                 {
-                    client.GetConnection().Dispose();
+                    client.Dispose();
                 }
                 catch { }
                 Console.Clear();
@@ -264,25 +246,25 @@ public class GameClientManager : IGameClientManager
                 var toPing = new List<GameClient>();
                 foreach (var client in _clients.Values.ToList())
                 {
-                    if (client.PingCount < 6)
-                    {
-                        client.PingCount++;
-                        toPing.Add(client);
-                    }
-                    else
-                    {
-                        lock (_timedOutConnections.SyncRoot)
-                        {
-                            _timedOutConnections.Enqueue(client);
-                        }
-                    }
+                    //if (client.PingCount < 6)
+                    //{
+                    //    client.PingCount++;
+                    //    toPing.Add(client);
+                    //}
+                    //else
+                    //{
+                    //    lock (_timedOutConnections.SyncRoot)
+                    //    {
+                    //        _timedOutConnections.Enqueue(client);
+                    //    }
+                    //}
                 }
                 var start = DateTime.Now;
                 foreach (var client in toPing.ToList())
                 {
                     try
                     {
-                        client.SendPacket(new PongComposer());
+                        client.Send(new PongComposer());
                     }
                     catch
                     {

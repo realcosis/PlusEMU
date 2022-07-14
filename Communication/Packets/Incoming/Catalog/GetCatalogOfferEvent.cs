@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Catalog;
+﻿using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.HabboHotel.Catalog;
 using Plus.HabboHotel.GameClients;
 
@@ -14,9 +13,9 @@ internal class GetCatalogOfferEvent : IPacketEvent
         _catalogManager = catalogManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var offerId = packet.PopInt();
+        var offerId = packet.ReadInt();
         if (!_catalogManager.ItemOffers.ContainsKey(offerId))
             return Task.CompletedTask;
         var pageId = _catalogManager.ItemOffers[offerId];
@@ -28,7 +27,7 @@ internal class GetCatalogOfferEvent : IPacketEvent
             return Task.CompletedTask;
         var item = page.ItemOffers[offerId];
         if (item != null)
-            session.SendPacket(new CatalogOfferComposer(item));
+            session.Send(new CatalogOfferComposer(item));
         return Task.CompletedTask;
     }
 }

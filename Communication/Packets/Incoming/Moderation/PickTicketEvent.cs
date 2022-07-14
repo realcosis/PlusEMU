@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Moderation;
+﻿using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
 
@@ -16,12 +15,12 @@ internal class PickTicketEvent : IPacketEvent
         _clientManager = clientManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
             return Task.CompletedTask;
-        packet.PopInt(); //Junk
-        var ticketId = packet.PopInt();
+        packet.ReadInt(); //Junk
+        var ticketId = packet.ReadInt();
         if (!_moderationManager.TryGetTicket(ticketId, out var ticket))
             return Task.CompletedTask;
         ticket.Moderator = session.GetHabbo();

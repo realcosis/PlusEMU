@@ -1,24 +1,30 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class CfhTopicsInitComposer : ServerPacket
+internal class CfhTopicsInitComposer : IServerPacket
 {
+    private readonly Dictionary<string, List<ModerationPresetActions>> _userActionPresets;
+    public int MessageId => ServerPacketHeader.CfhTopicsInitMessageComposer;
+
     public CfhTopicsInitComposer(Dictionary<string, List<ModerationPresetActions>> userActionPresets)
-        : base(ServerPacketHeader.CfhTopicsInitMessageComposer)
     {
-        WriteInteger(userActionPresets.Count);
-        foreach (var cat in userActionPresets.ToList())
+        _userActionPresets = userActionPresets;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_userActionPresets.Count);
+        foreach (var cat in _userActionPresets.ToList())
         {
-            WriteString(cat.Key);
-            WriteInteger(cat.Value.Count);
+            packet.WriteString(cat.Key);
+            packet.WriteInteger(cat.Value.Count);
             foreach (var preset in cat.Value.ToList())
             {
-                WriteString(preset.Caption);
-                WriteInteger(preset.Id);
-                WriteString(preset.Type);
+                packet.WriteString(preset.Caption);
+                packet.WriteInteger(preset.Id);
+                packet.WriteString(preset.Type);
             }
         }
     }

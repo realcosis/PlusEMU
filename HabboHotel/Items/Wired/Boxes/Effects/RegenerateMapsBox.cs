@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Concurrent;
-using Plus.Communication.Packets.Incoming;
+﻿using System.Collections.Concurrent;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.HabboHotel.Items.Wired.Boxes.Effects;
@@ -25,10 +24,10 @@ internal class RegenerateMapsBox : IWiredItem
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet)
+    public void HandleSave(IIncomingPacket packet)
     {
-        var unknown = packet.PopInt();
-        var unknown2 = packet.PopString();
+        var unknown = packet.ReadInt();
+        var unknown2 = packet.ReadString();
     }
 
     public bool Execute(params object[] @params)

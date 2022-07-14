@@ -1,11 +1,22 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Marketplace;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class MarketplaceCancelOfferResultComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Marketplace;
+
+internal class MarketplaceCancelOfferResultComposer : IServerPacket
 {
+    private readonly int _offerId;
+    private readonly bool _success;
+    public int MessageId => ServerPacketHeader.MarketplaceCancelOfferResultMessageComposer;
+
     public MarketplaceCancelOfferResultComposer(int offerId, bool success)
-        : base(ServerPacketHeader.MarketplaceCancelOfferResultMessageComposer)
     {
-        WriteInteger(offerId);
-        WriteBoolean(success);
+        _offerId = offerId;
+        _success = success;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_offerId);
+        packet.WriteBoolean(_success);
     }
 }

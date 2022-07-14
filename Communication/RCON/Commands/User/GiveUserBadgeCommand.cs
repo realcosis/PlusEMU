@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Moderation;
+﻿using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.HabboHotel.Badges;
 
 namespace Plus.Communication.Rcon.Commands.User;
@@ -33,7 +31,7 @@ internal class GiveUserBadgeCommand : IRconCommand
         if (!client.GetHabbo().Inventory.Badges.HasBadge(badge))
         {
             await _badgeManager.GiveBadge(client.GetHabbo(), badge);
-            client.SendPacket(new BroadcastMessageAlertComposer("You have been given a new badge!"));
+            client.Send(new BroadcastMessageAlertComposer("You have been given a new badge!"));
         }
         return true;
     }

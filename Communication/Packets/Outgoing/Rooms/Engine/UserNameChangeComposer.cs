@@ -1,12 +1,26 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class UserNameChangeComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
+
+internal class UserNameChangeComposer : IServerPacket
 {
+    private readonly int _roomId;
+    private readonly int _virtualId;
+    private readonly string _username;
+
+    public int MessageId => ServerPacketHeader.UserNameChangeMessageComposer;
+
     public UserNameChangeComposer(int roomId, int virtualId, string username)
-        : base(ServerPacketHeader.UserNameChangeMessageComposer)
     {
-        WriteInteger(roomId);
-        WriteInteger(virtualId);
-        WriteString(username);
+        _roomId = roomId;
+        _virtualId = virtualId;
+        _username = username;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_roomId);
+        packet.WriteInteger(_virtualId);
+        packet.WriteString(_username);
     }
 }

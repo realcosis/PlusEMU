@@ -1,7 +1,13 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Session;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class OpenConnectionComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Session;
+
+internal class OpenConnectionComposer : IServerPacket
 {
-    public OpenConnectionComposer()
-        : base(ServerPacketHeader.OpenConnectionMessageComposer) { }
+    public int MessageId => ServerPacketHeader.OpenConnectionMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        // Empty Body
+    }
 }

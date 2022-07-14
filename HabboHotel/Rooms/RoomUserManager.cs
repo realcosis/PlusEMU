@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Drawing;
-using System.Linq;
 using Plus.Communication.Packets.Outgoing.Handshake;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
@@ -196,21 +193,21 @@ public class RoomUserManager
         if (_room.CheckRights(session, true))
         {
             user.SetStatus("flatctrl", "useradmin");
-            session.SendPacket(new YouAreOwnerComposer());
-            session.SendPacket(new YouAreControllerComposer(4));
+            session.Send(new YouAreOwnerComposer());
+            session.Send(new YouAreControllerComposer(4));
         }
         else if (_room.CheckRights(session, false) && _room.Group == null)
         {
             user.SetStatus("flatctrl", "1");
-            session.SendPacket(new YouAreControllerComposer(1));
+            session.Send(new YouAreControllerComposer(1));
         }
         else if (_room.Group != null && _room.CheckRights(session, false, true))
         {
             user.SetStatus("flatctrl", "3");
-            session.SendPacket(new YouAreControllerComposer(3));
+            session.Send(new YouAreControllerComposer(3));
         }
         else
-            session.SendPacket(new YouAreNotControllerComposer());
+            session.Send(new YouAreNotControllerComposer());
         user.UpdateNeeded = true;
         if (session.GetHabbo().GetPermissions().HasRight("mod_tool") && !session.GetHabbo().DisableForcedEffects)
             session.GetHabbo().Effects().ApplyEffect(102);
@@ -234,9 +231,9 @@ public class RoomUserManager
             if (session == null || session.GetHabbo() == null)
                 return;
             if (notifyKick)
-                session.SendPacket(new GenericErrorComposer(4008));
+                session.Send(new GenericErrorComposer(4008));
             if (nofityUser)
-                session.SendPacket(new CloseConnectionComposer());
+                session.Send(new CloseConnectionComposer());
             if (session.GetHabbo().TentId > 0)
                 session.GetHabbo().TentId = 0;
             var user = GetRoomUserByHabbo(session.GetHabbo().Id);

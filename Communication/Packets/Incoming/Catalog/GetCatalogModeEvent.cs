@@ -1,15 +1,14 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Catalog;
+﻿using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Catalog;
 
 internal class GetCatalogModeEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        string mode = packet.PopString();
-        session.SendPacket(new CatalogIndexComposer(session, PlusEnvironment.GetGame().GetCatalog().GetPages()));
+        string mode = packet.ReadString();
+        session.Send(new CatalogIndexComposer(session, PlusEnvironment.GetGame().GetCatalog().GetPages()));
         return Task.CompletedTask;
     }
 }

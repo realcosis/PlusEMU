@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Catalog;
+﻿using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Rooms.AI.Pets;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
@@ -24,13 +23,13 @@ internal class RemoveSaddleFromHorseEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return Task.CompletedTask;
-        if (!room.GetRoomUserManager().TryGetPet(packet.PopInt(), out var petUser))
+        if (!room.GetRoomUserManager().TryGetPet(packet.ReadInt(), out var petUser))
             return Task.CompletedTask;
         if (petUser.PetData == null || petUser.PetData.OwnerId != session.GetHabbo().Id)
             return Task.CompletedTask;
@@ -52,10 +51,10 @@ internal class RemoveSaddleFromHorseEvent : IPacketEvent
         if (item != null)
         {
             session.GetHabbo().Inventory.Furniture.AddItem(item);
-            session.SendPacket(new FurniListNotificationComposer(item.Id, 1));
-            session.SendPacket(new PurchaseOkComposer());
-            session.SendPacket(new FurniListAddComposer(item));
-            session.SendPacket(new FurniListUpdateComposer());
+            session.Send(new FurniListNotificationComposer(item.Id, 1));
+            session.Send(new PurchaseOkComposer());
+            session.Send(new FurniListAddComposer(item));
+            session.Send(new FurniListUpdateComposer());
         }
 
         //Update the Pet and the Pet figure information.

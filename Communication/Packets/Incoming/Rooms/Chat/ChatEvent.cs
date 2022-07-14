@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Moderation;
+﻿using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Communication.Packets.Outgoing.Rooms.Chat;
 using Plus.Core.Settings;
 using Plus.HabboHotel.GameClients;
@@ -42,7 +40,7 @@ public class ChatEvent : IPacketEvent
         _questManager = questManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -52,10 +50,10 @@ public class ChatEvent : IPacketEvent
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (user == null)
             return Task.CompletedTask;
-        var message = StringCharFilter.Escape(packet.PopString());
+        var message = StringCharFilter.Escape(packet.ReadString());
         if (message.Length > 100)
             message = message.Substring(0, 100);
-        var colour = packet.PopInt();
+        var colour = packet.ReadInt();
         if (!_chatStyleManager.TryGetStyle(colour, out var style) ||
             style.RequiredRight.Length > 0 && !session.GetHabbo().GetPermissions().HasRight(style.RequiredRight))
             colour = 0;
@@ -64,7 +62,7 @@ public class ChatEvent : IPacketEvent
             return Task.CompletedTask;
         if (session.GetHabbo().TimeMuted > 0)
         {
-            session.SendPacket(new MutedComposer(session.GetHabbo().TimeMuted));
+            session.Send(new MutedComposer(session.GetHabbo().TimeMuted));
             return Task.CompletedTask;
         }
         if (!session.GetHabbo().GetPermissions().HasRight("room_ignore_mute") && room.CheckMute(session))
@@ -79,7 +77,7 @@ public class ChatEvent : IPacketEvent
         {
             if (user.IncrementAndCheckFlood(out var muteTime))
             {
-                session.SendPacket(new FloodControlComposer(muteTime));
+                session.Send(new FloodControlComposer(muteTime));
                 return Task.CompletedTask;
             }
         }
@@ -98,7 +96,7 @@ public class ChatEvent : IPacketEvent
                 session.Disconnect();
                 return Task.CompletedTask;
             }
-            session.SendPacket(new ChatComposer(user.VirtualId, message, 0, colour));
+            session.Send(new ChatComposer(user.VirtualId, message, 0, colour));
             return Task.CompletedTask;
         }
         if (!session.GetHabbo().GetPermissions().HasRight("word_filter_override"))

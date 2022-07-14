@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Core.Language;
+﻿using Plus.Core.Language;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
@@ -18,12 +17,12 @@ internal class ModerationKickEvent : IPacketEvent
         _roomManger = roomManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().GetPermissions().HasRight("mod_kick"))
             return Task.CompletedTask;
-        var userId = packet.PopInt();
-        packet.PopString(); //message
+        var userId = packet.ReadInt();
+        packet.ReadString(); //message
         var client = _clientManager.GetClientByUserId(userId);
         if (client == null || client.GetHabbo() == null || client.GetHabbo().CurrentRoomId < 1 || client.GetHabbo().Id == session.GetHabbo().Id)
             return Task.CompletedTask;

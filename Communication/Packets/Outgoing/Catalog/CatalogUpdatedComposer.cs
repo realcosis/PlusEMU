@@ -1,10 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Catalog;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class CatalogUpdatedComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Catalog;
+
+public class CatalogUpdatedComposer : IServerPacket
 {
-    public CatalogUpdatedComposer()
-        : base(ServerPacketHeader.CatalogUpdatedMessageComposer)
-    {
-        WriteBoolean(false);
-    }
+    public int MessageId => ServerPacketHeader.CatalogUpdatedMessageComposer;
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteBoolean(false);
 }

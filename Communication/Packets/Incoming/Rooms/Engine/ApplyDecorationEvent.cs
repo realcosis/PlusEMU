@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Inventory.Furni;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Database;
 using Plus.HabboHotel.Achievements;
@@ -25,7 +24,7 @@ internal class ApplyDecorationEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -33,7 +32,7 @@ internal class ApplyDecorationEvent : IPacketEvent
             return Task.CompletedTask;
         if (!room.CheckRights(session, true))
             return Task.CompletedTask;
-        var item = session.GetHabbo().Inventory.Furniture.GetItem(packet.PopInt());
+        var item = session.GetHabbo().Inventory.Furniture.GetItem(packet.ReadInt());
         if (item == null)
             return Task.CompletedTask;
         if (item.GetBaseItem() == null)
@@ -76,7 +75,7 @@ internal class ApplyDecorationEvent : IPacketEvent
             dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
         }
         session.GetHabbo().Inventory.Furniture.RemoveItem(item.Id);
-        session.SendPacket(new FurniListRemoveComposer(item.Id));
+        session.Send(new FurniListRemoveComposer(item.Id));
         room.SendPacket(new RoomPropertyComposer(decorationKey, item.ExtraData));
         return Task.CompletedTask;
     }

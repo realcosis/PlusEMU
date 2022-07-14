@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
 using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
 using Plus.Database;
 using Plus.HabboHotel.Catalog.Clothing;
@@ -19,14 +18,14 @@ internal class UseSellableClothingEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
             return Task.CompletedTask;
-        var itemId = packet.PopInt();
+        var itemId = packet.ReadInt();
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
@@ -61,8 +60,8 @@ internal class UseSellableClothingEvent : IPacketEvent
         //Remove the item.
         room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
         session.GetHabbo().GetClothing().AddClothing(clothing.ClothingName, clothing.PartIds);
-        session.SendPacket(new FigureSetIdsComposer(session.GetHabbo().GetClothing().GetClothingParts));
-        session.SendPacket(new RoomNotificationComposer("figureset.redeemed.success"));
+        session.Send(new FigureSetIdsComposer(session.GetHabbo().GetClothing().GetClothingParts));
+        session.Send(new RoomNotificationComposer("figureset.redeemed.success"));
         session.SendWhisper("If for some reason cannot see your new clothing, reload the hotel!");
         return Task.CompletedTask;
     }

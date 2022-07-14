@@ -1,14 +1,13 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Avatar;
+﻿using Plus.Communication.Packets.Outgoing.Avatar;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Avatar;
 
 internal class GetWardrobeEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        session.SendPacket(new WardrobeComposer(session.GetHabbo().Id));
+        session.Send(new WardrobeComposer(session.GetHabbo().Id));
         return Task.CompletedTask;
     }
 }

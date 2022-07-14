@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Concurrent;
-using Plus.Communication.Packets.Incoming;
 using Plus.Communication.Packets.Outgoing.Rooms.Chat;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 
@@ -56,12 +56,12 @@ internal class KickUserBox : IWiredItem, IWiredCycle
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet)
+    public void HandleSave(IIncomingPacket packet)
     {
         if (SetItems.Count > 0)
             SetItems.Clear();
-        var unknown = packet.PopInt();
-        var message = packet.PopString();
+        var unknown = packet.ReadInt();
+        var message = packet.ReadString();
         StringData = message;
     }
 
@@ -81,11 +81,11 @@ internal class KickUserBox : IWiredItem, IWiredCycle
                 return false;
             if (player.GetPermissions().HasRight("mod_tool") || Instance.OwnerId == player.Id)
             {
-                player.GetClient().SendPacket(new WhisperComposer(user.VirtualId, "Wired Kick Exception: Unkickable Player", 0, 0));
+                player.GetClient().Send(new WhisperComposer(user.VirtualId, "Wired Kick Exception: Unkickable Player", 0, 0));
                 return false;
             }
             _toKick.Enqueue(player);
-            player.GetClient().SendPacket(new WhisperComposer(user.VirtualId, StringData, 0, 0));
+            player.GetClient().Send(new WhisperComposer(user.VirtualId, StringData, 0, 0));
         }
         return true;
     }

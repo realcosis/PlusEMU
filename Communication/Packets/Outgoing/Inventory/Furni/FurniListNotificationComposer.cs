@@ -1,13 +1,24 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Furni;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class FurniListNotificationComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Inventory.Furni;
+
+internal class FurniListNotificationComposer : IServerPacket
 {
+    private readonly int _id;
+    private readonly int _type;
+    public int MessageId => ServerPacketHeader.FurniListNotificationMessageComposer;
+
     public FurniListNotificationComposer(int id, int type)
-        : base(ServerPacketHeader.FurniListNotificationMessageComposer)
     {
-        WriteInteger(1);
-        WriteInteger(type);
-        WriteInteger(1);
-        WriteInteger(id);
+        _id = id;
+        _type = type;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(1);
+        packet.WriteInteger(_type);
+        packet.WriteInteger(1);
+        packet.WriteInteger(_id);
     }
 }

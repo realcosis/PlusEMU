@@ -81,7 +81,7 @@ public sealed class AvatarEffect
                 dbClient.RunQuery();
             }
         }
-        habbo.GetClient().SendPacket(new AvatarEffectExpiredComposer(this));
+        habbo.GetClient().Send(new AvatarEffectExpiredComposer(this));
         // reset fx if in room?
     }
 

@@ -1,10 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Help;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class SendBullyReportComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Help;
+
+// TODO @80O: Implement
+public class SendBullyReportComposer : IServerPacket
 {
-    public SendBullyReportComposer()
-        : base(ServerPacketHeader.SendBullyReportMessageComposer)
-    {
-        WriteInteger(0); //0-3, sends 0 on Habbo for this purpose.
-    }
+    public int MessageId => ServerPacketHeader.SendBullyReportMessageComposer;
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteInteger(0); //0-3, sends 0 on Habbo for this purpose.
 }

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
+using Microsoft.Extensions.Options;
 using MySqlConnector;
 using Plus.Core;
 using Plus.Database.Interfaces;
@@ -10,20 +10,20 @@ public sealed class Database : IDatabase
 {
     private readonly string _connectionStr;
 
-    public Database(ConfigurationData configurationData)
+    public Database(IOptions<DatabaseConfiguration> configuration)
     {
         _connectionStr = new MySqlConnectionStringBuilder
         {
             ConnectionTimeout = 10,
-            Database = configurationData.Data["db.name"],
+            Database = configuration.Value.Name,
             DefaultCommandTimeout = 30,
-            MaximumPoolSize = uint.Parse(configurationData.Data["db.pool.maxsize"]),
-            MinimumPoolSize = uint.Parse(configurationData.Data["db.pool.minsize"]),
-            Password = configurationData.Data["db.password"],
+            MaximumPoolSize = configuration.Value.MaximumPoolSize,
+            MinimumPoolSize = configuration.Value.MinimumPoolSize,
+            Password = configuration.Value.Password,
             Pooling = true,
-            Port = uint.Parse(configurationData.Data["db.port"]),
-            Server = configurationData.Data["db.hostname"],
-            UserID = configurationData.Data["db.username"],
+            Port = configuration.Value.Port,
+            Server = configuration.Value.Hostname,
+            UserID = configuration.Value.Username,
             AllowZeroDateTime = true,
             ConvertZeroDateTime = true,
             SslMode = MySqlSslMode.None
@@ -49,6 +49,7 @@ public sealed class Database : IDatabase
         return true;
     }
 
+    [Obsolete("Use IDatabase.Connection instead")]
     public IQueryAdapter GetQueryReactor()
     {
         try

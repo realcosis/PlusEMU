@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Database;
+﻿using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
 using Plus.Utilities;
@@ -19,17 +18,17 @@ internal class ModerationBanEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().GetPermissions().HasRight("mod_soft_ban"))
             return Task.CompletedTask;
-        var userId = packet.PopInt();
-        var message = packet.PopString();
-        var length = packet.PopInt() * 3600 + UnixTimestamp.GetNow();
-        packet.PopString(); //unk1
-        packet.PopString(); //unk2
-        var ipBan = packet.PopBoolean();
-        var machineBan = packet.PopBoolean();
+        var userId = packet.ReadInt();
+        var message = packet.ReadString();
+        var length = packet.ReadInt() * 3600 + UnixTimestamp.GetNow();
+        packet.ReadString(); //unk1
+        packet.ReadString(); //unk2
+        var ipBan = packet.ReadBool();
+        var machineBan = packet.ReadBool();
         if (machineBan)
             ipBan = false;
         var habbo = PlusEnvironment.GetHabboById(userId);

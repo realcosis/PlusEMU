@@ -1,18 +1,26 @@
-﻿using Plus.HabboHotel.Moderation;
+﻿using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Moderation;
 using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class CallForHelpPendingCallsComposer : ServerPacket
+internal class CallForHelpPendingCallsComposer : IServerPacket
 {
+    private readonly ModerationTicket _ticket;
+    public int MessageId => ServerPacketHeader.CallForHelpPendingCallsMessageComposer;
+
     public CallForHelpPendingCallsComposer(ModerationTicket ticket)
-        : base(ServerPacketHeader.CallForHelpPendingCallsMessageComposer)
     {
-        WriteInteger(1); // Count for whatever reason?
+        _ticket = ticket;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(1); // Count for whatever reason?
         {
-            WriteString(ticket.Id.ToString());
-            WriteString(UnixTimestamp.FromUnixTimestamp(ticket.Timestamp).ToShortTimeString()); // "11-02-2017 04:07:05";
-            WriteString(ticket.Issue);
+            packet.WriteString(_ticket.Id.ToString());
+            packet.WriteString(UnixTimestamp.FromUnixTimestamp(_ticket.Timestamp).ToShortTimeString()); // "11-02-2017 04:07:05";
+            packet.WriteString(_ticket.Issue);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
-using Plus.Communication.Packets.Incoming;
 using Plus.Communication.Packets.Outgoing.Rooms.Chat;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 
@@ -29,10 +29,10 @@ internal class GiveUserBadgeBox : IWiredItem
 
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet)
+    public void HandleSave(IIncomingPacket packet)
     {
-        var unknown = packet.PopInt();
-        var badge = packet.PopString();
+        var unknown = packet.ReadInt();
+        var badge = packet.ReadString();
         StringData = badge;
     }
 
@@ -52,11 +52,11 @@ internal class GiveUserBadgeBox : IWiredItem
         if (string.IsNullOrEmpty(StringData))
             return false;
         if (player.Inventory.Badges.HasBadge(StringData))
-            player.GetClient().SendPacket(new WhisperComposer(user.VirtualId, "Oops, it appears you have already recieved this badge!", 0, user.LastBubble));
+            player.GetClient().Send(new WhisperComposer(user.VirtualId, "Oops, it appears you have already recieved this badge!", 0, user.LastBubble));
         else
         {
             //player.Inventory.Badges.GiveBadge(StringData, true, player.GetClient());
-            // TODO: 80O Inject BadgeManager
+            // TODO @80O: Inject BadgeManager
             player.GetClient().SendNotification("You have recieved a badge!");
         }
         return true;

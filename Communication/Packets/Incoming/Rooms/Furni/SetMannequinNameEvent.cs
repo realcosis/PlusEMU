@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plus.Database;
+﻿using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni;
@@ -14,13 +12,13 @@ internal class SetMannequinNameEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         var room = session.GetHabbo().CurrentRoom;
         if (room == null || !room.CheckRights(session, true))
             return Task.CompletedTask;
-        var itemId = packet.PopInt();
-        var name = packet.PopString();
+        var itemId = packet.ReadInt();
+        var name = packet.ReadString();
         var item = session.GetHabbo().CurrentRoom.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;

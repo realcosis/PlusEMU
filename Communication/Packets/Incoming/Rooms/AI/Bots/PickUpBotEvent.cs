@@ -1,7 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using Plus.Communication.Packets.Outgoing.Inventory.Bots;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
@@ -18,11 +15,11 @@ internal class PickUpBotEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
-        var botId = packet.PopInt();
+        var botId = packet.ReadInt();
         if (botId == 0)
             return Task.CompletedTask;
         var room = session.GetHabbo().CurrentRoom;
@@ -44,7 +41,7 @@ internal class PickUpBotEvent : IPacketEvent
         room.GetGameMap().RemoveUserFromMap(botUser, new Point(botUser.X, botUser.Y));
         session.GetHabbo().Inventory.Bots.AddBot(new Bot(Convert.ToInt32(botUser.BotData.Id), Convert.ToInt32(botUser.BotData.OwnerId), botUser.BotData.Name, botUser.BotData.Motto,
             botUser.BotData.Look, botUser.BotData.Gender));
-        session.SendPacket(new BotInventoryComposer(session.GetHabbo().Inventory.Bots.Bots.Values.ToList()));
+        session.Send(new BotInventoryComposer(session.GetHabbo().Inventory.Bots.Bots.Values.ToList()));
         room.GetRoomUserManager().RemoveBot(botUser.VirtualId, false);
         return Task.CompletedTask;
     }

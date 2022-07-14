@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
 using Plus.HabboHotel.Rooms;
 
@@ -17,7 +15,7 @@ internal class GiveHandItemEvent : IPacketEvent
         _questManager = questManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -26,7 +24,7 @@ internal class GiveHandItemEvent : IPacketEvent
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (user == null)
             return Task.CompletedTask;
-        var targetUser = room.GetRoomUserManager().GetRoomUserByHabbo(packet.PopInt());
+        var targetUser = room.GetRoomUserManager().GetRoomUserByHabbo(packet.ReadInt());
         if (targetUser == null)
             return Task.CompletedTask;
         if (!(Math.Abs(user.X - targetUser.X) >= 3 || Math.Abs(user.Y - targetUser.Y) >= 3) || session.GetHabbo().GetPermissions().HasRight("mod_tool"))

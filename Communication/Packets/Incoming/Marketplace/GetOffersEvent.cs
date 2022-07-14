@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Text;
-using System.Threading.Tasks;
 using Plus.Communication.Packets.Outgoing.Marketplace;
 using Plus.Database;
 using Plus.HabboHotel.Catalog.Marketplace;
@@ -21,12 +18,12 @@ internal class GetOffersEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var minCost = packet.PopInt();
-        var maxCost = packet.PopInt();
-        var searchQuery = packet.PopString();
-        var filterMode = packet.PopInt();
+        var minCost = packet.ReadInt();
+        var maxCost = packet.ReadInt();
+        var searchQuery = packet.ReadString();
+        var filterMode = packet.ReadInt();
         DataTable table;
         var builder = new StringBuilder();
         string str;
@@ -98,7 +95,7 @@ internal class GetOffersEvent : IPacketEvent
                     dictionary2.Add(item.SpriteId, 1);
             }
         }
-        session.SendPacket(new MarketPlaceOffersComposer(dictionary, dictionary2));
+        session.Send(new MarketPlaceOffersComposer(dictionary, dictionary2));
         return Task.CompletedTask;
     }
 }

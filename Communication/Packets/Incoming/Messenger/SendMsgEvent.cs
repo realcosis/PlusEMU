@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Messenger;
+﻿using Plus.Communication.Packets.Outgoing.Messenger;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms.Chat.Filter;
 using Plus.HabboHotel.Users.Messenger;
@@ -15,13 +14,13 @@ internal class SendMsgEvent : IPacketEvent
         _wordFilterManager = wordFilterManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var userId = packet.PopInt();
+        var userId = packet.ReadInt();
         var friend = session.GetHabbo().GetMessenger().GetFriend(userId);
         if (friend == null)
-            session.SendPacket(new InstantMessageErrorComposer(MessengerMessageErrors.NotFriends, userId));
-        var message = _wordFilterManager.CheckMessage(packet.PopString());
+            session.Send(new InstantMessageErrorComposer(MessengerMessageErrors.NotFriends, userId));
+        var message = _wordFilterManager.CheckMessage(packet.ReadString());
         if (string.IsNullOrWhiteSpace(message))
             return Task.CompletedTask;
         if (session.GetHabbo().TimeMuted > 0)

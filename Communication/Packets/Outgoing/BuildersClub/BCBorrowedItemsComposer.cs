@@ -1,10 +1,9 @@
-﻿namespace Plus.Communication.Packets.Outgoing.BuildersClub;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class BcBorrowedItemsComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.BuildersClub;
+
+public class BcBorrowedItemsComposer : IServerPacket
 {
-    public BcBorrowedItemsComposer()
-        : base(ServerPacketHeader.BcBorrowedItemsMessageComposer)
-    {
-        WriteInteger(0);
-    }
+    public int MessageId => ServerPacketHeader.BcBorrowedItemsMessageComposer;
+    public void Compose(IOutgoingPacket packet) => packet.WriteInteger(0);
 }

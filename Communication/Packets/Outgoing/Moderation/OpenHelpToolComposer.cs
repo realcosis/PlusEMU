@@ -1,10 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Moderation;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class OpenHelpToolComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Moderation;
+
+internal class OpenHelpToolComposer : IServerPacket
 {
-    public OpenHelpToolComposer()
-        : base(ServerPacketHeader.OpenHelpToolMessageComposer)
-    {
-        WriteInteger(0);
-    }
+    public int MessageId => ServerPacketHeader.OpenHelpToolMessageComposer;
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteInteger(0);
 }

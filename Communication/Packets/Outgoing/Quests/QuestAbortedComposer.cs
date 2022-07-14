@@ -1,10 +1,10 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Quests;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class QuestAbortedComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Quests;
+
+internal class QuestAbortedComposer : IServerPacket
 {
-    public QuestAbortedComposer()
-        : base(ServerPacketHeader.QuestAbortedMessageComposer)
-    {
-        WriteBoolean(false);
-    }
+    public int MessageId => ServerPacketHeader.QuestAbortedMessageComposer;
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteBoolean(false);
 }

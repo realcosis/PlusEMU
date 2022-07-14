@@ -1,6 +1,4 @@
-﻿using System;
-using System.Data;
-using System.Threading.Tasks;
+﻿using System.Data;
 using Plus.Communication.Packets.Outgoing.Marketplace;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
@@ -16,10 +14,10 @@ internal class GetMarketplaceItemStatsEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var itemId = packet.PopInt();
-        var spriteId = packet.PopInt();
+        var itemId = packet.ReadInt();
+        var spriteId = packet.ReadInt();
         DataRow row;
         using (var dbClient = _database.GetQueryReactor())
         {
@@ -27,7 +25,7 @@ internal class GetMarketplaceItemStatsEvent : IPacketEvent
             dbClient.AddParameter("SpriteId", spriteId);
             row = dbClient.GetRow();
         }
-        session.SendPacket(new MarketplaceItemStatsComposer(itemId, spriteId, row != null ? Convert.ToInt32(row["avgprice"]) : 0));
+        session.Send(new MarketplaceItemStatsComposer(itemId, spriteId, row != null ? Convert.ToInt32(row["avgprice"]) : 0));
         return Task.CompletedTask;
     }
 }

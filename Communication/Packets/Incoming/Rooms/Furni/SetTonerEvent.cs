@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
@@ -17,7 +16,7 @@ internal class SetTonerEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return Task.CompletedTask;
@@ -28,10 +27,10 @@ internal class SetTonerEvent : IPacketEvent
         var item = room.GetRoomItemHandler().GetItem(room.TonerData.ItemId);
         if (item == null || item.GetBaseItem().InteractionType != InteractionType.Toner)
             return Task.CompletedTask;
-        packet.PopInt(); //id
-        var int1 = packet.PopInt();
-        var int2 = packet.PopInt();
-        var int3 = packet.PopInt();
+        packet.ReadInt(); //id
+        var int1 = packet.ReadInt();
+        var int2 = packet.ReadInt();
+        var int3 = packet.ReadInt();
         if (int1 > 255 || int2 > 255 || int3 > 255)
             return Task.CompletedTask;
         using (var dbClient = _database.GetQueryReactor())

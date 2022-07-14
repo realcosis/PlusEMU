@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Linq;
-using Plus.Communication.Packets.Incoming;
+﻿using System.Collections.Concurrent;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.HabboHotel.Items.Wired.Boxes.Effects;
@@ -98,20 +96,20 @@ internal class MoveFurniToUserBox : IWiredItem, IWiredCycle
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet)
+    public void HandleSave(IIncomingPacket packet)
     {
-        var unknown = packet.PopInt();
-        var unknown2 = packet.PopString();
+        var unknown = packet.ReadInt();
+        var unknown2 = packet.ReadString();
         if (SetItems.Count > 0)
             SetItems.Clear();
-        var furniCount = packet.PopInt();
+        var furniCount = packet.ReadInt();
         for (var i = 0; i < furniCount; i++)
         {
-            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.PopInt());
+            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadInt());
             if (selectedItem != null && !Instance.GetWired().OtherBoxHasItem(this, selectedItem.Id))
                 SetItems.TryAdd(selectedItem.Id, selectedItem);
         }
-        var delay = packet.PopInt();
+        var delay = packet.ReadInt();
         Delay = delay;
     }
 

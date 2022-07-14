@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Catalog;
+﻿using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
@@ -27,15 +26,15 @@ public class PurchaseRoomPromotionEvent : IPacketEvent
         _messengerDataLoader = messengerDataLoader;
     }
 
-    public async Task Parse(GameClient session, ClientPacket packet)
+    public async Task Parse(GameClient session, IIncomingPacket packet)
     {
-        packet.PopInt(); //pageId
-        packet.PopInt(); //itemId
-        var roomId = packet.PopInt();
-        var name = _wordFilterManager.CheckMessage(packet.PopString());
-        packet.PopBoolean(); //junk
-        var desc = _wordFilterManager.CheckMessage(packet.PopString());
-        var categoryId = packet.PopInt();
+        packet.ReadInt(); //pageId
+        packet.ReadInt(); //itemId
+        var roomId = packet.ReadInt();
+        var name = _wordFilterManager.CheckMessage(packet.ReadString());
+        packet.ReadBool(); //junk
+        var desc = _wordFilterManager.CheckMessage(packet.ReadString());
+        var categoryId = packet.ReadInt();
         if (!RoomFactory.TryGetData(roomId, out var data))
             return;
         if (data.OwnerId != session.GetHabbo().Id)
@@ -56,7 +55,7 @@ public class PurchaseRoomPromotionEvent : IPacketEvent
         }
         if (!session.GetHabbo().Inventory.Badges.HasBadge("RADZZ"))
             await _badgeManager.GiveBadge(session.GetHabbo(), "RADZZ");
-        session.SendPacket(new PurchaseOkComposer());
+        session.Send(new PurchaseOkComposer());
         if (session.GetHabbo().InRoom && session.GetHabbo().CurrentRoomId == roomId)
             session.GetHabbo().CurrentRoom?.SendPacket(new RoomEventComposer(data, data.Promotion));
         _messengerDataLoader.BroadcastStatusUpdate(session.GetHabbo(), MessengerEventTypes.EventStarted, name);

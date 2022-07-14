@@ -309,4 +309,6 @@ public static class ServerPacketHeader
     public const int NavigatorSettingsMessageComposer = 2477; //3175
 
     public const int MessengerInitMessageComposer = 1329; //391
+    public const int PollContentsComposer = 3826;
+    public const int PollOfferComposer = 1074;
 }

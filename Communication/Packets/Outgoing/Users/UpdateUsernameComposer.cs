@@ -1,12 +1,22 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Users;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class UpdateUsernameComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Users;
+
+internal class UpdateUsernameComposer : IServerPacket
 {
+    private readonly string _username;
+
+    public int MessageId => ServerPacketHeader.UpdateUsernameMessageComposer;
+
     public UpdateUsernameComposer(string username)
-        : base(ServerPacketHeader.UpdateUsernameMessageComposer)
     {
-        WriteInteger(0);
-        WriteString(username);
-        WriteInteger(0);
+        _username = username;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(0);
+        packet.WriteString(_username);
+        packet.WriteInteger(0);
     }
 }

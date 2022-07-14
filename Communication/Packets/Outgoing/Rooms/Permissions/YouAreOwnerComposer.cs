@@ -1,7 +1,13 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Permissions;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class YouAreOwnerComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Permissions;
+
+internal class YouAreOwnerComposer : IServerPacket
 {
-    public YouAreOwnerComposer()
-        : base(ServerPacketHeader.YouAreOwnerMessageComposer) { }
+    public int MessageId => ServerPacketHeader.YouAreOwnerMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        // Empty Body
+    }
 }

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Users;
+﻿using Plus.Communication.Packets.Outgoing.Users;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
@@ -21,7 +20,7 @@ internal class SetActivatedBadgesEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         session.GetHabbo().Inventory.Badges.ClearWearingBadges();
         using (var connection = _database.Connection())
@@ -31,8 +30,8 @@ internal class SetActivatedBadgesEvent : IPacketEvent
         }
         for (var i = 0; i < 5; i++)
         {
-            var slot = packet.PopInt();
-            var badge = packet.PopString();
+            var slot = packet.ReadInt();
+            var badge = packet.ReadString();
             if (badge.Length == 0)
                 continue;
             if (!session.GetHabbo().Inventory.Badges.HasBadge(badge) || slot < 1 || slot > 5)
@@ -47,7 +46,7 @@ internal class SetActivatedBadgesEvent : IPacketEvent
         if (session.GetHabbo().InRoom && _roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             room.SendPacket(new HabboUserBadgesComposer(session.GetHabbo()));
         else
-            session.SendPacket(new HabboUserBadgesComposer(session.GetHabbo()));
+            session.Send(new HabboUserBadgesComposer(session.GetHabbo()));
         return Task.CompletedTask;
     }
 }

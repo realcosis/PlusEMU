@@ -1,93 +1,101 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items.Wired;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired;
 
-internal class WiredEffectConfigComposer : ServerPacket
+internal class WiredEffectConfigComposer : IServerPacket
 {
+    private readonly IWiredItem _box;
+    private readonly List<int> _blockedItems;
+
+    public int MessageId => ServerPacketHeader.WiredEffectConfigMessageComposer;
+
     public WiredEffectConfigComposer(IWiredItem box, List<int> blockedItems)
-        : base(ServerPacketHeader.WiredEffectConfigMessageComposer)
     {
-        WriteBoolean(false);
-        WriteInteger(15);
-        WriteInteger(box.SetItems.Count);
-        foreach (var item in box.SetItems.Values.ToList()) WriteInteger(item.Id);
-        WriteInteger(box.Item.GetBaseItem().SpriteId);
-        WriteInteger(box.Item.Id);
-        if (box.Type == WiredBoxType.EffectBotGivesHanditemBox)
+        _box = box;
+        _blockedItems = blockedItems;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+
+        packet.WriteBoolean(false);
+        packet.WriteInteger(15);
+        packet.WriteInteger(_box.SetItems.Count);
+        foreach (var item in _box.SetItems.Values.ToList()) packet.WriteInteger(item.Id);
+        packet.WriteInteger(_box.Item.GetBaseItem().SpriteId);
+        packet.WriteInteger(_box.Item.Id);
+        if (_box.Type == WiredBoxType.EffectBotGivesHanditemBox)
         {
-            if (string.IsNullOrEmpty(box.StringData))
-                box.StringData = "Bot name;0";
-            WriteString(box.StringData != null ? box.StringData.Split(';')[0] : "");
+            if (string.IsNullOrEmpty(_box.StringData))
+                _box.StringData = "Bot name;0";
+            packet.WriteString(_box.StringData != null ? _box.StringData.Split(';')[0] : "");
         }
-        else if (box.Type == WiredBoxType.EffectBotFollowsUserBox)
+        else if (_box.Type == WiredBoxType.EffectBotFollowsUserBox)
         {
-            if (string.IsNullOrEmpty(box.StringData))
-                box.StringData = "0;Bot name";
-            WriteString(box.StringData != null ? box.StringData.Split(';')[1] : "");
-        }
-        else
-            WriteString(box.StringData);
-        if (box.Type != WiredBoxType.EffectMatchPosition && box.Type != WiredBoxType.EffectMoveAndRotate && box.Type != WiredBoxType.EffectMuteTriggerer &&
-            box.Type != WiredBoxType.EffectBotFollowsUserBox)
-            WriteInteger(0); // Loop
-        else if (box.Type == WiredBoxType.EffectMatchPosition)
-        {
-            if (string.IsNullOrEmpty(box.StringData))
-                box.StringData = "0;0;0";
-            WriteInteger(3);
-            WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[0]) : 0);
-            WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[1]) : 0);
-            WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[2]) : 0);
-        }
-        else if (box.Type == WiredBoxType.EffectMoveAndRotate)
-        {
-            if (string.IsNullOrEmpty(box.StringData))
-                box.StringData = "0;0";
-            WriteInteger(2);
-            WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[0]) : 0);
-            WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[1]) : 0);
-        }
-        else if (box.Type == WiredBoxType.EffectMuteTriggerer)
-        {
-            if (string.IsNullOrEmpty(box.StringData))
-                box.StringData = "0;Message";
-            WriteInteger(1); //Count, for the time.
-            WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[0]) : 0);
-        }
-        else if (box.Type == WiredBoxType.EffectBotFollowsUserBox)
-        {
-            WriteInteger(1); //Count, for the time.
-            WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[0]) : 0);
-        }
-        else if (box.Type == WiredBoxType.EffectBotGivesHanditemBox) WriteInteger(box.StringData != null ? int.Parse(box.StringData.Split(';')[1]) : 0);
-        if (box is IWiredCycle && box.Type != WiredBoxType.EffectKickUser && box.Type != WiredBoxType.EffectMatchPosition && box.Type != WiredBoxType.EffectMoveAndRotate &&
-            box.Type != WiredBoxType.EffectSetRollerSpeed)
-        {
-            var cycle = (IWiredCycle)box;
-            WriteInteger(WiredBoxTypeUtility.GetWiredId(box.Type));
-            WriteInteger(0);
-            WriteInteger(cycle.Delay);
-        }
-        else if (box.Type == WiredBoxType.EffectMatchPosition || box.Type == WiredBoxType.EffectMoveAndRotate)
-        {
-            var cycle = (IWiredCycle)box;
-            WriteInteger(0);
-            WriteInteger(WiredBoxTypeUtility.GetWiredId(box.Type));
-            WriteInteger(cycle.Delay);
+            if (string.IsNullOrEmpty(_box.StringData))
+                _box.StringData = "0;Bot name";
+            packet.WriteString(_box.StringData != null ? _box.StringData.Split(';')[1] : "");
         }
         else
+            packet.WriteString(_box.StringData);
+        if (_box.Type != WiredBoxType.EffectMatchPosition && _box.Type != WiredBoxType.EffectMoveAndRotate && _box.Type != WiredBoxType.EffectMuteTriggerer &&
+            _box.Type != WiredBoxType.EffectBotFollowsUserBox)
+            packet.WriteInteger(0); // Loop
+        else if (_box.Type == WiredBoxType.EffectMatchPosition)
         {
-            WriteInteger(0);
-            WriteInteger(WiredBoxTypeUtility.GetWiredId(box.Type));
-            WriteInteger(0);
+            if (string.IsNullOrEmpty(_box.StringData))
+                _box.StringData = "0;0;0";
+            packet.WriteInteger(3);
+            packet.WriteInteger(_box.StringData != null ? int.Parse(_box.StringData.Split(';')[0]) : 0);
+            packet.WriteInteger(_box.StringData != null ? int.Parse(_box.StringData.Split(';')[1]) : 0);
+            packet.WriteInteger(_box.StringData != null ? int.Parse(_box.StringData.Split(';')[2]) : 0);
         }
-        WriteInteger(blockedItems.Count()); // Incompatable items loop
-        if (blockedItems.Count() > 0)
+        else if (_box.Type == WiredBoxType.EffectMoveAndRotate)
         {
-            foreach (var itemId in blockedItems.ToList())
-                WriteInteger(itemId);
+            if (string.IsNullOrEmpty(_box.StringData))
+                _box.StringData = "0;0";
+            packet.WriteInteger(2);
+            packet.WriteInteger(_box.StringData != null ? int.Parse(_box.StringData.Split(';')[0]) : 0);
+            packet.WriteInteger(_box.StringData != null ? int.Parse(_box.StringData.Split(';')[1]) : 0);
         }
+        else if (_box.Type == WiredBoxType.EffectMuteTriggerer)
+        {
+            if (string.IsNullOrEmpty(_box.StringData))
+                _box.StringData = "0;Message";
+            packet.WriteInteger(1); //Count, for the time.
+            packet.WriteInteger(_box.StringData != null ? int.Parse(_box.StringData.Split(';')[0]) : 0);
+        }
+        else if (_box.Type == WiredBoxType.EffectBotFollowsUserBox)
+        {
+            packet.WriteInteger(1); //Count, for the time.
+            packet.WriteInteger(_box.StringData != null ? int.Parse(_box.StringData.Split(';')[0]) : 0);
+        }
+        else if (_box.Type == WiredBoxType.EffectBotGivesHanditemBox) packet.WriteInteger(_box.StringData != null ? int.Parse(_box.StringData.Split(';')[1]) : 0);
+        if (_box is IWiredCycle && _box.Type != WiredBoxType.EffectKickUser && _box.Type != WiredBoxType.EffectMatchPosition && _box.Type != WiredBoxType.EffectMoveAndRotate &&
+            _box.Type != WiredBoxType.EffectSetRollerSpeed)
+        {
+            var cycle = (IWiredCycle)_box;
+            packet.WriteInteger(WiredBoxTypeUtility.GetWiredId(_box.Type));
+            packet.WriteInteger(0);
+            packet.WriteInteger(cycle.Delay);
+        }
+        else if (_box.Type == WiredBoxType.EffectMatchPosition || _box.Type == WiredBoxType.EffectMoveAndRotate)
+        {
+            var cycle = (IWiredCycle)_box;
+            packet.WriteInteger(0);
+            packet.WriteInteger(WiredBoxTypeUtility.GetWiredId(_box.Type));
+            packet.WriteInteger(cycle.Delay);
+        }
+        else
+        {
+            packet.WriteInteger(0);
+            packet.WriteInteger(WiredBoxTypeUtility.GetWiredId(_box.Type));
+            packet.WriteInteger(0);
+        }
+        packet.WriteInteger(_blockedItems.Count()); // Incompatable items loop
+        foreach (var itemId in _blockedItems.ToList())
+            packet.WriteInteger(itemId);
+
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.AI.Pets;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.AI.Pets;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
@@ -17,13 +16,13 @@ internal class ModifyWhoCanRideHorseEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return Task.CompletedTask;
-        var petId = packet.PopInt();
+        var petId = packet.ReadInt();
         if (!room.GetRoomUserManager().TryGetPet(petId, out var pet))
             return Task.CompletedTask;
         pet.PetData.AnyoneCanRide = pet.PetData.AnyoneCanRide == 1 ? 0 : 1;

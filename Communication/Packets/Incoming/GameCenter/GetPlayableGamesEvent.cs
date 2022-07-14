@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.GameCenter;
+﻿using Plus.Communication.Packets.Outgoing.GameCenter;
 using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 
@@ -14,12 +13,12 @@ internal class GetPlayableGamesEvent : IPacketEvent
         _achievementManager = achievementManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var gameId = packet.PopInt();
-        session.SendPacket(new GameAccountStatusComposer(gameId));
-        session.SendPacket(new PlayableGamesComposer(gameId));
-        session.SendPacket(new GameAchievementListComposer(session, _achievementManager.GetGameAchievements(gameId), gameId));
+        var gameId = packet.ReadInt();
+        session.Send(new GameAccountStatusComposer(gameId));
+        session.Send(new PlayableGamesComposer(gameId));
+        session.Send(new GameAchievementListComposer(session, _achievementManager.GetGameAchievements(gameId), gameId));
         return Task.CompletedTask;
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using Plus.Communication.Packets.Outgoing.Rooms.Action;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
@@ -30,14 +29,14 @@ namespace Plus.HabboHotel.Users.Ignores
             using var connection = _database.Connection();
             await connection.ExecuteAsync("INSERT INTO user_ignores (user_id, ignore_id) VALUES (@userId, @targetId)", new { userId = habbo.Id, targetId });
             var name = await _gameClientManager.GetNameById(targetId);
-            habbo.GetClient().SendPacket(new IgnoreStatusComposer(1, name));
+            habbo.GetClient().Send(new IgnoreStatusComposer(1, name));
         }
         public async Task UnregisterIgnore(Habbo habbo, int targetId)
         {
             using var connection = _database.Connection();
             await connection.ExecuteAsync("DELETE FROM user_ignores WHERE user_id = @userId AND ignore_id = @targetId", new { userId = habbo.Id, targetId });
             var name = await _gameClientManager.GetNameById(targetId);
-            habbo.GetClient().SendPacket(new IgnoreStatusComposer(3, name));
+            habbo.GetClient().Send(new IgnoreStatusComposer(3, name));
         }
     }
 }

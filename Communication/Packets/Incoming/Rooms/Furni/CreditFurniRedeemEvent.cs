@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Inventory.Furni;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Core.Settings;
 using Plus.Database;
@@ -22,7 +21,7 @@ internal class CreditFurniRedeemEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -35,7 +34,7 @@ internal class CreditFurniRedeemEvent : IPacketEvent
             session.SendNotification("The hotel managers have temporarilly disabled exchanging!");
             return Task.CompletedTask;
         }
-        var exchange = room.GetRoomItemHandler().GetItem(packet.PopInt());
+        var exchange = room.GetRoomItemHandler().GetItem(packet.ReadInt());
         if (exchange == null)
             return Task.CompletedTask;
         if (exchange.Data.InteractionType != InteractionType.Exchange)
@@ -44,7 +43,7 @@ internal class CreditFurniRedeemEvent : IPacketEvent
         if (value > 0)
         {
             session.GetHabbo().Credits += value;
-            session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
+            session.Send(new CreditBalanceComposer(session.GetHabbo().Credits));
         }
         using (var dbClient = _database.GetQueryReactor())
         {
@@ -52,10 +51,10 @@ internal class CreditFurniRedeemEvent : IPacketEvent
             dbClient.AddParameter("exchangeId", exchange.Id);
             dbClient.RunQuery();
         }
-        session.SendPacket(new FurniListUpdateComposer());
+        session.Send(new FurniListUpdateComposer());
         room.GetRoomItemHandler().RemoveFurniture(null, exchange.Id);
         session.GetHabbo().Inventory.Furniture.RemoveItem(exchange.Id);
-        session.SendPacket(new FurniListRemoveComposer(exchange.Id));
+        session.Send(new FurniListRemoveComposer(exchange.Id));
         return Task.CompletedTask;
     }
 }

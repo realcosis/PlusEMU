@@ -1,13 +1,12 @@
-﻿using System.Threading.Tasks;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Messenger;
 
 internal class AcceptBuddyEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var amount = packet.PopInt();
+        var amount = packet.ReadInt();
         if (amount > 50)
             amount = 50;
         else if (amount < 0)
@@ -17,7 +16,7 @@ internal class AcceptBuddyEvent : IPacketEvent
 
         for (var i = 0; i < amount; i++)
         {
-            var requestId = packet.PopInt();
+            var requestId = packet.ReadInt();
             messenger.AcceptFriendRequest(requestId);
         }
         return Task.CompletedTask;

@@ -1,142 +1,157 @@
-﻿using System;
+﻿using System.Net.Sockets;
+using Microsoft.IO;
+using NetCoreServer;
 using NLog;
-using Plus.Communication;
-using Plus.Communication.ConnectionManager;
 using Plus.Communication.Encryption.Crypto.Prng;
-using Plus.Communication.Interfaces;
-using Plus.Communication.Packets.Incoming;
-using Plus.Communication.Packets.Outgoing.Moderation;
-using Plus.Communication.Packets.Outgoing.Rooms.Chat;
-using Plus.Core;
+using Plus.Communication.Flash;
+using Plus.Communication.Packets;
 using Plus.HabboHotel.Users;
+using Plus.Utilities.DependencyInjection;
 
 namespace Plus.HabboHotel.GameClients;
-
-public class GameClient
+public class DataReceivedArgs : EventArgs
 {
-    private static readonly ILogger Log = LogManager.GetCurrentClassLogger();
-    private ConnectionInformation _connection;
-    private bool _disconnected;
+    public ReadOnlyMemory<byte> Buffer { get; init; }
+}
+
+public interface IIncomingPacket
+{
+    int MessageId { get; set; }
+    Memory<byte> Buffer { get; }
+    byte ReadByte();
+    short ReadShort();
+    int ReadInt();
+    bool ReadBool();
+    string ReadString();
+    bool HasDataRemaining();
+    byte[] ReadFixedValue();
+    void ReadBytes(Span<byte> destination);
+}
+
+public interface IOutgoingPacket
+{
+    int MessageId { get; set; }
+    ReadOnlyMemory<byte> Buffer { get; }
+    void WriteByte(byte value);
+    void WriteShort(short value);
+    void WriteInt(int value);
+    void WriteInteger(int value);
+    void WriteBool(bool value);
+    void WriteBoolean(bool value);
+    void WriteString(string value);
+    void WriteDouble(double value);
+}
+
+
+[Transient]
+public interface IPacketFactory
+{
+    IIncomingPacket CreateIncomingPacket(Memory<byte> buffer);
+    IOutgoingPacket CreateOutgoingPacket(RecyclableMemoryStream stream);
+}
+
+
+public abstract class GameClient : TcpSession
+{
+    private readonly IGameServer _server;
+    private readonly IPacketFactory _packetFactory;
     private Habbo? _habbo;
-    private GamePacketParser _packetParser;
-    public string MachineId = string.Empty;
-    public Arc4? Rc4Client;
+    public event EventHandler<EventArgs>? ConnectionConnected;
+    public event EventHandler<EventArgs>? ConnectionDisconnected;
 
-    public GameClient(int clientId, ConnectionInformation connection)
-    {
-        ConnectionId = clientId;
-        _connection = connection;
-        _packetParser = new GamePacketParser(this);
-        PingCount = 0;
-    }
+    public RecyclableMemoryStream? _incompleteStream;
+    public Arc4? Rc4Client { get; set; }
 
+    public bool IsAuthenticated { get; set; } = false;
+    public DateTime TimeConnected { get; set; }
+
+    [Obsolete("Will be removed")]
+    public string MachineId { get; set; } = string.Empty;
+
+    [Obsolete("Will be removed")]
     public int PingCount { get; set; }
 
-    public int ConnectionId { get; }
-
-    private void SwitchParserRequest()
+    protected GameClient(IGameServer server, IPacketFactory packetFactory) : base(server as TcpServer)
     {
-        _packetParser.SetConnection(_connection);
-        _packetParser.OnNewPacket += ParserOnNewPacket;
-        var data = (_connection.Parser as InitialPacketParser).CurrentData;
-        _connection.Parser.Dispose();
-        _connection.Parser = _packetParser;
-        _connection.Parser.HandlePacketData(data);
+        _server = server;
+        _packetFactory = packetFactory;
     }
 
-    private void ParserOnNewPacket(ClientPacket message)
+    protected override void OnConnected()
     {
-        try
+        Socket.DontFragment = true;
+        TimeConnected = DateTime.UtcNow;
+        ConnectionConnected?.Invoke(this, EventArgs.Empty);
+    }
+
+    protected override void OnDisconnected() => ConnectionDisconnected?.Invoke(this, EventArgs.Empty);
+
+    public abstract (bool Complete, uint MessageId, int HeaderLength, int Length) GetMessageIdAndPacketLength(ReadOnlyMemory<byte> buffer);
+
+    protected override async void OnReceived(byte[] buffer, long offset, long size)
+    {
+        if (size > int.MaxValue) throw new InvalidOperationException("");
+        await using var stream = PlusMemoryStream.GetStream(buffer.AsSpan().Slice((int) offset, (int) size));
+        var memory = stream.GetMemory().Slice(0, (int)stream.Length);
+
+        if (_incompleteStream != null)
         {
-            PlusEnvironment.GetGame().GetPacketManager().TryExecutePacket(this, message);
+            _incompleteStream.Write(memory.Span);
+            memory = _incompleteStream.GetMemory().Slice(0, (int)_incompleteStream.Length);
         }
-        catch (Exception e)
+
+        while (memory.Length > 0)
         {
-            ExceptionLogger.LogException(e);
+            var (complete, messageId, headerLength, length) = GetMessageIdAndPacketLength(memory);
+            if (!complete)
+            {
+                _incompleteStream ??= PlusMemoryStream.GetStream(memory.Span);
+                break;
+            }
+
+            try
+            {
+                await _server.PacketReceived(this, messageId, _packetFactory.CreateIncomingPacket(memory.Slice(headerLength, length)));
+            }
+            catch (Exception e)
+            {
+                // TODO @80O: Add logging when ILogger interface has been implemented
+            }
+            memory = memory.Slice(headerLength + length);
+            _incompleteStream?.Advance(headerLength + length);
+        }
+
+        if (memory.Length == 0)
+        {
+            _incompleteStream?.Dispose();
+            _incompleteStream = null;
         }
     }
-
-    private void PolicyRequest()
-    {
-        _connection.SendData(PlusEnvironment.GetDefaultEncoding().GetBytes("<?xml version=\"1.0\"?>\r\n" +
-                                                                           "<!DOCTYPE cross-domain-policy SYSTEM \"/xml/dtds/cross-domain-policy.dtd\">\r\n" +
-                                                                           "<cross-domain-policy>\r\n" +
-                                                                           "<allow-access-from domain=\"*\" to-ports=\"1-31111\" />\r\n" +
-                                                                           "</cross-domain-policy>\x0"));
-    }
-
-
-    public void StartConnection()
-    {
-        PingCount = 0;
-        (_connection.Parser as InitialPacketParser).PolicyRequest += PolicyRequest;
-        (_connection.Parser as InitialPacketParser).SwitchParserRequest += SwitchParserRequest;
-        _connection.StartPacketProcessing();
-    }
-
-    public void SendWhisper(string message, int colour = 0)
-    {
-        if (GetHabbo() == null || GetHabbo().CurrentRoom == null)
-            return;
-        var user = GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(GetHabbo().Username);
-        if (user == null)
-            return;
-        SendPacket(new WhisperComposer(user.VirtualId, message, 0, colour == 0 ? user.LastBubble : colour));
-    }
-
-    public void SendNotification(string message) => SendPacket(new BroadcastMessageAlertComposer(message));
-
-    public void SendPacket(IServerPacket message)
-    {
-        Log.Debug("Sending Packet [{packetId}]({name}) to user [{userId}]", message.Id, message.GetType().Name, GetHabbo()?.Id);
-        GetConnection().SendData(message.GetBytes());
-    }
-
-    public ConnectionInformation GetConnection() => _connection;
 
     public Habbo GetHabbo() => _habbo!;
 
     public void SetHabbo(Habbo habbo)
     {
-        ArgumentNullException.ThrowIfNull(habbo);
-        if (_habbo != null) throw new InvalidOperationException("Habbo already set");
+        if (_habbo != null) throw new InvalidOperationException();
         _habbo = habbo;
     }
 
-    public void Disconnect()
+    private static readonly ILogger Log = LogManager.GetLogger("Plus.Communication.Packets");
+
+    public void Send(IServerPacket composer)
     {
-        try
-        {
-            if (GetHabbo() != null)
-            {
-                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
-                {
-                    dbClient.RunQuery(GetHabbo().GetQueryString);
-                }
-                GetHabbo().OnDisconnect();
-            }
-        }
-        catch (Exception e)
-        {
-            ExceptionLogger.LogException(e);
-        }
-        if (!_disconnected)
-        {
-            if (_connection != null)
-                _connection.Dispose();
-            _disconnected = true;
-        }
+        var stream = PlusMemoryStream.GetStream();
+        stream.Position = 0;
+        var packet = _packetFactory.CreateOutgoingPacket(stream);
+        composer.Compose(packet);
+        var args = new SocketAsyncEventArgs();
+        var memory = stream.GetBuffer().AsMemory().Slice(0, (int)stream.Length);
+        CreateHeader(memory, composer.MessageId);
+        args.SetBuffer(memory);
+        Socket.SendAsync(args);
+        Log.Debug("Send Packet: [" + composer.MessageId + "] " + composer.GetType().Name);
+        stream.Dispose();
     }
 
-    public void Dispose()
-    {
-        if (GetHabbo() != null)
-            GetHabbo().OnDisconnect();
-        MachineId = string.Empty;
-        _disconnected = true;
-        _habbo = null;
-        _connection = null;
-        Rc4Client = null;
-        _packetParser = null;
-    }
+    public abstract void CreateHeader(Memory<byte> memory, int messageId);
 }

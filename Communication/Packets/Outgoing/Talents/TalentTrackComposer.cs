@@ -1,37 +1,46 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Talents;
 
 namespace Plus.Communication.Packets.Outgoing.Talents;
 
-internal class TalentTrackComposer : ServerPacket
+internal class TalentTrackComposer : IServerPacket
 {
+    private readonly ICollection<TalentTrackLevel> _levels;
+    private readonly string _type;
+
+    public int MessageId => ServerPacketHeader.TalentTrackMessageComposer;
+
     public TalentTrackComposer(ICollection<TalentTrackLevel> levels, string type)
-        : base(ServerPacketHeader.TalentTrackMessageComposer)
     {
-        WriteString(type);
-        WriteInteger(levels.Count);
-        foreach (var level in levels.ToList())
+        _levels = levels;
+        _type = type;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteString(_type);
+        packet.WriteInteger(_levels.Count);
+        foreach (var level in _levels.ToList())
         {
-            WriteInteger(level.Level); //First level
-            WriteInteger(0); //Progress, 0 = nothing, 1 = started, 2 = done
-            WriteInteger(level.GetSubLevels().Count);
+            packet.WriteInteger(level.Level); //First level
+            packet.WriteInteger(0); //Progress, 0 = nothing, 1 = started, 2 = done
+            packet.WriteInteger(level.GetSubLevels().Count);
             foreach (var sub in level.GetSubLevels())
             {
-                WriteInteger(0); //Achievement Id
-                WriteInteger(0); //Achievement level
-                WriteString(sub.Badge); //Achievement name
-                WriteInteger(0); //Progress, 0 = nothing, 1 = started, 2 = done
-                WriteInteger(0); //My actual progress
-                WriteInteger(sub.RequiredProgress);
+                packet.WriteInteger(0); //Achievement Id
+                packet.WriteInteger(0); //Achievement level
+                packet.WriteString(sub.Badge); //Achievement name
+                packet.WriteInteger(0); //Progress, 0 = nothing, 1 = started, 2 = done
+                packet.WriteInteger(0); //My actual progress
+                packet.WriteInteger(sub.RequiredProgress);
             }
-            WriteInteger(level.Actions.Count);
-            foreach (var action in level.Actions.ToList()) WriteString(action);
-            WriteInteger(level.Gifts.Count);
+            packet.WriteInteger(level.Actions.Count);
+            foreach (var action in level.Actions.ToList()) packet.WriteString(action);
+            packet.WriteInteger(level.Gifts.Count);
             foreach (var gift in level.Gifts.ToList())
             {
-                WriteString(gift);
-                WriteInteger(0);
+                packet.WriteString(gift);
+                packet.WriteInteger(0);
             }
         }
         /*base.WriteString("citizenship");

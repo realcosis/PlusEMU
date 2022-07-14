@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Users;
+﻿using Plus.Communication.Packets.Outgoing.Users;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 
@@ -13,7 +10,7 @@ internal class GetHabboGroupBadgesEvent : IPacketEvent
 
     public GetHabboGroupBadgesEvent(IGroupManager groupManager) => _groupManager = groupManager;
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -24,7 +21,7 @@ internal class GetHabboGroupBadgesEvent : IPacketEvent
         if(badges != null)
         {
             room.SendPacket(new HabboGroupBadgesComposer(badges));
-            session.SendPacket(new HabboGroupBadgesComposer(badges));
+            session.Send(new HabboGroupBadgesComposer(badges));
         }
         return Task.CompletedTask;
     }

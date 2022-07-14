@@ -1,24 +1,30 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.LandingView.Promotions;
 
 namespace Plus.Communication.Packets.Outgoing.LandingView;
 
-internal class PromoArticlesComposer : ServerPacket
+internal class PromoArticlesComposer : IServerPacket
 {
+    private readonly ICollection<Promotion> _landingPromotions;
+    public int MessageId => ServerPacketHeader.PromoArticlesMessageComposer;
+
     public PromoArticlesComposer(ICollection<Promotion> landingPromotions)
-        : base(ServerPacketHeader.PromoArticlesMessageComposer)
     {
-        WriteInteger(landingPromotions.Count); //Count
-        foreach (var promotion in landingPromotions.ToList())
+        _landingPromotions = landingPromotions;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_landingPromotions.Count); //Count
+        foreach (var promotion in _landingPromotions.ToList())
         {
-            WriteInteger(promotion.Id); //ID
-            WriteString(promotion.Title); //Title
-            WriteString(promotion.Text); //Text
-            WriteString(promotion.ButtonText); //Button text
-            WriteInteger(promotion.ButtonType); //Link type 0 and 3
-            WriteString(promotion.ButtonLink); //Link to article
-            WriteString(promotion.ImageLink); //Image link
+            packet.WriteInteger(promotion.Id); //ID
+            packet.WriteString(promotion.Title); //Title
+            packet.WriteString(promotion.Text); //Text
+            packet.WriteString(promotion.ButtonText); //Button text
+            packet.WriteInteger(promotion.ButtonType); //Link type 0 and 3
+            packet.WriteString(promotion.ButtonLink); //Link to article
+            packet.WriteString(promotion.ImageLink); //Image link
         }
     }
 }

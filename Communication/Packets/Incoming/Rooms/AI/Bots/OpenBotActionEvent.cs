@@ -1,18 +1,16 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.AI.Bots;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.AI.Bots;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots;
 
 internal class OpenBotActionEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
-        var botId = packet.PopInt();
-        var actionId = packet.PopInt();
+        var botId = packet.ReadInt();
+        var actionId = packet.ReadInt();
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
             return Task.CompletedTask;
@@ -27,7 +25,7 @@ internal class OpenBotActionEvent : IPacketEvent
         botSpeech += ";#;";
         botSpeech += botUser.BotData.MixSentences;
         if (actionId == 2 || actionId == 5)
-            session.SendPacket(new OpenBotActionComposer(botUser, actionId, botSpeech));
+            session.Send(new OpenBotActionComposer(botUser, actionId, botSpeech));
         return Task.CompletedTask;
     }
 }

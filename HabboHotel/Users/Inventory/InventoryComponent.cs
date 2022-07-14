@@ -5,7 +5,6 @@ using Plus.HabboHotel.Users.Inventory.Badges;
 using Plus.HabboHotel.Users.Inventory.Bots;
 using Plus.HabboHotel.Users.Inventory.Furniture;
 using Plus.HabboHotel.Users.Inventory.Pets;
-using System;
 
 namespace Plus.HabboHotel.Users.Inventory;
 
@@ -66,6 +65,6 @@ public class InventoryComponent
 
     public void SendNewItems(int id)
     {
-        Client.SendPacket(new FurniListNotificationComposer(id, 1));
+        Client.Send(new FurniListNotificationComposer(id, 1));
     }
 }

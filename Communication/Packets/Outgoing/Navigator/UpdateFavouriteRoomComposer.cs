@@ -1,11 +1,23 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Navigator;
+﻿using Plus.HabboHotel.GameClients;
 
-public class UpdateFavouriteRoomComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Navigator;
+
+public class UpdateFavouriteRoomComposer : IServerPacket
 {
+    private readonly int _roomId;
+    private readonly bool _added;
+
+    public int MessageId => ServerPacketHeader.UpdateFavouriteRoomMessageComposer;
+
     public UpdateFavouriteRoomComposer(int roomId, bool added)
-        : base(ServerPacketHeader.UpdateFavouriteRoomMessageComposer)
     {
-        WriteInteger(roomId);
-        WriteBoolean(added);
+        _roomId = roomId;
+        _added = added;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_roomId);
+        packet.WriteBoolean(_added);
     }
 }

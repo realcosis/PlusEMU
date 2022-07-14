@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using Plus.Communication.Packets.Outgoing;
+﻿using System.Drawing;
+using Plus.Communication.Packets;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.Communication.Packets.Outgoing.Rooms.Chat;
 using Plus.HabboHotel.GameClients;
@@ -298,7 +296,7 @@ public class RoomUser
                 if (user.GetClient() == null || user.GetClient().GetHabbo() == null)
                     return;
                 if (!user.GetClient().GetHabbo().AllowPetSpeech)
-                    user.GetClient().SendPacket(new ChatComposer(VirtualId, message, 0, 0));
+                    user.GetClient().Send(new ChatComposer(VirtualId, message, 0, 0));
             }
         }
         else
@@ -310,7 +308,7 @@ public class RoomUser
                 if (user.GetClient() == null || user.GetClient().GetHabbo() == null)
                     return;
                 if (!user.GetClient().GetHabbo().AllowBotSpeech)
-                    user.GetClient().SendPacket(new ChatComposer(VirtualId, message, 0, colour == 0 ? 2 : colour));
+                    user.GetClient().Send(new ChatComposer(VirtualId, message, 0, colour == 0 ? 2 : colour));
             }
         }
     }
@@ -355,7 +353,7 @@ public class RoomUser
             return;
         GetClient().GetHabbo().HasSpoken = true;
         if (_mRoom.WordFilterList.Count > 0 && !GetClient().GetHabbo().GetPermissions().HasRight("word_filter_override")) message = _mRoom.GetFilter().CheckMessage(message);
-        ServerPacket packet = null;
+        IServerPacket packet = null;
         if (shout)
             packet = new ShoutComposer(VirtualId, message, PlusEnvironment.GetGame().GetChatManager().GetEmotions().GetEmotionsForText(message), colour);
         else
@@ -372,7 +370,7 @@ public class RoomUser
                     if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null ||
                         user.GetClient().GetHabbo().TentId == GetClient().GetHabbo().TentId)
                         continue;
-                    user.GetClient().SendPacket(packet);
+                    user.GetClient().Send(packet);
                 }
             }
         }
@@ -384,7 +382,7 @@ public class RoomUser
                     continue;
                 if (_mRoom.ChatDistance > 0 && Gamemap.TileDistance(X, Y, user.X, user.Y) > _mRoom.ChatDistance)
                     continue;
-                user.GetClient().SendPacket(packet);
+                user.GetClient().Send((IServerPacket)packet);
             }
         }
         if (shout)

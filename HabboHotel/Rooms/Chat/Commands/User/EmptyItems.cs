@@ -26,7 +26,7 @@ internal class EmptyItems : IChatCommand
         {
             ItemLoader.DeleteAllInventoryItemsForUser(session.GetHabbo().Id);
             session.GetHabbo().Inventory.Furniture.ClearItems();
-            session.SendPacket(new FurniListUpdateComposer());
+            session.Send(new FurniListUpdateComposer());
             session.SendNotification("Your inventory has been cleared!");
             return;
         }

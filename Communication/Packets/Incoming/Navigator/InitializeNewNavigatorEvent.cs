@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Navigator.New;
+﻿using Plus.Communication.Packets.Outgoing.Navigator.New;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Navigator;
 
@@ -14,13 +13,13 @@ internal class InitializeNewNavigatorEvent : IPacketEvent
         _navigatorManager = navigatorManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         var topLevelItems = _navigatorManager.GetTopLevelItems();
-        session.SendPacket(new NavigatorMetaDataParserComposer(topLevelItems));
-        session.SendPacket(new NavigatorLiftedRoomsComposer());
-        session.SendPacket(new NavigatorCollapsedCategoriesComposer());
-        session.SendPacket(new NavigatorPreferencesComposer());
+        session.Send(new NavigatorMetaDataParserComposer(topLevelItems));
+        session.Send(new NavigatorLiftedRoomsComposer());
+        session.Send(new NavigatorCollapsedCategoriesComposer());
+        session.Send(new NavigatorPreferencesComposer());
         return Task.CompletedTask;
     }
 }

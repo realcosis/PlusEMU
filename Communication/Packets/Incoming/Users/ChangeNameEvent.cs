@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Navigator;
+﻿using Plus.Communication.Packets.Outgoing.Navigator;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Communication.Packets.Outgoing.Rooms.Session;
 using Plus.Communication.Packets.Outgoing.Users;
@@ -29,7 +27,7 @@ internal class ChangeNameEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
@@ -37,12 +35,12 @@ internal class ChangeNameEvent : IPacketEvent
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Username);
         if (user == null)
             return Task.CompletedTask;
-        var newName = packet.PopString();
+        var newName = packet.ReadString();
         var oldName = session.GetHabbo().Username;
         if (newName == oldName)
         {
             session.GetHabbo().ChangeName(oldName);
-            session.SendPacket(new UpdateUsernameComposer(newName));
+            session.Send(new UpdateUsernameComposer(newName));
             return Task.CompletedTask;
         }
         if (!CanChangeName(session.GetHabbo()))
@@ -80,7 +78,7 @@ internal class ChangeNameEvent : IPacketEvent
         room.GetRoomUserManager().RemoveUserFromRoom(session, true);
         session.GetHabbo().ChangeName(newName);
         session.GetHabbo().GetMessenger().NotifyChangesToFriends();
-        session.SendPacket(new UpdateUsernameComposer(newName));
+        session.Send(new UpdateUsernameComposer(newName));
         room.SendPacket(new UserNameChangeComposer(room.Id, user.VirtualId, newName));
         using (var connection = _database.Connection())
         {
@@ -95,7 +93,7 @@ internal class ChangeNameEvent : IPacketEvent
             ownRooms.SendPacket(new RoomInfoUpdatedComposer(ownRooms.Id));
         }
         _achievementManager.ProgressAchievement(session, "ACH_Name", 1);
-        session.SendPacket(new RoomForwardComposer(room.Id));
+        session.Send(new RoomForwardComposer(room.Id));
         return Task.CompletedTask;
     }
 

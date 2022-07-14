@@ -1,13 +1,15 @@
-﻿namespace Plus.Communication.Packets.Outgoing.BuildersClub;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class BuildersClubMembershipComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.BuildersClub;
+
+public class BuildersClubMembershipComposer : IServerPacket
 {
-    public BuildersClubMembershipComposer()
-        : base(ServerPacketHeader.BuildersClubMembershipMessageComposer)
+    public int MessageId => ServerPacketHeader.BuildersClubMembershipMessageComposer;
+    public void Compose(IOutgoingPacket packet)
     {
-        WriteInteger(int.MaxValue);
-        WriteInteger(100);
-        WriteInteger(0);
-        WriteInteger(int.MaxValue);
+        packet.WriteInteger(int.MaxValue);
+        packet.WriteInteger(100);
+        packet.WriteInteger(0);
+        packet.WriteInteger(int.MaxValue);
     }
 }

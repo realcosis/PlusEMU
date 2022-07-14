@@ -1,16 +1,22 @@
-﻿using System;
+﻿using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class HeightMapComposer : ServerPacket
+internal class HeightMapComposer : IServerPacket
 {
+    private readonly string _map;
+    public int MessageId => ServerPacketHeader.HeightMapMessageComposer;
+
     public HeightMapComposer(string map)
-        : base(ServerPacketHeader.HeightMapMessageComposer)
     {
-        map = map.Replace("\n", "");
-        var split = map.Split('\r');
-        WriteInteger(split[0].Length);
-        WriteInteger((split.Length - 1) * split[0].Length);
+        _map = map;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        var split = _map.Replace("\n", "").Split('\r');
+        packet.WriteInteger(split[0].Length);
+        packet.WriteInteger((split.Length - 1) * split[0].Length);
         var x = 0;
         var y = 0;
         for (y = 0; y < split.Length - 1; y++)
@@ -27,7 +33,7 @@ internal class HeightMapComposer : ServerPacket
                     pos = 'x';
                 }
                 if (pos == 'x')
-                    WriteShort(-1);
+                    packet.WriteShort(-1);
                 else
                 {
                     var height = 0;
@@ -35,7 +41,7 @@ internal class HeightMapComposer : ServerPacket
                         height = height * 256;
                     else
                         height = (Convert.ToInt32(pos) - 87) * 256;
-                    WriteShort(height);
+                    packet.WriteShort((short)height);
                 }
             }
         }

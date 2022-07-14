@@ -1,11 +1,23 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Chat;
+﻿using Plus.HabboHotel.GameClients;
 
-public class UserTypingComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Chat;
+
+public class UserTypingComposer : IServerPacket
 {
+    private readonly int _virtualId;
+    private readonly bool _typing;
+
+    public int MessageId => ServerPacketHeader.UserTypingMessageComposer;
+
     public UserTypingComposer(int virtualId, bool typing)
-        : base(ServerPacketHeader.UserTypingMessageComposer)
     {
-        WriteInteger(virtualId);
-        WriteInteger(typing ? 1 : 0);
+        _virtualId = virtualId;
+        _typing = typing;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_virtualId);
+        packet.WriteInteger(_typing ? 1 : 0);
     }
 }

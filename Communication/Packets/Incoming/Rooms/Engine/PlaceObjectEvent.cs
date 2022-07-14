@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Inventory.Furni;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
 using Plus.Core.Settings;
 using Plus.HabboHotel.Achievements;
@@ -25,20 +21,20 @@ internal class PlaceObjectEvent : IPacketEvent
         _achievementManager = achievementManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return Task.CompletedTask;
-        var rawData = packet.PopString();
+        var rawData = packet.ReadString();
         var data = rawData.Split(' ');
         if (!int.TryParse(data[0], out var itemId))
             return Task.CompletedTask;
         var hasRights = room.CheckRights(session, false, true);
         if (!hasRights)
         {
-            session.SendPacket(new RoomNotificationComposer("furni_placement_error", "message", "${room.error.cant_set_not_owner}"));
+            session.Send(new RoomNotificationComposer("furni_placement_error", "message", "${room.error.cant_set_not_owner}"));
             return Task.CompletedTask;
         }
         var item = session.GetHabbo().Inventory.Furniture.GetItem(itemId);
@@ -105,7 +101,7 @@ internal class PlaceObjectEvent : IPacketEvent
             if (room.GetRoomItemHandler().SetFloorItem(session, roomItem, x, y, rotation, true, false, true))
             {
                 session.GetHabbo().Inventory.Furniture.RemoveItem(itemId);
-                session.SendPacket(new FurniListRemoveComposer(itemId));
+                session.Send(new FurniListRemoveComposer(itemId));
                 if (session.GetHabbo().Id == room.OwnerId)
                     _achievementManager.ProgressAchievement(session, "ACH_RoomDecoFurniCount", 1);
                 if (roomItem.IsWired)
@@ -121,7 +117,7 @@ internal class PlaceObjectEvent : IPacketEvent
                 }
             }
             else
-                session.SendPacket(new RoomNotificationComposer("furni_placement_error", "message", "${room.error.cant_set_item}"));
+                session.Send(new RoomNotificationComposer("furni_placement_error", "message", "${room.error.cant_set_item}"));
         }
         else if (item.IsWallItem)
         {
@@ -135,18 +131,18 @@ internal class PlaceObjectEvent : IPacketEvent
                     if (room.GetRoomItemHandler().SetWallItem(session, roomItem))
                     {
                         session.GetHabbo().Inventory.Furniture.RemoveItem(itemId);
-                        session.SendPacket(new FurniListRemoveComposer(itemId));
+                        session.Send(new FurniListRemoveComposer(itemId));
                         if (session.GetHabbo().Id == room.OwnerId)
                             _achievementManager.ProgressAchievement(session, "ACH_RoomDecoFurniCount", 1);
                     }
                 }
                 catch
                 {
-                    session.SendPacket(new RoomNotificationComposer("furni_placement_error", "message", "${room.error.cant_set_item}"));
+                    session.Send(new RoomNotificationComposer("furni_placement_error", "message", "${room.error.cant_set_item}"));
                 }
             }
             else
-                session.SendPacket(new RoomNotificationComposer("furni_placement_error", "message", "${room.error.cant_set_item}"));
+                session.Send(new RoomNotificationComposer("furni_placement_error", "message", "${room.error.cant_set_item}"));
         }
         return Task.CompletedTask;
     }

@@ -1,15 +1,16 @@
-﻿using System;
+﻿using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Outgoing.Messenger;
 
-internal class MessengerInitComposer : ServerPacket
+internal class MessengerInitComposer : IServerPacket
 {
-    public MessengerInitComposer()
-        : base(ServerPacketHeader.MessengerInitMessageComposer)
+    public int MessageId => ServerPacketHeader.MessengerInitMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
     {
-        WriteInteger(Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("messenger.buddy_limit"))); //Friends max.
-        WriteInteger(300);
-        WriteInteger(800);
-        WriteInteger(0); // category count
+        packet.WriteInteger(Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("messenger.buddy_limit"))); //Friends max.
+        packet.WriteInteger(300);
+        packet.WriteInteger(800);
+        packet.WriteInteger(0); // category count
     }
 }

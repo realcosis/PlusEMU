@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Rooms.PathFinding;
 
@@ -14,7 +13,7 @@ internal class LookToEvent : IPacketEvent
         _roomManager = roomManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return Task.CompletedTask;
@@ -24,8 +23,8 @@ internal class LookToEvent : IPacketEvent
         if (user.IsAsleep)
             return Task.CompletedTask;
         user.UnIdle();
-        var x = packet.PopInt();
-        var y = packet.PopInt();
+        var x = packet.ReadInt();
+        var y = packet.ReadInt();
         if (x == user.X && y == user.Y || user.IsWalking || user.RidingHorse)
             return Task.CompletedTask;
         var rot = Rotation.Calculate(user.X, user.Y, x, y);

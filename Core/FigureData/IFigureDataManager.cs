@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Plus.Core.FigureData.Types;
+﻿using Plus.Core.FigureData.Types;
 using Plus.HabboHotel.Users.Clothing.Parts;
 
 namespace Plus.Core.FigureData;

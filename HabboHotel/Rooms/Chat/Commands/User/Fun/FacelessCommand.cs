@@ -47,7 +47,7 @@ internal class FacelessCommand : IChatCommand
         {
             dbClient.RunQuery("UPDATE `users` SET `look` = '" + session.GetHabbo().Look + "' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
         }
-        session.SendPacket(new UserChangeComposer(user, true));
+        session.Send(new UserChangeComposer(user, true));
         session.GetHabbo().CurrentRoom.SendPacket(new UserChangeComposer(user, false));
     }
 }

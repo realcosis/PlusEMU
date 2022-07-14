@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Core.FigureData;
+﻿using Plus.Core.FigureData;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
@@ -18,11 +17,11 @@ internal class SaveWardrobeOutfitEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var slotId = packet.PopInt();
-        var look = packet.PopString();
-        var gender = packet.PopString();
+        var slotId = packet.ReadInt();
+        var look = packet.ReadString();
+        var gender = packet.ReadString();
         look = _figureDataManager.ProcessFigure(look, gender, session.GetHabbo().GetClothing().GetClothingParts, true);
 
         using (var connection = _database.Connection())

@@ -1,13 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni;
 
 internal class SaveBrandingItemEvent : IPacketEvent
 {
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -16,15 +14,15 @@ internal class SaveBrandingItemEvent : IPacketEvent
             return Task.CompletedTask;
         if (!room.CheckRights(session, true) || !session.GetHabbo().GetPermissions().HasRight("room_item_save_branding_items"))
             return Task.CompletedTask;
-        var itemId = packet.PopInt();
+        var itemId = packet.ReadInt();
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
         if (item.Data.InteractionType == InteractionType.Background)
         {
-            var data = packet.PopInt();
+            var data = packet.ReadInt();
             var brandData = "state" + Convert.ToChar(9) + "0";
-            for (var i = 1; i <= data; i++) brandData = brandData + Convert.ToChar(9) + packet.PopString();
+            for (var i = 1; i <= data; i++) brandData = brandData + Convert.ToChar(9) + packet.ReadString();
             item.ExtraData = brandData;
         }
         else if (item.Data.InteractionType == InteractionType.FxProvider)

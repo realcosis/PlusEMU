@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Groups;
+﻿using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.Communication.Packets.Outgoing.Rooms.Permissions;
 using Plus.Database;
 using Plus.HabboHotel.Cache;
@@ -28,10 +25,10 @@ internal class RemoveGroupMemberEvent : IPacketEvent
         _cacheManager = cacheManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var groupId = packet.PopInt();
-        var userId = packet.PopInt();
+        var groupId = packet.ReadInt();
+        var userId = packet.ReadInt();
         if (!_groupManager.TryGetGroup(groupId, out var group))
             return Task.CompletedTask;
         if (userId == session.GetHabbo().Id)
@@ -50,7 +47,7 @@ internal class RemoveGroupMemberEvent : IPacketEvent
                     user.RemoveStatus("flatctrl 1");
                     user.UpdateNeeded = true;
                     if (user.GetClient() != null)
-                        user.GetClient().SendPacket(new YouAreControllerComposer(0));
+                        user.GetClient().Send(new YouAreControllerComposer(0));
                 }
             }
             using (var connection = _database.Connection())
@@ -58,7 +55,7 @@ internal class RemoveGroupMemberEvent : IPacketEvent
                 connection.Execute(
                     "DELETE FROM `group_memberships` WHERE `group_id` = @groupId AND `user_id` = @userId", new { groupId = groupId, userId = userId });
             }
-            session.SendPacket(new GroupInfoComposer(group, session));
+            session.Send(new GroupInfoComposer(group, session));
             if (session.GetHabbo().GetStats().FavouriteGroupId == groupId)
             {
                 session.GetHabbo().GetStats().FavouriteGroupId = 0;
@@ -76,7 +73,7 @@ internal class RemoveGroupMemberEvent : IPacketEvent
                         user.RemoveStatus("flatctrl 1");
                         user.UpdateNeeded = true;
                         if (user.GetClient() != null)
-                            user.GetClient().SendPacket(new YouAreControllerComposer(0));
+                            user.GetClient().Send(new YouAreControllerComposer(0));
                     }
                 }
                 if (session.GetHabbo().InRoom && session.GetHabbo().CurrentRoom != null)
@@ -92,7 +89,7 @@ internal class RemoveGroupMemberEvent : IPacketEvent
                         .SendPacket(new RefreshFavouriteGroupComposer(session.GetHabbo().Id));
                 }
                 else
-                    session.SendPacket(new RefreshFavouriteGroupComposer(session.GetHabbo().Id));
+                    session.Send(new RefreshFavouriteGroupComposer(session.GetHabbo().Id));
             }
             return Task.CompletedTask;
         }
@@ -122,7 +119,7 @@ internal class RemoveGroupMemberEvent : IPacketEvent
             }
             var finishIndex = 14 < members.Count ? 14 : members.Count;
             var membersCount = members.Count;
-            session.SendPacket(new GroupMembersComposer(group, members.Take(finishIndex).ToList(), membersCount, 1,
+            session.Send(new GroupMembersComposer(group, members.Take(finishIndex).ToList(), membersCount, 1,
                 group.CreatorId == session.GetHabbo().Id || group.IsAdmin(session.GetHabbo().Id), 0, ""));
         }
         return Task.CompletedTask;

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Attributes;
+﻿using Plus.Communication.Attributes;
 using Plus.Communication.Packets.Outgoing.Handshake;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
@@ -16,17 +15,17 @@ public class UniqueIdEvent : IPacketEvent
         _moderationManager = moderationManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        packet.PopString();
-        var machineId = packet.PopString();
+        packet.ReadString();
+        var machineId = packet.ReadString();
         session.MachineId = machineId;
         if (_moderationManager.HasMachineBanCheck(machineId))
         {
             session.Disconnect();
             return Task.CompletedTask;
         }
-        session.SendPacket(new SetUniqueIdComposer(machineId));
+        session.Send(new SetUniqueIdComposer(machineId));
         return Task.CompletedTask;
     }
 }

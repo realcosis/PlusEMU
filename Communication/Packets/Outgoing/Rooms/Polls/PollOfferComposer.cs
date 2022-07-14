@@ -1,13 +1,16 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Polls;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class PollOfferComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Polls;
+
+internal class PollOfferComposer : IServerPacket
 {
-    public PollOfferComposer()
-        : base(1074)
+    public int MessageId => ServerPacketHeader.PollOfferComposer;
+
+    public void Compose(IOutgoingPacket packet)
     {
-        WriteInteger(111141); //Room Id
-        WriteString("CLIENT_NPS");
-        WriteString("Customer Satisfaction Poll");
-        WriteString("Give us your opinion!");
+        packet.WriteInteger(111141); //Room Id
+        packet.WriteString("CLIENT_NPS");
+        packet.WriteString("Customer Satisfaction Poll");
+        packet.WriteString("Give us your opinion!");
     }
 }

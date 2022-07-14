@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using Plus.Communication.Packets.Outgoing.Rooms.Chat;
 using Plus.HabboHotel.GameClients;
 
@@ -45,7 +44,7 @@ internal class BartenderBot : BotAi
                 GetRoomUser().Chat(response.ResponseText.Replace("{username}", user.GetClient().GetHabbo().Username));
                 break;
             case "whisper":
-                user.GetClient().SendPacket(new WhisperComposer(GetRoomUser().VirtualId, response.ResponseText.Replace("{username}", user.GetClient().GetHabbo().Username), 0, 0));
+                user.GetClient().Send(new WhisperComposer(GetRoomUser().VirtualId, response.ResponseText.Replace("{username}", user.GetClient().GetHabbo().Username), 0, 0));
                 break;
         }
         if (response.BeverageIds.Count > 0) user.CarryItem(response.BeverageIds[Random.Shared.Next(0, response.BeverageIds.Count)]);
@@ -69,7 +68,7 @@ internal class BartenderBot : BotAi
                 GetRoomUser().Chat(response.ResponseText.Replace("{username}", user.GetClient().GetHabbo().Username));
                 break;
             case "whisper":
-                user.GetClient().SendPacket(new WhisperComposer(GetRoomUser().VirtualId, response.ResponseText.Replace("{username}", user.GetClient().GetHabbo().Username), 0, 0));
+                user.GetClient().Send(new WhisperComposer(GetRoomUser().VirtualId, response.ResponseText.Replace("{username}", user.GetClient().GetHabbo().Username), 0, 0));
                 break;
         }
         if (response.BeverageIds.Count > 0) user.CarryItem(response.BeverageIds[Random.Shared.Next(0, response.BeverageIds.Count)]);

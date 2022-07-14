@@ -1,5 +1,4 @@
-﻿using System;
-using Plus.Communication.Packets.Outgoing;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Items.Data.Toner;
 
@@ -7,7 +6,7 @@ namespace Plus.HabboHotel.Items;
 
 internal static class ItemBehaviourUtility
 {
-    public static void GenerateExtradata(Item item, ServerPacket packet)
+    public static void GenerateExtradata(Item item, IOutgoingPacket packet)
     {
         switch (item.GetBaseItem().InteractionType)
         {
@@ -223,7 +222,7 @@ internal static class ItemBehaviourUtility
         }
     }
 
-    public static void GenerateWallExtradata(Item item, ServerPacket message)
+    public static void GenerateWallExtradata(Item item, IOutgoingPacket message)
     {
         switch (item.GetBaseItem().InteractionType)
         {

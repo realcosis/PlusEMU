@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Moderation;
+﻿using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Communication.Packets.Outgoing.Rooms.Chat;
 using Plus.HabboHotel.Rooms.Chat.Commands;
 using Plus.Core.Settings;
@@ -42,7 +40,7 @@ public class WhisperEvent : IPacketEvent
         _questManager = questManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -56,10 +54,10 @@ public class WhisperEvent : IPacketEvent
         }
         if (UnixTimestamp.GetNow() < session.GetHabbo().FloodTime && session.GetHabbo().FloodTime != 0)
             return Task.CompletedTask;
-        var @params = packet.PopString();
+        var @params = packet.ReadString();
         var toUser = @params.Split(' ')[0];
         var message = @params.Substring(toUser.Length + 1);
-        var colour = packet.PopInt();
+        var colour = packet.ReadInt();
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (user == null)
             return Task.CompletedTask;
@@ -68,7 +66,7 @@ public class WhisperEvent : IPacketEvent
             return Task.CompletedTask;
         if (session.GetHabbo().TimeMuted > 0)
         {
-            session.SendPacket(new MutedComposer(session.GetHabbo().TimeMuted));
+            session.Send(new MutedComposer(session.GetHabbo().TimeMuted));
             return Task.CompletedTask;
         }
         if (!session.GetHabbo().GetPermissions().HasRight("word_filter_override"))
@@ -81,7 +79,7 @@ public class WhisperEvent : IPacketEvent
         {
             if (user.IncrementAndCheckFlood(out var muteTime))
             {
-                session.SendPacket(new FloodControlComposer(muteTime));
+                session.Send(new FloodControlComposer(muteTime));
                 return Task.CompletedTask;
             }
         }
@@ -101,16 +99,16 @@ public class WhisperEvent : IPacketEvent
                 session.Disconnect();
                 return Task.CompletedTask;
             }
-            session.SendPacket(new WhisperComposer(user.VirtualId, message, 0, user.LastBubble));
+            session.Send(new WhisperComposer(user.VirtualId, message, 0, user.LastBubble));
             return Task.CompletedTask;
         }
         _questManager.ProgressUserQuest(session, QuestType.SocialChat);
         user.UnIdle();
-        user.GetClient().SendPacket(new WhisperComposer(user.VirtualId, message, 0, user.LastBubble));
+        user.GetClient().Send(new WhisperComposer(user.VirtualId, message, 0, user.LastBubble));
         if (!user2.IsBot && user2.UserId != user.UserId)
         {
             if (!user2.GetClient().GetHabbo().IgnoresComponent.IsIgnored(session.GetHabbo().Id))
-                user2.GetClient().SendPacket(new WhisperComposer(user.VirtualId, message, 0, user.LastBubble));
+                user2.GetClient().Send(new WhisperComposer(user.VirtualId, message, 0, user.LastBubble));
         }
         var toNotify = room.GetRoomUserManager().GetRoomUserByRank(2);
         if (toNotify.Count > 0)
@@ -120,7 +118,7 @@ public class WhisperEvent : IPacketEvent
                 if (notifiable != null && notifiable.HabboId != user2.HabboId && notifiable.HabboId != user.HabboId)
                 {
                     if (notifiable.GetClient() != null && notifiable.GetClient().GetHabbo() != null && !notifiable.GetClient().GetHabbo().IgnorePublicWhispers)
-                        notifiable.GetClient().SendPacket(new WhisperComposer(user.VirtualId, "[Whisper to " + toUser + "] " + message, 0, user.LastBubble));
+                        notifiable.GetClient().Send(new WhisperComposer(user.VirtualId, "[Whisper to " + toUser + "] " + message, 0, user.LastBubble));
                 }
             }
         }

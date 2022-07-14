@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Moderation;
+﻿using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
@@ -21,7 +19,7 @@ internal class SubmitNewTicketEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         // Run a quick check to see if we have any existing tickets.
         if (_moderationManager.UserHasTickets(session.GetHabbo().Id))
@@ -29,26 +27,26 @@ internal class SubmitNewTicketEvent : IPacketEvent
             var pendingTicket = _moderationManager.GetTicketBySenderId(session.GetHabbo().Id);
             if (pendingTicket != null)
             {
-                session.SendPacket(new CallForHelpPendingCallsComposer(pendingTicket));
+                session.Send(new CallForHelpPendingCallsComposer(pendingTicket));
                 return Task.CompletedTask;
             }
         }
         var chats = new List<string>();
-        var message = StringCharFilter.Escape(packet.PopString().Trim());
-        var category = packet.PopInt();
-        var reportedUserId = packet.PopInt();
-        var type = packet.PopInt(); // Unsure on what this actually is.
+        var message = StringCharFilter.Escape(packet.ReadString().Trim());
+        var category = packet.ReadInt();
+        var reportedUserId = packet.ReadInt();
+        var type = packet.ReadInt(); // Unsure on what this actually is.
         var reportedUser = PlusEnvironment.GetHabboById(reportedUserId);
         if (reportedUser == null)
         {
             // User doesn't exist.
             return Task.CompletedTask;
         }
-        var messagecount = packet.PopInt();
+        var messagecount = packet.ReadInt();
         for (var i = 0; i < messagecount; i++)
         {
-            packet.PopInt();
-            chats.Add(packet.PopString());
+            packet.ReadInt();
+            chats.Add(packet.ReadString());
         }
         var ticket = new ModerationTicket(1, type, category, UnixTimestamp.GetNow(), 1, session.GetHabbo(), reportedUser, message, session.GetHabbo().CurrentRoom, chats);
         if (!_moderationManager.TryAddTicket(ticket))

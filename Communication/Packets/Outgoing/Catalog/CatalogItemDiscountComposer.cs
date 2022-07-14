@@ -1,18 +1,20 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Catalog;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class CatalogItemDiscountComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Catalog;
+
+internal class CatalogItemDiscountComposer : IServerPacket
 {
-    public CatalogItemDiscountComposer()
-        : base(ServerPacketHeader.CatalogItemDiscountMessageComposer)
+    public int MessageId => ServerPacketHeader.CatalogItemDiscountMessageComposer;
+    public void Compose(IOutgoingPacket packet)
     {
-        WriteInteger(100); //Most you can get.
-        WriteInteger(6);
-        WriteInteger(1);
-        WriteInteger(1);
-        WriteInteger(2); //Count
+        packet.WriteInteger(100); //Most you can get.
+        packet.WriteInteger(6);
+        packet.WriteInteger(1);
+        packet.WriteInteger(1);
+        packet.WriteInteger(2); //Count
         {
-            WriteInteger(40);
-            WriteInteger(99);
+            packet.WriteInteger(40);
+            packet.WriteInteger(99);
         }
     }
 }

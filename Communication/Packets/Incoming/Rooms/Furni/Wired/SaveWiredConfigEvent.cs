@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items.Wired;
 
@@ -7,15 +6,15 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni.Wired;
 
 internal abstract class SaveWiredConfigEvent : IPacketEvent
 {
-    public virtual Task Parse(GameClient session, ClientPacket packet)
+    public virtual Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
         var room = session.GetHabbo().CurrentRoom;
         if (room == null || !room.CheckRights(session, false, true))
             return Task.CompletedTask;
-        var itemId = packet.PopInt();
-        session.SendPacket(new HideWiredConfigComposer());
+        var itemId = packet.ReadInt();
+        session.Send(new HideWiredConfigComposer());
         var selectedItem = room.GetRoomItemHandler().GetItem(itemId);
         if (selectedItem == null)
             return Task.CompletedTask;

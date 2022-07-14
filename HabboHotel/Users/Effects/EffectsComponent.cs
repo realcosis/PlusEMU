@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Data;
-using System.Linq;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.Utilities;
 

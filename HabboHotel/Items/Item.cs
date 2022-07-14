@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
+﻿using System.Drawing;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
 using Plus.Core;
@@ -1086,7 +1083,7 @@ public class Item
                                     if (_room.CheckRights(target.GetClient(), true))
                                         continue;
                                     target.ApplyEffect(4);
-                                    target.GetClient().SendPacket(new RoomNotificationComposer("Kicked from room", "You were hit by a cannonball!", "room_kick_cannonball", ""));
+                                    target.GetClient().Send(new RoomNotificationComposer("Kicked from room", "You were hit by a cannonball!", "room_kick_cannonball", ""));
                                     target.ApplyEffect(0);
                                     _room.GetRoomUserManager().RemoveUserFromRoom(target.GetClient(), true);
                                 }

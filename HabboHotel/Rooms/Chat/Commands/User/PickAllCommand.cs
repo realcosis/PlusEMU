@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Plus.Communication.Packets.Outgoing.Inventory.Furni;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
@@ -36,6 +35,6 @@ internal class PickAllCommand : IChatCommand
         var items = room.GetRoomItemHandler().GetWallAndFloor.ToList();
         if (items.Count > 0)
             session.SendWhisper("There are still more items in this room, manually remove them or use :ejectall to eject them!");
-        session.SendPacket(new FurniListUpdateComposer());
+        session.Send(new FurniListUpdateComposer());
     }
 }

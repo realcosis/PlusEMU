@@ -1,16 +1,20 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Navigator.New;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class NavigatorLiftedRoomsComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Navigator.New;
+
+// TODO @80O: Implement
+internal class NavigatorLiftedRoomsComposer : IServerPacket
 {
-    public NavigatorLiftedRoomsComposer()
-        : base(ServerPacketHeader.NavigatorLiftedRoomsMessageComposer)
+    public int MessageId => ServerPacketHeader.NavigatorLiftedRoomsMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
     {
-        WriteInteger(0); //Count
+        packet.WriteInteger(0); //Count
         {
-            WriteInteger(1); //Flat Id
-            WriteInteger(0); //Unknown
-            WriteString(string.Empty); //Image
-            WriteString("Caption"); //Caption.
+            packet.WriteInteger(1); //Flat Id
+            packet.WriteInteger(0); //Unknown
+            packet.WriteString(string.Empty); //Image
+            packet.WriteString("Caption"); //Caption.
         }
     }
 }

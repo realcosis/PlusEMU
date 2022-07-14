@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Groups;
+﻿using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.Communication.Packets.Outgoing.Rooms.Permissions;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
@@ -23,15 +21,15 @@ internal class UpdateGroupSettingsEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var groupId = packet.PopInt();
+        var groupId = packet.ReadInt();
         if (!_groupManager.TryGetGroup(groupId, out var group))
             return Task.CompletedTask;
         if (group.CreatorId != session.GetHabbo().Id)
             return Task.CompletedTask;
-        var type = packet.PopInt();
-        var furniOptions = packet.PopInt();
+        var type = packet.ReadInt();
+        var furniOptions = packet.ReadInt();
         switch (type)
         {
             default:
@@ -68,16 +66,16 @@ internal class UpdateGroupSettingsEvent : IPacketEvent
             {
                 user.RemoveStatus("flatctrl 1");
                 user.UpdateNeeded = true;
-                user.GetClient().SendPacket(new YouAreControllerComposer(0));
+                user.GetClient().Send(new YouAreControllerComposer(0));
             }
             else if (furniOptions == 0 && !user.Statusses.ContainsKey("flatctrl 1"))
             {
                 user.SetStatus("flatctrl 1");
                 user.UpdateNeeded = true;
-                user.GetClient().SendPacket(new YouAreControllerComposer(1));
+                user.GetClient().Send(new YouAreControllerComposer(1));
             }
         }
-        session.SendPacket(new GroupInfoComposer(group, session));
+        session.Send(new GroupInfoComposer(group, session));
         return Task.CompletedTask;
     }
 }

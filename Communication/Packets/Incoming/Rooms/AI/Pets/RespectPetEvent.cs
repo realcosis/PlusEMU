@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Pets;
+﻿using Plus.Communication.Packets.Outgoing.Pets;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
@@ -21,7 +20,7 @@ internal class RespectPetEvent : IPacketEvent
         _questManager = questManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom || session.GetHabbo().GetStats() == null || session.GetHabbo().GetStats().DailyPetRespectPoints == 0)
             return Task.CompletedTask;
@@ -30,7 +29,7 @@ internal class RespectPetEvent : IPacketEvent
         var thisUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (thisUser == null)
             return Task.CompletedTask;
-        var petId = packet.PopInt();
+        var petId = packet.ReadInt();
         if (!session.GetHabbo().CurrentRoom.GetRoomUserManager().TryGetPet(petId, out var pet))
         {
             //Okay so, we've established we have no pets in this room by this virtual Id, let us check out users, maybe they're creeping as a pet?!

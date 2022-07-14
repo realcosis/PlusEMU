@@ -1,17 +1,19 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Navigator.New;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class NavigatorPreferencesComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Navigator.New;
+
+// TODO @80O: Implement
+internal class NavigatorPreferencesComposer : IServerPacket
 {
-    public NavigatorPreferencesComposer()
-        : base(ServerPacketHeader.NavigatorPreferencesMessageComposer)
+    public int MessageId => ServerPacketHeader.NavigatorPreferencesMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
     {
-        // TODO: To Sleddy: Shouldn't we make this savable at some point?
-        // TODO: HMU if you want it to be saved to the database
-        WriteInteger(68); //X
-        WriteInteger(42); //Y
-        WriteInteger(425); //Width
-        WriteInteger(592); //Height
-        WriteBoolean(false); //Show or hide saved searches.
-        WriteInteger(0); //No idea?
+        packet.WriteInteger(68); //X
+        packet.WriteInteger(42); //Y
+        packet.WriteInteger(425); //Width
+        packet.WriteInteger(592); //Height
+        packet.WriteBoolean(false); //Show or hide saved searches.
+        packet.WriteInteger(0); //No idea?
     }
 }

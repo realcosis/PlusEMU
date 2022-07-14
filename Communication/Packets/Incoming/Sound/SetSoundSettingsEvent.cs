@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Database;
+﻿using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Dapper;
 
@@ -14,12 +13,12 @@ internal class SetSoundSettingsEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         var volume = "";
         for (var i = 0; i < 3; i++)
         {
-            var vol = packet.PopInt();
+            var vol = packet.ReadInt();
             if (vol < 0 || vol > 100) vol = 100;
             if (i < 2)
                 volume += vol + ",";

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using Plus.Communication.Packets.Incoming;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 
@@ -22,11 +22,11 @@ internal class BotGivesHandItemBox : IWiredItem
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet)
+    public void HandleSave(IIncomingPacket packet)
     {
-        var unknown = packet.PopInt();
-        var drinkId = packet.PopInt();
-        var botName = packet.PopString();
+        var unknown = packet.ReadInt();
+        var drinkId = packet.ReadInt();
+        var botName = packet.ReadString();
         if (SetItems.Count > 0)
             SetItems.Clear();
         StringData = botName + ";" + drinkId;

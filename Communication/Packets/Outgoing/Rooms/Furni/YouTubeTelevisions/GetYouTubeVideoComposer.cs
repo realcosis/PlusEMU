@@ -1,14 +1,27 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.YouTubeTelevisions;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class GetYouTubeVideoComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.YouTubeTelevisions;
+
+internal class GetYouTubeVideoComposer : IServerPacket
 {
+    private readonly int _itemId;
+    private readonly string _youTubeVideo;
+
+    public int MessageId => ServerPacketHeader.GetYouTubeVideoMessageComposer;
+
     public GetYouTubeVideoComposer(int itemId, string youTubeVideo)
-        : base(ServerPacketHeader.GetYouTubeVideoMessageComposer)
     {
-        WriteInteger(itemId);
-        WriteString(youTubeVideo); //"9Ht5RZpzPqw");
-        WriteInteger(0); //Start seconds
-        WriteInteger(0); //End seconds
-        WriteInteger(0); //State
+        _itemId = itemId;
+        _youTubeVideo = youTubeVideo;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_itemId);
+        packet.WriteString(_youTubeVideo); //"dQw4w9WgXcQ");
+        packet.WriteInteger(0); //Start seconds
+        packet.WriteInteger(0); //End seconds
+        packet.WriteInteger(0); //State
+
     }
 }

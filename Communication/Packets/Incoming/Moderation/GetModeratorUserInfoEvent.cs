@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using System.Threading.Tasks;
 using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Core.Language;
 using Plus.Database;
@@ -18,11 +17,11 @@ internal class GetModeratorUserInfoEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
             return Task.CompletedTask;
-        var userId = packet.PopInt();
+        var userId = packet.ReadInt();
         DataRow user;
         DataRow info;
         using (var dbClient = _database.GetQueryReactor())
@@ -43,7 +42,7 @@ internal class GetModeratorUserInfoEvent : IPacketEvent
                 info = dbClient.GetRow();
             }
         }
-        session.SendPacket(new ModeratorUserInfoComposer(user, info));
+        session.Send(new ModeratorUserInfoComposer(user, info));
         return Task.CompletedTask;
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Moderation;
+﻿using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Core.FigureData;
@@ -27,10 +24,10 @@ internal class UpdateFigureDataEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var gender = packet.PopString().ToUpper();
-        var look = _figureManager.ProcessFigure(packet.PopString(), gender, session.GetHabbo().GetClothing().GetClothingParts, true);
+        var gender = packet.ReadString().ToUpper();
+        var look = _figureManager.ProcessFigure(packet.ReadString(), gender, session.GetHabbo().GetClothing().GetClothingParts, true);
         if (look == session.GetHabbo().Look)
             return Task.CompletedTask;
         if ((DateTime.Now - session.GetHabbo().LastClothingUpdateTime).TotalSeconds <= 2.0)
@@ -46,7 +43,7 @@ internal class UpdateFigureDataEvent : IPacketEvent
         string[] allowedGenders = { "M", "F" };
         if (!allowedGenders.Contains(gender))
         {
-            session.SendPacket(new BroadcastMessageAlertComposer("Sorry, you chose an invalid gender."));
+            session.Send(new BroadcastMessageAlertComposer("Sorry, you chose an invalid gender."));
             return Task.CompletedTask;
         }
         _questManager.ProgressUserQuest(session, QuestType.ProfileChangeLook);
@@ -60,7 +57,7 @@ internal class UpdateFigureDataEvent : IPacketEvent
             dbClient.RunQuery();
         }
         _achievementManager.ProgressAchievement(session, "ACH_AvatarLooks", 1);
-        session.SendPacket(new AvatarAspectUpdateComposer(look, gender));
+        session.Send(new AvatarAspectUpdateComposer(look, gender));
         if (session.GetHabbo().Look.Contains("ha-1006"))
             _questManager.ProgressUserQuest(session, QuestType.WearHat);
         if (session.GetHabbo().InRoom)
@@ -68,7 +65,7 @@ internal class UpdateFigureDataEvent : IPacketEvent
             var roomUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (roomUser != null)
             {
-                session.SendPacket(new UserChangeComposer(roomUser, true));
+                session.Send(new UserChangeComposer(roomUser, true));
                 session.GetHabbo().CurrentRoom.SendPacket(new UserChangeComposer(roomUser, false));
             }
         }

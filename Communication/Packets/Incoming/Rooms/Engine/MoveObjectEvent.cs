@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Quests;
@@ -18,11 +17,11 @@ internal class MoveObjectEvent : IPacketEvent
         _questManager = questManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
-        var itemId = packet.PopInt();
+        var itemId = packet.ReadInt();
         if (itemId == 0)
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
@@ -35,7 +34,7 @@ internal class MoveObjectEvent : IPacketEvent
                 item = room.GetRoomItemHandler().GetItem(itemId);
                 if (item == null)
                     return Task.CompletedTask;
-                session.SendPacket(new ObjectUpdateComposer(item, room.OwnerId));
+                session.Send(new ObjectUpdateComposer(item, room.OwnerId));
                 return Task.CompletedTask;
             }
         }
@@ -46,9 +45,9 @@ internal class MoveObjectEvent : IPacketEvent
         item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
-        var x = packet.PopInt();
-        var y = packet.PopInt();
-        var rotation = packet.PopInt();
+        var x = packet.ReadInt();
+        var y = packet.ReadInt();
+        var rotation = packet.ReadInt();
         if (x != item.GetX || y != item.GetY)
             _questManager.ProgressUserQuest(session, QuestType.FurniMove);
         if (rotation != item.Rotation)

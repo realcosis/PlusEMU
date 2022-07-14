@@ -1,11 +1,23 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Navigator;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class RoomRatingComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Navigator;
+
+internal class RoomRatingComposer : IServerPacket
 {
+    private readonly int _score;
+    private readonly bool _canVote;
+
+    public int MessageId => ServerPacketHeader.RoomRatingMessageComposer;
+
     public RoomRatingComposer(int score, bool canVote)
-        : base(ServerPacketHeader.RoomRatingMessageComposer)
     {
-        WriteInteger(score);
-        WriteBoolean(canVote);
+        _score = score;
+        _canVote = canVote;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_score);
+        packet.WriteBoolean(_canVote);
     }
 }

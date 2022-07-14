@@ -1,27 +1,33 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms.AI;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Pets;
 
-internal class PetInventoryComposer : ServerPacket
+internal class PetInventoryComposer : IServerPacket
 {
+    private readonly ICollection<Pet> _pets;
+    public int MessageId => ServerPacketHeader.PetInventoryMessageComposer;
+
     public PetInventoryComposer(ICollection<Pet> pets)
-        : base(ServerPacketHeader.PetInventoryMessageComposer)
     {
-        WriteInteger(1);
-        WriteInteger(1);
-        WriteInteger(pets.Count);
-        foreach (var pet in pets.ToList())
+        _pets = pets;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(1);
+        packet.WriteInteger(1);
+        packet.WriteInteger(_pets.Count);
+        foreach (var pet in _pets.ToList())
         {
-            WriteInteger(pet.PetId);
-            WriteString(pet.Name);
-            WriteInteger(pet.Type);
-            WriteInteger(int.Parse(pet.Race));
-            WriteString(pet.Color);
-            WriteInteger(0);
-            WriteInteger(0);
-            WriteInteger(0);
+            packet.WriteInteger(pet.PetId);
+            packet.WriteString(pet.Name);
+            packet.WriteInteger(pet.Type);
+            packet.WriteInteger(int.Parse(pet.Race));
+            packet.WriteString(pet.Color);
+            packet.WriteInteger(0);
+            packet.WriteInteger(0);
+            packet.WriteInteger(0);
         }
     }
 }

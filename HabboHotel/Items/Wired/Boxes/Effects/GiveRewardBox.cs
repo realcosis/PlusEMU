@@ -1,5 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using Plus.Communication.Packets.Incoming;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.HabboHotel.Items.Wired.Boxes.Effects;
@@ -23,13 +23,13 @@ internal class GiveRewardBox : IWiredItem
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet)
+    public void HandleSave(IIncomingPacket packet)
     {
         if (SetItems.Count > 0)
             SetItems.Clear();
-        var unknown = packet.PopInt();
-        var time = packet.PopInt();
-        var message = packet.PopString();
+        var unknown = packet.ReadInt();
+        var time = packet.ReadInt();
+        var message = packet.ReadString();
 
         //this.StringData = Time + ";" + Message;
     }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using NLog;
+﻿using NLog;
 using Plus.Communication.Packets.Outgoing.Handshake;
 
 namespace Plus.HabboHotel.Users.Process;
@@ -98,7 +96,7 @@ internal sealed class ProcessComponent
                 }
                 _player.GetStats().DailyRespectPoints = _player.Rank == 1 && _player.VipRank == 0 ? 10 : _player.VipRank == 1 ? 15 : 20;
                 _player.GetStats().DailyPetRespectPoints = _player.Rank == 1 && _player.VipRank == 0 ? 10 : _player.VipRank == 1 ? 15 : 20;
-                if (_player.GetClient() != null) _player.GetClient().SendPacket(new UserObjectComposer(_player));
+                if (_player.GetClient() != null) _player.GetClient().Send(new UserObjectComposer(_player));
             }
             if (_player.GiftPurchasingWarnings < 15)
                 _player.GiftPurchasingWarnings = 0;

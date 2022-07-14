@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.LandingView;
+﻿using Plus.Communication.Packets.Outgoing.LandingView;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.LandingView;
 
@@ -14,9 +13,9 @@ internal class GetPromoArticlesEvent : IPacketEvent
         _landingViewManager = landingViewManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        session.SendPacket(new PromoArticlesComposer(_landingViewManager.GetPromotionItems()));
+        session.Send(new PromoArticlesComposer(_landingViewManager.GetPromotionItems()));
         return Task.CompletedTask;
     }
 }

@@ -1,7 +1,13 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Handshake;
+﻿using Plus.HabboHotel.GameClients;
 
-public class AuthenticationOkComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Handshake;
+
+public class AuthenticationOkComposer : IServerPacket
 {
-    public AuthenticationOkComposer()
-        : base(ServerPacketHeader.AuthenticationOkMessageComposer) { }
+    public int MessageId => ServerPacketHeader.AuthenticationOkMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        // Empty Body
+    }
 }

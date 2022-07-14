@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Moderation;
+﻿using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
 
@@ -16,7 +15,7 @@ internal class CallForHelpPendingCallsDeletedEvent : IPacketEvent
         _clientManager = clientManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (_moderationManager.UserHasTickets(session.GetHabbo().Id))
         {

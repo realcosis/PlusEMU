@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Permissions;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Permissions;
 using Plus.Communication.Packets.Outgoing.Rooms.Settings;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
@@ -18,7 +17,7 @@ internal class RemoveRightsEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -26,10 +25,10 @@ internal class RemoveRightsEvent : IPacketEvent
             return Task.CompletedTask;
         if (!room.CheckRights(session, true))
             return Task.CompletedTask;
-        var amount = packet.PopInt();
+        var amount = packet.ReadInt();
         for (var i = 0; i < amount && i <= 100; i++)
         {
-            var userId = packet.PopInt();
+            var userId = packet.ReadInt();
             if (userId > 0 && room.UsersWithRights.Contains(userId))
             {
                 var user = room.GetRoomUserManager().GetRoomUserByHabbo(userId);
@@ -37,7 +36,7 @@ internal class RemoveRightsEvent : IPacketEvent
                 {
                     user.RemoveStatus("flatctrl 1");
                     user.UpdateNeeded = true;
-                    user.GetClient().SendPacket(new YouAreControllerComposer(0));
+                    user.GetClient().Send(new YouAreControllerComposer(0));
                 }
                 using (var dbClient = _database.GetQueryReactor())
                 {
@@ -48,7 +47,7 @@ internal class RemoveRightsEvent : IPacketEvent
                 }
                 if (room.UsersWithRights.Contains(userId))
                     room.UsersWithRights.Remove(userId);
-                session.SendPacket(new FlatControllerRemovedComposer(room, userId));
+                session.Send(new FlatControllerRemovedComposer(room, userId));
             }
         }
         return Task.CompletedTask;

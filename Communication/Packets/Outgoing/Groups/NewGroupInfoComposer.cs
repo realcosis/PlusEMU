@@ -1,11 +1,23 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Groups;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class NewGroupInfoComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Groups;
+
+internal class NewGroupInfoComposer : IServerPacket
 {
+    private readonly int _roomId;
+    private readonly int _groupId;
+
+    public int MessageId => ServerPacketHeader.NewGroupInfoMessageComposer;
+
     public NewGroupInfoComposer(int roomId, int groupId)
-        : base(ServerPacketHeader.NewGroupInfoMessageComposer)
     {
-        WriteInteger(roomId);
-        WriteInteger(groupId);
+        _roomId = roomId;
+        _groupId = groupId;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_roomId);
+        packet.WriteInteger(_groupId);
     }
 }

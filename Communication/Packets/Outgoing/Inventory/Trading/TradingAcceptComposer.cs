@@ -1,11 +1,22 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Inventory.Trading;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class TradingAcceptComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Inventory.Trading;
+
+internal class TradingAcceptComposer : IServerPacket
 {
+    private readonly int _userId;
+    private readonly bool _accept;
+    public int MessageId => ServerPacketHeader.TradingAcceptMessageComposer;
+
     public TradingAcceptComposer(int userId, bool accept)
-        : base(ServerPacketHeader.TradingAcceptMessageComposer)
     {
-        WriteInteger(userId);
-        WriteInteger(accept ? 1 : 0);
+        _userId = userId;
+        _accept = accept;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_userId);
+        packet.WriteInteger(_accept ? 1 : 0);
     }
 }

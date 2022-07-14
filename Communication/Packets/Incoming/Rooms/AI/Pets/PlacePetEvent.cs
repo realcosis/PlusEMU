@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using NLog;
+﻿using NLog;
 using Plus.Communication.Packets.Outgoing.Inventory.Pets;
 using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
 using Plus.Core.Settings;
@@ -25,7 +21,7 @@ internal class PlacePetEvent : IPacketEvent
         _settingsManager = settingsManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -33,26 +29,26 @@ internal class PlacePetEvent : IPacketEvent
             return Task.CompletedTask;
         if (room.AllowPets == 0 && !room.CheckRights(session, true) || !room.CheckRights(session, true))
         {
-            session.SendPacket(new RoomErrorNotifComposer(1));
+            session.Send(new RoomErrorNotifComposer(1));
             return Task.CompletedTask;
         }
         if (room.GetRoomUserManager().PetCount > Convert.ToInt32(_settingsManager.TryGetValue("room.pets.placement_limit")))
         {
-            session.SendPacket(new RoomErrorNotifComposer(2)); //5 = I have too many.
+            session.Send(new RoomErrorNotifComposer(2)); //5 = I have too many.
             return Task.CompletedTask;
         }
-        if (!session.GetHabbo().Inventory.Pets.Pets.TryGetValue(packet.PopInt(), out var pet))
+        if (!session.GetHabbo().Inventory.Pets.Pets.TryGetValue(packet.ReadInt(), out var pet))
             return Task.CompletedTask;
         if (pet.PlacedInRoom)
         {
             session.SendNotification("This pet is already in the room?");
             return Task.CompletedTask;
         }
-        var x = packet.PopInt();
-        var y = packet.PopInt();
+        var x = packet.ReadInt();
+        var y = packet.ReadInt();
         if (!room.GetGameMap().CanWalk(x, y, false))
         {
-            session.SendPacket(new RoomErrorNotifComposer(4));
+            session.Send(new RoomErrorNotifComposer(4));
             return Task.CompletedTask;
         }
         if (room.GetRoomUserManager().TryGetPet(pet.PetId, out var oldPet)) room.GetRoomUserManager().RemoveBot(oldPet.VirtualId, false);
@@ -66,7 +62,7 @@ internal class PlacePetEvent : IPacketEvent
         pet.DbState = PetDatabaseUpdateState.NeedsUpdate;
         room.GetRoomUserManager().UpdatePets();
         session.GetHabbo().Inventory.Pets.RemovePet(pet.PetId);
-        session.SendPacket(new PetInventoryComposer(session.GetHabbo().Inventory.Pets.Pets.Values.ToList()));
+        session.Send(new PetInventoryComposer(session.GetHabbo().Inventory.Pets.Pets.Values.ToList()));
         return Task.CompletedTask;
     }
 }

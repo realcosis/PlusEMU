@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Inventory.Furni;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
@@ -20,15 +19,15 @@ internal class PickupObjectEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
             return Task.CompletedTask;
-        packet.PopInt(); //unknown
-        var itemId = packet.PopInt();
+        packet.ReadInt(); //unknown
+        var itemId = packet.ReadInt();
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
@@ -59,13 +58,13 @@ internal class PickupObjectEvent : IPacketEvent
             {
                 room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
                 session.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
-                session.SendPacket(new FurniListUpdateComposer());
+                session.Send(new FurniListUpdateComposer());
             }
             else if (session.GetHabbo().GetPermissions().HasRight("room_item_take")) //Staff are taking this item
             {
                 room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
                 session.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
-                session.SendPacket(new FurniListUpdateComposer());
+                session.Send(new FurniListUpdateComposer());
             }
             else //Item is being ejected.
             {
@@ -74,7 +73,7 @@ internal class PickupObjectEvent : IPacketEvent
                 {
                     room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
                     targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
-                    targetClient.SendPacket(new FurniListUpdateComposer());
+                    targetClient.Send(new FurniListUpdateComposer());
                 }
                 else //No, query time.
                 {

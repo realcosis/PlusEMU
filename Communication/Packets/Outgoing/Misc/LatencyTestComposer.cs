@@ -1,10 +1,16 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Misc;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class LatencyTestComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Misc;
+
+internal class LatencyTestComposer : IServerPacket
 {
-    public LatencyTestComposer(int testResponce)
-        : base(ServerPacketHeader.LatencyResponseMessageComposer)
+    private readonly int _testResponse;
+    public int MessageId => ServerPacketHeader.LatencyResponseMessageComposer;
+
+    public LatencyTestComposer(int testResponse)
     {
-        WriteInteger(testResponce);
+        _testResponse = testResponse;
     }
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteInteger(_testResponse);
 }

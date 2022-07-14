@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Catalog;
+﻿using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Database;
 using Plus.HabboHotel.Catalog.Utilities;
@@ -24,26 +21,26 @@ internal class CheckGnomeNameEvent : IPacketEvent
         _itemDataManager = itemDataManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
             return Task.CompletedTask;
-        var itemId = packet.PopInt();
+        var itemId = packet.ReadInt();
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null || item.Data == null || item.UserId != session.GetHabbo().Id || item.Data.InteractionType != InteractionType.GnomeBox)
             return Task.CompletedTask;
-        var petName = packet.PopString();
+        var petName = packet.ReadString();
         if (string.IsNullOrEmpty(petName))
         {
-            session.SendPacket(new CheckGnomeNameComposer(petName, 1));
+            session.Send(new CheckGnomeNameComposer(petName, 1));
             return Task.CompletedTask;
         }
         if (!PetUtility.CheckPetName(petName))
         {
-            session.SendPacket(new CheckGnomeNameComposer(petName, 1));
+            session.Send(new CheckGnomeNameComposer(petName, 1));
             return Task.CompletedTask;
         }
         var x = item.GetX;
@@ -59,7 +56,7 @@ internal class CheckGnomeNameEvent : IPacketEvent
         room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
 
         //Apparently we need this for success.
-        session.SendPacket(new CheckGnomeNameComposer(petName, 0));
+        session.Send(new CheckGnomeNameComposer(petName, 0));
 
         //Create the pet here.
         var pet = PetUtility.CreatePet(session.GetHabbo().Id, petName, 26, "30", "ffffff");
@@ -89,7 +86,7 @@ internal class CheckGnomeNameEvent : IPacketEvent
             if (food != null)
             {
                 session.GetHabbo().Inventory.Furniture.AddItem(food);
-                session.SendPacket(new FurniListNotificationComposer(food.Id, 1));
+                session.Send(new FurniListNotificationComposer(food.Id, 1));
             }
         }
         return Task.CompletedTask;

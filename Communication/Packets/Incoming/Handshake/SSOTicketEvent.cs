@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Attributes;
+﻿using Plus.Communication.Attributes;
 using Plus.Communication.Packets.Outgoing.BuildersClub;
 using Plus.Communication.Packets.Outgoing.Handshake;
 using Plus.Communication.Packets.Outgoing.Inventory.Achievements;
@@ -27,26 +26,26 @@ public class SsoTicketEvent : IPacketEvent
         _badgeManager = badgeManager;
     }
 
-    public async Task Parse(GameClient session, ClientPacket packet)
+    public async Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var sso = packet.PopString();
+        var sso = packet.ReadString();
         var error = await _authenticate.AuthenticateUsingSSO(session, sso);
         if (error == null)
         {
-            session.SendPacket(new AuthenticationOkComposer());
+            session.Send(new AuthenticationOkComposer());
 
-            // TODO: 80O: Move to individual incoming message handlers.
-            session.SendPacket(new AvatarEffectsComposer(session.GetHabbo().Effects().GetAllEffects));
-            session.SendPacket(new NavigatorSettingsComposer(session.GetHabbo().HomeRoom));
-            session.SendPacket(new FavouritesComposer(session.GetHabbo().FavoriteRooms));
-            session.SendPacket(new FigureSetIdsComposer(session.GetHabbo().GetClothing().GetClothingParts));
-            session.SendPacket(new UserRightsComposer(session.GetHabbo().Rank, session.GetHabbo().IsAmbassador));
-            session.SendPacket(new AvailabilityStatusComposer());
-            session.SendPacket(new AchievementScoreComposer(session.GetHabbo().GetStats().AchievementPoints));
-            session.SendPacket(new BuildersClubMembershipComposer());
-            session.SendPacket(new CfhTopicsInitComposer(PlusEnvironment.GetGame().GetModerationManager().UserActionPresets));
-            session.SendPacket(new BadgeDefinitionsComposer(PlusEnvironment.GetGame().GetAchievementManager().Achievements));
-            session.SendPacket(new SoundSettingsComposer(session.GetHabbo().ClientVolume, session.GetHabbo().ChatPreference, session.GetHabbo().AllowMessengerInvites,
+            // TODO @80O: Move to individual incoming message handlers.
+            session.Send(new AvatarEffectsComposer(session.GetHabbo().Effects().GetAllEffects));
+            session.Send(new NavigatorSettingsComposer(session.GetHabbo().HomeRoom));
+            session.Send(new FavouritesComposer(session.GetHabbo().FavoriteRooms));
+            session.Send(new FigureSetIdsComposer(session.GetHabbo().GetClothing().GetClothingParts));
+            session.Send(new UserRightsComposer(session.GetHabbo().Rank, session.GetHabbo().IsAmbassador));
+            session.Send(new AvailabilityStatusComposer());
+            session.Send(new AchievementScoreComposer(session.GetHabbo().GetStats().AchievementPoints));
+            session.Send(new BuildersClubMembershipComposer());
+            session.Send(new CfhTopicsInitComposer(PlusEnvironment.GetGame().GetModerationManager().UserActionPresets));
+            session.Send(new BadgeDefinitionsComposer(PlusEnvironment.GetGame().GetAchievementManager().Achievements));
+            session.Send(new SoundSettingsComposer(session.GetHabbo().ClientVolume, session.GetHabbo().ChatPreference, session.GetHabbo().AllowMessengerInvites,
                 session.GetHabbo().FocusPreference,
                 FriendBarStateUtility.GetInt(session.GetHabbo().FriendbarState)));
             //SendMessage(new TalentTrackLevelComposer());
@@ -74,13 +73,13 @@ public class SsoTicketEvent : IPacketEvent
             session.GetHabbo().InitProcess();
             if (session.GetHabbo().GetPermissions().HasRight("mod_tickets"))
             {
-                session.SendPacket(new ModeratorInitComposer(
+                session.Send(new ModeratorInitComposer(
                     PlusEnvironment.GetGame().GetModerationManager().UserMessagePresets,
                     PlusEnvironment.GetGame().GetModerationManager().RoomMessagePresets,
                     PlusEnvironment.GetGame().GetModerationManager().GetTickets));
             }
             if (PlusEnvironment.GetSettingsManager().TryGetValue("user.login.message.enabled") == "1")
-                session.SendPacket(new MotdNotificationComposer(PlusEnvironment.GetLanguageManager().TryGetValue("user.login.message")));
+                session.Send(new MotdNotificationComposer(PlusEnvironment.GetLanguageManager().TryGetValue("user.login.message")));
             await PlusEnvironment.GetGame().GetRewardManager().CheckRewards(session);
         }
     }

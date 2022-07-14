@@ -1,12 +1,22 @@
-﻿namespace Plus.Communication.Packets.Outgoing.GameCenter;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class GameAccountStatusComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.GameCenter;
+
+// TODO @80O: Implement
+internal class GameAccountStatusComposer : IServerPacket
 {
+    private readonly int _gameId;
+    public int MessageId => ServerPacketHeader.GameAccountStatusMessageComposer;
+
     public GameAccountStatusComposer(int gameId)
-        : base(ServerPacketHeader.GameAccountStatusMessageComposer)
     {
-        WriteInteger(gameId);
-        WriteInteger(-1); // Games Left
-        WriteInteger(0); //Was 16?
+        _gameId = gameId;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_gameId);
+        packet.WriteInteger(-1); // Games Left
+        packet.WriteInteger(0); //Was 16?
     }
 }

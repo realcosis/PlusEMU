@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Database;
+﻿using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Rooms;
@@ -17,7 +16,7 @@ internal class DeleteStickyNoteEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -25,7 +24,7 @@ internal class DeleteStickyNoteEvent : IPacketEvent
             return Task.CompletedTask;
         if (!room.CheckRights(session))
             return Task.CompletedTask;
-        var item = room.GetRoomItemHandler().GetItem(packet.PopInt());
+        var item = room.GetRoomItemHandler().GetItem(packet.ReadInt());
         if (item == null)
             return Task.CompletedTask;
         if (item.GetBaseItem().InteractionType == InteractionType.Postit || item.GetBaseItem().InteractionType == InteractionType.CameraPicture)

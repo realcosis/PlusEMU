@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Marketplace;
+﻿using Plus.Communication.Packets.Outgoing.Marketplace;
 using Plus.HabboHotel.Catalog.Marketplace;
 using Plus.HabboHotel.GameClients;
 
@@ -13,10 +12,10 @@ internal class CancelOfferEvent : IPacketEvent
     {
         _marketplaceManager = marketplaceManager;
     }
-    public async Task Parse(GameClient session, ClientPacket packet)
+    public async Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var offerId = packet.PopInt();
+        var offerId = packet.ReadInt();
         var success = await _marketplaceManager.TryCancelOffer(session.GetHabbo(), offerId);
-        session.SendPacket(new MarketplaceCancelOfferResultComposer(offerId, success));
+        session.Send(new MarketplaceCancelOfferResultComposer(offerId, success));
     }
 }

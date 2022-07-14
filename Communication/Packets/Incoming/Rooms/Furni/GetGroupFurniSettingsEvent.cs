@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Groups;
+﻿using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Items;
@@ -15,12 +14,12 @@ internal class GetGroupFurniSettingsEvent : IPacketEvent
         _groupManager = groupManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
-        var itemId = packet.PopInt();
-        var groupId = packet.PopInt();
+        var itemId = packet.ReadInt();
+        var groupId = packet.ReadInt();
         var item = session.GetHabbo().CurrentRoom.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
@@ -28,8 +27,8 @@ internal class GetGroupFurniSettingsEvent : IPacketEvent
             return Task.CompletedTask;
         if (!_groupManager.TryGetGroup(groupId, out var group))
             return Task.CompletedTask;
-        session.SendPacket(new GroupFurniSettingsComposer(group, itemId, session.GetHabbo().Id));
-        session.SendPacket(new GroupInfoComposer(group, session));
+        session.Send(new GroupFurniSettingsComposer(group, itemId, session.GetHabbo().Id));
+        session.Send(new GroupInfoComposer(group, session));
         return Task.CompletedTask;
     }
 }

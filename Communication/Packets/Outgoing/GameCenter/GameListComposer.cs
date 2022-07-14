@@ -1,22 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Games;
 
 namespace Plus.Communication.Packets.Outgoing.GameCenter;
 
-internal class GameListComposer : ServerPacket
+internal class GameListComposer : IServerPacket
 {
+    private readonly ICollection<GameData> _games;
+    public int MessageId => ServerPacketHeader.GameListMessageComposer;
+
     public GameListComposer(ICollection<GameData> games)
-        : base(ServerPacketHeader.GameListMessageComposer)
     {
-        WriteInteger(PlusEnvironment.GetGame().GetGameDataManager().GetCount()); //Game count
-        foreach (var game in games)
+        _games = games;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(PlusEnvironment.GetGame().GetGameDataManager().GetCount()); //Game count
+        foreach (var game in _games)
         {
-            WriteInteger(game.Id);
-            WriteString(game.Name);
-            WriteString(game.ColourOne);
-            WriteString(game.ColourTwo);
-            WriteString(game.ResourcePath);
-            WriteString(game.StringThree);
+            packet.WriteInteger(game.Id);
+            packet.WriteString(game.Name);
+            packet.WriteString(game.ColourOne);
+            packet.WriteString(game.ColourTwo);
+            packet.WriteString(game.ResourcePath);
+            packet.WriteString(game.StringThree);
         }
     }
 }

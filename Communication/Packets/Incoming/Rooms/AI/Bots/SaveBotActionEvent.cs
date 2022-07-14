@@ -1,8 +1,5 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Database;
@@ -20,16 +17,16 @@ internal class SaveBotActionEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
             return Task.CompletedTask;
-        var botId = packet.PopInt();
-        var actionId = packet.PopInt();
-        var dataString = packet.PopString();
+        var botId = packet.ReadInt();
+        var actionId = packet.ReadInt();
+        var dataString = packet.ReadString();
         if (actionId < 1 || actionId > 5)
             return Task.CompletedTask;
         if (!room.GetRoomUserManager().TryGetBot(botId, out var bot))
@@ -49,17 +46,13 @@ internal class SaveBotActionEvent : IPacketEvent
         {
             case 1:
             {
-                var userChangeComposer = new ServerPacket(ServerPacketHeader.UserChangeMessageComposer);
-                userChangeComposer.WriteInteger(bot.VirtualId);
-                userChangeComposer.WriteString(session.GetHabbo().Look);
-                userChangeComposer.WriteString(session.GetHabbo().Gender);
-                userChangeComposer.WriteString(bot.BotData.Motto);
-                userChangeComposer.WriteInteger(0);
-                room.SendPacket(userChangeComposer);
-
                 //Change the defaults
                 bot.BotData.Look = session.GetHabbo().Look;
                 bot.BotData.Gender = session.GetHabbo().Gender;
+
+                var userChangeComposer = new UserChangeComposer(bot.BotData);
+                room.SendPacket(userChangeComposer);
+
                 using var dbClient = _database.GetQueryReactor();
                 dbClient.SetQuery("UPDATE `bots` SET `look` = @look, `gender` = '" + session.GetHabbo().Gender + "' WHERE `id` = '" + bot.BotData.Id + "' LIMIT 1");
                 dbClient.AddParameter("look", session.GetHabbo().Look);

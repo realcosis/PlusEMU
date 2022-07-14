@@ -1,35 +1,46 @@
-﻿using Plus.HabboHotel.Items;
+﻿using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class ItemsComposer : ServerPacket
+internal class ItemsComposer : IServerPacket
 {
+    private readonly Item[] _objects;
+    private readonly Room _room;
+
+    public int MessageId => ServerPacketHeader.ItemsMessageComposer;
+
     public ItemsComposer(Item[] objects, Room room)
-        : base(ServerPacketHeader.ItemsMessageComposer)
     {
-        WriteInteger(1);
-        WriteInteger(room.OwnerId);
-        WriteString(room.OwnerName);
-        WriteInteger(objects.Length);
-        foreach (var item in objects) WriteWallItem(item, room.OwnerId);
+        _objects = objects;
+        _room = room;
     }
 
-    private void WriteWallItem(Item item, int userId)
+    public void Compose(IOutgoingPacket packet)
     {
-        WriteString(item.Id.ToString());
-        WriteInteger(item.Data.SpriteId);
+        packet.WriteInteger(1);
+        packet.WriteInteger(_room.OwnerId);
+        packet.WriteString(_room.OwnerName);
+        packet.WriteInteger(_objects.Length);
+        foreach (var item in _objects) WriteWallItem(packet, item, _room.OwnerId);
+    }
+
+    private void WriteWallItem(IOutgoingPacket packet, Item item, int userId)
+    {
+        packet.WriteString(item.Id.ToString());
+        packet.WriteInteger(item.Data.SpriteId);
         try
         {
-            WriteString(item.WallCoord);
+            packet.WriteString(item.WallCoord);
         }
         catch
         {
-            WriteString("");
+            packet.WriteString("");
         }
-        ItemBehaviourUtility.GenerateWallExtradata(item, this);
-        WriteInteger(-1);
-        WriteInteger(item.Data.Modes > 1 ? 1 : 0);
-        WriteInteger(userId);
+        ItemBehaviourUtility.GenerateWallExtradata(item, packet);
+        packet.WriteInteger(-1);
+        packet.WriteInteger(item.Data.Modes > 1 ? 1 : 0);
+        packet.WriteInteger(userId);
     }
 }

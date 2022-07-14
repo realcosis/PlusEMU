@@ -1,10 +1,19 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Messenger;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class FindFriendsProcessResultComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Messenger;
+
+internal class FindFriendsProcessResultComposer : IServerPacket
 {
+    private readonly bool _found;
+    public int MessageId => ServerPacketHeader.FindFriendsProcessResultMessageComposer;
+
     public FindFriendsProcessResultComposer(bool found)
-        : base(ServerPacketHeader.FindFriendsProcessResultMessageComposer)
     {
-        WriteBoolean(found);
+        _found = found;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteBoolean(_found);
     }
 }

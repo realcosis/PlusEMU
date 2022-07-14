@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using System.Threading.Tasks;
 using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
 using Plus.Database;
@@ -19,12 +18,12 @@ public class RedeemVoucherEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var code = packet.PopString().Replace("\r", "");
+        var code = packet.ReadString().Replace("\r", "");
         if (!_voucherManager.TryGetVoucher(code, out var voucher))
         {
-            session.SendPacket(new VoucherRedeemErrorComposer(0));
+            session.Send(new VoucherRedeemErrorComposer(0));
             return Task.CompletedTask;
         }
         if (voucher.CurrentUses >= voucher.MaxUses)
@@ -56,14 +55,14 @@ public class RedeemVoucherEvent : IPacketEvent
         if (voucher.Type == VoucherType.Credit)
         {
             session.GetHabbo().Credits += voucher.Value;
-            session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
+            session.Send(new CreditBalanceComposer(session.GetHabbo().Credits));
         }
         else if (voucher.Type == VoucherType.Ducket)
         {
             session.GetHabbo().Duckets += voucher.Value;
-            session.SendPacket(new HabboActivityPointNotificationComposer(session.GetHabbo().Duckets, voucher.Value));
+            session.Send(new HabboActivityPointNotificationComposer(session.GetHabbo().Duckets, voucher.Value));
         }
-        session.SendPacket(new VoucherRedeemOkComposer());
+        session.Send(new VoucherRedeemOkComposer());
         return Task.CompletedTask;
     }
 }

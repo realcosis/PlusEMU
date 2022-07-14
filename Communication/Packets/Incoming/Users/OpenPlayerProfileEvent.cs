@@ -2,7 +2,6 @@
 using Plus.HabboHotel.Friends;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
-using System.Threading.Tasks;
 
 namespace Plus.Communication.Packets.Incoming.Users;
 
@@ -17,10 +16,10 @@ internal class OpenPlayerProfileEvent : IPacketEvent
         _messengerDataLoader = messengerDataLoader;
     }
 
-    public async Task Parse(GameClient session, ClientPacket packet)
+    public async Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var userId = packet.PopInt();
-        packet.PopBoolean(); //IsMe?
+        var userId = packet.ReadInt();
+        packet.ReadBool(); //IsMe?
         var targetData = PlusEnvironment.GetHabboById(userId);
         if (targetData == null)
         {
@@ -31,6 +30,6 @@ internal class OpenPlayerProfileEvent : IPacketEvent
 
 
         var friendCount = await _messengerDataLoader.GetFriendCount(userId);
-        session.SendPacket(new ProfileInformationComposer(targetData, session, groups, friendCount));
+        session.Send(new ProfileInformationComposer(targetData, session, groups, friendCount));
     }
 }

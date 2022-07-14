@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Rooms.Engine;
+﻿using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Communication.Packets.Outgoing.Rooms.Permissions;
 using Plus.Communication.Packets.Outgoing.Rooms.Settings;
 using Plus.Database;
@@ -21,7 +18,7 @@ internal class RemoveAllRightsEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -36,7 +33,7 @@ internal class RemoveAllRightsEvent : IPacketEvent
             {
                 user.RemoveStatus("flatctrl 1");
                 user.UpdateNeeded = true;
-                user.GetClient().SendPacket(new YouAreControllerComposer(0));
+                user.GetClient().Send(new YouAreControllerComposer(0));
             }
             using (var dbClient = _database.GetQueryReactor())
             {
@@ -45,9 +42,9 @@ internal class RemoveAllRightsEvent : IPacketEvent
                 dbClient.AddParameter("rid", instance.Id);
                 dbClient.RunQuery();
             }
-            session.SendPacket(new FlatControllerRemovedComposer(instance, userId));
-            session.SendPacket(new RoomRightsListComposer(instance));
-            session.SendPacket(new UserUpdateComposer(instance.GetRoomUserManager().GetUserList().ToList()));
+            session.Send(new FlatControllerRemovedComposer(instance, userId));
+            session.Send(new RoomRightsListComposer(instance));
+            session.Send(new UserUpdateComposer(instance.GetRoomUserManager().GetUserList().ToList()));
         }
         if (instance.UsersWithRights.Count > 0)
             instance.UsersWithRights.Clear();

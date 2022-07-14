@@ -1,10 +1,11 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class FurnitureAliasesComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
+
+// TODO @80O: Implement
+internal class FurnitureAliasesComposer : IServerPacket
 {
-    public FurnitureAliasesComposer()
-        : base(ServerPacketHeader.FurnitureAliasesMessageComposer)
-    {
-        WriteInteger(0);
-    }
+    public int MessageId => ServerPacketHeader.FurnitureAliasesMessageComposer;
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteInteger(0);
 }

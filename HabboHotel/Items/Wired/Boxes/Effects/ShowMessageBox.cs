@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
-using Plus.Communication.Packets.Incoming;
 using Plus.Communication.Packets.Outgoing.Rooms.Chat;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 
@@ -29,10 +29,10 @@ internal class ShowMessageBox : IWiredItem
 
     public string ItemsData { get; set; }
 
-    public void HandleSave(ClientPacket packet)
+    public void HandleSave(IIncomingPacket packet)
     {
-        var unknown = packet.PopInt();
-        var message = packet.PopString();
+        var unknown = packet.ReadInt();
+        var message = packet.ReadString();
         StringData = message;
     }
 
@@ -55,7 +55,7 @@ internal class ShowMessageBox : IWiredItem
             message = message.Replace("%USERCOUNT%", player.CurrentRoom.UserCount.ToString());
         if (StringData.Contains("%USERSONLINE%"))
             message = message.Replace("%USERSONLINE%", PlusEnvironment.GetGame().GetClientManager().Count.ToString());
-        player.GetClient().SendPacket(new WhisperComposer(user.VirtualId, message, 0, 34));
+        player.GetClient().Send(new WhisperComposer(user.VirtualId, message, 0, 34));
         return true;
     }
 }

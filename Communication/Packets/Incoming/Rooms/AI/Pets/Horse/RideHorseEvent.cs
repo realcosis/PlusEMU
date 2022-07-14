@@ -1,6 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 using Plus.Communication.Packets.Outgoing.Rooms.AI.Pets;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
@@ -19,7 +17,7 @@ internal class RideHorseEvent : IPacketEvent
         _petLocale = petLocale;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -28,8 +26,8 @@ internal class RideHorseEvent : IPacketEvent
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (user == null)
             return Task.CompletedTask;
-        var petId = packet.PopInt();
-        var type = packet.PopBoolean();
+        var petId = packet.ReadInt();
+        var type = packet.ReadBool();
         if (!room.GetRoomUserManager().TryGetPet(petId, out var pet))
             return Task.CompletedTask;
         if (pet.PetData == null)

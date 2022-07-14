@@ -1,10 +1,16 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Rooms.Notifications;
+﻿using Plus.HabboHotel.GameClients;
 
-internal class RoomErrorNotifComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Rooms.Notifications;
+
+internal class RoomErrorNotifComposer : IServerPacket
 {
+    private readonly int _error;
+    public int MessageId => ServerPacketHeader.RoomErrorNotifMessageComposer;
+
     public RoomErrorNotifComposer(int error)
-        : base(ServerPacketHeader.RoomErrorNotifMessageComposer)
     {
-        WriteInteger(error);
+        _error = error;
     }
+
+    public void Compose(IOutgoingPacket packet) => packet.WriteInteger(_error);
 }

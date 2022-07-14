@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Navigator;
+﻿using Plus.Communication.Packets.Outgoing.Navigator;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Navigator;
 
@@ -14,10 +13,10 @@ public class GetUserFlatCatsEvent : IPacketEvent
         _navigatorManager = navigatorManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         var categories = _navigatorManager.GetFlatCategories();
-        session.SendPacket(new UserFlatCatsComposer(categories, session.GetHabbo().Rank));
+        session.Send(new UserFlatCatsComposer(categories, session.GetHabbo().Rank));
         return Task.CompletedTask;
     }
 }

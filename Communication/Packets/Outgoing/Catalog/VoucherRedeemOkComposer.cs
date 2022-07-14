@@ -1,11 +1,16 @@
-﻿namespace Plus.Communication.Packets.Outgoing.Catalog;
+﻿using Plus.HabboHotel.GameClients;
 
-public class VoucherRedeemOkComposer : ServerPacket
+namespace Plus.Communication.Packets.Outgoing.Catalog;
+
+
+// TODO @80O: Implement
+public class VoucherRedeemOkComposer : IServerPacket
 {
-    public VoucherRedeemOkComposer()
-        : base(ServerPacketHeader.VoucherRedeemOkMessageComposer)
+    public int MessageId => ServerPacketHeader.VoucherRedeemOkMessageComposer;
+
+    public void Compose(IOutgoingPacket packet)
     {
-        WriteString(""); //productName
-        WriteString(""); //productDescription
+        packet.WriteString(""); //productName
+        packet.WriteString(""); //productDescription
     }
 }

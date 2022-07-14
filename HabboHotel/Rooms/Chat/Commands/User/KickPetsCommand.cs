@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using System.Linq;
 using Plus.Communication.Packets.Outgoing.Inventory.Pets;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
@@ -57,9 +56,9 @@ internal class KickPetsCommand : IChatCommand
                 var targetClient = _gameClientManager.GetClientByUserId(pet.OwnerId);
                 if (targetClient != null)
                     if (targetClient.GetHabbo().Inventory.Pets.AddPet(pet))
-                        targetClient.SendPacket(new PetInventoryComposer(targetClient.GetHabbo().Inventory.Pets.Pets.Values.ToList()));
+                        targetClient.Send(new PetInventoryComposer(targetClient.GetHabbo().Inventory.Pets.Pets.Values.ToList()));
             }
-            if (session.GetHabbo().Inventory.Pets.AddPet(pet)) session.SendPacket(new PetInventoryComposer(session.GetHabbo().Inventory.Pets.Pets.Values.ToList()));
+            if (session.GetHabbo().Inventory.Pets.AddPet(pet)) session.Send(new PetInventoryComposer(session.GetHabbo().Inventory.Pets.Pets.Values.ToList()));
             using var dbClient = _database.GetQueryReactor();
             dbClient.RunQuery("UPDATE `bots` SET `room_id` = '0', `x` = '0', `Y` = '0', `Z` = '0' WHERE `id` = '" + pet.PetId + "' LIMIT 1");
             dbClient.RunQuery("UPDATE `bots_petdata` SET `experience` = '" + pet.Experience + "', `energy` = '" + pet.Energy + "', `nutrition` = '" + pet.Nutrition + "', `respect` = '" + pet.Respect +

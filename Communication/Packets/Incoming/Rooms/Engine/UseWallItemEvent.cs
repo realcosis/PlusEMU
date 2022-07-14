@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items.Wired;
 using Plus.HabboHotel.Quests;
 using Plus.HabboHotel.Rooms;
@@ -17,18 +16,18 @@ internal class UseWallItemEvent : IPacketEvent
         _questManager = questManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return Task.CompletedTask;
-        var itemId = packet.PopInt();
+        var itemId = packet.ReadInt();
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
         var hasRights = room.CheckRights(session, false, true);
-        var request = packet.PopInt();
+        var request = packet.ReadInt();
         item.Interactor.OnTrigger(session, item, request, hasRights);
         item.GetRoom().GetWired().TriggerEvent(WiredBoxType.TriggerStateChanges, session.GetHabbo(), item);
         _questManager.ProgressUserQuest(session, QuestType.ExploreFindItem, item.GetBaseItem().Id);

@@ -1,37 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Moderation;
 using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class ModeratorInitComposer : ServerPacket
+internal class ModeratorInitComposer : IServerPacket
 {
+    private readonly ICollection<string> _userPresets;
+    private readonly ICollection<string> _roomPresets;
+    private readonly ICollection<ModerationTicket> _tickets;
+
+    public int MessageId => ServerPacketHeader.ModeratorInitMessageComposer;
+
     public ModeratorInitComposer(ICollection<string> userPresets, ICollection<string> roomPresets, ICollection<ModerationTicket> tickets)
-        : base(ServerPacketHeader.ModeratorInitMessageComposer)
     {
-        WriteInteger(tickets.Count);
-        foreach (var ticket in tickets)
+        _userPresets = userPresets;
+        _roomPresets = roomPresets;
+        _tickets = tickets;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_tickets.Count);
+        foreach (var ticket in _tickets)
         {
-            WriteInteger(ticket.Id); // Id
-            WriteInteger(ticket.GetStatus(Id)); // Tab ID
-            WriteInteger(ticket.Type); // Type
-            WriteInteger(ticket.Category); // Category
-            WriteInteger(Convert.ToInt32((DateTime.Now - UnixTimestamp.FromUnixTimestamp(ticket.Timestamp)).TotalMilliseconds)); // This should fix the overflow?
-            WriteInteger(ticket.Priority); // Priority
-            WriteInteger(ticket.Sender?.Id ?? 0); // Sender ID
-            WriteInteger(1);
-            WriteString(ticket.Sender == null ? string.Empty : ticket.Sender.Username); // Sender Name
-            WriteInteger(ticket.Reported?.Id ?? 0); // Reported ID
-            WriteString(ticket.Reported == null ? string.Empty : ticket.Reported.Username); // Reported Name
-            WriteInteger(ticket.Moderator?.Id ?? 0); // Moderator ID
-            WriteString(ticket.Moderator == null ? string.Empty : ticket.Moderator.Username); // Mod Name
-            WriteString(ticket.Issue); // Issue
-            WriteInteger(ticket.Room?.Id ?? 0); // Room Id
-            WriteInteger(0); //LOOP
+            packet.WriteInteger(ticket.Id); // Id
+            packet.WriteInteger(ticket.GetStatus(ticket.Id)); // Tab ID
+            packet.WriteInteger(ticket.Type); // Type
+            packet.WriteInteger(ticket.Category); // Category
+            packet.WriteInteger(Convert.ToInt32((DateTime.Now - UnixTimestamp.FromUnixTimestamp(ticket.Timestamp)).TotalMilliseconds)); // This should fix the overflow?
+            packet.WriteInteger(ticket.Priority); // Priority
+            packet.WriteInteger(ticket.Sender?.Id ?? 0); // Sender ID
+            packet.WriteInteger(1);
+            packet.WriteString(ticket.Sender == null ? string.Empty : ticket.Sender.Username); // Sender Name
+            packet.WriteInteger(ticket.Reported?.Id ?? 0); // Reported ID
+            packet.WriteString(ticket.Reported == null ? string.Empty : ticket.Reported.Username); // Reported Name
+            packet.WriteInteger(ticket.Moderator?.Id ?? 0); // Moderator ID
+            packet.WriteString(ticket.Moderator == null ? string.Empty : ticket.Moderator.Username); // Mod Name
+            packet.WriteString(ticket.Issue); // Issue
+            packet.WriteInteger(ticket.Room?.Id ?? 0); // Room Id
+            packet.WriteInteger(0); //LOOP
         }
-        WriteInteger(userPresets.Count);
-        foreach (var pre in userPresets) WriteString(pre);
+        packet.WriteInteger(_userPresets.Count);
+        foreach (var pre in _userPresets) packet.WriteString(pre);
         /*base.WriteInteger(UserActionPresets.Count);
         foreach (KeyValuePair<string, List<ModerationPresetActionMessages>> Cat in UserActionPresets.ToList())
         {
@@ -52,18 +63,19 @@ internal class ModeratorInitComposer : ServerPacket
         }*/
 
         // TODO: Figure out
-        WriteInteger(0);
+        packet.WriteInteger(0);
         {
             //Loop a string.
         }
-        WriteBoolean(true); // Ticket right
-        WriteBoolean(true); // Chatlogs
-        WriteBoolean(true); // User actions alert etc
-        WriteBoolean(true); // Kick users
-        WriteBoolean(true); // Ban users
-        WriteBoolean(true); // Caution etc
-        WriteBoolean(true); // Love you, Tom
-        WriteInteger(roomPresets.Count);
-        foreach (var pre in roomPresets) WriteString(pre);
+        // TODO @80O: Implement moderation rights through rank system configurable from database.
+        packet.WriteBoolean(true); // Ticket right
+        packet.WriteBoolean(true); // Chatlogs
+        packet.WriteBoolean(true); // User actions alert etc
+        packet.WriteBoolean(true); // Kick users
+        packet.WriteBoolean(true); // Ban users
+        packet.WriteBoolean(true); // Caution etc
+        packet.WriteBoolean(true); // Love you, Tom
+        packet.WriteInteger(_roomPresets.Count);
+        foreach (var pre in _roomPresets) packet.WriteString(pre);
     }
 }

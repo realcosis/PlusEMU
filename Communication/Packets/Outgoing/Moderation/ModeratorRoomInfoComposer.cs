@@ -1,22 +1,32 @@
-﻿using Plus.HabboHotel.Rooms;
+﻿using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class ModeratorRoomInfoComposer : ServerPacket
+internal class ModeratorRoomInfoComposer : IServerPacket
 {
+    private readonly RoomData _data;
+    private readonly bool _ownerInRoom;
+    public int MessageId => ServerPacketHeader.ModeratorRoomInfoMessageComposer;
+
     public ModeratorRoomInfoComposer(RoomData data, bool ownerInRoom)
-        : base(ServerPacketHeader.ModeratorRoomInfoMessageComposer)
     {
-        WriteInteger(data.Id);
-        WriteInteger(data.UsersNow);
-        WriteBoolean(ownerInRoom); // owner in room
-        WriteInteger(data.OwnerId);
-        WriteString(data.OwnerName);
-        WriteBoolean(data != null);
-        WriteString(data.Name);
-        WriteString(data.Description);
-        WriteInteger(data.Tags.Count);
-        foreach (var tag in data.Tags) WriteString(tag);
-        WriteBoolean(false);
+        _data = data;
+        _ownerInRoom = ownerInRoom;
+    }
+
+    public void Compose(IOutgoingPacket packet)
+    {
+        packet.WriteInteger(_data.Id);
+        packet.WriteInteger(_data.UsersNow);
+        packet.WriteBoolean(_ownerInRoom); // owner in room
+        packet.WriteInteger(_data.OwnerId);
+        packet.WriteString(_data.OwnerName);
+        packet.WriteBoolean(_data != null);
+        packet.WriteString(_data.Name);
+        packet.WriteString(_data.Description);
+        packet.WriteInteger(_data.Tags.Count);
+        foreach (var tag in _data.Tags) packet.WriteString(tag);
+        packet.WriteBoolean(false);
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Plus.Communication.Packets.Outgoing.Groups;
+﻿using Plus.Communication.Packets.Outgoing.Groups;
 using Plus.Communication.Packets.Outgoing.Rooms.Permissions;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
@@ -18,10 +17,10 @@ internal class GiveAdminRightsEvent : IPacketEvent
         _roomManager = roomManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var groupId = packet.PopInt();
-        var userId = packet.PopInt();
+        var groupId = packet.ReadInt();
+        var userId = packet.ReadInt();
         if (!_groupManager.TryGetGroup(groupId, out var group))
             return Task.CompletedTask;
         if (session.GetHabbo().Id != group.CreatorId || !group.IsMember(userId))
@@ -42,10 +41,10 @@ internal class GiveAdminRightsEvent : IPacketEvent
                     user.SetStatus("flatctrl 3");
                 user.UpdateNeeded = true;
                 if (user.GetClient() != null)
-                    user.GetClient().SendPacket(new YouAreControllerComposer(3));
+                    user.GetClient().Send(new YouAreControllerComposer(3));
             }
         }
-        session.SendPacket(new GroupMemberUpdatedComposer(groupId, habbo, 1));
+        session.Send(new GroupMemberUpdatedComposer(groupId, habbo, 1));
         return Task.CompletedTask;
     }
 }

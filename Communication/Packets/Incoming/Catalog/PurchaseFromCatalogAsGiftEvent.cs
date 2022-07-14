@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Communication.Packets.Outgoing.Inventory.Purse;
@@ -45,17 +43,17 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
         _questManager = questManager;
     }
 
-    public Task Parse(GameClient session, ClientPacket packet)
+    public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var pageId = packet.PopInt();
-        var itemId = packet.PopInt();
-        var data = packet.PopString();
-        var giftUser = StringCharFilter.Escape(packet.PopString());
-        var giftMessage = StringCharFilter.Escape(packet.PopString().Replace(Convert.ToChar(5), ' '));
-        var spriteId = packet.PopInt();
-        var ribbon = packet.PopInt();
-        var colour = packet.PopInt();
-        packet.PopBoolean();
+        var pageId = packet.ReadInt();
+        var itemId = packet.ReadInt();
+        var data = packet.ReadString();
+        var giftUser = StringCharFilter.Escape(packet.ReadString());
+        var giftMessage = StringCharFilter.Escape(packet.ReadString().Replace(Convert.ToChar(5), ' '));
+        var spriteId = packet.ReadInt();
+        var ribbon = packet.ReadInt();
+        var colour = packet.ReadInt();
+        packet.ReadBool();
         if (_settingsManager.TryGetValue("room.item.gifts.enabled") != "1")
         {
             session.SendNotification("The hotel managers have disabled gifting");
@@ -82,18 +80,18 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
             return Task.CompletedTask;
         if (session.GetHabbo().Credits < item.CostCredits)
         {
-            session.SendPacket(new PresentDeliverErrorMessageComposer(true, false));
+            session.Send(new PresentDeliverErrorMessageComposer(true, false));
             return Task.CompletedTask;
         }
         if (session.GetHabbo().Duckets < item.CostPixels)
         {
-            session.SendPacket(new PresentDeliverErrorMessageComposer(false, true));
+            session.Send(new PresentDeliverErrorMessageComposer(false, true));
             return Task.CompletedTask;
         }
         var habbo = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(giftUser)?.GetHabbo();
         if (habbo == null)
         {
-            session.SendPacket(new GiftWrappingErrorComposer());
+            session.Send(new GiftWrappingErrorComposer());
             return Task.CompletedTask;
         }
         if (!habbo.AllowGifts)
@@ -175,7 +173,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
                 case InteractionType.BadgeDisplay:
                     if (!session.GetHabbo().Inventory.Badges.HasBadge(data))
                     {
-                        session.SendPacket(new BroadcastMessageAlertComposer("Oops, it appears that you do not own this badge."));
+                        session.Send(new BroadcastMessageAlertComposer("Oops, it appears that you do not own this badge."));
                         return Task.CompletedTask;
                     }
                     itemExtraData = data + Convert.ToChar(9) + session.GetHabbo().Username + Convert.ToChar(9) + DateTime.Now.Day + "-" + DateTime.Now.Month + "-" + DateTime.Now.Year;
@@ -199,10 +197,10 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
             if (receiver != null)
             {
                 receiver.GetHabbo().Inventory.Furniture.AddItem(giveItem);
-                receiver.SendPacket(new FurniListNotificationComposer(giveItem.Id, 1));
-                receiver.SendPacket(new PurchaseOkComposer());
-                receiver.SendPacket(new FurniListAddComposer(giveItem));
-                receiver.SendPacket(new FurniListUpdateComposer());
+                receiver.Send(new FurniListNotificationComposer(giveItem.Id, 1));
+                receiver.Send(new PurchaseOkComposer());
+                receiver.Send(new FurniListAddComposer(giveItem));
+                receiver.Send(new FurniListUpdateComposer());
             }
 
             if (habbo.Id != session.GetHabbo().Id)
@@ -213,16 +211,16 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
                 _questManager.ProgressUserQuest(session, QuestType.GiftOthers);
             }
         }
-        session.SendPacket(new PurchaseOkComposer(item, presentData));
+        session.Send(new PurchaseOkComposer(item, presentData));
         if (item.CostCredits > 0)
         {
             session.GetHabbo().Credits -= item.CostCredits;
-            session.SendPacket(new CreditBalanceComposer(session.GetHabbo().Credits));
+            session.Send(new CreditBalanceComposer(session.GetHabbo().Credits));
         }
         if (item.CostPixels > 0)
         {
             session.GetHabbo().Duckets -= item.CostPixels;
-            session.SendPacket(new HabboActivityPointNotificationComposer(session.GetHabbo().Duckets, session.GetHabbo().Duckets));
+            session.Send(new HabboActivityPointNotificationComposer(session.GetHabbo().Duckets, session.GetHabbo().Duckets));
         }
         session.GetHabbo().LastGiftPurchaseTime = DateTime.Now;
         return Task.CompletedTask;
