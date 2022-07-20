@@ -2,9 +2,9 @@
 
 namespace Plus.Communication.Packets.Outgoing.Catalog;
 
-internal class GiftWrappingErrorComposer : IServerPacket
+public class GiftWrappingErrorComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.GiftWrappingErrorMessageComposer;
+    public uint MessageId => ServerPacketHeader.GiftWrappingErrorComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

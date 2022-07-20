@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class HeightMapComposer : IServerPacket
+public class HeightMapComposer : IServerPacket
 {
     private readonly string _map;
-    public int MessageId => ServerPacketHeader.HeightMapMessageComposer;
+    public uint MessageId => ServerPacketHeader.HeightMapComposer;
 
     public HeightMapComposer(string map)
     {

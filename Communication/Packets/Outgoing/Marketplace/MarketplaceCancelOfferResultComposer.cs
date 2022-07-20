@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Marketplace;
 
-internal class MarketplaceCancelOfferResultComposer : IServerPacket
+public class MarketplaceCancelOfferResultComposer : IServerPacket
 {
     private readonly int _offerId;
     private readonly bool _success;
-    public int MessageId => ServerPacketHeader.MarketplaceCancelOfferResultMessageComposer;
+    public uint MessageId => ServerPacketHeader.MarketplaceCancelOfferResultComposer;
 
     public MarketplaceCancelOfferResultComposer(int offerId, bool success)
     {

@@ -4,7 +4,7 @@ namespace Plus.Communication.Packets.Outgoing.Handshake;
 
 public class AuthenticationOkComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.AuthenticationOkMessageComposer;
+    public uint MessageId => ServerPacketHeader.AuthenticationOkComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

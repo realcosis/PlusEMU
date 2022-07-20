@@ -9,7 +9,7 @@ public class ShoutComposer : IServerPacket
     private readonly int _emotion;
     private readonly int _colour;
 
-    public int MessageId => ServerPacketHeader.ShoutMessageComposer;
+    public uint MessageId => ServerPacketHeader.ShoutComposer;
 
     public ShoutComposer(int virtualId, string message, int emotion, int colour)
     {

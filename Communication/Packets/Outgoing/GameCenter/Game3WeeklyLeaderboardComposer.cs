@@ -8,7 +8,7 @@ public class Game3WeeklyLeaderboardComposer : IServerPacket
 {
     private readonly GameData _gameData;
     private readonly ICollection<Habbo> _habbos;
-    public int MessageId => ServerPacketHeader.Game3WeeklyLeaderboardMessageComposer;
+    public uint MessageId => ServerPacketHeader.Game3WeeklyLeaderboardComposer;
 
     public Game3WeeklyLeaderboardComposer(GameData gameData, ICollection<Habbo> habbos)
     {

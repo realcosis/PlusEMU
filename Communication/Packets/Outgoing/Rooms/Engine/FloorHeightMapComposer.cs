@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class FloorHeightMapComposer : IServerPacket
+public class FloorHeightMapComposer : IServerPacket
 {
     private readonly string _map;
     private readonly int _wallHeight;
-    public int MessageId => ServerPacketHeader.FloorHeightMapMessageComposer;
+    public uint MessageId => ServerPacketHeader.FloorHeightMapComposer;
 
     public FloorHeightMapComposer(string map, int wallHeight)
     {

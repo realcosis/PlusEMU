@@ -9,7 +9,7 @@ public class AchievementUnlockedComposer : IServerPacket
     private readonly int _level;
     private readonly int _pointReward;
     private readonly int _pixelReward;
-    public int MessageId => ServerPacketHeader.AchievementUnlockedMessageComposer;
+    public uint MessageId => ServerPacketHeader.AchievementUnlockedComposer;
 
     public AchievementUnlockedComposer(Achievement achievement, int level, int pointReward, int pixelReward)
     {

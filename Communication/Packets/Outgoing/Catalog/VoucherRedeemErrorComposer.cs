@@ -5,7 +5,7 @@ namespace Plus.Communication.Packets.Outgoing.Catalog;
 public class VoucherRedeemErrorComposer : IServerPacket
 {
     private readonly int _type;
-    public int MessageId => ServerPacketHeader.VoucherRedeemErrorMessageComposer;
+    public uint MessageId => ServerPacketHeader.VoucherRedeemErrorComposer;
 
     public VoucherRedeemErrorComposer(int type) => _type = type; // TODO @80O: Extract enum with all errors
 

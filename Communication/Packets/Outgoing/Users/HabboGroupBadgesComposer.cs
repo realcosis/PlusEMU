@@ -3,11 +3,11 @@ using Plus.HabboHotel.Groups;
 
 namespace Plus.Communication.Packets.Outgoing.Users;
 
-internal class HabboGroupBadgesComposer : IServerPacket
+public class HabboGroupBadgesComposer : IServerPacket
 {
     private readonly Dictionary<int, string> _badges;
 
-    public int MessageId => ServerPacketHeader.HabboGroupBadgesMessageComposer;
+    public uint MessageId => ServerPacketHeader.HabboGroupBadgesComposer;
 
     public HabboGroupBadgesComposer(Dictionary<int, string> badges)
     {

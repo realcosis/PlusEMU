@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Navigator;
 
-internal class PopularRoomTagsResultComposer : IServerPacket
+public class PopularRoomTagsResultComposer : IServerPacket
 {
     private readonly ICollection<KeyValuePair<string, int>> _tags;
 
-    public int MessageId => ServerPacketHeader.PopularRoomTagsResultMessageComposer;
+    public uint MessageId => ServerPacketHeader.PopularRoomTagsResultComposer;
 
     public PopularRoomTagsResultComposer(ICollection<KeyValuePair<string, int>> tags)
     {

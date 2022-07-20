@@ -6,7 +6,7 @@ public class UserRightsComposer : IServerPacket
 {
     private readonly int _rank;
     private readonly bool _isAmbassador;
-    public int MessageId => ServerPacketHeader.UserRightsMessageComposer;
+    public uint MessageId => ServerPacketHeader.UserRightsComposer;
 
     public UserRightsComposer(int rank, bool isAmbassador)
     {

@@ -6,7 +6,7 @@ namespace Plus.Communication.Packets.Outgoing.Handshake;
 public class UserObjectComposer : IServerPacket
 {
     private readonly Habbo _habbo;
-    public int MessageId => ServerPacketHeader.UserObjectMessageComposer;
+    public uint MessageId => ServerPacketHeader.UserObjectComposer;
 
     public UserObjectComposer(Habbo habbo)
     {

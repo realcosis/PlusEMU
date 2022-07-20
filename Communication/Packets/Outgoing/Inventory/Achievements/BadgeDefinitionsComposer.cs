@@ -3,10 +3,10 @@ using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Achievements;
 
-internal class BadgeDefinitionsComposer : IServerPacket
+public class BadgeDefinitionsComposer : IServerPacket
 {
     private readonly Dictionary<string, Achievement> _achievements;
-    public int MessageId => ServerPacketHeader.BadgeDefinitionsMessageComposer;
+    public uint MessageId => ServerPacketHeader.BadgeDefinitionsComposer;
 
     public BadgeDefinitionsComposer(Dictionary<string, Achievement> achievements)
     {

@@ -6,11 +6,11 @@ using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class ModeratorUserChatlogComposer : IServerPacket
+public class ModeratorUserChatlogComposer : IServerPacket
 {
     private readonly Habbo _habbo;
     private readonly List<KeyValuePair<RoomData, List<ChatlogEntry>>> _chatlogs;
-    public int MessageId => ServerPacketHeader.ModeratorUserChatlogMessageComposer;
+    public uint MessageId => ServerPacketHeader.ModeratorUserChatlogComposer;
 
     public ModeratorUserChatlogComposer(Habbo habbo, List<KeyValuePair<RoomData, List<ChatlogEntry>>> chatlogs)
     {

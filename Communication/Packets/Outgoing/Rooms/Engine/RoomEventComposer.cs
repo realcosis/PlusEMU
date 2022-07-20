@@ -3,12 +3,12 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class RoomEventComposer : IServerPacket
+public class RoomEventComposer : IServerPacket
 {
     private readonly RoomData _data;
     private readonly RoomPromotion? _promotion;
 
-    public int MessageId => ServerPacketHeader.RoomEventMessageComposer;
+    public uint MessageId => ServerPacketHeader.RoomEventComposer;
 
     public RoomEventComposer(RoomData data, RoomPromotion? promotion)
     {

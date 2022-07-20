@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Settings;
 
-internal class RoomMuteSettingsComposer : IServerPacket
+public class RoomMuteSettingsComposer : IServerPacket
 {
     private readonly bool _status;
 
-    public int MessageId => ServerPacketHeader.RoomMuteSettingsMessageComposer;
+    public uint MessageId => ServerPacketHeader.RoomMuteSettingsComposer;
 
     public RoomMuteSettingsComposer(bool status)
     {

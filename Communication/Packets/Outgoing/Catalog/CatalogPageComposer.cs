@@ -9,7 +9,7 @@ public class CatalogPageComposer : IServerPacket
 {
     private readonly CatalogPage _page;
     private readonly string _mode;
-    public int MessageId => ServerPacketHeader.CatalogPageMessageComposer;
+    public uint MessageId => ServerPacketHeader.CatalogPageComposer;
 
     public CatalogPageComposer(CatalogPage page, string mode)
     {

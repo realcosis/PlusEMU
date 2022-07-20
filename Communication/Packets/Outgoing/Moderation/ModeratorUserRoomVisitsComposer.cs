@@ -5,11 +5,11 @@ using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class ModeratorUserRoomVisitsComposer : IServerPacket
+public class ModeratorUserRoomVisitsComposer : IServerPacket
 {
     private readonly Habbo _data;
     private readonly Dictionary<double, RoomData> _visits;
-    public int MessageId => ServerPacketHeader.ModeratorUserRoomVisitsMessageComposer;
+    public uint MessageId => ServerPacketHeader.ModeratorUserRoomVisitsComposer;
 
     public ModeratorUserRoomVisitsComposer(Habbo data, Dictionary<double, RoomData> visits)
     {

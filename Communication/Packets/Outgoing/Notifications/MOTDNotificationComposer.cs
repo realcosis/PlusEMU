@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Notifications;
 
-internal class MotdNotificationComposer : IServerPacket
+public class MotdNotificationComposer : IServerPacket
 {
     private readonly string _message;
 
-    public int MessageId => ServerPacketHeader.MotdNotificationMessageComposer;
+    public uint MessageId => ServerPacketHeader.MotdNotificationComposer;
 
     public MotdNotificationComposer(string message)
     {

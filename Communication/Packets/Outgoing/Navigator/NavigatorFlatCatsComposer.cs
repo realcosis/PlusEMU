@@ -3,10 +3,10 @@ using Plus.HabboHotel.Navigator;
 
 namespace Plus.Communication.Packets.Outgoing.Navigator;
 
-internal class NavigatorFlatCatsComposer : IServerPacket
+public class NavigatorFlatCatsComposer : IServerPacket
 {
     private readonly ICollection<SearchResultList> _categories;
-    public int MessageId => ServerPacketHeader.NavigatorFlatCatsMessageComposer;
+    public uint MessageId => ServerPacketHeader.NavigatorFlatCatsComposer;
 
     public NavigatorFlatCatsComposer(ICollection<SearchResultList> categories)
     {

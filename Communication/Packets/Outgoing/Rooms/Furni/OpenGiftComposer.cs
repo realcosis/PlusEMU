@@ -3,14 +3,14 @@ using Plus.HabboHotel.Items;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni;
 
-internal class OpenGiftComposer : IServerPacket
+public class OpenGiftComposer : IServerPacket
 {
     private readonly ItemData _data;
     private readonly string _text;
     private readonly Item _item;
     private readonly bool _itemIsInRoom;
 
-    public int MessageId => ServerPacketHeader.OpenGiftMessageComposer;
+    public uint MessageId => ServerPacketHeader.OpenGiftComposer;
 
     public OpenGiftComposer(ItemData data, string text, Item item, bool itemIsInRoom)
     {

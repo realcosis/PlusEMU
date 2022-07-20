@@ -3,9 +3,9 @@
 namespace Plus.Communication.Packets.Outgoing.Navigator.New;
 
 // TODO @80O: Implement
-internal class NavigatorPreferencesComposer : IServerPacket
+public class NavigatorPreferencesComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.NavigatorPreferencesMessageComposer;
+    public uint MessageId => ServerPacketHeader.NavigatorPreferencesComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

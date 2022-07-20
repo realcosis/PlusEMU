@@ -5,12 +5,12 @@ using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class ModeratorTicketChatlogComposer : IServerPacket
+public class ModeratorTicketChatlogComposer : IServerPacket
 {
     private readonly ModerationTicket _ticket;
     private readonly RoomData _roomData;
     private readonly double _timestamp;
-    public int MessageId => ServerPacketHeader.ModeratorTicketChatlogMessageComposer;
+    public uint MessageId => ServerPacketHeader.ModeratorTicketChatlogComposer;
 
     public ModeratorTicketChatlogComposer(ModerationTicket ticket, RoomData roomData, double timestamp)
     {

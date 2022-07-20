@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Marketplace;
 
-internal class MarketplaceCanMakeOfferResultComposer : IServerPacket
+public class MarketplaceCanMakeOfferResultComposer : IServerPacket
 {
     private readonly int _result;
-    public int MessageId => ServerPacketHeader.MarketplaceCanMakeOfferResultMessageComposer;
+    public uint MessageId => ServerPacketHeader.MarketplaceCanMakeOfferResultComposer;
 
     public MarketplaceCanMakeOfferResultComposer(int result)
     {

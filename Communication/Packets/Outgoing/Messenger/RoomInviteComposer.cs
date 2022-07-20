@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Messenger;
 
-internal class RoomInviteComposer : IServerPacket
+public class RoomInviteComposer : IServerPacket
 {
     private readonly int _senderId;
     private readonly string _text;
 
-    public int MessageId => ServerPacketHeader.RoomInviteMessageComposer;
+    public uint MessageId => ServerPacketHeader.RoomInviteComposer;
 
     public RoomInviteComposer(int senderId, string text)
     {

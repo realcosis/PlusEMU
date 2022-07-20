@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Trading;
 
-internal class TradingErrorComposer : IServerPacket
+public class TradingErrorComposer : IServerPacket
 {
     private readonly int _error;
     private readonly string _username;
-    public int MessageId => ServerPacketHeader.TradingErrorMessageComposer;
+    public uint MessageId => ServerPacketHeader.TradingErrorComposer;
 
     public TradingErrorComposer(int error, string username)
     {

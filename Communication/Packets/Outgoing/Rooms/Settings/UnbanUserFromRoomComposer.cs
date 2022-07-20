@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Settings;
 
-internal class UnbanUserFromRoomComposer : IServerPacket
+public class UnbanUserFromRoomComposer : IServerPacket
 {
     private readonly int _roomId;
     private readonly int _userId;
 
-    public int MessageId => ServerPacketHeader.UnbanUserFromRoomMessageComposer;
+    public uint MessageId => ServerPacketHeader.UnbanUserFromRoomComposer;
 
     public UnbanUserFromRoomComposer(int roomId, int userId)
     {

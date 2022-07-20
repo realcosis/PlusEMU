@@ -5,13 +5,13 @@ using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Users;
 
-internal class ProfileInformationComposer : IServerPacket
+public class ProfileInformationComposer : IServerPacket
 {
     private readonly Habbo _habbo;
     private readonly GameClient _session;
     private readonly List<Group> _groups;
     private readonly int _friendCount;
-    public int MessageId => ServerPacketHeader.ProfileInformationMessageComposer;
+    public uint MessageId => ServerPacketHeader.ProfileInformationComposer;
 
     public ProfileInformationComposer(Habbo habbo, GameClient session, List<Group> groups, int friendCount)
     {

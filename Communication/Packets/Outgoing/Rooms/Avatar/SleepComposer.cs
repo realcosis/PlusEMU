@@ -7,7 +7,7 @@ public class SleepComposer : IServerPacket
 {
     private readonly RoomUser _user;
     private readonly bool _isSleeping;
-    public int MessageId => ServerPacketHeader.SleepMessageComposer;
+    public uint MessageId => ServerPacketHeader.SleepComposer;
 
     public SleepComposer(RoomUser user, bool isSleeping)
     {

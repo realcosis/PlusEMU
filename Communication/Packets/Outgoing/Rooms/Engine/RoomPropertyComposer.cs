@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class RoomPropertyComposer : IServerPacket
+public class RoomPropertyComposer : IServerPacket
 {
     private readonly string _name;
     private readonly string _value;
 
-    public int MessageId => ServerPacketHeader.RoomPropertyMessageComposer;
+    public uint MessageId => ServerPacketHeader.RoomPropertyComposer;
 
     public RoomPropertyComposer(string name, string value)
     {

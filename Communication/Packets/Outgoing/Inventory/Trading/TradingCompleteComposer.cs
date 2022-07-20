@@ -2,9 +2,9 @@
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Trading;
 
-internal class TradingCompleteComposer : IServerPacket
+public class TradingCompleteComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.TradingCompleteMessageComposer;
+    public uint MessageId => ServerPacketHeader.TradingCompleteComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

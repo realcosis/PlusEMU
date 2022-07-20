@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Trading;
 
-internal class TradingClosedComposer : IServerPacket
+public class TradingClosedComposer : IServerPacket
 {
     private readonly int _userId;
-    public int MessageId => ServerPacketHeader.TradingClosedMessageComposer;
+    public uint MessageId => ServerPacketHeader.TradingClosedComposer;
 
     public TradingClosedComposer(int userId)
     {

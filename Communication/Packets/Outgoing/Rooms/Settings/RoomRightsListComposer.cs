@@ -3,10 +3,10 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Settings;
 
-internal class RoomRightsListComposer : IServerPacket
+public class RoomRightsListComposer : IServerPacket
 {
     private readonly Room _instance;
-    public int MessageId => ServerPacketHeader.RoomRightsListMessageComposer;
+    public uint MessageId => ServerPacketHeader.RoomRightsListComposer;
 
     public RoomRightsListComposer(Room instance)
     {

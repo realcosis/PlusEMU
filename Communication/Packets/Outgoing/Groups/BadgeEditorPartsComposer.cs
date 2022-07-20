@@ -3,9 +3,9 @@ using Plus.HabboHotel.Groups;
 
 namespace Plus.Communication.Packets.Outgoing.Groups;
 
-internal class BadgeEditorPartsComposer : IServerPacket
+public class BadgeEditorPartsComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.BadgeEditorPartsMessageComposer;
+    public uint MessageId => ServerPacketHeader.BadgeEditorPartsComposer;
 
     private readonly ICollection<GroupBadgeParts> _bases;
     private readonly ICollection<GroupBadgeParts> _symbols;

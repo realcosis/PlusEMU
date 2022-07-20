@@ -15,7 +15,7 @@ public class Game2WeeklyLeaderboardComposer : IServerPacket
         _habbos = habbos;
     }
 
-    public int MessageId => ServerPacketHeader.Game2WeeklyLeaderboardMessageComposer;
+    public uint MessageId => ServerPacketHeader.Game2WeeklyLeaderboardComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

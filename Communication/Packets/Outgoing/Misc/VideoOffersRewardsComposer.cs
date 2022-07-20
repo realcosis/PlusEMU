@@ -2,13 +2,13 @@
 
 namespace Plus.Communication.Packets.Outgoing.Misc;
 
-internal class VideoOffersRewardsComposer : IServerPacket
+public class VideoOffersRewardsComposer : IServerPacket
 {
     private readonly int _id;
     private readonly string _type;
     private readonly string _message;
 
-    public int MessageId => ServerPacketHeader.VideoOffersRewardsMessageComposer;
+    public uint MessageId => ServerPacketHeader.VideoOffersRewardsComposer;
 
     public VideoOffersRewardsComposer(int id, string type, string message)
     {

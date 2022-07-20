@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.LandingView;
 
-internal class CampaignComposer : IServerPacket
+public class CampaignComposer : IServerPacket
 {
     private readonly string _campaignString;
     private readonly string _campaignName;
 
-    public int MessageId => ServerPacketHeader.CampaignMessageComposer;
+    public uint MessageId => ServerPacketHeader.CampaignComposer;
 
     public CampaignComposer(string campaignString, string campaignName)
     {

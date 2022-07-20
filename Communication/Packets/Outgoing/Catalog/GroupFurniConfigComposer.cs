@@ -3,10 +3,10 @@ using Plus.HabboHotel.Groups;
 
 namespace Plus.Communication.Packets.Outgoing.Catalog;
 
-internal class GroupFurniConfigComposer : IServerPacket
+public class GroupFurniConfigComposer : IServerPacket
 {
     private readonly ICollection<Group> _groups;
-    public int MessageId => ServerPacketHeader.GroupFurniConfigMessageComposer;
+    public uint MessageId => ServerPacketHeader.GroupFurniConfigComposer;
 
     public GroupFurniConfigComposer(ICollection<Group> groups)
     {

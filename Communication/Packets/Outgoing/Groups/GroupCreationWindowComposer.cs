@@ -3,10 +3,10 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Groups;
 
-internal class GroupCreationWindowComposer : IServerPacket
+public class GroupCreationWindowComposer : IServerPacket
 {
     private readonly ICollection<RoomData> _rooms;
-    public int MessageId => ServerPacketHeader.GroupCreationWindowMessageComposer;
+    public uint MessageId => ServerPacketHeader.GroupCreationWindowComposer;
 
     public GroupCreationWindowComposer(ICollection<RoomData> rooms)
     {

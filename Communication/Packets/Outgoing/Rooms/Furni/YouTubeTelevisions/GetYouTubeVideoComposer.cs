@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.YouTubeTelevisions;
 
-internal class GetYouTubeVideoComposer : IServerPacket
+public class GetYouTubeVideoComposer : IServerPacket
 {
     private readonly int _itemId;
     private readonly string _youTubeVideo;
 
-    public int MessageId => ServerPacketHeader.GetYouTubeVideoMessageComposer;
+    public uint MessageId => ServerPacketHeader.GetYouTubeVideoComposer;
 
     public GetYouTubeVideoComposer(int itemId, string youTubeVideo)
     {

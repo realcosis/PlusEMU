@@ -3,9 +3,9 @@
 namespace Plus.Communication.Packets.Outgoing.Pets;
 
 // TODO @80O: Implement
-internal class PetBreedingComposer : IServerPacket
+public class PetBreedingComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.PetBreedingMessageComposer;
+    public uint MessageId => ServerPacketHeader.PetBreedingComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

@@ -3,10 +3,10 @@ using Plus.HabboHotel.Users;
 
 namespace Plus.Communication.Packets.Outgoing.Users;
 
-internal class GetRelationshipsComposer : IServerPacket
+public class GetRelationshipsComposer : IServerPacket
 {
     private readonly Habbo _habbo;
-    public int MessageId => ServerPacketHeader.GetRelationshipsMessageComposer;
+    public uint MessageId => ServerPacketHeader.GetRelationshipsComposer;
 
     public GetRelationshipsComposer(Habbo habbo)
     {

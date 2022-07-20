@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Messenger;
 
-internal class FollowFriendFailedComposer : IServerPacket
+public class FollowFriendFailedComposer : IServerPacket
 {
     private readonly int _errorCode;
-    public int MessageId => ServerPacketHeader.FollowFriendFailedMessageComposer;
+    public uint MessageId => ServerPacketHeader.FollowFriendFailedComposer;
 
     public FollowFriendFailedComposer(int errorCode)
     {

@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.AI.Pets;
 
-internal class PetTrainingPanelComposer : IServerPacket
+public class PetTrainingPanelComposer : IServerPacket
 {
     private readonly int _petId;
     private readonly int _level;
 
-    public int MessageId => ServerPacketHeader.PetTrainingPanelMessageComposer;
+    public uint MessageId => ServerPacketHeader.PetTrainingPanelComposer;
 
     public PetTrainingPanelComposer(int petId, int level)
     {

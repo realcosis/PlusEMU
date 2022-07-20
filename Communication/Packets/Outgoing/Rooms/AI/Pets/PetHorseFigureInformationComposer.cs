@@ -3,10 +3,10 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.AI.Pets;
 
-internal class PetHorseFigureInformationComposer : IServerPacket
+public class PetHorseFigureInformationComposer : IServerPacket
 {
     private readonly RoomUser _petUser;
-    public int MessageId => ServerPacketHeader.PetHorseFigureInformationMessageComposer;
+    public uint MessageId => ServerPacketHeader.PetHorseFigureInformationComposer;
 
     public PetHorseFigureInformationComposer(RoomUser petUser)
     {

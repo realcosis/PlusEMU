@@ -3,12 +3,12 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 
-internal class DanceComposer : IServerPacket
+public class DanceComposer : IServerPacket
 {
     private readonly RoomUser _avatar;
     private readonly int _dance;
 
-    public int MessageId => ServerPacketHeader.DanceMessageComposer;
+    public uint MessageId => ServerPacketHeader.DanceComposer;
 
     public DanceComposer(RoomUser avatar, int dance)
     {

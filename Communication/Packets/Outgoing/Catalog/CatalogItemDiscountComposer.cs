@@ -2,9 +2,9 @@
 
 namespace Plus.Communication.Packets.Outgoing.Catalog;
 
-internal class CatalogItemDiscountComposer : IServerPacket
+public class CatalogItemDiscountComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.CatalogItemDiscountMessageComposer;
+    public uint MessageId => ServerPacketHeader.CatalogItemDiscountComposer;
     public void Compose(IOutgoingPacket packet)
     {
         packet.WriteInteger(100); //Most you can get.

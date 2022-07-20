@@ -3,10 +3,10 @@ using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Outgoing.Navigator;
 
-internal class FavouritesComposer : IServerPacket
+public class FavouritesComposer : IServerPacket
 {
     private readonly ArrayList _favouriteIds;
-    public int MessageId => ServerPacketHeader.FavouritesMessageComposer;
+    public uint MessageId => ServerPacketHeader.FavouritesComposer;
 
     public FavouritesComposer(ArrayList favouriteIds)
     {

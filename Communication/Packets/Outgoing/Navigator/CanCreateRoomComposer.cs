@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Navigator;
 
-internal class CanCreateRoomComposer : IServerPacket
+public class CanCreateRoomComposer : IServerPacket
 {
     private readonly bool _error;
     private readonly int _maxRoomsPerUser;
-    public int MessageId => ServerPacketHeader.CanCreateRoomMessageComposer;
+    public uint MessageId => ServerPacketHeader.CanCreateRoomComposer;
 
     public CanCreateRoomComposer(bool error, int maxRoomsPerUser)
     {

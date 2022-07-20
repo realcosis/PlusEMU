@@ -2,13 +2,13 @@
 
 namespace Plus.Communication.Packets.Outgoing.Users;
 
-internal class NameChangeUpdateComposer : IServerPacket
+public class NameChangeUpdateComposer : IServerPacket
 {
     private readonly string _name;
     private readonly int _error;
     private readonly ICollection<string> _tags;
 
-    public int MessageId => ServerPacketHeader.NameChangeUpdateMessageComposer;
+    public uint MessageId => ServerPacketHeader.NameChangeUpdateComposer;
 
     public NameChangeUpdateComposer(string name, int error, ICollection<string> tags)
     {

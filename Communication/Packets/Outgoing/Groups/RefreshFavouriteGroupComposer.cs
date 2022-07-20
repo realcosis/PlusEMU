@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Groups;
 
-internal class RefreshFavouriteGroupComposer : IServerPacket
+public class RefreshFavouriteGroupComposer : IServerPacket
 {
     private readonly int _id;
-    public int MessageId => ServerPacketHeader.RefreshFavouriteGroupMessageComposer;
+    public uint MessageId => ServerPacketHeader.RefreshFavouriteGroupComposer;
 
     public RefreshFavouriteGroupComposer(int id)
     {

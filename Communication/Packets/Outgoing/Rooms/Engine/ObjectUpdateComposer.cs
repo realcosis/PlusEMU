@@ -4,11 +4,11 @@ using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class ObjectUpdateComposer : IServerPacket
+public class ObjectUpdateComposer : IServerPacket
 {
     private readonly Item _item;
     private readonly int _userId;
-    public int MessageId => ServerPacketHeader.ObjectUpdateMessageComposer;
+    public uint MessageId => ServerPacketHeader.ObjectUpdateComposer;
 
     public ObjectUpdateComposer(Item item, int userId)
     {

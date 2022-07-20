@@ -5,7 +5,7 @@ namespace Plus.Communication.Packets.Outgoing.Catalog;
 // TODO @80O: Implement
 public class ClubGiftsComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.ClubGiftsMessageComposer;
+    public uint MessageId => ServerPacketHeader.ClubGiftsComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

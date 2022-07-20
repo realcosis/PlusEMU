@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Users;
 
-internal class UserTagsComposer : IServerPacket
+public class UserTagsComposer : IServerPacket
 {
     private readonly int _userId;
-    public int MessageId => ServerPacketHeader.UserTagsMessageComposer;
+    public uint MessageId => ServerPacketHeader.UserTagsComposer;
 
     public UserTagsComposer(int userId)
     {

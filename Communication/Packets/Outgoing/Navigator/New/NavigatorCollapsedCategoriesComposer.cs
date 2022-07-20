@@ -3,9 +3,9 @@
 namespace Plus.Communication.Packets.Outgoing.Navigator.New;
 
 // TODO @80O: Implement
-internal class NavigatorCollapsedCategoriesComposer : IServerPacket
+public class NavigatorCollapsedCategoriesComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.NavigatorCollapsedCategoriesMessageComposer;
+    public uint MessageId => ServerPacketHeader.NavigatorCollapsedCategoriesComposer;
 
     public void Compose(IOutgoingPacket packet) => packet.WriteInteger(0);
 }

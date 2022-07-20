@@ -5,11 +5,11 @@ using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class ModeratorRoomChatlogComposer : IServerPacket
+public class ModeratorRoomChatlogComposer : IServerPacket
 {
     private readonly Room _room;
     private readonly ICollection<ChatlogEntry> _chats;
-    public int MessageId => ServerPacketHeader.ModeratorRoomChatlogMessageComposer;
+    public uint MessageId => ServerPacketHeader.ModeratorRoomChatlogComposer;
 
     public ModeratorRoomChatlogComposer(Room room, ICollection<ChatlogEntry> chats)
     {

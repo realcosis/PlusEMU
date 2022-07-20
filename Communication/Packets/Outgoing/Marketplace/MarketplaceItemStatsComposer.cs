@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Marketplace;
 
-internal class MarketplaceItemStatsComposer : IServerPacket
+public class MarketplaceItemStatsComposer : IServerPacket
 {
     private readonly int _itemId;
     private readonly int _spriteId;
     private readonly int _averagePrice;
-    public int MessageId => ServerPacketHeader.MarketplaceItemStatsMessageComposer;
+    public uint MessageId => ServerPacketHeader.MarketplaceItemStatsComposer;
 
     public MarketplaceItemStatsComposer(int itemId, int spriteId, int averagePrice)
     {

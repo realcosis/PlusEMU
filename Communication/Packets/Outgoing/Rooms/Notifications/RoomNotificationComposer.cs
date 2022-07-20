@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Notifications;
 
-internal class RoomNotificationComposer : IServerPacket
+public class RoomNotificationComposer : IServerPacket
 {
     private string _type;
     private Dictionary<string, string> _values;
 
-    public int MessageId => ServerPacketHeader.RoomNotificationMessageComposer;
+    public uint MessageId => ServerPacketHeader.RoomNotificationComposer;
 
     public RoomNotificationComposer(string type, string key, string value)
     {

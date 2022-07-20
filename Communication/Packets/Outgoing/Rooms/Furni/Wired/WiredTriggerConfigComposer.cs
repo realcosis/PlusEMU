@@ -3,12 +3,12 @@ using Plus.HabboHotel.Items.Wired;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired;
 
-internal class WiredTriggeRconfigComposer : IServerPacket
+public class WiredTriggeRconfigComposer : IServerPacket
 {
     private readonly IWiredItem _box;
     private readonly List<int> _blockedItems;
 
-    public int MessageId => ServerPacketHeader.WiredTriggeRconfigMessageComposer;
+    public uint MessageId => ServerPacketHeader.WiredTriggeRconfigComposer;
 
     public WiredTriggeRconfigComposer(IWiredItem box, List<int> blockedItems)
     {

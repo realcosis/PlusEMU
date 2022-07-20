@@ -2,9 +2,9 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Polls;
 
-internal class PollOfferComposer : IServerPacket
+public class PollOfferComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.PollOfferComposer;
+    public uint MessageId => ServerPacketHeader.PollOfferComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

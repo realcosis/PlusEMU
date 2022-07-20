@@ -6,7 +6,7 @@ public class ActionComposer : IServerPacket
 {
     private readonly int _virtualId;
     private readonly int _action;
-    public int MessageId => ServerPacketHeader.ActionMessageComposer;
+    public uint MessageId => ServerPacketHeader.ActionComposer;
 
     public ActionComposer(int virtualId, int action)
     {

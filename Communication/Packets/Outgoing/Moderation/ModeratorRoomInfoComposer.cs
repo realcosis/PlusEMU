@@ -3,11 +3,11 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class ModeratorRoomInfoComposer : IServerPacket
+public class ModeratorRoomInfoComposer : IServerPacket
 {
     private readonly RoomData _data;
     private readonly bool _ownerInRoom;
-    public int MessageId => ServerPacketHeader.ModeratorRoomInfoMessageComposer;
+    public uint MessageId => ServerPacketHeader.ModeratorRoomInfoComposer;
 
     public ModeratorRoomInfoComposer(RoomData data, bool ownerInRoom)
     {

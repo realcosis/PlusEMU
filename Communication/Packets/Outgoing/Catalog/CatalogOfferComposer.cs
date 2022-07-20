@@ -5,10 +5,10 @@ using Plus.HabboHotel.Items;
 
 namespace Plus.Communication.Packets.Outgoing.Catalog;
 
-internal class CatalogOfferComposer : IServerPacket
+public class CatalogOfferComposer : IServerPacket
 {
     private readonly CatalogItem _item;
-    public int MessageId => ServerPacketHeader.CatalogOfferMessageComposer;
+    public uint MessageId => ServerPacketHeader.CatalogOfferComposer;
 
     public CatalogOfferComposer(CatalogItem item)
     {

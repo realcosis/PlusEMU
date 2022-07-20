@@ -4,13 +4,13 @@ using Plus.HabboHotel.Users.Messenger;
 
 namespace Plus.Communication.Packets.Outgoing.Messenger;
 
-internal class BuddyListComposer : IServerPacket
+public class BuddyListComposer : IServerPacket
 {
     private readonly ICollection<MessengerBuddy> _friends;
     private readonly Habbo _player;
     private readonly int _pages;
     private readonly int _page;
-    public int MessageId => ServerPacketHeader.BuddyListMessageComposer;
+    public uint MessageId => ServerPacketHeader.BuddyListComposer;
 
     public BuddyListComposer(ICollection<MessengerBuddy> friends, Habbo player, int pages, int page)
     {

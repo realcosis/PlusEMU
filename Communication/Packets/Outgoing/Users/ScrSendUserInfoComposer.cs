@@ -3,9 +3,9 @@
 namespace Plus.Communication.Packets.Outgoing.Users;
 
 // TODO @80O: Implement
-internal class ScrSendUserInfoComposer : IServerPacket
+public class ScrSendUserInfoComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.ScrSendUserInfoMessageComposer;
+    public uint MessageId => ServerPacketHeader.ScrSendUserInfoComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

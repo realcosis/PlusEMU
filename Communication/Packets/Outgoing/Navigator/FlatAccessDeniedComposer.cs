@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Navigator;
 
-internal class FlatAccessDeniedComposer : IServerPacket
+public class FlatAccessDeniedComposer : IServerPacket
 {
     private readonly string _username;
-    public int MessageId => ServerPacketHeader.FlatAccessDeniedMessageComposer;
+    public uint MessageId => ServerPacketHeader.FlatAccessDeniedComposer;
 
     public FlatAccessDeniedComposer(string username)
     {

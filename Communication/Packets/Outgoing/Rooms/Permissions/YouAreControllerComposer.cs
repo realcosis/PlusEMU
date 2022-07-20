@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Permissions;
 
-internal class YouAreControllerComposer : IServerPacket
+public class YouAreControllerComposer : IServerPacket
 {
     private readonly int _setting;
-    public int MessageId => ServerPacketHeader.YouAreControllerMessageComposer;
+    public uint MessageId => ServerPacketHeader.YouAreControllerComposer;
 
     public YouAreControllerComposer(int setting)
     {

@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.GameCenter;
 
-internal class JoinQueueComposer : IServerPacket
+public class JoinQueueComposer : IServerPacket
 {
     private readonly int _gameId;
-    public int MessageId => ServerPacketHeader.JoinQueueMessageComposer;
+    public uint MessageId => ServerPacketHeader.JoinQueueComposer;
 
     public JoinQueueComposer(int gameId)
     {

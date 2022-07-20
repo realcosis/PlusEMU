@@ -8,7 +8,7 @@ public class CatalogIndexComposer : IServerPacket
     private readonly GameClient _session;
     private readonly ICollection<CatalogPage> _pages;
 
-    public int MessageId => ServerPacketHeader.CatalogIndexMessageComposer;
+    public uint MessageId => ServerPacketHeader.CatalogIndexComposer;
 
     public CatalogIndexComposer(GameClient session, ICollection<CatalogPage> pages)
     {

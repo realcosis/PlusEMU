@@ -2,9 +2,9 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Permissions;
 
-internal class YouAreNotControllerComposer : IServerPacket
+public class YouAreNotControllerComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.YouAreNotControllerMessageComposer;
+    public uint MessageId => ServerPacketHeader.YouAreNotControllerComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

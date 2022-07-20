@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Messenger;
 
-internal class NewBuddyRequestComposer : IServerPacket
+public class NewBuddyRequestComposer : IServerPacket
 {
     private readonly int _id;
     private readonly string _name;
     private readonly string _figure;
-    public int MessageId => ServerPacketHeader.NewBuddyRequestMessageComposer;
+    public uint MessageId => ServerPacketHeader.NewBuddyRequestComposer;
 
     public NewBuddyRequestComposer(int id, string name, string figure)
     {

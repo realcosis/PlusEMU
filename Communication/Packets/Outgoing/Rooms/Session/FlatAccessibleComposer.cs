@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Session;
 
-internal class FlatAccessibleComposer : IServerPacket
+public class FlatAccessibleComposer : IServerPacket
 {
     private readonly string _username;
 
-    public int MessageId => ServerPacketHeader.FlatAccessibleMessageComposer;
+    public uint MessageId => ServerPacketHeader.FlatAccessibleComposer;
 
     public FlatAccessibleComposer(string username)
     {

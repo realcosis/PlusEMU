@@ -3,13 +3,13 @@ using Plus.HabboHotel.Groups;
 
 namespace Plus.Communication.Packets.Outgoing.Groups;
 
-internal class GroupInfoComposer : IServerPacket
+public class GroupInfoComposer : IServerPacket
 {
     private readonly Group _group;
     private readonly GameClient _session;
     private readonly bool _newWindow;
 
-    public int MessageId => ServerPacketHeader.GroupInfoMessageComposer;
+    public uint MessageId => ServerPacketHeader.GroupInfoComposer;
 
     public GroupInfoComposer(Group group, GameClient session, bool newWindow = false)
     {

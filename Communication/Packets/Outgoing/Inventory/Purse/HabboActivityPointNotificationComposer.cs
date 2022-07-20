@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Purse;
 
-internal class HabboActivityPointNotificationComposer : IServerPacket
+public class HabboActivityPointNotificationComposer : IServerPacket
 {
     private readonly int _balance;
     private readonly int _notify;
     private readonly int _type;
-    public int MessageId => ServerPacketHeader.HabboActivityPointNotificationMessageComposer;
+    public uint MessageId => ServerPacketHeader.HabboActivityPointNotificationComposer;
 
     public HabboActivityPointNotificationComposer(int balance, int notify, int type = 0)
     {

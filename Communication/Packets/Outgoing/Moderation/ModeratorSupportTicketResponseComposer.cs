@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class ModeratorSupportTicketResponseComposer : IServerPacket
+public class ModeratorSupportTicketResponseComposer : IServerPacket
 {
     private readonly int _result;
-    public int MessageId => ServerPacketHeader.ModeratorSupportTicketResponseMessageComposer;
+    public uint MessageId => ServerPacketHeader.ModeratorSupportTicketResponseComposer;
 
     public ModeratorSupportTicketResponseComposer(int result)
     {

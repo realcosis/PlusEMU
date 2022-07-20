@@ -4,11 +4,11 @@ using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class ModeratorSupportTicketComposer : IServerPacket
+public class ModeratorSupportTicketComposer : IServerPacket
 {
     private readonly int _id;
     private readonly ModerationTicket _ticket;
-    public int MessageId => ServerPacketHeader.ModeratorSupportTicketMessageComposer;
+    public uint MessageId => ServerPacketHeader.ModeratorSupportTicketComposer;
 
     public ModeratorSupportTicketComposer(int id, ModerationTicket ticket)
     {

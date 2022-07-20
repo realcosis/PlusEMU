@@ -4,7 +4,7 @@ namespace Plus.Communication.Packets.Outgoing.BuildersClub;
 
 public class BuildersClubMembershipComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.BuildersClubMembershipMessageComposer;
+    public uint MessageId => ServerPacketHeader.BuildersClubMembershipComposer;
     public void Compose(IOutgoingPacket packet)
     {
         packet.WriteInteger(int.MaxValue);

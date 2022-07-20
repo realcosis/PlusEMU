@@ -3,12 +3,12 @@ using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Outgoing.GameCenter;
 
-internal class GameAchievementListComposer : IServerPacket
+public class GameAchievementListComposer : IServerPacket
 {
     private readonly GameClient _session;
     private readonly ICollection<Achievement> _achievements;
     private readonly int _gameId;
-    public int MessageId => ServerPacketHeader.GameAchievementListMessageComposer;
+    public uint MessageId => ServerPacketHeader.GameAchievementListComposer;
 
     public GameAchievementListComposer(GameClient session, ICollection<Achievement> achievements, int gameId)
     {

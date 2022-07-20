@@ -3,12 +3,12 @@ using Plus.HabboHotel.Groups;
 
 namespace Plus.Communication.Packets.Outgoing.Groups;
 
-internal class GroupFurniSettingsComposer : IServerPacket
+public class GroupFurniSettingsComposer : IServerPacket
 {
     private readonly Group _group;
     private readonly int _itemId;
     private readonly int _userId;
-    public int MessageId => ServerPacketHeader.GroupFurniSettingsMessageComposer;
+    public uint MessageId => ServerPacketHeader.GroupFurniSettingsComposer;
 
     public GroupFurniSettingsComposer(Group group, int itemId, int userId)
     {

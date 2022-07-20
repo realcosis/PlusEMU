@@ -3,11 +3,11 @@ using Plus.HabboHotel.Quests;
 
 namespace Plus.Communication.Packets.Outgoing.Quests;
 
-internal class QuestStartedComposer : IServerPacket
+public class QuestStartedComposer : IServerPacket
 {
     private readonly GameClient _session;
     private readonly Quest _quest;
-    public int MessageId => ServerPacketHeader.QuestStartedMessageComposer;
+    public uint MessageId => ServerPacketHeader.QuestStartedComposer;
 
     public QuestStartedComposer(GameClient session, Quest quest)
     {

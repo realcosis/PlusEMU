@@ -3,11 +3,11 @@ using Plus.HabboHotel.Items.Wired;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired;
 
-internal class WiredConditionConfigComposer : IServerPacket
+public class WiredConditionConfigComposer : IServerPacket
 {
     private readonly IWiredItem _box;
 
-    public int MessageId => ServerPacketHeader.WiredConditionConfigMessageComposer;
+    public uint MessageId => ServerPacketHeader.WiredConditionConfigComposer;
 
     public WiredConditionConfigComposer(IWiredItem box)
     {

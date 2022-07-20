@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class MutedComposer : IServerPacket
+public class MutedComposer : IServerPacket
 {
     private readonly double _timeMuted;
 
-    public int MessageId => ServerPacketHeader.MutedMessageComposer;
+    public uint MessageId => ServerPacketHeader.MutedComposer;
 
     public MutedComposer(double timeMuted)
     {

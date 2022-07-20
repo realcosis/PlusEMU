@@ -4,7 +4,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.RentableSpaces;
 
 public class RentableSpaceComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.RentableSpaceMessageComposer;
+    public uint MessageId => ServerPacketHeader.RentableSpaceComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

@@ -4,7 +4,7 @@ namespace Plus.Communication.Packets.Outgoing.Handshake;
 
 public class PongComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.PongMessageComposer;
+    public uint MessageId => ServerPacketHeader.PongComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

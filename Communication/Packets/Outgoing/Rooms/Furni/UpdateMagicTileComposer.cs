@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni;
 
-internal class UpdateMagicTileComposer : IServerPacket
+public class UpdateMagicTileComposer : IServerPacket
 {
     private readonly int _itemId;
     private readonly int _height;
 
-    public int MessageId => ServerPacketHeader.UpdateMagicTileMessageComposer;
+    public uint MessageId => ServerPacketHeader.UpdateMagicTileComposer;
 
     public UpdateMagicTileComposer(int itemId, int height)
     {

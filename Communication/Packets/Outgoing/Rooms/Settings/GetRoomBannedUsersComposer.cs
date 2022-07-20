@@ -3,10 +3,10 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Settings;
 
-internal class GetRoomBannedUsersComposer : IServerPacket
+public class GetRoomBannedUsersComposer : IServerPacket
 {
     private readonly Room _instance;
-    public int MessageId => ServerPacketHeader.GetRoomBannedUsersMessageComposer;
+    public uint MessageId => ServerPacketHeader.GetRoomBannedUsersComposer;
 
     public GetRoomBannedUsersComposer(Room instance)
     {

@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Stickys;
 
-internal class StickyNoteComposer : IServerPacket
+public class StickyNoteComposer : IServerPacket
 {
     private readonly string _itemId;
     private readonly string _extradata;
 
-    public int MessageId => ServerPacketHeader.StickyNoteMessageComposer;
+    public uint MessageId => ServerPacketHeader.StickyNoteComposer;
 
     public StickyNoteComposer(string itemId, string extradata)
     {

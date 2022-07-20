@@ -2,9 +2,9 @@
 
 namespace Plus.Communication.Packets.Outgoing.Quests;
 
-internal class QuestAbortedComposer : IServerPacket
+public class QuestAbortedComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.QuestAbortedMessageComposer;
+    public uint MessageId => ServerPacketHeader.QuestAbortedComposer;
 
     public void Compose(IOutgoingPacket packet) => packet.WriteBoolean(false);
 }

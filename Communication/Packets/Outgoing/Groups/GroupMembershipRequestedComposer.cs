@@ -3,13 +3,13 @@ using Plus.HabboHotel.Users;
 
 namespace Plus.Communication.Packets.Outgoing.Groups;
 
-internal class GroupMembershipRequestedComposer : IServerPacket
+public class GroupMembershipRequestedComposer : IServerPacket
 {
     private readonly int _groupId;
     private readonly Habbo _habbo;
     private readonly int _type;
 
-    public int MessageId => ServerPacketHeader.GroupMembershipRequestedMessageComposer;
+    public uint MessageId => ServerPacketHeader.GroupMembershipRequestedComposer;
 
     public GroupMembershipRequestedComposer(int groupId, Habbo habbo, int type)
     {

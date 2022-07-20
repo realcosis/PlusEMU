@@ -4,10 +4,10 @@ using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class CallForHelpPendingCallsComposer : IServerPacket
+public class CallForHelpPendingCallsComposer : IServerPacket
 {
     private readonly ModerationTicket _ticket;
-    public int MessageId => ServerPacketHeader.CallForHelpPendingCallsMessageComposer;
+    public uint MessageId => ServerPacketHeader.CallForHelpPendingCallsComposer;
 
     public CallForHelpPendingCallsComposer(ModerationTicket ticket)
     {

@@ -2,13 +2,13 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class UserNameChangeComposer : IServerPacket
+public class UserNameChangeComposer : IServerPacket
 {
     private readonly int _roomId;
     private readonly int _virtualId;
     private readonly string _username;
 
-    public int MessageId => ServerPacketHeader.UserNameChangeMessageComposer;
+    public uint MessageId => ServerPacketHeader.UserNameChangeComposer;
 
     public UserNameChangeComposer(int roomId, int virtualId, string username)
     {

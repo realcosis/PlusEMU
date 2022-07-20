@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Handshake;
 
-internal class GenericErrorComposer : IServerPacket
+public class GenericErrorComposer : IServerPacket
 {
     private readonly int _errorId;
-    public int MessageId => ServerPacketHeader.GenericErrorMessageComposer;
+    public uint MessageId => ServerPacketHeader.GenericErrorComposer;
 
     public GenericErrorComposer(int errorId)
     {

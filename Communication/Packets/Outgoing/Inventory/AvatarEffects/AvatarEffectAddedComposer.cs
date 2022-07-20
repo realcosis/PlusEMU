@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
 
-internal class AvatarEffectAddedComposer : IServerPacket
+public class AvatarEffectAddedComposer : IServerPacket
 {
     private readonly int _spriteId;
     private readonly int _duration;
-    public int MessageId => ServerPacketHeader.AvatarEffectAddedMessageComposer;
+    public uint MessageId => ServerPacketHeader.AvatarEffectAddedComposer;
 
     public AvatarEffectAddedComposer(int spriteId, int duration)
     {

@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class BroadcastMessageAlertComposer : IServerPacket
+public class BroadcastMessageAlertComposer : IServerPacket
 {
     private readonly string _message;
     private readonly string _url;
-    public int MessageId => ServerPacketHeader.BroadcastMessageAlertMessageComposer;
+    public uint MessageId => ServerPacketHeader.BroadcastMessageAlertComposer;
 
     public BroadcastMessageAlertComposer(string message, string url = "")
     {

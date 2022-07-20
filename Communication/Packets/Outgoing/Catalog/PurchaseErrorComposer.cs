@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Catalog;
 
-internal class PurchaseErrorComposer : IServerPacket
+public class PurchaseErrorComposer : IServerPacket
 {
     private readonly int _errorCode;
-    public int MessageId => ServerPacketHeader.PurchaseErrorMessageComposer;
+    public uint MessageId => ServerPacketHeader.PurchaseErrorComposer;
 
     public PurchaseErrorComposer(int errorCode)
     {

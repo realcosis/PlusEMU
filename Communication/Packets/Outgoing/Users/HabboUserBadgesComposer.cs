@@ -3,10 +3,10 @@ using Plus.HabboHotel.Users;
 
 namespace Plus.Communication.Packets.Outgoing.Users;
 
-internal class HabboUserBadgesComposer : IServerPacket
+public class HabboUserBadgesComposer : IServerPacket
 {
     private readonly Habbo _habbo;
-    public int MessageId => ServerPacketHeader.HabboUserBadgesMessageComposer;
+    public uint MessageId => ServerPacketHeader.HabboUserBadgesComposer;
 
     public HabboUserBadgesComposer(Habbo habbo)
     {

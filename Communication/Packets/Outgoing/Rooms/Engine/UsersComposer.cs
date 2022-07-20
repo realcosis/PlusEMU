@@ -6,11 +6,11 @@ using Plus.HabboHotel.Rooms.AI;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class UsersComposer : IServerPacket
+public class UsersComposer : IServerPacket
 {
     private readonly ICollection<RoomUser> _users;
 
-    public int MessageId => ServerPacketHeader.UsersMessageComposer;
+    public uint MessageId => ServerPacketHeader.UsersComposer;
 
     public UsersComposer(ICollection<RoomUser> users)
     {

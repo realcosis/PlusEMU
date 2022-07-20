@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Groups;
 
-internal class NewGroupInfoComposer : IServerPacket
+public class NewGroupInfoComposer : IServerPacket
 {
     private readonly int _roomId;
     private readonly int _groupId;
 
-    public int MessageId => ServerPacketHeader.NewGroupInfoMessageComposer;
+    public uint MessageId => ServerPacketHeader.NewGroupInfoComposer;
 
     public NewGroupInfoComposer(int roomId, int groupId)
     {

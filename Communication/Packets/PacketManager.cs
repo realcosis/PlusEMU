@@ -72,11 +72,8 @@ public sealed class PacketManager : IPacketManager, IDisposable
         if (_cancellationTokenSource.IsCancellationRequested)
             return;
 
-        await Task.Run(async () =>
-        {
-            var task = pak.Parse(session, packet);
-            await task.WaitAsync(_maximumRunTimeInSec, _cancellationTokenSource.Token);
-        }, _cancellationTokenSource.Token).ContinueWith(t =>
+        var task = pak.Parse(session, packet); 
+        await task.WaitAsync(_maximumRunTimeInSec, _cancellationTokenSource.Token).ContinueWith(t =>
         {
             if (t.IsFaulted && t.Exception != null)
             {

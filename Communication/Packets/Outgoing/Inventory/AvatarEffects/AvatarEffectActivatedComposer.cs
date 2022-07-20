@@ -3,10 +3,10 @@ using Plus.HabboHotel.Users.Effects;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
 
-internal class AvatarEffectActivatedComposer : IServerPacket
+public class AvatarEffectActivatedComposer : IServerPacket
 {
     private readonly AvatarEffect _effect;
-    public int MessageId => ServerPacketHeader.AvatarEffectActivatedMessageComposer;
+    public uint MessageId => ServerPacketHeader.AvatarEffectActivatedComposer;
 
     public AvatarEffectActivatedComposer(AvatarEffect effect)
     {

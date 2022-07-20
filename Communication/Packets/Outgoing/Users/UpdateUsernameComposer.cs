@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Users;
 
-internal class UpdateUsernameComposer : IServerPacket
+public class UpdateUsernameComposer : IServerPacket
 {
     private readonly string _username;
 
-    public int MessageId => ServerPacketHeader.UpdateUsernameMessageComposer;
+    public uint MessageId => ServerPacketHeader.UpdateUsernameComposer;
 
     public UpdateUsernameComposer(string username)
     {

@@ -7,7 +7,7 @@ public class UserTypingComposer : IServerPacket
     private readonly int _virtualId;
     private readonly bool _typing;
 
-    public int MessageId => ServerPacketHeader.UserTypingMessageComposer;
+    public uint MessageId => ServerPacketHeader.UserTypingComposer;
 
     public UserTypingComposer(int virtualId, bool typing)
     {

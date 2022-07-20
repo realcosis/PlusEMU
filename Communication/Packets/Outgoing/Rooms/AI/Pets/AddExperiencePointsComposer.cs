@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.AI.Pets;
 
-internal class AddExperiencePointsComposer : IServerPacket
+public class AddExperiencePointsComposer : IServerPacket
 {
     private readonly int _petId;
     private readonly int _virtualId;
     private readonly int _amount;
-    public int MessageId => ServerPacketHeader.AddExperiencePointsMessageComposer;
+    public uint MessageId => ServerPacketHeader.AddExperiencePointsComposer;
 
     public AddExperiencePointsComposer(int petId, int virtualId, int amount)
     {

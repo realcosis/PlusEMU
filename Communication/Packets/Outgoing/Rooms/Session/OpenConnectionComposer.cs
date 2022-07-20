@@ -2,9 +2,9 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Session;
 
-internal class OpenConnectionComposer : IServerPacket
+public class OpenConnectionComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.OpenConnectionMessageComposer;
+    public uint MessageId => ServerPacketHeader.OpenConnectionComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

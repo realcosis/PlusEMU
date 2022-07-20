@@ -6,7 +6,7 @@ public class InitCryptoComposer : IServerPacket
 {
     private readonly string _prime;
     private readonly string _generator;
-    public int MessageId => ServerPacketHeader.InitCryptoMessageComposer;
+    public uint MessageId => ServerPacketHeader.InitCryptoComposer;
 
     public InitCryptoComposer(string prime, string generator)
     {

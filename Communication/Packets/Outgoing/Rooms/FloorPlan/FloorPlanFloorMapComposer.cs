@@ -3,11 +3,11 @@ using Plus.HabboHotel.Items;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.FloorPlan;
 
-internal class FloorPlanFloorMapComposer : IServerPacket
+public class FloorPlanFloorMapComposer : IServerPacket
 {
     private readonly ICollection<Item> _items;
 
-    public int MessageId => ServerPacketHeader.FloorPlanFloorMapMessageComposer;
+    public uint MessageId => ServerPacketHeader.FloorPlanFloorMapComposer;
 
     public FloorPlanFloorMapComposer(ICollection<Item> items)
     {

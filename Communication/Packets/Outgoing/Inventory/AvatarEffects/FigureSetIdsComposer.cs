@@ -3,10 +3,10 @@ using Plus.HabboHotel.Users.Clothing.Parts;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.AvatarEffects;
 
-internal class FigureSetIdsComposer : IServerPacket
+public class FigureSetIdsComposer : IServerPacket
 {
     private readonly ICollection<ClothingParts> _clothingParts;
-    public int MessageId => ServerPacketHeader.FigureSetIdsMessageComposer;
+    public uint MessageId => ServerPacketHeader.FigureSetIdsComposer;
 
     public FigureSetIdsComposer(ICollection<ClothingParts> clothingParts)
     {

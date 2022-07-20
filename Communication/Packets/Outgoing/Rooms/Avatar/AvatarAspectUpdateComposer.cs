@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 
-internal class AvatarAspectUpdateComposer : IServerPacket
+public class AvatarAspectUpdateComposer : IServerPacket
 {
     private readonly string _figure;
     private readonly string _gender;
 
-    public int MessageId => ServerPacketHeader.AvatarAspectUpdateMessageComposer;
+    public uint MessageId => ServerPacketHeader.AvatarAspectUpdateComposer;
 
     public AvatarAspectUpdateComposer(string figure, string gender)
     {

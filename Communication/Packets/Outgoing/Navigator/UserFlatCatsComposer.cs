@@ -3,12 +3,12 @@ using Plus.HabboHotel.Navigator;
 
 namespace Plus.Communication.Packets.Outgoing.Navigator;
 
-internal class UserFlatCatsComposer : IServerPacket
+public class UserFlatCatsComposer : IServerPacket
 {
     private readonly ICollection<SearchResultList> _categories;
     private readonly int _rank;
 
-    public int MessageId => ServerPacketHeader.UserFlatCatsMessageComposer;
+    public uint MessageId => ServerPacketHeader.UserFlatCatsComposer;
 
     public UserFlatCatsComposer(ICollection<SearchResultList> categories, int rank)
     {

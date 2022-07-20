@@ -3,7 +3,7 @@ using Plus.HabboHotel.Navigator;
 
 namespace Plus.Communication.Packets.Outgoing.Navigator.New;
 
-internal class NavigatorSearchResultSetComposer : IServerPacket
+public class NavigatorSearchResultSetComposer : IServerPacket
 {
     private readonly string _category;
     private readonly string _data;
@@ -11,7 +11,7 @@ internal class NavigatorSearchResultSetComposer : IServerPacket
     private readonly GameClient _session;
     private readonly int _goBack;
     private readonly int _fetchLimit;
-    public int MessageId => ServerPacketHeader.NavigatorSearchResultSetMessageComposer;
+    public uint MessageId => ServerPacketHeader.NavigatorSearchResultSetComposer;
 
     public NavigatorSearchResultSetComposer(string category, string data,
         ICollection<SearchResultList> searchResultLists, GameClient session, int goBack = 1, int fetchLimit = 12)

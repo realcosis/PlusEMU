@@ -4,12 +4,12 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class ItemsComposer : IServerPacket
+public class ItemsComposer : IServerPacket
 {
     private readonly Item[] _objects;
     private readonly Room _room;
 
-    public int MessageId => ServerPacketHeader.ItemsMessageComposer;
+    public uint MessageId => ServerPacketHeader.ItemsComposer;
 
     public ItemsComposer(Item[] objects, Room room)
     {

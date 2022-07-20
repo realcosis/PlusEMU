@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Navigator;
 
-internal class RoomInfoUpdatedComposer : IServerPacket
+public class RoomInfoUpdatedComposer : IServerPacket
 {
     private readonly int _roomId;
 
-    public int MessageId => ServerPacketHeader.RoomInfoUpdatedMessageComposer;
+    public uint MessageId => ServerPacketHeader.RoomInfoUpdatedComposer;
 
     public RoomInfoUpdatedComposer(int roomId)
     {

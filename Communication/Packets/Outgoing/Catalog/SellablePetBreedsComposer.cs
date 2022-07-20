@@ -8,7 +8,7 @@ public class SellablePetBreedsComposer : IServerPacket
     private readonly string _petType;
     private readonly int _petId;
     private readonly ICollection<PetRace> _races;
-    public int MessageId => ServerPacketHeader.SellablePetBreedsMessageComposer;
+    public uint MessageId => ServerPacketHeader.SellablePetBreedsComposer;
 
     public SellablePetBreedsComposer(string petType, int petId, ICollection<PetRace> races)
     {

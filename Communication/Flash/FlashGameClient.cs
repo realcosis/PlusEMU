@@ -46,7 +46,7 @@ namespace Plus.Communication.Flash
             base.OnReceived(buffer, offset, size);
         }
 
-        public override void CreateHeader(Memory<byte> memory, int messageId)
+        public override void CreateHeader(Memory<byte> memory, uint messageId)
         {
             EncodeInt32(memory, memory.Length - 4, 0);
             EncodeInt16(memory, (short)messageId, 4);

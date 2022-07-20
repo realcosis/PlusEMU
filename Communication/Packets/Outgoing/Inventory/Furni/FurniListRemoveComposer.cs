@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Furni;
 
-internal class FurniListRemoveComposer : IServerPacket
+public class FurniListRemoveComposer : IServerPacket
 {
     private readonly int _id;
-    public int MessageId => ServerPacketHeader.FurniListRemoveMessageComposer;
+    public uint MessageId => ServerPacketHeader.FurniListRemoveComposer;
 
     public FurniListRemoveComposer(int id)
     {

@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Navigator;
 
-internal class FlatCreatedComposer : IServerPacket
+public class FlatCreatedComposer : IServerPacket
 {
     private readonly int _roomId;
     private readonly string _roomName;
 
-    public int MessageId => ServerPacketHeader.FlatCreatedMessageComposer;
+    public uint MessageId => ServerPacketHeader.FlatCreatedComposer;
 
     public FlatCreatedComposer(int roomId, string roomName)
     {

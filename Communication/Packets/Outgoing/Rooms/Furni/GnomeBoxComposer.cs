@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni;
 
-internal class GnomeBoxComposer : IServerPacket
+public class GnomeBoxComposer : IServerPacket
 {
     private readonly int _itemId;
-    public int MessageId => ServerPacketHeader.GnomeBoxMessageComposer;
+    public uint MessageId => ServerPacketHeader.GnomeBoxComposer;
 
     public GnomeBoxComposer(int itemId)
     {

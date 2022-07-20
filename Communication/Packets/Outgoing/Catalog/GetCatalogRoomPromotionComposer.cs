@@ -3,7 +3,7 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Catalog;
 
-internal class GetCatalogRoomPromotionComposer : IServerPacket
+public class GetCatalogRoomPromotionComposer : IServerPacket
 {
     private readonly List<RoomData> _usersRooms;
 
@@ -12,7 +12,7 @@ internal class GetCatalogRoomPromotionComposer : IServerPacket
         _usersRooms = usersRooms;
     }
 
-    public int MessageId => ServerPacketHeader.PromotableRoomsMessageComposer;
+    public uint MessageId => ServerPacketHeader.PromotableRoomsComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

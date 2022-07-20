@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Freeze;
 
-internal class UpdateFreezeLivesComposer : IServerPacket
+public class UpdateFreezeLivesComposer : IServerPacket
 {
     private readonly int _userId;
     private readonly int _freezeLives;
-    public int MessageId => ServerPacketHeader.UpdateFreezeLivesMessageComposer;
+    public uint MessageId => ServerPacketHeader.UpdateFreezeLivesComposer;
 
     public UpdateFreezeLivesComposer(int userId, int freezeLives)
     {

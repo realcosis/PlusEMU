@@ -3,12 +3,12 @@ using Plus.HabboHotel.Items.Televisions;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.YouTubeTelevisions;
 
-internal class GetYouTubePlaylistComposer : IServerPacket
+public class GetYouTubePlaylistComposer : IServerPacket
 {
     private readonly int _itemId;
     private readonly ICollection<TelevisionItem> _videos;
 
-    public int MessageId => ServerPacketHeader.GetYouTubePlaylistMessageComposer;
+    public uint MessageId => ServerPacketHeader.GetYouTubePlaylistComposer;
 
     public GetYouTubePlaylistComposer(int itemId, ICollection<TelevisionItem> videos)
     {

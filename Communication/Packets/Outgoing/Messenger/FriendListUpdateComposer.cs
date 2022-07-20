@@ -3,10 +3,10 @@ using Plus.HabboHotel.Users.Messenger;
 
 namespace Plus.Communication.Packets.Outgoing.Messenger;
 
-internal class FriendListUpdateComposer : IServerPacket
+public class FriendListUpdateComposer : IServerPacket
 {
     private readonly Dictionary<MessengerBuddy, BuddyModificationType> _friends;
-    public int MessageId => ServerPacketHeader.FriendListUpdateMessageComposer;
+    public uint MessageId => ServerPacketHeader.FriendListUpdateComposer;
 
     public FriendListUpdateComposer(MessengerBuddy friend, BuddyModificationType modificationType)
     {

@@ -6,7 +6,7 @@ namespace Plus.Communication.Packets.Outgoing.GameCenter;
 // TODO @80O: Implement
 public class LoadGameComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.LoadGameMessageComposer;
+    public uint MessageId => ServerPacketHeader.LoadGameComposer;
 
     private readonly GameData _gameData;
     private readonly string _ssoTicket;

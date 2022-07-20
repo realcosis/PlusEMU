@@ -6,7 +6,7 @@ public class CheckPetNameComposer : IServerPacket
 {
     private readonly int _error;
     private readonly string _extraData;
-    public int MessageId => ServerPacketHeader.CheckPetNameMessageComposer;
+    public uint MessageId => ServerPacketHeader.CheckPetNameComposer;
 
     public CheckPetNameComposer(int error, string extraData)
     {

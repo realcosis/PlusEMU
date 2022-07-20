@@ -3,9 +3,9 @@
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
 // TODO @80O: Implement
-internal class FurnitureAliasesComposer : IServerPacket
+public class FurnitureAliasesComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.FurnitureAliasesMessageComposer;
+    public uint MessageId => ServerPacketHeader.FurnitureAliasesComposer;
 
     public void Compose(IOutgoingPacket packet) => packet.WriteInteger(0);
 }

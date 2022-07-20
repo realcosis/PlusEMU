@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Trading;
 
-internal class TradingAcceptComposer : IServerPacket
+public class TradingAcceptComposer : IServerPacket
 {
     private readonly int _userId;
     private readonly bool _accept;
-    public int MessageId => ServerPacketHeader.TradingAcceptMessageComposer;
+    public uint MessageId => ServerPacketHeader.TradingAcceptComposer;
 
     public TradingAcceptComposer(int userId, bool accept)
     {

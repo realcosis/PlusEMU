@@ -4,10 +4,10 @@ using System.Data;
 
 namespace Plus.Communication.Packets.Outgoing.Marketplace;
 
-internal class MarketPlaceOwnOffersComposer : IServerPacket
+public class MarketPlaceOwnOffersComposer : IServerPacket
 {
     private readonly int _userId;
-    public int MessageId => ServerPacketHeader.MarketPlaceOwnOffersMessageComposer;
+    public uint MessageId => ServerPacketHeader.MarketPlaceOwnOffersComposer;
 
     public MarketPlaceOwnOffersComposer(int userId)
     {

@@ -3,11 +3,11 @@ using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Outgoing.Marketplace;
 
-internal class MarketPlaceOffersComposer : IServerPacket
+public class MarketPlaceOffersComposer : IServerPacket
 {
     private readonly Dictionary<int, MarketOffer> _dictionary;
     private readonly Dictionary<int, int> _dictionary2;
-    public int MessageId => ServerPacketHeader.MarketPlaceOffersMessageComposer;
+    public uint MessageId => ServerPacketHeader.MarketPlaceOffersComposer;
 
     public MarketPlaceOffersComposer(Dictionary<int, MarketOffer> dictionary, Dictionary<int, int> dictionary2)
         : base()

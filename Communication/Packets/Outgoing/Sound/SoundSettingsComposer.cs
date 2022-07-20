@@ -2,7 +2,7 @@
 
 namespace Plus.Communication.Packets.Outgoing.Sound;
 
-internal class SoundSettingsComposer : IServerPacket
+public class SoundSettingsComposer : IServerPacket
 {
     private readonly IEnumerable<int> _volumes;
     private readonly bool _chatPreference;
@@ -10,7 +10,7 @@ internal class SoundSettingsComposer : IServerPacket
     private readonly bool _focusPreference;
     private readonly int _friendBarState;
 
-    public int MessageId => ServerPacketHeader.SoundSettingsMessageComposer;
+    public uint MessageId => ServerPacketHeader.SoundSettingsComposer;
 
     public SoundSettingsComposer(IEnumerable<int> volumes, bool chatPreference, bool invitesStatus, bool focusPreference, int friendBarState)
     {

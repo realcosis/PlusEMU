@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Navigator;
 
-internal class RoomRatingComposer : IServerPacket
+public class RoomRatingComposer : IServerPacket
 {
     private readonly int _score;
     private readonly bool _canVote;
 
-    public int MessageId => ServerPacketHeader.RoomRatingMessageComposer;
+    public uint MessageId => ServerPacketHeader.RoomRatingComposer;
 
     public RoomRatingComposer(int score, bool canVote)
     {

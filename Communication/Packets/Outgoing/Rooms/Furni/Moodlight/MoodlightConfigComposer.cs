@@ -3,11 +3,11 @@ using Plus.HabboHotel.Items.Data.Moodlight;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Moodlight;
 
-internal class MoodlightConfigComposer : IServerPacket
+public class MoodlightConfigComposer : IServerPacket
 {
     private readonly MoodlightData _moodlightData;
 
-    public int MessageId => ServerPacketHeader.MoodlightConfigMessageComposer;
+    public uint MessageId => ServerPacketHeader.MoodlightConfigComposer;
 
     public MoodlightConfigComposer(MoodlightData moodlightData)
     {

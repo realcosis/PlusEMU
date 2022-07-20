@@ -3,11 +3,11 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Settings;
 
-internal class RoomSettingsDataComposer : IServerPacket
+public class RoomSettingsDataComposer : IServerPacket
 {
     private readonly Room _room;
 
-    public int MessageId => ServerPacketHeader.RoomSettingsDataMessageComposer;
+    public uint MessageId => ServerPacketHeader.RoomSettingsDataComposer;
 
     public RoomSettingsDataComposer(Room room)
     {

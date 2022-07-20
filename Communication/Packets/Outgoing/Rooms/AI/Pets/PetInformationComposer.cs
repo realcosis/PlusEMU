@@ -5,12 +5,12 @@ using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.AI.Pets;
 
-internal class PetInformationComposer : IServerPacket
+public class PetInformationComposer : IServerPacket
 {
     private readonly Habbo? _habbo;
     private readonly Pet? _pet;
 
-    public int MessageId => ServerPacketHeader.PetInformationMessageComposer;
+    public uint MessageId => ServerPacketHeader.PetInformationComposer;
 
     public PetInformationComposer(Pet pet)
     {

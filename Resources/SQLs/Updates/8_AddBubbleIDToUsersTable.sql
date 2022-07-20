@@ -1,1 +1,1 @@
-﻿ALTER TABLE `users` ADD COLUMN `bubble_id` TINYINT NOT_NULL DEFAULT '0' AFTER `is_ambassador`;
+﻿ALTER TABLE `users` ADD COLUMN `bubble_id` TINYINT NOT NULL DEFAULT '0' AFTER `is_ambassador`;

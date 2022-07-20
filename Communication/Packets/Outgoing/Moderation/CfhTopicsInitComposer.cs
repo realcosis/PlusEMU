@@ -3,10 +3,10 @@ using Plus.HabboHotel.Moderation;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class CfhTopicsInitComposer : IServerPacket
+public class CfhTopicsInitComposer : IServerPacket
 {
     private readonly Dictionary<string, List<ModerationPresetActions>> _userActionPresets;
-    public int MessageId => ServerPacketHeader.CfhTopicsInitMessageComposer;
+    public uint MessageId => ServerPacketHeader.CfhTopicsInitComposer;
 
     public CfhTopicsInitComposer(Dictionary<string, List<ModerationPresetActions>> userActionPresets)
     {

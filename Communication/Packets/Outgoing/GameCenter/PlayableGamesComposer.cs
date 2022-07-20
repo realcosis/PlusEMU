@@ -2,7 +2,7 @@
 
 namespace Plus.Communication.Packets.Outgoing.GameCenter;
 
-internal class PlayableGamesComposer : IServerPacket
+public class PlayableGamesComposer : IServerPacket
 {
     private readonly int _gameId;
 
@@ -11,7 +11,7 @@ internal class PlayableGamesComposer : IServerPacket
         _gameId = gameId;
     }
 
-    public int MessageId => ServerPacketHeader.PlayableGamesMessageComposer;
+    public uint MessageId => ServerPacketHeader.PlayableGamesComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

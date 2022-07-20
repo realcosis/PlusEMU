@@ -51,10 +51,6 @@ public static class ClientPacketHeader
 
     // Room Engine
 
-    // Room Furniture
-
-    public const uint OneWayGateEvent = 1970;
-
     // Room Settings
 
     // Room Action
@@ -154,7 +150,7 @@ public static class ClientPacketHeader
     public const uint ToggleMoodlightEvent = 14; //1826
     public const uint GetDailyQuestEvent = 3441; //484
     public const uint SetMannequinNameEvent = 3262; //2406
-    public const uint UseOneWayGateEvent = 1970; //2816
+    public const uint OneWayGateEvent = 1970; //2816
     public const uint EventTrackerEvent = 143; //2386
     public const uint FloorPlanEditorRoomPropertiesEvent = 2478; //24
     public const uint PickUpPetEvent = 3975; //2342

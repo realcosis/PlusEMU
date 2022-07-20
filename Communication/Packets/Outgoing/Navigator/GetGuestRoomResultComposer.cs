@@ -3,13 +3,13 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Navigator;
 
-internal class GetGuestRoomResultComposer : IServerPacket
+public class GetGuestRoomResultComposer : IServerPacket
 {
     private readonly GameClient _session;
     private readonly RoomData _data;
     private readonly bool _isLoading;
     private readonly bool _checkEntry;
-    public int MessageId => ServerPacketHeader.GetGuestRoomResultMessageComposer;
+    public uint MessageId => ServerPacketHeader.GetGuestRoomResultComposer;
 
     public GetGuestRoomResultComposer(GameClient session, RoomData data, bool isLoading, bool checkEntry)
     {

@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Navigator;
 
-internal class NavigatorSettingsComposer : IServerPacket
+public class NavigatorSettingsComposer : IServerPacket
 {
     private readonly int _homeroom;
-    public int MessageId => ServerPacketHeader.NavigatorSettingsMessageComposer;
+    public uint MessageId => ServerPacketHeader.NavigatorSettingsComposer;
 
     public NavigatorSettingsComposer(int homeroom)
     {

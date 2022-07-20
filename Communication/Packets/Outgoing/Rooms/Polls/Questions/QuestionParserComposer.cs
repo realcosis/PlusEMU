@@ -3,9 +3,9 @@
 namespace Plus.Communication.Packets.Outgoing.Rooms.Polls.Questions;
 
 // TODO @80O: Implement Polls
-internal class QuestionParserComposer : IServerPacket
+public class QuestionParserComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.QuestionParserMessageComposer;
+    public uint MessageId => ServerPacketHeader.QuestionParserComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

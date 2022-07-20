@@ -3,11 +3,11 @@ using Plus.HabboHotel.Users.Messenger;
 
 namespace Plus.Communication.Packets.Outgoing.Messenger;
 
-internal class HabboSearchResultComposer : IServerPacket
+public class HabboSearchResultComposer : IServerPacket
 {
     private readonly List<SearchResult> _friends;
     private readonly List<SearchResult> _otherUsers;
-    public int MessageId => ServerPacketHeader.HabboSearchResultMessageComposer;
+    public uint MessageId => ServerPacketHeader.HabboSearchResultComposer;
 
     public HabboSearchResultComposer(List<SearchResult> friends, List<SearchResult> otherUsers)
     {

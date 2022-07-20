@@ -4,7 +4,7 @@ namespace Plus.Communication.Packets.Outgoing.Catalog;
 
 public class MarketplaceConfigurationComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.MarketplaceConfigurationMessageComposer;
+    public uint MessageId => ServerPacketHeader.MarketplaceConfigurationComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

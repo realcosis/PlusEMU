@@ -4,13 +4,13 @@ using Plus.HabboHotel.Items;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Furni;
 
-internal class FurniListComposer : IServerPacket
+public class FurniListComposer : IServerPacket
 {
     private readonly ICollection<Item> _items;
     private readonly int _pages;
     private readonly int _page;
 
-    public int MessageId => ServerPacketHeader.FurniListMessageComposer;
+    public uint MessageId => ServerPacketHeader.FurniListComposer;
 
     public FurniListComposer(ICollection<Item> items, int pages, int page)
     {

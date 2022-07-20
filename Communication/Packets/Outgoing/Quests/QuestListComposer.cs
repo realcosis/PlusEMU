@@ -8,7 +8,7 @@ public class QuestListComposer : IServerPacket
     private readonly GameClient _session;
     private readonly bool _send;
     private readonly Dictionary<string, Quest> _userQuests;
-    public int MessageId => ServerPacketHeader.QuestListMessageComposer;
+    public uint MessageId => ServerPacketHeader.QuestListComposer;
 
     public QuestListComposer(GameClient session, bool send, Dictionary<string, Quest> userQuests)
     {

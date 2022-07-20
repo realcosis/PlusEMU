@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Trading;
 
-internal class TradingStartComposer : IServerPacket
+public class TradingStartComposer : IServerPacket
 {
     private readonly int _user1Id;
     private readonly int _user2Id;
-    public int MessageId => ServerPacketHeader.TradingStartMessageComposer;
+    public uint MessageId => ServerPacketHeader.TradingStartComposer;
 
     public TradingStartComposer(int user1Id, int user2Id)
     {

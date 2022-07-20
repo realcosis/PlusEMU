@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Notifications;
 
-internal class RoomErrorNotifComposer : IServerPacket
+public class RoomErrorNotifComposer : IServerPacket
 {
     private readonly int _error;
-    public int MessageId => ServerPacketHeader.RoomErrorNotifMessageComposer;
+    public uint MessageId => ServerPacketHeader.RoomErrorNotifComposer;
 
     public RoomErrorNotifComposer(int error)
     {

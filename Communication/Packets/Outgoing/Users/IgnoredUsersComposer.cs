@@ -6,7 +6,7 @@ public class IgnoredUsersComposer : IServerPacket
 {
     private readonly IReadOnlyCollection<string> _ignoredUsers;
 
-    public int MessageId => ServerPacketHeader.IgnoredUsersMessageComposer;
+    public uint MessageId => ServerPacketHeader.IgnoredUsersComposer;
 
     public IgnoredUsersComposer(IReadOnlyCollection<string> ignoredUsers)
     {

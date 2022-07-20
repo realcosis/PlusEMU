@@ -4,10 +4,10 @@ using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class ObjectAddComposer : IServerPacket
+public class ObjectAddComposer : IServerPacket
 {
     private readonly Item _item;
-    public int MessageId => ServerPacketHeader.ObjectAddMessageComposer;
+    public uint MessageId => ServerPacketHeader.ObjectAddComposer;
 
     public ObjectAddComposer(Item item)
     {

@@ -5,7 +5,7 @@ namespace Plus.Communication.Packets.Outgoing.Help;
 public class SubmitBullyReportComposer : IServerPacket
 {
     private readonly int _result;
-    public int MessageId => ServerPacketHeader.SubmitBullyReportMessageComposer;
+    public uint MessageId => ServerPacketHeader.SubmitBullyReportComposer;
 
     public SubmitBullyReportComposer(int result)
     {

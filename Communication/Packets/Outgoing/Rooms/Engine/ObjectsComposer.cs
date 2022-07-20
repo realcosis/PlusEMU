@@ -5,11 +5,11 @@ using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class ObjectsComposer : IServerPacket
+public class ObjectsComposer : IServerPacket
 {
     private readonly Item[] _objects;
     private readonly Room _room;
-    public int MessageId => ServerPacketHeader.ObjectsMessageComposer;
+    public uint MessageId => ServerPacketHeader.ObjectsComposer;
 
     public ObjectsComposer(Item[] objects, Room room)
     {

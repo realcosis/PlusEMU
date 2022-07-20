@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Purse;
 
-internal class ActivityPointsComposer : IServerPacket
+public class ActivityPointsComposer : IServerPacket
 {
     private readonly int _pixelsBalance;
     private readonly int _seasionalCurrency;
     private readonly int _gotwPoints;
-    public int MessageId => ServerPacketHeader.ActivityPointsMessageComposer;
+    public uint MessageId => ServerPacketHeader.ActivityPointsComposer;
 
     public ActivityPointsComposer(int pixelsBalance, int seasionalCurrency, int gotwPoints)
     {

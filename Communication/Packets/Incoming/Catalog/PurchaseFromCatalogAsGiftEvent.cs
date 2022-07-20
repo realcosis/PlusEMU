@@ -80,12 +80,12 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
             return Task.CompletedTask;
         if (session.GetHabbo().Credits < item.CostCredits)
         {
-            session.Send(new PresentDeliverErrorMessageComposer(true, false));
+            session.Send(new PresentDeliverErrorComposer(true, false));
             return Task.CompletedTask;
         }
         if (session.GetHabbo().Duckets < item.CostPixels)
         {
-            session.Send(new PresentDeliverErrorMessageComposer(false, true));
+            session.Send(new PresentDeliverErrorComposer(false, true));
             return Task.CompletedTask;
         }
         var habbo = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(giftUser)?.GetHabbo();

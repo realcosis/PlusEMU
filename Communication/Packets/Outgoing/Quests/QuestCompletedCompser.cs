@@ -2,9 +2,9 @@
 
 namespace Plus.Communication.Packets.Outgoing.Quests;
 
-internal class QuestCompletedCompser : IServerPacket
+public class QuestCompletedCompser : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.QuestCompletedMessageComposer;
+    public uint MessageId => ServerPacketHeader.QuestCompletedComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

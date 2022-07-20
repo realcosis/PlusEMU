@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Messenger;
 
-internal class FindFriendsProcessResultComposer : IServerPacket
+public class FindFriendsProcessResultComposer : IServerPacket
 {
     private readonly bool _found;
-    public int MessageId => ServerPacketHeader.FindFriendsProcessResultMessageComposer;
+    public uint MessageId => ServerPacketHeader.FindFriendsProcessResultComposer;
 
     public FindFriendsProcessResultComposer(bool found)
     {

@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Achievements;
 
-internal class AchievementScoreComposer : IServerPacket
+public class AchievementScoreComposer : IServerPacket
 {
     private readonly int _score;
-    public int MessageId => ServerPacketHeader.AchievementScoreMessageComposer;
+    public uint MessageId => ServerPacketHeader.AchievementScoreComposer;
 
     public AchievementScoreComposer(int score)
     {

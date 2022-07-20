@@ -5,7 +5,7 @@ namespace Plus.Communication.Packets.Outgoing.Help;
 // TODO @80O: Implement
 public class SanctionStatusComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.SanctionStatusMessageComposer;
+    public uint MessageId => ServerPacketHeader.SanctionStatusComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

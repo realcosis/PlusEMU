@@ -2,13 +2,13 @@
 
 namespace Plus.Communication.Packets.Outgoing.Messenger;
 
-internal class NewConsoleMessageComposer : IServerPacket
+public class NewConsoleMessageComposer : IServerPacket
 {
     private readonly int _sender;
     private readonly string _message;
     private readonly int _secondsAgo;
 
-    public int MessageId => ServerPacketHeader.NewConsoleMessageMessageComposer;
+    public uint MessageId => ServerPacketHeader.NewConsoleMessageComposer;
 
     public NewConsoleMessageComposer(int sender, string message, int secondsAgo = 0)
     {

@@ -3,10 +3,10 @@ using Plus.HabboHotel.Users.Badges;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Badges;
 
-internal class BadgesComposer : IServerPacket
+public class BadgesComposer : IServerPacket
 {
     private readonly GameClient _session;
-    public int MessageId => ServerPacketHeader.BadgesMessageComposer;
+    public uint MessageId => ServerPacketHeader.BadgesComposer;
 
     public BadgesComposer(GameClient session)
     {

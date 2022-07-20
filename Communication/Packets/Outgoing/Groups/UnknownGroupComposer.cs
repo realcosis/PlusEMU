@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Groups;
 
-internal class UnknownGroupComposer : IServerPacket
+public class UnknownGroupComposer : IServerPacket
 {
     private readonly int _groupId;
     private readonly int _habboId;
 
-    public int MessageId => ServerPacketHeader.UnknownGroupMessageComposer;
+    public uint MessageId => ServerPacketHeader.UnknownGroupComposer;
 
     public UnknownGroupComposer(int groupId, int habboId)
     {

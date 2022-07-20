@@ -4,7 +4,7 @@ using Plus.HabboHotel.Rooms.AI;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class UserChangeComposer : IServerPacket
+public class UserChangeComposer : IServerPacket
 {
     private int _virtualId;
     private string _look;
@@ -12,7 +12,7 @@ internal class UserChangeComposer : IServerPacket
     private string _motto;
     private int _achievementScore;
 
-    public int MessageId => ServerPacketHeader.UserChangeMessageComposer;
+    public uint MessageId => ServerPacketHeader.UserChangeComposer;
 
     public UserChangeComposer(RoomUser user, bool self)
     {

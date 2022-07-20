@@ -3,11 +3,11 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Settings;
 
-internal class FlatControllerRemovedComposer : IServerPacket
+public class FlatControllerRemovedComposer : IServerPacket
 {
     private readonly Room _instance;
     private readonly int _userId;
-    public int MessageId => ServerPacketHeader.FlatControllerRemovedMessageComposer;
+    public uint MessageId => ServerPacketHeader.FlatControllerRemovedComposer;
 
     public FlatControllerRemovedComposer(Room instance, int userId)
     {

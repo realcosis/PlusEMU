@@ -84,12 +84,12 @@ internal class ConfirmLoveLockEvent : IPacketEvent
         }
         if (userOneId == session.GetHabbo().Id)
         {
-            session.Send(new LoveLockDialogueSetLockedMessageComposer(pId));
+            session.Send(new LoveLockDialogueSetLockedComposer(pId));
             userOne.LlPartner = userTwoId;
         }
         else if (userTwoId == session.GetHabbo().Id)
         {
-            session.Send(new LoveLockDialogueSetLockedMessageComposer(pId));
+            session.Send(new LoveLockDialogueSetLockedComposer(pId));
             userTwo.LlPartner = userOneId;
         }
         if (userOne.LlPartner == 0 || userTwo.LlPartner == 0)
@@ -108,8 +108,8 @@ internal class ConfirmLoveLockEvent : IPacketEvent
             dbClient.AddParameter("ID", item.Id);
             dbClient.RunQuery();
         }
-        userOne.GetClient().Send(new LoveLockDialogueCloseMessageComposer(pId));
-        userTwo.GetClient().Send(new LoveLockDialogueCloseMessageComposer(pId));
+        userOne.GetClient().Send(new LoveLockDialogueCloseComposer(pId));
+        userTwo.GetClient().Send(new LoveLockDialogueCloseComposer(pId));
         userOne.CanWalk = true;
         userTwo.CanWalk = true;
         userOne = null;

@@ -3,12 +3,12 @@ using Plus.HabboHotel.Items;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class ObjectRemoveComposer : IServerPacket
+public class ObjectRemoveComposer : IServerPacket
 {
     private readonly Item _item;
     private readonly int _userId;
 
-    public int MessageId => ServerPacketHeader.ObjectRemoveMessageComposer;
+    public uint MessageId => ServerPacketHeader.ObjectRemoveComposer;
 
     public ObjectRemoveComposer(Item item, int userId)
     {

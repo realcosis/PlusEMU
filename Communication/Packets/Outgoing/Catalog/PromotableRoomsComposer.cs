@@ -3,10 +3,10 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Catalog;
 
-internal class PromotableRoomsComposer : IServerPacket
+public class PromotableRoomsComposer : IServerPacket
 {
     private readonly ICollection<RoomData> _rooms;
-    public int MessageId => ServerPacketHeader.PromotableRoomsMessageComposer;
+    public uint MessageId => ServerPacketHeader.PromotableRoomsComposer;
 
     public PromotableRoomsComposer(ICollection<RoomData> rooms)
     {

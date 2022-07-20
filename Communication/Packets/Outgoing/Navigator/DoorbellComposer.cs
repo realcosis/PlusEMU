@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Navigator;
 
-internal class DoorbellComposer : IServerPacket
+public class DoorbellComposer : IServerPacket
 {
     private readonly string _username;
 
-    public int MessageId => ServerPacketHeader.DoorbellMessageComposer;
+    public uint MessageId => ServerPacketHeader.DoorbellComposer;
 
     public DoorbellComposer(string username)
     {

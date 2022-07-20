@@ -6,7 +6,7 @@ public class CheckGnomeNameComposer : IServerPacket
 {
     private readonly string _petName;
     private readonly int _errorId;
-    public int MessageId => ServerPacketHeader.CheckGnomeNameMessageComposer;
+    public uint MessageId => ServerPacketHeader.CheckGnomeNameComposer;
 
     public CheckGnomeNameComposer(string petName, int errorId)
     {

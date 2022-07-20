@@ -3,11 +3,11 @@ using Plus.HabboHotel.Users.Messenger;
 
 namespace Plus.Communication.Packets.Outgoing.Messenger;
 
-internal class InstantMessageErrorComposer : IServerPacket
+public class InstantMessageErrorComposer : IServerPacket
 {
     private readonly MessengerMessageErrors _error;
     private readonly int _target;
-    public int MessageId => ServerPacketHeader.InstantMessageErrorMessageComposer;
+    public uint MessageId => ServerPacketHeader.InstantMessageErrorComposer;
 
     public InstantMessageErrorComposer(MessengerMessageErrors error, int target)
     {

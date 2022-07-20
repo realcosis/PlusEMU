@@ -4,6 +4,6 @@ namespace Plus.Communication.Packets;
 
 public interface IServerPacket
 {
-    int MessageId { get; }
+    uint MessageId { get; }
     void Compose(IOutgoingPacket packet);
 }

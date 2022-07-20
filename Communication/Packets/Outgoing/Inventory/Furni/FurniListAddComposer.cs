@@ -7,7 +7,7 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.Furni;
 public class FurniListAddComposer : IServerPacket
 {
     private readonly Item _item;
-    public int MessageId => ServerPacketHeader.FurniListAddMessageComposer;
+    public uint MessageId => ServerPacketHeader.FurniListAddComposer;
 
     public FurniListAddComposer(Item item)
     {

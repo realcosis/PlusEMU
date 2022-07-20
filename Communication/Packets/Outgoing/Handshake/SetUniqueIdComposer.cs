@@ -5,7 +5,7 @@ namespace Plus.Communication.Packets.Outgoing.Handshake;
 public class SetUniqueIdComposer : IServerPacket
 {
     private readonly string _id;
-    public int MessageId => ServerPacketHeader.SetUniqueIdMessageComposer;
+    public uint MessageId => ServerPacketHeader.SetUniqueIdComposer;
 
     public SetUniqueIdComposer(string id)
     {

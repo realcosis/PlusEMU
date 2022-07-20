@@ -7,7 +7,7 @@ public class UpdateFavouriteRoomComposer : IServerPacket
     private readonly int _roomId;
     private readonly bool _added;
 
-    public int MessageId => ServerPacketHeader.UpdateFavouriteRoomMessageComposer;
+    public uint MessageId => ServerPacketHeader.UpdateFavouriteRoomComposer;
 
     public UpdateFavouriteRoomComposer(int roomId, bool added)
     {

@@ -3,12 +3,12 @@ using Plus.HabboHotel.Items.Wired;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.Wired;
 
-internal class WiredEffectConfigComposer : IServerPacket
+public class WiredEffectConfigComposer : IServerPacket
 {
     private readonly IWiredItem _box;
     private readonly List<int> _blockedItems;
 
-    public int MessageId => ServerPacketHeader.WiredEffectConfigMessageComposer;
+    public uint MessageId => ServerPacketHeader.WiredEffectConfigComposer;
 
     public WiredEffectConfigComposer(IWiredItem box, List<int> blockedItems)
     {

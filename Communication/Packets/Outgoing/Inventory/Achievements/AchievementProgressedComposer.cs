@@ -3,14 +3,14 @@ using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Achievements;
 
-internal class AchievementProgressedComposer : IServerPacket
+public class AchievementProgressedComposer : IServerPacket
 {
     private readonly Achievement _achievement;
     private readonly int _targetLevel;
     private readonly AchievementLevel _targetLevelData;
     private readonly int _totalLevels;
     private readonly UserAchievement _userData;
-    public int MessageId => ServerPacketHeader.AchievementProgressedMessageComposer;
+    public uint MessageId => ServerPacketHeader.AchievementProgressedComposer;
 
     public AchievementProgressedComposer(Achievement achievement, int targetLevel, AchievementLevel targetLevelData, int totalLevels, UserAchievement userData)
     {

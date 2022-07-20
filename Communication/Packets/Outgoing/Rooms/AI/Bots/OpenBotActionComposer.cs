@@ -3,13 +3,13 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.AI.Bots;
 
-internal class OpenBotActionComposer : IServerPacket
+public class OpenBotActionComposer : IServerPacket
 {
     private readonly RoomUser _botUser;
     private readonly int _actionId;
     private readonly string _botSpeech;
 
-    public int MessageId => ServerPacketHeader.OpenBotActionMessageComposer;
+    public uint MessageId => ServerPacketHeader.OpenBotActionComposer;
 
     public OpenBotActionComposer(RoomUser botUser, int actionId, string botSpeech)
     {

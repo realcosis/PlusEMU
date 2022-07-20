@@ -3,10 +3,10 @@ using Plus.HabboHotel.Rooms.AI;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Pets;
 
-internal class PetInventoryComposer : IServerPacket
+public class PetInventoryComposer : IServerPacket
 {
     private readonly ICollection<Pet> _pets;
-    public int MessageId => ServerPacketHeader.PetInventoryMessageComposer;
+    public uint MessageId => ServerPacketHeader.PetInventoryComposer;
 
     public PetInventoryComposer(ICollection<Pet> pets)
     {

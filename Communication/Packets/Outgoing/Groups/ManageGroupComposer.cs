@@ -3,12 +3,12 @@ using Plus.HabboHotel.Groups;
 
 namespace Plus.Communication.Packets.Outgoing.Groups;
 
-internal class ManageGroupComposer : IServerPacket
+public class ManageGroupComposer : IServerPacket
 {
     private readonly Group _group;
     private readonly string[] _badgeParts;
 
-    public int MessageId => ServerPacketHeader.ManageGroupMessageComposer;
+    public uint MessageId => ServerPacketHeader.ManageGroupComposer;
 
     public ManageGroupComposer(Group group, string[] badgeParts)
     {

@@ -3,10 +3,10 @@ using Plus.HabboHotel.Users.Inventory.Bots;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Bots;
 
-internal class BotInventoryComposer : IServerPacket
+public class BotInventoryComposer : IServerPacket
 {
     private readonly ICollection<Bot> _bots;
-    public int MessageId => ServerPacketHeader.BotInventoryMessageComposer;
+    public uint MessageId => ServerPacketHeader.BotInventoryComposer;
 
     public BotInventoryComposer(ICollection<Bot> bots)
     {

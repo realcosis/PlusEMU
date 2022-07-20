@@ -4,7 +4,7 @@ namespace Plus.Communication.Packets.Outgoing.Handshake;
 
 public class UserPerksComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.UserPerksMessageComposer;
+    public uint MessageId => ServerPacketHeader.UserPerksComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

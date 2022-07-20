@@ -9,7 +9,7 @@ public class WhisperComposer : IServerPacket
     private readonly int _emotion;
     private readonly int _colour;
 
-    public int MessageId => ServerPacketHeader.WhisperMessageComposer;
+    public uint MessageId => ServerPacketHeader.WhisperComposer;
 
     public WhisperComposer(int virtualId, string text, int emotion, int colour)
     {

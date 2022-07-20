@@ -3,9 +3,9 @@
 namespace Plus.Communication.Packets.Outgoing.Sound;
 
 // TODO @80O: Implement
-internal class TraxSongInfoComposer : IServerPacket
+public class TraxSongInfoComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.TraxSongInfoMessageComposer;
+    public uint MessageId => ServerPacketHeader.TraxSongInfoComposer;
 
     public void Compose(IOutgoingPacket packet) => packet.WriteInteger(0); //Count;
 }

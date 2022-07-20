@@ -5,7 +5,7 @@ namespace Plus.Communication.Packets.Outgoing.Handshake;
 public class SecretKeyComposer : IServerPacket
 {
     private readonly string _publicKey;
-    public int MessageId => ServerPacketHeader.SecretKeyMessageComposer;
+    public uint MessageId => ServerPacketHeader.SecretKeyComposer;
 
     public SecretKeyComposer(string publicKey)
     {

@@ -6,7 +6,7 @@ namespace Plus.Communication.Packets.Outgoing.Avatar;
 public class WardrobeComposer : IServerPacket
 {
     private readonly int _userId;
-    public int MessageId => ServerPacketHeader.WardrobeMessageComposer;
+    public uint MessageId => ServerPacketHeader.WardrobeComposer;
 
     public WardrobeComposer(int userId)
     {

@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Action;
 
-internal class IgnoreStatusComposer : IServerPacket
+public class IgnoreStatusComposer : IServerPacket
 {
     private readonly int _status;
     private readonly string _username;
-    public int MessageId => ServerPacketHeader.IgnoreStatusMessageComposer;
+    public uint MessageId => ServerPacketHeader.IgnoreStatusComposer;
 
     public IgnoreStatusComposer(int status, string username)
     {

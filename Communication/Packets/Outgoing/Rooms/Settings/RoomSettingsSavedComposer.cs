@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Settings;
 
-internal class RoomSettingsSavedComposer : IServerPacket
+public class RoomSettingsSavedComposer : IServerPacket
 {
     private readonly int _roomId;
 
-    public int MessageId => ServerPacketHeader.RoomSettingsSavedMessageComposer;
+    public uint MessageId => ServerPacketHeader.RoomSettingsSavedComposer;
 
     public RoomSettingsSavedComposer(int roomId)
     {

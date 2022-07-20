@@ -5,7 +5,7 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Session;
 public class RoomForwardComposer : IServerPacket
 {
     private readonly int _roomId;
-    public int MessageId => ServerPacketHeader.RoomForwardMessageComposer;
+    public uint MessageId => ServerPacketHeader.RoomForwardComposer;
 
     public RoomForwardComposer(int roomId)
     {

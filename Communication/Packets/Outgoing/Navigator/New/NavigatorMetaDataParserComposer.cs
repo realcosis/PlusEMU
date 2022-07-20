@@ -4,10 +4,10 @@ using Plus.HabboHotel.Navigator;
 namespace Plus.Communication.Packets.Outgoing.Navigator.New;
 
 // TODO @80O: Implement
-internal class NavigatorMetaDataParserComposer : IServerPacket
+public class NavigatorMetaDataParserComposer : IServerPacket
 {
     private readonly ICollection<TopLevelItem> _topLevelItems;
-    public int MessageId => ServerPacketHeader.NavigatorMetaDataParserMessageComposer;
+    public uint MessageId => ServerPacketHeader.NavigatorMetaDataParserComposer;
 
     public NavigatorMetaDataParserComposer(ICollection<TopLevelItem> topLevelItems)
     {

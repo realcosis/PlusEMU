@@ -6,7 +6,7 @@ public class FloodControlComposer : IServerPacket
 {
     private readonly int _floodTime;
 
-    public int MessageId => ServerPacketHeader.FloodControlMessageComposer;
+    public uint MessageId => ServerPacketHeader.FloodControlComposer;
 
     public FloodControlComposer(int floodTime)
     {

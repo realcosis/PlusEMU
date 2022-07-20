@@ -3,10 +3,10 @@ using Plus.HabboHotel.LandingView.Promotions;
 
 namespace Plus.Communication.Packets.Outgoing.LandingView;
 
-internal class PromoArticlesComposer : IServerPacket
+public class PromoArticlesComposer : IServerPacket
 {
     private readonly ICollection<Promotion> _landingPromotions;
-    public int MessageId => ServerPacketHeader.PromoArticlesMessageComposer;
+    public uint MessageId => ServerPacketHeader.PromoArticlesComposer;
 
     public PromoArticlesComposer(ICollection<Promotion> landingPromotions)
     {

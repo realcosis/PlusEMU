@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.LandingView;
 
-internal class ConcurrentUsersGoalProgressComposer : IServerPacket
+public class ConcurrentUsersGoalProgressComposer : IServerPacket
 {
     private readonly int _usersNow;
-    public int MessageId => ServerPacketHeader.ConcurrentUsersGoalProgressMessageComposer;
+    public uint MessageId => ServerPacketHeader.ConcurrentUsersGoalProgressComposer;
 
     public ConcurrentUsersGoalProgressComposer(int usersNow)
     {

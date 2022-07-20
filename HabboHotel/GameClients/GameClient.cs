@@ -5,6 +5,7 @@ using NLog;
 using Plus.Communication.Encryption.Crypto.Prng;
 using Plus.Communication.Flash;
 using Plus.Communication.Packets;
+using Plus.Communication.Revisions;
 using Plus.HabboHotel.Users;
 
 namespace Plus.HabboHotel.GameClients;
@@ -28,6 +29,8 @@ public abstract class GameClient : TcpSession
 
     [Obsolete("Will be removed")]
     public int PingCount { get; set; }
+
+    public Revision Revision { get; set; }
 
     protected GameClient(IGameServer server, IPacketFactory packetFactory) : base(server as TcpServer)
     {
@@ -69,7 +72,14 @@ public abstract class GameClient : TcpSession
 
             try
             {
-                await _server.PacketReceived(this, messageId, _packetFactory.CreateIncomingPacket(memory.Slice(headerLength, length)));
+                if (Revision.IncomingIdToInternalIdMapping.TryGetValue(messageId, out var internalMessageId))
+                {
+                    await _server.PacketReceived(this, internalMessageId, _packetFactory.CreateIncomingPacket(memory.Slice(headerLength, length)));
+                }
+                else
+                {
+                    // TODO @80O: Add logging unknown packet received.
+                }
             }
             catch (Exception e)
             {
@@ -98,18 +108,19 @@ public abstract class GameClient : TcpSession
 
     public void Send(IServerPacket composer)
     {
+        var outgoingMessageId = Revision.InternalIdToOutgoingIdMapping[composer.MessageId];
         var stream = PlusMemoryStream.GetStream();
         stream.Position = 0;
         var packet = _packetFactory.CreateOutgoingPacket(stream);
         composer.Compose(packet);
         var args = new SocketAsyncEventArgs();
         var memory = stream.GetBuffer().AsMemory().Slice(0, (int)stream.Length);
-        CreateHeader(memory, composer.MessageId);
+        CreateHeader(memory, outgoingMessageId);
         args.SetBuffer(memory);
         Socket.SendAsync(args);
-        Log.Debug("Send Packet: [" + composer.MessageId + "] " + composer.GetType().Name);
+        Log.Debug($"Send Packet: [{outgoingMessageId}] {composer.GetType().Name} (ID: {composer.MessageId}");
         stream.Dispose();
     }
 
-    public abstract void CreateHeader(Memory<byte> memory, int messageId);
+    public abstract void CreateHeader(Memory<byte> memory, uint messageId);
 }

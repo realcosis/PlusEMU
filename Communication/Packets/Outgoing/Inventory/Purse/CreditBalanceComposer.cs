@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Purse;
 
-internal class CreditBalanceComposer : IServerPacket
+public class CreditBalanceComposer : IServerPacket
 {
     private readonly int _creditsBalance;
-    public int MessageId => ServerPacketHeader.CreditBalanceMessageComposer;
+    public uint MessageId => ServerPacketHeader.CreditBalanceComposer;
 
     public CreditBalanceComposer(int creditsBalance)
     {

@@ -3,12 +3,12 @@ using Plus.HabboHotel.Users;
 
 namespace Plus.Communication.Packets.Outgoing.Groups;
 
-internal class GroupMemberUpdatedComposer : IServerPacket
+public class GroupMemberUpdatedComposer : IServerPacket
 {
     private readonly int _groupId;
     private readonly Habbo _habbo;
     private readonly int _type;
-    public int MessageId => ServerPacketHeader.GroupMemberUpdatedMessageComposer;
+    public uint MessageId => ServerPacketHeader.GroupMemberUpdatedComposer;
 
     public GroupMemberUpdatedComposer(int groupId, Habbo habbo, int type)
     {

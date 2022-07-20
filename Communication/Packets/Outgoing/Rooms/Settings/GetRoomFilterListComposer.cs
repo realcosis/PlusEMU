@@ -3,11 +3,11 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Settings;
 
-internal class GetRoomFilterListComposer : IServerPacket
+public class GetRoomFilterListComposer : IServerPacket
 {
     private readonly Room _instance;
 
-    public int MessageId => ServerPacketHeader.GetRoomFilterListMessageComposer;
+    public uint MessageId => ServerPacketHeader.GetRoomFilterListComposer;
 
     public GetRoomFilterListComposer(Room instance)
     {

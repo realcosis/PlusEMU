@@ -2,9 +2,9 @@
 
 namespace Plus.Communication.Packets.Outgoing.Messenger;
 
-internal class MessengerInitComposer : IServerPacket
+public class MessengerInitComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.MessengerInitMessageComposer;
+    public uint MessageId => ServerPacketHeader.MessengerInitComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

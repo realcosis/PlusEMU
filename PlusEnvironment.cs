@@ -53,7 +53,6 @@ public class PlusEnvironment : IPlusEnvironment
 
     private static readonly ConcurrentDictionary<int, Habbo> _usersCached = new();
 
-    public static string SwfRevision = "";
     private readonly IEnumerable<IStartable> _startableTasks;
     private readonly RconConfiguration _rconConfiguration;
 

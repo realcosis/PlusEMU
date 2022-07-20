@@ -3,9 +3,9 @@
 namespace Plus.Communication.Packets.Outgoing.Navigator.New;
 
 // TODO @80O: Implement
-internal class NavigatorLiftedRoomsComposer : IServerPacket
+public class NavigatorLiftedRoomsComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.NavigatorLiftedRoomsMessageComposer;
+    public uint MessageId => ServerPacketHeader.NavigatorLiftedRoomsComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

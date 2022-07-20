@@ -11,12 +11,10 @@ namespace Plus.Communication.Packets.Incoming.Ambassadors
 
         public async Task Parse(GameClient session, IIncomingPacket packet)
         {
-
             var userid = packet.ReadInt();
             var target = PlusEnvironment.GetHabboById(userid);
 
             await _ambassadorsManager.Warn(session.GetHabbo(), target, "Alert");
-            
         }
     }
 }

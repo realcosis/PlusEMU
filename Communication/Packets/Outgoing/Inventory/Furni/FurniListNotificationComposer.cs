@@ -2,11 +2,11 @@
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Furni;
 
-internal class FurniListNotificationComposer : IServerPacket
+public class FurniListNotificationComposer : IServerPacket
 {
     private readonly int _id;
     private readonly int _type;
-    public int MessageId => ServerPacketHeader.FurniListNotificationMessageComposer;
+    public uint MessageId => ServerPacketHeader.FurniListNotificationComposer;
 
     public FurniListNotificationComposer(int id, int type)
     {

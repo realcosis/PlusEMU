@@ -3,10 +3,10 @@
 namespace Plus.Communication.Packets.Outgoing.GameCenter;
 
 // TODO @80O: Implement
-internal class GameAccountStatusComposer : IServerPacket
+public class GameAccountStatusComposer : IServerPacket
 {
     private readonly int _gameId;
-    public int MessageId => ServerPacketHeader.GameAccountStatusMessageComposer;
+    public uint MessageId => ServerPacketHeader.GameAccountStatusComposer;
 
     public GameAccountStatusComposer(int gameId)
     {

@@ -3,11 +3,11 @@ using Plus.HabboHotel.Items;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class ItemUpdateComposer : IServerPacket
+public class ItemUpdateComposer : IServerPacket
 {
     private readonly Item _item;
     private readonly int _userId;
-    public int MessageId => ServerPacketHeader.ItemUpdateMessageComposer;
+    public uint MessageId => ServerPacketHeader.ItemUpdateComposer;
 
     public ItemUpdateComposer(Item item, int userId)
     {

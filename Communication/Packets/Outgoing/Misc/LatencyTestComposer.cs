@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Misc;
 
-internal class LatencyTestComposer : IServerPacket
+public class LatencyTestComposer : IServerPacket
 {
     private readonly int _testResponse;
-    public int MessageId => ServerPacketHeader.LatencyResponseMessageComposer;
+    public uint MessageId => ServerPacketHeader.LatencyResponseComposer;
 
     public LatencyTestComposer(int testResponse)
     {

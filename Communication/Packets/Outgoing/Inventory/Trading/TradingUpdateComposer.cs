@@ -4,10 +4,10 @@ using Plus.HabboHotel.Rooms.Trading;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Trading;
 
-internal class TradingUpdateComposer : IServerPacket
+public class TradingUpdateComposer : IServerPacket
 {
     private readonly Trade _trade;
-    public int MessageId => ServerPacketHeader.TradingUpdateMessageComposer;
+    public uint MessageId => ServerPacketHeader.TradingUpdateComposer;
 
     public TradingUpdateComposer(Trade trade)
     {

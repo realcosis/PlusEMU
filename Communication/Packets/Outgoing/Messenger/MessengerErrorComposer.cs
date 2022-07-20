@@ -2,12 +2,12 @@
 
 namespace Plus.Communication.Packets.Outgoing.Messenger;
 
-internal class MessengerErrorComposer : IServerPacket
+public class MessengerErrorComposer : IServerPacket
 {
     private readonly int _errorCode1;
     private readonly int _errorCode2;
 
-    public int MessageId => ServerPacketHeader.MessengerErrorMessageComposer;
+    public uint MessageId => ServerPacketHeader.MessengerErrorComposer;
 
     public MessengerErrorComposer(int errorCode1, int errorCode2)
     {

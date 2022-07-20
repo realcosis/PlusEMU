@@ -4,7 +4,7 @@ using Plus.HabboHotel.Groups;
 
 namespace Plus.Communication.Packets.Outgoing.Groups;
 
-internal class GroupMembersComposer : IServerPacket
+public class GroupMembersComposer : IServerPacket
 {
     private readonly Group _group;
     private readonly ICollection<UserCache> _members;
@@ -14,7 +14,7 @@ internal class GroupMembersComposer : IServerPacket
     private readonly int _reqType;
     private readonly string _searchVal;
 
-    public int MessageId => ServerPacketHeader.GroupMembersMessageComposer;
+    public uint MessageId => ServerPacketHeader.GroupMembersComposer;
 
     public GroupMembersComposer(Group group, ICollection<UserCache> members, int membersCount, int page, bool admin, int reqType, string searchVal)
     {

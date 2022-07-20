@@ -4,11 +4,11 @@ using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class ModeratorUserInfoComposer : IServerPacket
+public class ModeratorUserInfoComposer : IServerPacket
 {
     private readonly DataRow _user;
     private readonly DataRow _info;
-    public int MessageId => ServerPacketHeader.ModeratorUserInfoMessageComposer;
+    public uint MessageId => ServerPacketHeader.ModeratorUserInfoComposer;
 
     public ModeratorUserInfoComposer(DataRow user, DataRow info)
     {

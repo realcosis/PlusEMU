@@ -4,13 +4,13 @@ using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Moderation;
 
-internal class ModeratorInitComposer : IServerPacket
+public class ModeratorInitComposer : IServerPacket
 {
     private readonly ICollection<string> _userPresets;
     private readonly ICollection<string> _roomPresets;
     private readonly ICollection<ModerationTicket> _tickets;
 
-    public int MessageId => ServerPacketHeader.ModeratorInitMessageComposer;
+    public uint MessageId => ServerPacketHeader.ModeratorInitComposer;
 
     public ModeratorInitComposer(ICollection<string> userPresets, ICollection<string> roomPresets, ICollection<ModerationTicket> tickets)
     {

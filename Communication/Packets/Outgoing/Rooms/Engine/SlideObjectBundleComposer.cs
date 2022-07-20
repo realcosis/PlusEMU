@@ -3,7 +3,7 @@ using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class SlideObjectBundleComposer : IServerPacket
+public class SlideObjectBundleComposer : IServerPacket
 {
     private readonly int _fromX;
     private readonly int _fromY;
@@ -15,7 +15,7 @@ internal class SlideObjectBundleComposer : IServerPacket
     private readonly int _avatarId;
     private readonly int _itemId;
 
-    public int MessageId => ServerPacketHeader.SlideObjectBundleMessageComposer;
+    public uint MessageId => ServerPacketHeader.SlideObjectBundleComposer;
 
     public SlideObjectBundleComposer(int fromX, int fromY, double fromZ, int toX, int toY, double toZ, int rollerId, int avatarId, int itemId)
     {

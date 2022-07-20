@@ -2,13 +2,13 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class RoomVisualizationSettingsComposer : IServerPacket
+public class RoomVisualizationSettingsComposer : IServerPacket
 {
     private readonly int _walls;
     private readonly int _floor;
     private readonly bool _hideWalls;
 
-    public int MessageId => ServerPacketHeader.RoomVisualizationSettingsMessageComposer;
+    public uint MessageId => ServerPacketHeader.RoomVisualizationSettingsComposer;
 
     public RoomVisualizationSettingsComposer(int walls, int floor, bool hideWalls)
     {

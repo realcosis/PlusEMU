@@ -3,10 +3,10 @@ using Plus.HabboHotel.Games;
 
 namespace Plus.Communication.Packets.Outgoing.GameCenter;
 
-internal class GameListComposer : IServerPacket
+public class GameListComposer : IServerPacket
 {
     private readonly ICollection<GameData> _games;
-    public int MessageId => ServerPacketHeader.GameListMessageComposer;
+    public uint MessageId => ServerPacketHeader.GameListComposer;
 
     public GameListComposer(ICollection<GameData> games)
     {

@@ -2,9 +2,9 @@
 
 namespace Plus.Communication.Packets.Outgoing.Handshake;
 
-internal class AvailabilityStatusComposer : IServerPacket
+public class AvailabilityStatusComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.AvailabilityStatusMessageComposer;
+    public uint MessageId => ServerPacketHeader.AvailabilityStatusComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

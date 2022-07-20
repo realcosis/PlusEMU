@@ -8,7 +8,7 @@ public class ChatComposer : IServerPacket
     private readonly string _message;
     private readonly int _emotion;
     private readonly int _colour;
-    public int MessageId => ServerPacketHeader.ChatMessageComposer;
+    public uint MessageId => ServerPacketHeader.ChatComposer;
 
     public ChatComposer(int virtualId, string message, int emotion, int colour)
     {

@@ -2,9 +2,9 @@
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Furni;
 
-internal class FurniListUpdateComposer : IServerPacket
+public class FurniListUpdateComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.FurniListUpdateMessageComposer;
+    public uint MessageId => ServerPacketHeader.FurniListUpdateComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

@@ -3,12 +3,12 @@ using Plus.HabboHotel.Talents;
 
 namespace Plus.Communication.Packets.Outgoing.Talents;
 
-internal class TalentTrackComposer : IServerPacket
+public class TalentTrackComposer : IServerPacket
 {
     private readonly ICollection<TalentTrackLevel> _levels;
     private readonly string _type;
 
-    public int MessageId => ServerPacketHeader.TalentTrackMessageComposer;
+    public uint MessageId => ServerPacketHeader.TalentTrackComposer;
 
     public TalentTrackComposer(ICollection<TalentTrackLevel> levels, string type)
     {

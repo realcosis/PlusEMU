@@ -6,7 +6,7 @@ namespace Plus.Communication.Packets.Outgoing.Catalog;
 // TODO @80O: Implement
 public class VoucherRedeemOkComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.VoucherRedeemOkMessageComposer;
+    public uint MessageId => ServerPacketHeader.VoucherRedeemOkComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

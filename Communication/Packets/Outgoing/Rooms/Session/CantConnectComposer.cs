@@ -2,10 +2,10 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Session;
 
-internal class CantConnectComposer : IServerPacket
+public class CantConnectComposer : IServerPacket
 {
     private readonly int _error;
-    public int MessageId => ServerPacketHeader.CantConnectMessageComposer;
+    public uint MessageId => ServerPacketHeader.CantConnectComposer;
 
 
     // TODO @80O: Extract list of all error values and move to enum.

@@ -8,7 +8,7 @@ public class PurchaseOkComposer : IServerPacket
 {
     private readonly CatalogItem? _item;
     private readonly ItemData? _baseItem;
-    public int MessageId => ServerPacketHeader.PurchaseOkMessageComposer;
+    public uint MessageId => ServerPacketHeader.PurchaseOkComposer;
 
     public PurchaseOkComposer()
     {

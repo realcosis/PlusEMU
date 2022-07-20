@@ -2,13 +2,13 @@
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.FloorPlan;
 
-internal class FloorPlanSendDoorComposer : IServerPacket
+public class FloorPlanSendDoorComposer : IServerPacket
 {
     private readonly int _doorX;
     private readonly int _doorY;
     private readonly int _doorDirection;
 
-    public int MessageId => ServerPacketHeader.FloorPlanSendDoorMessageComposer;
+    public uint MessageId => ServerPacketHeader.FloorPlanSendDoorComposer;
 
     public FloorPlanSendDoorComposer(int doorX, int doorY, int doorDirection)
     {

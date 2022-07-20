@@ -5,7 +5,7 @@ namespace Plus.Communication.Packets.Outgoing.Catalog;
 // TODO @80O: Implement / Configurable from database
 public class GiftWrappingConfigurationComposer : IServerPacket
 {
-    public int MessageId => ServerPacketHeader.GiftWrappingConfigurationMessageComposer;
+    public uint MessageId => ServerPacketHeader.GiftWrappingConfigurationComposer;
 
     public void Compose(IOutgoingPacket packet)
     {

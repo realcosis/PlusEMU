@@ -3,12 +3,12 @@ using Plus.HabboHotel.Users.Messenger;
 
 namespace Plus.Communication.Packets.Outgoing.Messenger;
 
-internal class FriendNotificationComposer : IServerPacket
+public class FriendNotificationComposer : IServerPacket
 {
     private readonly int _userId;
     private readonly MessengerEventTypes _type;
     private readonly string _data;
-    public int MessageId => ServerPacketHeader.FriendNotificationMessageComposer;
+    public uint MessageId => ServerPacketHeader.FriendNotificationComposer;
 
     public FriendNotificationComposer(int userId, MessengerEventTypes type, string data)
     {

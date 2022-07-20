@@ -5,10 +5,10 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-internal class UserUpdateComposer : IServerPacket
+public class UserUpdateComposer : IServerPacket
 {
     private readonly ICollection<RoomUser> _users;
-    public int MessageId => ServerPacketHeader.UserUpdateMessageComposer;
+    public uint MessageId => ServerPacketHeader.UserUpdateComposer;
 
     public UserUpdateComposer(ICollection<RoomUser> users)
     {
