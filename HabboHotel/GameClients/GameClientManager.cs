@@ -159,16 +159,6 @@ public class GameClientManager : IGameClientManager
         }
     }
 
-    public void DisposeConnection(int clientId)
-    {
-        if (!TryGetClient(clientId, out var client))
-            return;
-        
-        if (client != null)
-            client.Dispose();
-        _clients.TryRemove(clientId, out client);
-    }
-
     public void LogClonesOut(int userId)
     {
         var client = GetClientByUserId(userId);
@@ -214,23 +204,23 @@ public class GameClientManager : IGameClientManager
         }
         Log.Info("Done saving users inventory!");
         Log.Info("Closing server connections...");
-        try
-        {
-            foreach (var client in GetClients.ToList())
-            {
-                try
-                {
-                    client.Dispose();
-                }
-                catch { }
-                Console.Clear();
-                Log.Info("<<- SERVER SHUTDOWN ->> CLOSING CONNECTIONS");
-            }
-        }
-        catch (Exception e)
-        {
-            ExceptionLogger.LogException(e);
-        }
+        //try
+        //{
+        //    foreach (var client in GetClients.ToList())
+        //    {
+        //        try
+        //        {
+        //            client.Dispose();
+        //        }
+        //        catch { }
+        //        Console.Clear();
+        //        Log.Info("<<- SERVER SHUTDOWN ->> CLOSING CONNECTIONS");
+        //    }
+        //}
+        //catch (Exception e)
+        //{
+        //    ExceptionLogger.LogException(e);
+        //}
         if (_clients.Count > 0)
             _clients.Clear();
         Log.Info("Connections closed!");

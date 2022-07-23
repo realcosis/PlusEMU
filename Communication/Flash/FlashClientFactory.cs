@@ -1,10 +1,11 @@
 ﻿using NetCoreServer;
 using Plus.Communication.Abstractions;
 using Plus.Communication.Revisions;
+using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Flash
 {
-    public class FlashClientFactory : IGameClientFactory<FlashGameClient>
+    public class FlashClientFactory : IGameClientFactory<TcpSessionProxy, TcpServer>
     {
         private readonly FlashPacketFactory _packetFactory;
         private readonly IRevisionsCache _revisionsCache;
@@ -15,7 +16,6 @@ namespace Plus.Communication.Flash
             _revisionsCache = revisionsCache;
         }
 
-        public FlashGameClient Create(TcpServer server) => new(server as FlashServer, _packetFactory)
-            { Revision = _revisionsCache.InternalRevision };
+        public TcpSessionProxy Create(TcpServer server) => new((FlashServer)server, new FlashGameClient((FlashServer)server, _packetFactory) { Revision = _revisionsCache.InternalRevision });
     }
 }

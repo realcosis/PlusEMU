@@ -4,6 +4,7 @@ using NLog;
 using Plus.Core;
 using System.Reflection;
 using Plus.Communication.Flash;
+using Plus.Communication.Nitro;
 using Plus.Communication.RCON;
 using Plus.Database;
 using Plus.Plugins;
@@ -37,6 +38,7 @@ public static class Program
             .Build();
 
         services.AddConfiguration<FlashServerConfiguration>(configuration.GetSection("Flash"));
+        services.AddConfiguration<NitroServerConfiguration>(configuration.GetSection("Nitro"));
         services.AddConfiguration<DatabaseConfiguration>(configuration.GetSection("Database"));
         services.AddConfiguration<RconConfiguration>(configuration.GetSection("Rcon"));
 

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net.Sockets;
+using System.Text;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Flash
@@ -11,7 +12,7 @@ namespace Plus.Communication.Flash
                                                                  "<cross-domain-policy>\r\n" +
                                                                  "<allow-access-from domain=\"*\" to-ports=\"1-31111\" />\r\n" +
                                                                  "</cross-domain-policy>\x0");
-        public FlashGameClient(FlashServer server, IPacketFactory packetFactory) : base(server, packetFactory)
+        public FlashGameClient(IGameServer server, IPacketFactory packetFactory) : base(server, packetFactory)
         {
         }
 
@@ -33,17 +34,24 @@ namespace Plus.Communication.Flash
             span[offset + 1] = (byte)((value >> 0) & 0xFF);
         }
 
-        protected override void OnReceived(byte[] buffer, long offset, long size)
+        internal override void OnReceived(byte[] buffer, long offset, long size)
         {
             if (!_hasReceivedPolicy && buffer[offset] == (byte)'<')
             {
                 _hasReceivedPolicy = true;
-                Send(XmlPolicy);
+                SendPolicy();
                 Disconnect();
                 return;
             }
 
             base.OnReceived(buffer, offset, size);
+        }
+
+        private void SendPolicy()
+        {
+            var args = new SocketAsyncEventArgs();
+            args.SetBuffer(XmlPolicy);
+            SendCallback(args);
         }
 
         public override void CreateHeader(Memory<byte> memory, uint messageId)
@@ -52,7 +60,7 @@ namespace Plus.Communication.Flash
             EncodeInt16(memory, (short)messageId, 4);
         }
 
-        public override (bool Complete, uint MessageId, int HeaderLength, int Length) GetMessageIdAndPacketLength(ReadOnlyMemory<byte> buffer)
+        internal override (bool Complete, uint MessageId, int HeaderLength, int Length) GetMessageIdAndPacketLength(ReadOnlyMemory<byte> buffer)
         {
             if (buffer.Length < 6) return default;
             var length = DecodeInt32(buffer) - 2;

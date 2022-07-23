@@ -18,7 +18,6 @@ public interface IGameClientManager
     void ModAlert(string message);
     void DoAdvertisingReport(GameClient reporter, GameClient target);
     void SendPacket(IServerPacket packet, string fuse = "");
-    void DisposeConnection(int clientId);
     void LogClonesOut(int userId);
     void RegisterClient(GameClient client, int userId, string username);
     void UnregisterClient(int userid, string username);

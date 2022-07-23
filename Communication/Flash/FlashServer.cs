@@ -4,7 +4,7 @@ using Plus.Communication.Packets;
 
 namespace Plus.Communication.Flash
 {
-    public class FlashServer : GameServer<FlashServerConfiguration, FlashGameClient>, IFlashServer
+    public class FlashServer : TcpGameServer<FlashServerConfiguration>, IFlashServer
     {
         public FlashServer(IOptions<FlashServerConfiguration> options, FlashClientFactory flashClientFactory, IPacketManager packetManager) : base(options, flashClientFactory, packetManager)
         {

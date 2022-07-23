@@ -10,7 +10,66 @@ using Plus.HabboHotel.Users;
 
 namespace Plus.HabboHotel.GameClients;
 
-public abstract class GameClient : TcpSession
+public interface IGameClient
+{
+    event EventHandler<EventArgs>? ConnectionConnected;
+    event EventHandler<EventArgs>? ConnectionDisconnected;
+    Arc4? Rc4Client { get; set; }
+    bool IsAuthenticated { get; set; }
+    DateTime TimeConnected { get; set; }
+    string MachineId { get; set; }
+    int PingCount { get; set; }
+    Revision Revision { get; set; }
+    Habbo GetHabbo();
+    void SetHabbo(Habbo habbo);
+    void Send(IServerPacket composer);
+    bool Disconnect();
+}
+
+public class TcpSessionProxy : TcpSession
+{
+    private readonly GameClient _client;
+    public TcpSessionProxy(TcpServer server, GameClient client) : base(server)
+    {
+        _client = client;
+        _client.Id = Id;
+        _client.SendCallback = args => Socket.SendAsync(args);
+        _client.DisconnectRequested = () => Disconnect();
+    }
+
+    protected override void OnConnected()
+    {
+        Socket.DontFragment = true;
+        _client.OnConnected();
+    }
+
+    protected override void OnDisconnected() => _client.OnDisconnected();
+
+    protected override void OnReceived(byte[] buffer, long offset, long size) => _client.OnReceived(buffer, offset, size);
+}
+
+public class WsSessionProxy : WsSession
+{
+    private readonly GameClient _client;
+    public WsSessionProxy(WsServer server, GameClient client) : base(server)
+    {
+        _client = client;
+        _client.SendCallback = args => Socket.SendAsync(args);
+        _client.DisconnectRequested = () => Disconnect();
+    }
+
+    protected override void OnConnected()
+    {
+        Socket.DontFragment = true;
+        _client.OnConnected();
+    }
+
+    protected override void OnDisconnected() => _client.OnDisconnected();
+
+    public override void OnWsReceived(byte[] buffer, long offset, long size) => _client.OnReceived(buffer, offset, size);
+}
+
+public abstract class GameClient
 {
     private readonly IGameServer _server;
     private readonly IPacketFactory _packetFactory;
@@ -32,24 +91,29 @@ public abstract class GameClient : TcpSession
 
     public Revision Revision { get; set; }
 
-    protected GameClient(IGameServer server, IPacketFactory packetFactory) : base(server as TcpServer)
+    internal Func<SocketAsyncEventArgs, bool> SendCallback { get; set; }
+    internal Action? DisconnectRequested { get; set; }
+
+    public Guid Id { get; set; }
+
+
+    public void Disconnect() => DisconnectRequested?.Invoke();
+
+    protected GameClient(IGameServer server, IPacketFactory packetFactory)
     {
-        _server = server;
         _packetFactory = packetFactory;
+        _server = server;
     }
 
-    protected override void OnConnected()
+    internal void OnConnected()
     {
-        Socket.DontFragment = true;
-        TimeConnected = DateTime.UtcNow;
         ConnectionConnected?.Invoke(this, EventArgs.Empty);
     }
 
-    protected override void OnDisconnected() => ConnectionDisconnected?.Invoke(this, EventArgs.Empty);
+    internal void OnDisconnected() => ConnectionDisconnected?.Invoke(this, EventArgs.Empty);
 
-    public abstract (bool Complete, uint MessageId, int HeaderLength, int Length) GetMessageIdAndPacketLength(ReadOnlyMemory<byte> buffer);
-
-    protected override async void OnReceived(byte[] buffer, long offset, long size)
+    internal abstract (bool Complete, uint MessageId, int HeaderLength, int Length) GetMessageIdAndPacketLength(ReadOnlyMemory<byte> buffer);
+    internal virtual async void OnReceived(byte[] buffer, long offset, long size)
     {
         if (size > int.MaxValue) throw new InvalidOperationException("");
         await using var stream = PlusMemoryStream.GetStream(buffer.AsSpan().Slice((int) offset, (int) size));
@@ -117,7 +181,7 @@ public abstract class GameClient : TcpSession
         var memory = stream.GetBuffer().AsMemory().Slice(0, (int)stream.Length);
         CreateHeader(memory, outgoingMessageId);
         args.SetBuffer(memory);
-        Socket.SendAsync(args);
+        SendCallback(args);
         Log.Debug($"Send Packet: [{outgoingMessageId}] {composer.GetType().Name} (ID: {composer.MessageId}");
         stream.Dispose();
     }
