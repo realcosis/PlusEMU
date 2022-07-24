@@ -8,6 +8,7 @@ using NLog;
 using Plus.Communication.Encryption;
 using Plus.Communication.Encryption.Keys;
 using Plus.Communication.Flash;
+using Plus.Communication.Nitro;
 using Plus.Communication.Packets.Outgoing.Moderation;
 using Plus.Communication.Rcon;
 using Plus.Communication.RCON;
@@ -37,6 +38,7 @@ public class PlusEnvironment : IPlusEnvironment
     private static IDatabase _database;
     private static IRconSocket _rcon;
     private static IFlashServer _flashServer;
+    private readonly INitroServer _nitroServer;
     private static IFigureDataManager _figureManager;
 
     // TODO: Get rid?
@@ -64,7 +66,8 @@ public class PlusEnvironment : IPlusEnvironment
         IEnumerable<IStartable> startableTasks,
         IRconSocket rconSocket,
         IOptions<RconConfiguration> rconConfiguration,
-        IFlashServer flashServer)
+        IFlashServer flashServer,
+        INitroServer nitroServer)
     {
         _database = database;
         _languageManager = languageManager;
@@ -74,6 +77,7 @@ public class PlusEnvironment : IPlusEnvironment
         _startableTasks = startableTasks;
         _rcon = rconSocket;
         _flashServer = flashServer;
+        _nitroServer = nitroServer;
         _rconConfiguration = rconConfiguration.Value;
     }
 
@@ -122,6 +126,7 @@ public class PlusEnvironment : IPlusEnvironment
 
             //Accept connections.
             _flashServer.Start();
+            _nitroServer.Start();
 
             // Allow services to self initialize
             foreach (var task in _startableTasks)

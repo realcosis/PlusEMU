@@ -15,7 +15,7 @@ namespace Plus.Communication.Nitro
         public string Hostname { get; set; }
     }
 
-    public interface INitroServer
+    public interface INitroServer : IGameServer
     {
     }
 
