@@ -78,6 +78,10 @@ namespace Plus.Communication.Revisions
                     foreach (var outgoing in undefinedOutgoing)
                         Console.WriteLine(outgoing);
                 }
+
+
+                revision.IncomingIdToInternalIdMapping = revision.IncomingHeaders.Where(kvp => kvp.Value > 0).ToDictionary(kvp => kvp.Value, kvp => InternalRevision.IncomingHeaders[kvp.Key]);
+                revision.InternalIdToOutgoingIdMapping = revision.OutgoingHeaders.Where(kvp => kvp.Value > 0).ToDictionary(kvp => InternalRevision.OutgoingHeaders[kvp.Key], kvp => kvp.Value);
             }
         }
     }

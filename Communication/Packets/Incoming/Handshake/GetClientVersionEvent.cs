@@ -17,6 +17,9 @@ public class GetClientVersionEvent : IPacketEvent
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
         var build = packet.ReadString();
+        var clientType = packet.ReadString();
+        var clientPlatform = packet.ReadInt();
+        var clientDeviceType = packet.ReadInt();
         if (!_revisionsCache.Revisions.TryGetValue(build, out var revision))
         {
             session.Disconnect();
