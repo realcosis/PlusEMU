@@ -54,7 +54,11 @@ public class WsSessionProxy : WsSession
     public WsSessionProxy(WsServer server, GameClient client) : base(server)
     {
         _client = client;
-        _client.SendCallback = args => Socket.SendAsync(args);
+        _client.SendCallback = args =>
+        {
+            var buffer = args.MemoryBuffer.ToArray();
+            return SendBinaryAsync(buffer, 0, buffer.Length);
+        };
         _client.DisconnectRequested = () => Disconnect();
     }
 
@@ -182,7 +186,7 @@ public abstract class GameClient
         CreateHeader(memory, outgoingMessageId);
         args.SetBuffer(memory);
         SendCallback(args);
-        Log.Debug($"Send Packet: [{outgoingMessageId}] {composer.GetType().Name} (ID: {composer.MessageId}");
+        Log.Debug($"Send Packet: {composer.GetType().Name} (EmuId: {composer.MessageId}, ClientId: {outgoingMessageId})");
         stream.Dispose();
     }
 
