@@ -13,6 +13,7 @@ public class FloorHeightMapComposer : IServerPacket
     {
         _map = map;
         _wallHeight = wallHeight;
+        _zoomIn = zoomIn;
     }
 
     public void Compose(IOutgoingPacket packet)
