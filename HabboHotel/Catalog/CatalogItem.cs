@@ -4,13 +4,13 @@ namespace Plus.HabboHotel.Catalog;
 
 public class CatalogItem
 {
-    public CatalogItem(int id, int itemId, ItemData data, string catalogName, int pageId, int costCredits, int costPixels,
+    public CatalogItem(int id, int itemId, ItemDefinition definition, string catalogName, int pageId, int costCredits, int costPixels,
         int costDiamonds, int amount, int limitedEditionSells, int limitedEditionStack, bool hasOffer, string extraData, string badge, int offerId)
     {
         Id = id;
         Name = catalogName;
         ItemId = itemId;
-        Data = data;
+        Definition = definition;
         PageId = pageId;
         CostCredits = costCredits;
         CostPixels = costPixels;
@@ -27,7 +27,7 @@ public class CatalogItem
 
     public int Id { get; }
     public int ItemId { get; }
-    public ItemData Data { get; }
+    public ItemDefinition Definition { get; }
     public int Amount { get; }
     public int CostCredits { get; }
     public string ExtraData { get; }

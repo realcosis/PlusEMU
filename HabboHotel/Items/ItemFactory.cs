@@ -4,14 +4,14 @@ namespace Plus.HabboHotel.Items;
 
 public static class ItemFactory
 {
-    public static Item CreateSingleItemNullable(ItemData data, Habbo habbo, string extraData, string displayFlags, int groupId = 0, int limitedNumber = 0, int limitedStack = 0)
+    public static Item CreateSingleItemNullable(ItemDefinition definition, Habbo habbo, string extraData, string displayFlags, int groupId = 0, int limitedNumber = 0, int limitedStack = 0)
     {
-        if (data == null) throw new InvalidOperationException("Data cannot be null.");
-        var item = new Item(0, 0, data.Id, extraData, 0, 0, 0, 0, habbo.Id, groupId, limitedNumber, limitedStack, "");
+        if (definition == null) throw new InvalidOperationException("Data cannot be null.");
+        var item = new Item(0, 0, definition.Id, extraData, 0, 0, 0, 0, habbo.Id, groupId, limitedNumber, limitedStack, "");
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
         dbClient.SetQuery(
             "INSERT INTO `items` (base_item,user_id,room_id,x,y,z,wall_pos,rot,extra_data,`limited_number`,`limited_stack`) VALUES (@did,@uid,@rid,@x,@y,@z,@wall_pos,@rot,@extra_data, @limited_number, @limited_stack)");
-        dbClient.AddParameter("did", data.Id);
+        dbClient.AddParameter("did", definition.Id);
         dbClient.AddParameter("uid", habbo.Id);
         dbClient.AddParameter("rid", 0);
         dbClient.AddParameter("x", 0);
@@ -33,15 +33,15 @@ public static class ItemFactory
         return item;
     }
 
-    public static Item CreateSingleItem(ItemData data, Habbo habbo, string extraData, string displayFlags, int itemId, int limitedNumber = 0, int limitedStack = 0)
+    public static Item CreateSingleItem(ItemDefinition definition, Habbo habbo, string extraData, string displayFlags, int itemId, int limitedNumber = 0, int limitedStack = 0)
     {
-        if (data == null) throw new InvalidOperationException("Data cannot be null.");
-        var item = new Item(itemId, 0, data.Id, extraData, 0, 0, 0, 0, habbo.Id, 0, limitedNumber, limitedStack, "");
+        if (definition == null) throw new InvalidOperationException("Data cannot be null.");
+        var item = new Item(itemId, 0, definition.Id, extraData, 0, 0, 0, 0, habbo.Id, 0, limitedNumber, limitedStack, "");
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
         dbClient.SetQuery(
             "INSERT INTO `items` (`id`,base_item,user_id,room_id,x,y,z,wall_pos,rot,extra_data,`limited_number`,`limited_stack`) VALUES (@id, @did,@uid,@rid,@x,@y,@z,@wall_pos,@rot,@extra_data, @limited_number, @limited_stack)");
         dbClient.AddParameter("id", itemId);
-        dbClient.AddParameter("did", data.Id);
+        dbClient.AddParameter("did", definition.Id);
         dbClient.AddParameter("uid", habbo.Id);
         dbClient.AddParameter("rid", 0);
         dbClient.AddParameter("x", 0);
@@ -56,15 +56,15 @@ public static class ItemFactory
         return item;
     }
 
-    public static Item CreateGiftItem(ItemData data, Habbo habbo, string extraData, string displayFlags, int itemId, int limitedNumber = 0, int limitedStack = 0)
+    public static Item CreateGiftItem(ItemDefinition definition, Habbo habbo, string extraData, string displayFlags, int itemId, int limitedNumber = 0, int limitedStack = 0)
     {
-        if (data == null) throw new InvalidOperationException("Data cannot be null.");
-        var item = new Item(itemId, 0, data.Id, extraData, 0, 0, 0, 0, habbo.Id, 0, limitedNumber, limitedStack, "");
+        if (definition == null) throw new InvalidOperationException("Data cannot be null.");
+        var item = new Item(itemId, 0, definition.Id, extraData, 0, 0, 0, 0, habbo.Id, 0, limitedNumber, limitedStack, "");
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
         dbClient.SetQuery(
             "INSERT INTO `items` (`id`,base_item,user_id,room_id,x,y,z,wall_pos,rot,extra_data,`limited_number`,`limited_stack`) VALUES (@id, @did,@uid,@rid,@x,@y,@z,@wall_pos,@rot,@extra_data, @limited_number, @limited_stack)");
         dbClient.AddParameter("id", itemId);
-        dbClient.AddParameter("did", data.Id);
+        dbClient.AddParameter("did", definition.Id);
         dbClient.AddParameter("uid", habbo.Id);
         dbClient.AddParameter("rid", 0);
         dbClient.AddParameter("x", 0);
@@ -79,15 +79,15 @@ public static class ItemFactory
         return item;
     }
 
-    public static List<Item> CreateMultipleItems(ItemData data, Habbo habbo, string extraData, int amount, int groupId = 0)
+    public static List<Item> CreateMultipleItems(ItemDefinition definition, Habbo habbo, string extraData, int amount, int groupId = 0)
     {
-        if (data == null) throw new InvalidOperationException("Data cannot be null.");
+        if (definition == null) throw new InvalidOperationException("Data cannot be null.");
         var items = new List<Item>();
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
         for (var i = 0; i < amount; i++)
         {
             dbClient.SetQuery("INSERT INTO `items` (base_item,user_id,room_id,x,y,z,wall_pos,rot,extra_data) VALUES(@did,@uid,@rid,@x,@y,@z,@wallpos,@rot,@flags);");
-            dbClient.AddParameter("did", data.Id);
+            dbClient.AddParameter("did", definition.Id);
             dbClient.AddParameter("uid", habbo.Id);
             dbClient.AddParameter("rid", 0);
             dbClient.AddParameter("x", 0);
@@ -96,7 +96,7 @@ public static class ItemFactory
             dbClient.AddParameter("wallpos", "");
             dbClient.AddParameter("rot", 0);
             dbClient.AddParameter("flags", extraData);
-            var item = new Item(Convert.ToInt32(dbClient.InsertQuery()), 0, data.Id, extraData, 0, 0, 0, 0, habbo.Id, groupId, 0, 0, "");
+            var item = new Item(Convert.ToInt32(dbClient.InsertQuery()), 0, definition.Id, extraData, 0, 0, 0, 0, habbo.Id, groupId, 0, 0, "");
             if (groupId > 0)
             {
                 dbClient.SetQuery("INSERT INTO `items_groups` (`id`, `group_id`) VALUES (@id, @gid)");
@@ -109,12 +109,12 @@ public static class ItemFactory
         return items;
     }
 
-    public static List<Item> CreateTeleporterItems(ItemData data, Habbo habbo, int groupId = 0)
+    public static List<Item> CreateTeleporterItems(ItemDefinition definition, Habbo habbo, int groupId = 0)
     {
         var items = new List<Item>();
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
         dbClient.SetQuery("INSERT INTO `items` (base_item,user_id,room_id,x,y,z,wall_pos,rot,extra_data) VALUES(@did,@uid,@rid,@x,@y,@z,@wallpos,@rot,@flags);");
-        dbClient.AddParameter("did", data.Id);
+        dbClient.AddParameter("did", definition.Id);
         dbClient.AddParameter("uid", habbo.Id);
         dbClient.AddParameter("rid", 0);
         dbClient.AddParameter("x", 0);
@@ -125,7 +125,7 @@ public static class ItemFactory
         dbClient.AddParameter("flags", "");
         var item1Id = Convert.ToInt32(dbClient.InsertQuery());
         dbClient.SetQuery("INSERT INTO `items` (base_item,user_id,room_id,x,y,z,wall_pos,rot,extra_data) VALUES(@did,@uid,@rid,@x,@y,@z,@wallpos,@rot,@flags);");
-        dbClient.AddParameter("did", data.Id);
+        dbClient.AddParameter("did", definition.Id);
         dbClient.AddParameter("uid", habbo.Id);
         dbClient.AddParameter("rid", 0);
         dbClient.AddParameter("x", 0);
@@ -135,8 +135,8 @@ public static class ItemFactory
         dbClient.AddParameter("rot", 0);
         dbClient.AddParameter("flags", item1Id.ToString());
         var item2Id = Convert.ToInt32(dbClient.InsertQuery());
-        var item1 = new Item(item1Id, 0, data.Id, "", 0, 0, 0, 0, habbo.Id, groupId, 0, 0, "");
-        var item2 = new Item(item2Id, 0, data.Id, "", 0, 0, 0, 0, habbo.Id, groupId, 0, 0, "");
+        var item1 = new Item(item1Id, 0, definition.Id, "", 0, 0, 0, 0, habbo.Id, groupId, 0, 0, "");
+        var item2 = new Item(item2Id, 0, definition.Id, "", 0, 0, 0, 0, habbo.Id, groupId, 0, 0, "");
         dbClient.SetQuery("INSERT INTO `room_items_tele_links` (`tele_one_id`, `tele_two_id`) VALUES (" + item1Id + ", " + item2Id + "), (" + item2Id + ", " + item1Id + ")");
         dbClient.RunQuery();
         items.Add(item1);

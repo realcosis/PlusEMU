@@ -5,16 +5,16 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Furni;
 
 public class OpenGiftComposer : IServerPacket
 {
-    private readonly ItemData _data;
+    private readonly ItemDefinition _definition;
     private readonly string _text;
     private readonly Item _item;
     private readonly bool _itemIsInRoom;
 
     public uint MessageId => ServerPacketHeader.OpenGiftComposer;
 
-    public OpenGiftComposer(ItemData data, string text, Item item, bool itemIsInRoom)
+    public OpenGiftComposer(ItemDefinition definition, string text, Item item, bool itemIsInRoom)
     {
-        _data = data;
+        _definition = definition;
         _text = text;
         _item = item;
         _itemIsInRoom = itemIsInRoom;
@@ -22,11 +22,11 @@ public class OpenGiftComposer : IServerPacket
 
     public void Compose(IOutgoingPacket packet)
     {
-        packet.WriteString(_data.Type.ToString());
-        packet.WriteInteger(_data.SpriteId);
-        packet.WriteString(_data.ItemName);
+        packet.WriteString(_definition.Type.ToString());
+        packet.WriteInteger(_definition.SpriteId);
+        packet.WriteString(_definition.ItemName);
         packet.WriteInteger(_item.Id);
-        packet.WriteString(_data.Type.ToString());
+        packet.WriteString(_definition.Type.ToString());
         packet.WriteBoolean(_itemIsInRoom); //Is it in the room?
         packet.WriteString(_text);
     }

@@ -23,7 +23,7 @@ internal class GetGroupFurniSettingsEvent : IPacketEvent
         var item = session.GetHabbo().CurrentRoom.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
-        if (item.Data.InteractionType != InteractionType.GuildGate)
+        if (item.Definition.InteractionType != InteractionType.GuildGate)
             return Task.CompletedTask;
         if (!_groupManager.TryGetGroup(groupId, out var group))
             return Task.CompletedTask;

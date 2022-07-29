@@ -35,7 +35,7 @@ internal class TradingOfferItemsEvent : IPacketEvent
         var tradeUser = trade.Users[0];
         if (tradeUser.RoomUser != roomUser)
             tradeUser = trade.Users[1];
-        var allItems = session.GetHabbo().Inventory.Furniture.AllItems.Where(x => x.Data.Id == item.Data.Id).Take(amount).ToList();
+        var allItems = session.GetHabbo().Inventory.Furniture.AllItems.Where(x => x.Definition.Id == item.Definition.Id).Take(amount).ToList();
         foreach (var I in allItems)
         {
             if (tradeUser.OfferedItems.ContainsKey(I.Id))

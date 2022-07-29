@@ -50,7 +50,7 @@ public class Item
             Id = id;
             RoomId = roomId;
             _room = room;
-            Data = data;
+            Definition = data;
             BaseItem = baseItem;
             ExtraData = extraData;
             GroupId = group;
@@ -130,7 +130,7 @@ public class Item
         }
     }
 
-    public ItemData Data { get; set; }
+    public ItemDefinition Definition { get; set; }
 
     public Dictionary<int, ThreeDCoord> GetAffectedTiles { get; private set; }
 
@@ -1154,18 +1154,18 @@ public class Item
 
     public void ResetBaseItem()
     {
-        Data = null;
-        Data = GetBaseItem();
+        Definition = null;
+        Definition = GetBaseItem();
     }
 
-    public ItemData GetBaseItem()
+    public ItemDefinition GetBaseItem()
     {
-        if (Data == null)
+        if (Definition == null)
         {
             if (PlusEnvironment.GetGame().GetItemManager().GetItem(BaseItem, out var I))
-                Data = I;
+                Definition = I;
         }
-        return Data;
+        return Definition;
     }
 
     public Room GetRoom()
@@ -1205,7 +1205,7 @@ public class Item
     public void Destroy()
     {
         _room = null;
-        Data = null;
+        Definition = null;
         GetAffectedTiles.Clear();
     }
 }

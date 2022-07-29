@@ -18,7 +18,7 @@ public class CatalogOfferComposer : IServerPacket
     public void Compose(IOutgoingPacket packet)
     {
         packet.WriteInteger(_item.OfferId);
-        packet.WriteString(_item.Data.ItemName);
+        packet.WriteString(_item.Definition.ItemName);
         packet.WriteBoolean(false); //IsRentable
         packet.WriteInteger(_item.CostCredits);
         if (_item.CostDiamonds > 0)
@@ -38,13 +38,13 @@ public class CatalogOfferComposer : IServerPacket
             packet.WriteString("b");
             packet.WriteString(_item.Badge);
         }
-        packet.WriteString(_item.Data.Type.ToString());
-        if (_item.Data.Type.ToString().ToLower() == "b")
-            packet.WriteString(_item.Data.ItemName); //Badge name.
+        packet.WriteString(_item.Definition.Type.ToString());
+        if (_item.Definition.Type.ToString().ToLower() == "b")
+            packet.WriteString(_item.Definition.ItemName); //Badge name.
         else
         {
-            packet.WriteInteger(_item.Data.SpriteId);
-            if (_item.Data.InteractionType == InteractionType.Wallpaper || _item.Data.InteractionType == InteractionType.Floor || _item.Data.InteractionType == InteractionType.Landscape)
+            packet.WriteInteger(_item.Definition.SpriteId);
+            if (_item.Definition.InteractionType == InteractionType.Wallpaper || _item.Definition.InteractionType == InteractionType.Floor || _item.Definition.InteractionType == InteractionType.Landscape)
                 packet.WriteString(_item.Name.Split('_')[2]);
 
             // TODO @80O: Dont make this static hardcoded page 9

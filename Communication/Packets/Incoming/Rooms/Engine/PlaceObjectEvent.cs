@@ -45,7 +45,7 @@ internal class PlaceObjectEvent : IPacketEvent
             session.SendNotification("You cannot have more than " + Convert.ToInt32(_settingsManager.TryGetValue("room.item.placement_limit")) + " items in a room!");
             return Task.CompletedTask;
         }
-        if (item.Data.InteractionType == InteractionType.Exchange && room.OwnerId != session.GetHabbo().Id && !session.GetHabbo().GetPermissions().HasRight("room_item_place_exchange_anywhere"))
+        if (item.Definition.InteractionType == InteractionType.Exchange && room.OwnerId != session.GetHabbo().Id && !session.GetHabbo().GetPermissions().HasRight("room_item_place_exchange_anywhere"))
         {
             session.SendNotification("You cannot place exchange items in other people's rooms!");
             return Task.CompletedTask;

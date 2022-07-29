@@ -3,8 +3,8 @@
 public interface IItemDataManager
 {
     void Init();
-    bool GetItem(int id, out ItemData item);
-    ItemData? GetItemData(int id);
-    ItemData GetItemByName(string name);
-    bool GetGift(int spriteId, out ItemData item);
+    bool GetItem(int id, out ItemDefinition item);
+    ItemDefinition? GetItemData(int id);
+    ItemDefinition GetItemByName(string name);
+    bool GetGift(int spriteId, out ItemDefinition item);
 }

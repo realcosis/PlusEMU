@@ -37,9 +37,9 @@ internal class CreditFurniRedeemEvent : IPacketEvent
         var exchange = room.GetRoomItemHandler().GetItem(packet.ReadInt());
         if (exchange == null)
             return Task.CompletedTask;
-        if (exchange.Data.InteractionType != InteractionType.Exchange)
+        if (exchange.Definition.InteractionType != InteractionType.Exchange)
             return Task.CompletedTask;
-        var value = exchange.Data.BehaviourData;
+        var value = exchange.Definition.BehaviourData;
         if (value > 0)
         {
             session.GetHabbo().Credits += value;

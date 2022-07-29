@@ -29,21 +29,21 @@ internal class UseSellableClothingEvent : IPacketEvent
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
-        if (item.Data == null)
+        if (item.Definition == null)
             return Task.CompletedTask;
         if (item.UserId != session.GetHabbo().Id)
             return Task.CompletedTask;
-        if (item.Data.InteractionType != InteractionType.PurchasableClothing)
+        if (item.Definition.InteractionType != InteractionType.PurchasableClothing)
         {
             session.SendNotification("Oops, this item isn't set as a sellable clothing item!");
             return Task.CompletedTask;
         }
-        if (item.Data.BehaviourData == 0)
+        if (item.Definition.BehaviourData == 0)
         {
             session.SendNotification("Oops, this item doesn't have a linking clothing configuration, please report it!");
             return Task.CompletedTask;
         }
-        if (!_clothingManager.TryGetClothing(item.Data.BehaviourData, out var clothing))
+        if (!_clothingManager.TryGetClothing(item.Definition.BehaviourData, out var clothing))
         {
             session.SendNotification("Oops, we couldn't find this clothing part!");
             return Task.CompletedTask;

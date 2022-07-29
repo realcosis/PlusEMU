@@ -103,7 +103,7 @@ internal class OpenGiftEvent : IPacketEvent
         return Task.CompletedTask;
     }
 
-    private void FinishOpenGift(GameClient session, ItemData baseItem, Item present, Room room, DataRow row)
+    private void FinishOpenGift(GameClient session, ItemDefinition baseItem, Item present, Room room, DataRow row)
     {
         try
         {
@@ -123,7 +123,7 @@ internal class OpenGiftEvent : IPacketEvent
             present.BaseItem = Convert.ToInt32(row["base_id"]);
             present.ResetBaseItem();
             present.ExtraData = !string.IsNullOrEmpty(Convert.ToString(row["extra_data"])) ? Convert.ToString(row["extra_data"]) : "";
-            if (present.Data.Type == 's')
+            if (present.Definition.Type == 's')
             {
                 if (!room.GetRoomItemHandler().SetFloorItem(session, present, present.GetX, present.GetY, present.Rotation, true, false, true))
                 {
@@ -146,7 +146,7 @@ internal class OpenGiftEvent : IPacketEvent
                 }
                 itemIsInRoom = false;
             }
-            session.Send(new OpenGiftComposer(present.Data, present.ExtraData, present, itemIsInRoom));
+            session.Send(new OpenGiftComposer(present.Definition, present.ExtraData, present, itemIsInRoom));
             session.Send(new FurniListUpdateComposer());
         }
         catch

@@ -7,14 +7,14 @@ namespace Plus.Communication.Packets.Outgoing.Catalog;
 public class PurchaseOkComposer : IServerPacket
 {
     private readonly CatalogItem? _item;
-    private readonly ItemData? _baseItem;
+    private readonly ItemDefinition? _baseItem;
     public uint MessageId => ServerPacketHeader.PurchaseOkComposer;
 
     public PurchaseOkComposer()
     {
     }
 
-    public PurchaseOkComposer(CatalogItem item, ItemData baseItem)
+    public PurchaseOkComposer(CatalogItem item, ItemDefinition baseItem)
     {
         _item = item;
         _baseItem = baseItem;

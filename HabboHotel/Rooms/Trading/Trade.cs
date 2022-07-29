@@ -137,9 +137,9 @@ public sealed class Trade
             logUserOne += item.Id + ";";
             roomUserOne.GetClient().GetHabbo().Inventory.Furniture.RemoveItem(item.Id);
             roomUserOne.GetClient().Send(new FurniListRemoveComposer(item.Id));
-            if (item.Data.InteractionType == InteractionType.Exchange && PlusEnvironment.GetSettingsManager().TryGetValue("trading.auto_exchange_redeemables") == "1")
+            if (item.Definition.InteractionType == InteractionType.Exchange && PlusEnvironment.GetSettingsManager().TryGetValue("trading.auto_exchange_redeemables") == "1")
             {
-                roomUserTwo.GetClient().GetHabbo().Credits += item.Data.BehaviourData;
+                roomUserTwo.GetClient().GetHabbo().Credits += item.Definition.BehaviourData;
                 roomUserTwo.GetClient().Send(new CreditBalanceComposer(roomUserTwo.GetClient().GetHabbo().Credits));
                 dbClient.SetQuery("DELETE FROM `items` WHERE `id` = @id LIMIT 1");
                 dbClient.AddParameter("id", item.Id);
@@ -163,9 +163,9 @@ public sealed class Trade
             logUserTwo += item.Id + ";";
             roomUserTwo.GetClient().GetHabbo().Inventory.Furniture.RemoveItem(item.Id);
             roomUserTwo.GetClient().Send(new FurniListRemoveComposer(item.Id));
-            if (item.Data.InteractionType == InteractionType.Exchange && PlusEnvironment.GetSettingsManager().TryGetValue("trading.auto_exchange_redeemables") == "1")
+            if (item.Definition.InteractionType == InteractionType.Exchange && PlusEnvironment.GetSettingsManager().TryGetValue("trading.auto_exchange_redeemables") == "1")
             {
-                roomUserOne.GetClient().GetHabbo().Credits += item.Data.BehaviourData;
+                roomUserOne.GetClient().GetHabbo().Credits += item.Definition.BehaviourData;
                 roomUserOne.GetClient().Send(new CreditBalanceComposer(roomUserOne.GetClient().GetHabbo().Credits));
                 dbClient.SetQuery("DELETE FROM `items` WHERE `id` = @id LIMIT 1");
                 dbClient.AddParameter("id", item.Id);

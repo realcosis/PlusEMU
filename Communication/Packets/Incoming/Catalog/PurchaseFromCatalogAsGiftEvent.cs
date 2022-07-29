@@ -109,7 +109,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
         }
         if (session.GetHabbo().SessionGiftBlocked)
             return Task.CompletedTask;
-        var extra_data = giftUser + Convert.ToChar(5) + giftMessage + Convert.ToChar(5) + session.GetHabbo().Id + Convert.ToChar(5) + item.Data.Id + Convert.ToChar(5) + spriteId + Convert.ToChar(5) + ribbon +
+        var extra_data = giftUser + Convert.ToChar(5) + giftMessage + Convert.ToChar(5) + session.GetHabbo().Id + Convert.ToChar(5) + item.Definition.Id + Convert.ToChar(5) + spriteId + Convert.ToChar(5) + ribbon +
                  Convert.ToChar(5) + colour;
         int newItemId;
         using (var connection = _database.Connection())
@@ -119,7 +119,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
                 new { baseId = presentData.Id, habboId = habbo.Id, extra_data = extra_data });
             newItemId = Convert.ToInt32(InsertQuery);
             string itemExtraData = null;
-            switch (item.Data.InteractionType)
+            switch (item.Definition.InteractionType)
             {
                 case InteractionType.None:
                     itemExtraData = "";
@@ -185,7 +185,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
 
             //Insert the present, forever.
             connection.Execute("INSERT INTO `user_presents` (`item_id`,`base_id`,`extra_data`) VALUES (@itemId, @baseId, @extra_data)",
-                new {itemId = newItemId, baseId = item.Data.Id, extra_data = string.IsNullOrEmpty(itemExtraData) ? "" : itemExtraData });
+                new {itemId = newItemId, baseId = item.Definition.Id, extra_data = string.IsNullOrEmpty(itemExtraData) ? "" : itemExtraData });
 
             //Here we're clearing up a record, this is dumb, but okay.
             connection.Execute("DELETE FROM `items` WHERE `id` = @deleteId LIMIT 1", new { deleteId = newItemId});

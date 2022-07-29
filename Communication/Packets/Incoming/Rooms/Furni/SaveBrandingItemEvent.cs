@@ -18,14 +18,14 @@ internal class SaveBrandingItemEvent : IPacketEvent
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
-        if (item.Data.InteractionType == InteractionType.Background)
+        if (item.Definition.InteractionType == InteractionType.Background)
         {
             var data = packet.ReadInt();
             var brandData = "state" + Convert.ToChar(9) + "0";
             for (var i = 1; i <= data; i++) brandData = brandData + Convert.ToChar(9) + packet.ReadString();
             item.ExtraData = brandData;
         }
-        else if (item.Data.InteractionType == InteractionType.FxProvider)
+        else if (item.Definition.InteractionType == InteractionType.FxProvider)
         {
             /*int Unknown = Packet.PopInt();
             string Data = Packet.PopString();

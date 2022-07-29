@@ -29,7 +29,7 @@ public class ItemsComposer : IServerPacket
     private void WriteWallItem(IOutgoingPacket packet, Item item, int userId)
     {
         packet.WriteString(item.Id.ToString());
-        packet.WriteInteger(item.Data.SpriteId);
+        packet.WriteInteger(item.Definition.SpriteId);
         try
         {
             packet.WriteString(item.WallCoord);
@@ -40,7 +40,7 @@ public class ItemsComposer : IServerPacket
         }
         ItemBehaviourUtility.GenerateWallExtradata(item, packet);
         packet.WriteInteger(-1);
-        packet.WriteInteger(item.Data.Modes > 1 ? 1 : 0);
+        packet.WriteInteger(item.Definition.Modes > 1 ? 1 : 0);
         packet.WriteInteger(userId);
     }
 }

@@ -33,7 +33,7 @@ internal class ApplyHorseEffectEvent : IPacketEvent
             return Task.CompletedTask;
         if (petUser.PetData == null || petUser.PetData.OwnerId != session.GetHabbo().Id)
             return Task.CompletedTask;
-        if (item.Data.InteractionType == InteractionType.HorseSaddle1)
+        if (item.Definition.InteractionType == InteractionType.HorseSaddle1)
         {
             petUser.PetData.Saddle = 9;
             using (var dbClient = _database.GetQueryReactor())
@@ -45,7 +45,7 @@ internal class ApplyHorseEffectEvent : IPacketEvent
             //We only want to use this if we're successful.
             room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
         }
-        else if (item.Data.InteractionType == InteractionType.HorseSaddle2)
+        else if (item.Definition.InteractionType == InteractionType.HorseSaddle2)
         {
             petUser.PetData.Saddle = 10;
             using (var dbClient = _database.GetQueryReactor())
@@ -57,7 +57,7 @@ internal class ApplyHorseEffectEvent : IPacketEvent
             //We only want to use this if we're successful.
             room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
         }
-        else if (item.Data.InteractionType == InteractionType.HorseHairstyle)
+        else if (item.Definition.InteractionType == InteractionType.HorseHairstyle)
         {
             var parse = 100;
             var hairType = item.GetBaseItem().ItemName.Split('_')[2];
@@ -72,7 +72,7 @@ internal class ApplyHorseEffectEvent : IPacketEvent
             //We only want to use this if we're successful.
             room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
         }
-        else if (item.Data.InteractionType == InteractionType.HorseHairDye)
+        else if (item.Definition.InteractionType == InteractionType.HorseHairDye)
         {
             var hairDye = 48;
             var hairType = item.GetBaseItem().ItemName.Split('_')[2];
@@ -87,7 +87,7 @@ internal class ApplyHorseEffectEvent : IPacketEvent
             //We only want to use this if we're successful.
             room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
         }
-        else if (item.Data.InteractionType == InteractionType.HorseBodyDye)
+        else if (item.Definition.InteractionType == InteractionType.HorseBodyDye)
         {
             var race = item.GetBaseItem().ItemName.Split('_')[2];
             var parse = int.Parse(race);

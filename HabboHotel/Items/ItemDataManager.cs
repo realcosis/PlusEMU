@@ -6,8 +6,8 @@ namespace Plus.HabboHotel.Items;
 public class ItemDataManager : IItemDataManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Items.ItemDataManager");
-    public Dictionary<int, ItemData> Gifts = new(0); //<SpriteId, Item>
-    public Dictionary<int, ItemData> Items = new(0);
+    public Dictionary<int, ItemDefinition> Gifts = new(0); //<SpriteId, Item>
+    public Dictionary<int, ItemDefinition> Items = new(0);
 
     public void Init()
     {
@@ -50,13 +50,13 @@ public class ItemDataManager : IItemDataManager
                         if (!Gifts.ContainsKey(spriteId))
                         {
                             Gifts.Add(spriteId,
-                                new ItemData(id, spriteId, itemName, publicName, type, width, length, height, allowStack, allowWalk, allowSit, allowRecycle, allowTrade, allowMarketplace, allowGift,
+                                new ItemDefinition(id, spriteId, itemName, publicName, type, width, length, height, allowStack, allowWalk, allowSit, allowRecycle, allowTrade, allowMarketplace, allowGift,
                                     allowInventoryStack, interactionType, behaviourData, cycleCount, vendingIds, heightAdjustable, effectId, isRare, extraRot));
                         }
                         if (!Items.ContainsKey(id))
                         {
                             Items.Add(id,
-                                new ItemData(id, spriteId, itemName, publicName, type, width, length, height, allowStack, allowWalk, allowSit, allowRecycle, allowTrade, allowMarketplace, allowGift,
+                                new ItemDefinition(id, spriteId, itemName, publicName, type, width, length, height, allowStack, allowWalk, allowSit, allowRecycle, allowTrade, allowMarketplace, allowGift,
                                     allowInventoryStack, interactionType, behaviourData, cycleCount, vendingIds, heightAdjustable, effectId, isRare, extraRot));
                         }
                     }
@@ -73,21 +73,21 @@ public class ItemDataManager : IItemDataManager
     }
 
     [Obsolete("Cannot use this in an async context!")]
-    public bool GetItem(int id, out ItemData item)
+    public bool GetItem(int id, out ItemDefinition item)
     {
         if (Items.TryGetValue(id, out item))
             return true;
         return false;
     }
 
-    public ItemData? GetItemData(int id)
+    public ItemDefinition? GetItemData(int id)
     {
         if (Items.TryGetValue(id, out var item))
             return item;
         return null;
     }
 
-    public ItemData GetItemByName(string name)
+    public ItemDefinition GetItemByName(string name)
     {
         foreach (var entry in Items)
         {
@@ -98,7 +98,7 @@ public class ItemDataManager : IItemDataManager
         return null;
     }
 
-    public bool GetGift(int spriteId, out ItemData item)
+    public bool GetGift(int spriteId, out ItemDefinition item)
     {
         if (Gifts.TryGetValue(spriteId, out item))
             return true;

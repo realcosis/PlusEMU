@@ -25,7 +25,7 @@ public class TradingUpdateComposer : IServerPacket
                 packet.WriteInteger(item.Id);
                 packet.WriteString(item.GetBaseItem().Type.ToString().ToLower());
                 packet.WriteInteger(item.Id);
-                packet.WriteInteger(item.Data.SpriteId);
+                packet.WriteInteger(item.Definition.SpriteId);
                 packet.WriteInteger(0); //Not sure.
                 if (item.LimitedNo > 0)
                 {
@@ -48,7 +48,7 @@ public class TradingUpdateComposer : IServerPacket
                     packet.WriteInteger(0);
             }
             packet.WriteInteger(user.OfferedItems.Count); //Item Count
-            packet.WriteInteger(user.OfferedItems.Values.Where(x => x.Data.InteractionType == InteractionType.Exchange).Sum(t => t.Data.BehaviourData));
+            packet.WriteInteger(user.OfferedItems.Values.Where(x => x.Definition.InteractionType == InteractionType.Exchange).Sum(t => t.Definition.BehaviourData));
         }
 
     }

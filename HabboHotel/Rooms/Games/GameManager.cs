@@ -56,22 +56,22 @@ public class GameManager
         }
         foreach (var item in _room.GetRoomItemHandler().GetFloor.ToList())
         {
-            if (team == Team.Blue && item.Data.InteractionType == InteractionType.Banzaiscoreblue)
+            if (team == Team.Blue && item.Definition.InteractionType == InteractionType.Banzaiscoreblue)
             {
                 item.ExtraData = Points[Convert.ToInt32(team)].ToString();
                 item.UpdateState();
             }
-            else if (team == Team.Red && item.Data.InteractionType == InteractionType.Banzaiscorered)
+            else if (team == Team.Red && item.Definition.InteractionType == InteractionType.Banzaiscorered)
             {
                 item.ExtraData = Points[Convert.ToInt32(team)].ToString();
                 item.UpdateState();
             }
-            else if (team == Team.Green && item.Data.InteractionType == InteractionType.Banzaiscoregreen)
+            else if (team == Team.Green && item.Definition.InteractionType == InteractionType.Banzaiscoregreen)
             {
                 item.ExtraData = Points[Convert.ToInt32(team)].ToString();
                 item.UpdateState();
             }
-            else if (team == Team.Yellow && item.Data.InteractionType == InteractionType.Banzaiscoreyellow)
+            else if (team == Team.Yellow && item.Definition.InteractionType == InteractionType.Banzaiscoreyellow)
             {
                 item.ExtraData = Points[Convert.ToInt32(team)].ToString();
                 item.UpdateState();

@@ -6,21 +6,21 @@ public static class ItemUtility
 {
     public static bool CanGiftItem(CatalogItem item)
     {
-        if (!item.Data.AllowGift || item.IsLimited || item.Amount > 1 || item.Data.InteractionType == InteractionType.Exchange ||
-            item.Data.InteractionType == InteractionType.Badge || item.Data.Type != 's' && item.Data.Type != 'i' || item.CostDiamonds > 0 ||
-            item.Data.InteractionType == InteractionType.Teleport || item.Data.InteractionType == InteractionType.Deal)
+        if (!item.Definition.AllowGift || item.IsLimited || item.Amount > 1 || item.Definition.InteractionType == InteractionType.Exchange ||
+            item.Definition.InteractionType == InteractionType.Badge || item.Definition.Type != 's' && item.Definition.Type != 'i' || item.CostDiamonds > 0 ||
+            item.Definition.InteractionType == InteractionType.Teleport || item.Definition.InteractionType == InteractionType.Deal)
             return false;
-        if (item.Data.IsRare)
+        if (item.Definition.IsRare)
             return false;
-        if (item.Data.InteractionType == InteractionType.Pet)
+        if (item.Definition.InteractionType == InteractionType.Pet)
             return false;
         return true;
     }
 
     public static bool CanSelectAmount(CatalogItem item)
     {
-        if (item.IsLimited || item.Amount > 1 || item.Data.InteractionType == InteractionType.Exchange || !item.HaveOffer || item.Data.InteractionType == InteractionType.Badge ||
-            item.Data.InteractionType == InteractionType.Deal)
+        if (item.IsLimited || item.Amount > 1 || item.Definition.InteractionType == InteractionType.Exchange || !item.HaveOffer || item.Definition.InteractionType == InteractionType.Badge ||
+            item.Definition.InteractionType == InteractionType.Deal)
             return false;
         return true;
     }
@@ -41,7 +41,7 @@ public static class ItemUtility
     {
         if (item.LimitedNo > 0)
             return true;
-        if (item.Data.IsRare)
+        if (item.Definition.IsRare)
             return true;
         return false;
     }

@@ -46,18 +46,18 @@ public class CatalogPageComposer : IServerPacket
                     packet.WriteInteger(0); // Type of PixelCost
                 }
                 packet.WriteBoolean(ItemUtility.CanGiftItem(item));
-                if (item.Data.InteractionType == InteractionType.Deal || item.Data.InteractionType == InteractionType.Roomdeal)
+                if (item.Definition.InteractionType == InteractionType.Deal || item.Definition.InteractionType == InteractionType.Roomdeal)
                 {
                     CatalogDeal deal = null;
-                    if (!PlusEnvironment.GetGame().GetCatalog().TryGetDeal(item.Data.BehaviourData, out deal))
+                    if (!PlusEnvironment.GetGame().GetCatalog().TryGetDeal(item.Definition.BehaviourData, out deal))
                         packet.WriteInteger(0); //Count
                     else
                     {
                         packet.WriteInteger(deal.ItemDataList.Count);
                         foreach (var dealItem in deal.ItemDataList.ToList())
                         {
-                            packet.WriteString(dealItem.Data.Type.ToString());
-                            packet.WriteInteger(dealItem.Data.SpriteId);
+                            packet.WriteString(dealItem.Definition.Type.ToString());
+                            packet.WriteInteger(dealItem.Definition.SpriteId);
                             packet.WriteString("");
                             packet.WriteInteger(dealItem.Amount);
                             packet.WriteBoolean(false);
@@ -72,18 +72,18 @@ public class CatalogPageComposer : IServerPacket
                         packet.WriteString("b");
                         packet.WriteString(item.Badge);
                     }
-                    packet.WriteString(item.Data.Type.ToString());
-                    if (item.Data.Type.ToString().ToLower() == "b")
+                    packet.WriteString(item.Definition.Type.ToString());
+                    if (item.Definition.Type.ToString().ToLower() == "b")
                     {
                         //This is just a badge, append the name.
-                        packet.WriteString(item.Data.ItemName);
+                        packet.WriteString(item.Definition.ItemName);
                     }
                     else
                     {
-                        packet.WriteInteger(item.Data.SpriteId);
-                        if (item.Data.InteractionType == InteractionType.Wallpaper || item.Data.InteractionType == InteractionType.Floor || item.Data.InteractionType == InteractionType.Landscape)
+                        packet.WriteInteger(item.Definition.SpriteId);
+                        if (item.Definition.InteractionType == InteractionType.Wallpaper || item.Definition.InteractionType == InteractionType.Floor || item.Definition.InteractionType == InteractionType.Landscape)
                             packet.WriteString(item.Name.Split('_')[2]);
-                        else if (item.Data.InteractionType == InteractionType.Bot) //Bots
+                        else if (item.Definition.InteractionType == InteractionType.Bot) //Bots
                         {
                             CatalogBot catalogBot = null;
                             if (!PlusEnvironment.GetGame().GetCatalog().TryGetBot(item.ItemId, out catalogBot))
