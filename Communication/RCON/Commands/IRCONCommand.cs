@@ -2,7 +2,7 @@
 
 namespace Plus.Communication.Rcon.Commands;
 
-[Transient]
+[Singleton]
 public interface IRconCommand
 {
     string Key { get; }

@@ -1,6 +1,6 @@
 ﻿namespace Plus.Utilities.DependencyInjection
 {
-    public class TransientAttribute : Attribute
+    public class ScopedAttribute : Attribute
     {
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Plus.HabboHotel.Users.UserData
 {
-    [Transient]
+    [Singleton]
     public interface IUserDataLoadingTask
     {
         /// <summary>

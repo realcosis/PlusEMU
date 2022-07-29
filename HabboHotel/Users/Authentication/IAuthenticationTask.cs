@@ -2,7 +2,7 @@
 
 namespace Plus.HabboHotel.Users.Authentication
 {
-    [Transient]
+    [Singleton]
     public interface IAuthenticationTask
     {
         /// <summary>

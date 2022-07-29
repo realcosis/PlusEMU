@@ -2,7 +2,7 @@
 
 namespace Plus.Plugins
 {
-    [Transient]
+    [Singleton]
     public interface IPlugin
     {
         void Start();

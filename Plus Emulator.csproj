@@ -57,10 +57,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Utilities\Collections\" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ContentWithTargetPath Include="Resources\Revisions\**">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<TargetPath>revisions\%(Filename)%(Extension)</TargetPath>

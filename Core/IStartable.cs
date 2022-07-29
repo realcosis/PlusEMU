@@ -2,7 +2,7 @@
 
 namespace Plus.Core
 {
-    [Transient]
+    [Singleton]
     public interface IStartable
     {
         Task Start();

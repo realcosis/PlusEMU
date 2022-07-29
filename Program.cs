@@ -15,15 +15,15 @@ namespace Plus;
 
 public static class Program
 {
-    private static IEnumerable<Type> _transientTypes;
+    private static Dictionary<ServiceLifetime, IEnumerable<Type>> _defaultTypes = new();
 
     public static async Task Main(string[] args)
     {
         Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
-
-
+        
         var services = new ServiceCollection();
-        _transientTypes = typeof(Program).Assembly.GetTypes().Where(t => t.IsInterface && t.GetCustomAttributes<TransientAttribute>().Any());
+        _defaultTypes[ServiceLifetime.Singleton] = typeof(Program).Assembly.GetTypes().Where(t => t.IsInterface && t.GetCustomAttributes<SingletonAttribute>().Any());
+        _defaultTypes[ServiceLifetime.Scoped] = typeof(Program).Assembly.GetTypes().Where(t => t.IsInterface && t.GetCustomAttributes<ScopedAttribute>().Any());
 
         // Plugins
         Directory.CreateDirectory("plugins");
@@ -83,13 +83,13 @@ public static class Program
         }
     }
 
-    public static IServiceCollection AddAssignableTo<T>(this IServiceCollection services, Assembly assembly) => services.AddAssignableTo(new[] { assembly }, typeof(T));
+    public static IServiceCollection AddAssignableTo<T>(this IServiceCollection services, Assembly assembly, ServiceLifetime lifetime = ServiceLifetime.Singleton) => services.AddAssignableTo(new[] { assembly }, typeof(T), lifetime);
 
-    public static IServiceCollection AddAssignableTo<T>(this IServiceCollection services, IEnumerable<Assembly> assemblies) => services.AddAssignableTo(assemblies, typeof(T));
+    public static IServiceCollection AddAssignableTo<T>(this IServiceCollection services, IEnumerable<Assembly> assemblies, ServiceLifetime lifetime = ServiceLifetime.Singleton) => services.AddAssignableTo(assemblies, typeof(T), lifetime);
 
-    public static IServiceCollection AddAssignableTo(this IServiceCollection services, Assembly assembly, Type type) => services.AddAssignableTo(new[] { assembly }, type);
+    public static IServiceCollection AddAssignableTo(this IServiceCollection services, Assembly assembly, Type type, ServiceLifetime lifetime = ServiceLifetime.Singleton) => services.AddAssignableTo(new[] { assembly }, type, lifetime);
 
-    public static IServiceCollection AddAssignableTo(this IServiceCollection services, IEnumerable<Assembly> assemblies, Type type) =>
+    public static IServiceCollection AddAssignableTo(this IServiceCollection services, IEnumerable<Assembly> assemblies, Type type, ServiceLifetime lifetime = ServiceLifetime.Singleton) =>
         services.Scan(scan => scan.FromAssemblies(assemblies)
             .AddClasses(classes => classes.Where(t => t.IsAssignableTo(type) && !t.IsAbstract && !t.IsInterface))
             .UsingRegistrationStrategy(RegistrationStrategy.Append)
@@ -98,8 +98,10 @@ public static class Program
 
     private static IServiceCollection AddDefaultRules(this IServiceCollection services, Assembly assembly)
     {
-        foreach (var type in _transientTypes)
-            services.AddAssignableTo(assembly, type);
+        foreach (var type in assembly.GetTypes().Where(t => t.IsInterface && t.GetCustomAttributes<SingletonAttribute>().Any()).Concat(_defaultTypes[ServiceLifetime.Singleton]).Distinct())
+            services.AddAssignableTo(assembly, type, ServiceLifetime.Singleton);
+        foreach (var type in assembly.GetTypes().Where(t => t.IsInterface && t.GetCustomAttributes<ScopedAttribute>().Any()).Concat(_defaultTypes[ServiceLifetime.Scoped]).Distinct())
+            services.AddAssignableTo(assembly, type, ServiceLifetime.Scoped);
 
         services.Scan(scan => scan.FromAssemblies(assembly)
             .AddClasses(classes => classes.Where(c => c.GetInterface($"I{c.Name}") != null))

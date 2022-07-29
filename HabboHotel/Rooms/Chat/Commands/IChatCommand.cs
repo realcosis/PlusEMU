@@ -3,7 +3,7 @@ using Plus.Utilities.DependencyInjection;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands;
 
-[Transient]
+[Singleton]
 public interface IChatCommand
 {
     string Key { get; }

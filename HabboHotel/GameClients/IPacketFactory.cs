@@ -3,7 +3,7 @@ using Plus.Utilities.DependencyInjection;
 
 namespace Plus.HabboHotel.GameClients
 {
-    [Transient]
+    [Singleton]
     public interface IPacketFactory
     {
         IIncomingPacket CreateIncomingPacket(Memory<byte> buffer);
