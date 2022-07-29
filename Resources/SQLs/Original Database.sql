@@ -25083,4 +25083,4 @@ CREATE TABLE `ambassador_logs` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- 8_AddBubbleIDToUsersTable
-ALTER TABLE `users` ADD COLUMN `bubble_id` TINYINT NOT_NULL DEFAULT '0' AFTER `is_ambassador`;
+ALTER TABLE `users` ADD COLUMN `bubble_id` TINYINT NOT NULL DEFAULT '0' AFTER `is_ambassador`;
