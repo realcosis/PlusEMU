@@ -2,9 +2,9 @@
 
 namespace Plus.HabboHotel.Items;
 
-public class ItemData
+public class ItemDefinition
 {
-    public ItemData(int id, int sprite, string name, string publicName, string type, int width, int length, double height, bool stackable, bool walkable, bool isSeat,
+    public ItemDefinition(int id, int sprite, string name, string publicName, string type, int width, int length, double height, bool stackable, bool walkable, bool isSeat,
         bool allowRecycle, bool allowTrade, bool allowMarketplaceSell, bool allowGift, bool allowInventoryStack, InteractionType interactionType, int behaviourData, int modes,
         string vendingIds, string adjustableHeights, int effectId, bool isRare, bool extraRot)
     {
@@ -27,29 +27,8 @@ public class ItemData
         InteractionType = interactionType;
         BehaviourData = behaviourData;
         Modes = modes;
-        VendingIds = new List<int>();
-        if (vendingIds.Contains(","))
-        {
-            foreach (var vendingId in vendingIds.Split(','))
-            {
-                try
-                {
-                    VendingIds.Add(int.Parse(vendingId));
-                }
-                catch
-                {
-                    Console.WriteLine("Error with Item " + ItemName + " - Vending Ids");
-                }
-            }
-        }
-        else if (!string.IsNullOrEmpty(vendingIds) && int.Parse(vendingIds) > 0)
-            VendingIds.Add(int.Parse(vendingIds));
-        AdjustableHeights = new List<double>();
-        if (adjustableHeights.Contains(","))
-            foreach (var h in adjustableHeights.Split(','))
-                AdjustableHeights.Add(double.Parse(h));
-        else if (!string.IsNullOrEmpty(adjustableHeights) && double.Parse(adjustableHeights) > 0)
-            AdjustableHeights.Add(double.Parse(adjustableHeights));
+        VendingIds = (!string.IsNullOrEmpty(vendingIds) && vendingIds != "0") ? vendingIds.Split(",").Select(int.Parse).ToList() : new(0);
+        AdjustableHeights = (!string.IsNullOrEmpty(adjustableHeights) && adjustableHeights != "0") ? adjustableHeights.Split(",").Select(double.Parse).ToList() : new(0);
         EffectId = effectId;
         var wiredId = 0;
         if (InteractionType == InteractionType.WiredCondition || InteractionType == InteractionType.WiredTrigger || InteractionType == InteractionType.WiredEffect)
@@ -75,13 +54,21 @@ public class ItemData
     public bool AllowMarketplaceSell { get; set; }
     public bool AllowGift { get; set; }
     public bool AllowInventoryStack { get; set; }
+
+    /// TODO @80O: Convert to string so plugins can add new interactions.
     public InteractionType InteractionType { get; set; }
     public int BehaviourData { get; set; }
     public int Modes { get; set; }
     public List<int> VendingIds { get; set; }
     public List<double> AdjustableHeights { get; set; }
     public int EffectId { get; set; }
+
+    /// TODO @80O: Should be removed, use unique interaction name instead.
     public WiredBoxType WiredType { get; set; }
+
+    /// TODO @80O: This is dumb, remove it.
     public bool IsRare { get; set; }
+
+    /// TODO @80O: I think this can be removed. Seems useless and unclear what its supposed to do.
     public bool ExtraRot { get; set; }
 }
