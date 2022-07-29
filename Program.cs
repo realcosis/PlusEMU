@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using NLog;
+using NLog.Extensions.Logging;
 using Plus.Core;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
 using Plus.Communication.Flash;
 using Plus.Communication.Nitro;
 using Plus.Communication.RCON;
@@ -51,6 +53,12 @@ public static class Program
 
         // Configuration
         LogManager.LoadConfiguration(Path.Join(Directory.GetCurrentDirectory(), "Config", "nlog.config"));
+        services.AddLogging(loggingBuilder =>
+        {
+            loggingBuilder.ClearProviders();
+            loggingBuilder.SetMinimumLevel(Microsoft.Extensions.Logging.LogLevel.Trace);
+            loggingBuilder.AddNLog();
+        });
 
         var serviceProvider = services.BuildServiceProvider();
         foreach (var plugin in pluginDefinitions)
