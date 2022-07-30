@@ -11,7 +11,7 @@ internal class AllAroundMeCommand : IChatCommand
 
     public string Description => "Need some attention? Pull all of the users to you.";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (user == null)

@@ -22,16 +22,16 @@ internal class UserInfoCommand : IChatCommand
         _gameClientManager = gameClientManager;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter the username of the user you wish to view.");
             return;
         }
         DataRow userData = null;
         DataRow userInfo = null;
-        var username = @params[1];
+        var username = parameters[1];
         using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery(

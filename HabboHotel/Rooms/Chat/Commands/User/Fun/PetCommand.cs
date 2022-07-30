@@ -12,7 +12,7 @@ internal class PetCommand : IChatCommand
 
     public string Description => "Allows you to transform into a pet..";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         var roomUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (roomUser == null)
@@ -34,17 +34,17 @@ internal class PetCommand : IChatCommand
             }
             return;
         }
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Oops, you forgot to choose the type of pet you'd like to turn into! Use :pet list to see the availiable morphs!");
             return;
         }
-        if (@params[1].ToLower() == "list")
+        if (parameters[1].ToLower() == "list")
         {
             session.SendWhisper("Habbo, Dog, Cat, Terrier, Croc, Bear, Pig, Lion, Rhino, Spider, Turtle, Chick, Frog, Drag, Monkey, Horse, Bunny, Pigeon, Demon and Gnome.");
             return;
         }
-        var targetPetId = GetPetIdByString(@params[1]);
+        var targetPetId = GetPetIdByString(parameters[1]);
         if (targetPetId == 0)
         {
             session.SendWhisper("Oops, couldn't find a pet by that name!");

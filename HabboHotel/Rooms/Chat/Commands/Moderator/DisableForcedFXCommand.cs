@@ -18,7 +18,7 @@ internal class DisableForcedFxCommand : IChatCommand
         _database = database;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         session.GetHabbo().DisableForcedEffects = !session.GetHabbo().DisableForcedEffects;
         using (var dbClient = _database.GetQueryReactor())

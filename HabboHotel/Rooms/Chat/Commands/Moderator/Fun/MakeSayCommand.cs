@@ -12,17 +12,17 @@ internal class MakeSayCommand : IChatCommand
 
     public string Description => "Forces the specified user to say the specified message.";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         var thisUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (thisUser == null)
             return;
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
             session.SendWhisper("You must enter a username and the message you wish to force them to say.");
         else
         {
-            var message = CommandManager.MergeParams(@params, 2);
-            var targetUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(@params[1]);
+            var message = CommandManager.MergeParams(parameters, 2);
+            var targetUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(parameters[1]);
             if (targetUser != null)
             {
                 if (targetUser.GetClient() != null && targetUser.GetClient().GetHabbo() != null)

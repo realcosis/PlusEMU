@@ -18,7 +18,7 @@ internal class DisableMimicCommand : IChatCommand
         _database = database;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         session.GetHabbo().AllowMimic = !session.GetHabbo().AllowMimic;
         session.SendWhisper("You're " + (session.GetHabbo().AllowMimic ? "now" : "no longer") + " able to be mimiced.");

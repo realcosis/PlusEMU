@@ -12,14 +12,14 @@ internal class MassDanceCommand : IChatCommand
 
     public string Description => "Force everyone in the room to dance to a dance of your choice.";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter a dance ID. (1-4)");
             return;
         }
-        var danceId = Convert.ToInt32(@params[1]);
+        var danceId = Convert.ToInt32(parameters[1]);
         if (danceId < 0 || danceId > 4)
         {
             session.SendWhisper("Please enter a dance ID. (1-4)");

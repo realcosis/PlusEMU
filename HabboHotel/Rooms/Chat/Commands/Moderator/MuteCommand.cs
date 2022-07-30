@@ -18,14 +18,14 @@ internal class MuteCommand : IChatCommand
         _database = database;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter a username and a valid time in seconds (max 600, anything over will be set back to 600).");
             return;
         }
-        var habbo = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1])?.GetHabbo();
+        var habbo = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(parameters[1])?.GetHabbo();
         if (habbo == null)
         {
             session.SendWhisper("An error occoured whilst finding that user in the database.");
@@ -37,7 +37,7 @@ internal class MuteCommand : IChatCommand
             return;
         }
         double time;
-        if (double.TryParse(@params[2], out time))
+        if (double.TryParse(parameters[2], out time))
         {
             if (time > 600 && !session.GetHabbo().GetPermissions().HasRight("mod_mute_limit_override"))
                 time = 600;

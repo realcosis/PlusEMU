@@ -21,9 +21,9 @@ internal class RoomCommand : IChatCommand
         _database = database;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Oops, you must choose a room option to disable.");
             return;
@@ -33,7 +33,7 @@ internal class RoomCommand : IChatCommand
             session.SendWhisper("Oops, only the room owner or staff can use this command.");
             return;
         }
-        var option = @params[1];
+        var option = parameters[1];
         switch (option)
         {
             case "list":

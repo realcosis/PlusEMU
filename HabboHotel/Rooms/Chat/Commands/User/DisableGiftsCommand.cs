@@ -18,7 +18,7 @@ internal class DisableGiftsCommand : IChatCommand
         _database = database;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         session.GetHabbo().AllowGifts = !session.GetHabbo().AllowGifts;
         session.SendWhisper("You're " + (session.GetHabbo().AllowGifts ? "now" : "no longer") + " accepting gifts.");

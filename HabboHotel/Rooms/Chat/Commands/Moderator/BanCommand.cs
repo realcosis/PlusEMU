@@ -24,14 +24,14 @@ internal class BanCommand : IChatCommand
         _gameClientManager = gameClientManager;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter the username of the user you'd like to IP ban & account ban.");
             return;
         }
-        var habbo = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1])?.GetHabbo();
+        var habbo = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(parameters[1])?.GetHabbo();
         if (habbo == null)
         {
             session.SendWhisper("An error occoured whilst finding that user in the database.");
@@ -43,14 +43,14 @@ internal class BanCommand : IChatCommand
             return;
         }
         double expire = 0;
-        var hours = @params[2];
+        var hours = parameters[2];
         if (string.IsNullOrEmpty(hours) || hours == "perm")
             expire = UnixTimestamp.GetNow() + 78892200;
         else
             expire = UnixTimestamp.GetNow() + Convert.ToDouble(hours) * 3600;
         string reason = null;
-        if (@params.Length >= 4)
-            reason = CommandManager.MergeParams(@params, 3);
+        if (parameters.Length >= 4)
+            reason = CommandManager.MergeParams(parameters, 3);
         else
             reason = "No reason specified.";
         var username = habbo.Username;

@@ -22,7 +22,7 @@ internal class ConvertCreditsCommand : IChatCommand
         _database = database;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         var totalValue = 0;
         try

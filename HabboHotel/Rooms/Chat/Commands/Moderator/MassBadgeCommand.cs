@@ -20,9 +20,9 @@ internal class MassBadgeCommand : IChatCommand
         _badgeManager = badgeManager;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter the code of the badge you'd like to give to the entire hotel.");
             return;
@@ -31,14 +31,14 @@ internal class MassBadgeCommand : IChatCommand
         {
             if (client == null || client.GetHabbo() == null || client.GetHabbo().Username == session.GetHabbo().Username)
                 continue;
-            if (!client.GetHabbo().Inventory.Badges.HasBadge(@params[1]))
+            if (!client.GetHabbo().Inventory.Badges.HasBadge(parameters[1]))
             {
-                _badgeManager.GiveBadge(client.GetHabbo(), @params[1]).Wait();
+                _badgeManager.GiveBadge(client.GetHabbo(), parameters[1]).Wait();
                 client.SendNotification("You have just been given a badge!");
             }
             else
                 client.SendWhisper(session.GetHabbo().Username + " tried to give you a badge, but you already have it!");
         }
-        session.SendWhisper("You have successfully given every user in this hotel the " + @params[1] + " badge!");
+        session.SendWhisper("You have successfully given every user in this hotel the " + parameters[1] + " badge!");
     }
 }

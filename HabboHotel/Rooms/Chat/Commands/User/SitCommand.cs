@@ -11,7 +11,7 @@ internal class SitCommand : IChatCommand
 
     public string Description => "Allows you to sit down in your current spot.";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (user == null)

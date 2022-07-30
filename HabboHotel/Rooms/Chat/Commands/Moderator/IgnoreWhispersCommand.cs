@@ -11,7 +11,7 @@ internal class IgnoreWhispersCommand : IChatCommand
 
     public string Description => "Allows you to ignore all of the whispers in the room, except from your own.";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         session.GetHabbo().IgnorePublicWhispers = !session.GetHabbo().IgnorePublicWhispers;
         session.SendWhisper("You're " + (session.GetHabbo().IgnorePublicWhispers ? "now" : "no longer") + " ignoring public whispers!");

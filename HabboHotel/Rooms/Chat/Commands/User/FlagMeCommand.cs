@@ -14,7 +14,7 @@ internal class FlagMeCommand : IChatCommand
 
     public string Description => "Gives you the option to change your username.";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         if (!CanChangeName(session.GetHabbo()))
         {

@@ -18,7 +18,7 @@ internal class MuteBotsCommand : IChatCommand
         _database = database;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         session.GetHabbo().AllowBotSpeech = !session.GetHabbo().AllowBotSpeech;
         using (var dbClient = _database.GetQueryReactor())

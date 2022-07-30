@@ -24,14 +24,14 @@ internal class EventAlertCommand : IChatCommand
     {
         if (@params.Length != 1)
             session.SendWhisper("Invalid command! :eventalert");
-        else if (_lastEvent == null || (DateTime.Now - _lastEvent) > TimeSpan.FromHours(1))
+        else if (_lastEvent == null || DateTime.Now - _lastEvent > TimeSpan.FromHours(1))
         {
-            _gameClientManager.SendPacket(new BroadcastMessageAlertComposer(":follow " + session.GetHabbo().Username + " for events! win prizes!\r\n- " + session.GetHabbo().Username));
+            _gameClientManager.SendPacket(new BroadcastMessageAlertComposer($":follow {session.GetHabbo().Username} for events! win prizes!\r\n- {session.GetHabbo().Username}"));
             _lastEvent = DateTime.Now;
         }
         else
         {
-            session.SendWhisper("Event Cooldown! " + (DateTime.Now - _lastEvent).Value.Minutes + " minutes left until another event can be hosted.");
+            session.SendWhisper($"Event Cooldown! {(DateTime.Now - _lastEvent).Value.Minutes} minutes left until another event can be hosted.");
         }
     }
 }

@@ -18,18 +18,18 @@ internal class BubbleCommand : IChatCommand
         _chatStyleManager = chatStyleManager;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (user == null)
             return;
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Oops, you forgot to enter a bubble ID!");
             return;
         }
         var bubble = 0;
-        if (!int.TryParse(@params[1], out bubble))
+        if (!int.TryParse(parameters[1], out bubble))
         {
             session.SendWhisper("Please enter a valid number.");
             return;

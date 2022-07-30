@@ -11,15 +11,15 @@ internal class MassEnableCommand : IChatCommand
 
     public string Description => "Give every user in the room a specific enable ID.";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter an effect ID.");
             return;
         }
         var enableId = 0;
-        if (int.TryParse(@params[1], out enableId))
+        if (int.TryParse(parameters[1], out enableId))
         {
             if (enableId == 102 || enableId == 178)
             {

@@ -12,7 +12,7 @@ internal class AllEyesOnMeCommand : IChatCommand
 
     public string Description => "Want some attention? Make everyone face you!";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         var thisUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (thisUser == null)

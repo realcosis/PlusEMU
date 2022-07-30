@@ -11,7 +11,7 @@ internal class FastwalkCommand : IChatCommand
 
     public string Description => "Gives you the ability to walk very fast.";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (user == null)

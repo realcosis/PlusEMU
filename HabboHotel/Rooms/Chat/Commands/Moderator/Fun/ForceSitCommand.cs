@@ -11,14 +11,14 @@ internal class ForceSitCommand : IChatCommand
 
     public string Description => "Force another to user sit.";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Oops, you forgot to choose a target user!");
             return;
         }
-        var user = room.GetRoomUserManager().GetRoomUserByHabbo(@params[1]);
+        var user = room.GetRoomUserManager().GetRoomUserByHabbo(parameters[1]);
         if (user == null)
             return;
         if (user.Statusses.ContainsKey("lie") || user.IsLying || user.RidingHorse || user.IsWalking)

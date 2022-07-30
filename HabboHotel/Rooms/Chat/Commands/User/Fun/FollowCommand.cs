@@ -17,14 +17,14 @@ internal class FollowCommand : IChatCommand
         _gameClientManager = gameClientManager;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter the username of the user you wish to follow.");
             return;
         }
-        var targetClient = _gameClientManager.GetClientByUsername(@params[1]);
+        var targetClient = _gameClientManager.GetClientByUsername(parameters[1]);
         if (targetClient == null)
         {
             session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");

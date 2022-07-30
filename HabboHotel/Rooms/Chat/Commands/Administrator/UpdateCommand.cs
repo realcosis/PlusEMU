@@ -93,14 +93,14 @@ internal class UpdateCommand : IChatCommand
         _chatStyleManager = chatStyleManager;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("You must inculde a thing to update, e.g. :update catalog");
             return;
         }
-        var updateVariable = @params[1];
+        var updateVariable = parameters[1];
         switch (updateVariable.ToLower())
         {
             case "cata":

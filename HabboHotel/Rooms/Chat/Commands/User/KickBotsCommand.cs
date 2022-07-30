@@ -20,7 +20,7 @@ internal class KickBotsCommand : IChatCommand
         _database = database;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         if (!room.CheckRights(session, true))
         {

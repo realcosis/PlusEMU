@@ -11,9 +11,9 @@ internal class RoomAlertCommand : IChatCommand
 
     public string Description => "Send a message to the users in this room.";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter a message you'd like to send to the room.");
             return;
@@ -23,7 +23,7 @@ internal class RoomAlertCommand : IChatCommand
             session.SendWhisper("You can only Room Alert in your own room!");
             return;
         }
-        var message = CommandManager.MergeParams(@params, 1);
+        var message = CommandManager.MergeParams(parameters, 1);
         foreach (var roomUser in room.GetRoomUserManager().GetRoomUsers())
         {
             if (roomUser == null || roomUser.GetClient() == null || session.GetHabbo().Id == roomUser.UserId)

@@ -11,16 +11,16 @@ internal class RoomMuteCommand : IChatCommand
 
     public string Description => "Mute the room with a reason.";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please provide a reason for muting the room to show to the users.");
             return;
         }
         if (!room.RoomMuted)
             room.RoomMuted = true;
-        var msg = CommandManager.MergeParams(@params, 1);
+        var msg = CommandManager.MergeParams(parameters, 1);
         var roomUsers = room.GetRoomUserManager().GetRoomUsers();
         if (roomUsers.Count > 0)
         {

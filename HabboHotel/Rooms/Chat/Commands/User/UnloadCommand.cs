@@ -16,7 +16,7 @@ internal class UnloadCommand : IChatCommand
     {
         _roomManager = roomManager;
     }
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         if (room.CheckRights(session, true) || session.GetHabbo().GetPermissions().HasRight("room_unload_any"))
             _roomManager.UnloadRoom(room.Id);

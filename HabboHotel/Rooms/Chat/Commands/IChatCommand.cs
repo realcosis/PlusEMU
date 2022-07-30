@@ -10,5 +10,5 @@ public interface IChatCommand
     string PermissionRequired { get; }
     string Parameters { get; }
     string Description { get; }
-    void Execute(GameClient session, Room room, string[] @params);
+    void Execute(GameClient session, Room room, string[] parameters);
 }

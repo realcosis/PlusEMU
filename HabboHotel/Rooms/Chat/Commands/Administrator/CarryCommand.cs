@@ -11,10 +11,10 @@ internal class CarryCommand : IChatCommand
 
     public string Description => "Allows you to carry a hand item";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         var itemId = 0;
-        if (!int.TryParse(Convert.ToString(@params[1]), out itemId))
+        if (!int.TryParse(Convert.ToString(parameters[1]), out itemId))
         {
             session.SendWhisper("Please enter a valid integer.");
             return;

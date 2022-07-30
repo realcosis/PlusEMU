@@ -12,18 +12,18 @@ internal class DanceCommand : IChatCommand
 
     public string Description => "Too lazy to dance the proper way? Do it like this!";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         var thisUser = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (thisUser == null)
             return;
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter an ID of a dance.");
             return;
         }
         int danceId;
-        if (int.TryParse(@params[1], out danceId))
+        if (int.TryParse(parameters[1], out danceId))
         {
             if (danceId > 4 || danceId < 0)
             {

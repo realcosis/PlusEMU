@@ -18,9 +18,9 @@ internal class SuperPullCommand : IChatCommand
         _gameClientManager = gameClientManager;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter the username of the user you wish to super pull.");
             return;
@@ -30,7 +30,7 @@ internal class SuperPullCommand : IChatCommand
             session.SendWhisper("Oops, it appears that the room owner has disabled the ability to use the spull command in here.");
             return;
         }
-        var targetClient = _gameClientManager.GetClientByUsername(@params[1]);
+        var targetClient = _gameClientManager.GetClientByUsername(parameters[1]);
         if (targetClient == null)
         {
             session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");
@@ -70,6 +70,6 @@ internal class SuperPullCommand : IChatCommand
             targetUser.MoveTo(thisUser.X, thisUser.Y + 1);
         else if (thisUser.RotBody == 6)
             targetUser.MoveTo(thisUser.X - 1, thisUser.Y);
-        room.SendPacket(new ChatComposer(thisUser.VirtualId, "*super pulls " + @params[1] + " to them*", 0, thisUser.LastBubble));
+        room.SendPacket(new ChatComposer(thisUser.VirtualId, "*super pulls " + parameters[1] + " to them*", 0, thisUser.LastBubble));
     }
 }

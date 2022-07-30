@@ -12,7 +12,7 @@ internal class StatsCommand : IChatCommand
 
     public string Description => "View your current statistics.";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         var minutes = session.GetHabbo().GetStats().OnlineTime / 60;
         var hours = minutes / 60;

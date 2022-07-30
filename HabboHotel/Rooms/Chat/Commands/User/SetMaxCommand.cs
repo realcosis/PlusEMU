@@ -18,17 +18,17 @@ internal class SetMaxCommand : IChatCommand
         _database = database;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         if (!room.CheckRights(session, true))
             return;
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter a value for the room visitor limit.");
             return;
         }
         int maxAmount;
-        if (int.TryParse(@params[1], out maxAmount))
+        if (int.TryParse(parameters[1], out maxAmount))
         {
             if (maxAmount == 0)
             {

@@ -18,14 +18,14 @@ internal class KickCommand : IChatCommand
         _gameClientManager = gameClientManager;
         _roomManager = roomManager;
     }
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter the username of the user you wish to summon.");
             return;
         }
-        var targetClient = _gameClientManager.GetClientByUsername(@params[1]);
+        var targetClient = _gameClientManager.GetClientByUsername(parameters[1]);
         if (targetClient == null)
         {
             session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");
@@ -49,8 +49,8 @@ internal class KickCommand : IChatCommand
         Room targetRoom;
         if (!_roomManager.TryGetRoom(targetClient.GetHabbo().CurrentRoomId, out targetRoom))
             return;
-        if (@params.Length > 2)
-            targetClient.SendNotification("A moderator has kicked you from the room for the following reason: " + CommandManager.MergeParams(@params, 2));
+        if (parameters.Length > 2)
+            targetClient.SendNotification("A moderator has kicked you from the room for the following reason: " + CommandManager.MergeParams(parameters, 2));
         else
             targetClient.SendNotification("A moderator has kicked you from the room.");
         targetRoom.GetRoomUserManager().RemoveUserFromRoom(targetClient, true);

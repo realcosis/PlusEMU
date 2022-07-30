@@ -24,14 +24,14 @@ internal class IpBanCommand : IChatCommand
         _gameClientManager = gameClientManager;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter the username of the user you'd like to IP ban & account ban.");
             return;
         }
-        var habbo = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(@params[1])?.GetHabbo();
+        var habbo = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(parameters[1])?.GetHabbo();
         if (habbo == null)
         {
             session.SendWhisper("An error occoured whilst finding that user in the database.");
@@ -52,8 +52,8 @@ internal class IpBanCommand : IChatCommand
             ipAddress = dbClient.GetString();
         }
         string reason = null;
-        if (@params.Length >= 3)
-            reason = CommandManager.MergeParams(@params, 2);
+        if (parameters.Length >= 3)
+            reason = CommandManager.MergeParams(parameters, 2);
         else
             reason = "No reason specified.";
         if (!string.IsNullOrEmpty(ipAddress))

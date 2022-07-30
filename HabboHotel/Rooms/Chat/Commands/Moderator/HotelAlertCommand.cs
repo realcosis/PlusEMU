@@ -18,14 +18,14 @@ internal class HotelAlertCommand : IChatCommand
         _gameClientManager = gameClientManager;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter a message to send.");
             return;
         }
-        var message = CommandManager.MergeParams(@params, 1);
+        var message = CommandManager.MergeParams(parameters, 1);
         _gameClientManager.SendPacket(new BroadcastMessageAlertComposer(message + "\r\n" + "- " + session.GetHabbo().Username));
     }
 }

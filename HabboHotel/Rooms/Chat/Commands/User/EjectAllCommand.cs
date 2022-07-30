@@ -21,7 +21,7 @@ internal class EjectAllCommand : IChatCommand
         _database = database;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         if (session.GetHabbo().Id == room.OwnerId)
         {

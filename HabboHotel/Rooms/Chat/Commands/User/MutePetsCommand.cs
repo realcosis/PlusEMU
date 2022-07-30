@@ -18,7 +18,7 @@ internal class MutePetsCommand : IChatCommand
         _database = database;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         session.GetHabbo().AllowPetSpeech = !session.GetHabbo().AllowPetSpeech;
         using (var dbClient = _database.GetQueryReactor())

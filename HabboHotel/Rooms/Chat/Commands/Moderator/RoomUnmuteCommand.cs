@@ -11,7 +11,7 @@ internal class RoomUnmuteCommand : IChatCommand
 
     public string Description => "Unmute the room.";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
         if (!room.RoomMuted)
         {

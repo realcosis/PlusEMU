@@ -11,14 +11,14 @@ internal class RoomKickCommand : IChatCommand
 
     public string Description => "Kick the room and provide a message to the users.";
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please provide a reason to the users for this room kick.");
             return;
         }
-        var message = CommandManager.MergeParams(@params, 1);
+        var message = CommandManager.MergeParams(parameters, 1);
         foreach (var roomUser in room.GetRoomUserManager().GetUserList().ToList())
         {
             if (roomUser == null || roomUser.IsBot || roomUser.GetClient() == null || roomUser.GetClient().GetHabbo() == null ||

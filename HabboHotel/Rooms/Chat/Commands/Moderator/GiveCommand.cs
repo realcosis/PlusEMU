@@ -18,20 +18,20 @@ internal class GiveCommand : IChatCommand
         _gameClientManager = gameClientManager;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter a currency type! (coins, duckets, diamonds, gotw)");
             return;
         }
-        var target = _gameClientManager.GetClientByUsername(@params[1]);
+        var target = _gameClientManager.GetClientByUsername(parameters[1]);
         if (target == null)
         {
             session.SendWhisper("Oops, couldn't find that user!");
             return;
         }
-        var updateVal = @params[2];
+        var updateVal = parameters[2];
         switch (updateVal.ToLower())
         {
             case "coins":
@@ -43,7 +43,7 @@ internal class GiveCommand : IChatCommand
                     break;
                 }
                 int amount;
-                if (int.TryParse(@params[3], out amount))
+                if (int.TryParse(parameters[3], out amount))
                 {
                     target.GetHabbo().Credits = target.GetHabbo().Credits += amount;
                     target.Send(new CreditBalanceComposer(target.GetHabbo().Credits));
@@ -64,7 +64,7 @@ internal class GiveCommand : IChatCommand
                     break;
                 }
                 int amount;
-                if (int.TryParse(@params[3], out amount))
+                if (int.TryParse(parameters[3], out amount))
                 {
                     target.GetHabbo().Duckets += amount;
                     target.Send(new HabboActivityPointNotificationComposer(target.GetHabbo().Duckets, amount));
@@ -84,7 +84,7 @@ internal class GiveCommand : IChatCommand
                     break;
                 }
                 int amount;
-                if (int.TryParse(@params[3], out amount))
+                if (int.TryParse(parameters[3], out amount))
                 {
                     target.GetHabbo().Diamonds += amount;
                     target.Send(new HabboActivityPointNotificationComposer(target.GetHabbo().Diamonds, amount, 5));
@@ -105,7 +105,7 @@ internal class GiveCommand : IChatCommand
                     break;
                 }
                 int amount;
-                if (int.TryParse(@params[3], out amount))
+                if (int.TryParse(parameters[3], out amount))
                 {
                     target.GetHabbo().GotwPoints = target.GetHabbo().GotwPoints + amount;
                     target.Send(new HabboActivityPointNotificationComposer(target.GetHabbo().GotwPoints, amount, 103));

@@ -18,9 +18,9 @@ internal class PullCommand : IChatCommand
         _gameClientManager = gameClientManager;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter the username of the user you wish to pull.");
             return;
@@ -30,7 +30,7 @@ internal class PullCommand : IChatCommand
             session.SendWhisper("Oops, it appears that the room owner has disabled the ability to use the pull command in here.");
             return;
         }
-        var targetClient = _gameClientManager.GetClientByUsername(@params[1]);
+        var targetClient = _gameClientManager.GetClientByUsername(parameters[1]);
         if (targetClient == null)
         {
             session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");
@@ -62,7 +62,7 @@ internal class PullCommand : IChatCommand
         }
         if (targetClient.GetHabbo().CurrentRoomId == session.GetHabbo().CurrentRoomId && Math.Abs(thisUser.X - targetUser.X) < 3 && Math.Abs(thisUser.Y - targetUser.Y) < 3)
         {
-            room.SendPacket(new ChatComposer(thisUser.VirtualId, "*pulls " + @params[1] + " to them*", 0, thisUser.LastBubble));
+            room.SendPacket(new ChatComposer(thisUser.VirtualId, "*pulls " + parameters[1] + " to them*", 0, thisUser.LastBubble));
             if (thisUser.RotBody % 2 != 0) 
                 PullTarget(targetUser, thisUser.X, thisUser.Y, thisUser.RotBody - 1);
             else

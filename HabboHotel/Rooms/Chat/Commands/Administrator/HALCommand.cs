@@ -18,15 +18,15 @@ internal class HalCommand : IChatCommand
         _clientManager = clientManager;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 2)
+        if (parameters.Length == 2)
         {
             session.SendWhisper("Please enter a message and a URL to send..");
             return;
         }
-        var url = @params[1];
-        var message = CommandManager.MergeParams(@params, 2);
+        var url = parameters[1];
+        var message = CommandManager.MergeParams(parameters, 2);
         _clientManager.SendPacket(new RoomNotificationComposer("Habboon Hotel Alert!", message + "\r\n" + "- " + session.GetHabbo().Username, "", url, url));
     }
 }

@@ -18,9 +18,9 @@ internal class PushCommand : IChatCommand
         _gameClientManager = gameClientManager;
     }
 
-    public void Execute(GameClient session, Room room, string[] @params)
+    public void Execute(GameClient session, Room room, string[] parameters)
     {
-        if (@params.Length == 1)
+        if (parameters.Length == 1)
         {
             session.SendWhisper("Please enter the username of the user you wish to push.");
             return;
@@ -30,7 +30,7 @@ internal class PushCommand : IChatCommand
             session.SendWhisper("Oops, it appears that the room owner has disabled the ability to use the push command in here.");
             return;
         }
-        var targetClient = _gameClientManager.GetClientByUsername(@params[1]);
+        var targetClient = _gameClientManager.GetClientByUsername(parameters[1]);
         if (targetClient == null)
         {
             session.SendWhisper("An error occoured whilst finding that user, maybe they're not online.");
@@ -86,9 +86,9 @@ internal class PushCommand : IChatCommand
                 targetUser.MoveTo(targetUser.X - 1, targetUser.Y);
                 targetUser.MoveTo(targetUser.X, targetUser.Y + 1);
             }
-            room.SendPacket(new ChatComposer(thisUser.VirtualId, "*pushes " + @params[1] + "*", 0, thisUser.LastBubble));
+            room.SendPacket(new ChatComposer(thisUser.VirtualId, "*pushes " + parameters[1] + "*", 0, thisUser.LastBubble));
         }
         else
-            session.SendWhisper("Oops, " + @params[1] + " is not close enough!");
+            session.SendWhisper("Oops, " + parameters[1] + " is not close enough!");
     }
 }
