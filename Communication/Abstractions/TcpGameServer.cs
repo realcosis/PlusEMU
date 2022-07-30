@@ -88,7 +88,6 @@ namespace Plus.Communication.Abstractions
             }
         }
 
-        // TODO @80O: Multi revision support.
         // TODO @80O: Allow packet content to be modified before executing.
         // TODO @80O: Add hooks before & after packet execution.
         public Task PacketReceived(GameClient client, uint messageId, IIncomingPacket packet) => _packetManager.TryExecutePacket(client, messageId, packet);
