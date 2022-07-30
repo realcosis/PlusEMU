@@ -41,9 +41,6 @@ public class PlusEnvironment : IPlusEnvironment
     private readonly INitroServer _nitroServer;
     private static IFigureDataManager _figureManager;
 
-    // TODO: Get rid?
-    public static bool Event = false;
-    public static DateTime LastEvent;
     public static DateTime ServerStarted;
 
     private static readonly List<char> Allowedchars = new(new[]

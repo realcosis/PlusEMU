@@ -13,6 +13,8 @@ internal class EventAlertCommand : IChatCommand
 
     public string Description => "Send a hotel alert for your event!";
 
+    private static DateTime? _lastEvent;
+
     public EventAlertCommand(IGameClientManager gameClientManager)
     {
         _gameClientManager = gameClientManager;
@@ -20,33 +22,16 @@ internal class EventAlertCommand : IChatCommand
 
     public void Execute(GameClient session, Room room, string[] @params)
     {
-        if (session != null)
+        if (@params.Length != 1)
+            session.SendWhisper("Invalid command! :eventalert");
+        else if (_lastEvent == null || (DateTime.Now - _lastEvent) > TimeSpan.FromHours(1))
         {
-            if (room != null)
-            {
-                if (@params.Length != 1)
-                    session.SendWhisper("Invalid command! :eventalert");
-                else if (!PlusEnvironment.Event)
-                {
-                    _gameClientManager.SendPacket(new BroadcastMessageAlertComposer(":follow " + session.GetHabbo().Username + " for events! win prizes!\r\n- " + session.GetHabbo().Username));
-                    PlusEnvironment.LastEvent = DateTime.Now;
-                    PlusEnvironment.Event = true;
-                }
-                else
-                {
-                    var timeSpan = DateTime.Now - PlusEnvironment.LastEvent;
-                    if (timeSpan.Hours >= 1)
-                    {
-                        _gameClientManager.SendPacket(new BroadcastMessageAlertComposer(":follow " + session.GetHabbo().Username + " for events! win prizes!\r\n- " + session.GetHabbo().Username));
-                        PlusEnvironment.LastEvent = DateTime.Now;
-                    }
-                    else
-                    {
-                        var num = checked(60 - timeSpan.Minutes);
-                        session.SendWhisper("Event Cooldown! " + num + " minutes left until another event can be hosted.");
-                    }
-                }
-            }
+            _gameClientManager.SendPacket(new BroadcastMessageAlertComposer(":follow " + session.GetHabbo().Username + " for events! win prizes!\r\n- " + session.GetHabbo().Username));
+            _lastEvent = DateTime.Now;
+        }
+        else
+        {
+            session.SendWhisper("Event Cooldown! " + (DateTime.Now - _lastEvent).Value.Minutes + " minutes left until another event can be hosted.");
         }
     }
 }
