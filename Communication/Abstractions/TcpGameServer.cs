@@ -49,6 +49,11 @@ namespace Plus.Communication.Abstractions
             }
         }
 
+        protected override void OnDisconnected(TcpSession session)
+        {
+            _connectedClients.TryRemove(session.Id, out _);
+        }
+
         // TODO @80O: Allow packet content to be modified before executing.
         // TODO @80O: Add hooks before & after packet execution.
         public Task PacketReceived(GameClient client, uint messageId, IIncomingPacket packet) => _packetManager.TryExecutePacket(client, messageId, packet);
@@ -87,6 +92,12 @@ namespace Plus.Communication.Abstractions
                 gameClient.Disconnect();
             }
         }
+
+        protected override void OnDisconnected(TcpSession session)
+        {
+            _connectedClients.TryRemove(session.Id, out _);
+        }
+
 
         // TODO @80O: Allow packet content to be modified before executing.
         // TODO @80O: Add hooks before & after packet execution.
