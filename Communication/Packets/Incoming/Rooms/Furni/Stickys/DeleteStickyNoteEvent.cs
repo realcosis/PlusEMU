@@ -27,7 +27,7 @@ internal class DeleteStickyNoteEvent : IPacketEvent
         var item = room.GetRoomItemHandler().GetItem(packet.ReadInt());
         if (item == null)
             return Task.CompletedTask;
-        if (item.GetBaseItem().InteractionType == InteractionType.Postit || item.GetBaseItem().InteractionType == InteractionType.CameraPicture)
+        if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.Postit || item.Definition.GetBaseItem(item).InteractionType == InteractionType.CameraPicture)
         {
             room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
             using var dbClient = _database.GetQueryReactor();

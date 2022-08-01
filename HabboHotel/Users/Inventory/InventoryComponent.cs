@@ -22,45 +22,46 @@ public class InventoryComponent
     public GameClient Client { get; set; }
 
     [Obsolete]
-    public Item AddNewItem(int id, int baseItem, string extraData, int group, bool toInsert, bool fromRoom, int limitedNumber, int limitedStack)
+    public Item AddNewItem(uint id, int baseItem, string extraData, int group, bool toInsert, bool fromRoom, uint limitedNumber, uint limitedStack)
     {
-        /// WTF IS THIS SHIT
-        if (toInsert)
-        {
-            if (fromRoom)
-            {
-                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-                dbClient.RunQuery("UPDATE `items` SET `room_id` = '0', `user_id` = '" + UserId + "' WHERE `id` = '" + id + "' LIMIT 1");
-            }
-            else
-            {
-                using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-                if (id > 0)
-                {
-                    dbClient.RunQuery("INSERT INTO `items` (`id`,`base_item`, `user_id`, `limited_number`, `limited_stack`) VALUES ('" + id + "', '" + baseItem + "', '" + UserId + "', '" +
-                                      limitedNumber + "', '" + limitedStack + "')");
-                }
-                else
-                {
-                    dbClient.SetQuery("INSERT INTO `items` (`base_item`, `user_id`, `limited_number`, `limited_stack`) VALUES ('" + baseItem + "', '" + UserId + "', '" + limitedNumber + "', '" +
-                                      limitedStack + "')");
-                    id = Convert.ToInt32(dbClient.InsertQuery());
-                }
-                SendNewItems(Convert.ToInt32(id));
-                if (group > 0)
-                    dbClient.RunQuery("INSERT INTO `items_groups` VALUES (" + id + ", " + group + ")");
-                if (!string.IsNullOrEmpty(extraData))
-                {
-                    dbClient.SetQuery("UPDATE `items` SET `extra_data` = @extradata WHERE `id` = '" + id + "' LIMIT 1");
-                    dbClient.AddParameter("extradata", extraData);
-                    dbClient.RunQuery();
-                }
-            }
-        }
-        var itemToAdd = new Item(id, 0, baseItem, extraData, 0, 0, 0, 0, UserId, group, limitedNumber, limitedStack, string.Empty);
-        Furniture.RemoveItem(id);
-        Furniture.AddItem(itemToAdd);
-        return itemToAdd;
+        ///// WTF IS THIS SHIT
+        //if (toInsert)
+        //{
+        //    if (fromRoom)
+        //    {
+        //        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        //        dbClient.RunQuery("UPDATE `items` SET `room_id` = '0', `user_id` = '" + UserId + "' WHERE `id` = '" + id + "' LIMIT 1");
+        //    }
+        //    else
+        //    {
+        //        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        //        if (id > 0)
+        //        {
+        //            dbClient.RunQuery("INSERT INTO `items` (`id`,`base_item`, `user_id`, `limited_number`, `limited_stack`) VALUES ('" + id + "', '" + baseItem + "', '" + UserId + "', '" +
+        //                              limitedNumber + "', '" + limitedStack + "')");
+        //        }
+        //        else
+        //        {
+        //            dbClient.SetQuery("INSERT INTO `items` (`base_item`, `user_id`, `limited_number`, `limited_stack`) VALUES ('" + baseItem + "', '" + UserId + "', '" + limitedNumber + "', '" +
+        //                              limitedStack + "')");
+        //            id = Convert.ToUInt32(dbClient.InsertQuery());
+        //        }
+        //        SendNewItems(Convert.ToInt32(id));
+        //        if (group > 0)
+        //            dbClient.RunQuery("INSERT INTO `items_groups` VALUES (" + id + ", " + group + ")");
+        //        if (!string.IsNullOrEmpty(extraData))
+        //        {
+        //            dbClient.SetQuery("UPDATE `items` SET `extra_data` = @extradata WHERE `id` = '" + id + "' LIMIT 1");
+        //            dbClient.AddParameter("extradata", extraData);
+        //            dbClient.RunQuery();
+        //        }
+        //    }
+        //}
+        //var itemToAdd = new Item(id, 0, baseItem, extraData, 0, 0, 0, 0, UserId, group, limitedNumber, limitedStack, string.Empty);
+        //Furniture.RemoveItem(id);
+        //Furniture.AddItem(itemToAdd);
+        //return itemToAdd;
+        return null;
     }
 
     public void SendNewItems(int id)

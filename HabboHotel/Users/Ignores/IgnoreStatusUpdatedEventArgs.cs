@@ -2,10 +2,10 @@
 {
     public class IgnoreStatusUpdatedEventArgs : EventArgs
     {
-        public IgnoreStatusUpdatedEventArgs(int userId)
+        public IgnoreStatusUpdatedEventArgs(uint userId)
         {
             UserId = userId;
         }
-        public int UserId { get; }
+        public uint UserId { get; }
     }
 }

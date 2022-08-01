@@ -16,20 +16,16 @@ internal static class ItemBehaviourUtility
 
     public static bool IsLimited(this InventoryItem item) => item.UniqueSeries > 0;
 
-    public static Item ToFloorObject(this InventoryItem item)
+    public static Item ToFloorObject(this InventoryItem item) => new()
     {
-        return new Item()
-        {
-            Id = item.Id,
-            OwnerId = item.OwnerId,
-            Definition = item.Definition,
-            ExtraData = item.ExtraData,
-            UniqueNumber = item.UniqueNumber,
-            UniqueSeries = item.UniqueSeries,
-            WallCoordinates = item.WallCoordinates,
-        };
-        return new Item(item.Id, item.Definition, item.ExtraData, item.OwnerId, item.UniqueNumber, item.UniqueSeries, item.WallCoordinates);
-    }
+        Id = item.Id,
+        OwnerId = item.OwnerId,
+        Definition = item.Definition,
+        ExtraData = item.ExtraData,
+        UniqueNumber = item.UniqueNumber,
+        UniqueSeries = item.UniqueSeries,
+        WallCoordinates = item.WallCoordinates,
+    };
 
     public static void GenerateExtradata(Item item, IOutgoingPacket packet)
     {
@@ -38,7 +34,7 @@ internal static class ItemBehaviourUtility
             default:
                 packet.WriteInteger(1);
                 packet.WriteInteger(0);
-                packet.WriteString(item.GetBaseItem().InteractionType != InteractionType.FootballGate ? item.ExtraData : string.Empty);
+                packet.WriteString(item.GetBaseItem().InteractionType != InteractionType.FootballGate ? item.LegacyDataString : string.Empty);
                 break;
             case InteractionType.GnomeBox:
                 packet.WriteInteger(0);
@@ -59,17 +55,17 @@ internal static class ItemBehaviourUtility
             case InteractionType.Wallpaper:
                 packet.WriteInteger(2);
                 packet.WriteInteger(0);
-                packet.WriteString(item.ExtraData);
+                packet.WriteString(item.LegacyDataString);
                 break;
             case InteractionType.Floor:
                 packet.WriteInteger(3);
                 packet.WriteInteger(0);
-                packet.WriteString(item.ExtraData);
+                packet.WriteString(item.LegacyDataString);
                 break;
             case InteractionType.Landscape:
                 packet.WriteInteger(4);
                 packet.WriteInteger(0);
-                packet.WriteString(item.ExtraData);
+                packet.WriteString(item.LegacyDataString);
                 break;
             case InteractionType.GuildItem:
             case InteractionType.GuildGate:
@@ -79,14 +75,14 @@ internal static class ItemBehaviourUtility
                 {
                     packet.WriteInteger(1);
                     packet.WriteInteger(0);
-                    packet.WriteString(item.ExtraData);
+                    packet.WriteString(item.LegacyDataString);
                 }
                 else
                 {
                     packet.WriteInteger(0);
                     packet.WriteInteger(2);
                     packet.WriteInteger(5);
-                    packet.WriteString(item.ExtraData);
+                    packet.WriteString(item.LegacyDataString);
                     packet.WriteString(group.Id.ToString());
                     packet.WriteString(group.Badge);
                     packet.WriteString(PlusEnvironment.GetGame().GetGroupManager().GetColourCode(group.Colour1, true));
@@ -96,22 +92,22 @@ internal static class ItemBehaviourUtility
             case InteractionType.Background:
                 packet.WriteInteger(0);
                 packet.WriteInteger(1);
-                if (!string.IsNullOrEmpty(item.ExtraData))
+                if (!string.IsNullOrEmpty(item.LegacyDataString))
                 {
-                    packet.WriteInteger(item.ExtraData.Split(Convert.ToChar(9)).Length / 2);
-                    for (var i = 0; i <= item.ExtraData.Split(Convert.ToChar(9)).Length - 1; i++) packet.WriteString(item.ExtraData.Split(Convert.ToChar(9))[i]);
+                    packet.WriteInteger(item.LegacyDataString.Split(Convert.ToChar(9)).Length / 2);
+                    for (var i = 0; i <= item.LegacyDataString.Split(Convert.ToChar(9)).Length - 1; i++) packet.WriteString(item.LegacyDataString.Split(Convert.ToChar(9))[i]);
                 }
                 else
                     packet.WriteInteger(0);
                 break;
             case InteractionType.Gift:
             {
-                var extraData = item.ExtraData.Split(Convert.ToChar(5));
+                var extraData = item.LegacyDataString.Split(Convert.ToChar(5));
                 if (extraData.Length != 7)
                 {
                     packet.WriteInteger(0);
                     packet.WriteInteger(0);
-                    packet.WriteString(item.ExtraData);
+                    packet.WriteString(item.LegacyDataString);
                 }
                 else
                 {
@@ -121,7 +117,7 @@ internal static class ItemBehaviourUtility
                     {
                         packet.WriteInteger(0);
                         packet.WriteInteger(0);
-                        packet.WriteString(item.ExtraData);
+                        packet.WriteString(item.LegacyDataString);
                     }
                     else
                     {
@@ -148,9 +144,9 @@ internal static class ItemBehaviourUtility
                 packet.WriteInteger(0);
                 packet.WriteInteger(1);
                 packet.WriteInteger(3);
-                if (item.ExtraData.Contains(Convert.ToChar(5).ToString()))
+                if (item.LegacyDataString.Contains(Convert.ToChar(5).ToString()))
                 {
-                    var stuff = item.ExtraData.Split(Convert.ToChar(5));
+                    var stuff = item.LegacyDataString.Split(Convert.ToChar(5));
                     packet.WriteString("GENDER");
                     packet.WriteString(stuff[0]);
                     packet.WriteString("FIGURE");
@@ -192,8 +188,8 @@ internal static class ItemBehaviourUtility
                 packet.WriteInteger(0);
                 packet.WriteInteger(2);
                 packet.WriteInteger(4);
-                var badgeData = item.ExtraData.Split(Convert.ToChar(9));
-                if (item.ExtraData.Contains(Convert.ToChar(9).ToString()))
+                var badgeData = item.LegacyDataString.Split(Convert.ToChar(9));
+                if (item.LegacyDataString.Contains(Convert.ToChar(9).ToString()))
                 {
                     packet.WriteString("0"); //No idea
                     packet.WriteString(badgeData[0]); //Badge name
@@ -217,9 +213,9 @@ internal static class ItemBehaviourUtility
                 packet.WriteString("");
                 break;
             case InteractionType.Lovelock:
-                if (item.ExtraData.Contains(Convert.ToChar(5).ToString()))
+                if (item.LegacyDataString.Contains(Convert.ToChar(5).ToString()))
                 {
-                    var eData = item.ExtraData.Split((char)5);
+                    var eData = item.LegacyDataString.Split((char)5);
                     var I = 0;
                     packet.WriteInteger(0);
                     packet.WriteInteger(2);
@@ -252,10 +248,10 @@ internal static class ItemBehaviourUtility
         switch (item.GetBaseItem().InteractionType)
         {
             default:
-                message.WriteString(item.ExtraData);
+                message.WriteString(item.LegacyDataString);
                 break;
             case InteractionType.Postit:
-                message.WriteString(item.ExtraData.Split(' ')[0]);
+                message.WriteString(item.LegacyDataString.Split(' ')[0]);
                 break;
         }
     }

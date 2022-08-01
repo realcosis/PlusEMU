@@ -9,7 +9,7 @@ public class InteractorBanzaiScoreCounter : IFurniInteractor
     {
         if (item.Team == Team.None)
             return;
-        item.ExtraData = item.GetRoom().GetGameManager().Points[Convert.ToInt32(item.Team)].ToString();
+        item.LegacyDataString = item.GetRoom().GetGameManager().Points[Convert.ToInt32(item.Team)].ToString();
         item.UpdateState(false, true);
     }
 
@@ -20,7 +20,7 @@ public class InteractorBanzaiScoreCounter : IFurniInteractor
         if (hasRights)
         {
             item.GetRoom().GetGameManager().Points[Convert.ToInt32(item.Team)] = 0;
-            item.ExtraData = "0";
+            item.LegacyDataString = "0";
             item.UpdateState();
         }
     }

@@ -20,7 +20,7 @@ public class InteractorLoveLock : IFurniInteractor
             return;
         if (Gamemap.TilesTouching(item.GetX, item.GetY, user.X, user.Y))
         {
-            if (item.ExtraData == null || item.ExtraData.Length <= 1 || !item.ExtraData.Contains(Convert.ToChar(5).ToString()))
+            if (item.LegacyDataString == null || item.LegacyDataString.Length <= 1 || !item.LegacyDataString.Contains(Convert.ToChar(5).ToString()))
             {
                 Point pointOne;
                 Point pointTwo;

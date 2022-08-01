@@ -63,7 +63,7 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
                     {
                         if (coordinatedItem == null || coordinatedItem.Id == item.Id)
                             continue;
-                        if (!coordinatedItem.GetBaseItem().Walkable)
+                        if (!coordinatedItem.Definition.GetBaseItem(coordinatedItem).Walkable)
                         {
                             _next = 0;
                             canBePlaced = false;
@@ -71,7 +71,7 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
                         }
                         if (coordinatedItem.TotalHeight > newZ)
                             newZ = coordinatedItem.TotalHeight;
-                        if (canBePlaced && !coordinatedItem.GetBaseItem().Stackable)
+                        if (canBePlaced && !coordinatedItem.Definition.GetBaseItem(coordinatedItem).Stackable)
                             canBePlaced = false;
                     }
                     if (newRot != item.Rotation)

@@ -7,16 +7,16 @@ public class InteractorDice : IFurniInteractor
 {
     public void OnPlace(GameClient session, Item item)
     {
-        if (item.ExtraData == "-1")
+        if (item.LegacyDataString == "-1")
         {
-            item.ExtraData = "0";
+            item.LegacyDataString = "0";
             item.UpdateNeeded = true;
         }
     }
 
     public void OnRemove(GameClient session, Item item)
     {
-        if (item.ExtraData == "-1") item.ExtraData = "0";
+        if (item.LegacyDataString == "-1") item.LegacyDataString = "0";
     }
 
     public void OnTrigger(GameClient session, Item item, int request, bool hasRights)
@@ -28,16 +28,16 @@ public class InteractorDice : IFurniInteractor
             return;
         if (Gamemap.TilesTouching(item.GetX, item.GetY, user.X, user.Y))
         {
-            if (item.ExtraData != "-1")
+            if (item.LegacyDataString != "-1")
             {
                 if (request == -1)
                 {
-                    item.ExtraData = "0";
+                    item.LegacyDataString = "0";
                     item.UpdateState();
                 }
                 else
                 {
-                    item.ExtraData = "-1";
+                    item.LegacyDataString = "-1";
                     item.UpdateState(false, true);
                     item.RequestUpdate(3, true);
                 }
@@ -49,7 +49,7 @@ public class InteractorDice : IFurniInteractor
 
     public void OnWiredTrigger(Item item)
     {
-        item.ExtraData = "-1";
+        item.LegacyDataString = "-1";
         item.UpdateState(false, true);
         item.RequestUpdate(4, true);
     }

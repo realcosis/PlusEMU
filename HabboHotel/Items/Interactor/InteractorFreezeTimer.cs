@@ -6,7 +6,7 @@ internal class InteractorFreezeTimer : IFurniInteractor
 {
     public void OnPlace(GameClient session, Item item)
     {
-        item.ExtraData = "30";
+        item.LegacyDataString = "30";
         item.UpdateState();
     }
 
@@ -16,9 +16,9 @@ internal class InteractorFreezeTimer : IFurniInteractor
     {
         if (!hasRights) return;
         var oldValue = 0;
-        if (!int.TryParse(item.ExtraData, out oldValue))
+        if (!int.TryParse(item.LegacyDataString, out oldValue))
         {
-            item.ExtraData = "30";
+            item.LegacyDataString = "30";
             oldValue = 30;
         }
         if (request == 0 && oldValue == 0)
@@ -53,7 +53,7 @@ internal class InteractorFreezeTimer : IFurniInteractor
         {
             if (request == 1 && oldValue == 0)
             {
-                item.ExtraData = "30";
+                item.LegacyDataString = "30";
                 oldValue = 30;
             }
             if (!item.GetRoom().GetFreeze().GameIsStarted)
@@ -69,7 +69,7 @@ internal class InteractorFreezeTimer : IFurniInteractor
                 item.PendingReset = true;
             }
         }
-        item.ExtraData = Convert.ToString(oldValue);
+        item.LegacyDataString = Convert.ToString(oldValue);
         item.UpdateState();
     }
 
@@ -79,7 +79,7 @@ internal class InteractorFreezeTimer : IFurniInteractor
             item.GetRoom().GetFreeze().StopGame(true);
         item.PendingReset = true;
         item.UpdateNeeded = true;
-        item.ExtraData = "30";
+        item.LegacyDataString = "30";
         item.UpdateState();
         item.GetRoom().GetFreeze().StartGame();
     }

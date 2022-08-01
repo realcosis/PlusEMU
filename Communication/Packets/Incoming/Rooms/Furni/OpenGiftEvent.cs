@@ -56,7 +56,7 @@ internal class OpenGiftEvent : IPacketEvent
             session.Send(new FurniListRemoveComposer(present.Id));
             return Task.CompletedTask;
         }
-        if (!int.TryParse(present.ExtraData.Split(Convert.ToChar(5))[2], out var purchaserId))
+        if (!int.TryParse(present.LegacyDataString.Split(Convert.ToChar(5))[2], out var purchaserId))
         {
             session.SendNotification("Oops! Appears there was a bug with this gift.\nWe'll just get rid of it for you.");
             room.GetRoomItemHandler().RemoveFurniture(null, present.Id);
@@ -121,8 +121,8 @@ internal class OpenGiftEvent : IPacketEvent
                 dbClient.RunQuery("DELETE FROM `user_presents` WHERE `item_id` = " + present.Id + " LIMIT 1");
             }
             present.BaseItem = Convert.ToInt32(row["base_id"]);
-            present.ResetBaseItem();
-            present.ExtraData = !string.IsNullOrEmpty(Convert.ToString(row["extra_data"])) ? Convert.ToString(row["extra_data"]) : "";
+            // present.ResetBaseItem(); // TODO @80O: Disabled in item refactor
+            present.LegacyDataString = !string.IsNullOrEmpty(Convert.ToString(row["extra_data"])) ? Convert.ToString(row["extra_data"]) : "";
             if (present.Definition.Type == 's')
             {
                 if (!room.GetRoomItemHandler().SetFloorItem(session, present, present.GetX, present.GetY, present.Rotation, true, false, true))
@@ -146,7 +146,7 @@ internal class OpenGiftEvent : IPacketEvent
                 }
                 itemIsInRoom = false;
             }
-            session.Send(new OpenGiftComposer(present.Definition, present.ExtraData, present, itemIsInRoom));
+            session.Send(new OpenGiftComposer(present.Definition, present.LegacyDataString, present, itemIsInRoom));
             session.Send(new FurniListUpdateComposer());
         }
         catch

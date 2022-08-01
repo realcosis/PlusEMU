@@ -67,7 +67,7 @@ internal class FurniDoesntMatchStateAndPositionBox : IWiredItem
                 var part = partsString[1].Split(',');
                 if (int.Parse(StringData.Split(';')[0]) == 1) //State
                 {
-                    if (ii.ExtraData == part[4])
+                    if (ii.LegacyDataString == part[4])
                         return false;
                 }
                 if (int.Parse(StringData.Split(';')[1]) == 1) //Direction

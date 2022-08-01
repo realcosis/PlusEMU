@@ -19,20 +19,20 @@ internal class InteractorSwitch : IFurniInteractor
             return;
         if (Gamemap.TilesTouching(item.GetX, item.GetY, user.X, user.Y))
         {
-            var modes = item.GetBaseItem().Modes - 1;
+            var modes = item.Definition.GetBaseItem(item).Modes - 1;
             if (modes <= 0)
                 return;
             PlusEnvironment.GetGame().GetQuestManager().ProgressUserQuest(session, QuestType.FurniSwitch);
             var currentMode = 0;
             var newMode = 0;
-            if (!int.TryParse(item.ExtraData, out currentMode)) { }
+            if (!int.TryParse(item.LegacyDataString, out currentMode)) { }
             if (currentMode <= 0)
                 newMode = 1;
             else if (currentMode >= modes)
                 newMode = 0;
             else
                 newMode = currentMode + 1;
-            item.ExtraData = newMode.ToString();
+            item.LegacyDataString = newMode.ToString();
             item.UpdateState();
         }
         else

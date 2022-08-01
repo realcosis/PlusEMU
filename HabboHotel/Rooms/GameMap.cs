@@ -4,6 +4,7 @@ using Plus.Core;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Rooms.Games.Teams;
 using Plus.HabboHotel.Rooms.PathFinding;
+using Plus.HabboHotel.Users.Inventory.Furniture;
 
 namespace Plus.HabboHotel.Rooms;
 
@@ -300,7 +301,7 @@ public class Gamemap
                         GameMap[coord.X, coord.Y] = 1;
                 }
                 else if (item.GetZ <= Model.SqFloorHeight[item.GetX, item.GetY] + 0.1 && item.GetBaseItem().InteractionType == InteractionType.Gate &&
-                         item.ExtraData == "1") // If this item is a gate, open, and on the floor, allow users to walk here.
+                         item.LegacyDataString == "1") // If this item is a gate, open, and on the floor, allow users to walk here.
                 {
                     if (GameMap[coord.X, coord.Y] != 3)
                         GameMap[coord.X, coord.Y] = 1;
@@ -377,8 +378,8 @@ public class Gamemap
             case InteractionType.FootballGate:
                 //IsTrans = true;
                 _room.GetSoccer().RegisterGate(item);
-                var splittedExtraData = item.ExtraData.Split(':');
-                if (string.IsNullOrEmpty(item.ExtraData) || splittedExtraData.Length <= 1)
+                var splittedExtraData = item.LegacyDataString.Split(':');
+                if (string.IsNullOrEmpty(item.LegacyDataString) || splittedExtraData.Length <= 1)
                 {
                     item.Gender = "M";
                     switch (item.Team)
@@ -416,7 +417,7 @@ public class Gamemap
             case InteractionType.Banzaitele:
             {
                 _room.GetGameItemHandler().AddTeleport(item, item.Id);
-                item.ExtraData = "";
+                item.LegacyDataString = "";
                 break;
             }
             case InteractionType.Banzaipuck:
@@ -584,7 +585,7 @@ public class Gamemap
                 }
             }
         }
-        if (item.GetBaseItem().Type != 's')
+        if (item.GetBaseItem().Type != ItemType.Floor)
             return true;
         foreach (var coord in item.GetCoords.ToList()) AddCoordinatedItem(item, new Point(coord.X, coord.Y));
         if (item.GetX > Model.MapSizeX - 1)
@@ -799,7 +800,7 @@ public class Gamemap
                     if (group.IsMember(user.GetClient().GetHabbo().Id))
                     {
                         I.InteractingUser = user.GetClient().GetHabbo().Id;
-                        I.ExtraData = "1";
+                        I.LegacyDataString = "1";
                         I.UpdateState(false, true);
                         I.RequestUpdate(4, true);
                         return true;

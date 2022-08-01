@@ -218,8 +218,8 @@ internal static class WiredBoxTypeUtility
         {
             if (item.Type == WiredBoxType.TriggerRepeat)
             {
-                if (!blockedItems.Contains(item.Item.GetBaseItem().SpriteId))
-                    blockedItems.Add(item.Item.GetBaseItem().SpriteId);
+                if (!blockedItems.Contains(item.Item.Definition.GetBaseItem(item.Item).SpriteId))
+                    blockedItems.Add(item.Item.Definition.GetBaseItem(item.Item).SpriteId);
                 else continue;
             }
             else continue;
@@ -239,14 +239,14 @@ internal static class WiredBoxTypeUtility
             if (item.Type == WiredBoxType.EffectKickUser || item.Type == WiredBoxType.EffectMuteTriggerer || item.Type == WiredBoxType.EffectShowMessage ||
                 item.Type == WiredBoxType.EffectTeleportToFurni || item.Type == WiredBoxType.EffectBotFollowsUserBox)
             {
-                if (!blockedItems.Contains(item.Item.GetBaseItem().SpriteId))
-                    blockedItems.Add(item.Item.GetBaseItem().SpriteId);
+                if (!blockedItems.Contains(item.Item.Definition.GetBaseItem(item.Item).SpriteId))
+                    blockedItems.Add(item.Item.Definition.GetBaseItem(item.Item).SpriteId);
                 else continue;
             }
             else if (item.Type == WiredBoxType.EffectMoveFurniToNearestUser && hasMoveRotate || item.Type == WiredBoxType.EffectMoveAndRotate && hasMoveNear)
             {
-                if (!blockedItems.Contains(item.Item.GetBaseItem().SpriteId))
-                    blockedItems.Add(item.Item.GetBaseItem().SpriteId);
+                if (!blockedItems.Contains(item.Item.Definition.GetBaseItem(item.Item).SpriteId))
+                    blockedItems.Add(item.Item.Definition.GetBaseItem(item.Item).SpriteId);
                 else continue;
             }
         }

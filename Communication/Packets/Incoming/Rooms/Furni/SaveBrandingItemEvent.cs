@@ -23,7 +23,7 @@ internal class SaveBrandingItemEvent : IPacketEvent
             var data = packet.ReadInt();
             var brandData = "state" + Convert.ToChar(9) + "0";
             for (var i = 1; i <= data; i++) brandData = brandData + Convert.ToChar(9) + packet.ReadString();
-            item.ExtraData = brandData;
+            item.LegacyDataString = brandData;
         }
         else if (item.Definition.InteractionType == InteractionType.FxProvider)
         {

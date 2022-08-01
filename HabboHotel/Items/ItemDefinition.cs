@@ -5,41 +5,41 @@ namespace Plus.HabboHotel.Items;
 
 public class ItemDefinition
 {
-    public ItemDefinition(int id, int sprite, string name, string publicName, string type, int width, int length, double height, bool stackable, bool walkable, bool isSeat,
-        bool allowRecycle, bool allowTrade, bool allowMarketplaceSell, bool allowGift, bool allowInventoryStack, InteractionType interactionType, int behaviourData, int modes,
-        string vendingIds, string adjustableHeights, int effectId, bool isRare, bool extraRot)
-    {
-        Id = id;
-        SpriteId = sprite;
-        ItemName = name;
-        PublicName = publicName;
-        Type = string.Equals(type, "s", StringComparison.OrdinalIgnoreCase) ? ItemType.Floor : ItemType.Wall;
-        Width = width;
-        Length = length;
-        Height = height;
-        Stackable = stackable;
-        Walkable = walkable;
-        IsSeat = isSeat;
-        AllowEcotronRecycle = allowRecycle;
-        AllowTrade = allowTrade;
-        AllowMarketplaceSell = allowMarketplaceSell;
-        AllowGift = allowGift;
-        AllowInventoryStack = allowInventoryStack;
-        InteractionType = interactionType;
-        BehaviourData = behaviourData;
-        Modes = modes;
-        VendingIds = (!string.IsNullOrEmpty(vendingIds) && vendingIds != "0") ? vendingIds.Split(",").Select(int.Parse).ToList() : new(0);
-        AdjustableHeights = (!string.IsNullOrEmpty(adjustableHeights) && adjustableHeights != "0") ? adjustableHeights.Split(",").Select(double.Parse).ToList() : new(0);
-        EffectId = effectId;
-        var wiredId = 0;
-        if (InteractionType == InteractionType.WiredCondition || InteractionType == InteractionType.WiredTrigger || InteractionType == InteractionType.WiredEffect)
-            wiredId = BehaviourData;
-        WiredType = WiredBoxTypeUtility.FromWiredId(wiredId);
-        IsRare = isRare;
-        ExtraRot = extraRot;
-    }
+    //public ItemDefinition(uint id, int sprite, string name, string publicName, string type, int width, int length, double height, bool stackable, bool walkable, bool isSeat,
+    //    bool allowRecycle, bool allowTrade, bool allowMarketplaceSell, bool allowGift, bool allowInventoryStack, InteractionType interactionType, int behaviourData, int modes,
+    //    string vendingIds, string adjustableHeights, int effectId, bool isRare, bool extraRot)
+    //{
+    //    Id = id;
+    //    SpriteId = sprite;
+    //    ItemName = name;
+    //    PublicName = publicName;
+    //    Type = string.Equals(type, "s", StringComparison.OrdinalIgnoreCase) ? ItemType.Floor : ItemType.Wall;
+    //    Width = width;
+    //    Length = length;
+    //    Height = height;
+    //    Stackable = stackable;
+    //    Walkable = walkable;
+    //    IsSeat = isSeat;
+    //    AllowEcotronRecycle = allowRecycle;
+    //    AllowTrade = allowTrade;
+    //    AllowMarketplaceSell = allowMarketplaceSell;
+    //    AllowGift = allowGift;
+    //    AllowInventoryStack = allowInventoryStack;
+    //    InteractionType = interactionType;
+    //    BehaviourData = behaviourData;
+    //    Modes = modes;
+    //    VendingIds = (!string.IsNullOrEmpty(vendingIds) && vendingIds != "0") ? vendingIds.Split(",").Select(int.Parse).ToList() : new(0);
+    //    AdjustableHeights = (!string.IsNullOrEmpty(adjustableHeights) && adjustableHeights != "0") ? adjustableHeights.Split(",").Select(double.Parse).ToList() : new(0);
+    //    EffectId = effectId;
+    //    var wiredId = 0;
+    //    if (InteractionType == InteractionType.WiredCondition || InteractionType == InteractionType.WiredTrigger || InteractionType == InteractionType.WiredEffect)
+    //        wiredId = BehaviourData;
+    //    WiredType = WiredBoxTypeUtility.FromWiredId(wiredId);
+    //    IsRare = isRare;
+    //    ExtraRot = extraRot;
+    //}
 
-    public int Id { get; set; }
+    public uint Id { get; set; }
     public int SpriteId { get; set; }
     public string ItemName { get; set; }
     public string PublicName { get; set; }

@@ -22,7 +22,7 @@ internal class ConfirmLoveLockEvent : IPacketEvent
         if (room == null)
             return Task.CompletedTask;
         var item = room.GetRoomItemHandler().GetItem(pId);
-        if (item == null || item.GetBaseItem() == null || item.GetBaseItem().InteractionType != InteractionType.Lovelock)
+        if (item == null || item.Definition.GetBaseItem(item) == null || item.Definition.GetBaseItem(item).InteractionType != InteractionType.Lovelock)
             return Task.CompletedTask;
         var userOneId = item.InteractingUser;
         var userTwoId = item.InteractingUser2;
@@ -60,7 +60,7 @@ internal class ConfirmLoveLockEvent : IPacketEvent
             item.InteractingUser2 = 0;
             return Task.CompletedTask;
         }
-        if (item.ExtraData.Contains(Convert.ToChar(5).ToString()))
+        if (item.LegacyDataString.Contains(Convert.ToChar(5).ToString()))
         {
             userTwo.CanWalk = true;
             userTwo.GetClient().SendNotification("It appears this love lock has already been locked.");
@@ -94,7 +94,7 @@ internal class ConfirmLoveLockEvent : IPacketEvent
         }
         if (userOne.LlPartner == 0 || userTwo.LlPartner == 0)
             return Task.CompletedTask;
-        item.ExtraData = "1" + (char)5 + userOne.GetUsername() + (char)5 + userTwo.GetUsername() + (char)5 + userOne.GetClient().GetHabbo().Look + (char)5 + userTwo.GetClient().GetHabbo().Look +
+        item.LegacyDataString = "1" + (char)5 + userOne.GetUsername() + (char)5 + userTwo.GetUsername() + (char)5 + userOne.GetClient().GetHabbo().Look + (char)5 + userTwo.GetClient().GetHabbo().Look +
                          (char)5 + DateTime.Now.ToString("dd/MM/yyyy");
         item.InteractingUser = 0;
         item.InteractingUser2 = 0;
@@ -104,7 +104,7 @@ internal class ConfirmLoveLockEvent : IPacketEvent
         using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `items` SET `extra_data` = @extraData WHERE `id` = @ID LIMIT 1");
-            dbClient.AddParameter("extraData", item.ExtraData);
+            dbClient.AddParameter("extraData", item.LegacyDataString);
             dbClient.AddParameter("ID", item.Id);
             dbClient.RunQuery();
         }

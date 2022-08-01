@@ -27,7 +27,7 @@ internal class GetMoodlightConfigEvent : IPacketEvent
         {
             foreach (var item in room.GetRoomItemHandler().GetWall.ToList())
             {
-                if (item.GetBaseItem().InteractionType == InteractionType.Moodlight)
+                if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.Moodlight)
                     room.MoodlightData = new MoodlightData(item.Id);
             }
         }

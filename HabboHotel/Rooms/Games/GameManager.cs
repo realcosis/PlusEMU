@@ -48,9 +48,9 @@ public class GameManager
         Points[Convert.ToInt32(team)] = newPoints;
         foreach (var item in GetFurniItems(team).Values.ToList())
         {
-            if (!IsFootballGoal(item.GetBaseItem().InteractionType))
+            if (!IsFootballGoal(item.Definition.GetBaseItem(item).InteractionType))
             {
-                item.ExtraData = Points[Convert.ToInt32(team)].ToString();
+                item.LegacyDataString = Points[Convert.ToInt32(team)].ToString();
                 item.UpdateState();
             }
         }
@@ -58,22 +58,22 @@ public class GameManager
         {
             if (team == Team.Blue && item.Definition.InteractionType == InteractionType.Banzaiscoreblue)
             {
-                item.ExtraData = Points[Convert.ToInt32(team)].ToString();
+                item.LegacyDataString = Points[Convert.ToInt32(team)].ToString();
                 item.UpdateState();
             }
             else if (team == Team.Red && item.Definition.InteractionType == InteractionType.Banzaiscorered)
             {
-                item.ExtraData = Points[Convert.ToInt32(team)].ToString();
+                item.LegacyDataString = Points[Convert.ToInt32(team)].ToString();
                 item.UpdateState();
             }
             else if (team == Team.Green && item.Definition.InteractionType == InteractionType.Banzaiscoregreen)
             {
-                item.ExtraData = Points[Convert.ToInt32(team)].ToString();
+                item.LegacyDataString = Points[Convert.ToInt32(team)].ToString();
                 item.UpdateState();
             }
             else if (team == Team.Yellow && item.Definition.InteractionType == InteractionType.Banzaiscoreyellow)
             {
-                item.ExtraData = Points[Convert.ToInt32(team)].ToString();
+                item.LegacyDataString = Points[Convert.ToInt32(team)].ToString();
                 item.UpdateState();
             }
         }
@@ -165,7 +165,7 @@ public class GameManager
 
     private void LockGate(Item item)
     {
-        var type = item.GetBaseItem().InteractionType;
+        var type = item.Definition.GetBaseItem(item).InteractionType;
         if (type == InteractionType.FreezeBlueGate || type == InteractionType.FreezeGreenGate ||
             type == InteractionType.FreezeRedGate || type == InteractionType.FreezeYellowGate
             || type == InteractionType.Banzaigateblue || type == InteractionType.Banzaigatered ||
@@ -178,7 +178,7 @@ public class GameManager
 
     private void UnlockGate(Item item)
     {
-        var type = item.GetBaseItem().InteractionType;
+        var type = item.Definition.GetBaseItem(item).InteractionType;
         if (type == InteractionType.FreezeBlueGate || type == InteractionType.FreezeGreenGate ||
             type == InteractionType.FreezeRedGate || type == InteractionType.FreezeYellowGate
             || type == InteractionType.Banzaigateblue || type == InteractionType.Banzaigatered ||

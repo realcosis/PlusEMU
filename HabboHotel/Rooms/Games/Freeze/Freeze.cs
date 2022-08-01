@@ -51,8 +51,8 @@ public class Freeze
         {
             foreach (var exitTile in ExitTeleports.Values.ToList())
             {
-                if (exitTile.ExtraData == "0" || string.IsNullOrEmpty(exitTile.ExtraData))
-                    exitTile.ExtraData = "1";
+                if (exitTile.LegacyDataString == "0" || string.IsNullOrEmpty(exitTile.LegacyDataString))
+                    exitTile.LegacyDataString = "1";
                 exitTile.UpdateState();
             }
         }
@@ -69,8 +69,8 @@ public class Freeze
         {
             foreach (var exitTile in ExitTeleports.Values.ToList())
             {
-                if (exitTile.ExtraData == "1" || string.IsNullOrEmpty(exitTile.ExtraData))
-                    exitTile.ExtraData = "0";
+                if (exitTile.LegacyDataString == "1" || string.IsNullOrEmpty(exitTile.LegacyDataString))
+                    exitTile.LegacyDataString = "0";
                 exitTile.UpdateState();
             }
         }
@@ -133,19 +133,19 @@ public class Freeze
     {
         foreach (var item in _freezeTiles.Values.ToList())
         {
-            if (!string.IsNullOrEmpty(item.ExtraData))
+            if (!string.IsNullOrEmpty(item.LegacyDataString))
             {
                 item.InteractionCountHelper = 0;
-                item.ExtraData = "";
+                item.LegacyDataString = "";
                 item.UpdateState(false, true);
                 _room.GetGameMap().AddItemToMap(item, false);
             }
         }
         foreach (var item in _freezeBlocks.Values)
         {
-            if (!string.IsNullOrEmpty(item.ExtraData))
+            if (!string.IsNullOrEmpty(item.LegacyDataString))
             {
-                item.ExtraData = "";
+                item.LegacyDataString = "";
                 item.UpdateState(false, true);
                 _room.GetGameMap().AddItemToMap(item, false);
             }
@@ -163,7 +163,7 @@ public class Freeze
                 if (item.InteractionCountHelper == 0)
                 {
                     item.InteractionCountHelper = 1;
-                    item.ExtraData = "1000";
+                    item.LegacyDataString = "1000";
                     item.UpdateState();
                     item.InteractingUser = user.UserId;
                     item.FreezePowerUp = user.BanzaiPowerUp;
@@ -246,11 +246,11 @@ public class Freeze
     {
         foreach (var item in items.ToList())
         {
-            switch (item.GetBaseItem().InteractionType)
+            switch (item.Definition.GetBaseItem(item).InteractionType)
             {
                 case InteractionType.FreezeTile:
                 {
-                    item.ExtraData = "11000";
+                    item.LegacyDataString = "11000";
                     item.UpdateState(false, true);
                     continue;
                 }
@@ -270,50 +270,50 @@ public class Freeze
 
     private void SetRandomPowerUp(Item item)
     {
-        if (!string.IsNullOrEmpty(item.ExtraData))
+        if (!string.IsNullOrEmpty(item.LegacyDataString))
             return;
         var next = Random.Shared.Next(1, 14);
         switch (next)
         {
             case 2:
             {
-                item.ExtraData = "2000";
+                item.LegacyDataString = "2000";
                 item.FreezePowerUp = FreezePowerUp.BlueArrow;
                 break;
             }
             case 3:
             {
-                item.ExtraData = "3000";
+                item.LegacyDataString = "3000";
                 item.FreezePowerUp = FreezePowerUp.Snowballs;
                 break;
             }
             case 4:
             {
-                item.ExtraData = "4000";
+                item.LegacyDataString = "4000";
                 item.FreezePowerUp = FreezePowerUp.GreenArrow;
                 break;
             }
             case 5:
             {
-                item.ExtraData = "5000";
+                item.LegacyDataString = "5000";
                 item.FreezePowerUp = FreezePowerUp.OrangeSnowball;
                 break;
             }
             case 6:
             {
-                item.ExtraData = "6000";
+                item.LegacyDataString = "6000";
                 item.FreezePowerUp = FreezePowerUp.Heart;
                 break;
             }
             case 7:
             {
-                item.ExtraData = "7000";
+                item.LegacyDataString = "7000";
                 item.FreezePowerUp = FreezePowerUp.Shield;
                 break;
             }
             default:
             {
-                item.ExtraData = "1000";
+                item.LegacyDataString = "1000";
                 item.FreezePowerUp = FreezePowerUp.None;
                 break;
             }
@@ -350,7 +350,7 @@ public class Freeze
             }
         }
         item.FreezePowerUp = FreezePowerUp.None;
-        item.ExtraData = "1" + item.ExtraData;
+        item.LegacyDataString = "1" + item.LegacyDataString;
         item.UpdateState(false, true);
     }
 
@@ -537,7 +537,7 @@ public class Freeze
     {
         foreach (var item in items)
         {
-            if (item.GetBaseItem().InteractionType == InteractionType.FreezeTile)
+            if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.FreezeTile)
                 return true;
         }
         return false;
@@ -547,7 +547,7 @@ public class Freeze
     {
         foreach (var item in items)
         {
-            if (item.GetBaseItem().InteractionType == InteractionType.FreezeTileBlock)
+            if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.FreezeTileBlock)
                 return true;
         }
         return false;

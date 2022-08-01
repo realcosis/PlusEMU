@@ -31,7 +31,7 @@ internal class PickupObjectEvent : IPacketEvent
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
-        if (item.GetBaseItem().InteractionType == InteractionType.Postit)
+        if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.Postit)
             return Task.CompletedTask;
         var itemRights = false;
         if (item.UserId == session.GetHabbo().Id || room.CheckRights(session, false))
@@ -42,14 +42,14 @@ internal class PickupObjectEvent : IPacketEvent
             itemRights = true;
         if (itemRights)
         {
-            if (item.GetBaseItem().InteractionType == InteractionType.Tent || item.GetBaseItem().InteractionType == InteractionType.TentSmall)
+            if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.Tent || item.Definition.GetBaseItem(item).InteractionType == InteractionType.TentSmall)
                 room.RemoveTent(item.Id);
-            if (item.GetBaseItem().InteractionType == InteractionType.Moodlight)
+            if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.Moodlight)
             {
                 using var dbClient = _database.GetQueryReactor();
                 dbClient.RunQuery("DELETE FROM `room_items_moodlight` WHERE `item_id` = '" + item.Id + "' LIMIT 1");
             }
-            else if (item.GetBaseItem().InteractionType == InteractionType.Toner)
+            else if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.Toner)
             {
                 using var dbClient = _database.GetQueryReactor();
                 dbClient.RunQuery("DELETE FROM `room_items_toner` WHERE `id` = '" + item.Id + "' LIMIT 1");
@@ -57,13 +57,13 @@ internal class PickupObjectEvent : IPacketEvent
             if (item.UserId == session.GetHabbo().Id)
             {
                 room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
-                session.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
+                session.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.LegacyDataString, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
                 session.Send(new FurniListUpdateComposer());
             }
             else if (session.GetHabbo().GetPermissions().HasRight("room_item_take")) //Staff are taking this item
             {
                 room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
-                session.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
+                session.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.LegacyDataString, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
                 session.Send(new FurniListUpdateComposer());
             }
             else //Item is being ejected.
@@ -72,7 +72,7 @@ internal class PickupObjectEvent : IPacketEvent
                 if (targetClient != null && targetClient.GetHabbo() != null) //Again, do we have an active client?
                 {
                     room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
-                    targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
+                    targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.LegacyDataString, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
                     targetClient.Send(new FurniListUpdateComposer());
                 }
                 else //No, query time.

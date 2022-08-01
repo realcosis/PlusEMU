@@ -19,11 +19,11 @@ internal class InteractorCannon : IFurniInteractor
         var actor = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (actor == null)
             return;
-        if (item.ExtraData == "1")
+        if (item.LegacyDataString == "1")
             return;
         if (Gamemap.TileDistance(actor.X, actor.Y, item.GetX, item.GetY) > 2)
             return;
-        item.ExtraData = "1";
+        item.LegacyDataString = "1";
         item.UpdateState(false, true);
         item.RequestUpdate(2, true);
     }
@@ -32,9 +32,9 @@ internal class InteractorCannon : IFurniInteractor
     {
         if (item == null)
             return;
-        if (item.ExtraData == "1")
+        if (item.LegacyDataString == "1")
             return;
-        item.ExtraData = "1";
+        item.LegacyDataString = "1";
         item.UpdateState(false, true);
         item.RequestUpdate(2, true);
     }

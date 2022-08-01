@@ -10,7 +10,7 @@ public class RoomData
 
     public List<string> Tags;
 
-    public RoomData(int id, string caption, string modelName, string ownerName, int ownerId, string password, int score, string type, string access, int usersNow, int usersMax, int category,
+    public RoomData(uint id, string caption, string modelName, string ownerName, int ownerId, string password, int score, string type, string access, int usersNow, int usersMax, int category,
         string description,
         string tags, string floor, string landscape, int allowPets, int allowPetsEating, int roomBlockingEnabled, int hidewall, int wallThickness, int floorThickness, string wallpaper,
         int muteSettings,
@@ -113,7 +113,7 @@ public class RoomData
         Model = data.Model;
     }
 
-    public int Id { get; set; }
+    public uint Id { get; set; }
     public string Name { get; set; }
     public string ModelName { get; set; }
     public string OwnerName { get; set; }

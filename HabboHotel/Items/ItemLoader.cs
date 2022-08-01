@@ -5,7 +5,7 @@ namespace Plus.HabboHotel.Items;
 
 public static class ItemLoader
 {
-    public static List<Item> GetItemsForRoom(int roomId, Room room)
+    public static List<Item> GetItemsForRoom(uint roomId, Room room)
     {
         var items = new List<Item>();
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
@@ -17,11 +17,12 @@ public static class ItemLoader
         {
             foreach (DataRow row in table.Rows)
             {
-                if (PlusEnvironment.GetGame().GetItemManager().GetItem(Convert.ToInt32(row["base_item"]), out var data))
+                if (PlusEnvironment.GetGame().GetItemManager().Items.TryGetValue(Convert.ToUInt32(row["base_item"]), out var data))
                 {
-                    items.Add(new Item(Convert.ToInt32(row["id"]), Convert.ToInt32(row["room_id"]), Convert.ToInt32(row["base_item"]), Convert.ToString(row["extra_data"]),
-                        Convert.ToInt32(row["x"]), Convert.ToInt32(row["y"]), Convert.ToDouble(row["z"]), Convert.ToInt32(row["rot"]), Convert.ToInt32(row["user_id"]),
-                        Convert.ToInt32(row["group_id"]), Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]), Convert.ToString(row["wall_pos"]), room));
+                    // TODO @80O: Items refactor
+                    //items.Add(new Item(Convert.ToInt32(row["id"]), Convert.ToInt32(row["room_id"]), Convert.ToInt32(row["base_item"]), Convert.ToString(row["extra_data"]),
+                    //    Convert.ToInt32(row["x"]), Convert.ToInt32(row["y"]), Convert.ToDouble(row["z"]), Convert.ToInt32(row["rot"]), Convert.ToInt32(row["user_id"]),
+                    //    Convert.ToInt32(row["group_id"]), Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]), Convert.ToString(row["wall_pos"]), room));
                 }
             }
         }
@@ -41,11 +42,12 @@ public static class ItemLoader
         {
             foreach (DataRow row in items.Rows)
             {
-                if (PlusEnvironment.GetGame().GetItemManager().GetItem(Convert.ToInt32(row["base_item"]), out var data))
+                if (PlusEnvironment.GetGame().GetItemManager().Items.TryGetValue(Convert.ToUInt32(row["base_item"]), out var data))
                 {
-                    I.Add(new Item(Convert.ToInt32(row["id"]), Convert.ToInt32(row["room_id"]), Convert.ToInt32(row["base_item"]), Convert.ToString(row["extra_data"]),
-                        Convert.ToInt32(row["x"]), Convert.ToInt32(row["y"]), Convert.ToDouble(row["z"]), Convert.ToInt32(row["rot"]), Convert.ToInt32(row["user_id"]),
-                        Convert.ToInt32(row["group_id"]), Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]), Convert.ToString(row["wall_pos"])));
+                    // TODO @80O: Items refactor
+                    //I.Add(new Item(Convert.ToInt32(row["id"]), Convert.ToInt32(row["room_id"]), Convert.ToInt32(row["base_item"]), Convert.ToString(row["extra_data"]),
+                    //    Convert.ToInt32(row["x"]), Convert.ToInt32(row["y"]), Convert.ToDouble(row["z"]), Convert.ToInt32(row["rot"]), Convert.ToInt32(row["user_id"]),
+                    //    Convert.ToInt32(row["group_id"]), Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]), Convert.ToString(row["wall_pos"])));
                 }
             }
         }

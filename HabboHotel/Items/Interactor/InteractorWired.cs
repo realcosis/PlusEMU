@@ -23,10 +23,10 @@ public class InteractorWired : IFurniInteractor
         IWiredItem box = null;
         if (!item.GetRoom().GetWired().TryGet(item.Id, out box))
             return;
-        item.ExtraData = "1";
+        item.LegacyDataString = "1";
         item.UpdateState(false, true);
         item.RequestUpdate(2, true);
-        if (item.GetBaseItem().WiredType == WiredBoxType.AddonRandomEffect)
+        if (item.Definition.GetBaseItem(item).WiredType == WiredBoxType.AddonRandomEffect)
             return;
         if (item.GetRoom().GetWired().IsTrigger(item))
         {

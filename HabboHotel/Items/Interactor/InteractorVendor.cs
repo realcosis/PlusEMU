@@ -8,7 +8,7 @@ public class InteractorVendor : IFurniInteractor
 {
     public void OnPlace(GameClient session, Item item)
     {
-        item.ExtraData = "0";
+        item.LegacyDataString = "0";
         item.UpdateNeeded = true;
         if (item.InteractingUser > 0)
         {
@@ -19,7 +19,7 @@ public class InteractorVendor : IFurniInteractor
 
     public void OnRemove(GameClient session, Item item)
     {
-        item.ExtraData = "0";
+        item.LegacyDataString = "0";
         if (item.InteractingUser > 0)
         {
             var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);
@@ -29,7 +29,7 @@ public class InteractorVendor : IFurniInteractor
 
     public void OnTrigger(GameClient session, Item item, int request, bool hasRights)
     {
-        if (item.ExtraData != "1" && item.GetBaseItem().VendingIds.Count >= 1 && item.InteractingUser == 0 &&
+        if (item.LegacyDataString != "1" && item.Definition.GetBaseItem(item).VendingIds.Count >= 1 && item.InteractingUser == 0 &&
             session != null)
         {
             var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
@@ -44,7 +44,7 @@ public class InteractorVendor : IFurniInteractor
             user.ClearMovement(true);
             user.SetRot(Rotation.Calculate(user.X, user.Y, item.GetX, item.GetY), false);
             item.RequestUpdate(2, true);
-            item.ExtraData = "1";
+            item.LegacyDataString = "1";
             item.UpdateState(false, true);
         }
     }

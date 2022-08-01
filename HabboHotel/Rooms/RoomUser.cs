@@ -68,7 +68,7 @@ public class RoomUser
     public int PrevTime;
     public bool RidingHorse = false;
     public int RollerDelay = 0;
-    public int RoomId;
+    public uint RoomId;
     public int RotBody; //byte
     public int RotHead; //byte
 
@@ -93,7 +93,7 @@ public class RoomUser
     public int Y; //byte
     public double Z;
 
-    public RoomUser(int habboId, int roomId, int virtualId, Room room)
+    public RoomUser(int habboId, uint roomId, int virtualId, Room room)
     {
         Freezed = false;
         HabboId = habboId;

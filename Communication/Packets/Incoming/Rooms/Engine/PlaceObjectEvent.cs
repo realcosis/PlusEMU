@@ -21,6 +21,7 @@ internal class PlaceObjectEvent : IPacketEvent
         _achievementManager = achievementManager;
     }
 
+    /// TODO @80O: Unfuck this mess
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom)
@@ -29,7 +30,7 @@ internal class PlaceObjectEvent : IPacketEvent
             return Task.CompletedTask;
         var rawData = packet.ReadString();
         var data = rawData.Split(' ');
-        if (!int.TryParse(data[0], out var itemId))
+        if (!uint.TryParse(data[0], out var itemId))
             return Task.CompletedTask;
         var hasRights = room.CheckRights(session, false, true);
         if (!hasRights)
@@ -47,7 +48,7 @@ internal class PlaceObjectEvent : IPacketEvent
         if (item == null)
             return Task.CompletedTask;
 
-        if (item.Data.InteractionType == InteractionType.Exchange && room.OwnerId != session.GetHabbo().Id && !session.GetHabbo().GetPermissions().HasRight("room_item_place_exchange_anywhere"))
+        if (item.Definition.InteractionType == InteractionType.Exchange && room.OwnerId != session.GetHabbo().Id && !session.GetHabbo().GetPermissions().HasRight("room_item_place_exchange_anywhere"))
         {
             session.SendNotification("You cannot place exchange items in other people's rooms!");
             return Task.CompletedTask;
@@ -99,18 +100,17 @@ internal class PlaceObjectEvent : IPacketEvent
             if (!int.TryParse(data[1], out var x)) return Task.CompletedTask;
             if (!int.TryParse(data[2], out var y)) return Task.CompletedTask;
             if (!int.TryParse(data[3], out var rotation)) return Task.CompletedTask;
-            var roomItem = new Item(item.Id, room.RoomId, item.BaseItem, item.ExtraData, x, y, 0, rotation, session.GetHabbo().Id, item.GroupId, item.LimitedNo, item.LimitedTot, string.Empty, room);
-            if (room.GetRoomItemHandler().SetFloorItem(session, roomItem, x, y, rotation, true, false, true))
+            if (room.GetRoomItemHandler().SetFloorItem(session, item, x, y, rotation, true, false, true))
             {
                 session.GetHabbo().Inventory.Furniture.RemoveItem(itemId);
                 session.Send(new FurniListRemoveComposer(itemId));
                 if (session.GetHabbo().Id == room.OwnerId)
                     _achievementManager.ProgressAchievement(session, "ACH_RoomDecoFurniCount", 1);
-                if (roomItem.IsWired)
+                if (item.IsWired)
                 {
                     try
                     {
-                        room.GetWired().LoadWiredBox(roomItem);
+                        room.GetWired().LoadWiredBox(item);
                     }
                     catch
                     {
@@ -129,8 +129,7 @@ internal class PlaceObjectEvent : IPacketEvent
             {
                 try
                 {
-                    var roomItem = new Item(item.Id, room.RoomId, item.BaseItem, item.ExtraData, 0, 0, 0, 0, session.GetHabbo().Id, item.GroupId, item.LimitedNo, item.LimitedTot, wallPos, room);
-                    if (room.GetRoomItemHandler().SetWallItem(session, roomItem))
+                    if (room.GetRoomItemHandler().SetWallItem(session, item))
                     {
                         session.GetHabbo().Inventory.Furniture.RemoveItem(itemId);
                         session.Send(new FurniListRemoveComposer(itemId));

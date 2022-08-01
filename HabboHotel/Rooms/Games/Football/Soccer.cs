@@ -208,7 +208,7 @@ public class Soccer
 
     public void OnGateRemove(Item item)
     {
-        switch (item.GetBaseItem().InteractionType)
+        switch (item.Definition.GetBaseItem(item).InteractionType)
         {
             case InteractionType.FootballGoalRed:
             case InteractionType.Footballcounterred:
@@ -248,7 +248,7 @@ public class Soccer
             return;
         double newZ = _room.GetGameMap().Model.SqFloorHeight[newX, newY];
         _room.SendPacket(new SlideObjectBundleComposer(item.Coordinate.X, item.Coordinate.Y, item.GetZ, newX, newY, newZ, item.Id, item.Id, item.Id));
-        item.ExtraData = "11";
+        item.LegacyDataString = "11";
         item.UpdateNeeded = true;
         _room.GetRoomItemHandler().SetFloorItem(null, item, newX, newY, item.Rotation, false, false, false);
         _room.OnUserShoot(user, item);

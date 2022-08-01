@@ -108,7 +108,7 @@ public class WiredComponent
 
     public IWiredItem GenerateNewBox(Item item)
     {
-        switch (item.GetBaseItem().WiredType)
+        switch (item.Definition.GetBaseItem(item).WiredType)
         {
             case WiredBoxType.TriggerRoomEnter:
                 return new RoomEnterBox(_room, item);
@@ -232,11 +232,11 @@ public class WiredComponent
         return null;
     }
 
-    public bool IsTrigger(Item item) => item.GetBaseItem().InteractionType == InteractionType.WiredTrigger;
+    public bool IsTrigger(Item item) => item.Definition.GetBaseItem(item).InteractionType == InteractionType.WiredTrigger;
 
-    public bool IsEffect(Item item) => item.GetBaseItem().InteractionType == InteractionType.WiredEffect;
+    public bool IsEffect(Item item) => item.Definition.GetBaseItem(item).InteractionType == InteractionType.WiredEffect;
 
-    public bool IsCondition(Item item) => item.GetBaseItem().InteractionType == InteractionType.WiredCondition;
+    public bool IsCondition(Item item) => item.Definition.GetBaseItem(item).InteractionType == InteractionType.WiredCondition;
 
     public bool OtherBoxHasItem(IWiredItem box, int itemId)
     {
@@ -367,9 +367,9 @@ public class WiredComponent
 
     public void OnEvent(Item item)
     {
-        if (item.ExtraData == "1")
+        if (item.LegacyDataString == "1")
             return;
-        item.ExtraData = "1";
+        item.LegacyDataString = "1";
         item.UpdateState(false, true);
         item.RequestUpdate(2, true);
     }
@@ -385,7 +385,7 @@ public class WiredComponent
             if (selectedItem == null)
                 continue;
             if (item.Type == WiredBoxType.EffectMatchPosition || item.Type == WiredBoxType.ConditionMatchStateAndPosition || item.Type == WiredBoxType.ConditionDontMatchStateAndPosition)
-                items += I.Id + ":" + I.GetX + "," + I.GetY + "," + I.GetZ + "," + I.Rotation + "," + I.ExtraData + ";";
+                items += I.Id + ":" + I.GetX + "," + I.GetY + "," + I.GetZ + "," + I.Rotation + "," + I.LegacyDataString + ";";
             else
                 items += I.Id + ";";
         }

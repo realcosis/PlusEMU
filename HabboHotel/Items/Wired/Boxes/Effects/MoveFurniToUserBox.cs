@@ -61,7 +61,7 @@ internal class MoveFurniToUserBox : IWiredItem, IWiredCycle
                     {
                         if (coordinateItem == null || coordinateItem.Id == item.Id)
                             continue;
-                        if (!coordinateItem.GetBaseItem().Walkable)
+                        if (!coordinateItem.Definition.GetBaseItem(coordinateItem).Walkable)
                         {
                             _next = 0;
                             canBePlaced = false;
@@ -69,7 +69,7 @@ internal class MoveFurniToUserBox : IWiredItem, IWiredCycle
                         }
                         if (coordinateItem.TotalHeight > newZ)
                             newZ = coordinateItem.TotalHeight;
-                        if (canBePlaced && !coordinateItem.GetBaseItem().Stackable)
+                        if (canBePlaced && !coordinateItem.Definition.GetBaseItem(coordinateItem).Stackable)
                             canBePlaced = false;
                     }
                     if (canBePlaced && point != item.Coordinate)

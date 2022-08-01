@@ -23,19 +23,19 @@ public class ItemUpdateComposer : IServerPacket
     private void WriteWallItem(IOutgoingPacket packet, Item item, int userId)
     {
         packet.WriteString(item.Id.ToString());
-        packet.WriteInteger(item.GetBaseItem().SpriteId);
+        packet.WriteInteger(item.Definition.GetBaseItem(item).SpriteId);
         packet.WriteString(item.WallCoordinates);
-        switch (item.GetBaseItem().InteractionType)
+        switch (item.Definition.GetBaseItem(item).InteractionType)
         {
             case InteractionType.Postit:
-                packet.WriteString(item.ExtraData.Split(' ')[0]);
+                packet.WriteString(item.LegacyDataString.Split(' ')[0]);
                 break;
             default:
-                packet.WriteString(item.ExtraData);
+                packet.WriteString(item.LegacyDataString);
                 break;
         }
         packet.WriteInteger(-1);
-        packet.WriteInteger(item.GetBaseItem().Modes > 1 ? 1 : 0);
+        packet.WriteInteger(item.Definition.GetBaseItem(item).Modes > 1 ? 1 : 0);
         packet.WriteInteger(userId);
     }
 }

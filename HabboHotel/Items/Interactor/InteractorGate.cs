@@ -11,13 +11,13 @@ public class InteractorGate : IFurniInteractor
 
     public void OnTrigger(GameClient session, Item item, int request, bool hasRights)
     {
-        var modes = item.GetBaseItem().Modes - 1;
+        var modes = item.Definition.GetBaseItem(item).Modes - 1;
         if (!hasRights)
             return;
         if (modes <= 0) item.UpdateState(false, true);
         var currentMode = 0;
         var newMode = 0;
-        if (!int.TryParse(item.ExtraData, out currentMode)) { }
+        if (!int.TryParse(item.LegacyDataString, out currentMode)) { }
         if (currentMode <= 0)
             newMode = 1;
         else if (currentMode >= modes)
@@ -27,7 +27,7 @@ public class InteractorGate : IFurniInteractor
         if (newMode == 0)
             if (!item.GetRoom().GetGameMap().ItemCanBePlaced(item.GetX, item.GetY))
                 return;
-        item.ExtraData = newMode.ToString();
+        item.LegacyDataString = newMode.ToString();
         item.UpdateState();
         item.GetRoom().GetGameMap().UpdateMapForItem(item);
         item.GetRoom().GetWired().TriggerEvent(WiredBoxType.TriggerStateChanges, session.GetHabbo(), item);
@@ -36,11 +36,11 @@ public class InteractorGate : IFurniInteractor
 
     public void OnWiredTrigger(Item item)
     {
-        var modes = item.GetBaseItem().Modes - 1;
+        var modes = item.Definition.GetBaseItem(item).Modes - 1;
         if (modes <= 0) item.UpdateState(false, true);
         var currentMode = 0;
         var newMode = 0;
-        if (!int.TryParse(item.ExtraData, out currentMode)) { }
+        if (!int.TryParse(item.LegacyDataString, out currentMode)) { }
         if (currentMode <= 0)
             newMode = 1;
         else if (currentMode >= modes)
@@ -50,7 +50,7 @@ public class InteractorGate : IFurniInteractor
         if (newMode == 0)
             if (!item.GetRoom().GetGameMap().ItemCanBePlaced(item.GetX, item.GetY))
                 return;
-        item.ExtraData = newMode.ToString();
+        item.LegacyDataString = newMode.ToString();
         item.UpdateState();
         item.GetRoom().GetGameMap().UpdateMapForItem(item);
         //Item.GetRoom().GenerateMaps();

@@ -143,11 +143,11 @@ internal class MatchPositionBox : IWiredItem, IWiredCycle
 
     private void SetState(Item item, string extradata)
     {
-        if (item.ExtraData == extradata)
+        if (item.LegacyDataString == extradata)
             return;
-        if (item.GetBaseItem().InteractionType == InteractionType.Dice)
+        if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.Dice)
             return;
-        item.ExtraData = extradata;
+        item.LegacyDataString = extradata;
         item.UpdateState(false, true);
     }
 

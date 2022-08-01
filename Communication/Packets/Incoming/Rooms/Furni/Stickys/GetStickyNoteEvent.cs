@@ -21,9 +21,9 @@ internal class GetStickyNoteEvent : IPacketEvent
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return Task.CompletedTask;
         var item = room.GetRoomItemHandler().GetItem(packet.ReadInt());
-        if (item == null || item.GetBaseItem().InteractionType != InteractionType.Postit)
+        if (item == null || item.Definition.GetBaseItem(item).InteractionType != InteractionType.Postit)
             return Task.CompletedTask;
-        session.Send(new StickyNoteComposer(item.Id.ToString(), item.ExtraData));
+        session.Send(new StickyNoteComposer(item.Id.ToString(), item.LegacyDataString));
         return Task.CompletedTask;
     }
 }

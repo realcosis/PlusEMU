@@ -22,7 +22,7 @@ public class WiredTriggeRconfigComposer : IServerPacket
         packet.WriteInteger(5);
         packet.WriteInteger(_box.SetItems.Count);
         foreach (var item in _box.SetItems.Values.ToList()) packet.WriteInteger(item.Id);
-        packet.WriteInteger(_box.Item.GetBaseItem().SpriteId);
+        packet.WriteInteger(_box.Item.Definition.GetBaseItem(_box.Item).SpriteId);
         packet.WriteInteger(_box.Item.Id);
         packet.WriteString(_box.StringData);
         packet.WriteInteger(_box is IWiredCycle ? 1 : 0);

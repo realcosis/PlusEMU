@@ -15,16 +15,16 @@ public class RoomManager : IRoomManager
 
     private readonly Dictionary<string, RoomModel> _roomModels;
 
-    private readonly ConcurrentDictionary<int, Room> _rooms;
+    private readonly ConcurrentDictionary<uint, Room> _rooms;
 
     private DateTime _cycleLastExecution;
 
 
     public RoomManager()
     {
-        _roomModels = new Dictionary<string, RoomModel>();
-        _rooms = new ConcurrentDictionary<int, Room>();
-        _roomLoadingSync = new object();
+        _roomModels = new();
+        _rooms = new();
+        _roomLoadingSync = new();
     }
 
     public int Count => _rooms.Count;
@@ -132,12 +132,12 @@ public class RoomManager : IRoomManager
         return false;
     }
 
-    public void UnloadRoom(int roomId)
+    public void UnloadRoom(uint roomId)
     {
         if (_rooms.TryRemove(roomId, out var room)) room.Dispose();
     }
 
-    public bool TryLoadRoom(int roomId, out Room room)
+    public bool TryLoadRoom(uint roomId, out Room room)
     {
         Room inst = null;
         if (_rooms.TryGetValue(roomId, out inst))
@@ -237,7 +237,7 @@ public class RoomManager : IRoomManager
     }
 
 
-    public bool TryGetRoom(int roomId, out Room room) => _rooms.TryGetValue(roomId, out room);
+    public bool TryGetRoom(uint roomId, out Room room) => _rooms.TryGetValue(roomId, out room);
 
     public RoomData CreateRoom(GameClient session, string name, string description, int category, int maxVisitors, int tradeSettings, RoomModel model, string wallpaper = "0.0", string floor = "0.0",
         string landscape = "0.0", int wallthick = 0, int floorthick = 0)

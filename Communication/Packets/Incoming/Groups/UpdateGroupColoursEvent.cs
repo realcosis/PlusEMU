@@ -39,10 +39,10 @@ internal class UpdateGroupColoursEvent : IPacketEvent
         {
             foreach (var item in session.GetHabbo().CurrentRoom.GetRoomItemHandler().GetFloor.ToList())
             {
-                if (item == null || item.GetBaseItem() == null)
+                if (item == null || item.Definition.GetBaseItem(item) == null)
                     continue;
-                if (item.GetBaseItem().InteractionType != InteractionType.GuildItem && item.GetBaseItem().InteractionType != InteractionType.GuildGate ||
-                    item.GetBaseItem().InteractionType != InteractionType.GuildForum)
+                if (item.Definition.GetBaseItem(item).InteractionType != InteractionType.GuildItem && item.Definition.GetBaseItem(item).InteractionType != InteractionType.GuildGate ||
+                    item.Definition.GetBaseItem(item).InteractionType != InteractionType.GuildForum)
                     continue;
                 session.GetHabbo().CurrentRoom.SendPacket(new ObjectUpdateComposer(item, Convert.ToInt32(item.UserId)));
             }

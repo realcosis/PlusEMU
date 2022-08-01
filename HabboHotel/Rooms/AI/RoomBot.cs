@@ -27,7 +27,7 @@ public class RoomBot
 
     public int OwnerId;
     public List<RandomSpeech> RandomSpeech;
-    public int RoomId;
+    public uint RoomId;
 
     public RoomUser RoomUser;
     public int Rot;
@@ -41,7 +41,7 @@ public class RoomBot
     public int Y;
     public double Z;
 
-    public RoomBot(int id, int roomId, string type, string walkingMode, string name, string motto, string look, int x, int y, double z, int rotation,
+    public RoomBot(int id, uint roomId, string type, string walkingMode, string name, string motto, string look, int x, int y, double z, int rotation,
         int minX, int minY, int maxX, int maxY, ref List<RandomSpeech> speeches, string gender, int dance, int ownerId,
         bool automaticChat, int speakingInterval, bool mixSentences, int chatBubble)
     {

@@ -17,7 +17,7 @@ public class ObjectAddComposer : IServerPacket
     public void Compose(IOutgoingPacket packet)
     {
         packet.WriteInteger(_item.Id);
-        packet.WriteInteger(_item.GetBaseItem().SpriteId);
+        packet.WriteInteger(_item.Definition.GetBaseItem(_item).SpriteId);
         packet.WriteInteger(_item.GetX);
         packet.WriteInteger(_item.GetY);
         packet.WriteInteger(_item.Rotation);
@@ -27,14 +27,14 @@ public class ObjectAddComposer : IServerPacket
         {
             packet.WriteInteger(1);
             packet.WriteInteger(256);
-            packet.WriteString(_item.ExtraData);
+            packet.WriteString(_item.LegacyDataString);
             packet.WriteInteger(_item.UniqueNumber);
             packet.WriteInteger(_item.UniqueSeries);
         }
         else
             ItemBehaviourUtility.GenerateExtradata(_item, packet);
         packet.WriteInteger(-1); // to-do: check
-        packet.WriteInteger(_item.GetBaseItem().Modes > 1 ? 1 : 0);
+        packet.WriteInteger(_item.Definition.GetBaseItem(_item).Modes > 1 ? 1 : 0);
         packet.WriteInteger(_item.UserId);
         packet.WriteString(_item.Username);
 

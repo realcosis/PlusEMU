@@ -17,22 +17,22 @@ public class FurniListAddComposer : IServerPacket
     public void Compose(IOutgoingPacket packet)
     {
         packet.WriteInteger(_item.Id);
-        packet.WriteString(_item.GetBaseItem().Type.ToString().ToUpper());
+        packet.WriteString(_item.Definition.GetBaseItem(_item).Type.ToString().ToUpper());
         packet.WriteInteger(_item.Id);
-        packet.WriteInteger(_item.GetBaseItem().SpriteId);
+        packet.WriteInteger(_item.Definition.GetBaseItem(_item).SpriteId);
         if (_item.UniqueNumber > 0)
         {
             packet.WriteInteger(1);
             packet.WriteInteger(256);
-            packet.WriteString(_item.ExtraData);
+            packet.WriteString(_item.LegacyDataString);
             packet.WriteInteger(_item.UniqueNumber);
             packet.WriteInteger(_item.UniqueSeries);
         }
         else
             ItemBehaviourUtility.GenerateExtradata(_item, packet);
-        packet.WriteBoolean(_item.GetBaseItem().AllowEcotronRecycle);
-        packet.WriteBoolean(_item.GetBaseItem().AllowTrade);
-        packet.WriteBoolean(_item.UniqueNumber == 0 && _item.GetBaseItem().AllowInventoryStack);
+        packet.WriteBoolean(_item.Definition.GetBaseItem(_item).AllowEcotronRecycle);
+        packet.WriteBoolean(_item.Definition.GetBaseItem(_item).AllowTrade);
+        packet.WriteBoolean(_item.UniqueNumber == 0 && _item.Definition.GetBaseItem(_item).AllowInventoryStack);
         packet.WriteBoolean(ItemUtility.IsRare(_item));
         packet.WriteInteger(-1); //Seconds to expiration.
         packet.WriteBoolean(true);

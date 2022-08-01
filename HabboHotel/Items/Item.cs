@@ -19,10 +19,24 @@ public class Item
     public uint OwnerId { get; set; }
     public uint RoomId { get; set; }
     public ItemDefinition Definition { get; set; }
-    public IFurniObjectData ExtraData { get; set; }
+    public IFurniObjectData ExtraData { get; set; } = FurniObjectData.Empty;
     public uint UniqueNumber { get; set; }
     public uint UniqueSeries { get; set; }
     public string WallCoordinates = string.Empty;
+
+    public string LegacyDataString {
+        get
+        {
+            if (ExtraData is LegacyDataFormat data)
+                return data.Data;
+            return string.Empty;
+        }
+        set
+        {
+            if (ExtraData is LegacyDataFormat data)
+                data.Data = value;
+        }
+    }
 
 
 
@@ -50,93 +64,6 @@ public class Item
 
 
     public int Value;
-
-    //public Item(int id, int roomId, int baseItem, string extraData, int x, int y, double z, int rot, int userid, int group, int limitedNumber, int limitedStack, string wallCoord, Room room = null)
-    //{
-    //    if (PlusEnvironment.GetGame().GetItemManager().GetItem(baseItem, out var data))
-    //    {
-    //        Id = id;
-    //        RoomId = roomId;
-    //        _room = room;
-    //        Definition = data;
-    //        BaseItem = baseItem;
-    //        ExtraData = extraData;
-    //        GroupId = group;
-    //        GetX = x;
-    //        GetY = y;
-    //        if (!double.IsInfinity(z))
-    //            GetZ = z;
-    //        Rotation = rot;
-    //        UpdateNeeded = false;
-    //        UpdateCounter = 0;
-    //        InteractingUser = 0;
-    //        InteractingUser2 = 0;
-    //        InteractingBallUser = 0;
-    //        InteractionCount = 0;
-    //        Value = 0;
-    //        UserId = userid;
-    //        Username = PlusEnvironment.GetUsernameById(userid);
-    //        LimitedNo = limitedNumber;
-    //        LimitedTot = limitedStack;
-    //        switch (GetBaseItem().InteractionType)
-    //        {
-    //            case InteractionType.Teleport:
-    //                RequestUpdate(0, true);
-    //                break;
-    //            case InteractionType.Hopper:
-    //                RequestUpdate(0, true);
-    //                break;
-    //            case InteractionType.Roller:
-    //                IsRoller = true;
-    //                if (roomId > 0) GetRoom().GetRoomItemHandler().GotRollers = true;
-    //                break;
-    //            case InteractionType.Banzaiscoreblue:
-    //            case InteractionType.Footballcounterblue:
-    //            case InteractionType.Banzaigateblue:
-    //            case InteractionType.FreezeBlueGate:
-    //            case InteractionType.Freezebluecounter:
-    //                Team = Team.Blue;
-    //                break;
-    //            case InteractionType.Banzaiscoregreen:
-    //            case InteractionType.Footballcountergreen:
-    //            case InteractionType.Banzaigategreen:
-    //            case InteractionType.Freezegreencounter:
-    //            case InteractionType.FreezeGreenGate:
-    //                Team = Team.Green;
-    //                break;
-    //            case InteractionType.Banzaiscorered:
-    //            case InteractionType.Footballcounterred:
-    //            case InteractionType.Banzaigatered:
-    //            case InteractionType.Freezeredcounter:
-    //            case InteractionType.FreezeRedGate:
-    //                Team = Team.Red;
-    //                break;
-    //            case InteractionType.Banzaiscoreyellow:
-    //            case InteractionType.Footballcounteryellow:
-    //            case InteractionType.Banzaigateyellow:
-    //            case InteractionType.Freezeyellowcounter:
-    //            case InteractionType.FreezeYellowGate:
-    //                Team = Team.Yellow;
-    //                break;
-    //            case InteractionType.Banzaitele:
-    //            {
-    //                ExtraData = "";
-    //                break;
-    //            }
-    //        }
-    //        IsWallItem = GetBaseItem().Type.ToString().ToLower() == "i";
-    //        IsFloorItem = GetBaseItem().Type.ToString().ToLower() == "s";
-    //        if (IsFloorItem)
-    //            GetAffectedTiles = Gamemap.GetAffectedTiles(GetBaseItem().Length, GetBaseItem().Width, GetX, GetY, rot);
-    //        else if (IsWallItem)
-    //        {
-    //            WallCoord = wallCoord;
-    //            IsWallItem = true;
-    //            IsFloorItem = false;
-    //            GetAffectedTiles = new Dictionary<int, ThreeDCoord>();
-    //        }
-    //    }
-    //}
 
     public Dictionary<int, ThreeDCoord> GetAffectedTiles { get; private set; }
 
@@ -182,13 +109,13 @@ public class Item
         get
         {
             var curHeight = 0.0;
-            if (GetBaseItem().AdjustableHeights.Count > 1)
+            if (Definition.AdjustableHeights.Count > 1)
             {
-                if (int.TryParse(ExtraData, out var num2) && GetBaseItem().AdjustableHeights.Count - 1 >= num2)
-                    curHeight = GetZ + GetBaseItem().AdjustableHeights[num2];
+                if (int.TryParse(LegacyDataString, out var num2) && Definition.AdjustableHeights.Count - 1 >= num2)
+                    curHeight = GetZ + Definition.AdjustableHeights[num2];
             }
             if (curHeight <= 0.0)
-                curHeight = GetZ + GetBaseItem().Height;
+                curHeight = GetZ + Definition.Height;
             return curHeight;
         }
     }
@@ -266,7 +193,7 @@ public class Item
         get
         {
             if (IsWired) return new InteractorWired();
-            switch (GetBaseItem().InteractionType)
+            switch (Definition.InteractionType)
             {
                 case InteractionType.Gate:
                     return new InteractorGate();
@@ -331,7 +258,7 @@ public class Item
     {
         get
         {
-            switch (GetBaseItem().InteractionType)
+            switch (Definition.InteractionType)
             {
                 case InteractionType.WiredEffect:
                 case InteractionType.WiredTrigger:
@@ -374,15 +301,15 @@ public class Item
                 UpdateCounter = 0;
                 RoomUser user = null;
                 RoomUser user2 = null;
-                switch (GetBaseItem().InteractionType)
+                switch (Definition.InteractionType)
                 {
                     case InteractionType.GuildGate:
                     {
-                        if (ExtraData == "1")
+                        if (LegacyDataString == "1")
                         {
                             if (GetRoom().GetRoomUserManager().GetUserForSquare(GetX, GetY) == null)
                             {
-                                ExtraData = "0";
+                                LegacyDataString = "0";
                                 UpdateState(false, true);
                             }
                             else
@@ -392,11 +319,11 @@ public class Item
                     }
                     case InteractionType.Effect:
                     {
-                        if (ExtraData == "1")
+                        if (LegacyDataString == "1")
                         {
                             if (GetRoom().GetRoomUserManager().GetUserForSquare(GetX, GetY) == null)
                             {
-                                ExtraData = "0";
+                                LegacyDataString = "0";
                                 UpdateState(false, true);
                             }
                             else
@@ -409,7 +336,7 @@ public class Item
                         if (InteractingUser > 0) user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
                         if (user != null && user.X == GetX && user.Y == GetY)
                         {
-                            ExtraData = "1";
+                            LegacyDataString = "1";
                             user.MoveTo(SquareBehind);
                             user.InteractingGate = false;
                             user.GateId = 0;
@@ -419,15 +346,15 @@ public class Item
                         else if (user != null && user.Coordinate == SquareBehind)
                         {
                             user.UnlockWalking();
-                            ExtraData = "0";
+                            LegacyDataString = "0";
                             InteractingUser = 0;
                             user.InteractingGate = false;
                             user.GateId = 0;
                             UpdateState(false, true);
                         }
-                        else if (ExtraData == "1")
+                        else if (LegacyDataString == "1")
                         {
-                            ExtraData = "0";
+                            LegacyDataString = "0";
                             UpdateState(false, true);
                         }
                         if (user == null) InteractingUser = 0;
@@ -452,13 +379,13 @@ public class Item
                         else if (user != null && (user.Coordinate == SquareBehind || user.Coordinate == SquareInFront))
                         {
                             user.UnlockWalking();
-                            ExtraData = "0";
+                            LegacyDataString = "0";
                             InteractingUser = 0;
                             UpdateState(false, true);
                         }
-                        else if (ExtraData == "1")
+                        else if (LegacyDataString == "1")
                         {
-                            ExtraData = "0";
+                            LegacyDataString = "0";
                             UpdateState(false, true);
                         }
                         if (user == null) InteractingUser = 0;
@@ -486,7 +413,7 @@ public class Item
                                     user.AllowOverride = false;
                                     if (user.TeleDelay == 0)
                                     {
-                                        var roomHopId = ItemHopperFinder.GetAHopper(user.RoomId);
+                                        var roomHopId = ItemHopperFinder.GetAHopper((uint)user.RoomId); // TODO @80O: Remove cast
                                         var nextHopperId = ItemHopperFinder.GetHopperId(roomHopId);
                                         if (!user.IsBot && user != null && user.GetClient() != null &&
                                             user.GetClient().GetHabbo() != null)
@@ -548,27 +475,27 @@ public class Item
                         // Set the new item state, by priority
                         if (keepDoorOpen)
                         {
-                            if (ExtraData != "1")
+                            if (LegacyDataString != "1")
                             {
-                                ExtraData = "1";
+                                LegacyDataString = "1";
                                 UpdateState(false, true);
                             }
                         }
                         else if (showHopperEffect)
                         {
-                            if (ExtraData != "2")
+                            if (LegacyDataString != "2")
                             {
-                                ExtraData = "2";
+                                LegacyDataString = "2";
                                 UpdateState(false, true);
                             }
                         }
                         else
                         {
-                            if (ExtraData != "0")
+                            if (LegacyDataString != "0")
                             {
                                 if (pause == 0)
                                 {
-                                    ExtraData = "0";
+                                    LegacyDataString = "0";
                                     UpdateState(false, true);
                                     pause = 2;
                                 }
@@ -623,7 +550,7 @@ public class Item
                                                     user.SetRot(item.Rotation, false);
 
                                                     // Force tele effect update (dirty)
-                                                    item.ExtraData = "2";
+                                                    item.LegacyDataString = "2";
                                                     item.UpdateState(false, true);
 
                                                     // Set secondary interacting user
@@ -713,25 +640,25 @@ public class Item
                         // Set the new item state, by priority
                         if (showTeleEffect)
                         {
-                            if (ExtraData != "2")
+                            if (LegacyDataString != "2")
                             {
-                                ExtraData = "2";
+                                LegacyDataString = "2";
                                 UpdateState(false, true);
                             }
                         }
                         else if (keepDoorOpen)
                         {
-                            if (ExtraData != "1")
+                            if (LegacyDataString != "1")
                             {
-                                ExtraData = "1";
+                                LegacyDataString = "1";
                                 UpdateState(false, true);
                             }
                         }
                         else
                         {
-                            if (ExtraData != "0")
+                            if (LegacyDataString != "0")
                             {
-                                ExtraData = "0";
+                                LegacyDataString = "0";
                                 UpdateState(false, true);
                             }
                         }
@@ -741,62 +668,62 @@ public class Item
                         break;
                     }
                     case InteractionType.Bottle:
-                        ExtraData = Random.Shared.Next(0, 8).ToString();
+                        LegacyDataString = Random.Shared.Next(0, 8).ToString();
                         UpdateState();
                         break;
                     case InteractionType.Dice:
                     {
                         var numbers = new[] { "1", "2", "3", "4", "5", "6" };
-                        if (ExtraData == "-1")
-                            ExtraData = RandomizeStrings(numbers)[0];
+                        if (LegacyDataString == "-1")
+                            LegacyDataString = RandomizeStrings(numbers)[0];
                         UpdateState();
                     }
                         break;
                     case InteractionType.HabboWheel:
-                        ExtraData = Random.Shared.Next(1, 10).ToString();
+                        LegacyDataString = Random.Shared.Next(1, 10).ToString();
                         UpdateState();
                         break;
                     case InteractionType.LoveShuffler:
-                        if (ExtraData == "0")
+                        if (LegacyDataString == "0")
                         {
-                            ExtraData = Random.Shared.Next(1, 5).ToString();
+                            LegacyDataString = Random.Shared.Next(1, 5).ToString();
                             RequestUpdate(20, false);
                         }
-                        else if (ExtraData != "-1") ExtraData = "-1";
+                        else if (LegacyDataString != "-1") LegacyDataString = "-1";
                         UpdateState(false, true);
                         break;
                     case InteractionType.Alert:
-                        if (ExtraData == "1")
+                        if (LegacyDataString == "1")
                         {
-                            ExtraData = "0";
+                            LegacyDataString = "0";
                             UpdateState(false, true);
                         }
                         break;
                     case InteractionType.VendingMachine:
-                        if (ExtraData == "1")
+                        if (LegacyDataString == "1")
                         {
                             user = GetRoom().GetRoomUserManager().GetRoomUserByHabbo(InteractingUser);
                             if (user == null)
                                 break;
                             user.UnlockWalking();
-                            if (GetBaseItem().VendingIds.Count > 0)
+                            if (Definition.VendingIds.Count > 0)
                             {
-                                var randomDrink = GetBaseItem().VendingIds[Random.Shared.Next(0, GetBaseItem().VendingIds.Count)];
+                                var randomDrink = Definition.VendingIds[Random.Shared.Next(0, Definition.VendingIds.Count)];
                                 user.CarryItem(randomDrink);
                             }
                             InteractingUser = 0;
-                            ExtraData = "0";
+                            LegacyDataString = "0";
                             UpdateState(false, true);
                         }
                         break;
                     case InteractionType.Scoreboard:
                     {
-                        if (string.IsNullOrEmpty(ExtraData))
+                        if (string.IsNullOrEmpty(LegacyDataString))
                             break;
                         var seconds = 0;
                         try
                         {
-                            seconds = int.Parse(ExtraData);
+                            seconds = int.Parse(LegacyDataString);
                         }
                         catch { }
                         if (seconds > 0)
@@ -805,7 +732,7 @@ public class Item
                             {
                                 seconds--;
                                 InteractionCountHelper = 0;
-                                ExtraData = seconds.ToString();
+                                LegacyDataString = seconds.ToString();
                                 UpdateState();
                             }
                             else
@@ -818,12 +745,12 @@ public class Item
                     }
                     case InteractionType.Banzaicounter:
                     {
-                        if (string.IsNullOrEmpty(ExtraData))
+                        if (string.IsNullOrEmpty(LegacyDataString))
                             break;
                         var seconds = 0;
                         try
                         {
-                            seconds = int.Parse(ExtraData);
+                            seconds = int.Parse(LegacyDataString);
                         }
                         catch { }
                         if (seconds > 0)
@@ -834,7 +761,7 @@ public class Item
                                 InteractionCountHelper = 0;
                                 if (GetRoom().GetBanzai().IsBanzaiActive)
                                 {
-                                    ExtraData = seconds.ToString();
+                                    LegacyDataString = seconds.ToString();
                                     UpdateState();
                                 }
                                 else
@@ -853,7 +780,7 @@ public class Item
                     }
                     case InteractionType.Banzaitele:
                     {
-                        ExtraData = string.Empty;
+                        LegacyDataString = string.Empty;
                         UpdateState();
                         break;
                     }
@@ -868,29 +795,29 @@ public class Item
                                 {
                                     case Team.Blue:
                                     {
-                                        ExtraData = "11";
+                                        LegacyDataString = "11";
                                         break;
                                     }
                                     case Team.Green:
                                     {
-                                        ExtraData = "8";
+                                        LegacyDataString = "8";
                                         break;
                                     }
                                     case Team.Red:
                                     {
-                                        ExtraData = "5";
+                                        LegacyDataString = "5";
                                         break;
                                     }
                                     case Team.Yellow:
                                     {
-                                        ExtraData = "14";
+                                        LegacyDataString = "14";
                                         break;
                                     }
                                 }
                             }
                             else
                             {
-                                ExtraData = "";
+                                LegacyDataString = "";
                                 InteractionCountHelper++;
                             }
                             UpdateState();
@@ -920,7 +847,7 @@ public class Item
                     {
                         if (InteractingUser > 0)
                         {
-                            ExtraData = "11000";
+                            LegacyDataString = "11000";
                             UpdateState(false, true);
                             GetRoom().GetFreeze().OnFreezeTiles(this, FreezePowerUp);
                             InteractingUser = 0;
@@ -930,12 +857,12 @@ public class Item
                     }
                     case InteractionType.Counter:
                     {
-                        if (string.IsNullOrEmpty(ExtraData))
+                        if (string.IsNullOrEmpty(LegacyDataString))
                             break;
                         var seconds = 0;
                         try
                         {
-                            seconds = int.Parse(ExtraData);
+                            seconds = int.Parse(LegacyDataString);
                         }
                         catch { }
                         if (seconds > 0)
@@ -946,7 +873,7 @@ public class Item
                                 InteractionCountHelper = 0;
                                 if (GetRoom().GetSoccer().GameIsStarted)
                                 {
-                                    ExtraData = seconds.ToString();
+                                    LegacyDataString = seconds.ToString();
                                     UpdateState();
                                 }
                                 else
@@ -965,12 +892,12 @@ public class Item
                     }
                     case InteractionType.Freezetimer:
                     {
-                        if (string.IsNullOrEmpty(ExtraData))
+                        if (string.IsNullOrEmpty(LegacyDataString))
                             break;
                         var seconds = 0;
                         try
                         {
-                            seconds = int.Parse(ExtraData);
+                            seconds = int.Parse(LegacyDataString);
                         }
                         catch { }
                         if (seconds > 0)
@@ -981,7 +908,7 @@ public class Item
                                 InteractionCountHelper = 0;
                                 if (GetRoom().GetFreeze().GameIsStarted)
                                 {
-                                    ExtraData = seconds.ToString();
+                                    LegacyDataString = seconds.ToString();
                                     UpdateState();
                                 }
                                 else
@@ -1000,7 +927,7 @@ public class Item
                     }
                     case InteractionType.PressurePad:
                     {
-                        ExtraData = "1";
+                        LegacyDataString = "1";
                         UpdateState();
                         break;
                     }
@@ -1008,16 +935,16 @@ public class Item
                     case InteractionType.WiredTrigger:
                     case InteractionType.WiredCondition:
                     {
-                        if (ExtraData == "1")
+                        if (LegacyDataString == "1")
                         {
-                            ExtraData = "0";
+                            LegacyDataString = "0";
                             UpdateState(false, true);
                         }
                     }
                         break;
                     case InteractionType.Cannon:
                     {
-                        if (ExtraData != "1")
+                        if (LegacyDataString != "1")
                             break;
                         var targetStart = Coordinate;
                         var targetSquares = new List<Point>();
@@ -1098,7 +1025,7 @@ public class Item
                                 }
                             }
                         }
-                        ExtraData = "2";
+                        LegacyDataString = "2";
                         UpdateState(false, true);
                     }
                         break;
@@ -1164,17 +1091,7 @@ public class Item
     public void ResetBaseItem()
     {
         Definition = null;
-        Definition = GetBaseItem();
-    }
-
-    public ItemDefinition GetBaseItem()
-    {
-        if (Definition == null)
-        {
-            if (PlusEnvironment.GetGame().GetItemManager().GetItem(BaseItem, out var I))
-                Definition = I;
-        }
-        return Definition;
+        Definition = Definition;
     }
 
     public Room GetRoom()
@@ -1197,7 +1114,7 @@ public class Item
     {
         if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null)
             return;
-        if (GetBaseItem().InteractionType == InteractionType.Tent || GetBaseItem().InteractionType == InteractionType.TentSmall) GetRoom().AddUserToTent(Id, user);
+        if (Definition.InteractionType == InteractionType.Tent || Definition.InteractionType == InteractionType.TentSmall) GetRoom().AddUserToTent(Id, user);
         GetRoom().GetWired().TriggerEvent(WiredBoxType.TriggerWalkOnFurni, user.GetClient().GetHabbo(), this);
         user.LastItem = this;
     }
@@ -1206,7 +1123,7 @@ public class Item
     {
         if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null)
             return;
-        if (GetBaseItem().InteractionType == InteractionType.Tent || GetBaseItem().InteractionType == InteractionType.TentSmall)
+        if (Definition.InteractionType == InteractionType.Tent || Definition.InteractionType == InteractionType.TentSmall)
             GetRoom().RemoveUserFromTent(Id, user);
         GetRoom().GetWired().TriggerEvent(WiredBoxType.TriggerWalkOffFurni, user.GetClient().GetHabbo(), this);
     }

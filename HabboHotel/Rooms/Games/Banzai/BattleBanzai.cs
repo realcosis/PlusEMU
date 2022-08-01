@@ -14,10 +14,10 @@ namespace Plus.HabboHotel.Rooms.Games.Banzai;
 
 public class BattleBanzai
 {
-    private ConcurrentDictionary<int, Item> _banzaiTiles;
+    private ConcurrentDictionary<uint, Item> _banzaiTiles;
     private GameField _field;
     private byte[,] _floorMap;
-    private ConcurrentDictionary<int, Item> _pucks;
+    private ConcurrentDictionary<uint, Item> _pucks;
     private Room _room;
     private double _timestarted;
 
@@ -26,19 +26,19 @@ public class BattleBanzai
         _room = room;
         IsBanzaiActive = false;
         _timestarted = 0;
-        _pucks = new ConcurrentDictionary<int, Item>();
-        _banzaiTiles = new ConcurrentDictionary<int, Item>();
+        _pucks = new();
+        _banzaiTiles = new();
     }
 
     public bool IsBanzaiActive { get; private set; }
 
-    public void AddTile(Item item, int itemId)
+    public void AddTile(Item item, uint itemId)
     {
         if (!_banzaiTiles.ContainsKey(itemId))
             _banzaiTiles.TryAdd(itemId, item);
     }
 
-    public void RemoveTile(int itemId)
+    public void RemoveTile(uint itemId)
     {
         _banzaiTiles.TryRemove(itemId, out var item);
     }
@@ -176,7 +176,7 @@ public class BattleBanzai
         for (var i = 1; i < 5; i++) _room.GetGameManager().Points[i] = 0;
         foreach (var tile in _banzaiTiles.Values)
         {
-            tile.ExtraData = "1";
+            tile.LegacyDataString = "1";
             tile.Value = 0;
             tile.Team = Team.None;
             tile.UpdateState();
@@ -199,7 +199,7 @@ public class BattleBanzai
                 case InteractionType.Banzaiscorered:
                 case InteractionType.Banzaiscoreyellow:
                 {
-                    item.ExtraData = "0";
+                    item.LegacyDataString = "0";
                     item.UpdateState();
                     break;
                 }
@@ -226,7 +226,7 @@ public class BattleBanzai
             }
             else if (tile.Team == Team.None)
             {
-                tile.ExtraData = "0";
+                tile.LegacyDataString = "0";
                 tile.UpdateState();
             }
         }
@@ -291,7 +291,7 @@ public class BattleBanzai
         var oldRoomCoord = item.Coordinate;
         if (oldRoomCoord.X == newX && oldRoomCoord.Y == newY)
             return;
-        item.ExtraData = Convert.ToInt32(team).ToString();
+        item.LegacyDataString = Convert.ToInt32(team).ToString();
         item.UpdateNeeded = true;
         item.UpdateState();
         double newZ = _room.GetGameMap().Model.SqFloorHeight[newX, newY];
@@ -338,7 +338,7 @@ public class BattleBanzai
             }
         }
         var newColor = item.Value + Convert.ToInt32(item.Team) * 3 - 1;
-        item.ExtraData = newColor.ToString();
+        item.LegacyDataString = newColor.ToString();
     }
 
     private void HandleBanzaiTiles(Point coord, Team team, RoomUser user)
@@ -357,8 +357,8 @@ public class BattleBanzai
                 user.ApplyEffect(0);
                 continue;
             }
-            if (item.ExtraData.Equals("5") || item.ExtraData.Equals("8") || item.ExtraData.Equals("11") ||
-                item.ExtraData.Equals("14"))
+            if (item.LegacyDataString.Equals("5") || item.LegacyDataString.Equals("8") || item.LegacyDataString.Equals("11") ||
+                item.LegacyDataString.Equals("14"))
             {
                 i++;
                 continue;
@@ -366,8 +366,8 @@ public class BattleBanzai
             if (item.GetX != coord.X || item.GetY != coord.Y)
                 continue;
             SetTile(item, team, user);
-            if (item.ExtraData.Equals("5") || item.ExtraData.Equals("8") || item.ExtraData.Equals("11") ||
-                item.ExtraData.Equals("14"))
+            if (item.LegacyDataString.Equals("5") || item.LegacyDataString.Equals("8") || item.LegacyDataString.Equals("11") ||
+                item.LegacyDataString.Equals("14"))
                 i++;
             item.UpdateState(false, true);
         }
@@ -402,7 +402,7 @@ public class BattleBanzai
             item.Team = team;
         }
         var newColor = item.Value + Convert.ToInt32(item.Team) * 3 - 1;
-        item.ExtraData = newColor.ToString();
+        item.LegacyDataString = newColor.ToString();
     }
 
     public void Dispose()

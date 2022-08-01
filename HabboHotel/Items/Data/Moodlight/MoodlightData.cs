@@ -7,11 +7,11 @@ public class MoodlightData
 {
     public int CurrentPreset;
     public bool Enabled;
-    public int ItemId;
+    public uint ItemId;
 
     public List<MoodlightPreset> Presets;
 
-    public MoodlightData(int itemId)
+    public MoodlightData(uint itemId)
     {
         ItemId = itemId;
         DataRow row = null;

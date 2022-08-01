@@ -163,23 +163,23 @@ public class RoomUserManager
             {
                 if (session.GetHabbo().IsTeleporting)
                 {
-                    item.ExtraData = "2";
+                    item.LegacyDataString = "2";
                     item.UpdateState(false, true);
                     user.SetPos(item.GetX, item.GetY, item.GetZ);
                     user.SetRot(item.Rotation, false);
                     item.InteractingUser2 = session.GetHabbo().Id;
-                    item.ExtraData = "0";
+                    item.LegacyDataString = "0";
                     item.UpdateState(false, true);
                 }
                 else if (session.GetHabbo().IsHopping)
                 {
-                    item.ExtraData = "1";
+                    item.LegacyDataString = "1";
                     item.UpdateState(false, true);
                     user.SetPos(item.GetX, item.GetY, item.GetZ);
                     user.SetRot(item.Rotation, false);
                     user.AllowOverride = false;
                     item.InteractingUser2 = session.GetHabbo().Id;
-                    item.ExtraData = "2";
+                    item.LegacyDataString = "2";
                     item.UpdateState(false, true);
                 }
             }
@@ -1022,7 +1022,7 @@ public class RoomUserManager
                                 if (item.GetBaseItem().EffectId == 0 && user.GetClient().GetHabbo().Effects().CurrentEffect == 0)
                                     return;
                                 user.GetClient().GetHabbo().Effects().ApplyEffect(item.GetBaseItem().EffectId);
-                                item.ExtraData = "1";
+                                item.LegacyDataString = "1";
                                 item.UpdateState(false, true);
                                 item.RequestUpdate(2, true);
                             }

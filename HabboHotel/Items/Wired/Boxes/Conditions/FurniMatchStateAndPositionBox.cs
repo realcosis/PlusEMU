@@ -71,7 +71,7 @@ internal class FurniMatchStateAndPositionBox : IWiredItem
                 {
                     try
                     {
-                        if (ii.ExtraData != part[4])
+                        if (ii.LegacyDataString != part[4])
                             return false;
                     }
                     catch { }

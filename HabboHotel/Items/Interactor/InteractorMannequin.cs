@@ -11,9 +11,9 @@ internal class InteractorMannequin : IFurniInteractor
 
     public void OnTrigger(GameClient session, Item item, int request, bool hasRights)
     {
-        if (item.ExtraData.Contains(Convert.ToChar(5).ToString()))
+        if (item.LegacyDataString.Contains(Convert.ToChar(5).ToString()))
         {
-            var stuff = item.ExtraData.Split(Convert.ToChar(5));
+            var stuff = item.LegacyDataString.Split(Convert.ToChar(5));
             session.GetHabbo().Gender = stuff[0].ToUpper();
             var newFig = new Dictionary<string, string>();
             newFig.Clear();
