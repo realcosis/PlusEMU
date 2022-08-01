@@ -21,7 +21,7 @@ internal class DeleteRoomEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var roomId = packet.ReadInt();
+        var roomId = packet.ReadUInt();
         if (roomId == 0)
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(roomId, out var room))

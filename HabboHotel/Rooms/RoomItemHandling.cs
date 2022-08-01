@@ -175,12 +175,12 @@ public class RoomItemHandling
             else if (item.Definition.InteractionType == InteractionType.Moodlight)
             {
                 if (_room.MoodlightData == null)
-                    _room.MoodlightData = new MoodlightData(item.Id);
+                    _room.MoodlightData = new(item.Id);
             }
             else if (item.Definition.InteractionType == InteractionType.Toner)
             {
                 if (_room.TonerData == null)
-                    _room.TonerData = new TonerData(item.Id);
+                    _room.TonerData = new(item.Id);
             }
             else if (item.IsWired)
             {
@@ -253,7 +253,7 @@ public class RoomItemHandling
     private List<IServerPacket> CycleRollers()
     {
         if (!GotRollers)
-            return new List<IServerPacket>();
+            return new();
         if (_mRollerCycle >= _mRollerSpeed || _mRollerSpeed == 0)
         {
             _rollerItemsMoved.Clear();
@@ -311,7 +311,7 @@ public class RoomItemHandling
                 }
                 var rollerUser = _room.GetGameMap().GetRoomUsers(roller.Coordinate).FirstOrDefault();
                 if (rollerUser != null && !rollerUser.IsWalking && nextRollerClear &&
-                    _room.GetGameMap().IsValidStep(new Vector2D(roller.GetX, roller.GetY), new Vector2D(nextSquare.X, nextSquare.Y), true, false, true) &&
+                    _room.GetGameMap().IsValidStep(new(roller.GetX, roller.GetY), new(nextSquare.X, nextSquare.Y), true, false, true) &&
                     _room.GetGameMap().CanRollItemHere(nextSquare.X, nextSquare.Y) && _room.GetGameMap().GetFloorStatus(nextSquare) != 0)
                 {
                     if (!_rollerUsersMoved.Contains(rollerUser.HabboId))
@@ -331,7 +331,7 @@ public class RoomItemHandling
             return _rollerMessages;
         }
         _mRollerCycle++;
-        return new List<IServerPacket>();
+        return new();
     }
 
     public IServerPacket UpdateItemOnRoller(Item pItem, Point nextCoord, uint pRolledId, double nextZ)
@@ -344,7 +344,7 @@ public class RoomItemHandling
     public IServerPacket UpdateUserOnRoller(RoomUser pUser, Point pNextCoord, uint pRollerId, double nextZ)
     {
         var mMessage = new SlideObjectBundleComposer(pUser.X, pUser.Y, pUser.Z, pNextCoord.X, pNextCoord.Y, nextZ, pRollerId, pUser.VirtualId, 0);
-        _room.GetGameMap().UpdateUserMovement(new Point(pUser.X, pUser.Y), new Point(pNextCoord.X, pNextCoord.Y), pUser);
+        _room.GetGameMap().UpdateUserMovement(new(pUser.X, pUser.Y), new(pNextCoord.X, pNextCoord.Y), pUser);
         _room.GetGameMap().GameMap[pUser.X, pUser.Y] = 1;
         pUser.X = pNextCoord.X;
         pUser.Y = pNextCoord.Y;
@@ -460,7 +460,7 @@ public class RoomItemHandling
                 {
                     foreach (var tile in affectedTiles.Values)
                     {
-                        if (_room.GetGameMap().GetRoomUsers(new Point(tile.X, tile.Y)).Count > 0)
+                        if (_room.GetGameMap().GetRoomUsers(new(tile.X, tile.Y)).Count > 0)
                         {
                             if (needsReAdd)
                                 _room.GetGameMap().AddToMap(item);
@@ -576,7 +576,7 @@ public class RoomItemHandling
     }
 
 
-    public List<Item> GetFurniObjects(int x, int y) => _room.GetGameMap().GetCoordinatedItems(new Point(x, y));
+    public List<Item> GetFurniObjects(int x, int y) => _room.GetGameMap().GetCoordinatedItems(new(x, y));
 
     public bool SetFloorItem(Item item, int newX, int newY, double newZ)
     {
@@ -586,7 +586,7 @@ public class RoomItemHandling
         item.SetState(newX, newY, newZ, Gamemap.GetAffectedTiles(item.Definition.Length, item.Definition.Width, newX, newY, item.Rotation));
         if (item.Definition.InteractionType == InteractionType.Toner)
             if (_room.TonerData == null)
-                _room.TonerData = new TonerData(item.Id);
+                _room.TonerData = new(item.Id);
         UpdateItem(item);
         _room.GetGameMap().AddItemToMap(item);
         return true;
@@ -606,7 +606,7 @@ public class RoomItemHandling
         {
             if (_room.MoodlightData == null)
             {
-                _room.MoodlightData = new MoodlightData(item.Id);
+                _room.MoodlightData = new(item.Id);
                 item.LegacyDataString = _room.MoodlightData.GenerateExtraData();
             }
         }
@@ -754,7 +754,7 @@ public class RoomItemHandling
                     collection.AddRange(list4);
             }
             if (furniObjects == null)
-                furniObjects = new List<Item>();
+                furniObjects = new();
             list3.AddRange(furniObjects);
             list3.AddRange(collection);
             foreach (var i in list3.ToList())

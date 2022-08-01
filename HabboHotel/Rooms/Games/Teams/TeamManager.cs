@@ -15,10 +15,10 @@ public class TeamManager
     {
         var t = new TeamManager();
         t.Game = game;
-        t.BlueTeam = new List<RoomUser>();
-        t.RedTeam = new List<RoomUser>();
-        t.GreenTeam = new List<RoomUser>();
-        t.YellowTeam = new List<RoomUser>();
+        t.BlueTeam = new();
+        t.RedTeam = new();
+        t.GreenTeam = new();
+        t.YellowTeam = new();
         return t;
     }
 
@@ -62,7 +62,7 @@ public class TeamManager
                         item.UpdateState();
                         if (BlueTeam.Count == 5)
                         {
-                            foreach (var sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY))) sser.SqState = 0;
+                            foreach (var sser in room.GetGameMap().GetRoomUsers(new(item.GetX, item.GetY))) sser.SqState = 0;
                             room.GetGameMap().GameMap[item.GetX, item.GetY] = 0;
                         }
                     }
@@ -72,7 +72,7 @@ public class TeamManager
                         item.UpdateState();
                         if (RedTeam.Count == 5)
                         {
-                            foreach (var sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY))) sser.SqState = 0;
+                            foreach (var sser in room.GetGameMap().GetRoomUsers(new(item.GetX, item.GetY))) sser.SqState = 0;
                             room.GetGameMap().GameMap[item.GetX, item.GetY] = 0;
                         }
                     }
@@ -82,7 +82,7 @@ public class TeamManager
                         item.UpdateState();
                         if (GreenTeam.Count == 5)
                         {
-                            foreach (var sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
+                            foreach (var sser in room.GetGameMap().GetRoomUsers(new(item.GetX, item.GetY)))
                                 sser.SqState = 0;
                             room.GetGameMap().GameMap[item.GetX, item.GetY] = 0;
                         }
@@ -93,7 +93,7 @@ public class TeamManager
                         item.UpdateState();
                         if (YellowTeam.Count == 5)
                         {
-                            foreach (var sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
+                            foreach (var sser in room.GetGameMap().GetRoomUsers(new(item.GetX, item.GetY)))
                                 sser.SqState = 0;
                             room.GetGameMap().GameMap[item.GetX, item.GetY] = 0;
                         }
@@ -164,7 +164,7 @@ public class TeamManager
                         item.UpdateState();
                         if (room.GetGameMap().GameMap[item.GetX, item.GetY] == 0)
                         {
-                            foreach (var sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
+                            foreach (var sser in room.GetGameMap().GetRoomUsers(new(item.GetX, item.GetY)))
                                 sser.SqState = 1;
                             room.GetGameMap().GameMap[item.GetX, item.GetY] = 1;
                         }
@@ -175,7 +175,7 @@ public class TeamManager
                         item.UpdateState();
                         if (room.GetGameMap().GameMap[item.GetX, item.GetY] == 0)
                         {
-                            foreach (var sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
+                            foreach (var sser in room.GetGameMap().GetRoomUsers(new(item.GetX, item.GetY)))
                                 sser.SqState = 1;
                             room.GetGameMap().GameMap[item.GetX, item.GetY] = 1;
                         }
@@ -186,7 +186,7 @@ public class TeamManager
                         item.UpdateState();
                         if (room.GetGameMap().GameMap[item.GetX, item.GetY] == 0)
                         {
-                            foreach (var sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
+                            foreach (var sser in room.GetGameMap().GetRoomUsers(new(item.GetX, item.GetY)))
                                 sser.SqState = 1;
                             room.GetGameMap().GameMap[item.GetX, item.GetY] = 1;
                         }
@@ -197,7 +197,7 @@ public class TeamManager
                         item.UpdateState();
                         if (room.GetGameMap().GameMap[item.GetX, item.GetY] == 0)
                         {
-                            foreach (var sser in room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY)))
+                            foreach (var sser in room.GetGameMap().GetRoomUsers(new(item.GetX, item.GetY)))
                                 sser.SqState = 1;
                             room.GetGameMap().GameMap[item.GetX, item.GetY] = 1;
                         }

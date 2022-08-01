@@ -64,7 +64,7 @@ public class InventoryComponent
         return null;
     }
 
-    public void SendNewItems(int id)
+    public void SendNewItems(uint id)
     {
         Client.Send(new FurniListNotificationComposer(id, 1));
     }

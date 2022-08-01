@@ -41,7 +41,7 @@ internal class KickPetsCommand : IChatCommand
                 {
                     rider.RidingHorse = false;
                     rider.ApplyEffect(-1);
-                    rider.MoveTo(new Point(rider.X + 1, rider.Y + 1));
+                    rider.MoveTo(new(rider.X + 1, rider.Y + 1));
                 }
                 else
                     bot.RidingHorse = false;

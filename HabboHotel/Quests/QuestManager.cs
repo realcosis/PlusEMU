@@ -23,8 +23,8 @@ public class QuestManager : IQuestManager
     {
         _database = database;
         _messengerDataLoader = messengerDataLoader;
-        _quests = new Dictionary<int, Quest>();
-        _questCount = new Dictionary<string, int>();
+        _quests = new();
+        _questCount = new();
     }
 
     public void Init()
@@ -50,7 +50,7 @@ public class QuestManager : IQuestManager
                     var rewardtype = Convert.ToInt32(dRow["reward_type"].ToString());
                     var time = Convert.ToInt32(dRow["timestamp_unlock"]);
                     var locked = Convert.ToInt32(dRow["timestamp_lock"]);
-                    _quests.Add(id, new Quest(id, category, num, (QuestType)type, goalData, name, reward, dataBit, rewardtype, time, locked));
+                    _quests.Add(id, new(id, category, num, (QuestType)type, goalData, name, reward, dataBit, rewardtype, time, locked));
                     AddToCounter(category);
                 }
             }

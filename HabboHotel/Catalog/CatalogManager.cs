@@ -30,12 +30,12 @@ public class CatalogManager : ICatalogManager
         _petRaceManager = petRaceManager;
         _voucherManager = voucherManager;
         _clothingManager = clothingManager;
-        _itemOffers = new Dictionary<int, int>();
-        _pages = new Dictionary<int, CatalogPage>();
-        _botPresets = new Dictionary<int, CatalogBot>();
-        _items = new Dictionary<int, Dictionary<int, CatalogItem>>();
-        _deals = new Dictionary<int, CatalogDeal>();
-        _promotions = new Dictionary<int, CatalogPromotion>();
+        _itemOffers = new();
+        _pages = new();
+        _botPresets = new();
+        _items = new();
+        _deals = new();
+        _promotions = new();
     }
 
     public Dictionary<int, int> ItemOffers => _itemOffers;
@@ -75,10 +75,10 @@ public class CatalogManager : ICatalogManager
                         continue;
                     }
                     if (!_items.ContainsKey(pageId))
-                        _items[pageId] = new Dictionary<int, CatalogItem>();
+                        _items[pageId] = new();
                     if (offerId != -1 && !_itemOffers.ContainsKey(offerId))
                         _itemOffers.Add(offerId, pageId);
-                    _items[pageId].Add(Convert.ToInt32(row["id"]), new CatalogItem(Convert.ToInt32(row["id"]), Convert.ToInt32(row["item_id"]),
+                    _items[pageId].Add(Convert.ToInt32(row["id"]), new(Convert.ToInt32(row["id"]), Convert.ToInt32(row["item_id"]),
                         data, Convert.ToString(row["catalog_name"]), Convert.ToInt32(row["page_id"]), Convert.ToInt32(row["cost_credits"]), Convert.ToInt32(row["cost_pixels"]),
                         Convert.ToInt32(row["cost_diamonds"]),
                         Convert.ToInt32(row["amount"]), Convert.ToInt32(row["limited_sells"]), Convert.ToInt32(row["limited_stack"]), ConvertExtensions.EnumToBool(row["offer_active"].ToString()),
@@ -107,11 +107,11 @@ public class CatalogManager : ICatalogManager
             {
                 foreach (DataRow row in catalogPages.Rows)
                 {
-                    _pages.Add(Convert.ToInt32(row["id"]), new CatalogPage(Convert.ToInt32(row["id"]), Convert.ToInt32(row["parent_id"]), row["enabled"].ToString(), Convert.ToString(row["caption"]),
+                    _pages.Add(Convert.ToInt32(row["id"]), new(Convert.ToInt32(row["id"]), Convert.ToInt32(row["parent_id"]), row["enabled"].ToString(), Convert.ToString(row["caption"]),
                         Convert.ToString(row["page_link"]), Convert.ToInt32(row["icon_image"]), Convert.ToInt32(row["min_rank"]), Convert.ToInt32(row["min_vip"]), row["visible"].ToString(),
                         Convert.ToString(row["page_layout"]),
                         Convert.ToString(row["page_strings_1"]), Convert.ToString(row["page_strings_2"]),
-                        _items.ContainsKey(Convert.ToInt32(row["id"])) ? _items[Convert.ToInt32(row["id"])] : new Dictionary<int, CatalogItem>(), ref _itemOffers));
+                        _items.ContainsKey(Convert.ToInt32(row["id"])) ? _items[Convert.ToInt32(row["id"])] : new(), ref _itemOffers));
                 }
             }
             dbClient.SetQuery("SELECT `id`,`name`,`figure`,`motto`,`gender`,`ai_type` FROM `catalog_bot_presets`");
@@ -121,7 +121,7 @@ public class CatalogManager : ICatalogManager
                 foreach (DataRow row in bots.Rows)
                 {
                     _botPresets.Add(Convert.ToInt32(row[0]),
-                        new CatalogBot(Convert.ToInt32(row[0]), Convert.ToString(row[1]), Convert.ToString(row[2]), Convert.ToString(row[3]), Convert.ToString(row[4]), Convert.ToString(row[5])));
+                        new(Convert.ToInt32(row[0]), Convert.ToString(row[1]), Convert.ToString(row[2]), Convert.ToString(row[3]), Convert.ToString(row[4]), Convert.ToString(row[5])));
                 }
             }
             dbClient.SetQuery("SELECT * FROM `catalog_promotions`");
@@ -133,7 +133,7 @@ public class CatalogManager : ICatalogManager
                     if (!_promotions.ContainsKey(Convert.ToInt32(row["id"])))
                     {
                         _promotions.Add(Convert.ToInt32(row["id"]),
-                            new CatalogPromotion(Convert.ToInt32(row["id"]), Convert.ToString(row["title"]), Convert.ToString(row["image"]), Convert.ToInt32(row["unknown"]),
+                            new(Convert.ToInt32(row["id"]), Convert.ToString(row["title"]), Convert.ToString(row["image"]), Convert.ToInt32(row["unknown"]),
                                 Convert.ToString(row["page_link"]), Convert.ToInt32(row["parent_id"])));
                     }
                 }

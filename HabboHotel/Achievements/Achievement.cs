@@ -10,7 +10,7 @@ public class Achievement
         GroupName = groupName;
         Category = category;
         GameId = gameId;
-        Levels = new Dictionary<int, AchievementLevel>();
+        Levels = new();
     }
 
     public int Id { get; }

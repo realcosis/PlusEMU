@@ -27,10 +27,10 @@ public class InteractorPuzzleBox : IFurniInteractor
             }
             var room = item.GetRoom();
             var newPoint = new Point(0, 0);
-            if (user.RotBody == 4) newPoint = new Point(item.GetX, item.GetY + 1);
-            if (user.RotBody == 0) newPoint = new Point(item.GetX, item.GetY - 1);
-            if (user.RotBody == 6) newPoint = new Point(item.GetX - 1, item.GetY);
-            if (user.RotBody == 2) newPoint = new Point(item.GetX + 1, item.GetY);
+            if (user.RotBody == 4) newPoint = new(item.GetX, item.GetY + 1);
+            if (user.RotBody == 0) newPoint = new(item.GetX, item.GetY - 1);
+            if (user.RotBody == 6) newPoint = new(item.GetX - 1, item.GetY);
+            if (user.RotBody == 2) newPoint = new(item.GetX + 1, item.GetY);
             if (room.GetGameMap().ValidTile(newPoint.X, newPoint.Y) &&
                 room.GetGameMap().ItemCanBePlaced(newPoint.X, newPoint.Y) &&
                 room.GetGameMap().CanRollItemHere(newPoint.X, newPoint.Y))

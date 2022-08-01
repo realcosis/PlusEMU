@@ -43,7 +43,7 @@ public class RoomManager : IRoomManager
                         continue;
                     if (room.ProcessTask == null || room.ProcessTask.IsCompleted)
                     {
-                        room.ProcessTask = new Task(room.ProcessRoom);
+                        room.ProcessTask = new(room.ProcessRoom);
                         room.ProcessTask.Start();
                         room.IsLagging = 0;
                     }
@@ -77,7 +77,7 @@ public class RoomManager : IRoomManager
         foreach (DataRow row in data.Rows)
         {
             var model = Convert.ToString(row["id"]);
-            _roomModels.Add(model, new RoomModel(model, Convert.ToInt32(row["door_x"]), Convert.ToInt32(row["door_y"]), (double)row["door_z"], Convert.ToInt32(row["door_dir"]),
+            _roomModels.Add(model, new(model, Convert.ToInt32(row["door_x"]), Convert.ToInt32(row["door_y"]), (double)row["door_z"], Convert.ToInt32(row["door_dir"]),
                 Convert.ToString(row["heightmap"]), ConvertExtensions.EnumToBool(row["club_only"].ToString()), Convert.ToInt32(row["wall_height"]), false));
         }
     }
@@ -94,7 +94,7 @@ public class RoomManager : IRoomManager
         var model = Convert.ToString(row["id"]);
         if (!_roomModels.ContainsKey(model))
         {
-            _roomModels.Add(model, new RoomModel(model, Convert.ToInt32(row["door_x"]), Convert.ToInt32(row["door_y"]), Convert.ToDouble(row["door_z"]), Convert.ToInt32(row["door_dir"]),
+            _roomModels.Add(model, new(model, Convert.ToInt32(row["door_x"]), Convert.ToInt32(row["door_y"]), Convert.ToDouble(row["door_z"]), Convert.ToInt32(row["door_dir"]),
                 Convert.ToString(row["heightmap"]), ConvertExtensions.EnumToBool(row["club_only"].ToString()), Convert.ToInt32(row["wall_height"]), true));
         }
         return true;

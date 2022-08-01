@@ -17,10 +17,10 @@ public class GameManager
     {
         _room = room;
         Points = new int[5];
-        _redTeamItems = new ConcurrentDictionary<int, Item>();
-        _blueTeamItems = new ConcurrentDictionary<int, Item>();
-        _greenTeamItems = new ConcurrentDictionary<int, Item>();
-        _yellowTeamItems = new ConcurrentDictionary<int, Item>();
+        _redTeamItems = new();
+        _blueTeamItems = new();
+        _greenTeamItems = new();
+        _yellowTeamItems = new();
     }
 
     public int[] Points { get; set; }
@@ -94,7 +94,7 @@ public class GameManager
         switch (team)
         {
             default:
-                return new ConcurrentDictionary<int, Item>();
+                return new();
             case Team.Blue:
                 return _blueTeamItems;
             case Team.Green:
@@ -171,7 +171,7 @@ public class GameManager
             || type == InteractionType.Banzaigateblue || type == InteractionType.Banzaigatered ||
             type == InteractionType.Banzaigategreen || type == InteractionType.Banzaigateyellow)
         {
-            foreach (var user in _room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY))) user.SqState = 0;
+            foreach (var user in _room.GetGameMap().GetRoomUsers(new(item.GetX, item.GetY))) user.SqState = 0;
             _room.GetGameMap().GameMap[item.GetX, item.GetY] = 0;
         }
     }
@@ -184,7 +184,7 @@ public class GameManager
             || type == InteractionType.Banzaigateblue || type == InteractionType.Banzaigatered ||
             type == InteractionType.Banzaigategreen || type == InteractionType.Banzaigateyellow)
         {
-            foreach (var user in _room.GetGameMap().GetRoomUsers(new Point(item.GetX, item.GetY))) user.SqState = 1;
+            foreach (var user in _room.GetGameMap().GetRoomUsers(new(item.GetX, item.GetY))) user.SqState = 1;
             _room.GetGameMap().GameMap[item.GetX, item.GetY] = 1;
         }
     }

@@ -9,8 +9,8 @@ public sealed class ChatlogManager : IChatlogManager
 
     public ChatlogManager()
     {
-        _chatlogs = new List<ChatlogEntry>();
-        _lock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
+        _chatlogs = new();
+        _lock = new(LockRecursionPolicy.NoRecursion);
     }
 
     public void StoreChatlog(ChatlogEntry entry)

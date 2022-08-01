@@ -15,7 +15,7 @@ public class BotManager : IBotManager
 
     public BotManager(IDatabase database)
     {
-        _responses = new List<BotResponse>();
+        _responses = new();
         _database = database;
     }
 
@@ -30,7 +30,7 @@ public class BotManager : IBotManager
         {
             foreach (DataRow row in data.Rows)
             {
-                _responses.Add(new BotResponse(Convert.ToString(row["bot_ai"]), Convert.ToString(row["chat_keywords"]), Convert.ToString(row["response_text"]), row["response_mode"].ToString(),
+                _responses.Add(new(Convert.ToString(row["bot_ai"]), Convert.ToString(row["chat_keywords"]), Convert.ToString(row["response_text"]), row["response_mode"].ToString(),
                     Convert.ToString(row["response_beverage"])));
             }
         }

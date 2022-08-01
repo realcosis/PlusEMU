@@ -20,7 +20,7 @@ namespace Plus.Plugins
         public PluginLoadContext(string pluginPath)
         {
             _pluginPath = pluginPath;
-            _resolver = new AssemblyDependencyResolver(pluginPath);
+            _resolver = new(pluginPath);
             _assemblies = Directory.GetFiles(pluginPath).Where(f => f.EndsWith(".dll")).Select(f =>
             {
                 try

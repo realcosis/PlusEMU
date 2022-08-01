@@ -182,7 +182,7 @@ public class RoomData
         {
             if (Convert.ToDouble(getPromotion["timestamp_expire"]) > UnixTimestamp.GetNow())
             {
-                Promotion = new RoomPromotion(Convert.ToString(getPromotion["title"]), Convert.ToString(getPromotion["description"]), Convert.ToDouble(getPromotion["timestamp_start"]),
+                Promotion = new(Convert.ToString(getPromotion["title"]), Convert.ToString(getPromotion["description"]), Convert.ToDouble(getPromotion["timestamp_start"]),
                     Convert.ToDouble(getPromotion["timestamp_expire"]), Convert.ToInt32(getPromotion["category_id"]));
             }
         }

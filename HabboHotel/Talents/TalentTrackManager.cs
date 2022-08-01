@@ -11,7 +11,7 @@ public class TalentTrackManager : ITalentTrackManager
 
     public TalentTrackManager()
     {
-        _citizenshipLevels = new Dictionary<int, TalentTrackLevel>();
+        _citizenshipLevels = new();
     }
 
     public void Init()
@@ -27,7 +27,7 @@ public class TalentTrackManager : ITalentTrackManager
             foreach (DataRow row in data.Rows)
             {
                 _citizenshipLevels.Add(Convert.ToInt32(row["level"]),
-                    new TalentTrackLevel(Convert.ToString(row["type"]), Convert.ToInt32(row["level"]), Convert.ToString(row["data_actions"]), Convert.ToString(row["data_gifts"])));
+                    new(Convert.ToString(row["type"]), Convert.ToInt32(row["level"]), Convert.ToString(row["data_actions"]), Convert.ToString(row["data_gifts"])));
             }
         }
         _log.Info("Loaded " + _citizenshipLevels.Count + " talent track levels");

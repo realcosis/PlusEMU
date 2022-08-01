@@ -42,7 +42,7 @@ public class DiffieHellman
             }
             var bytes = new byte[Bitlength / 8];
             Randomizer.NextBytes(bytes);
-            _privateKey = new BigInteger(bytes);
+            _privateKey = new(bytes);
             if (Generator > Prime)
             {
                 var temp = Prime;

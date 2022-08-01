@@ -32,7 +32,7 @@ public sealed class ClothingComponent
             {
                 foreach (DataRow row in getClothing.Rows)
                 {
-                    if (_allClothing.TryAdd(Convert.ToInt32(row["part_id"]), new ClothingParts(Convert.ToInt32(row["id"]), Convert.ToInt32(row["part_id"]), Convert.ToString(row["part"]))))
+                    if (_allClothing.TryAdd(Convert.ToInt32(row["part_id"]), new(Convert.ToInt32(row["id"]), Convert.ToInt32(row["part_id"]), Convert.ToString(row["part"]))))
                     {
                         //umm?
                     }
@@ -58,7 +58,7 @@ public sealed class ClothingComponent
                     dbClient.AddParameter("Part", clothingName);
                     newId = Convert.ToInt32(dbClient.InsertQuery());
                 }
-                _allClothing.TryAdd(partId, new ClothingParts(newId, partId, clothingName));
+                _allClothing.TryAdd(partId, new(newId, partId, clothingName));
             }
         }
     }

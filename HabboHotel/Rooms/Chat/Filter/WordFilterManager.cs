@@ -10,7 +10,7 @@ public sealed class WordFilterManager : IWordFilterManager
 
     public WordFilterManager()
     {
-        _filteredWords = new List<WordFilter>();
+        _filteredWords = new();
     }
 
     public void Init()
@@ -27,7 +27,7 @@ public sealed class WordFilterManager : IWordFilterManager
             {
                 var isStrict = ConvertExtensions.EnumToBool(row["strict"].ToString());
                 var isBannable = ConvertExtensions.EnumToBool(row["bannable"].ToString());
-                _filteredWords.Add(new WordFilter(
+                _filteredWords.Add(new(
                     row["word"].ToString(), 
                     row["replacement"].ToString(), 
                     isStrict,

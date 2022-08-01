@@ -43,7 +43,7 @@ public sealed class ProcessComponent : IProcessComponent
     /// </summary>
     public void Init()
     {
-        _timer = new Timer(Run, null, _runtimeInSec * 1000, _runtimeInSec * 1000);
+        _timer = new(Run, null, _runtimeInSec * 1000, _runtimeInSec * 1000);
     }
 
     /// <summary>

@@ -16,7 +16,7 @@ internal class MatchPositionBox : IWiredItem, IWiredCycle
     {
         Instance = instance;
         Item = item;
-        SetItems = new ConcurrentDictionary<int, Item>();
+        SetItems = new();
         TickCount = Delay;
         _requested = false;
     }
@@ -46,7 +46,7 @@ internal class MatchPositionBox : IWiredItem, IWiredCycle
                 if (string.IsNullOrEmpty(I))
                     continue;
                 var itemId = Convert.ToInt32(I.Split(':')[0]);
-                var ii = Instance.GetRoomItemHandler().GetItem(Convert.ToInt32(itemId));
+                var ii = Instance.GetRoomItemHandler().GetItem(Convert.ToUInt32(itemId));
                 if (ii == null)
                     continue;
                 var partsString = I.Split(':');
@@ -103,7 +103,7 @@ internal class MatchPositionBox : IWiredItem, IWiredCycle
     public Item Item { get; set; }
     public WiredBoxType Type => WiredBoxType.EffectMatchPosition;
 
-    public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public ConcurrentDictionary<uint, Item> SetItems { get; set; }
 
     public string StringData { get; set; }
 
@@ -122,7 +122,7 @@ internal class MatchPositionBox : IWiredItem, IWiredCycle
         var furniCount = packet.ReadInt();
         for (var i = 0; i < furniCount; i++)
         {
-            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadInt());
+            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadUInt());
             if (selectedItem != null)
                 SetItems.TryAdd(selectedItem.Id, selectedItem);
         }

@@ -13,7 +13,7 @@ public class PointField
 
     public PointField(byte forValue)
     {
-        _pointList = new List<Point>();
+        _pointList = new();
         ForValue = forValue;
     }
 

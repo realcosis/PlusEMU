@@ -11,7 +11,7 @@ public sealed class ChatStyleManager : IChatStyleManager
 
     public ChatStyleManager()
     {
-        _styles = new Dictionary<int, ChatStyle>();
+        _styles = new();
     }
 
     public void Init()
@@ -30,7 +30,7 @@ public sealed class ChatStyleManager : IChatStyleManager
                     try
                     {
                         if (!_styles.ContainsKey(Convert.ToInt32(row["id"])))
-                            _styles.Add(Convert.ToInt32(row["id"]), new ChatStyle(Convert.ToInt32(row["id"]), Convert.ToString(row["name"]), Convert.ToString(row["required_right"])));
+                            _styles.Add(Convert.ToInt32(row["id"]), new(Convert.ToInt32(row["id"]), Convert.ToString(row["name"]), Convert.ToString(row["required_right"])));
                     }
                     catch (Exception ex)
                     {

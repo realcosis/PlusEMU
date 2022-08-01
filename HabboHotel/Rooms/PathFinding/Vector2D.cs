@@ -37,7 +37,7 @@ public class Vector2D
 
     public override string ToString() => X + ", " + Y;
 
-    public static Vector2D operator +(Vector2D one, Vector2D two) => new Vector2D(one.X + two.X, one.Y + two.Y);
+    public static Vector2D operator +(Vector2D one, Vector2D two) => new(one.X + two.X, one.Y + two.Y);
 
-    public static Vector2D operator -(Vector2D one, Vector2D two) => new Vector2D(one.X - two.X, one.Y - two.Y);
+    public static Vector2D operator -(Vector2D one, Vector2D two) => new(one.X - two.X, one.Y - two.Y);
 }

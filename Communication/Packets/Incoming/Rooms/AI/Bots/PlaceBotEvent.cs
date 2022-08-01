@@ -74,14 +74,14 @@ internal class PlaceBotEvent : IPacketEvent
             dbClient.SetQuery("SELECT `text` FROM `bots_speech` WHERE `bot_id` = @BotId");
             dbClient.AddParameter("BotId", bot.Id);
             var botSpeech = dbClient.GetTable();
-            foreach (DataRow speech in botSpeech.Rows) botSpeechList.Add(new RandomSpeech(Convert.ToString(speech["text"]), bot.Id));
+            foreach (DataRow speech in botSpeech.Rows) botSpeechList.Add(new(Convert.ToString(speech["text"]), bot.Id));
         }
         var botUser = room.GetRoomUserManager().DeployBot(
-            new RoomBot(bot.Id, session.GetHabbo().CurrentRoomId, Convert.ToString(getData["ai_type"]), Convert.ToString(getData["walk_mode"]), bot.Name, "", bot.Figure, x, y, 0, 4, 0, 0, 0, 0,
+            new(bot.Id, session.GetHabbo().CurrentRoomId, Convert.ToString(getData["ai_type"]), Convert.ToString(getData["walk_mode"]), bot.Name, "", bot.Figure, x, y, 0, 4, 0, 0, 0, 0,
                 ref botSpeechList, "", 0, bot.OwnerId, ConvertExtensions.EnumToBool(getData["automatic_chat"].ToString()), Convert.ToInt32(getData["speaking_interval"]),
                 ConvertExtensions.EnumToBool(getData["mix_sentences"].ToString()), Convert.ToInt32(getData["chat_bubble"])), null);
         botUser.Chat("Hello!");
-        room.GetGameMap().UpdateUserMovement(new Point(x, y), new Point(x, y), botUser);
+        room.GetGameMap().UpdateUserMovement(new(x, y), new(x, y), botUser);
         if (!session.GetHabbo().Inventory.Bots.RemoveBot(botId))
         {
             Console.WriteLine("Error whilst removing Bot: " + bot.Id);

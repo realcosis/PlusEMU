@@ -99,7 +99,7 @@ public class Item
             {
                 Coordinate
             };
-            foreach (var tile in GetAffectedTiles.Values) toReturn.Add(new Point(tile.X, tile.Y));
+            foreach (var tile in GetAffectedTiles.Values) toReturn.Add(new(tile.X, tile.Y));
             return toReturn;
         }
     }
@@ -555,7 +555,7 @@ public class Item
 
                                                     // Set secondary interacting user
                                                     item.InteractingUser2 = InteractingUser;
-                                                    GetRoom().GetGameMap().RemoveUserFromMap(user, new Point(GetX, GetY));
+                                                    GetRoom().GetGameMap().RemoveUserFromMap(user, new(GetX, GetY));
                                                     InteractingUser = 0;
                                                 }
                                             }
@@ -952,7 +952,7 @@ public class Item
                         {
                             case 0:
                             {
-                                targetStart = new Point(GetX - 1, GetY);
+                                targetStart = new(GetX - 1, GetY);
                                 if (!targetSquares.Contains(targetStart))
                                     targetSquares.Add(targetStart);
                                 for (var I = 1; I <= 3; I++)
@@ -965,7 +965,7 @@ public class Item
                             }
                             case 2:
                             {
-                                targetStart = new Point(GetX, GetY - 1);
+                                targetStart = new(GetX, GetY - 1);
                                 if (!targetSquares.Contains(targetStart))
                                     targetSquares.Add(targetStart);
                                 for (var I = 1; I <= 3; I++)
@@ -978,7 +978,7 @@ public class Item
                             }
                             case 4:
                             {
-                                targetStart = new Point(GetX + 2, GetY);
+                                targetStart = new(GetX + 2, GetY);
                                 if (!targetSquares.Contains(targetStart))
                                     targetSquares.Add(targetStart);
                                 for (var I = 1; I <= 3; I++)
@@ -991,7 +991,7 @@ public class Item
                             }
                             case 6:
                             {
-                                targetStart = new Point(GetX, GetY + 2);
+                                targetStart = new(GetX, GetY + 2);
                                 if (!targetSquares.Contains(targetStart))
                                     targetSquares.Add(targetStart);
                                 for (var I = 1; I <= 3; I++)
@@ -1043,7 +1043,7 @@ public class Item
         var list = new List<KeyValuePair<int, string>>();
         // Add all strings from array
         // Add new random int each time
-        foreach (var s in arr) list.Add(new KeyValuePair<int, string>(Random.Shared.Next(), s));
+        foreach (var s in arr) list.Add(new(Random.Shared.Next(), s));
         // Sort the list by the random number
         var sorted = from item in list
             orderby item.Key

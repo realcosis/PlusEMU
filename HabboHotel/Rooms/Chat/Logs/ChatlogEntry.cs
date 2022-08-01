@@ -14,9 +14,9 @@ public sealed class ChatlogEntry
         Message = message;
         Timestamp = timestamp;
         if (player != null)
-            _playerReference = new WeakReference(player);
+            _playerReference = new(player);
         if (instance != null)
-            _roomReference = new WeakReference(instance);
+            _roomReference = new(instance);
     }
 
     public int PlayerId { get; }

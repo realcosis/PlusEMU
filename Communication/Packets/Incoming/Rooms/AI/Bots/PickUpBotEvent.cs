@@ -38,8 +38,8 @@ internal class PickUpBotEvent : IPacketEvent
             dbClient.AddParameter("id", botId);
             dbClient.RunQuery();
         }
-        room.GetGameMap().RemoveUserFromMap(botUser, new Point(botUser.X, botUser.Y));
-        session.GetHabbo().Inventory.Bots.AddBot(new Bot(Convert.ToInt32(botUser.BotData.Id), Convert.ToInt32(botUser.BotData.OwnerId), botUser.BotData.Name, botUser.BotData.Motto,
+        room.GetGameMap().RemoveUserFromMap(botUser, new(botUser.X, botUser.Y));
+        session.GetHabbo().Inventory.Bots.AddBot(new(Convert.ToInt32(botUser.BotData.Id), Convert.ToInt32(botUser.BotData.OwnerId), botUser.BotData.Name, botUser.BotData.Motto,
             botUser.BotData.Look, botUser.BotData.Gender));
         session.Send(new BotInventoryComposer(session.GetHabbo().Inventory.Bots.Bots.Values.ToList()));
         room.GetRoomUserManager().RemoveBot(botUser.VirtualId, false);

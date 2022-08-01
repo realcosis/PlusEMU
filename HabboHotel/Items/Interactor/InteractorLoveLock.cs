@@ -27,12 +27,12 @@ public class InteractorLoveLock : IFurniInteractor
                 switch (item.Rotation)
                 {
                     case 2:
-                        pointOne = new Point(item.GetX, item.GetY + 1);
-                        pointTwo = new Point(item.GetX, item.GetY - 1);
+                        pointOne = new(item.GetX, item.GetY + 1);
+                        pointTwo = new(item.GetX, item.GetY - 1);
                         break;
                     case 4:
-                        pointOne = new Point(item.GetX - 1, item.GetY);
-                        pointTwo = new Point(item.GetX + 1, item.GetY);
+                        pointOne = new(item.GetX - 1, item.GetY);
+                        pointTwo = new(item.GetX + 1, item.GetY);
                         break;
                     default:
                         return;

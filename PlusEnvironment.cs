@@ -116,7 +116,7 @@ public class PlusEnvironment : IPlusEnvironment
             _figureManager.Init();
 
             //Have our encryption ready.
-            HabboEncryptionV2.Initialize(new RsaKeys());
+            HabboEncryptionV2.Initialize(new());
 
             //Make sure Rcon is connected before we allow clients to Connect.
             _rcon.Init(_rconConfiguration.Hostname, _rconConfiguration.Port, _rconConfiguration.AllowedAddresses);

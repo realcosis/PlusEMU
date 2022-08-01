@@ -30,7 +30,7 @@ public class MoodlightData
         }
         Enabled = PlusEnvironment.EnumToBool(row["enabled"].ToString());
         CurrentPreset = Convert.ToInt32(row["current_preset"]);
-        Presets = new List<MoodlightPreset>();
+        Presets = new();
         Presets.Add(GeneratePreset(Convert.ToString(row["preset_one"])));
         Presets.Add(GeneratePreset(Convert.ToString(row["preset_two"])));
         Presets.Add(GeneratePreset(Convert.ToString(row["preset_three"])));
@@ -82,14 +82,14 @@ public class MoodlightData
     {
         var bits = data.Split(',');
         if (!IsValidColor(bits[0])) bits[0] = "#000000";
-        return new MoodlightPreset(bits[0], int.Parse(bits[1]), PlusEnvironment.EnumToBool(bits[2]));
+        return new(bits[0], int.Parse(bits[1]), PlusEnvironment.EnumToBool(bits[2]));
     }
 
     public MoodlightPreset GetPreset(int i)
     {
         i--;
         if (Presets[i] != null) return Presets[i];
-        return new MoodlightPreset("#000000", 255, false);
+        return new("#000000", 255, false);
     }
 
     public static bool IsValidColor(string colorCode)

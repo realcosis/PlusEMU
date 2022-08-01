@@ -40,7 +40,7 @@ public sealed class ModerationManager : IModerationManager
             var result = new Dictionary<string, List<ModerationPresetActions>>();
             foreach (var category in _moderationCfhTopics.ToList())
             {
-                result.Add(category.Value, new List<ModerationPresetActions>());
+                result.Add(category.Value, new());
                 if (_moderationCfhTopicActions.ContainsKey(category.Key))
                     foreach (var data in _moderationCfhTopicActions[category.Key])
                         result[category.Value].Add(data);
@@ -105,8 +105,8 @@ public sealed class ModerationManager : IModerationManager
                 foreach (DataRow row in moderationTopicsActions.Rows)
                 {
                     var parentId = Convert.ToInt32(row["parent_id"]);
-                    if (!_moderationCfhTopicActions.ContainsKey(parentId)) _moderationCfhTopicActions.Add(parentId, new List<ModerationPresetActions>());
-                    _moderationCfhTopicActions[parentId].Add(new ModerationPresetActions(Convert.ToInt32(row["id"]), Convert.ToInt32(row["parent_id"]), Convert.ToString(row["type"]),
+                    if (!_moderationCfhTopicActions.ContainsKey(parentId)) _moderationCfhTopicActions.Add(parentId, new());
+                    _moderationCfhTopicActions[parentId].Add(new(Convert.ToInt32(row["id"]), Convert.ToInt32(row["parent_id"]), Convert.ToString(row["type"]),
                         Convert.ToString(row["caption"]), Convert.ToString(row["message_text"]),
                         Convert.ToInt32(row["mute_time"]), Convert.ToInt32(row["ban_time"]), Convert.ToInt32(row["ip_time"]), Convert.ToInt32(row["trade_lock_time"]),
                         Convert.ToString(row["default_sanction"])));
@@ -132,8 +132,8 @@ public sealed class ModerationManager : IModerationManager
                 foreach (DataRow row in presetsActionMessages.Rows)
                 {
                     var parentId = Convert.ToInt32(row["parent_id"]);
-                    if (!_userActionPresetMessages.ContainsKey(parentId)) _userActionPresetMessages.Add(parentId, new List<ModerationPresetActionMessages>());
-                    _userActionPresetMessages[parentId].Add(new ModerationPresetActionMessages(Convert.ToInt32(row["id"]), Convert.ToInt32(row["parent_id"]), Convert.ToString(row["caption"]),
+                    if (!_userActionPresetMessages.ContainsKey(parentId)) _userActionPresetMessages.Add(parentId, new());
+                    _userActionPresetMessages[parentId].Add(new(Convert.ToInt32(row["id"]), Convert.ToInt32(row["parent_id"]), Convert.ToString(row["caption"]),
                         Convert.ToString(row["message_text"]),
                         Convert.ToInt32(row["mute_hours"]), Convert.ToInt32(row["ban_hours"]), Convert.ToInt32(row["ip_ban_hours"]), Convert.ToInt32(row["trade_lock_days"]),
                         Convert.ToString(row["notice"])));
@@ -228,7 +228,7 @@ public sealed class ModerationManager : IModerationManager
         if (type == ModerationBanType.Machine || type == ModerationBanType.Username)
         {
             if (!_bans.ContainsKey(banValue))
-                _bans.Add(banValue, new ModerationBan(type, banValue, reason, expireTimestamp));
+                _bans.Add(banValue, new(type, banValue, reason, expireTimestamp));
         }
     }
 

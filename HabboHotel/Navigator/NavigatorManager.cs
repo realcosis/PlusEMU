@@ -20,15 +20,15 @@ public sealed class NavigatorManager : INavigatorManager
     public NavigatorManager(IDatabase database)
     {
         _database = database;
-        _topLevelItems = new Dictionary<int, TopLevelItem>();
-        _searchResultLists = new Dictionary<int, SearchResultList>();
+        _topLevelItems = new();
+        _searchResultLists = new();
 
         //Does this need to be dynamic?
-        _topLevelItems.Add(1, new TopLevelItem(1, "official_view", "", ""));
-        _topLevelItems.Add(2, new TopLevelItem(2, "hotel_view", "", ""));
-        _topLevelItems.Add(3, new TopLevelItem(3, "roomads_view", "", ""));
-        _topLevelItems.Add(4, new TopLevelItem(4, "myworld_view", "", ""));
-        _featuredRooms = new Dictionary<int, FeaturedRoom>();
+        _topLevelItems.Add(1, new(1, "official_view", "", ""));
+        _topLevelItems.Add(2, new(2, "hotel_view", "", ""));
+        _topLevelItems.Add(3, new(3, "roomads_view", "", ""));
+        _topLevelItems.Add(4, new(4, "myworld_view", "", ""));
+        _featuredRooms = new();
     }
 
     public void Init()
@@ -51,7 +51,7 @@ public sealed class NavigatorManager : INavigatorManager
                         if (!_searchResultLists.ContainsKey(Convert.ToInt32(row["id"])))
                         {
                             _searchResultLists.Add(Convert.ToInt32(row["id"]),
-                                new SearchResultList(Convert.ToInt32(row["id"]), Convert.ToString(row["category"]), Convert.ToString(row["category_identifier"]), Convert.ToString(row["public_name"]),
+                                new(Convert.ToInt32(row["id"]), Convert.ToString(row["category"]), Convert.ToString(row["category_identifier"]), Convert.ToString(row["public_name"]),
                                     true, -1, Convert.ToInt32(row["required_rank"]), NavigatorViewModeUtility.GetViewModeByString(Convert.ToString(row["view_mode"])),
                                     Convert.ToString(row["category_type"]), Convert.ToString(row["search_allowance"]), Convert.ToInt32(row["order_id"])));
                         }
@@ -69,7 +69,7 @@ public sealed class NavigatorManager : INavigatorManager
                         if (!_featuredRooms.ContainsKey(Convert.ToInt32(row["room_id"])))
                         {
                             _featuredRooms.Add(Convert.ToInt32(row["room_id"]),
-                                new FeaturedRoom(Convert.ToInt32(row["room_id"]), Convert.ToString(row["caption"]), Convert.ToString(row["description"]), Convert.ToString(row["image_url"])));
+                                new(Convert.ToInt32(row["room_id"]), Convert.ToString(row["caption"]), Convert.ToString(row["description"]), Convert.ToString(row["image_url"])));
                         }
                     }
                 }
@@ -140,7 +140,7 @@ public sealed class NavigatorManager : INavigatorManager
             })).ToDictionary(search => search.Id);
     }
 
-    public async Task SaveHomeRoom(Habbo habbo, int roomId)
+    public async Task SaveHomeRoom(Habbo habbo, uint roomId)
     {
         habbo.HomeRoom = roomId;
 

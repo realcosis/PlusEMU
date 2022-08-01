@@ -40,7 +40,7 @@ public class PurchaseRoomPromotionEvent : IPacketEvent
         if (data.OwnerId != session.GetHabbo().Id)
             return;
         if (data.Promotion == null)
-            data.Promotion = new RoomPromotion(name, desc, categoryId);
+            data.Promotion = new(name, desc, categoryId);
         else
         {
             data.Promotion.Name = name;

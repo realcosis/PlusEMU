@@ -16,9 +16,9 @@ public class FigureDataManager : IFigureDataManager
 
     public FigureDataManager()
     {
-        _palettes = new Dictionary<int, Palette>();
-        _setTypes = new Dictionary<string, FigureSet>();
-        _requirements = new List<string>
+        _palettes = new();
+        _setTypes = new();
+        _requirements = new()
         {
             "hd",
             "ch",
@@ -40,11 +40,11 @@ public class FigureDataManager : IFigureDataManager
         {
             foreach (XmlNode child in node.ChildNodes)
             {
-                _palettes.Add(Convert.ToInt32(child.Attributes["id"].Value), new Palette(Convert.ToInt32(child.Attributes["id"].Value)));
+                _palettes.Add(Convert.ToInt32(child.Attributes["id"].Value), new(Convert.ToInt32(child.Attributes["id"].Value)));
                 foreach (XmlNode sub in child.ChildNodes)
                 {
                     _palettes[Convert.ToInt32(child.Attributes["id"].Value)].Colors.Add(Convert.ToInt32(sub.Attributes["id"].Value),
-                        new Color(Convert.ToInt32(sub.Attributes["id"].Value), Convert.ToInt32(sub.Attributes["index"].Value), Convert.ToInt32(sub.Attributes["club"].Value),
+                        new(Convert.ToInt32(sub.Attributes["id"].Value), Convert.ToInt32(sub.Attributes["index"].Value), Convert.ToInt32(sub.Attributes["club"].Value),
                             Convert.ToInt32(sub.Attributes["selectable"].Value) == 1, Convert.ToString(sub.InnerText)));
                 }
             }
@@ -54,11 +54,11 @@ public class FigureDataManager : IFigureDataManager
         {
             foreach (XmlNode child in node.ChildNodes)
             {
-                _setTypes.Add(child.Attributes["type"].Value, new FigureSet(SetTypeUtility.GetSetType(child.Attributes["type"].Value), Convert.ToInt32(child.Attributes["paletteid"].Value)));
+                _setTypes.Add(child.Attributes["type"].Value, new(SetTypeUtility.GetSetType(child.Attributes["type"].Value), Convert.ToInt32(child.Attributes["paletteid"].Value)));
                 foreach (XmlNode sub in child.ChildNodes)
                 {
                     _setTypes[child.Attributes["type"].Value].Sets.Add(Convert.ToInt32(sub.Attributes["id"].Value),
-                        new Set(Convert.ToInt32(sub.Attributes["id"].Value), Convert.ToString(sub.Attributes["gender"].Value), Convert.ToInt32(sub.Attributes["club"].Value),
+                        new(Convert.ToInt32(sub.Attributes["id"].Value), Convert.ToString(sub.Attributes["gender"].Value), Convert.ToInt32(sub.Attributes["club"].Value),
                             Convert.ToInt32(sub.Attributes["colorable"].Value) == 1, Convert.ToInt32(sub.Attributes["selectable"].Value) == 1,
                             Convert.ToInt32(sub.Attributes["preselectable"].Value) == 1));
                     foreach (XmlNode subb in sub.ChildNodes)
@@ -67,7 +67,7 @@ public class FigureDataManager : IFigureDataManager
                         {
                             _setTypes[child.Attributes["type"].Value].Sets[Convert.ToInt32(sub.Attributes["id"].Value)].Parts.Add(
                                 Convert.ToInt32(subb.Attributes["id"].Value) + "-" + subb.Attributes["type"].Value,
-                                new Part(Convert.ToInt32(subb.Attributes["id"].Value), SetTypeUtility.GetSetType(child.Attributes["type"].Value),
+                                new(Convert.ToInt32(subb.Attributes["id"].Value), SetTypeUtility.GetSetType(child.Attributes["type"].Value),
                                     Convert.ToInt32(subb.Attributes["colorable"].Value) == 1, Convert.ToInt32(subb.Attributes["index"].Value), Convert.ToInt32(subb.Attributes["colorindex"].Value)));
                         }
                     }
@@ -76,7 +76,7 @@ public class FigureDataManager : IFigureDataManager
         }
 
         //Faceless.
-        _setTypes["hd"].Sets.Add(99999, new Set(99999, "U", 0, true, false, false));
+        _setTypes["hd"].Sets.Add(99999, new(99999, "U", 0, true, false, false));
         Log.Info("Loaded " + _palettes.Count + " Color Palettes");
         Log.Info("Loaded " + _setTypes.Count + " Set Types");
     }

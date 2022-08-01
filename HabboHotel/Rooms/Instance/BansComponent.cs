@@ -24,7 +24,7 @@ public class BansComponent
         if (instance == null)
             return;
         _instance = instance;
-        _bans = new ConcurrentDictionary<int, double>();
+        _bans = new();
         DataTable getBans = null;
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
         dbClient.SetQuery("SELECT `user_id`, `expire` FROM `room_bans` WHERE `room_id` = " + _instance.Id + " AND `expire` > UNIX_TIMESTAMP();");

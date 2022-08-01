@@ -179,7 +179,7 @@ internal static class ItemBehaviourUtility
                 if (item.RoomId != 0)
                 {
                     if (item.GetRoom().TonerData == null)
-                        item.GetRoom().TonerData = new TonerData(item.Id);
+                        item.GetRoom().TonerData = new(item.Id);
                     packet.WriteInteger(0);
                     packet.WriteInteger(5);
                     packet.WriteInteger(4);

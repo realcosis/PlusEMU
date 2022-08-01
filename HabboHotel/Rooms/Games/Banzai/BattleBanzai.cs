@@ -170,7 +170,7 @@ public class BattleBanzai
         if (IsBanzaiActive)
             return;
         _floorMap = new byte[_room.GetGameMap().Model.MapSizeY, _room.GetGameMap().Model.MapSizeX];
-        _field = new GameField(_floorMap, true);
+        _field = new(_floorMap, true);
         _timestarted = UnixTimestamp.GetNow();
         _room.GetGameManager().LockGates();
         for (var i = 1; i < 5; i++) _room.GetGameManager().Points[i] = 0;
@@ -300,7 +300,7 @@ public class BattleBanzai
         if (mover == null || mover.GetHabbo() == null)
             return;
         var user = mover.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(mover.GetHabbo().Id);
-        if (IsBanzaiActive) HandleBanzaiTiles(new Point(newX, newY), team, user);
+        if (IsBanzaiActive) HandleBanzaiTiles(new(newX, newY), team, user);
     }
 
     private void SetTile(Item item, Team team, RoomUser user)
@@ -322,7 +322,7 @@ public class BattleBanzai
                         t = (Team)gameField.ForValue;
                         foreach (var p in gameField.GetPoints())
                         {
-                            HandleMaxBanzaiTiles(new Point(p.X, p.Y), t);
+                            HandleMaxBanzaiTiles(new(p.X, p.Y), t);
                             _floorMap[p.Y, p.X] = gameField.ForValue;
                         }
                     }

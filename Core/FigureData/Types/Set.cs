@@ -10,7 +10,7 @@ internal class Set
         Colorable = colorable;
         Selectable = selectable;
         Preselectable = preselectable;
-        Parts = new Dictionary<string, Part>();
+        Parts = new();
     }
 
     public int Id { get; set; }

@@ -61,7 +61,7 @@ public class GenericBot : BotAi
                         if (GetRoomUser().Coordinate == GetBotData().TargetCoordinate)
                         {
                             GetBotData().ForcedMovement = false;
-                            GetBotData().TargetCoordinate = new Point();
+                            GetBotData().TargetCoordinate = new();
                             GetRoomUser().MoveTo(GetBotData().TargetCoordinate.X, GetBotData().TargetCoordinate.Y);
                         }
                     }

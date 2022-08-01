@@ -27,9 +27,9 @@ public class Group
         Type = (GroupType)type;
         AdminOnlyDeco = adminOnlyDeco;
         ForumEnabled = ForumEnabled;
-        _members = new List<int>();
-        _requests = new List<int>();
-        _administrators = new List<int>();
+        _members = new();
+        _requests = new();
+        _administrators = new();
         InitMembers();
     }
 
@@ -40,7 +40,7 @@ public class Group
     public int CreateTime { get; set; }
     public int CreatorId { get; set; }
     public string Description { get; set; }
-    public int RoomId { get; set; }
+    public uint RoomId { get; set; }
     public int Colour1 { get; set; }
     public int Colour2 { get; set; }
     public bool ForumEnabled { get; set; }

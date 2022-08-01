@@ -15,7 +15,7 @@ public class GenerateSecretKeyEvent : IPacketEvent
         var sharedKey = HabboEncryptionV2.CalculateDiffieHellmanSharedKey(cipherPublickey);
         if (sharedKey != 0)
         {
-            session.Rc4Client = new Arc4(sharedKey.getBytes());
+            session.Rc4Client = new(sharedKey.getBytes());
             session.Send(new SecretKeyComposer(HabboEncryptionV2.GetRsaDiffieHellmanPublicKey()));
         }
         else

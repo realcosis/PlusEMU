@@ -27,7 +27,7 @@ internal class PickupObjectEvent : IPacketEvent
         if (room == null)
             return Task.CompletedTask;
         packet.ReadInt(); //unknown
-        var itemId = packet.ReadInt();
+        var itemId = packet.ReadUInt();
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;

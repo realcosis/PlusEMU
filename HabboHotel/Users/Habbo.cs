@@ -91,7 +91,7 @@ public class Habbo
 
     public int GotwPoints { get; set; }
 
-    public int HomeRoom { get; set; }
+    public uint HomeRoom { get; set; }
 
     public double LastOnline { get; set; }
 
@@ -248,19 +248,19 @@ public class Habbo
 
     public bool InitProcess()
     {
-        _process = new ProcessComponent();
+        _process = new();
         return _process.Init(this);
     }
 
     public bool InitFx()
     {
-        _fx = new EffectsComponent();
+        _fx = new();
         return _fx.Init(this);
     }
 
     public bool InitClothing()
     {
-        _clothing = new ClothingComponent();
+        _clothing = new();
         return _clothing.Init(this);
     }
 

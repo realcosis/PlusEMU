@@ -16,6 +16,6 @@ internal static class AvatarEffectFactory
         dbClient.AddParameter("uid", habbo.Id);
         dbClient.AddParameter("sid", spriteId);
         dbClient.AddParameter("dur", duration);
-        return new AvatarEffect(Convert.ToInt32(dbClient.InsertQuery()), habbo.Id, spriteId, duration, false, 0, 1);
+        return new(Convert.ToInt32(dbClient.InsertQuery()), habbo.Id, spriteId, duration, false, 0, 1);
     }
 }

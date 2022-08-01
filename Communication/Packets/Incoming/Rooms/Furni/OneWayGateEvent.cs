@@ -10,7 +10,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni
             var room = session.GetHabbo().CurrentRoom;
             if (room == null)
                 return Task.CompletedTask;
-            var item = room.GetRoomItemHandler().GetItem(packet.ReadInt());
+            var item = room.GetRoomItemHandler().GetItem(packet.ReadUInt());
             if (item == null)
                 return Task.CompletedTask;
             var hasRights = room.CheckRights(session);

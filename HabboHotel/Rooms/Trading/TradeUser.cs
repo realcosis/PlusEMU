@@ -8,7 +8,7 @@ public sealed class TradeUser
     {
         RoomUser = user;
         HasAccepted = false;
-        OfferedItems = new Dictionary<int, Item>();
+        OfferedItems = new();
     }
 
     public RoomUser RoomUser { get; }

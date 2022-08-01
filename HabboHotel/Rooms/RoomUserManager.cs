@@ -34,9 +34,9 @@ public class RoomUserManager
     public RoomUserManager(Room room)
     {
         _room = room;
-        _users = new ConcurrentDictionary<int, RoomUser>();
-        _pets = new ConcurrentDictionary<int, RoomUser>();
-        _bots = new ConcurrentDictionary<int, RoomUser>();
+        _users = new();
+        _pets = new();
+        _bots = new();
         _primaryPrivateUserId = 0;
         _secondaryPrivateUserId = 0;
         PetCount = 0;
@@ -115,7 +115,7 @@ public class RoomUserManager
         OnRemove(user);
     }
 
-    public RoomUser GetUserForSquare(int x, int y) => _room.GetGameMap().GetRoomUsers(new Point(x, y)).FirstOrDefault();
+    public RoomUser GetUserForSquare(int x, int y) => _room.GetGameMap().GetRoomUsers(new(x, y)).FirstOrDefault();
 
     public bool AddAvatarToRoom(GameClient session)
     {
@@ -349,7 +349,7 @@ public class RoomUserManager
                     RemoveBot(toRemove.VirtualId, false);
                 }
             }
-            _room.GetGameMap().RemoveUserFromMap(user, new Point(user.X, user.Y));
+            _room.GetGameMap().RemoveUserFromMap(user, new(user.X, user.Y));
         }
         catch (Exception e)
         {
@@ -363,7 +363,7 @@ public class RoomUserManager
             _room.GetGameMap().GameMap[user.SetX, user.SetY] = user.SqState;
         else
             _room.GetGameMap().GameMap[user.X, user.Y] = user.SqState;
-        _room.GetGameMap().RemoveUserFromMap(user, new Point(user.X, user.Y));
+        _room.GetGameMap().RemoveUserFromMap(user, new(user.X, user.Y));
         _room.SendPacket(new UserRemoveComposer(user.VirtualId));
         RoomUser toRemove = null;
         if (_users.TryRemove(user.InternalRoomId, out toRemove))
@@ -601,11 +601,11 @@ public class RoomUserManager
                 }
                 if (user.SetStep)
                 {
-                    if (_room.GetGameMap().IsValidStep2(user, new Vector2D(user.X, user.Y), new Vector2D(user.SetX, user.SetY), user.GoalX == user.SetX && user.GoalY == user.SetY, user.AllowOverride))
+                    if (_room.GetGameMap().IsValidStep2(user, new(user.X, user.Y), new(user.SetX, user.SetY), user.GoalX == user.SetX && user.GoalY == user.SetY, user.AllowOverride))
                     {
                         if (!user.RidingHorse)
-                            _room.GetGameMap().UpdateUserMovement(new Point(user.Coordinate.X, user.Coordinate.Y), new Point(user.SetX, user.SetY), user);
-                        var coordinatedItems = _room.GetGameMap().GetCoordinatedItems(new Point(user.X, user.Y));
+                            _room.GetGameMap().UpdateUserMovement(new(user.Coordinate.X, user.Coordinate.Y), new(user.SetX, user.SetY), user);
+                        var coordinatedItems = _room.GetGameMap().GetCoordinatedItems(new(user.X, user.Y));
                         foreach (var item in coordinatedItems.ToList()) item.UserWalksOffFurni(user);
                         if (!user.IsBot)
                         {
@@ -633,7 +633,7 @@ public class RoomUserManager
                             toRemove.Add(user);
                             continue;
                         }
-                        var items = _room.GetGameMap().GetCoordinatedItems(new Point(user.X, user.Y));
+                        var items = _room.GetGameMap().GetCoordinatedItems(new(user.X, user.Y));
                         foreach (var item in items.ToList()) item.UserWalksOnFurni(user);
                         UpdateUserStatus(user, true);
                     }
@@ -645,7 +645,7 @@ public class RoomUserManager
                 {
                     if (user.Path.Count > 1)
                         user.Path.Clear();
-                    user.Path = PathFinder.FindPath(user, _room.GetGameMap().DiagonalEnabled, _room.GetGameMap(), new Vector2D(user.X, user.Y), new Vector2D(user.GoalX, user.GoalY));
+                    user.Path = PathFinder.FindPath(user, _room.GetGameMap().DiagonalEnabled, _room.GetGameMap(), new(user.X, user.Y), new(user.GoalX, user.GoalY));
                     if (user.Path.Count > 1)
                     {
                         user.PathStep = 1;
@@ -713,7 +713,7 @@ public class RoomUserManager
                         var nextX = nextStep.X;
                         var nextY = nextStep.Y;
                         user.RemoveStatus("mv");
-                        if (_room.GetGameMap().IsValidStep2(user, new Vector2D(user.X, user.Y), new Vector2D(nextX, nextY), user.GoalX == nextX && user.GoalY == nextY, user.AllowOverride))
+                        if (_room.GetGameMap().IsValidStep2(user, new(user.X, user.Y), new(nextX, nextY), user.GoalX == nextX && user.GoalY == nextY, user.AllowOverride))
                         {
                             var nextZ = _room.GetGameMap().SqAbsoluteHeight(nextX, nextY);
                             if (!user.IsBot)

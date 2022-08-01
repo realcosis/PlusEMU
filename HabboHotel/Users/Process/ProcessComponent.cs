@@ -55,7 +55,7 @@ internal sealed class ProcessComponent
         if (_player != null)
             return false;
         _player = player;
-        _timer = new Timer(Run, null, _runtimeInSec * 1000, _runtimeInSec * 1000);
+        _timer = new(Run, null, _runtimeInSec * 1000, _runtimeInSec * 1000);
         return true;
     }
 

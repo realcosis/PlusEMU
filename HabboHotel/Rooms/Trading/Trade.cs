@@ -17,8 +17,8 @@ public sealed class Trade
         CanChange = true;
         _instance = room;
         Users = new TradeUser[2];
-        Users[0] = new TradeUser(playerOne);
-        Users[1] = new TradeUser(playerTwo);
+        Users[0] = new(playerOne);
+        Users[1] = new(playerTwo);
         playerOne.IsTrading = true;
         playerOne.TradeId = Id;
         playerOne.TradePartner = playerTwo.UserId;

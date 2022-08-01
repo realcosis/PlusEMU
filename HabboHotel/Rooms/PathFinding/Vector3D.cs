@@ -17,5 +17,5 @@ internal sealed class Vector3D
 
     public double Z { get; set; }
 
-    public Vector2D ToVector2D() => new Vector2D(X, Y);
+    public Vector2D ToVector2D() => new(X, Y);
 }

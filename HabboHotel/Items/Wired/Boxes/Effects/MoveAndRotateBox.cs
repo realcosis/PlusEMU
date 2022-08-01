@@ -16,7 +16,7 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
     {
         Instance = instance;
         Item = item;
-        SetItems = new ConcurrentDictionary<int, Item>();
+        SetItems = new();
         TickCount = Delay;
         _requested = false;
     }
@@ -49,7 +49,7 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
                 Item toRemove = null;
                 if (Instance.GetWired().OtherBoxHasItem(this, item.Id))
                     SetItems.TryRemove(item.Id, out toRemove);
-                var point = HandleMovement(Convert.ToInt32(StringData.Split(';')[0]), new Point(item.GetX, item.GetY));
+                var point = HandleMovement(Convert.ToInt32(StringData.Split(';')[0]), new(item.GetX, item.GetY));
                 var newRot = HandleRotation(Convert.ToInt32(StringData.Split(';')[1]), item.Rotation);
                 Instance.GetWired().OnUserFurniCollision(Instance, item);
                 if (!Instance.GetGameMap().ItemCanMove(item, point))
@@ -98,7 +98,7 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
 
     public WiredBoxType Type => WiredBoxType.EffectMoveAndRotate;
 
-    public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public ConcurrentDictionary<uint, Item> SetItems { get; set; }
     public string StringData { get; set; }
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
@@ -114,7 +114,7 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
         var furniCount = packet.ReadInt();
         for (var i = 0; i < furniCount; i++)
         {
-            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadInt());
+            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadUInt());
             if (selectedItem != null && !Instance.GetWired().OtherBoxHasItem(this, selectedItem.Id))
                 SetItems.TryAdd(selectedItem.Id, selectedItem);
         }
@@ -185,16 +185,16 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
                 switch (Random.Shared.Next(1, 5))
                 {
                     case 1:
-                        newPos = new Point(position.X + 1, position.Y);
+                        newPos = new(position.X + 1, position.Y);
                         break;
                     case 2:
-                        newPos = new Point(position.X - 1, position.Y);
+                        newPos = new(position.X - 1, position.Y);
                         break;
                     case 3:
-                        newPos = new Point(position.X, position.Y + 1);
+                        newPos = new(position.X, position.Y + 1);
                         break;
                     case 4:
-                        newPos = new Point(position.X, position.Y - 1);
+                        newPos = new(position.X, position.Y - 1);
                         break;
                 }
                 break;
@@ -202,37 +202,37 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
             case 2:
             {
                 if (Random.Shared.Next(0, 3) == 1)
-                    newPos = new Point(position.X - 1, position.Y);
+                    newPos = new(position.X - 1, position.Y);
                 else
-                    newPos = new Point(position.X + 1, position.Y);
+                    newPos = new(position.X + 1, position.Y);
                 break;
             }
             case 3:
             {
                 if (Random.Shared.Next(0, 3) == 1)
-                    newPos = new Point(position.X, position.Y - 1);
+                    newPos = new(position.X, position.Y - 1);
                 else
-                    newPos = new Point(position.X, position.Y + 1);
+                    newPos = new(position.X, position.Y + 1);
                 break;
             }
             case 4:
             {
-                newPos = new Point(position.X, position.Y - 1);
+                newPos = new(position.X, position.Y - 1);
                 break;
             }
             case 5:
             {
-                newPos = new Point(position.X + 1, position.Y);
+                newPos = new(position.X + 1, position.Y);
                 break;
             }
             case 6:
             {
-                newPos = new Point(position.X, position.Y + 1);
+                newPos = new(position.X, position.Y + 1);
                 break;
             }
             case 7:
             {
-                newPos = new Point(position.X - 1, position.Y);
+                newPos = new(position.X - 1, position.Y);
                 break;
             }
         }

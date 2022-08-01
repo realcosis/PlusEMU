@@ -6,7 +6,7 @@ internal class FigureSet
     {
         Type = type;
         PalletId = palletId;
-        Sets = new Dictionary<int, Set>();
+        Sets = new();
     }
 
     public SetType Type { get; set; }

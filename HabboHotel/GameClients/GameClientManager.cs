@@ -30,11 +30,11 @@ public class GameClientManager : IGameClientManager
     public GameClientManager(IDatabase database)
     {
         _database = database;
-        _clients = new ConcurrentDictionary<int, GameClient>();
-        _userIdRegister = new ConcurrentDictionary<int, GameClient>();
-        _usernameRegister = new ConcurrentDictionary<string, GameClient>();
-        _timedOutConnections = new Queue();
-        _clientPingStopwatch = new Stopwatch();
+        _clients = new();
+        _userIdRegister = new();
+        _usernameRegister = new();
+        _timedOutConnections = new();
+        _clientPingStopwatch = new();
         _clientPingStopwatch.Start();
     }
 

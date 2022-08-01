@@ -21,7 +21,7 @@ public class Gamemap
         StaticModel = model;
         DiagonalEnabled = true;
         Model = new(StaticModel);
-        _coordinatedItems = new ConcurrentDictionary<Point, List<uint>>();
+        _coordinatedItems = new();
         _itemHeightMap = new double[Model.MapSizeX, Model.MapSizeY];
         _userMap = new();
     }

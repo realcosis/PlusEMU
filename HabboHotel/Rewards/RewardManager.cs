@@ -18,8 +18,8 @@ public class RewardManager : IRewardManager
     {
         _database = database;
         _badgeManager = badgeManager;
-        _rewards = new ConcurrentDictionary<int, Reward>();
-        _rewardLogs = new ConcurrentDictionary<int, List<int>>();
+        _rewards = new();
+        _rewardLogs = new();
     }
 
     public void Init()
@@ -32,7 +32,7 @@ public class RewardManager : IRewardManager
             foreach (DataRow dRow in dTable.Rows)
             {
                 _rewards.TryAdd((int)dRow["id"],
-                    new Reward(Convert.ToDouble(dRow["reward_start"]), Convert.ToDouble(dRow["reward_end"]), Convert.ToString(dRow["reward_type"]), Convert.ToString(dRow["reward_data"]),
+                    new(Convert.ToDouble(dRow["reward_start"]), Convert.ToDouble(dRow["reward_end"]), Convert.ToString(dRow["reward_type"]), Convert.ToString(dRow["reward_data"]),
                         Convert.ToString(dRow["message"])));
             }
         }
@@ -45,7 +45,7 @@ public class RewardManager : IRewardManager
                 var id = (int)dRow["user_id"];
                 var rewardId = (int)dRow["reward_id"];
                 if (!_rewardLogs.ContainsKey(id))
-                    _rewardLogs.TryAdd(id, new List<int>());
+                    _rewardLogs.TryAdd(id, new());
                 if (!_rewardLogs[id].Contains(rewardId))
                     _rewardLogs[id].Add(rewardId);
             }
@@ -64,7 +64,7 @@ public class RewardManager : IRewardManager
     private void LogReward(int id, int rewardId)
     {
         if (!_rewardLogs.ContainsKey(id))
-            _rewardLogs.TryAdd(id, new List<int>());
+            _rewardLogs.TryAdd(id, new());
         if (!_rewardLogs[id].Contains(rewardId))
             _rewardLogs[id].Add(rewardId);
         using var dbClient = _database.GetQueryReactor();

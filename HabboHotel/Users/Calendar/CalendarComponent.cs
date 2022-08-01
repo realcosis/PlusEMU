@@ -16,8 +16,8 @@ public sealed class CalendarComponent
 
     public CalendarComponent()
     {
-        _lateBoxes = new List<int>();
-        _openedBoxes = new List<int>();
+        _lateBoxes = new();
+        _openedBoxes = new();
     }
 
     /// <summary>

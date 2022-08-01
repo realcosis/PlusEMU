@@ -28,7 +28,7 @@ internal class CheckGnomeNameEvent : IPacketEvent
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
             return Task.CompletedTask;
-        var itemId = packet.ReadInt();
+        var itemId = packet.ReadUInt();
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null || item.Definition == null || item.UserId != session.GetHabbo().Id || item.Definition.InteractionType != InteractionType.GnomeBox)
             return Task.CompletedTask;
@@ -77,12 +77,12 @@ internal class CheckGnomeNameEvent : IPacketEvent
 
         //Make a RoomUser of the pet.
         room.GetRoomUserManager()
-            .DeployBot(new RoomBot(pet.PetId, pet.RoomId, "pet", "freeroam", pet.Name, "", pet.Look, x, y, 0, 0, 0, 0, 0, 0, ref rndSpeechList, "", 0, pet.OwnerId, false, 0, false, 0), pet);
+            .DeployBot(new(pet.PetId, pet.RoomId, "pet", "freeroam", pet.Name, "", pet.Look, x, y, 0, 0, 0, 0, 0, 0, ref rndSpeechList, "", 0, pet.OwnerId, false, 0, false, 0), pet);
 
         //Give the food.
-        if (_itemDataManager.GetItem(320, out var petFood))
+        if (_itemDataManager.Items.TryGetValue(320, out var petFood))
         {
-            var food = ItemFactory.CreateSingleItemNullable(petFood, session.GetHabbo(), "", "");
+            var food = ItemFactory.CreateSingleItemNullable(petFood, session.GetHabbo(), "", "").ToInventoryItem();
             if (food != null)
             {
                 session.GetHabbo().Inventory.Furniture.AddItem(food);

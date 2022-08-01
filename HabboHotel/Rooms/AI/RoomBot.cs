@@ -72,7 +72,7 @@ public class RoomBot
         MixSentences = mixSentences;
         ChatBubble = chatBubble;
         ForcedMovement = false;
-        TargetCoordinate = new Point();
+        TargetCoordinate = new();
         TargetUser = 0;
     }
 
@@ -88,7 +88,7 @@ public class RoomBot
 
     public void LoadRandomSpeech(List<RandomSpeech> speeches)
     {
-        RandomSpeech = new List<RandomSpeech>();
+        RandomSpeech = new();
         foreach (var speech in speeches)
         {
             if (speech.BotId == BotId)
@@ -100,7 +100,7 @@ public class RoomBot
     public RandomSpeech GetRandomSpeech()
     {
         if (RandomSpeech.Count < 1)
-            return new RandomSpeech("", 0);
+            return new("", 0);
         return RandomSpeech[Random.Shared.Next(0, RandomSpeech.Count)];
     }
 

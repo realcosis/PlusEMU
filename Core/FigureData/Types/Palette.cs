@@ -5,7 +5,7 @@ public class Palette
     public Palette(int id)
     {
         Id = id;
-        Colors = new Dictionary<int, Color>();
+        Colors = new();
     }
 
     public int Id { get; set; }

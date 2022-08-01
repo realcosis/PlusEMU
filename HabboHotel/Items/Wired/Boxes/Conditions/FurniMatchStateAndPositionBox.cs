@@ -10,7 +10,7 @@ internal class FurniMatchStateAndPositionBox : IWiredItem
     {
         Instance = instance;
         Item = item;
-        SetItems = new ConcurrentDictionary<int, Item>();
+        SetItems = new();
     }
 
     public Room Instance { get; set; }
@@ -19,7 +19,7 @@ internal class FurniMatchStateAndPositionBox : IWiredItem
 
     public WiredBoxType Type => WiredBoxType.ConditionMatchStateAndPosition;
 
-    public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public ConcurrentDictionary<uint, Item> SetItems { get; set; }
 
     public string StringData { get; set; }
 
@@ -39,7 +39,7 @@ internal class FurniMatchStateAndPositionBox : IWiredItem
         var furniCount = packet.ReadInt();
         for (var i = 0; i < furniCount; i++)
         {
-            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadInt());
+            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadUInt());
             if (selectedItem != null)
                 SetItems.TryAdd(selectedItem.Id, selectedItem);
         }
@@ -62,7 +62,7 @@ internal class FurniMatchStateAndPositionBox : IWiredItem
             {
                 if (string.IsNullOrEmpty(I))
                     continue;
-                var ii = Instance.GetRoomItemHandler().GetItem(Convert.ToInt32(I.Split(':')[0]));
+                var ii = Instance.GetRoomItemHandler().GetItem(Convert.ToUInt32(I.Split(':')[0]));
                 if (ii == null)
                     continue;
                 var partsString = I.Split(':');

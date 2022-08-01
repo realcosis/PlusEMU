@@ -130,7 +130,7 @@ public class Game : IGame
 
     public void StartGameLoop()
     {
-        _gameCycle = new Task(GameCycle);
+        _gameCycle = new(GameCycle);
         _gameCycle.Start();
         _cycleActive = true;
     }

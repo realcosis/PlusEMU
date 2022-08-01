@@ -41,7 +41,7 @@ internal class GetModeratorUserChatlogEvent : IPacketEvent
                 if (!RoomFactory.TryGetData(Convert.ToInt32(row["room_id"]), out var roomData))
                     continue;
                 var timestampExit = Convert.ToDouble(row["exit_timestamp"]) <= 0 ? UnixTimestamp.GetNow() : Convert.ToDouble(row["exit_timestamp"]);
-                chatlogs.Add(new KeyValuePair<RoomData, List<ChatlogEntry>>(roomData, GetChatlogs(roomData, Convert.ToDouble(row["entry_timestamp"]), timestampExit)));
+                chatlogs.Add(new(roomData, GetChatlogs(roomData, Convert.ToDouble(row["entry_timestamp"]), timestampExit)));
             }
         }
         session.Send(new ModeratorUserChatlogComposer(data, chatlogs));

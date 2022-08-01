@@ -107,7 +107,7 @@ public class RoomUser
         RotHead = 0;
         RotBody = 0;
         UpdateNeeded = true;
-        Statusses = new Dictionary<string, string>();
+        Statusses = new();
         TeleDelay = -1;
         _mRoom = room;
         AllowOverride = false;
@@ -430,7 +430,7 @@ public class RoomUser
         if (TeleportEnabled)
         {
             UnIdle();
-            GetRoom().SendPacket(GetRoom().GetRoomItemHandler().UpdateUserOnRoller(this, new Point(pX, pY), 0, GetRoom().GetGameMap().SqAbsoluteHeight(GoalX, GoalY)));
+            GetRoom().SendPacket(GetRoom().GetRoomItemHandler().UpdateUserOnRoller(this, new(pX, pY), 0, GetRoom().GetGameMap().SqAbsoluteHeight(GoalX, GoalY)));
             if (Statusses.ContainsKey("sit"))
                 Z -= 0.35;
             UpdateNeeded = true;

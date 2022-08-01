@@ -10,9 +10,9 @@ public class PetCommandManager : IPetCommandManager
 
     public PetCommandManager()
     {
-        _petCommands = new Dictionary<string, PetCommand>();
-        _commandRegister = new Dictionary<int, string>();
-        _commandDatabase = new Dictionary<string, string>();
+        _petCommands = new();
+        _commandRegister = new();
+        _commandDatabase = new();
     }
 
     public void Init()
@@ -39,7 +39,7 @@ public class PetCommandManager : IPetCommandManager
             var commandId = pair.Key;
             var commandStringedId = pair.Value;
             var commandInput = _commandDatabase[commandStringedId + ".input"].Split(',');
-            foreach (var command in commandInput) _petCommands.Add(command, new PetCommand(commandId, command));
+            foreach (var command in commandInput) _petCommands.Add(command, new(commandId, command));
         }
     }
 

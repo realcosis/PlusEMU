@@ -16,7 +16,7 @@ public class BadgeManager : IBadgeManager
     public BadgeManager(IDatabase database)
     {
         _database = database;
-        _badges = new Dictionary<string, BadgeDefinition>();
+        _badges = new();
     }
 
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Badges.BadgeManager");
@@ -33,7 +33,7 @@ public class BadgeManager : IBadgeManager
             {
                 var code = Convert.ToString(row["code"]).ToUpper();
                 if (!_badges.ContainsKey(code))
-                    _badges.Add(code, new BadgeDefinition(code, Convert.ToString(row["required_right"])));
+                    _badges.Add(code, new(code, Convert.ToString(row["required_right"])));
             }
         }
         Log.Info("Loaded " + _badges.Count + " badge definitions.");
@@ -55,7 +55,7 @@ public class BadgeManager : IBadgeManager
             userId = habbo.Id,
             badge = badge.Code
         });
-        habbo.Inventory.Badges.AddBadge(new Badge(code, 0));
+        habbo.Inventory.Badges.AddBadge(new(code, 0));
             habbo.GetClient().Send(new BadgesComposer(habbo.GetClient()));
             habbo.GetClient().Send(new FurniListNotificationComposer(1, 4));
     }

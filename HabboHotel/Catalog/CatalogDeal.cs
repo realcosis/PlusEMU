@@ -10,7 +10,7 @@ public class CatalogDeal
         Id = id;
         DisplayName = displayName;
         RoomId = roomId;
-        ItemDataList = new List<CatalogItem>();
+        ItemDataList = new();
         if (roomId != 0)
         {
             DataTable data = null;
@@ -44,7 +44,7 @@ public class CatalogDeal
                 continue;
             if (!itemDataManager.GetItem(itemId, out var data))
                 continue;
-            ItemDataList.Add(new CatalogItem(0, itemId, data, string.Empty, 0, 0, 0, 0, amount, 0, 0, false, "", "", 0));
+            ItemDataList.Add(new(0, itemId, data, string.Empty, 0, 0, 0, 0, amount, 0, 0, false, "", "", 0));
         }
     }
 

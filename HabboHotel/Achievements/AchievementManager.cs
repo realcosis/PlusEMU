@@ -22,7 +22,7 @@ public class AchievementManager : IAchievementManager
 
     public AchievementManager(IDatabase database, IBadgeManager badgeManager)
     {
-        Achievements = new Dictionary<string, Achievement>();
+        Achievements = new();
         _database = database;
         _badgeManager = badgeManager;
     }
@@ -41,7 +41,7 @@ public class AchievementManager : IAchievementManager
         var userData = session.GetHabbo().GetAchievementData(group);
         if (userData == null)
         {
-            userData = new UserAchievement(group, 0, 0);
+            userData = new(group, 0, 0);
             session.GetHabbo().Achievements.TryAdd(group, userData);
         }
         var totalLevels = data.Levels.Count;

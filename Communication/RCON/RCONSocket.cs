@@ -17,11 +17,11 @@ public class RconSocket : IRconSocket
 
     public void Init(string host, int port, IEnumerable<string> allowedConnections)
     {
-        _allowedConnections = new List<string>();
+        _allowedConnections = new();
         foreach (var ipAddress in allowedConnections) _allowedConnections.Add(ipAddress);
         try
         {
-            _musSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _musSocket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _musSocket.Bind(new IPEndPoint(IPAddress.Parse(host), port)); // SHould be host?
             _musSocket.Listen(0);
             _musSocket.BeginAccept(OnCallBack, _musSocket);
