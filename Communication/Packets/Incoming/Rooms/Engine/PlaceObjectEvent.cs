@@ -44,7 +44,7 @@ internal class PlaceObjectEvent : IPacketEvent
             return Task.CompletedTask;
         }
         var inventoryItem = session.GetHabbo().Inventory.Furniture.GetItem(itemId);
-        var item = inventoryItem.ToFloorObject();
+        var item = inventoryItem.ToRoomObject();
         if (item == null)
             return Task.CompletedTask;
 

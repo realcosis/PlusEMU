@@ -294,7 +294,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                 }
                 foreach (var purchasedItem in generatedGenericItems)
                 {
-                    if (session.GetHabbo().Inventory.Furniture.AddItem(purchasedItem))
+                    if (session.GetHabbo().Inventory.Furniture.AddItem(purchasedItem.ToInventoryItem()))
                     {
                         //Session.SendMessage(new FurniListAddComposer(PurchasedItem));
                         session.Send(new FurniListNotificationComposer(purchasedItem.Id, 1));
@@ -319,7 +319,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                 {
                     session.GetHabbo().Inventory.Bots.AddBot(bot);
                     session.Send(new BotInventoryComposer(session.GetHabbo().Inventory.Bots.Bots.Values.ToList()));
-                    session.Send(new FurniListNotificationComposer(bot.Id, 5));
+                    session.Send(new FurniListNotificationComposer((uint)bot.Id, 5));
                 }
                 else
                     session.SendNotification("Oops! There was an error whilst purchasing this bot. It seems that there is no bot data for the bot!");
@@ -340,11 +340,11 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                     {
                         pet.RoomId = 0;
                         pet.PlacedInRoom = false;
-                        session.Send(new FurniListNotificationComposer(pet.PetId, 3));
+                        session.Send(new FurniListNotificationComposer((uint)pet.PetId, 3));
                         session.Send(new PetInventoryComposer(session.GetHabbo().Inventory.Pets.Pets.Values.ToList()));
-                        if (_itemManager.GetItem(320, out var petFood))
+                        if (_itemManager.Items.TryGetValue(320, out var petFood))
                         {
-                            var food = ItemFactory.CreateSingleItemNullable(petFood, session.GetHabbo(), "", "");
+                            var food = ItemFactory.CreateSingleItemNullable(petFood, session.GetHabbo(), "", "").ToInventoryItem();
                             if (food != null)
                             {
                                 session.GetHabbo().Inventory.Furniture.AddItem(food);

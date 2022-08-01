@@ -108,7 +108,7 @@ public class WiredComponent
 
     public IWiredItem GenerateNewBox(Item item)
     {
-        switch (item.Definition.GetBaseItem(item).WiredType)
+        switch (item.Definition.WiredType)
         {
             case WiredBoxType.TriggerRoomEnter:
                 return new RoomEnterBox(_room, item);
@@ -232,11 +232,11 @@ public class WiredComponent
         return null;
     }
 
-    public bool IsTrigger(Item item) => item.Definition.GetBaseItem(item).InteractionType == InteractionType.WiredTrigger;
+    public bool IsTrigger(Item item) => item.Definition.InteractionType == InteractionType.WiredTrigger;
 
-    public bool IsEffect(Item item) => item.Definition.GetBaseItem(item).InteractionType == InteractionType.WiredEffect;
+    public bool IsEffect(Item item) => item.Definition.InteractionType == InteractionType.WiredEffect;
 
-    public bool IsCondition(Item item) => item.Definition.GetBaseItem(item).InteractionType == InteractionType.WiredCondition;
+    public bool IsCondition(Item item) => item.Definition.InteractionType == InteractionType.WiredCondition;
 
     public bool OtherBoxHasItem(IWiredItem box, int itemId)
     {

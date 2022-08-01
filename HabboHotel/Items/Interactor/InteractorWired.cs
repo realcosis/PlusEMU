@@ -26,7 +26,7 @@ public class InteractorWired : IFurniInteractor
         item.LegacyDataString = "1";
         item.UpdateState(false, true);
         item.RequestUpdate(2, true);
-        if (item.Definition.GetBaseItem(item).WiredType == WiredBoxType.AddonRandomEffect)
+        if (item.Definition.WiredType == WiredBoxType.AddonRandomEffect)
             return;
         if (item.GetRoom().GetWired().IsTrigger(item))
         {

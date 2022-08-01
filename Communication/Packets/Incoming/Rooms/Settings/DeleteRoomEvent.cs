@@ -33,7 +33,7 @@ internal class DeleteRoomEvent : IPacketEvent
         {
             if (item == null)
                 continue;
-            if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.Moodlight)
+            if (item.Definition.InteractionType == InteractionType.Moodlight)
             {
                 using var dbClient = _database.GetQueryReactor();
                 dbClient.SetQuery("DELETE FROM `room_items_moodlight` WHERE `item_id` = @itemId LIMIT 1");

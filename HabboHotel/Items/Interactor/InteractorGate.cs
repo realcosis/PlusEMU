@@ -11,7 +11,7 @@ public class InteractorGate : IFurniInteractor
 
     public void OnTrigger(GameClient session, Item item, int request, bool hasRights)
     {
-        var modes = item.Definition.GetBaseItem(item).Modes - 1;
+        var modes = item.Definition.Modes - 1;
         if (!hasRights)
             return;
         if (modes <= 0) item.UpdateState(false, true);
@@ -36,7 +36,7 @@ public class InteractorGate : IFurniInteractor
 
     public void OnWiredTrigger(Item item)
     {
-        var modes = item.Definition.GetBaseItem(item).Modes - 1;
+        var modes = item.Definition.Modes - 1;
         if (modes <= 0) item.UpdateState(false, true);
         var currentMode = 0;
         var newMode = 0;

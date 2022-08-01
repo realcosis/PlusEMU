@@ -23,9 +23,9 @@ public class ItemUpdateComposer : IServerPacket
     private void WriteWallItem(IOutgoingPacket packet, Item item, int userId)
     {
         packet.WriteString(item.Id.ToString());
-        packet.WriteInteger(item.Definition.GetBaseItem(item).SpriteId);
+        packet.WriteInteger(item.Definition.SpriteId);
         packet.WriteString(item.WallCoordinates);
-        switch (item.Definition.GetBaseItem(item).InteractionType)
+        switch (item.Definition.InteractionType)
         {
             case InteractionType.Postit:
                 packet.WriteString(item.LegacyDataString.Split(' ')[0]);
@@ -35,7 +35,7 @@ public class ItemUpdateComposer : IServerPacket
                 break;
         }
         packet.WriteInteger(-1);
-        packet.WriteInteger(item.Definition.GetBaseItem(item).Modes > 1 ? 1 : 0);
+        packet.WriteInteger(item.Definition.Modes > 1 ? 1 : 0);
         packet.WriteInteger(userId);
     }
 }

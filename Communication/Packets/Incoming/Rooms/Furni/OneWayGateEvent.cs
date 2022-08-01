@@ -14,7 +14,7 @@ namespace Plus.Communication.Packets.Incoming.Rooms.Furni
             if (item == null)
                 return Task.CompletedTask;
             var hasRights = room.CheckRights(session);
-            if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.OneWayGate)
+            if (item.Definition.InteractionType == InteractionType.OneWayGate)
             {
                 item.Interactor.OnTrigger(session, item, -1, hasRights);
                 return Task.CompletedTask;

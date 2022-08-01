@@ -52,7 +52,7 @@ internal class BuyOfferEvent : IPacketEvent
             ReloadOffers(session);
             return Task.CompletedTask;
         }
-        if (!_itemDataManager.GetItem(Convert.ToInt32(row["item_id"]), out var item))
+        if (!_itemDataManager.Items.TryGetValue(Convert.ToUInt32(row["item_id"]), out var item))
         {
             session.SendNotification("Item isn't in the hotel anymore.");
             ReloadOffers(session);
@@ -72,7 +72,7 @@ internal class BuyOfferEvent : IPacketEvent
             session.GetHabbo().Credits -= Convert.ToInt32(row["total_price"]);
             session.Send(new CreditBalanceComposer(session.GetHabbo().Credits));
             var giveItem = ItemFactory.CreateSingleItem(item, session.GetHabbo(), Convert.ToString(row["extra_data"]), Convert.ToString(row["extra_data"]), Convert.ToInt32(row["furni_id"]),
-                Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]));
+                Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"])).ToInventoryItem();
             if (giveItem != null)
             {
                 session.GetHabbo().Inventory.Furniture.AddItem(giveItem);
@@ -149,7 +149,7 @@ internal class BuyOfferEvent : IPacketEvent
             {
                 if (!_marketplace.MarketItemKeys.Contains(Convert.ToInt32(row["offer_id"])))
                 {
-                    var item = new MarketOffer(Convert.ToInt32(row["offer_id"]), Convert.ToInt32(row["sprite_id"]), Convert.ToInt32(row["total_price"]), int.Parse(row["item_type"].ToString()),
+                    var item = new MarketOffer(Convert.ToUInt32(row["offer_id"]), Convert.ToInt32(row["sprite_id"]), Convert.ToInt32(row["total_price"]), int.Parse(row["item_type"].ToString()),
                         Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]));
                     _marketplace.MarketItemKeys.Add(Convert.ToInt32(row["offer_id"]));
                     _marketplace.MarketItems.Add(item);

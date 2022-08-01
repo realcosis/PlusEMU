@@ -25,7 +25,7 @@ internal class SetTonerEvent : IPacketEvent
         if (room.TonerData == null)
             return Task.CompletedTask;
         var item = room.GetRoomItemHandler().GetItem(room.TonerData.ItemId);
-        if (item == null || item.Definition.GetBaseItem(item).InteractionType != InteractionType.Toner)
+        if (item == null || item.Definition.InteractionType != InteractionType.Toner)
             return Task.CompletedTask;
         packet.ReadInt(); //id
         var int1 = packet.ReadInt();

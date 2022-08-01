@@ -22,7 +22,7 @@ internal class ToggleMoodlightEvent : IPacketEvent
         if (!room.CheckRights(session, true) || room.MoodlightData == null)
             return Task.CompletedTask;
         var item = room.GetRoomItemHandler().GetItem(room.MoodlightData.ItemId);
-        if (item == null || item.Definition.GetBaseItem(item).InteractionType != InteractionType.Moodlight)
+        if (item == null || item.Definition.InteractionType != InteractionType.Moodlight)
             return Task.CompletedTask;
         if (room.MoodlightData.Enabled)
             room.MoodlightData.Disable();

@@ -33,9 +33,9 @@ internal class UseFurnitureEvent : IPacketEvent
         if (item == null)
             return Task.CompletedTask;
         var hasRights = room.CheckRights(session, false, true);
-        if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.Banzaitele)
+        if (item.Definition.InteractionType == InteractionType.Banzaitele)
             return Task.CompletedTask;
-        if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.Toner)
+        if (item.Definition.InteractionType == InteractionType.Toner)
         {
             if (!room.CheckRights(session, true))
                 return Task.CompletedTask;
@@ -48,7 +48,7 @@ internal class UseFurnitureEvent : IPacketEvent
         }
         if (item.Definition.InteractionType == InteractionType.GnomeBox && item.UserId == session.GetHabbo().Id) session.Send(new GnomeBoxComposer(item.Id));
         var toggle = true;
-        if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.WfFloorSwitch1 || item.Definition.GetBaseItem(item).InteractionType == InteractionType.WfFloorSwitch2)
+        if (item.Definition.InteractionType == InteractionType.WfFloorSwitch1 || item.Definition.InteractionType == InteractionType.WfFloorSwitch2)
         {
             var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user == null)
@@ -59,7 +59,7 @@ internal class UseFurnitureEvent : IPacketEvent
         item.Interactor.OnTrigger(session, item, request, hasRights);
         if (toggle)
             item.GetRoom().GetWired().TriggerEvent(WiredBoxType.TriggerStateChanges, session.GetHabbo(), item);
-        _questManager.ProgressUserQuest(session, QuestType.ExploreFindItem, item.Definition.GetBaseItem(item).Id);
+        _questManager.ProgressUserQuest(session, QuestType.ExploreFindItem, item.Definition.Id);
         return Task.CompletedTask;
     }
 }

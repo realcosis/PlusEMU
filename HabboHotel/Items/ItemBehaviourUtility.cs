@@ -16,7 +16,18 @@ internal static class ItemBehaviourUtility
 
     public static bool IsLimited(this InventoryItem item) => item.UniqueSeries > 0;
 
-    public static Item ToFloorObject(this InventoryItem item) => new()
+    public static Item ToRoomObject(this InventoryItem item) => new()
+    {
+        Id = item.Id,
+        OwnerId = item.OwnerId,
+        Definition = item.Definition,
+        ExtraData = item.ExtraData,
+        UniqueNumber = item.UniqueNumber,
+        UniqueSeries = item.UniqueSeries,
+        WallCoordinates = item.WallCoordinates,
+    };
+
+    public static InventoryItem ToInventoryItem(this Item item) => new()
     {
         Id = item.Id,
         OwnerId = item.OwnerId,

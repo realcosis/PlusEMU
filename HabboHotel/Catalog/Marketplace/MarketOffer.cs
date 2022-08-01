@@ -2,7 +2,7 @@
 
 public class MarketOffer
 {
-    public MarketOffer(int offerId, int spriteId, int totalPrice, int itemType, int limitedNumber, int limitedStack)
+    public MarketOffer(uint offerId, int spriteId, int totalPrice, int itemType, int limitedNumber, int limitedStack)
     {
         OfferId = offerId;
         SpriteId = spriteId;
@@ -16,13 +16,13 @@ public class MarketOffer
     {
     }
 
-    public int OfferId { get; set;  }
+    public uint OfferId { get; set;  }
     public int ItemType { get; set; }
     public int SpriteId { get; set; }
     public int TotalPrice { get; set; }
     public int LimitedNumber { get; set; }
     public int LimitedStack { get; set; }
-    public int ItemId { get; set; }
+    public uint ItemId { get; set; }
     public int UserId { get; set; }
     public string ExtraData { get; set; } = string.Empty;
     public int FurniId { get; set; }

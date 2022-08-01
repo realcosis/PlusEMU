@@ -48,7 +48,7 @@ public class GameManager
         Points[Convert.ToInt32(team)] = newPoints;
         foreach (var item in GetFurniItems(team).Values.ToList())
         {
-            if (!IsFootballGoal(item.Definition.GetBaseItem(item).InteractionType))
+            if (!IsFootballGoal(item.Definition.InteractionType))
             {
                 item.LegacyDataString = Points[Convert.ToInt32(team)].ToString();
                 item.UpdateState();
@@ -165,7 +165,7 @@ public class GameManager
 
     private void LockGate(Item item)
     {
-        var type = item.Definition.GetBaseItem(item).InteractionType;
+        var type = item.Definition.InteractionType;
         if (type == InteractionType.FreezeBlueGate || type == InteractionType.FreezeGreenGate ||
             type == InteractionType.FreezeRedGate || type == InteractionType.FreezeYellowGate
             || type == InteractionType.Banzaigateblue || type == InteractionType.Banzaigatered ||
@@ -178,7 +178,7 @@ public class GameManager
 
     private void UnlockGate(Item item)
     {
-        var type = item.Definition.GetBaseItem(item).InteractionType;
+        var type = item.Definition.InteractionType;
         if (type == InteractionType.FreezeBlueGate || type == InteractionType.FreezeGreenGate ||
             type == InteractionType.FreezeRedGate || type == InteractionType.FreezeYellowGate
             || type == InteractionType.Banzaigateblue || type == InteractionType.Banzaigatered ||

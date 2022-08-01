@@ -31,7 +31,7 @@ public class ObjectsComposer : IServerPacket
     private void WriteFloorItem(IOutgoingPacket packet, Item item, int userId)
     {
         packet.WriteInteger(item.Id);
-        packet.WriteInteger(item.Definition.GetBaseItem(item).SpriteId);
+        packet.WriteInteger(item.Definition.SpriteId);
         packet.WriteInteger(item.GetX);
         packet.WriteInteger(item.GetY);
         packet.WriteInteger(item.Rotation);
@@ -48,7 +48,7 @@ public class ObjectsComposer : IServerPacket
         else
             ItemBehaviourUtility.GenerateExtradata(item, packet);
         packet.WriteInteger(-1); // to-do: check
-        packet.WriteInteger(item.Definition.GetBaseItem(item).Modes > 1 ? 1 : 0);
+        packet.WriteInteger(item.Definition.Modes > 1 ? 1 : 0);
         packet.WriteInteger(userId);
     }
 }

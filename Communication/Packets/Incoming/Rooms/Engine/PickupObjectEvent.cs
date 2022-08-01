@@ -31,7 +31,7 @@ internal class PickupObjectEvent : IPacketEvent
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
-        if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.Postit)
+        if (item.Definition.InteractionType == InteractionType.Postit)
             return Task.CompletedTask;
         var itemRights = false;
         if (item.UserId == session.GetHabbo().Id || room.CheckRights(session, false))
@@ -42,14 +42,14 @@ internal class PickupObjectEvent : IPacketEvent
             itemRights = true;
         if (itemRights)
         {
-            if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.Tent || item.Definition.GetBaseItem(item).InteractionType == InteractionType.TentSmall)
+            if (item.Definition.InteractionType == InteractionType.Tent || item.Definition.InteractionType == InteractionType.TentSmall)
                 room.RemoveTent(item.Id);
-            if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.Moodlight)
+            if (item.Definition.InteractionType == InteractionType.Moodlight)
             {
                 using var dbClient = _database.GetQueryReactor();
                 dbClient.RunQuery("DELETE FROM `room_items_moodlight` WHERE `item_id` = '" + item.Id + "' LIMIT 1");
             }
-            else if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.Toner)
+            else if (item.Definition.InteractionType == InteractionType.Toner)
             {
                 using var dbClient = _database.GetQueryReactor();
                 dbClient.RunQuery("DELETE FROM `room_items_toner` WHERE `id` = '" + item.Id + "' LIMIT 1");

@@ -30,7 +30,7 @@ internal class UseWallItemEvent : IPacketEvent
         var request = packet.ReadInt();
         item.Interactor.OnTrigger(session, item, request, hasRights);
         item.GetRoom().GetWired().TriggerEvent(WiredBoxType.TriggerStateChanges, session.GetHabbo(), item);
-        _questManager.ProgressUserQuest(session, QuestType.ExploreFindItem, item.Definition.GetBaseItem(item).Id);
+        _questManager.ProgressUserQuest(session, QuestType.ExploreFindItem, item.Definition.Id);
         return Task.CompletedTask;
     }
 }

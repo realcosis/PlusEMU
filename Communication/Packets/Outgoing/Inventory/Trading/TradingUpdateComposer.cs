@@ -23,7 +23,7 @@ public class TradingUpdateComposer : IServerPacket
             foreach (var item in user.OfferedItems.Values)
             {
                 packet.WriteInteger(item.Id);
-                packet.WriteString(item.Definition.GetBaseItem(item).Type.ToString().ToLower());
+                packet.WriteString(item.Definition.Type.ToString().ToLower());
                 packet.WriteInteger(item.Id);
                 packet.WriteInteger(item.Definition.SpriteId);
                 packet.WriteInteger(0); //Not sure.
@@ -44,7 +44,7 @@ public class TradingUpdateComposer : IServerPacket
                 packet.WriteInteger(0);
                 packet.WriteInteger(0);
                 packet.WriteInteger(0);
-                if (item.Definition.GetBaseItem(item).Type == 's')
+                if (item.Definition.Type == 's')
                     packet.WriteInteger(0);
             }
             packet.WriteInteger(user.OfferedItems.Count); //Item Count

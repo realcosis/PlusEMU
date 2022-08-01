@@ -29,7 +29,7 @@ public class InteractorVendor : IFurniInteractor
 
     public void OnTrigger(GameClient session, Item item, int request, bool hasRights)
     {
-        if (item.LegacyDataString != "1" && item.Definition.GetBaseItem(item).VendingIds.Count >= 1 && item.InteractingUser == 0 &&
+        if (item.LegacyDataString != "1" && item.Definition.VendingIds.Count >= 1 && item.InteractingUser == 0 &&
             session != null)
         {
             var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);

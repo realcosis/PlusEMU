@@ -43,7 +43,7 @@ public class InteractorOneWayGate : IFurniInteractor
         if (item.InteractingUser2 != user.UserId)
             item.InteractingUser2 = user.UserId;
         if (user == null) return;
-        if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.OneWayGate)
+        if (item.Definition.InteractionType == InteractionType.OneWayGate)
         {
             if (user.Coordinate != item.SquareInFront && user.CanWalk)
             {

@@ -56,7 +56,7 @@ public class TeamManager
                 {
                     if (item == null)
                         continue;
-                    if (item.Definition.GetBaseItem(item).InteractionType.Equals(InteractionType.Banzaigateblue))
+                    if (item.Definition.InteractionType.Equals(InteractionType.Banzaigateblue))
                     {
                         item.LegacyDataString = BlueTeam.Count.ToString();
                         item.UpdateState();
@@ -66,7 +66,7 @@ public class TeamManager
                             room.GetGameMap().GameMap[item.GetX, item.GetY] = 0;
                         }
                     }
-                    else if (item.Definition.GetBaseItem(item).InteractionType.Equals(InteractionType.Banzaigatered))
+                    else if (item.Definition.InteractionType.Equals(InteractionType.Banzaigatered))
                     {
                         item.LegacyDataString = RedTeam.Count.ToString();
                         item.UpdateState();
@@ -76,7 +76,7 @@ public class TeamManager
                             room.GetGameMap().GameMap[item.GetX, item.GetY] = 0;
                         }
                     }
-                    else if (item.Definition.GetBaseItem(item).InteractionType.Equals(InteractionType.Banzaigategreen))
+                    else if (item.Definition.InteractionType.Equals(InteractionType.Banzaigategreen))
                     {
                         item.LegacyDataString = GreenTeam.Count.ToString();
                         item.UpdateState();
@@ -87,7 +87,7 @@ public class TeamManager
                             room.GetGameMap().GameMap[item.GetX, item.GetY] = 0;
                         }
                     }
-                    else if (item.Definition.GetBaseItem(item).InteractionType.Equals(InteractionType.Banzaigateyellow))
+                    else if (item.Definition.InteractionType.Equals(InteractionType.Banzaigateyellow))
                     {
                         item.LegacyDataString = YellowTeam.Count.ToString();
                         item.UpdateState();
@@ -110,22 +110,22 @@ public class TeamManager
                 {
                     if (item == null)
                         continue;
-                    if (item.Definition.GetBaseItem(item).InteractionType.Equals(InteractionType.FreezeBlueGate))
+                    if (item.Definition.InteractionType.Equals(InteractionType.FreezeBlueGate))
                     {
                         item.LegacyDataString = BlueTeam.Count.ToString();
                         item.UpdateState();
                     }
-                    else if (item.Definition.GetBaseItem(item).InteractionType.Equals(InteractionType.FreezeRedGate))
+                    else if (item.Definition.InteractionType.Equals(InteractionType.FreezeRedGate))
                     {
                         item.LegacyDataString = RedTeam.Count.ToString();
                         item.UpdateState();
                     }
-                    else if (item.Definition.GetBaseItem(item).InteractionType.Equals(InteractionType.FreezeGreenGate))
+                    else if (item.Definition.InteractionType.Equals(InteractionType.FreezeGreenGate))
                     {
                         item.LegacyDataString = GreenTeam.Count.ToString();
                         item.UpdateState();
                     }
-                    else if (item.Definition.GetBaseItem(item).InteractionType.Equals(InteractionType.FreezeYellowGate))
+                    else if (item.Definition.InteractionType.Equals(InteractionType.FreezeYellowGate))
                     {
                         item.LegacyDataString = YellowTeam.Count.ToString();
                         item.UpdateState();
@@ -158,7 +158,7 @@ public class TeamManager
                 {
                     if (item == null)
                         continue;
-                    if (item.Definition.GetBaseItem(item).InteractionType.Equals(InteractionType.Banzaigateblue))
+                    if (item.Definition.InteractionType.Equals(InteractionType.Banzaigateblue))
                     {
                         item.LegacyDataString = BlueTeam.Count.ToString();
                         item.UpdateState();
@@ -169,7 +169,7 @@ public class TeamManager
                             room.GetGameMap().GameMap[item.GetX, item.GetY] = 1;
                         }
                     }
-                    else if (item.Definition.GetBaseItem(item).InteractionType.Equals(InteractionType.Banzaigatered))
+                    else if (item.Definition.InteractionType.Equals(InteractionType.Banzaigatered))
                     {
                         item.LegacyDataString = RedTeam.Count.ToString();
                         item.UpdateState();
@@ -180,7 +180,7 @@ public class TeamManager
                             room.GetGameMap().GameMap[item.GetX, item.GetY] = 1;
                         }
                     }
-                    else if (item.Definition.GetBaseItem(item).InteractionType.Equals(InteractionType.Banzaigategreen))
+                    else if (item.Definition.InteractionType.Equals(InteractionType.Banzaigategreen))
                     {
                         item.LegacyDataString = GreenTeam.Count.ToString();
                         item.UpdateState();
@@ -191,7 +191,7 @@ public class TeamManager
                             room.GetGameMap().GameMap[item.GetX, item.GetY] = 1;
                         }
                     }
-                    else if (item.Definition.GetBaseItem(item).InteractionType.Equals(InteractionType.Banzaigateyellow))
+                    else if (item.Definition.InteractionType.Equals(InteractionType.Banzaigateyellow))
                     {
                         item.LegacyDataString = YellowTeam.Count.ToString();
                         item.UpdateState();
@@ -214,22 +214,22 @@ public class TeamManager
                 {
                     if (item == null)
                         continue;
-                    if (item.Definition.GetBaseItem(item).InteractionType.Equals(InteractionType.FreezeBlueGate))
+                    if (item.Definition.InteractionType.Equals(InteractionType.FreezeBlueGate))
                     {
                         item.LegacyDataString = BlueTeam.Count.ToString();
                         item.UpdateState();
                     }
-                    else if (item.Definition.GetBaseItem(item).InteractionType.Equals(InteractionType.FreezeRedGate))
+                    else if (item.Definition.InteractionType.Equals(InteractionType.FreezeRedGate))
                     {
                         item.LegacyDataString = RedTeam.Count.ToString();
                         item.UpdateState();
                     }
-                    else if (item.Definition.GetBaseItem(item).InteractionType.Equals(InteractionType.FreezeGreenGate))
+                    else if (item.Definition.InteractionType.Equals(InteractionType.FreezeGreenGate))
                     {
                         item.LegacyDataString = GreenTeam.Count.ToString();
                         item.UpdateState();
                     }
-                    else if (item.Definition.GetBaseItem(item).InteractionType.Equals(InteractionType.FreezeYellowGate))
+                    else if (item.Definition.InteractionType.Equals(InteractionType.FreezeYellowGate))
                     {
                         item.LegacyDataString = YellowTeam.Count.ToString();
                         item.UpdateState();
