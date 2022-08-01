@@ -2,6 +2,7 @@
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Communication.Packets.Outgoing.Rooms.Notifications;
 using Plus.Core;
+using Plus.HabboHotel.Items.DataFormat;
 using Plus.HabboHotel.Items.Interactor;
 using Plus.HabboHotel.Items.Wired;
 using Plus.HabboHotel.Rooms;
@@ -13,25 +14,33 @@ namespace Plus.HabboHotel.Items;
 
 public class Item
 {
+
+    public uint Id { get; set; }
+    public uint OwnerId { get; set; }
+    public uint RoomId { get; set; }
+    public ItemDefinition Definition { get; set; }
+    public IFurniObjectData ExtraData { get; set; }
+    public uint UniqueNumber { get; set; }
+    public uint UniqueSeries { get; set; }
+    public string WallCoordinates = string.Empty;
+
+
+
+    /// TODO @80O: Cleanup shit below
     private Room? _room;
     private bool _updateNeeded;
     public int BaseItem;
-    public string ExtraData = string.Empty;
     public string Figure = string.Empty;
     public FreezePowerUp FreezePowerUp;
     public string Gender;
     public int GroupId;
-    public int Id;
     public int InteractingBallUser;
     public int InteractingUser;
     public int InteractingUser2;
     public byte InteractionCount;
     public byte InteractionCountHelper;
-    public int LimitedNo;
-    public int LimitedTot;
     public bool MagicRemove = false;
     public bool PendingReset = false;
-    public int RoomId;
     public int Rotation;
 
     public Team Team;
@@ -41,96 +50,93 @@ public class Item
 
 
     public int Value;
-    public string WallCoord = string.Empty;
 
-    public Item(int id, int roomId, int baseItem, string extraData, int x, int y, double z, int rot, int userid, int group, int limitedNumber, int limitedStack, string wallCoord, Room room = null)
-    {
-        if (PlusEnvironment.GetGame().GetItemManager().GetItem(baseItem, out var data))
-        {
-            Id = id;
-            RoomId = roomId;
-            _room = room;
-            Definition = data;
-            BaseItem = baseItem;
-            ExtraData = extraData;
-            GroupId = group;
-            GetX = x;
-            GetY = y;
-            if (!double.IsInfinity(z))
-                GetZ = z;
-            Rotation = rot;
-            UpdateNeeded = false;
-            UpdateCounter = 0;
-            InteractingUser = 0;
-            InteractingUser2 = 0;
-            InteractingBallUser = 0;
-            InteractionCount = 0;
-            Value = 0;
-            UserId = userid;
-            Username = PlusEnvironment.GetUsernameById(userid);
-            LimitedNo = limitedNumber;
-            LimitedTot = limitedStack;
-            switch (GetBaseItem().InteractionType)
-            {
-                case InteractionType.Teleport:
-                    RequestUpdate(0, true);
-                    break;
-                case InteractionType.Hopper:
-                    RequestUpdate(0, true);
-                    break;
-                case InteractionType.Roller:
-                    IsRoller = true;
-                    if (roomId > 0) GetRoom().GetRoomItemHandler().GotRollers = true;
-                    break;
-                case InteractionType.Banzaiscoreblue:
-                case InteractionType.Footballcounterblue:
-                case InteractionType.Banzaigateblue:
-                case InteractionType.FreezeBlueGate:
-                case InteractionType.Freezebluecounter:
-                    Team = Team.Blue;
-                    break;
-                case InteractionType.Banzaiscoregreen:
-                case InteractionType.Footballcountergreen:
-                case InteractionType.Banzaigategreen:
-                case InteractionType.Freezegreencounter:
-                case InteractionType.FreezeGreenGate:
-                    Team = Team.Green;
-                    break;
-                case InteractionType.Banzaiscorered:
-                case InteractionType.Footballcounterred:
-                case InteractionType.Banzaigatered:
-                case InteractionType.Freezeredcounter:
-                case InteractionType.FreezeRedGate:
-                    Team = Team.Red;
-                    break;
-                case InteractionType.Banzaiscoreyellow:
-                case InteractionType.Footballcounteryellow:
-                case InteractionType.Banzaigateyellow:
-                case InteractionType.Freezeyellowcounter:
-                case InteractionType.FreezeYellowGate:
-                    Team = Team.Yellow;
-                    break;
-                case InteractionType.Banzaitele:
-                {
-                    ExtraData = "";
-                    break;
-                }
-            }
-            IsWallItem = GetBaseItem().Type.ToString().ToLower() == "i";
-            IsFloorItem = GetBaseItem().Type.ToString().ToLower() == "s";
-            if (IsFloorItem)
-                GetAffectedTiles = Gamemap.GetAffectedTiles(GetBaseItem().Length, GetBaseItem().Width, GetX, GetY, rot);
-            else if (IsWallItem)
-            {
-                WallCoord = wallCoord;
-                IsWallItem = true;
-                IsFloorItem = false;
-                GetAffectedTiles = new Dictionary<int, ThreeDCoord>();
-            }
-        }
-    }
-
-    public ItemDefinition Definition { get; set; }
+    //public Item(int id, int roomId, int baseItem, string extraData, int x, int y, double z, int rot, int userid, int group, int limitedNumber, int limitedStack, string wallCoord, Room room = null)
+    //{
+    //    if (PlusEnvironment.GetGame().GetItemManager().GetItem(baseItem, out var data))
+    //    {
+    //        Id = id;
+    //        RoomId = roomId;
+    //        _room = room;
+    //        Definition = data;
+    //        BaseItem = baseItem;
+    //        ExtraData = extraData;
+    //        GroupId = group;
+    //        GetX = x;
+    //        GetY = y;
+    //        if (!double.IsInfinity(z))
+    //            GetZ = z;
+    //        Rotation = rot;
+    //        UpdateNeeded = false;
+    //        UpdateCounter = 0;
+    //        InteractingUser = 0;
+    //        InteractingUser2 = 0;
+    //        InteractingBallUser = 0;
+    //        InteractionCount = 0;
+    //        Value = 0;
+    //        UserId = userid;
+    //        Username = PlusEnvironment.GetUsernameById(userid);
+    //        LimitedNo = limitedNumber;
+    //        LimitedTot = limitedStack;
+    //        switch (GetBaseItem().InteractionType)
+    //        {
+    //            case InteractionType.Teleport:
+    //                RequestUpdate(0, true);
+    //                break;
+    //            case InteractionType.Hopper:
+    //                RequestUpdate(0, true);
+    //                break;
+    //            case InteractionType.Roller:
+    //                IsRoller = true;
+    //                if (roomId > 0) GetRoom().GetRoomItemHandler().GotRollers = true;
+    //                break;
+    //            case InteractionType.Banzaiscoreblue:
+    //            case InteractionType.Footballcounterblue:
+    //            case InteractionType.Banzaigateblue:
+    //            case InteractionType.FreezeBlueGate:
+    //            case InteractionType.Freezebluecounter:
+    //                Team = Team.Blue;
+    //                break;
+    //            case InteractionType.Banzaiscoregreen:
+    //            case InteractionType.Footballcountergreen:
+    //            case InteractionType.Banzaigategreen:
+    //            case InteractionType.Freezegreencounter:
+    //            case InteractionType.FreezeGreenGate:
+    //                Team = Team.Green;
+    //                break;
+    //            case InteractionType.Banzaiscorered:
+    //            case InteractionType.Footballcounterred:
+    //            case InteractionType.Banzaigatered:
+    //            case InteractionType.Freezeredcounter:
+    //            case InteractionType.FreezeRedGate:
+    //                Team = Team.Red;
+    //                break;
+    //            case InteractionType.Banzaiscoreyellow:
+    //            case InteractionType.Footballcounteryellow:
+    //            case InteractionType.Banzaigateyellow:
+    //            case InteractionType.Freezeyellowcounter:
+    //            case InteractionType.FreezeYellowGate:
+    //                Team = Team.Yellow;
+    //                break;
+    //            case InteractionType.Banzaitele:
+    //            {
+    //                ExtraData = "";
+    //                break;
+    //            }
+    //        }
+    //        IsWallItem = GetBaseItem().Type.ToString().ToLower() == "i";
+    //        IsFloorItem = GetBaseItem().Type.ToString().ToLower() == "s";
+    //        if (IsFloorItem)
+    //            GetAffectedTiles = Gamemap.GetAffectedTiles(GetBaseItem().Length, GetBaseItem().Width, GetX, GetY, rot);
+    //        else if (IsWallItem)
+    //        {
+    //            WallCoord = wallCoord;
+    //            IsWallItem = true;
+    //            IsFloorItem = false;
+    //            GetAffectedTiles = new Dictionary<int, ThreeDCoord>();
+    //        }
+    //    }
+    //}
 
     public Dictionary<int, ThreeDCoord> GetAffectedTiles { get; private set; }
 
@@ -150,11 +156,14 @@ public class Item
             _updateNeeded = value;
         }
     }
-
+    
+    [Obsolete("Will be removed in near future. @80O")]
     public bool IsRoller { get; }
 
+    [Obsolete("Will be removed in near future. @80O")]
     public Point Coordinate => new(GetX, GetY);
 
+    [Obsolete("Will be removed in near future. @80O")]
     public List<Point> GetCoords
     {
         get

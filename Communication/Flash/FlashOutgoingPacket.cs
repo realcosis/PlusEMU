@@ -42,8 +42,19 @@ namespace Plus.Communication.Flash
             _stream.Write(span.Slice(0, sizeof(int)));
             ArrayPool<byte>.Shared.Return(buffer);
         }
+        public void WriteUInt(uint value)
+        {
+            var buffer = ArrayPool<byte>.Shared.Rent(sizeof(uint));
+            var span = buffer.AsSpan();
+            if (BitConverter.IsLittleEndian)
+                value = BinaryPrimitives.ReverseEndianness(value);
+            MemoryMarshal.Write(span, ref value);
+            _stream.Write(span.Slice(0, sizeof(uint)));
+            ArrayPool<byte>.Shared.Return(buffer);
+        }
 
         public void WriteInteger(int value) => WriteInt(value);
+        public void WriteUInteger(uint value) => WriteUInt(value);
 
         public void WriteBool(bool value) => WriteByte(value ? (byte)1 : (byte)0);
         public void WriteBoolean(bool value) => WriteBool(value);

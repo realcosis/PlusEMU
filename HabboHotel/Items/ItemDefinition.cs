@@ -1,4 +1,5 @@
 ﻿using Plus.HabboHotel.Items.Wired;
+using Plus.HabboHotel.Users.Inventory.Furniture;
 
 namespace Plus.HabboHotel.Items;
 
@@ -12,7 +13,7 @@ public class ItemDefinition
         SpriteId = sprite;
         ItemName = name;
         PublicName = publicName;
-        Type = char.Parse(type);
+        Type = string.Equals(type, "s", StringComparison.OrdinalIgnoreCase) ? ItemType.Floor : ItemType.Wall;
         Width = width;
         Length = length;
         Height = height;
@@ -42,7 +43,7 @@ public class ItemDefinition
     public int SpriteId { get; set; }
     public string ItemName { get; set; }
     public string PublicName { get; set; }
-    public char Type { get; set; }
+    public ItemType Type { get; set; }
     public int Width { get; set; }
     public int Length { get; set; }
     public double Height { get; set; }

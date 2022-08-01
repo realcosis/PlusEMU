@@ -17,7 +17,7 @@ public class ItemAddComposer : IServerPacket
     {
         packet.WriteString(_item.Id.ToString());
         packet.WriteInteger(_item.GetBaseItem().SpriteId);
-        packet.WriteString(_item.WallCoord != null ? _item.WallCoord : string.Empty);
+        packet.WriteString(_item.WallCoordinates != null ? _item.WallCoordinates : string.Empty);
         ItemBehaviourUtility.GenerateWallExtradata(_item, packet);
         packet.WriteInteger(-1);
         packet.WriteInteger(_item.GetBaseItem().Modes > 1 ? 1 : 0); // Type New R63 ('use bottom')

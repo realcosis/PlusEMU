@@ -27,13 +27,13 @@ public class TradingUpdateComposer : IServerPacket
                 packet.WriteInteger(item.Id);
                 packet.WriteInteger(item.Definition.SpriteId);
                 packet.WriteInteger(0); //Not sure.
-                if (item.LimitedNo > 0)
+                if (item.UniqueNumber > 0)
                 {
                     packet.WriteBoolean(false); //Stackable
                     packet.WriteInteger(256);
                     packet.WriteString("");
-                    packet.WriteInteger(item.LimitedNo);
-                    packet.WriteInteger(item.LimitedTot);
+                    packet.WriteInteger(item.UniqueNumber);
+                    packet.WriteInteger(item.UniqueSeries);
                 }
                 else
                 {

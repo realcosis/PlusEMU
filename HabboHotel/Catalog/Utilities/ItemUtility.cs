@@ -39,7 +39,7 @@ public static class ItemUtility
 
     public static bool IsRare(Item item)
     {
-        if (item.LimitedNo > 0)
+        if (item.UniqueNumber > 0)
             return true;
         if (item.Definition.IsRare)
             return true;

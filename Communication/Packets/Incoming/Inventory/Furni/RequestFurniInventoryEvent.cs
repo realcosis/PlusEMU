@@ -1,6 +1,7 @@
 ﻿using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
+using Plus.HabboHotel.Users.Inventory.Furniture;
 
 namespace Plus.Communication.Packets.Incoming.Inventory.Furni;
 
@@ -15,7 +16,7 @@ internal class RequestFurniInventoryEvent : IPacketEvent
             session.Send(new FurniListComposer(items.ToList(), 1, 1));
         else
         {
-            foreach (ICollection<Item> batch in items.Chunk(700))
+            foreach (ICollection<InventoryItem> batch in items.Chunk(700))
             {
                 session.Send(new FurniListComposer(batch.ToList(), pages, page));
                 page++;

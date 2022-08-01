@@ -24,7 +24,7 @@ public class ItemUpdateComposer : IServerPacket
     {
         packet.WriteString(item.Id.ToString());
         packet.WriteInteger(item.GetBaseItem().SpriteId);
-        packet.WriteString(item.WallCoord);
+        packet.WriteString(item.WallCoordinates);
         switch (item.GetBaseItem().InteractionType)
         {
             case InteractionType.Postit:

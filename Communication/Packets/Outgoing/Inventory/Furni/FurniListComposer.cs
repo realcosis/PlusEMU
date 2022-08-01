@@ -1,18 +1,18 @@
-﻿using Plus.HabboHotel.Catalog.Utilities;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
+using Plus.HabboHotel.Users.Inventory.Furniture;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Furni;
 
 public class FurniListComposer : IServerPacket
 {
-    private readonly ICollection<Item> _items;
+    private readonly ICollection<InventoryItem> _items;
     private readonly int _pages;
     private readonly int _page;
 
     public uint MessageId => ServerPacketHeader.FurniListComposer;
 
-    public FurniListComposer(ICollection<Item> items, int pages, int page)
+    public FurniListComposer(ICollection<InventoryItem> items, int pages, int page)
     {
         _items = items;
         _pages = pages;
@@ -28,29 +28,20 @@ public class FurniListComposer : IServerPacket
             WriteItem(packet, item);
     }
 
-    private void WriteItem(IOutgoingPacket packet, Item item)
+    private void WriteItem(IOutgoingPacket packet, InventoryItem item)
     {
         packet.WriteInteger(item.Id);
-        packet.WriteString(item.GetBaseItem().Type.ToString().ToUpper());
+        packet.WriteString(item.Definition.Type.ToString().ToUpper());
         packet.WriteInteger(item.Id);
-        packet.WriteInteger(item.GetBaseItem().SpriteId);
-        if (item.LimitedNo > 0)
-        {
-            packet.WriteInteger(1);
-            packet.WriteInteger(256);
-            packet.WriteString(item.ExtraData);
-            packet.WriteInteger(item.LimitedNo);
-            packet.WriteInteger(item.LimitedTot);
-        }
-        else
-            ItemBehaviourUtility.GenerateExtradata(item, packet);
-        packet.WriteBoolean(item.GetBaseItem().AllowEcotronRecycle);
-        packet.WriteBoolean(item.GetBaseItem().AllowTrade);
-        packet.WriteBoolean(item.LimitedNo == 0 ? item.GetBaseItem().AllowInventoryStack : false);
-        packet.WriteBoolean(ItemUtility.IsRare(item));
-        packet.WriteInteger(-1); //Seconds to expiration.
-        packet.WriteBoolean(true);
-        packet.WriteInteger(-1); //Item RoomId
+        packet.WriteInteger(item.Definition.SpriteId);
+        ItemBehaviourUtility.Serialize(packet, item.ExtraData, item.LimitedNo, item.LimitedTot);
+        packet.WriteBoolean(item.Definition.AllowEcotronRecycle);
+        packet.WriteBoolean(item.Definition.AllowTrade);
+        packet.WriteBoolean(item.ShouldStackInInventory());
+        packet.WriteBoolean(item.Definition.AllowMarketplaceSell);
+        packet.WriteInteger(-1); //SecondsToExpiration.
+        packet.WriteBoolean(false); // HasRentPeriodStarted
+        packet.WriteInteger(-1); //Flatid
         if (!item.IsWallItem)
         {
             packet.WriteString(string.Empty);

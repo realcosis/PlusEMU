@@ -130,7 +130,7 @@ public class RoomItemHandling
                     var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(item.UserId);
                     if (client != null)
                     {
-                        client.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
+                        client.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
                         client.Send(new FurniListUpdateComposer());
                     }
                     continue;
@@ -140,7 +140,7 @@ public class RoomItemHandling
             }
             else if (item.IsWallItem)
             {
-                if (string.IsNullOrWhiteSpace(item.WallCoord))
+                if (string.IsNullOrWhiteSpace(item.WallCoordinates))
                 {
                     using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                     {
@@ -148,11 +148,11 @@ public class RoomItemHandling
                         dbClient.AddParameter("WallPosition", ":w=0,2 l=11,53 l");
                         dbClient.RunQuery();
                     }
-                    item.WallCoord = ":w=0,2 l=11,53 l";
+                    item.WallCoordinates = ":w=0,2 l=11,53 l";
                 }
                 try
                 {
-                    item.WallCoord = WallPositionCheck(":" + item.WallCoord.Split(':')[1]);
+                    item.WallCoordinates = WallPositionCheck(":" + item.WallCoordinates.Split(':')[1]);
                 }
                 catch
                 {
@@ -162,7 +162,7 @@ public class RoomItemHandling
                         dbClient.AddParameter("WallPosition", ":w=0,2 l=11,53 l");
                         dbClient.RunQuery();
                     }
-                    item.WallCoord = ":w=0,2 l=11,53 l";
+                    item.WallCoordinates = ":w=0,2 l=11,53 l";
                 }
                 if (!_wallItems.ContainsKey(item.Id))
                     _wallItems.TryAdd(item.Id, item);
@@ -385,7 +385,7 @@ public class RoomItemHandling
                                             !item.GetBaseItem().ItemName.Contains("landscape_single")))
                     {
                         dbClient.SetQuery("UPDATE `items` SET `wall_pos` = @wallPos WHERE `id` = '" + item.Id + "' LIMIT 1");
-                        dbClient.AddParameter("wallPos", item.WallCoord);
+                        dbClient.AddParameter("wallPos", item.WallCoordinates);
                         dbClient.RunQuery();
                     }
                     dbClient.RunQuery("UPDATE `items` SET `x` = '" + item.GetX + "', `y` = '" + item.GetY + "', `z` = '" + item.GetZ + "', `rot` = '" + item.Rotation + "' WHERE `id` = '" + item.Id +
@@ -614,7 +614,7 @@ public class RoomItemHandling
         {
             dbClient.SetQuery("UPDATE `items` SET `room_id` = '" + _room.RoomId + "', `x` = '" + item.GetX + "', `y` = '" + item.GetY + "', `z` = '" + item.GetZ + "', `rot` = '" + item.Rotation +
                               "', `wall_pos` = @WallPos WHERE `id` = '" + item.Id + "' LIMIT 1");
-            dbClient.AddParameter("WallPos", item.WallCoord);
+            dbClient.AddParameter("WallPos", item.WallCoordinates);
             dbClient.RunQuery();
         }
         _wallItems.TryAdd(item.Id, item);

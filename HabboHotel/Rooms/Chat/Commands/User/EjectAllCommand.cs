@@ -36,7 +36,7 @@ internal class EjectAllCommand : IChatCommand
                 if (targetClient != null && targetClient.GetHabbo() != null)
                 {
                     room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
-                    targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
+                    targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
                     targetClient.Send(new FurniListUpdateComposer());
                 }
                 else
@@ -57,7 +57,7 @@ internal class EjectAllCommand : IChatCommand
                 if (targetClient != null && targetClient.GetHabbo() != null)
                 {
                     room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
-                    targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
+                    targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
                     targetClient.Send(new FurniListUpdateComposer());
                 }
                 else

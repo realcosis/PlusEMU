@@ -23,13 +23,13 @@ public class ObjectAddComposer : IServerPacket
         packet.WriteInteger(_item.Rotation);
         packet.WriteString(TextHandling.GetString(_item.GetZ));
         packet.WriteString(string.Empty);
-        if (_item.LimitedNo > 0)
+        if (_item.UniqueNumber > 0)
         {
             packet.WriteInteger(1);
             packet.WriteInteger(256);
             packet.WriteString(_item.ExtraData);
-            packet.WriteInteger(_item.LimitedNo);
-            packet.WriteInteger(_item.LimitedTot);
+            packet.WriteInteger(_item.UniqueNumber);
+            packet.WriteInteger(_item.UniqueSeries);
         }
         else
             ItemBehaviourUtility.GenerateExtradata(_item, packet);

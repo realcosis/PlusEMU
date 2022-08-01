@@ -57,13 +57,13 @@ internal class PickupObjectEvent : IPacketEvent
             if (item.UserId == session.GetHabbo().Id)
             {
                 room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
-                session.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
+                session.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
                 session.Send(new FurniListUpdateComposer());
             }
             else if (session.GetHabbo().GetPermissions().HasRight("room_item_take")) //Staff are taking this item
             {
                 room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
-                session.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
+                session.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
                 session.Send(new FurniListUpdateComposer());
             }
             else //Item is being ejected.
@@ -72,7 +72,7 @@ internal class PickupObjectEvent : IPacketEvent
                 if (targetClient != null && targetClient.GetHabbo() != null) //Again, do we have an active client?
                 {
                     room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
-                    targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
+                    targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
                     targetClient.Send(new FurniListUpdateComposer());
                 }
                 else //No, query time.

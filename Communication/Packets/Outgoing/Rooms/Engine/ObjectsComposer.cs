@@ -37,13 +37,13 @@ public class ObjectsComposer : IServerPacket
         packet.WriteInteger(item.Rotation);
         packet.WriteString(TextHandling.GetString(item.GetZ));
         packet.WriteString(string.Empty);
-        if (item.LimitedNo > 0)
+        if (item.UniqueNumber > 0)
         {
             packet.WriteInteger(1);
             packet.WriteInteger(256);
             packet.WriteString(item.ExtraData);
-            packet.WriteInteger(item.LimitedNo);
-            packet.WriteInteger(item.LimitedTot);
+            packet.WriteInteger(item.UniqueNumber);
+            packet.WriteInteger(item.UniqueSeries);
         }
         else
             ItemBehaviourUtility.GenerateExtradata(item, packet);

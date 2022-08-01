@@ -20,19 +20,19 @@ public class FurniListAddComposer : IServerPacket
         packet.WriteString(_item.GetBaseItem().Type.ToString().ToUpper());
         packet.WriteInteger(_item.Id);
         packet.WriteInteger(_item.GetBaseItem().SpriteId);
-        if (_item.LimitedNo > 0)
+        if (_item.UniqueNumber > 0)
         {
             packet.WriteInteger(1);
             packet.WriteInteger(256);
             packet.WriteString(_item.ExtraData);
-            packet.WriteInteger(_item.LimitedNo);
-            packet.WriteInteger(_item.LimitedTot);
+            packet.WriteInteger(_item.UniqueNumber);
+            packet.WriteInteger(_item.UniqueSeries);
         }
         else
             ItemBehaviourUtility.GenerateExtradata(_item, packet);
         packet.WriteBoolean(_item.GetBaseItem().AllowEcotronRecycle);
         packet.WriteBoolean(_item.GetBaseItem().AllowTrade);
-        packet.WriteBoolean(_item.LimitedNo == 0 && _item.GetBaseItem().AllowInventoryStack);
+        packet.WriteBoolean(_item.UniqueNumber == 0 && _item.GetBaseItem().AllowInventoryStack);
         packet.WriteBoolean(ItemUtility.IsRare(_item));
         packet.WriteInteger(-1); //Seconds to expiration.
         packet.WriteBoolean(true);

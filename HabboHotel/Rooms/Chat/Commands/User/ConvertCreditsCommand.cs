@@ -44,7 +44,7 @@ internal class ConvertCreditsCommand : IChatCommand
                 foreach (DataRow row in table.Rows)
                 {
                     var item = session.GetHabbo().Inventory.Furniture.GetItem(Convert.ToInt32(row[0]));
-                    if (item == null || item.RoomId > 0 || item.Definition.InteractionType != InteractionType.Exchange)
+                    if (item == null || item.Definition.InteractionType != InteractionType.Exchange)
                         continue;
                     var value = item.Definition.BehaviourData;
                     dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
