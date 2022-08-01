@@ -16,5 +16,5 @@ public interface IMarketplaceManager
 
     Task<bool> TryCancelOffer(Habbo habbo, int offerId);
     Task<MarketOffer?> GetOffer(int offerId);
-    Task DeleteOffer(int offerId);
+    Task DeleteOffer(uint offerId);
 }

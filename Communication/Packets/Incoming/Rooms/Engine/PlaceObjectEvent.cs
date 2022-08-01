@@ -55,7 +55,7 @@ internal class PlaceObjectEvent : IPacketEvent
         }
 
         //TODO: Make neat.
-        switch (item.GetBaseItem().InteractionType)
+        switch (item.Definition.InteractionType)
         {
             case InteractionType.Moodlight:
             {
@@ -114,7 +114,7 @@ internal class PlaceObjectEvent : IPacketEvent
                     }
                     catch
                     {
-                        Console.WriteLine(item.GetBaseItem().InteractionType);
+                        Console.WriteLine(item.Definition.InteractionType);
                     }
                 }
             }

@@ -68,6 +68,7 @@ public class Habbo
 
     public List<uint> RatedRooms = new();
 
+    // TODO @80O: Convert to uint
     public int Id { get; set; }
 
     public string Username { get; set; } = string.Empty;

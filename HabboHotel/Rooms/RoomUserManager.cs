@@ -900,25 +900,25 @@ public class RoomUserManager
             {
                 if (item == null)
                     continue;
-                if (item.GetBaseItem().IsSeat)
+                if (item.Definition.IsSeat)
                 {
                     if (!user.Statusses.ContainsKey("sit"))
                     {
                         if (!user.Statusses.ContainsKey("sit"))
-                            user.Statusses.Add("sit", TextHandling.GetString(item.GetBaseItem().Height));
+                            user.Statusses.Add("sit", TextHandling.GetString(item.Definition.Height));
                     }
                     user.Z = item.GetZ;
                     user.RotHead = item.Rotation;
                     user.RotBody = item.Rotation;
                     user.UpdateNeeded = true;
                 }
-                switch (item.GetBaseItem().InteractionType)
+                switch (item.Definition.InteractionType)
                 {
                     case InteractionType.Bed:
                     case InteractionType.TentSmall:
                         {
                             if (!user.Statusses.ContainsKey("lay"))
-                                user.Statusses.Add("lay", TextHandling.GetString(item.GetBaseItem().Height) + " null");
+                                user.Statusses.Add("lay", TextHandling.GetString(item.Definition.Height) + " null");
                             user.Z = item.GetZ;
                             user.RotHead = item.Rotation;
                             user.RotBody = item.Rotation;
@@ -1017,11 +1017,11 @@ public class RoomUserManager
                                 return;
                             if (!user.IsBot)
                             {
-                                if (item == null || item.GetBaseItem() == null || user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().Effects() == null)
+                                if (item == null || item.Definition == null || user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().Effects() == null)
                                     return;
-                                if (item.GetBaseItem().EffectId == 0 && user.GetClient().GetHabbo().Effects().CurrentEffect == 0)
+                                if (item.Definition.EffectId == 0 && user.GetClient().GetHabbo().Effects().CurrentEffect == 0)
                                     return;
-                                user.GetClient().GetHabbo().Effects().ApplyEffect(item.GetBaseItem().EffectId);
+                                user.GetClient().GetHabbo().Effects().ApplyEffect(item.Definition.EffectId);
                                 item.LegacyDataString = "1";
                                 item.UpdateState(false, true);
                                 item.RequestUpdate(2, true);

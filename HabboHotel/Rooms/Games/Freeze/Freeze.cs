@@ -10,22 +10,22 @@ namespace Plus.HabboHotel.Rooms.Games.Freeze;
 
 public class Freeze
 {
-    private readonly ConcurrentDictionary<int, Item> _freezeBlocks;
-    private readonly ConcurrentDictionary<int, Item> _freezeTiles;
+    private readonly ConcurrentDictionary<uint, Item> _freezeBlocks;
+    private readonly ConcurrentDictionary<uint, Item> _freezeTiles;
     private Room _room;
 
     public Freeze(Room room)
     {
         _room = room;
         GameIsStarted = false;
-        ExitTeleports = new ConcurrentDictionary<int, Item>();
-        _freezeTiles = new ConcurrentDictionary<int, Item>();
-        _freezeBlocks = new ConcurrentDictionary<int, Item>();
+        ExitTeleports = new();
+        _freezeTiles = new();
+        _freezeBlocks = new();
     }
 
     public bool GameIsStarted { get; private set; }
 
-    public ConcurrentDictionary<int, Item> ExitTeleports { get; }
+    public ConcurrentDictionary<uint, Item> ExitTeleports { get; }
 
     public void AddExitTile(Item item)
     {
@@ -33,7 +33,7 @@ public class Freeze
             ExitTeleports.TryAdd(item.Id, item);
     }
 
-    public void RemoveExitTile(int id)
+    public void RemoveExitTile(uint id)
     {
         Item temp;
         if (ExitTeleports.ContainsKey(id))
@@ -246,7 +246,7 @@ public class Freeze
     {
         foreach (var item in items.ToList())
         {
-            switch (item.Definition.GetBaseItem(item).InteractionType)
+            switch (item.Definition.InteractionType)
             {
                 case InteractionType.FreezeTile:
                 {
@@ -360,7 +360,7 @@ public class Freeze
             _freezeTiles.TryAdd(item.Id, item);
     }
 
-    public void RemoveFreezeTile(int itemId)
+    public void RemoveFreezeTile(uint itemId)
     {
         Item item = null;
         if (_freezeTiles.ContainsKey(itemId))
@@ -373,7 +373,7 @@ public class Freeze
             _freezeBlocks.TryAdd(item.Id, item);
     }
 
-    public void RemoveFreezeBlock(int itemId)
+    public void RemoveFreezeBlock(uint itemId)
     {
         Item item = null;
         _freezeBlocks.TryRemove(itemId, out item);
@@ -537,7 +537,7 @@ public class Freeze
     {
         foreach (var item in items)
         {
-            if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.FreezeTile)
+            if (item.Definition.InteractionType == InteractionType.FreezeTile)
                 return true;
         }
         return false;
@@ -547,7 +547,7 @@ public class Freeze
     {
         foreach (var item in items)
         {
-            if (item.Definition.GetBaseItem(item).InteractionType == InteractionType.FreezeTileBlock)
+            if (item.Definition.InteractionType == InteractionType.FreezeTileBlock)
                 return true;
         }
         return false;

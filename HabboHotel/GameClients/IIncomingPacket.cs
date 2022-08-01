@@ -7,6 +7,7 @@
         byte ReadByte();
         short ReadShort();
         int ReadInt();
+        uint ReadUInt();
         bool ReadBool();
         string ReadString();
         bool HasDataRemaining();

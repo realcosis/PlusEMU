@@ -22,7 +22,7 @@ public static class ItemFactory
         dbClient.AddParameter("extra_data", extraData);
         dbClient.AddParameter("limited_number", limitedNumber);
         dbClient.AddParameter("limited_stack", limitedStack);
-        item.Id = Convert.ToInt32(dbClient.InsertQuery());
+        item.Id = Convert.ToUInt32(dbClient.InsertQuery());
         if (groupId > 0)
         {
             dbClient.SetQuery("INSERT INTO `items_groups` (`id`, `group_id`) VALUES (@id, @gid)");

@@ -15,7 +15,7 @@ public static class RoomFactory
         {
             foreach (DataRow row in rooms.Rows)
             {
-                if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(Convert.ToInt32(row["id"]), out var room))
+                if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(Convert.ToUInt32(row["id"]), out var room))
                     data.Add(room);
                 else
                 {
@@ -41,7 +41,7 @@ public static class RoomFactory
         return data;
     }
 
-    public static bool TryGetData(int roomId, out RoomData data)
+    public static bool TryGetData(uint roomId, out RoomData data)
     {
         if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(roomId, out var room))
         {

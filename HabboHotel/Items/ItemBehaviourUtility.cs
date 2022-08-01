@@ -29,12 +29,12 @@ internal static class ItemBehaviourUtility
 
     public static void GenerateExtradata(Item item, IOutgoingPacket packet)
     {
-        switch (item.GetBaseItem().InteractionType)
+        switch (item.Definition.InteractionType)
         {
             default:
                 packet.WriteInteger(1);
                 packet.WriteInteger(0);
-                packet.WriteString(item.GetBaseItem().InteractionType != InteractionType.FootballGate ? item.LegacyDataString : string.Empty);
+                packet.WriteString(item.Definition.InteractionType != InteractionType.FootballGate ? item.LegacyDataString : string.Empty);
                 break;
             case InteractionType.GnomeBox:
                 packet.WriteInteger(0);
@@ -245,7 +245,7 @@ internal static class ItemBehaviourUtility
 
     public static void GenerateWallExtradata(Item item, IOutgoingPacket message)
     {
-        switch (item.GetBaseItem().InteractionType)
+        switch (item.Definition.InteractionType)
         {
             default:
                 message.WriteString(item.LegacyDataString);

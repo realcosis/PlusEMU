@@ -5,6 +5,7 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni.Stickys;
 
+// TODO @80O: Verify stickies get the owner of the rooms recipient
 internal class AddStickyNoteEvent : IPacketEvent
 {
     private readonly IRoomManager _roomManager;
@@ -16,7 +17,7 @@ internal class AddStickyNoteEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var itemId = packet.ReadInt();
+        var itemId = packet.ReadUInt();
         var locationData = packet.ReadString();
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
@@ -30,7 +31,8 @@ internal class AddStickyNoteEvent : IPacketEvent
         try
         {
             var wallPossition = WallPositionCheck(":" + locationData.Split(':')[1]);
-            var roomItem = new Item(item.Id, room.RoomId, item.BaseItem, item.ExtraData, 0, 0, 0, 0, session.GetHabbo().Id, item.GroupId, 0, 0, wallPossition, room);
+            var roomItem = item.ToRoomObject();
+            roomItem.WallCoordinates = wallPossition;
             if (room.GetRoomItemHandler().SetWallItem(session, roomItem))
             {
                 session.GetHabbo().Inventory.Furniture.RemoveItem(itemId);

@@ -10,7 +10,7 @@ namespace Plus.HabboHotel.Rooms;
 
 public class Gamemap
 {
-    private ConcurrentDictionary<Point, List<int>> _coordinatedItems;
+    private ConcurrentDictionary<Point, List<uint>> _coordinatedItems;
     private double[,] _itemHeightMap;
     private Room _room;
     private ConcurrentDictionary<Point, List<RoomUser>> _userMap;
@@ -20,10 +20,10 @@ public class Gamemap
         _room = room;
         StaticModel = model;
         DiagonalEnabled = true;
-        Model = new DynamicRoomModel(StaticModel);
-        _coordinatedItems = new ConcurrentDictionary<Point, List<int>>();
+        Model = new(StaticModel);
+        _coordinatedItems = new ConcurrentDictionary<Point, List<uint>>();
         _itemHeightMap = new double[Model.MapSizeX, Model.MapSizeY];
-        _userMap = new ConcurrentDictionary<Point, List<RoomUser>>();
+        _userMap = new();
     }
 
     public bool DiagonalEnabled { get; set; }
@@ -55,7 +55,7 @@ public class Gamemap
         if (item == null || user == null)
             return;
         GameMap[user.X, user.Y] = user.SqState;
-        UpdateUserMovement(new Point(user.Coordinate.X, user.Coordinate.Y), new Point(item.Coordinate.X, item.Coordinate.Y), user);
+        UpdateUserMovement(new(user.Coordinate.X, user.Coordinate.Y), new(item.Coordinate.X, item.Coordinate.Y), user);
         user.X = item.GetX;
         user.Y = item.GetY;
         user.Z = item.GetZ;
@@ -88,7 +88,7 @@ public class Gamemap
     {
         if (_userMap.ContainsKey(coord))
             return _userMap[coord];
-        return new List<RoomUser>();
+        return new();
     }
 
     public Point GetRandomWalkableSquare()
@@ -99,7 +99,7 @@ public class Gamemap
             for (var x = 0; x < GameMap.GetUpperBound(0); x++)
             {
                 if (StaticModel.DoorX != x && StaticModel.DoorY != y && GameMap[x, y] == 1)
-                    walkableSquares.Add(new Point(x, y));
+                    walkableSquares.Add(new(x, y));
             }
         }
         var randomNumber = Random.Shared.Next(0, walkableSquares.Count + 1);
@@ -110,7 +110,7 @@ public class Gamemap
                 return coord;
             i++;
         }
-        return new Point(0, 0);
+        return new(0, 0);
     }
 
 
@@ -122,10 +122,10 @@ public class Gamemap
             for (var dX = 0; dX < GameMap.GetUpperBound(0); dX++)
             {
                 if (StaticModel.DoorX != dX && StaticModel.DoorY != dY && GameMap[dX, dY] == 1)
-                    walkableSquares.Add(new Point(dX, dY));
+                    walkableSquares.Add(new(dX, dY));
             }
         }
-        if (walkableSquares.Contains(new Point(x, y)))
+        if (walkableSquares.Contains(new(x, y)))
             return true;
         return false;
     }
@@ -157,7 +157,7 @@ public class Gamemap
     {
         var maxX = 0;
         var maxY = 0;
-        _coordinatedItems = new ConcurrentDictionary<Point, List<int>>();
+        _coordinatedItems = new();
         if (checkLines)
         {
             var items = _room.GetRoomItemHandler().GetFloor.ToArray();
@@ -275,7 +275,7 @@ public class Gamemap
             {
                 _itemHeightMap[coord.X, coord.Y] = item.TotalHeight - Model.SqFloorHeight[item.GetX, item.GetY];
                 EffectMap[coord.X, coord.Y] = 0;
-                switch (item.GetBaseItem().InteractionType)
+                switch (item.Definition.InteractionType)
                 {
                     case InteractionType.Pool:
                         EffectMap[coord.X, coord.Y] = 1;
@@ -295,18 +295,18 @@ public class Gamemap
                 }
 
                 //SwimHalloween
-                if (item.GetBaseItem().Walkable) // If this item is walkable and on the floor, allow users to walk here.
+                if (item.Definition.Walkable) // If this item is walkable and on the floor, allow users to walk here.
                 {
                     if (GameMap[coord.X, coord.Y] != 3)
                         GameMap[coord.X, coord.Y] = 1;
                 }
-                else if (item.GetZ <= Model.SqFloorHeight[item.GetX, item.GetY] + 0.1 && item.GetBaseItem().InteractionType == InteractionType.Gate &&
+                else if (item.GetZ <= Model.SqFloorHeight[item.GetX, item.GetY] + 0.1 && item.Definition.InteractionType == InteractionType.Gate &&
                          item.LegacyDataString == "1") // If this item is a gate, open, and on the floor, allow users to walk here.
                 {
                     if (GameMap[coord.X, coord.Y] != 3)
                         GameMap[coord.X, coord.Y] = 1;
                 }
-                else if (item.GetBaseItem().IsSeat || item.GetBaseItem().InteractionType == InteractionType.Bed || item.GetBaseItem().InteractionType == InteractionType.TentSmall)
+                else if (item.Definition.IsSeat || item.Definition.InteractionType == InteractionType.Bed || item.Definition.InteractionType == InteractionType.TentSmall)
                     GameMap[coord.X, coord.Y] = 3;
                 else // Finally, if it's none of those, block the square.
                 {
@@ -316,7 +316,7 @@ public class Gamemap
             }
 
             // Set bad maps
-            if (item.GetBaseItem().InteractionType == InteractionType.Bed || item.GetBaseItem().InteractionType == InteractionType.TentSmall)
+            if (item.Definition.InteractionType == InteractionType.Bed || item.Definition.InteractionType == InteractionType.TentSmall)
                 GameMap[coord.X, coord.Y] = 3;
         }
         catch (Exception e)
@@ -328,10 +328,10 @@ public class Gamemap
 
     public void AddCoordinatedItem(Item item, Point coord)
     {
-        var items = new List<int>(); //mCoordinatedItems[CoordForItem];
+        var items = new List<uint>(); //mCoordinatedItems[CoordForItem];
         if (!_coordinatedItems.TryGetValue(coord, out items))
         {
-            items = new List<int>();
+            items = new();
             if (!items.Contains(item.Id))
                 items.Add(item.Id);
             if (!_coordinatedItems.ContainsKey(coord))
@@ -357,7 +357,7 @@ public class Gamemap
             items = GetItemsFromIds(ids);
             return items;
         }
-        return new List<Item>();
+        return new();
     }
 
     public bool RemoveCoordinatedItem(Item item, Point coord)
@@ -373,7 +373,7 @@ public class Gamemap
 
     private void AddSpecialItems(Item item)
     {
-        switch (item.GetBaseItem().InteractionType)
+        switch (item.Definition.InteractionType)
         {
             case InteractionType.FootballGate:
                 //IsTrans = true;
@@ -450,7 +450,7 @@ public class Gamemap
 
     private void RemoveSpecialItem(Item item)
     {
-        switch (item.GetBaseItem().InteractionType)
+        switch (item.Definition.InteractionType)
         {
             case InteractionType.FootballGate:
                 _room.GetSoccer().UnRegisterGate(item);
@@ -526,7 +526,7 @@ public class Gamemap
         if (handleGameItem)
         {
             AddSpecialItems(item);
-            switch (item.GetBaseItem().InteractionType)
+            switch (item.Definition.InteractionType)
             {
                 case InteractionType.FootballGoalRed:
                 case InteractionType.Footballcounterred:
@@ -585,9 +585,9 @@ public class Gamemap
                 }
             }
         }
-        if (item.GetBaseItem().Type != ItemType.Floor)
+        if (item.Definition.Type != ItemType.Floor)
             return true;
-        foreach (var coord in item.GetCoords.ToList()) AddCoordinatedItem(item, new Point(coord.X, coord.Y));
+        foreach (var coord in item.GetCoords.ToList()) AddCoordinatedItem(item, new(coord.X, coord.Y));
         if (item.GetX > Model.MapSizeX - 1)
         {
             Model.AddX();
@@ -624,7 +624,7 @@ public class Gamemap
 
     public bool ItemCanMove(Item item, Point moveTo)
     {
-        var points = GetAffectedTiles(item.GetBaseItem().Length, item.GetBaseItem().Width, moveTo.X, moveTo.Y, item.Rotation).Values.ToList();
+        var points = GetAffectedTiles(item.Definition.Length, item.Definition.Width, moveTo.X, moveTo.Y, item.Rotation).Values.ToList();
         if (points == null || points.Count == 0)
             return true;
         foreach (var coord in points)
@@ -752,20 +752,20 @@ public class Gamemap
             if (iX > coord.X)
             {
                 iX--;
-                return new Point(iX, iY);
+                return new(iX, iY);
             }
             iX++;
-            return new Point(iX, iY);
+            return new(iX, iY);
         }
         if (!x && distance < 99)
         {
             if (iY > coord.Y)
             {
                 iY--;
-                return new Point(iX, iY);
+                return new(iX, iY);
             }
             iY++;
-            return new Point(iX, iY);
+            return new(iX, iY);
         }
         return item.Coordinate;
     }
@@ -787,10 +787,10 @@ public class Gamemap
         var items = _room.GetGameMap().GetAllRoomItemForSquare(to.X, to.Y);
         if (items.Count > 0)
         {
-            var hasGroupGate = items.ToList().Count(x => x.GetBaseItem().InteractionType == InteractionType.GuildGate) > 0;
+            var hasGroupGate = items.ToList().Count(x => x.Definition.InteractionType == InteractionType.GuildGate) > 0;
             if (hasGroupGate)
             {
-                var I = items.FirstOrDefault(x => x.GetBaseItem().InteractionType == InteractionType.GuildGate);
+                var I = items.FirstOrDefault(x => x.Definition.InteractionType == InteractionType.GuildGate);
                 if (I != null)
                 {
                     if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(I.GroupId, out var group))
@@ -824,7 +824,7 @@ public class Gamemap
                 continue;
             }
             highestZ = item.GetZ;
-            if (item.GetBaseItem().IsSeat)
+            if (item.Definition.IsSeat)
                 chair = true;
         }
         if (GameMap[to.X, to.Y] == 3 && !endOfPath && !chair || GameMap[to.X, to.Y] == 0 || GameMap[to.X, to.Y] == 2 && !endOfPath)
@@ -864,7 +864,7 @@ public class Gamemap
         var items = _room.GetGameMap().GetAllRoomItemForSquare(to.X, to.Y);
         if (items.Count > 0)
         {
-            var hasGroupGate = items.ToList().Count(x => x != null && x.GetBaseItem().InteractionType == InteractionType.GuildGate) > 0;
+            var hasGroupGate = items.ToList().Count(x => x != null && x.Definition.InteractionType == InteractionType.GuildGate) > 0;
             if (hasGroupGate)
                 return true;
         }
@@ -937,10 +937,10 @@ public class Gamemap
                         continue;
                     if (item.TotalHeight > highestStack)
                     {
-                        if (item.GetBaseItem().IsSeat || item.GetBaseItem().InteractionType == InteractionType.Bed || item.GetBaseItem().InteractionType == InteractionType.TentSmall)
+                        if (item.Definition.IsSeat || item.Definition.InteractionType == InteractionType.Bed || item.Definition.InteractionType == InteractionType.TentSmall)
                         {
                             deduct = true;
-                            deductable = item.GetBaseItem().Height;
+                            deductable = item.Definition.Height;
                         }
                         else
                             deduct = false;
@@ -979,16 +979,16 @@ public class Gamemap
             {
                 for (var i = 1; i < length; i++)
                 {
-                    pointList.Add(x++, new ThreeDCoord(posX, posY + i, i));
-                    for (var j = 1; j < width; j++) pointList.Add(x++, new ThreeDCoord(posX + j, posY + i, i < j ? j : i));
+                    pointList.Add(x++, new(posX, posY + i, i));
+                    for (var j = 1; j < width; j++) pointList.Add(x++, new(posX + j, posY + i, i < j ? j : i));
                 }
             }
             else if (rotation == 2 || rotation == 6)
             {
                 for (var i = 1; i < length; i++)
                 {
-                    pointList.Add(x++, new ThreeDCoord(posX + i, posY, i));
-                    for (var j = 1; j < width; j++) pointList.Add(x++, new ThreeDCoord(posX + i, posY + j, i < j ? j : i));
+                    pointList.Add(x++, new(posX + i, posY, i));
+                    for (var j = 1; j < width; j++) pointList.Add(x++, new(posX + i, posY + j, i < j ? j : i));
                 }
             }
         }
@@ -998,26 +998,26 @@ public class Gamemap
             {
                 for (var i = 1; i < width; i++)
                 {
-                    pointList.Add(x++, new ThreeDCoord(posX + i, posY, i));
-                    for (var j = 1; j < length; j++) pointList.Add(x++, new ThreeDCoord(posX + i, posY + j, i < j ? j : i));
+                    pointList.Add(x++, new(posX + i, posY, i));
+                    for (var j = 1; j < length; j++) pointList.Add(x++, new(posX + i, posY + j, i < j ? j : i));
                 }
             }
             else if (rotation == 2 || rotation == 6)
             {
                 for (var i = 1; i < width; i++)
                 {
-                    pointList.Add(x++, new ThreeDCoord(posX, posY + i, i));
-                    for (var j = 1; j < length; j++) pointList.Add(x++, new ThreeDCoord(posX + j, posY + i, i < j ? j : i));
+                    pointList.Add(x++, new(posX, posY + i, i));
+                    for (var j = 1; j < length; j++) pointList.Add(x++, new(posX + j, posY + i, i < j ? j : i));
                 }
             }
         }
         return pointList;
     }
 
-    public List<Item> GetItemsFromIds(List<int> input)
+    public List<Item> GetItemsFromIds(List<uint> input)
     {
         if (input == null || input.Count == 0)
-            return new List<Item>();
+            return new();
         var items = new List<Item>();
         lock (input)
         {
@@ -1074,11 +1074,11 @@ public class Gamemap
         if (_coordinatedItems.TryGetValue(coord, out var ids))
             items = GetItemsFromIds(ids);
         else
-            items = new List<Item>();
+            items = new();
         return items;
     }
 
-    public bool SquareHasUsers(int x, int y) => MapGotUser(new Point(x, y));
+    public bool SquareHasUsers(int x, int y) => MapGotUser(new(x, y));
 
 
     public static bool TilesTouching(int x1, int y1, int x2, int y2)

@@ -21,7 +21,7 @@ public interface IRoomManager
     List<Room> GetOnGoingRoomPromotions(int mode, int amount = 50);
     List<Room> GetPromotedRooms(int categoryId, int amount = 50);
     List<Room> GetGroupRooms(int amount = 50);
-    List<Room> GetRoomsByIds(List<int> ids, int amount = 50);
+    List<Room> GetRoomsByIds(List<uint> ids, int amount = 50);
     Room TryGetRandomLoadedRoom();
     bool TryGetRoom(uint roomId, out Room room);
 

@@ -4,6 +4,7 @@ using Plus.Database;
 using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
+using Plus.HabboHotel.Items.DataFormat;
 using Plus.HabboHotel.Quests;
 using Plus.HabboHotel.Rooms;
 
@@ -32,13 +33,13 @@ internal class ApplyDecorationEvent : IPacketEvent
             return Task.CompletedTask;
         if (!room.CheckRights(session, true))
             return Task.CompletedTask;
-        var item = session.GetHabbo().Inventory.Furniture.GetItem(packet.ReadInt());
+        var item = session.GetHabbo().Inventory.Furniture.GetItem(packet.ReadUInt());
         if (item == null)
             return Task.CompletedTask;
-        if (item.GetBaseItem() == null)
+        if (item.Definition == null)
             return Task.CompletedTask;
         var decorationKey = string.Empty;
-        switch (item.GetBaseItem().InteractionType)
+        switch (item.Definition.InteractionType)
         {
             case InteractionType.Floor:
                 decorationKey = "floor";
@@ -50,20 +51,24 @@ internal class ApplyDecorationEvent : IPacketEvent
                 decorationKey = "landscape";
                 break;
         }
+        var data = (item.ExtraData is LegacyDataFormat legacyData ? legacyData.Data : string.Empty);
+        if (string.IsNullOrWhiteSpace(data))
+            return Task.CompletedTask;
+
         switch (decorationKey)
         {
             case "floor":
-                room.Floor = item.ExtraData;
+                room.Floor = data;
                 _questManager.ProgressUserQuest(session, QuestType.FurniDecoFloor);
                 _achievementManager.ProgressAchievement(session, "ACH_RoomDecoFloor", 1);
                 break;
             case "wallpaper":
-                room.Wallpaper = item.ExtraData;
+                room.Wallpaper = data;
                 _questManager.ProgressUserQuest(session, QuestType.FurniDecoWall);
                 _achievementManager.ProgressAchievement(session, "ACH_RoomDecoWallpaper", 1);
                 break;
             case "landscape":
-                room.Landscape = item.ExtraData;
+                room.Landscape = data;
                 _achievementManager.ProgressAchievement(session, "ACH_RoomDecoLandscape", 1);
                 break;
         }
@@ -76,7 +81,7 @@ internal class ApplyDecorationEvent : IPacketEvent
         }
         session.GetHabbo().Inventory.Furniture.RemoveItem(item.Id);
         session.Send(new FurniListRemoveComposer(item.Id));
-        room.SendPacket(new RoomPropertyComposer(decorationKey, item.ExtraData));
+        room.SendPacket(new RoomPropertyComposer(decorationKey, data));
         return Task.CompletedTask;
     }
 }

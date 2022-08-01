@@ -64,12 +64,12 @@ public class GameItemHandler
             _banzaiPyramids.TryAdd(itemId, item);
     }
 
-    public void RemovePyramid(int itemId)
+    public void RemovePyramid(uint itemId)
     {
         _banzaiPyramids.TryRemove(itemId, out var item);
     }
 
-    public void AddTeleport(Item item, int itemId)
+    public void AddTeleport(Item item, uint itemId)
     {
         if (_banzaiTeleports.ContainsKey(itemId))
             _banzaiTeleports[itemId] = item;
@@ -77,7 +77,7 @@ public class GameItemHandler
             _banzaiTeleports.TryAdd(itemId, item);
     }
 
-    public void RemoveTeleport(int itemId)
+    public void RemoveTeleport(uint itemId)
     {
         _banzaiTeleports.TryRemove(itemId, out var item);
     }

@@ -27,7 +27,7 @@ public class Pet
     public bool PlacedInRoom;
     public string Race;
     public int Respect;
-    public int RoomId;
+    public uint RoomId;
     public int Saddle;
 
     public int Type;
@@ -36,7 +36,7 @@ public class Pet
     public int Y;
     public double Z;
 
-    public Pet(int petId, int ownerId, int roomId, string name, int type, string race, string color, int experience, int energy, int nutrition, int respect, double creationStamp, int x, int y,
+    public Pet(int petId, int ownerId, uint roomId, string name, int type, string race, string color, int experience, int energy, int nutrition, int respect, double creationStamp, int x, int y,
         double z, int saddle, int anyonecanride, int dye, int petHer, string gnomeClothing)
     {
         PetId = petId;

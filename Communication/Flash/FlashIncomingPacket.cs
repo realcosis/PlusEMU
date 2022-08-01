@@ -41,6 +41,14 @@ namespace Plus.Communication.Flash
             Buffer = Buffer.Slice(sizeof(int));
             return result;
         }
+        public uint ReadUInt()
+        {
+            var span = Buffer.Span.Slice(0, 4);
+            span.Reverse();
+            var result = MemoryMarshal.Read<uint>(span);
+            Buffer = Buffer.Slice(sizeof(uint));
+            return result;
+        }
 
         public bool ReadBool() => ReadInt() == 1;
 

@@ -9,7 +9,7 @@ namespace Plus.HabboHotel.Rooms.Games.Football;
 
 public class Soccer
 {
-    private ConcurrentDictionary<int, Item> _balls;
+    private ConcurrentDictionary<uint, Item> _balls;
     private Item[] _gates;
     private Room _room;
 
@@ -17,7 +17,7 @@ public class Soccer
     {
         _room = room;
         _gates = new Item[4];
-        _balls = new ConcurrentDictionary<int, Item>();
+        _balls = new();
         GameIsStarted = false;
     }
 
@@ -40,7 +40,7 @@ public class Soccer
         _balls.TryAdd(item.Id, item);
     }
 
-    public void RemoveBall(int itemId)
+    public void RemoveBall(uint itemId)
     {
         _balls.TryRemove(itemId, out var item);
     }
@@ -208,7 +208,7 @@ public class Soccer
 
     public void OnGateRemove(Item item)
     {
-        switch (item.Definition.GetBaseItem(item).InteractionType)
+        switch (item.Definition.InteractionType)
         {
             case InteractionType.FootballGoalRed:
             case InteractionType.Footballcounterred:
@@ -247,7 +247,7 @@ public class Soccer
         if (oldRoomCoord.X == newX && oldRoomCoord.Y == newY)
             return;
         double newZ = _room.GetGameMap().Model.SqFloorHeight[newX, newY];
-        _room.SendPacket(new SlideObjectBundleComposer(item.Coordinate.X, item.Coordinate.Y, item.GetZ, newX, newY, newZ, item.Id, item.Id, item.Id));
+        _room.SendPacket(new SlideObjectBundleComposer(item.Coordinate.X, item.Coordinate.Y, item.GetZ, newX, newY, newZ, item.Id, (int)item.Id, item.Id));
         item.LegacyDataString = "11";
         item.UpdateNeeded = true;
         _room.GetRoomItemHandler().SetFloorItem(null, item, newX, newY, item.Rotation, false, false, false);

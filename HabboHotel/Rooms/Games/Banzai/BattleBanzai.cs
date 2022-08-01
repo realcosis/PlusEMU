@@ -49,7 +49,7 @@ public class BattleBanzai
             _pucks.TryAdd(item.Id, item);
     }
 
-    public void RemovePuck(int itemId)
+    public void RemovePuck(uint itemId)
     {
         _pucks.TryRemove(itemId, out var item);
     }
@@ -191,7 +191,7 @@ public class BattleBanzai
     {
         foreach (var item in _room.GetRoomItemHandler().GetFloor.ToList())
         {
-            var type = item.GetBaseItem().InteractionType;
+            var type = item.Definition.InteractionType;
             switch (type)
             {
                 case InteractionType.Banzaiscoreblue:
@@ -351,7 +351,7 @@ public class BattleBanzai
         {
             if (item == null)
                 continue;
-            if (item.GetBaseItem().InteractionType != InteractionType.Banzaifloor)
+            if (item.Definition.InteractionType != InteractionType.Banzaifloor)
             {
                 user.Team = Team.None;
                 user.ApplyEffect(0);
@@ -384,7 +384,7 @@ public class BattleBanzai
         {
             if (item == null)
                 continue;
-            if (item.GetBaseItem().InteractionType != InteractionType.Banzaifloor)
+            if (item.Definition.InteractionType != InteractionType.Banzaifloor)
                 continue;
             if (item.GetX != coord.X || item.GetY != coord.Y)
                 continue;

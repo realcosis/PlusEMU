@@ -187,7 +187,7 @@ public class Room : RoomData
             var speeches = new List<RandomSpeech>();
             foreach (DataRow speech in botSpeech.Rows) speeches.Add(new(Convert.ToString(speech["text"]), Convert.ToInt32(bot["id"])));
             _roomUserManager.DeployBot(
-                new RoomBot(Convert.ToInt32(bot["id"]), Convert.ToInt32(bot["room_id"]), Convert.ToString(bot["ai_type"]), Convert.ToString(bot["walk_mode"]), Convert.ToString(bot["name"]),
+                new RoomBot(Convert.ToInt32(bot["id"]), Convert.ToUInt32(bot["room_id"]), Convert.ToString(bot["ai_type"]), Convert.ToString(bot["walk_mode"]), Convert.ToString(bot["name"]),
                     Convert.ToString(bot["motto"]), Convert.ToString(bot["look"]), int.Parse(bot["x"].ToString()), int.Parse(bot["y"].ToString()), int.Parse(bot["z"].ToString()),
                     int.Parse(bot["rotation"].ToString()), 0, 0, 0, 0, ref speeches, "M", 0, Convert.ToInt32(bot["user_id"].ToString()), Convert.ToBoolean(bot["automatic_chat"]),
                     Convert.ToInt32(bot["speaking_interval"]), ConvertExtensions.EnumToBool(bot["mix_sentences"].ToString()), Convert.ToInt32(bot["chat_bubble"])), null);
@@ -307,9 +307,9 @@ public class Room : RoomData
         string key = null;
         foreach (var item in GetRoomItemHandler().GetFurniObjects(ball.GetX, ball.GetY).ToList())
         {
-            if (item.GetBaseItem().ItemName.StartsWith("fball_goal_"))
+            if (item.Definition.ItemName.StartsWith("fball_goal_"))
             {
-                key = item.GetBaseItem().ItemName.Split(new[] { '_' })[2];
+                key = item.Definition.ItemName.Split(new[] { '_' })[2];
                 user.UnIdle();
                 user.DanceId = 0;
                 PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(user.GetClient(), "ACH_FootballGoalScored", 1);
@@ -318,10 +318,10 @@ public class Room : RoomData
         }
         if (key != null)
         {
-            if (predicate == null) predicate = p => p.GetBaseItem().ItemName == "fball_score_" + key;
+            if (predicate == null) predicate = p => p.Definition.ItemName == "fball_score_" + key;
             foreach (var item2 in GetRoomItemHandler().GetFloor.Where(predicate).ToList())
             {
-                if (item2.GetBaseItem().ItemName == "fball_score_" + key)
+                if (item2.Definition.ItemName == "fball_score_" + key)
                 {
                     if (!string.IsNullOrEmpty(item2.LegacyDataString))
                         item2.LegacyDataString = (Convert.ToInt32(item2.LegacyDataString) + 1).ToString();

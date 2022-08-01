@@ -226,7 +226,7 @@ public class RoomManager : IRoomManager
         return _rooms.Values.Where(x => x.Group != null && x.Access != RoomAccess.Invisible).OrderByDescending(x => x.Score).Take(amount).ToList();
     }
 
-    public List<Room> GetRoomsByIds(List<int> ids, int amount = 50)
+    public List<Room> GetRoomsByIds(List<uint> ids, int amount = 50)
     {
         return _rooms.Values.Where(x => ids.Contains(x.Id) && x.Access != RoomAccess.Invisible).OrderByDescending(x => x.UsersNow).Take(amount).ToList();
     }
@@ -247,7 +247,7 @@ public class RoomManager : IRoomManager
             session.SendNotification(PlusEnvironment.GetLanguageManager().TryGetValue("room.creation.name.too_short"));
             return null;
         }
-        var roomId = 0;
+        var roomId = 0u;
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
             dbClient.SetQuery(
@@ -259,7 +259,7 @@ public class RoomManager : IRoomManager
             dbClient.AddParameter("category", category);
             dbClient.AddParameter("usersmax", maxVisitors);
             dbClient.AddParameter("tradesettings", tradeSettings);
-            roomId = Convert.ToInt32(dbClient.InsertQuery());
+            roomId = Convert.ToUInt32(dbClient.InsertQuery());
         }
         var data = new RoomData(roomId, name, model.Id, session.GetHabbo().Username, session.GetHabbo().Id, "", 0, "public", "open", 0, maxVisitors, category, description, string.Empty,
             floor, landscape, 1, 1, 0, 0, wallthick, floorthick, wallpaper, 1, 1, 1, 1, 1, 1, 1, 8, tradeSettings, true, true, true, true, true, true, true, 0, 0, true, model);
