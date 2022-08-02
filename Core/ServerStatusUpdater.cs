@@ -1,11 +1,16 @@
-﻿using NLog;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Plus.Core;
 
 public class ServerStatusUpdater : IDisposable, IServerStatusUpdater
 {
     private const int UpdateInSeconds = 30;
-    private static readonly ILogger _log = LogManager.GetLogger("Plus.Core.ServerStatusUpdater");
+    private readonly ILogger<ServerStatusUpdater> _logger;
+
+    public ServerStatusUpdater(ILogger<ServerStatusUpdater> logger)
+    {
+        _logger = logger;
+    }
 
     private Timer _timer;
 
@@ -23,7 +28,7 @@ public class ServerStatusUpdater : IDisposable, IServerStatusUpdater
     {
         _timer = new Timer(OnTick, null, TimeSpan.FromSeconds(UpdateInSeconds), TimeSpan.FromSeconds(UpdateInSeconds));
         Console.Title = "Plus Emulator - 0 users online - 0 rooms loaded - 0 day(s) 0 hour(s) uptime";
-        _log.Info("Server Status Updater has been started.");
+        _logger.LogInformation("Server Status Updater has been started.");
     }
 
     public void OnTick(object obj)

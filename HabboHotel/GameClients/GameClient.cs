@@ -1,6 +1,6 @@
 ﻿using System.Net.Sockets;
 using Microsoft.IO;
-using NLog;
+using Microsoft.Extensions.Logging;
 using Plus.Communication.Encryption.Crypto.Prng;
 using Plus.Communication.Flash;
 using Plus.Communication.Packets;
@@ -13,6 +13,7 @@ public abstract class GameClient
 {
     private readonly IGameServer _server;
     private readonly IPacketFactory _packetFactory;
+    private readonly ILogger<GameClient> _logger;
     private Habbo? _habbo;
 
     public RecyclableMemoryStream? _incompleteStream;
@@ -36,6 +37,11 @@ public abstract class GameClient
 
 
     public void Disconnect() => DisconnectRequested?.Invoke();
+
+    public GameClient(ILogger<GameClient> logger)
+    {
+        _logger = logger;
+    }
 
     protected GameClient(IGameServer server, IPacketFactory packetFactory)
     {
@@ -101,8 +107,6 @@ public abstract class GameClient
         _habbo = habbo;
     }
 
-    private static readonly ILogger Log = LogManager.GetLogger("Plus.Communication.Packets");
-
     public void Send(IServerPacket composer)
     {
         var outgoingMessageId = Revision.InternalIdToOutgoingIdMapping[composer.MessageId];
@@ -115,7 +119,7 @@ public abstract class GameClient
         CreateHeader(memory, outgoingMessageId);
         args.SetBuffer(memory);
         SendCallback(args);
-        Log.Debug($"Send Packet: {composer.GetType().Name} (EmuId: {composer.MessageId}, ClientId: {outgoingMessageId})");
+        _logger.LogDebug($"Send Packet: {composer.GetType().Name} (EmuId: {composer.MessageId}, ClientId: {outgoingMessageId})");
         stream.Dispose();
     }
 
