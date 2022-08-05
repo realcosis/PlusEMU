@@ -10,7 +10,7 @@ public interface ICatalogManager
 {
     Dictionary<int, int> ItemOffers { get; }
     void Init(IItemDataManager itemDataManager);
-    bool TryGetBot(int itemId, out CatalogBot bot);
+    bool TryGetBot(uint itemId, out CatalogBot bot);
     bool TryGetPage(int pageId, out CatalogPage page);
     bool TryGetDeal(int dealId, out CatalogDeal deal);
     ICollection<CatalogPage> GetPages();

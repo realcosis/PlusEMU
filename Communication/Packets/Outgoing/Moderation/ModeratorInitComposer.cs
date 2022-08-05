@@ -38,7 +38,7 @@ public class ModeratorInitComposer : IServerPacket
             packet.WriteInteger(ticket.Moderator?.Id ?? 0); // Moderator ID
             packet.WriteString(ticket.Moderator == null ? string.Empty : ticket.Moderator.Username); // Mod Name
             packet.WriteString(ticket.Issue); // Issue
-            packet.WriteInteger(ticket.Room?.Id ?? 0); // Room Id
+            packet.WriteUInteger(ticket.Room?.Id ?? 0); // Room Id
             packet.WriteInteger(0); //LOOP
         }
         packet.WriteInteger(_userPresets.Count);

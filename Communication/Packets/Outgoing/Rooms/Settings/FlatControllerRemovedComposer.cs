@@ -17,7 +17,7 @@ public class FlatControllerRemovedComposer : IServerPacket
 
     public void Compose(IOutgoingPacket packet)
     {
-        packet.WriteInteger(_instance.Id);
+        packet.WriteUInteger(_instance.Id);
         packet.WriteInteger(_userId);
     }
 }

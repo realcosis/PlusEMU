@@ -4,12 +4,12 @@ namespace Plus.Communication.Packets.Outgoing.Navigator;
 
 public class FlatCreatedComposer : IServerPacket
 {
-    private readonly int _roomId;
+    private readonly uint _roomId;
     private readonly string _roomName;
 
     public uint MessageId => ServerPacketHeader.FlatCreatedComposer;
 
-    public FlatCreatedComposer(int roomId, string roomName)
+    public FlatCreatedComposer(uint roomId, string roomName)
     {
         _roomId = roomId;
         _roomName = roomName;
@@ -17,7 +17,7 @@ public class FlatCreatedComposer : IServerPacket
 
     public void Compose(IOutgoingPacket packet)
     {
-        packet.WriteInteger(_roomId);
+        packet.WriteUInteger(_roomId);
         packet.WriteString(_roomName);
     }
 }

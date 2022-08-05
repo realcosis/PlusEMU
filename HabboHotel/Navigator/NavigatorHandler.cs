@@ -90,7 +90,7 @@ internal static class NavigatorHandler
                                 if (Convert.ToString(row["state"]) == "invisible")
                                     continue;
                                 RoomData data = null;
-                                if (!RoomFactory.TryGetData(Convert.ToInt32(row["id"]), out data))
+                                if (!RoomFactory.TryGetData(Convert.ToUInt32(row["id"]), out data))
                                     continue;
                                 if (!results.Contains(data))
                                     results.Add(data);

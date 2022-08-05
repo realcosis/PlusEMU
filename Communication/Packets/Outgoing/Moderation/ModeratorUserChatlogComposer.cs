@@ -32,7 +32,7 @@ public class ModeratorUserChatlogComposer : IServerPacket
             packet.WriteString(chatlog.Key.Name); // room name
             packet.WriteString("roomId");
             packet.WriteByte(1);
-            packet.WriteInteger(chatlog.Key.Id);
+            packet.WriteUInteger(chatlog.Key.Id);
             packet.WriteShort((short)chatlog.Value.Count); // Chatlogs Count
             foreach (var entry in chatlog.Value)
             {

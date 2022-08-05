@@ -25,7 +25,7 @@ public class PurchaseOkComposer : IServerPacket
         if (_item != null && _baseItem != null)
         {
 
-            packet.WriteInteger(_baseItem.Id);
+            packet.WriteUInteger(_baseItem.Id);
             packet.WriteString(_baseItem.ItemName);
             packet.WriteBoolean(false);
             packet.WriteInteger(_item.CostCredits);

@@ -15,7 +15,7 @@ internal class TradingOfferItemEvent : IPacketEvent
         var roomUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (roomUser == null)
             return Task.CompletedTask;
-        var itemId = packet.ReadInt();
+        var itemId = packet.ReadUInt();
         if (!roomUser.IsTrading)
         {
             session.Send(new TradingClosedComposer(session.GetHabbo().Id));

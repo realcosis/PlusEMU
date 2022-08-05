@@ -7,7 +7,7 @@ public sealed class ChatlogEntry
     private readonly WeakReference _playerReference;
     private readonly WeakReference _roomReference;
 
-    public ChatlogEntry(int playerId, int roomId, string message, double timestamp, Habbo player = null, RoomData instance = null)
+    public ChatlogEntry(int playerId, uint roomId, string message, double timestamp, Habbo player = null, RoomData instance = null)
     {
         PlayerId = playerId;
         RoomId = roomId;
@@ -21,7 +21,7 @@ public sealed class ChatlogEntry
 
     public int PlayerId { get; }
 
-    public int RoomId { get; }
+    public uint RoomId { get; }
 
     public string Message { get; }
 

@@ -45,9 +45,9 @@ internal class RemoveSaddleFromHorseEvent : IPacketEvent
         }
 
         //Give the saddle back to the user.
-        if (!_itemDataManager.GetItem(saddleId, out var itemData))
+        if (!_itemDataManager.Items.TryGetValue(saddleId, out var itemData))
             return Task.CompletedTask;
-        var item = ItemFactory.CreateSingleItemNullable(itemData, session.GetHabbo(), "", "");
+        var item = ItemFactory.CreateSingleItemNullable(itemData, session.GetHabbo(), "", "").ToInventoryItem();
         if (item != null)
         {
             session.GetHabbo().Inventory.Furniture.AddItem(item);

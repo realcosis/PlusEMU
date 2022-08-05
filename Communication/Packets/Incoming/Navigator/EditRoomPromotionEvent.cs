@@ -21,7 +21,7 @@ internal class EditRoomPromotionEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var roomId = packet.ReadInt();
+        var roomId = packet.ReadUInt();
         var name = _wordFilterManager.CheckMessage(packet.ReadString());
         var desc = _wordFilterManager.CheckMessage(packet.ReadString());
         if (!RoomFactory.TryGetData(roomId, out var data))
@@ -41,7 +41,7 @@ internal class EditRoomPromotionEvent : IPacketEvent
             dbClient.RunQuery();
         }
         Room room;
-        if (!_roomManager.TryGetRoom(Convert.ToInt32(roomId), out room))
+        if (!_roomManager.TryGetRoom(Convert.ToUInt32(roomId), out room))
             return Task.CompletedTask;
         data.Promotion.Name = name;
         data.Promotion.Description = desc;

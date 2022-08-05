@@ -13,7 +13,7 @@ public sealed class NavigatorManager : INavigatorManager
     private readonly IDatabase _database;
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Navigator.NavigatorManager");
 
-    private readonly Dictionary<int, FeaturedRoom> _featuredRooms;
+    private readonly Dictionary<uint, FeaturedRoom> _featuredRooms;
     private readonly Dictionary<int, SearchResultList> _searchResultLists;
     private readonly Dictionary<int, TopLevelItem> _topLevelItems;
 
@@ -66,9 +66,9 @@ public sealed class NavigatorManager : INavigatorManager
                 {
                     if (Convert.ToInt32(row["enabled"]) == 1)
                     {
-                        if (!_featuredRooms.ContainsKey(Convert.ToInt32(row["room_id"])))
+                        if (!_featuredRooms.ContainsKey(Convert.ToUInt32(row["room_id"])))
                         {
-                            _featuredRooms.Add(Convert.ToInt32(row["room_id"]),
+                            _featuredRooms.Add(Convert.ToUInt32(row["room_id"]),
                                 new(Convert.ToInt32(row["room_id"]), Convert.ToString(row["caption"]), Convert.ToString(row["description"]), Convert.ToString(row["image_url"])));
                         }
                     }
@@ -126,7 +126,7 @@ public sealed class NavigatorManager : INavigatorManager
 
     public bool TryGetSearchResultList(int id, out SearchResultList searchResultList) => _searchResultLists.TryGetValue(id, out searchResultList);
 
-    public bool TryGetFeaturedRoom(int roomId, out FeaturedRoom publicRoom) => _featuredRooms.TryGetValue(roomId, out publicRoom);
+    public bool TryGetFeaturedRoom(uint roomId, out FeaturedRoom publicRoom) => _featuredRooms.TryGetValue(roomId, out publicRoom);
 
     public ICollection<FeaturedRoom> GetFeaturedRooms() => _featuredRooms.Values;
 

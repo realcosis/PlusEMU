@@ -17,7 +17,7 @@ public class ModeratorRoomInfoComposer : IServerPacket
 
     public void Compose(IOutgoingPacket packet)
     {
-        packet.WriteInteger(_data.Id);
+        packet.WriteUInteger(_data.Id);
         packet.WriteInteger(_data.UsersNow);
         packet.WriteBoolean(_ownerInRoom); // owner in room
         packet.WriteInteger(_data.OwnerId);

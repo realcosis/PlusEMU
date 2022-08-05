@@ -57,13 +57,14 @@ internal class GetOffersEvent : IPacketEvent
                 if (!_marketplaceManager.MarketItemKeys.Contains(Convert.ToInt32(row["offer_id"])))
                 {
                     _marketplaceManager.MarketItemKeys.Add(Convert.ToInt32(row["offer_id"]));
-                    _marketplaceManager.MarketItems.Add(new MarketOffer(Convert.ToInt32(row["offer_id"]), Convert.ToInt32(row["sprite_id"]),
+                    _marketplaceManager.MarketItems.Add(new MarketOffer(Convert.ToUInt32(row["offer_id"]), Convert.ToUInt32(row["sprite_id"]),
                         Convert.ToInt32(row["total_price"]), int.Parse(row["item_type"].ToString()), Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"])));
                 }
             }
         }
-        var dictionary = new Dictionary<int, MarketOffer>();
-        var dictionary2 = new Dictionary<int, int>();
+        /// TODO @80O: Wtf is this shit
+        var dictionary = new Dictionary<uint, MarketOffer>();
+        var dictionary2 = new Dictionary<uint, int>();
         foreach (var item in _marketplaceManager.MarketItems)
         {
             if (dictionary.ContainsKey(item.SpriteId))

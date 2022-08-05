@@ -19,7 +19,7 @@ internal class MoveWallItemEvent : IPacketEvent
             return Task.CompletedTask;
         if (!room.CheckRights(session))
             return Task.CompletedTask;
-        var itemId = packet.ReadInt();
+        var itemId = packet.ReadUInt();
         var wallPositionData = packet.ReadString();
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null)

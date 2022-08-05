@@ -30,7 +30,7 @@ public class ObjectsComposer : IServerPacket
 
     private void WriteFloorItem(IOutgoingPacket packet, Item item, int userId)
     {
-        packet.WriteInteger(item.Id);
+        packet.WriteUInteger(item.Id);
         packet.WriteInteger(item.Definition.SpriteId);
         packet.WriteInteger(item.GetX);
         packet.WriteInteger(item.GetY);
@@ -42,8 +42,8 @@ public class ObjectsComposer : IServerPacket
             packet.WriteInteger(1);
             packet.WriteInteger(256);
             packet.WriteString(item.LegacyDataString);
-            packet.WriteInteger(item.UniqueNumber);
-            packet.WriteInteger(item.UniqueSeries);
+            packet.WriteUInteger(item.UniqueNumber);
+            packet.WriteUInteger(item.UniqueSeries);
         }
         else
             ItemBehaviourUtility.GenerateExtradata(item, packet);

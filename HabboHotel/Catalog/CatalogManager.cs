@@ -12,7 +12,7 @@ namespace Plus.HabboHotel.Catalog;
 public class CatalogManager : ICatalogManager
 {
     private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Catalog.CatalogManager");
-    private readonly Dictionary<int, CatalogBot> _botPresets;
+    private readonly Dictionary<uint, CatalogBot> _botPresets;
     private readonly Dictionary<int, CatalogDeal> _deals;
     private readonly Dictionary<int, Dictionary<int, CatalogItem>> _items;
     private readonly Dictionary<int, CatalogPage> _pages;
@@ -67,9 +67,9 @@ public class CatalogManager : ICatalogManager
                         continue;
                     var itemId = Convert.ToInt32(row["id"]);
                     var pageId = Convert.ToInt32(row["page_id"]);
-                    var baseId = Convert.ToInt32(row["item_id"]);
+                    var baseId = Convert.ToUInt32(row["item_id"]);
                     var offerId = Convert.ToInt32(row["offer_id"]);
-                    if (!itemDataManager.GetItem(baseId, out var data))
+                    if (!itemDataManager.Items.TryGetValue(baseId, out var data))
                     {
                         Log.Error("Couldn't load Catalog Item " + itemId + ", no furniture record found.");
                         continue;
@@ -78,7 +78,7 @@ public class CatalogManager : ICatalogManager
                         _items[pageId] = new();
                     if (offerId != -1 && !_itemOffers.ContainsKey(offerId))
                         _itemOffers.Add(offerId, pageId);
-                    _items[pageId].Add(Convert.ToInt32(row["id"]), new(Convert.ToInt32(row["id"]), Convert.ToInt32(row["item_id"]),
+                    _items[pageId].Add(Convert.ToInt32(row["id"]), new(Convert.ToInt32(row["id"]), Convert.ToUInt32(row["item_id"]),
                         data, Convert.ToString(row["catalog_name"]), Convert.ToInt32(row["page_id"]), Convert.ToInt32(row["cost_credits"]), Convert.ToInt32(row["cost_pixels"]),
                         Convert.ToInt32(row["cost_diamonds"]),
                         Convert.ToInt32(row["amount"]), Convert.ToInt32(row["limited_sells"]), Convert.ToInt32(row["limited_stack"]), ConvertExtensions.EnumToBool(row["offer_active"].ToString()),
@@ -120,7 +120,7 @@ public class CatalogManager : ICatalogManager
             {
                 foreach (DataRow row in bots.Rows)
                 {
-                    _botPresets.Add(Convert.ToInt32(row[0]),
+                    _botPresets.Add(Convert.ToUInt32(row[0]),
                         new(Convert.ToInt32(row[0]), Convert.ToString(row[1]), Convert.ToString(row[2]), Convert.ToString(row[3]), Convert.ToString(row[4]), Convert.ToString(row[5])));
                 }
             }
@@ -144,7 +144,7 @@ public class CatalogManager : ICatalogManager
         Log.Info("Catalog Manager -> LOADED");
     }
 
-    public bool TryGetBot(int itemId, out CatalogBot bot) => _botPresets.TryGetValue(itemId, out bot);
+    public bool TryGetBot(uint itemId, out CatalogBot bot) => _botPresets.TryGetValue(itemId, out bot);
 
     public bool TryGetPage(int pageId, out CatalogPage page) => _pages.TryGetValue(pageId, out page);
 

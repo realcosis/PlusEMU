@@ -23,7 +23,7 @@ internal class UnIgnoreUserEvent : IPacketEvent
         var player = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(username)?.GetHabbo();
         if (player == null)
             return Task.CompletedTask;
-        session.GetHabbo().IgnoresComponent.Unignore(player.Id);
+        session.GetHabbo().IgnoresComponent.Unignore((uint)player.Id);
         return Task.CompletedTask;
     }
 }

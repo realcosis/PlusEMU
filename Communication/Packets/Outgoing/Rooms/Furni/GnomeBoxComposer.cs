@@ -4,13 +4,13 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Furni;
 
 public class GnomeBoxComposer : IServerPacket
 {
-    private readonly int _itemId;
+    private readonly uint _itemId;
     public uint MessageId => ServerPacketHeader.GnomeBoxComposer;
 
-    public GnomeBoxComposer(int itemId)
+    public GnomeBoxComposer(uint itemId)
     {
         _itemId = itemId;
     }
 
-    public void Compose(IOutgoingPacket packet) => packet.WriteInteger(_itemId);
+    public void Compose(IOutgoingPacket packet) => packet.WriteUInteger(_itemId);
 }

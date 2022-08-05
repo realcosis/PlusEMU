@@ -107,7 +107,7 @@ public class WhisperEvent : IPacketEvent
         user.GetClient().Send(new WhisperComposer(user.VirtualId, message, 0, user.LastBubble));
         if (!user2.IsBot && user2.UserId != user.UserId)
         {
-            if (!user2.GetClient().GetHabbo().IgnoresComponent.IsIgnored(session.GetHabbo().Id))
+            if (!user2.GetClient().GetHabbo().IgnoresComponent.IsIgnored((uint)session.GetHabbo().Id))
                 user2.GetClient().Send(new WhisperComposer(user.VirtualId, message, 0, user.LastBubble));
         }
         var toNotify = room.GetRoomUserManager().GetRoomUserByRank(2);

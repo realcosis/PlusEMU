@@ -19,9 +19,9 @@ public class WiredConditionConfigComposer : IServerPacket
         packet.WriteBoolean(false);
         packet.WriteInteger(5);
         packet.WriteInteger(_box.SetItems.Count);
-        foreach (var item in _box.SetItems.Values.ToList()) packet.WriteInteger(item.Id);
-        packet.WriteInteger(_box.Item.Definition.GetBaseItem(_box.Item).SpriteId);
-        packet.WriteInteger(_box.Item.Id);
+        foreach (var item in _box.SetItems.Values.ToList()) packet.WriteUInteger(item.Id);
+        packet.WriteInteger(_box.Item.Definition.SpriteId);
+        packet.WriteUInteger(_box.Item.Id);
         packet.WriteString(_box.StringData);
         if (_box.Type == WiredBoxType.ConditionMatchStateAndPosition || _box.Type == WiredBoxType.ConditionDontMatchStateAndPosition)
         {

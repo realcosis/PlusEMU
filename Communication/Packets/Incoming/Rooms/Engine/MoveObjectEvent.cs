@@ -21,7 +21,7 @@ internal class MoveObjectEvent : IPacketEvent
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
-        var itemId = packet.ReadInt();
+        var itemId = packet.ReadUInt();
         if (itemId == 0)
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))

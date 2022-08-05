@@ -127,7 +127,7 @@ public class RoomItemHandling
                     {
                         dbClient.RunQuery("UPDATE `items` SET `room_id` = '0' WHERE `id` = '" + item.Id + "' LIMIT 1");
                     }
-                    var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(item.UserId);
+                    var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId((uint)item.UserId);
                     if (client != null)
                     {
                         client.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.LegacyDataString, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
@@ -688,17 +688,17 @@ public class RoomItemHandling
             {
                 _floorItems.TryRemove(item.Id, out var I);
                 // TODO @80O: Items refactor
-                // session.GetHabbo().Inventory.Furniture.AddItem(I);
+                session.GetHabbo().Inventory.Furniture.AddItem(I.ToInventoryItem());
                 _room.SendPacket(new ObjectRemoveComposer(item, item.UserId));
             }
             else if (item.IsWallItem)
             {
                 _wallItems.TryRemove(item.Id, out var I);
                 // TODO @80O: Items refactor
-                // session.GetHabbo().Inventory.Furniture.AddItem(I);
+                session.GetHabbo().Inventory.Furniture.AddItem(I.ToInventoryItem());
                 _room.SendPacket(new ItemRemoveComposer(item, item.UserId));
             }
-            session.Send(new FurniListAddComposer(item));
+            session.Send(new FurniListAddComposer(item.ToInventoryItem()));
         }
         _rollers.Clear();
         return items;

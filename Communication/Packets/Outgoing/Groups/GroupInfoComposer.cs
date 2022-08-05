@@ -27,7 +27,7 @@ public class GroupInfoComposer : IServerPacket
         packet.WriteString(_group.Name);
         packet.WriteString(_group.Description);
         packet.WriteString(_group.Badge);
-        packet.WriteInteger(_group.RoomId);
+        packet.WriteUInteger(_group.RoomId);
         packet.WriteString(_group.GetRoom() != null ? _group.GetRoom().Name : "No room found.."); // room name
         packet.WriteInteger(_group.CreatorId == _session.GetHabbo().Id ? 3 : _group.HasRequest(_session.GetHabbo().Id) ? 2 : _group.IsMember(_session.GetHabbo().Id) ? 1 : 0);
         packet.WriteInteger(_group.MemberCount); // Members

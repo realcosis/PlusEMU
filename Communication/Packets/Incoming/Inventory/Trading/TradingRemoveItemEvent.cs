@@ -15,7 +15,7 @@ internal class TradingRemoveItemEvent : IPacketEvent
         var roomUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (roomUser == null)
             return Task.CompletedTask;
-        var itemId = packet.ReadInt();
+        var itemId = packet.ReadUInt();
         if (!room.GetTrading().TryGetTrade(roomUser.TradeId, out var trade))
         {
             session.Send(new TradingClosedComposer(session.GetHabbo().Id));

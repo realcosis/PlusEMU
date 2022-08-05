@@ -8,7 +8,7 @@ public interface IMarketplaceManager
     Dictionary<int, int> MarketCounts { get; }
     List<int> MarketItemKeys { get; }
     List<MarketOffer> MarketItems { get; }
-    int AvgPriceForSprite(int spriteId);
+    int AvgPriceForSprite(uint spriteId);
     string FormatTimestampString();
     double FormatTimestamp();
     int OfferCountForSprite(int spriteId);

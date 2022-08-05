@@ -6,7 +6,7 @@ public class OpenFlatConnectionEvent : IPacketEvent
 {
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var roomId = packet.ReadInt();
+        var roomId = packet.ReadUInt();
         var password = packet.ReadString();
         session.GetHabbo().PrepareRoom(roomId, password);
         return Task.CompletedTask;

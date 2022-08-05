@@ -22,9 +22,9 @@ public class WiredEffectConfigComposer : IServerPacket
         packet.WriteBoolean(false);
         packet.WriteInteger(15);
         packet.WriteInteger(_box.SetItems.Count);
-        foreach (var item in _box.SetItems.Values.ToList()) packet.WriteInteger(item.Id);
-        packet.WriteInteger(_box.Item.Definition.GetBaseItem(_box.Item).SpriteId);
-        packet.WriteInteger(_box.Item.Id);
+        foreach (var item in _box.SetItems.Values.ToList()) packet.WriteUInteger(item.Id);
+        packet.WriteInteger(_box.Item.Definition.SpriteId);
+        packet.WriteUInteger(_box.Item.Id);
         if (_box.Type == WiredBoxType.EffectBotGivesHanditemBox)
         {
             if (string.IsNullOrEmpty(_box.StringData))

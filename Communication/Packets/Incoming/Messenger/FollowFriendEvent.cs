@@ -15,7 +15,7 @@ internal class FollowFriendEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var buddyId = packet.ReadInt();
+        var buddyId = packet.ReadUInt();
         if (buddyId == 0 || buddyId == session.GetHabbo().Id)
             return Task.CompletedTask;
         var client = _clientManager.GetClientByUserId(buddyId);

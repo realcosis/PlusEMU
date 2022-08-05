@@ -25,7 +25,7 @@ internal class GetModeratorRoomChatlogEvent : IPacketEvent
         if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
             return Task.CompletedTask;
         packet.ReadInt(); //junk
-        var roomId = packet.ReadInt();
+        var roomId = packet.ReadUInt();
         if (!_roomManager.TryGetRoom(roomId, out var room)) return Task.CompletedTask;
         _chatlogManager.FlushAndSave();
         var chats = new List<ChatlogEntry>();

@@ -33,7 +33,7 @@ public class ModeratorSupportTicketComposer : IServerPacket
         packet.WriteInteger(_ticket.Moderator?.Id ?? 0); // Moderator ID
         packet.WriteString(_ticket.Moderator == null ? string.Empty : _ticket.Moderator.Username); // Mod Name
         packet.WriteString(_ticket.Issue); // Issue
-        packet.WriteInteger(_ticket.Room?.Id ?? 0); // Room Id
+        packet.WriteUInteger(_ticket.Room?.Id ?? 0); // Room Id
         packet.WriteInteger(0);
         {
             // push String

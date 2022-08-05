@@ -19,7 +19,6 @@ namespace Plus.HabboHotel.Users.Inventory.Furniture
         public bool IsWallItem => Definition.Type == ItemType.Wall;
         public ItemDefinition Definition { get; set; } = null!;
         public IFurniObjectData ExtraData { get; set; } = FurniObjectData.Empty;
-        public string WallCoordinates { get; set; } = string.Empty;
 
         public uint UniqueNumber;
         public uint UniqueSeries;

@@ -102,7 +102,7 @@ public class GroupManager : IGroupManager
         return false;
     }
 
-    public bool TryCreateGroup(Habbo player, string name, string description, int roomId, string badge, int colour1, int colour2, out Group group)
+    public bool TryCreateGroup(Habbo player, string name, string description, uint roomId, string badge, int colour1, int colour2, out Group @group)
     {
         group = new(0, name, description, badge, roomId, player.Id, (int)UnixTimestamp.GetNow(), 0, colour1, colour2, 0, false);
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(badge))

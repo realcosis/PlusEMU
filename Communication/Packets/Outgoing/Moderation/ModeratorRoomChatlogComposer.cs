@@ -26,7 +26,7 @@ public class ModeratorRoomChatlogComposer : IServerPacket
         packet.WriteString(_room.Name);
         packet.WriteString("roomId");
         packet.WriteByte(1);
-        packet.WriteInteger(_room.Id);
+        packet.WriteUInteger(_room.Id);
         packet.WriteShort((short)_chats.Count);
         foreach (var entry in _chats)
         {

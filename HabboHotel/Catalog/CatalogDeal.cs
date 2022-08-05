@@ -40,9 +40,9 @@ public class CatalogDeal
         foreach (var split in splitItems)
         {
             var item = split.Split('*');
-            if (!int.TryParse(item[0], out var itemId) || !int.TryParse(item[1], out var amount))
+            if (!uint.TryParse(item[0], out var itemId) || !int.TryParse(item[1], out var amount))
                 continue;
-            if (!itemDataManager.GetItem(itemId, out var data))
+            if (!itemDataManager.Items.TryGetValue(itemId, out var data))
                 continue;
             ItemDataList.Add(new(0, itemId, data, string.Empty, 0, 0, 0, 0, amount, 0, 0, false, "", "", 0));
         }

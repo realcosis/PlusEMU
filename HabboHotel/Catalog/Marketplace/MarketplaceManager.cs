@@ -21,7 +21,7 @@ public class MarketplaceManager : IMarketplaceManager
         _database = database;
         _itemDataManager = itemDataManager;
     }
-    public int AvgPriceForSprite(int spriteId)
+    public int AvgPriceForSprite(uint spriteId)
     {
         var num = 0;
         var num2 = 0;

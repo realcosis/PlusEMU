@@ -7,11 +7,11 @@ namespace Plus.HabboHotel.Rooms.Games;
 
 public class GameManager
 {
-    private ConcurrentDictionary<int, Item> _blueTeamItems;
-    private ConcurrentDictionary<int, Item> _greenTeamItems;
-    private ConcurrentDictionary<int, Item> _redTeamItems;
+    private ConcurrentDictionary<uint, Item> _blueTeamItems;
+    private ConcurrentDictionary<uint, Item> _greenTeamItems;
+    private ConcurrentDictionary<uint, Item> _redTeamItems;
+    private ConcurrentDictionary<uint, Item> _yellowTeamItems;
     private Room _room;
-    private ConcurrentDictionary<int, Item> _yellowTeamItems;
 
     public GameManager(Room room)
     {
@@ -89,7 +89,7 @@ public class GameManager
 
     private int GetScoreForTeam(Team team) => Points[Convert.ToInt32(team)];
 
-    private ConcurrentDictionary<int, Item> GetFurniItems(Team team)
+    private ConcurrentDictionary<uint, Item> GetFurniItems(Team team)
     {
         switch (team)
         {

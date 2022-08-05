@@ -24,7 +24,6 @@ internal static class ItemBehaviourUtility
         ExtraData = item.ExtraData,
         UniqueNumber = item.UniqueNumber,
         UniqueSeries = item.UniqueSeries,
-        WallCoordinates = item.WallCoordinates,
     };
 
     public static InventoryItem ToInventoryItem(this Item item) => new()
@@ -34,8 +33,7 @@ internal static class ItemBehaviourUtility
         Definition = item.Definition,
         ExtraData = item.ExtraData,
         UniqueNumber = item.UniqueNumber,
-        UniqueSeries = item.UniqueSeries,
-        WallCoordinates = item.WallCoordinates,
+        UniqueSeries = item.UniqueSeries
     };
 
     public static void GenerateExtradata(Item item, IOutgoingPacket packet)

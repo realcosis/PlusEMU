@@ -30,7 +30,7 @@ public class PurchaseRoomPromotionEvent : IPacketEvent
     {
         packet.ReadInt(); //pageId
         packet.ReadInt(); //itemId
-        var roomId = packet.ReadInt();
+        var roomId = packet.ReadUInt();
         var name = _wordFilterManager.CheckMessage(packet.ReadString());
         packet.ReadBool(); //junk
         var desc = _wordFilterManager.CheckMessage(packet.ReadString());

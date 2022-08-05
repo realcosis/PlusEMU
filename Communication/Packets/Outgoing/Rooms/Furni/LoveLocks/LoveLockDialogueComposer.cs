@@ -4,18 +4,18 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Furni.LoveLocks;
 
 public class LoveLockDialogueComposer : IServerPacket
 {
-    private readonly int _itemId;
+    private readonly uint _itemId;
 
     public uint MessageId => ServerPacketHeader.LoveLockDialogueComposer;
 
-    public LoveLockDialogueComposer(int itemId)
+    public LoveLockDialogueComposer(uint itemId)
     {
         _itemId = itemId;
     }
 
     public void Compose(IOutgoingPacket packet)
     {
-        packet.WriteInteger(_itemId);
+        packet.WriteUInteger(_itemId);
         packet.WriteBoolean(true);
     }
 }

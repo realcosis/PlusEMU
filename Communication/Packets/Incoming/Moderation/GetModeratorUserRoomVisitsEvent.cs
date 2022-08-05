@@ -21,7 +21,7 @@ internal class GetModeratorUserRoomVisitsEvent : IPacketEvent
     {
         if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
             return Task.CompletedTask;
-        var userId = packet.ReadInt();
+        var userId = packet.ReadUInt();
         var target = _clientManager.GetClientByUserId(userId);
         if (target == null)
             return Task.CompletedTask;
@@ -35,7 +35,7 @@ internal class GetModeratorUserRoomVisitsEvent : IPacketEvent
             {
                 foreach (DataRow row in table.Rows)
                 {
-                    if (!RoomFactory.TryGetData(Convert.ToInt32(row["room_id"]), out var data))
+                    if (!RoomFactory.TryGetData(Convert.ToUInt32(row["room_id"]), out var data))
                         continue;
                     if (!visits.ContainsKey(Convert.ToDouble(row["entry_timestamp"])))
                         visits.Add(Convert.ToDouble(row["entry_timestamp"]), data);

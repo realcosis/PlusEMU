@@ -12,7 +12,7 @@ public class Group
     private RoomData _room;
     public bool HasForum;
 
-    public Group(int id, string name, string description, string badge, int roomId, int owner, int time, int type, int colour1, int colour2, int adminOnlyDeco, bool hasForum)
+    public Group(int id, string name, string description, string badge, uint roomId, int owner, int time, int type, int colour1, int colour2, int adminOnlyDeco, bool hasForum)
     {
         Id = id;
         Name = name;

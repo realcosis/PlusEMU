@@ -17,7 +17,7 @@ namespace Plus.HabboHotel.Users.Inventory
 
         public async Task Load(Habbo habbo)
         {
-            var items = ItemLoader.GetItemsForUser(habbo.Id);
+            var items = ItemLoader.GetItemsForUser((uint)habbo.Id);
             habbo.SetInventoryComponent(new()
             {
                 UserId = habbo.Id,

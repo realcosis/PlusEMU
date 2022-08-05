@@ -26,7 +26,7 @@ public static class ItemUtility
         return true;
     }
 
-    public static int GetSaddleId(int saddle)
+    public static uint GetSaddleId(int saddle)
     {
         switch (saddle)
         {

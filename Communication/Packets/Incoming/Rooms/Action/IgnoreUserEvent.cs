@@ -26,9 +26,9 @@ internal class IgnoreUserEvent : IPacketEvent
         var player = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(username)?.GetHabbo();
         if (player == null || player.GetPermissions().HasRight("mod_tool"))
             return Task.CompletedTask;
-        if (session.GetHabbo().IgnoresComponent.IsIgnored(player.Id))
+        if (session.GetHabbo().IgnoresComponent.IsIgnored((uint)player.Id))
             return Task.CompletedTask;
-        session.GetHabbo().IgnoresComponent.Ignore(player.Id);
+        session.GetHabbo().IgnoresComponent.Ignore((uint)player.Id);
         _achievementManager.ProgressAchievement(session, "ACH_SelfModIgnoreSeen", 1);
         return Task.CompletedTask;
     }
