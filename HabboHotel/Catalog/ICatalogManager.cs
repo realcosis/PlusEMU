@@ -15,8 +15,12 @@ public interface ICatalogManager
     bool TryGetDeal(int dealId, out CatalogDeal deal);
     ICollection<CatalogPage> GetPages();
     ICollection<CatalogPromotion> GetPromotions();
+    [Obsolete("Use dependency injection instead.")]
     IMarketplaceManager GetMarketplace();
+    [Obsolete("Use dependency injection instead.")]
     IPetRaceManager GetPetRaceManager();
+    [Obsolete("Use dependency injection instead.")]
     IVoucherManager GetVoucherManager();
+    [Obsolete("Use dependency injection instead.")]
     IClothingManager GetClothingManager();
 }

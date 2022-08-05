@@ -58,7 +58,7 @@ internal class GetOffersEvent : IPacketEvent
                 {
                     _marketplaceManager.MarketItemKeys.Add(Convert.ToInt32(row["offer_id"]));
                     _marketplaceManager.MarketItems.Add(new MarketOffer(Convert.ToUInt32(row["offer_id"]), Convert.ToUInt32(row["sprite_id"]),
-                        Convert.ToInt32(row["total_price"]), int.Parse(row["item_type"].ToString()), Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"])));
+                        Convert.ToInt32(row["total_price"]), int.Parse(row["item_type"].ToString()), Convert.ToUInt32(row["limited_number"]), Convert.ToUInt32(row["limited_stack"])));
                 }
             }
         }

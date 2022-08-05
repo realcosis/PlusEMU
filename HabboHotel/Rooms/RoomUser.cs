@@ -360,7 +360,7 @@ public class RoomUser
             packet = new ChatComposer(VirtualId, message, PlusEnvironment.GetGame().GetChatManager().GetEmotions().GetEmotionsForText(message), colour);
         if (GetClient().GetHabbo().TentId > 0)
         {
-            _mRoom.SendToTent((uint)GetClient().GetHabbo().Id, GetClient().GetHabbo().TentId, packet);
+            _mRoom.SendToTent(GetClient().GetHabbo().Id, GetClient().GetHabbo().TentId, packet);
             packet = new WhisperComposer(VirtualId, "[Tent Chat] " + message, 0, colour);
             var toNotify = _mRoom.GetRoomUserManager().GetRoomUserByRank(2);
             if (toNotify.Count > 0)
@@ -378,7 +378,7 @@ public class RoomUser
         {
             foreach (var user in _mRoom.GetRoomUserManager().GetRoomUsers().ToList())
             {
-                if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().IgnoresComponent.IsIgnored((uint)_mClient.GetHabbo().Id))
+                if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().IgnoresComponent.IsIgnored(_mClient.GetHabbo().Id))
                     continue;
                 if (_mRoom.ChatDistance > 0 && Gamemap.TileDistance(X, Y, user.X, user.Y) > _mRoom.ChatDistance)
                     continue;

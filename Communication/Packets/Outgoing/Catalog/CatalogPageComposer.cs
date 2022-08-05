@@ -96,8 +96,8 @@ public class CatalogPageComposer : IServerPacket
                         packet.WriteBoolean(item.IsLimited); // IsLimited
                         if (item.IsLimited)
                         {
-                            packet.WriteInteger(item.LimitedEditionStack);
-                            packet.WriteInteger(item.LimitedEditionStack - item.LimitedEditionSells);
+                            packet.WriteUInteger(item.LimitedEditionStack);
+                            packet.WriteUInteger(item.LimitedEditionStack - item.LimitedEditionSells);
                         }
                     }
                 }

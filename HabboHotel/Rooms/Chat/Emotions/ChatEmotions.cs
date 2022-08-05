@@ -1,6 +1,6 @@
 ﻿namespace Plus.HabboHotel.Rooms.Chat.Emotions;
 
-internal enum ChatEmotions
+public enum ChatEmotions
 {
     Smile,
     Angry,

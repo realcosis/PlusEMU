@@ -511,7 +511,7 @@ public class Room : RoomData
         }
     }
 
-    public void SendToTent(uint id, uint tentId, IServerPacket packet)
+    public void SendToTent(int id, uint tentId, IServerPacket packet)
     {
         if (!_tents.ContainsKey(tentId))
             return;

@@ -76,7 +76,7 @@ namespace Plus.HabboHotel.Friends
                 return;
             }
 
-            if (!target.GetHabbo().AllowConsoleMessages || target.GetHabbo().IgnoresComponent.IsIgnored((uint)habbo.Id))
+            if (!target.GetHabbo().AllowConsoleMessages || target.GetHabbo().IgnoresComponent.IsIgnored(habbo.Id))
             {
                 habbo.GetClient().Send(new InstantMessageErrorComposer(MessengerMessageErrors.FriendBusy, args.Friend.Id));
                 return;

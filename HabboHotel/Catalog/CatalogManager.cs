@@ -81,7 +81,7 @@ public class CatalogManager : ICatalogManager
                     _items[pageId].Add(Convert.ToInt32(row["id"]), new(Convert.ToInt32(row["id"]), Convert.ToUInt32(row["item_id"]),
                         data, Convert.ToString(row["catalog_name"]), Convert.ToInt32(row["page_id"]), Convert.ToInt32(row["cost_credits"]), Convert.ToInt32(row["cost_pixels"]),
                         Convert.ToInt32(row["cost_diamonds"]),
-                        Convert.ToInt32(row["amount"]), Convert.ToInt32(row["limited_sells"]), Convert.ToInt32(row["limited_stack"]), ConvertExtensions.EnumToBool(row["offer_active"].ToString()),
+                        Convert.ToInt32(row["amount"]), Convert.ToUInt32(row["limited_sells"]), Convert.ToUInt32(row["limited_stack"]), ConvertExtensions.EnumToBool(row["offer_active"].ToString()),
                         Convert.ToString(row["extradata"]), Convert.ToString(row["badge"]), Convert.ToInt32(row["offer_id"])));
                 }
             }

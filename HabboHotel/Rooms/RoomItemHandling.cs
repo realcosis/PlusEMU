@@ -127,7 +127,7 @@ public class RoomItemHandling
                     {
                         dbClient.RunQuery("UPDATE `items` SET `room_id` = '0' WHERE `id` = '" + item.Id + "' LIMIT 1");
                     }
-                    var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId((uint)item.UserId);
+                    var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(item.UserId);
                     if (client != null)
                     {
                         client.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.LegacyDataString, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);

@@ -84,8 +84,8 @@ public class PurchaseFromCatalogEvent : IPacketEvent
         var totalDiamondCost = amount > 1 ? item.CostDiamonds * amount - (int)Math.Floor((double)amount / 6) * item.CostDiamonds : item.CostDiamonds;
         if (session.GetHabbo().Credits < totalCreditsCost || session.GetHabbo().Duckets < totalPixelCost || session.GetHabbo().Diamonds < totalDiamondCost)
             return;
-        var limitedEditionSells = 0;
-        var limitedEditionStack = 0;
+        var limitedEditionSells = 0u;
+        var limitedEditionStack = 0u;
         switch (item.Definition.InteractionType)
         {
             case InteractionType.None:

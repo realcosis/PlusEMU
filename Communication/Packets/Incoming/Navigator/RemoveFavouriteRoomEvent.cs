@@ -15,7 +15,7 @@ public class RemoveFavouriteRoomEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var id = packet.ReadInt();
+        var id = packet.ReadUInt();
         session.GetHabbo().FavoriteRooms.Remove(id);
         session.Send(new UpdateFavouriteRoomComposer(id, false));
         using var dbClient = _database.GetQueryReactor();

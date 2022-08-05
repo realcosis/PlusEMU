@@ -3,10 +3,6 @@ using Plus.Database;
 
 namespace Plus.HabboHotel.Users.Ignores
 {
-    public interface IIgnoredUsersService
-    {
-        Task<List<string>> GetIgnoredUsersByName(IEnumerable<uint> userIds);
-    }
     internal class IgnoredUsersService : IIgnoredUsersService
     {
         private readonly IDatabase _database;
@@ -16,7 +12,7 @@ namespace Plus.HabboHotel.Users.Ignores
             _database = database;
         }
 
-        public async Task<List<string>> GetIgnoredUsersByName(IEnumerable<uint> userIds)
+        public async Task<List<string>> GetIgnoredUsersByName(IEnumerable<int> userIds)
         {
             using var connection = _database.Connection();
             return (await connection.QueryAsync<string>("SELECT username FROM users WHERE id in @userIds", new { userIds })).ToList();

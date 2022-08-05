@@ -21,7 +21,7 @@ public class MarketplaceManager : IMarketplaceManager
         _database = database;
         _itemDataManager = itemDataManager;
     }
-    public int AvgPriceForSprite(uint spriteId)
+    public int AvgPriceForSprite(int spriteId)
     {
         var num = 0;
         var num2 = 0;
@@ -51,10 +51,10 @@ public class MarketplaceManager : IMarketplaceManager
 
     public double FormatTimestamp() => UnixTimestamp.GetNow() - 172800.0;
 
-    public int OfferCountForSprite(int spriteId)
+    public int OfferCountForSprite(uint spriteId)
     {
-        var dictionary = new Dictionary<int, MarketOffer>();
-        var dictionary2 = new Dictionary<int, int>();
+        var dictionary = new Dictionary<uint, MarketOffer>();
+        var dictionary2 = new Dictionary<uint, int>();
         foreach (var item in MarketItems)
         {
             if (dictionary.ContainsKey(item.SpriteId))

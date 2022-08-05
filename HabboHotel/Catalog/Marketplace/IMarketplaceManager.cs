@@ -8,10 +8,10 @@ public interface IMarketplaceManager
     Dictionary<int, int> MarketCounts { get; }
     List<int> MarketItemKeys { get; }
     List<MarketOffer> MarketItems { get; }
-    int AvgPriceForSprite(uint spriteId);
+    int AvgPriceForSprite(int spriteId);
     string FormatTimestampString();
     double FormatTimestamp();
-    int OfferCountForSprite(int spriteId);
+    int OfferCountForSprite(uint spriteId);
     int CalculateComissionPrice(float price);
 
     Task<bool> TryCancelOffer(Habbo habbo, uint offerId);

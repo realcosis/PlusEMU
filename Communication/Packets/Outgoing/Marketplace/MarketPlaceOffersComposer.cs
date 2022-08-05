@@ -27,11 +27,11 @@ public class MarketPlaceOffersComposer : IServerPacket
             packet.WriteUInteger(value.SpriteId);
             packet.WriteInteger(256);
             packet.WriteString("");
-            packet.WriteInteger(value.LimitedNumber);
-            packet.WriteInteger(value.LimitedStack);
+            packet.WriteUInteger(value.LimitedNumber);
+            packet.WriteUInteger(value.LimitedStack);
             packet.WriteInteger(value.TotalPrice);
             packet.WriteInteger(0);
-            packet.WriteInteger(PlusEnvironment.GetGame().GetCatalog().GetMarketplace().AvgPriceForSprite(value.SpriteId));
+            packet.WriteInteger(PlusEnvironment.GetGame().GetCatalog().GetMarketplace().AvgPriceForSprite((int)value.SpriteId));
             packet.WriteInteger(_dictionary2[value.SpriteId]);
         }
         packet.WriteInteger(_dictionary.Count); //Item count to show how many were found.

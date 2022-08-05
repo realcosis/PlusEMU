@@ -21,7 +21,7 @@ internal class GetModeratorUserRoomVisitsEvent : IPacketEvent
     {
         if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
             return Task.CompletedTask;
-        var userId = packet.ReadUInt();
+        var userId = packet.ReadInt();
         var target = _clientManager.GetClientByUserId(userId);
         if (target == null)
             return Task.CompletedTask;

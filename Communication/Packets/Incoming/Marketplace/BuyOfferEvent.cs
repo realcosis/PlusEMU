@@ -71,8 +71,8 @@ internal class BuyOfferEvent : IPacketEvent
             }
             session.GetHabbo().Credits -= Convert.ToInt32(row["total_price"]);
             session.Send(new CreditBalanceComposer(session.GetHabbo().Credits));
-            var giveItem = ItemFactory.CreateSingleItem(item, session.GetHabbo(), Convert.ToString(row["extra_data"]), Convert.ToString(row["extra_data"]), Convert.ToInt32(row["furni_id"]),
-                Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"])).ToInventoryItem();
+            var giveItem = ItemFactory.CreateSingleItem(item, session.GetHabbo(), Convert.ToString(row["extra_data"]), Convert.ToString(row["extra_data"]), Convert.ToUInt32(row["furni_id"]),
+                Convert.ToUInt32(row["limited_number"]), Convert.ToUInt32(row["limited_stack"])).ToInventoryItem();
             if (giveItem != null)
             {
                 session.GetHabbo().Inventory.Furniture.AddItem(giveItem);
@@ -149,15 +149,15 @@ internal class BuyOfferEvent : IPacketEvent
             {
                 if (!_marketplace.MarketItemKeys.Contains(Convert.ToInt32(row["offer_id"])))
                 {
-                    var item = new MarketOffer(Convert.ToUInt32(row["offer_id"]), Convert.ToInt32(row["sprite_id"]), Convert.ToInt32(row["total_price"]), int.Parse(row["item_type"].ToString()),
-                        Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]));
+                    var item = new MarketOffer(Convert.ToUInt32(row["offer_id"]), Convert.ToUInt32(row["sprite_id"]), Convert.ToInt32(row["total_price"]), int.Parse(row["item_type"].ToString()),
+                        Convert.ToUInt32(row["limited_number"]), Convert.ToUInt32(row["limited_stack"]));
                     _marketplace.MarketItemKeys.Add(Convert.ToInt32(row["offer_id"]));
                     _marketplace.MarketItems.Add(item);
                 }
             }
         }
-        var dictionary = new Dictionary<int, MarketOffer>();
-        var dictionary2 = new Dictionary<int, int>();
+        var dictionary = new Dictionary<uint, MarketOffer>();
+        var dictionary2 = new Dictionary<uint, int>();
         foreach (var item in _marketplace.MarketItems)
         {
             if (dictionary.ContainsKey(item.SpriteId))

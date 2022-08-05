@@ -62,8 +62,8 @@ public class CatalogOfferComposer : IServerPacket
             packet.WriteBoolean(_item.IsLimited); // IsLimited
             if (_item.IsLimited)
             {
-                packet.WriteInteger(_item.LimitedEditionStack);
-                packet.WriteInteger(_item.LimitedEditionStack - _item.LimitedEditionSells);
+                packet.WriteUInteger(_item.LimitedEditionStack);
+                packet.WriteUInteger(_item.LimitedEditionStack - _item.LimitedEditionSells);
             }
         }
         packet.WriteInteger(0); // club_level

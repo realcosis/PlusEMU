@@ -24,7 +24,7 @@ public class GameClientManager : IGameClientManager
     private readonly ConcurrentDictionary<int, GameClient> _clients;
 
     private readonly Queue _timedOutConnections;
-    private readonly ConcurrentDictionary<uint, GameClient> _userIdRegister;
+    private readonly ConcurrentDictionary<int, GameClient> _userIdRegister;
     private readonly ConcurrentDictionary<string, GameClient> _usernameRegister;
 
     public GameClientManager(IDatabase database)
@@ -48,7 +48,7 @@ public class GameClientManager : IGameClientManager
         HandleTimeouts();
     }
 
-    public GameClient? GetClientByUserId(uint userId) => _userIdRegister.ContainsKey(userId) ? _userIdRegister[userId] : null;
+    public GameClient? GetClientByUserId(int userId) => _userIdRegister.ContainsKey(userId) ? _userIdRegister[userId] : null;
 
     public GameClient? GetClientByUsername(string username) => _usernameRegister.ContainsKey(username.ToLower()) ? _usernameRegister[username.ToLower()] : null;
 
@@ -63,7 +63,7 @@ public class GameClientManager : IGameClientManager
         return true;
     }
 
-    public async Task<string> GetNameById(uint id)
+    public async Task<string> GetNameById(int id)
     {
         var client = GetClientByUserId(id);
         if (client != null)
@@ -72,7 +72,7 @@ public class GameClientManager : IGameClientManager
         return await connection.QuerySingleOrDefaultAsync<string>("SELECT username FROM users WHERE id = @id LIMIT 1", new { id });
     }
 
-    public IEnumerable<GameClient> GetClientsById(Dictionary<uint, MessengerBuddy>.KeyCollection users)
+    public IEnumerable<GameClient> GetClientsById(Dictionary<int, MessengerBuddy>.KeyCollection users)
     {
         foreach (var id in users)
         {
@@ -159,14 +159,14 @@ public class GameClientManager : IGameClientManager
         }
     }
 
-    public void LogClonesOut(uint userId)
+    public void LogClonesOut(int userId)
     {
         var client = GetClientByUserId(userId);
         if (client != null)
             client.Disconnect();
     }
 
-    public void RegisterClient(GameClient client, uint userId, string username)
+    public void RegisterClient(GameClient client, int userId, string username)
     {
         if (_usernameRegister.ContainsKey(username.ToLower()))
             _usernameRegister[username.ToLower()] = client;
@@ -178,7 +178,7 @@ public class GameClientManager : IGameClientManager
             _userIdRegister.TryAdd(userId, client);
     }
 
-    public void UnregisterClient(uint userid, string username)
+    public void UnregisterClient(int userid, string username)
     {
         _userIdRegister.TryRemove(userid, out _);
         _usernameRegister.TryRemove(username.ToLower(), out _);
