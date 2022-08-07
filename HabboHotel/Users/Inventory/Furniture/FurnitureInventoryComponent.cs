@@ -10,6 +10,41 @@ namespace Plus.HabboHotel.Users.Inventory.Furniture
         Floor,
         Wall
     }
+    public enum FurniCategory
+    {
+        Default = 1,
+        WallPaper,
+        Floor,
+        Landscape,
+        PostIt,
+        Poster,
+        SoundSet,
+        TraxSong,
+        Present,
+        EcotronBox,
+        Trophy,
+        CreditFurni,
+        PetShampoo,
+        PetCustomPart,
+        PetCustomPartShampoo,
+        PetSaddle,
+        GuildFurni,
+        GameFurni,
+        MonsterplantSeed,
+        MonsterplantRevival,
+        MonsterplantRebreed,
+        MonsterplantFertilize
+    }
+
+    public static class ItemTypeExtensions
+    {
+        public static string ToCharCode(this ItemType category) => category switch
+        {
+            ItemType.Floor => "S",
+            ItemType.Wall => "I",
+            _ => throw new ArgumentException("Invalid ItemCategory!")
+        };
+    }
 
     public class InventoryItem
     {

@@ -44,6 +44,7 @@ public class ItemDefinition
     public string ItemName { get; set; }
     public string PublicName { get; set; }
     public ItemType Type { get; set; }
+    public FurniCategory Category { get; set; } = FurniCategory.Default;
     public int Width { get; set; }
     public int Length { get; set; }
     public double Height { get; set; }

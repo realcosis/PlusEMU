@@ -31,9 +31,10 @@ public class FurniListComposer : IServerPacket
     private void WriteItem(IOutgoingPacket packet, InventoryItem item)
     {
         packet.WriteUInteger(item.Id);
-        packet.WriteString(item.Definition.Type.ToString().ToUpper());
+        packet.WriteString(item.Definition.Type.ToCharCode());
         packet.WriteUInteger(item.Id);
         packet.WriteInteger(item.Definition.SpriteId);
+        packet.WriteInteger((int)item.Definition.Category);
         ItemBehaviourUtility.Serialize(packet, item.ExtraData, item.UniqueNumber, item.UniqueSeries);
         packet.WriteBoolean(item.Definition.AllowEcotronRecycle);
         packet.WriteBoolean(item.Definition.AllowTrade);

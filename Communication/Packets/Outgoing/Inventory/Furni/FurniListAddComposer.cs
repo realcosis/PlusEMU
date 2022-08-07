@@ -17,9 +17,10 @@ public class FurniListAddComposer : IServerPacket
     public void Compose(IOutgoingPacket packet)
     {
         packet.WriteUInteger(_item.Id);
-        packet.WriteString(_item.Definition.Type.ToString().ToUpper());
+        packet.WriteString(_item.Definition.Type.ToCharCode());
         packet.WriteUInteger(_item.Id);
         packet.WriteInteger(_item.Definition.SpriteId);
+        packet.WriteInteger((int)_item.Definition.Category);
         ItemBehaviourUtility.Serialize(packet, _item.ExtraData, _item.UniqueNumber, _item.UniqueSeries);
         packet.WriteBoolean(_item.Definition.AllowEcotronRecycle);
         packet.WriteBoolean(_item.Definition.AllowTrade);

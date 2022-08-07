@@ -56,7 +56,7 @@ public class ItemDataManager : IItemDataManager
                             ExtraRot = row["extra_rot"].ToString() == "1",
                         };
 
-                        Gifts.Add(definition.SpriteId, definition.Id);
+                        Gifts.TryAdd(definition.SpriteId, definition.Id);
                         Items.Add(definition.Id, definition);
                     }
                     catch (Exception e)

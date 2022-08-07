@@ -2,6 +2,6 @@
 {
     public interface IIgnoredUsersService
     {
-        Task<List<string>> GetIgnoredUsersByName(IEnumerable<int> userIds);
+        Task<List<string>> GetIgnoredUsersByName(IReadOnlyCollection<int> userIds);
     }
 }
