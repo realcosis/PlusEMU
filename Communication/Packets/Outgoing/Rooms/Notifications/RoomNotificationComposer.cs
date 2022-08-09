@@ -14,6 +14,12 @@ public class RoomNotificationComposer : IServerPacket
         _type = type;
         _values = new() { { key, value } };
     }
+    
+    public RoomNotificationComposer(string type, Dictionary<string, string> values)
+    {
+        _type = type;
+        _values = values;
+    }
 
     public RoomNotificationComposer(string type)
     {
