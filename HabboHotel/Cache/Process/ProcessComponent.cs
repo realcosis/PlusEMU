@@ -1,4 +1,4 @@
-﻿using NLog;
+﻿using Microsoft.Extensions.Logging;
 using Plus.Core;
 using Plus.HabboHotel.Users;
 
@@ -6,7 +6,12 @@ namespace Plus.HabboHotel.Cache.Process;
 
 public sealed class ProcessComponent : IProcessComponent
 {
-    private static readonly ILogger Log = LogManager.GetLogger("Plus.HabboHotel.Cache.Process.ProcessComponent");
+    private readonly ILogger<ProcessComponent> _logger;
+
+    public ProcessComponent(ILogger<ProcessComponent> logger)
+    {
+        _logger = logger;
+    }
 
     /// <summary>
     /// How often the timer should execute.
