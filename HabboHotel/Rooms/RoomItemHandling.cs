@@ -712,14 +712,14 @@ public class RoomItemHandling
             var dictionary = Gamemap.GetAffectedTiles(item.Definition.Length, item.Definition.Width, newX, newY, newRot);
             if (!_room.GetGameMap().ValidTile(newX, newY))
                 return false;
-            foreach (var coord in dictionary.Values.ToList())
+            foreach (var coord in dictionary.Values)
             {
                 if (_room.GetGameMap().Model.DoorX == coord.X && _room.GetGameMap().Model.DoorY == coord.Y)
                     return false;
             }
             if (_room.GetGameMap().Model.DoorX == newX && _room.GetGameMap().Model.DoorY == newY)
                 return false;
-            foreach (var coord in dictionary.Values.ToList())
+            foreach (var coord in dictionary.Values)
             {
                 if (!_room.GetGameMap().ValidTile(coord.X, coord.Y))
                     return false;
@@ -729,7 +729,7 @@ public class RoomItemHandling
                 return false;
             if (_room.GetGameMap().Model.SqState[newX, newY] != SquareState.Open)
                 return false;
-            foreach (var coord in dictionary.Values.ToList())
+            foreach (var coord in dictionary.Values)
             {
                 if (_room.GetGameMap().Model.SqState[coord.X, coord.Y] != SquareState.Open)
                     return false;
@@ -738,7 +738,7 @@ public class RoomItemHandling
             {
                 if (_room.GetGameMap().SquareHasUsers(newX, newY))
                     return false;
-                foreach (var coord in dictionary.Values.ToList())
+                foreach (var coord in dictionary.Values)
                 {
                     if (_room.GetGameMap().SquareHasUsers(coord.X, coord.Y))
                         return false;
@@ -747,7 +747,7 @@ public class RoomItemHandling
             var furniObjects = GetFurniObjects(newX, newY);
             var collection = new List<Item>();
             var list3 = new List<Item>();
-            foreach (var coord in dictionary.Values.ToList())
+            foreach (var coord in dictionary.Values)
             {
                 var list4 = GetFurniObjects(coord.X, coord.Y);
                 if (list4 != null)
@@ -757,7 +757,7 @@ public class RoomItemHandling
                 furniObjects = new();
             list3.AddRange(furniObjects);
             list3.AddRange(collection);
-            foreach (var i in list3.ToList())
+            foreach (var i in list3)
             {
                 if (i.Id != item.Id && !i.Definition.Stackable)
                     return false;
