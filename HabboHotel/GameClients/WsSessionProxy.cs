@@ -19,7 +19,6 @@ namespace Plus.HabboHotel.GameClients
 
         protected override void OnConnected()
         {
-            Socket.DontFragment = true;
             base.OnConnected();
         }
 
