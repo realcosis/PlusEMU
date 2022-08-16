@@ -341,6 +341,16 @@ public static class ClientPacketHeader
     //public const uint GetHabboBasicMembershipExtendOfferEvent =;
     //public const uint GetLimitedOfferAppearingNextEvent =;
     //public const uint GetHabboClubExtendOfferEvent =;
+    //public const uint GetIsOfferGiftableEvent =;
+    //public const uint GetNextTargetedOfferEvent =;
+    //public const uint GetSeasonalCalendarDailyOfferEvent =;
+    //public const uint MarkCatalogNewAdditionsPageOpenedEvent =;
+    //public const uint PurchaseBasicMembershipExtensionEvent =;
+    //public const uint PurchaseTargetedOfferEvent =;
+    //public const uint PurchaseVipMembershipExtensionEvent =;
+    //public const uint SelectClubGiftEvent =;
+    //public const uint SetTargetedOfferStateEvent =;
+    //public const uint ShopTargetedOfferViewedEvent =;
 
 
     //recycler
@@ -353,15 +363,16 @@ public static class ClientPacketHeader
     //public const uint SetRelationshipStatusEvent =;
     //public const uint VisitUserEvent =;
 
-    //public const uint GetIsOfferGiftableEvent =;
-    //public const uint GetNextTargetedOfferEvent =;
-    //public const uint GetSeasonalCalendarDailyOfferEvent =;
-    //public const uint MarkCatalogNewAdditionsPageOpenedEvent =;
-    //public const uint PurchaseBasicMembershipExtensionEvent =;
-    //public const uint PurchaseTargetedOfferEvent =;
-    //public const uint PurchaseVipMembershipExtensionEvent =;
-    //public const uint SelectClubGiftEvent =;
-    //public const uint SetTargetedOfferStateEvent =;
-    //public const uint ShopTargetedOfferViewedEvent =;
+    //competition
+    //public const uint ForwardToACompetitionRoomEvent =;
+    //public const uint ForwardToASubmittableRoomEvent =;
+    //public const uint ForwardToRandomCompetitionRoomEvent =;
+    //public const uint GetCurrentTimingCodeEvent =;
+    //public const uint GetIsUserPartOfCompetitionEvent =;
+    //public const uint GetSecondsUntilEvent =;
+    //public const uint RoomCompetitionInitEvent =;
+    //public const uint SubmitRoomToCompetitionEvent =;
+    //public const uint VoteForRoomEvent =;
+
 
 }
