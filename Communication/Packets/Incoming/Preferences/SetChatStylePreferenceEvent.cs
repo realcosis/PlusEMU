@@ -1,6 +1,6 @@
 ﻿using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Rooms.Avatar;
+namespace Plus.Communication.Packets.Incoming.Rooms.Preferences;
 
 internal class SetChatStylePreferenceEvent : IPacketEvent
 {

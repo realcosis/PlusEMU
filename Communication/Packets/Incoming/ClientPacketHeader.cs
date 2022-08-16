@@ -14,6 +14,8 @@ public static class ClientPacketHeader
     public const uint ChangeUserNameEvent = 2709; //1067
     public const uint GetWardrobeEvent = 3901; //765
     public const uint SaveWardrobeOutfitEvent = 1777; //55
+
+    //Preferences
     public const uint SetChatStylePreferenceEvent = 1656;
 
     // Catalog
