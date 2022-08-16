@@ -220,7 +220,7 @@ public static class ClientPacketHeader
     public const uint DeleteGroupThreadEvent = 50; //3299
     public const uint PurchaseGroupEvent = 2959; //2546
     public const uint MessengerInitEvent = 2825; //2151
-    public const uint CancelTyPingEvent = 1329; //1114
+    public const uint CancelTypingEvent = 1329; //1114
     public const uint GetMoodlightConfigEvent = 2906; //3472
     public const uint GetGroupInfoEvent = 681; //3211
     public const uint CreateFlatEvent = 92; //3077
@@ -246,7 +246,7 @@ public static class ClientPacketHeader
     public const uint RespectUserEvent = 3812; //1955
     public const uint AddFavouriteRoomEvent = 3251; //3092
     public const uint DeclineBuddyEvent = 3484; //835
-    public const uint StartTyPingEvent = 2826; //3362
+    public const uint StartTypingEvent = 2826; //3362
     public const uint GetGroupFurniConfigEvent = 3902; //3046
     public const uint SendRoomInviteEvent = 1806; //2694
     public const uint RemoveAllRightsEvent = 884; //1404

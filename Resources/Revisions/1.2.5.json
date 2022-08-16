@@ -1,7 +1,7 @@
 {
   "Name": "1.2.5",
   "IncomingHeaders": {
-    "InitCryptoEvent": 3110,
+    "InitDiffieHandshakeEvent": 3110,
     "GenerateSecretKeyEvent": 773,
     "UniqueIdEvent": 2490,
     "SsoTicketEvent": 2419,
@@ -230,7 +230,7 @@
     "DeleteStickyNoteEvent": 3336,
     "MuteUserEvent": 3485,
     "ApplyHorseEffectEvent": 1328,
-    "GetClientVersionEvent": 4000,
+    "VersionCheckEvent": 4000,
     "OnBullyClickEvent": 2455,
     "HabboSearchEvent": 1210,
     "PickTicketEvent": 15,
@@ -244,7 +244,7 @@
     "SaveFloorPlanModelEvent": 875,
     "MoveWallItemEvent": 168,
     "ClientVariablesEvent": 1053,
-    "PingEvent": 2596,
+    "PongEvent": 2596,
     "DeleteGroupEvent": 1134,
     "UpdateGroupSettingsEvent": 3435,
     "GetRecyclerRewardsEvent": 1342,
