@@ -6,7 +6,7 @@ using Plus.HabboHotel.GameClients;
 namespace Plus.Communication.Packets.Incoming.Handshake;
 
 [NoAuthenticationRequired]
-public class InitCryptoEvent : IPacketEvent
+public class InitDiffieHandshakeEvent : IPacketEvent
 {
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
