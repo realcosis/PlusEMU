@@ -293,7 +293,7 @@ public static class ClientPacketHeader
     public const uint PongEvent = 509; //2584
     public const uint DeleteGroupEvent = 114; //747
     public const uint UpdateGroupSettingsEvent = 2435; //3180
-    public const uint GetRecyclerRewardsEvent = 2152; //3258
+    public const uint GetRecyclerPrizesEvent = 2152; //3258
     public const uint PurchaseRoomPromotionEvent = 1542; //3078
     public const uint PickUpBotEvent = 3058; //644
     public const uint GetOffersEvent = 2817; //442
@@ -340,4 +340,9 @@ public static class ClientPacketHeader
     //public const uint GetDirectClubBuyAvailableEvent =;
     //public const uint GetHabboBasicMembershipExtendOfferEvent =;
     //public const uint GetLimitedOfferAppearingNextEvent =;
+
+
+    //recycler
+    //public const uint GetRecyclerStatusEvent =;
+    //public const uint RecyclerRecycleEvent =;
 }

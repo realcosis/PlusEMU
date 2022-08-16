@@ -247,7 +247,7 @@
     "PongEvent": 509,
     "DeleteGroupEvent": 114,
     "UpdateGroupSettingsEvent": 2435,
-    "GetRecyclerRewardsEvent": 2152,
+    "GetRecyclerPrizesEvent": 2152,
     "PurchaseRoomPromotionEvent": 1542,
     "PickUpBotEvent": 3058,
     "GetOffersEvent": 2817,
