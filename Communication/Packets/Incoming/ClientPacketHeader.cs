@@ -22,6 +22,7 @@ public static class ClientPacketHeader
     // Catalog
     public const uint GetCatalogIndexEvent = 3226; //1294
     public const uint GetCatalogPageEvent = 60; //39
+    public const uint GetClubGiftInfoEvent = 3127; //3302
     public const uint PurchaseFromCatalogEvent = 3492; //2830
     public const uint PurchaseFromCatalogAsGiftEvent = 1555; //21
 
@@ -128,7 +129,6 @@ public static class ClientPacketHeader
 
     public const uint RemoveMyRightsEvent = 111; //879
     public const uint GiveHandItemEvent = 2523; //3315
-    public const uint GetClubGiftsEvent = 3127; //3302
     public const uint GoToHotelViewEvent = 1429; //3576
     public const uint GetRoomFilterListEvent = 179; //1348
     public const uint GetPromoArticlesEvent = 2782; //3895
