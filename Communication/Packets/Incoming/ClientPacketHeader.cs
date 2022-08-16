@@ -324,4 +324,8 @@ public static class ClientPacketHeader
     //public const uint PurchasePhotoEvent =;
     //public const uint RenderRoomEvent =;
     //public const uint RenderRoomThumbnailEvent =;
+
+    //campaign
+    //public const uint OpenCampaignCalendarDoorAsStaffEvent =;
+    //public const uint OpenCampaignCalendarDoorEvent =;
 }
