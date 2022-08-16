@@ -4,5 +4,5 @@ namespace Plus.Communication.Packets.Incoming.Camera;
 
 internal class InitCameraEvent
 {
-   => / throw new NotImplementedException();
+    public Task Parse(GameClient session) => throw new NotImplementedException();
 }
