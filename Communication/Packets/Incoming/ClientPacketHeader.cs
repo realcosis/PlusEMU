@@ -126,7 +126,7 @@ public static class ClientPacketHeader
 
     // Ambassador
 
-    public const uint AmbassadorSendAlertEvent = 560;
+    public const uint AmbassadorAlertEvent = 560;
 
     public const uint RemoveMyRightsEvent = 111; //879
     public const uint GiveHandItemEvent = 2523; //3315
@@ -142,7 +142,7 @@ public static class ClientPacketHeader
     public const uint SaveBotActionEvent = 2921; //678g
     public const uint LetUserInEvent = 1781; //2356
     public const uint GetMarketplaceItemStatsEvent = 1561; //1203
-    public const uint GetSellablePetBreedsEvent = 599; //2505
+    public const uint GetSellablePetPalettesEvent = 599; //2505
     public const uint ForceOpenCalendarBoxEvent = 1275; //2879
     public const uint SetFriendBarStateEvent = 3841; //716
     public const uint DeleteRoomEvent = 439; //722
@@ -294,7 +294,7 @@ public static class ClientPacketHeader
     public const uint DeleteGroupEvent = 114; //747
     public const uint UpdateGroupSettingsEvent = 2435; //3180
     public const uint GetRecyclerPrizesEvent = 2152; //3258
-    public const uint PurchaseRoomPromotionEvent = 1542; //3078
+    public const uint PurchaseRoomAdEvent = 1542; //3078
     public const uint PickUpBotEvent = 3058; //644
     public const uint GetOffersEvent = 2817; //442
     public const uint GetHabboGroupBadgesEvent = 3925; //301
@@ -340,6 +340,7 @@ public static class ClientPacketHeader
     //public const uint GetDirectClubBuyAvailableEvent =;
     //public const uint GetHabboBasicMembershipExtendOfferEvent =;
     //public const uint GetLimitedOfferAppearingNextEvent =;
+    //public const uint GetHabboClubExtendOfferEvent =;
 
 
     //recycler
@@ -351,5 +352,16 @@ public static class ClientPacketHeader
     //public const uint FriendFurniConfirmLockEvent =;
     //public const uint SetRelationshipStatusEvent =;
     //public const uint VisitUserEvent =;
+
+    //public const uint GetIsOfferGiftableEvent =;
+    //public const uint GetNextTargetedOfferEvent =;
+    //public const uint GetSeasonalCalendarDailyOfferEvent =;
+    //public const uint MarkCatalogNewAdditionsPageOpenedEvent =;
+    //public const uint PurchaseBasicMembershipExtensionEvent =;
+    //public const uint PurchaseTargetedOfferEvent =;
+    //public const uint PurchaseVipMembershipExtensionEvent =;
+    //public const uint SelectClubGiftEvent =;
+    //public const uint SetTargetedOfferStateEvent =;
+    //public const uint ShopTargetedOfferViewedEvent =;
 
 }
