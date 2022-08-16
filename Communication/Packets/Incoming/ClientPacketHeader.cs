@@ -10,6 +10,7 @@ public static class ClientPacketHeader
     public const uint InfoRetrieveEvent = 2629; //186
 
     // Avatar
+    public const uint CheckUserNameEvent = 2507; //8
     public const uint GetWardrobeEvent = 3901; //765
     public const uint SaveWardrobeOutfitEvent = 1777; //55
     public const uint SetChatStylePreferenceEvent = 1656;
@@ -254,7 +255,6 @@ public static class ClientPacketHeader
     public const uint OpenBotActionEvent = 3236; //2544
     public const uint OpenCalendarBoxEvent = 1229; //724
     public const uint DeleteGroupPostEvent = 1991; //317
-    public const uint CheckValidNameEvent = 2507; //8
     public const uint UpdateGroupBadgeEvent = 1589; //2959
     public const uint PlaceObjectEvent = 1809; //579
     public const uint RemoveGroupFavouriteEvent = 226; //1412
