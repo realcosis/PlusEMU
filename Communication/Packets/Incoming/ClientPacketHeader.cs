@@ -11,6 +11,7 @@ public static class ClientPacketHeader
 
     // Avatar
     public const uint CheckUserNameEvent = 2507; //8
+    public const uint ChangeUserNameEvent = 2709; //1067
     public const uint GetWardrobeEvent = 3901; //765
     public const uint SaveWardrobeOutfitEvent = 1777; //55
     public const uint SetChatStylePreferenceEvent = 1656;
@@ -222,7 +223,6 @@ public static class ClientPacketHeader
     public const uint LatencyTestEvent = 878; //1789
     public const uint GetSelectedBadgesEvent = 2735; //2226
     public const uint AddStickyNoteEvent = 3891; //425
-    public const uint ChangeNameEvent = 2709; //1067
     public const uint RideHorseEvent = 3387; //1440
     public const uint InitializeNewNavigatorEvent = 3375; //882
     public const uint SetChatPreferenceEvent = 1045; //2006
