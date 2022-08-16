@@ -2,11 +2,6 @@
 
 public static class ClientPacketHeader
 {
-
-    //NotImplemented
-    //public const uint InitCameraEvent = ;
-
-
     // Handshake
     public const uint InitDiffieHandshakeEvent = 3392; //316
     public const uint GenerateSecretKeyEvent = 3622; //3847
@@ -319,4 +314,14 @@ public static class ClientPacketHeader
     public const uint GetRoomRightsEvent = 3937; //2734
     public const uint SendMsgEvent = 2409; //1981
     public const uint CloseTicketEvent = 1080; //50
+
+    //NotImplemented
+
+    //Camera
+    //public const uint InitCameraEvent =;
+    //public const uint PhotoCompetitionEvent =;
+    //public const uint PublishPhotoEvent =;
+    //public const uint PurchasePhotoEvent =;
+    //public const uint RenderRoomEvent =;
+    //public const uint RenderRoomThumbnailEvent =;
 }
