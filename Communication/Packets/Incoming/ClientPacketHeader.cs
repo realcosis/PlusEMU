@@ -2,6 +2,11 @@
 
 public static class ClientPacketHeader
 {
+
+    //NotImplemented
+    //public const uint InitCameraEvent = ;
+
+
     // Handshake
     public const uint InitDiffieHandshakeEvent = 3392; //316
     public const uint GenerateSecretKeyEvent = 3622; //3847
