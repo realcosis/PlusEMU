@@ -6,12 +6,12 @@ using Plus.HabboHotel.GameClients;
 namespace Plus.Communication.Packets.Incoming.Handshake;
 
 [NoAuthenticationRequired]
-public class GetClientVersionEvent : IPacketEvent
+public class VersionCheckEvent : IPacketEvent
 {
     private readonly IRevisionsCache _revisionsCache;
     private readonly ILogger _logger;
 
-    public GetClientVersionEvent(IRevisionsCache revisionsCache, ILogger<GetClientVersionEvent> logger)
+    public VersionCheckEvent(IRevisionsCache revisionsCache, ILogger<VersionCheckEvent> logger)
     {
         _revisionsCache = revisionsCache;
         _logger = logger;
