@@ -30,7 +30,7 @@ public static class ClientPacketHeader
     // Navigator
 
     // Messenger
-    public const uint GetBuddyRequestsEvent = 1646; //2485
+    public const uint GetFriendRequestsEvent = 1646; //2485
 
     // Quests
     public const uint GetQuestListEvent = 2198; //2305
@@ -134,9 +134,9 @@ public static class ClientPacketHeader
     public const uint GetRoomFilterListEvent = 179; //1348
     public const uint GetPromoArticlesEvent = 2782; //3895
     public const uint ModifyWhoCanRideHorseEvent = 3604; //1993
-    public const uint RemoveBuddyEvent = 1636; //698
+    public const uint RemoveFriendEvent = 1636; //698
     public const uint RefreshCampaignEvent = 3960; //3544
-    public const uint AcceptBuddyEvent = 2067; //45
+    public const uint AcceptFriendEvent = 2067; //45
     public const uint YouTubeVideoInformationEvent = 1295; //2395
     public const uint FollowFriendEvent = 848; //2280
     public const uint SaveBotActionEvent = 2921; //678g
@@ -212,7 +212,7 @@ public static class ClientPacketHeader
     public const uint CraftSecretEvent = 3623; //1622
     public const uint GetGameListingEvent = 705; //2993
     public const uint SetRelationshipEvent = 1514; //2112
-    public const uint RequestBuddyEvent = 1706; //3775
+    public const uint RequestFriendEvent = 1706; //3775
     public const uint MemoryPerformanceEvent = 124; //731
     public const uint ToggleYouTubeVideoEvent = 1956; //890
     public const uint SetMannequinFigureEvent = 1909; //3936
@@ -245,7 +245,7 @@ public static class ClientPacketHeader
     public const uint RemoveFavouriteRoomEvent = 3223; //855
     public const uint RespectUserEvent = 3812; //1955
     public const uint AddFavouriteRoomEvent = 3251; //3092
-    public const uint DeclineBuddyEvent = 3484; //835
+    public const uint DeclineFriendEvent = 3484; //835
     public const uint StartTypingEvent = 2826; //3362
     public const uint GetGroupFurniConfigEvent = 3902; //3046
     public const uint SendRoomInviteEvent = 1806; //2694
@@ -345,4 +345,11 @@ public static class ClientPacketHeader
     //recycler
     //public const uint GetRecyclerStatusEvent =;
     //public const uint RecyclerRecycleEvent =;
+
+
+    //FriendList
+    //public const uint FriendFurniConfirmLockEvent =;
+    //public const uint SetRelationshipStatusEvent =;
+    //public const uint VisitUserEvent =;
+
 }

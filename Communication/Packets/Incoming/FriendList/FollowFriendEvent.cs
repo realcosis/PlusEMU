@@ -1,0 +1,34 @@
+﻿using Plus.Communication.Packets.Outgoing.Messenger;
+using Plus.Communication.Packets.Outgoing.Rooms.Session;
+using Plus.HabboHotel.GameClients;
+
+namespace Plus.Communication.Packets.Incoming.FriendList;
+
+internal class FollowFriendEvent : IPacketEvent
+{
+    private readonly IGameClientManager _clientManager;
+
+    public FollowFriendEvent(IGameClientManager clientManager)
+    {
+        _clientManager = clientManager;
+    }
+
+    public Task Parse(GameClient session, IIncomingPacket packet)
+    {
+        var buddyId = packet.ReadInt();
+        if (buddyId == 0 || buddyId == session.GetHabbo().Id)
+            return Task.CompletedTask;
+        var client = _clientManager.GetClientByUserId(buddyId);
+        if (client == null || client.GetHabbo() == null)
+            return Task.CompletedTask;
+        if (!client.GetHabbo().InRoom)
+        {
+            session.Send(new FollowFriendFailedComposer(2));
+            return Task.CompletedTask;
+        }
+        if (session.GetHabbo().CurrentRoom?.RoomId == client.GetHabbo().CurrentRoom?.RoomId)
+            return Task.CompletedTask;
+        session.Send(new RoomForwardComposer(client.GetHabbo().CurrentRoomId));
+        return Task.CompletedTask;
+    }
+}
