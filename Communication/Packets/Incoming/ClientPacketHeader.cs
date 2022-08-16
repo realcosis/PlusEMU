@@ -22,6 +22,7 @@ public static class ClientPacketHeader
     // Catalog
     public const uint GetCatalogIndexEvent = 3226; //1294
     public const uint GetCatalogPageEvent = 60; //39
+    public const uint GetClubOffersEvent = 362; //2180
     public const uint GetClubGiftInfoEvent = 3127; //3302
     public const uint PurchaseFromCatalogEvent = 3492; //2830
     public const uint PurchaseFromCatalogAsGiftEvent = 1555; //21
@@ -286,7 +287,6 @@ public static class ClientPacketHeader
     public const uint ManageGroupEvent = 737; //2547
     public const uint PlacePetEvent = 1495; //223
     public const uint EditRoomPromotionEvent = 816; //3707
-    public const uint GetCatalogOfferEvent = 362; //2180
     public const uint SaveFloorPlanModelEvent = 1936; //1287
     public const uint MoveWallItemEvent = 1778; //609
     public const uint ClientVariablesEvent = 1220; //1600
