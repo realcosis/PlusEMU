@@ -3,7 +3,7 @@
 public static class ClientPacketHeader
 {
     // Handshake
-    public const uint InitCryptoEvent = 3392; //316
+    public const uint InitDiffieHandshakeEvent = 3392; //316
     public const uint GenerateSecretKeyEvent = 3622; //3847
     public const uint UniqueIdEvent = 3521; //1471
     public const uint SsoTicketEvent = 1989; //1778
@@ -220,7 +220,7 @@ public static class ClientPacketHeader
     public const uint DeleteGroupThreadEvent = 50; //3299
     public const uint PurchaseGroupEvent = 2959; //2546
     public const uint MessengerInitEvent = 2825; //2151
-    public const uint CancelTypingEvent = 1329; //1114
+    public const uint CancelTyPingEvent = 1329; //1114
     public const uint GetMoodlightConfigEvent = 2906; //3472
     public const uint GetGroupInfoEvent = 681; //3211
     public const uint CreateFlatEvent = 92; //3077
@@ -246,7 +246,7 @@ public static class ClientPacketHeader
     public const uint RespectUserEvent = 3812; //1955
     public const uint AddFavouriteRoomEvent = 3251; //3092
     public const uint DeclineBuddyEvent = 3484; //835
-    public const uint StartTypingEvent = 2826; //3362
+    public const uint StartTyPingEvent = 2826; //3362
     public const uint GetGroupFurniConfigEvent = 3902; //3046
     public const uint SendRoomInviteEvent = 1806; //2694
     public const uint RemoveAllRightsEvent = 884; //1404
@@ -277,7 +277,7 @@ public static class ClientPacketHeader
     public const uint DeleteStickyNoteEvent = 3885; //2777
     public const uint MuteUserEvent = 2101; //2997
     public const uint ApplyHorseEffectEvent = 3364; //870
-    public const uint GetClientVersionEvent = 4000; //4000
+    public const uint VersionCheckEvent = 4000; //4000
     public const uint OnBullyClickEvent = 254; //1932
     public const uint HabboSearchEvent = 1194; //3375
     public const uint PickTicketEvent = 1807; //3973
@@ -290,7 +290,7 @@ public static class ClientPacketHeader
     public const uint SaveFloorPlanModelEvent = 1936; //1287
     public const uint MoveWallItemEvent = 1778; //609
     public const uint ClientVariablesEvent = 1220; //1600
-    public const uint PingEvent = 509; //2584
+    public const uint PongEvent = 509; //2584
     public const uint DeleteGroupEvent = 114; //747
     public const uint UpdateGroupSettingsEvent = 2435; //3180
     public const uint GetRecyclerRewardsEvent = 2152; //3258
