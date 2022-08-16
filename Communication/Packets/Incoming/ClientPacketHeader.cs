@@ -374,5 +374,13 @@ public static class ClientPacketHeader
     //public const uint SubmitRoomToCompetitionEvent =;
     //public const uint VoteForRoomEvent =;
 
+    //crafting
+    //public const uint CraftEvent =;
+    //public const uint CraftSecretEvent =;
+    //public const uint GetCraftableProductsEvent =;
+    //public const uint GetCraftingRecipeEvent =;
+    //public const uint GetCraftingRecipesAvailableEvent =;
+
+
 
 }
