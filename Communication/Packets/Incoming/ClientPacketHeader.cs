@@ -17,6 +17,7 @@ public static class ClientPacketHeader
 
     //Preferences
     public const uint SetChatStylePreferenceEvent = 1656;
+    public const uint SetChatPreferenceEvent = 1045; //2006
 
     // Catalog
     public const uint GetCatalogIndexEvent = 3226; //1294
@@ -227,7 +228,6 @@ public static class ClientPacketHeader
     public const uint AddStickyNoteEvent = 3891; //425
     public const uint RideHorseEvent = 3387; //1440
     public const uint InitializeNewNavigatorEvent = 3375; //882
-    public const uint SetChatPreferenceEvent = 1045; //2006
     public const uint GetForumsListDataEvent = 3802; //3912
     public const uint ToggleMuteToolEvent = 1301; //2462
     public const uint UpdateGroupIdentityEvent = 1375; //1062
