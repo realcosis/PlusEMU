@@ -328,4 +328,16 @@ public static class ClientPacketHeader
     //campaign
     //public const uint OpenCampaignCalendarDoorAsStaffEvent =;
     //public const uint OpenCampaignCalendarDoorEvent =;
+
+    //catalog
+    //public const uint GetBonusRareInfoEvent =;
+    //public const uint BuildersClubQueryFurniCountEvent =;
+    //public const uint BuildersClubPlaceWallItemEvent =;
+    //public const uint BuildersClubPlaceRoomItemEvent =;
+    //public const uint GetBundleDiscountRulesetEvent =;
+    //public const uint GetCatalogPageExpirationEvent =;
+    //public const uint GetCatalogPageWithEarliestExpiryEvent =;
+    //public const uint GetDirectClubBuyAvailableEvent =;
+    //public const uint GetHabboBasicMembershipExtendOfferEvent =;
+    //public const uint GetLimitedOfferAppearingNextEvent =;
 }
