@@ -174,7 +174,7 @@ public static class ClientPacketHeader
     public const uint GetForumUserProfileEvent = 3515; //2639
     public const uint SaveWiredEffectConfigEvent = 2234; //3431
     public const uint GetRoomEntryDataEvent = 1747; //2768
-    public const uint JoinPlayerQueueEvent = 167; //951
+    public const uint JoinQueueEvent = 167; //951
     public const uint CanCreateRoomEvent = 2411; //361
     public const uint SetTonerEvent = 1389; //1061
     public const uint SaveWiredTriggerConfigEvent = 3877; //1897
@@ -210,7 +210,7 @@ public static class ClientPacketHeader
     public const uint RedeemVoucherEvent = 1384; //489
     public const uint ThrowDiceEvent = 3427; //1182
     public const uint CraftSecretEvent = 3623; //1622
-    public const uint GetGameListingEvent = 705; //2993
+    public const uint GetGameListEvent = 705; //2993
     public const uint SetRelationshipEvent = 1514; //2112
     public const uint RequestFriendEvent = 1706; //3775
     public const uint MemoryPerformanceEvent = 124; //731
@@ -299,7 +299,7 @@ public static class ClientPacketHeader
     public const uint GetOffersEvent = 2817; //442
     public const uint GetHabboGroupBadgesEvent = 3925; //301
     public const uint GetUserTagsEvent = 84; //1722
-    public const uint GetPlayableGamesEvent = 1418; //482
+    public const uint GetGameAchievementsEvent = 1418; //482
     public const uint GetCatalogRoomPromotionEvent = 2757; //538
     public const uint MoveAvatarEvent = 2121; //1737
     public const uint SaveBrandingItemEvent = 2208; //3156
