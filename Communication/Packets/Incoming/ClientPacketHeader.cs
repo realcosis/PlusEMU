@@ -386,6 +386,9 @@ public static class ClientPacketHeader
     //public const uint Game2GameChatEvent =;
     //public const uint Game2LoadStageReadyEvent =;
     //public const uint Game2PlayAgainEvent =;
+    //public const uint Game2CheckGameDirectoryStatusEvent =;
+    //public const uint Game2GetAccountGameStatusEvent =;
+    //public const uint Game2RequestFullStatusUpdateEvent =;
 
 
 
