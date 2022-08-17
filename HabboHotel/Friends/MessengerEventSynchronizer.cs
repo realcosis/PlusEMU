@@ -1,4 +1,4 @@
-﻿using Plus.Communication.Packets.Outgoing.Messenger;
+﻿using Plus.Communication.Packets.Outgoing.FriendList;
 using Plus.HabboHotel.Users;
 using Plus.HabboHotel.Users.Authentication;
 using Plus.HabboHotel.Users.Messenger;

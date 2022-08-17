@@ -4,7 +4,7 @@
 //using System.Data;
 //using System.Linq;
 //using Plus.Communication.Packets.Outgoing;
-//using Plus.Communication.Packets.Outgoing.Messenger;
+//using Plus.Communication.Packets.Outgoing.FriendList;
 //using Plus.HabboHotel.GameClients;
 //using Plus.HabboHotel.Quests;
 //using Plus.Utilities;

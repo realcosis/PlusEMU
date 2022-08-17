@@ -3,27 +3,34 @@
 public static class ClientPacketHeader
 {
     // Handshake
-    public const uint InitCryptoEvent = 3392; //316
+    public const uint InitDiffieHandshakeEvent = 3392; //316
     public const uint GenerateSecretKeyEvent = 3622; //3847
     public const uint UniqueIdEvent = 3521; //1471
     public const uint SsoTicketEvent = 1989; //1778
     public const uint InfoRetrieveEvent = 2629; //186
 
     // Avatar
+    public const uint CheckUserNameEvent = 2507; //8
+    public const uint ChangeUserNameEvent = 2709; //1067
     public const uint GetWardrobeEvent = 3901; //765
     public const uint SaveWardrobeOutfitEvent = 1777; //55
+
+    //Preferences
     public const uint SetChatStylePreferenceEvent = 1656;
+    public const uint SetChatPreferenceEvent = 1045; //2006
 
     // Catalog
     public const uint GetCatalogIndexEvent = 3226; //1294
     public const uint GetCatalogPageEvent = 60; //39
+    public const uint GetClubOffersEvent = 362; //2180
+    public const uint GetClubGiftInfoEvent = 3127; //3302
     public const uint PurchaseFromCatalogEvent = 3492; //2830
     public const uint PurchaseFromCatalogAsGiftEvent = 1555; //21
 
     // Navigator
 
     // Messenger
-    public const uint GetBuddyRequestsEvent = 1646; //2485
+    public const uint GetFriendRequestsEvent = 1646; //2485
 
     // Quests
     public const uint GetQuestListEvent = 2198; //2305
@@ -119,24 +126,23 @@ public static class ClientPacketHeader
 
     // Ambassador
 
-    public const uint AmbassadorSendAlertEvent = 560;
+    public const uint AmbassadorAlertEvent = 560;
 
     public const uint RemoveMyRightsEvent = 111; //879
     public const uint GiveHandItemEvent = 2523; //3315
-    public const uint GetClubGiftsEvent = 3127; //3302
     public const uint GoToHotelViewEvent = 1429; //3576
     public const uint GetRoomFilterListEvent = 179; //1348
     public const uint GetPromoArticlesEvent = 2782; //3895
     public const uint ModifyWhoCanRideHorseEvent = 3604; //1993
-    public const uint RemoveBuddyEvent = 1636; //698
+    public const uint RemoveFriendEvent = 1636; //698
     public const uint RefreshCampaignEvent = 3960; //3544
-    public const uint AcceptBuddyEvent = 2067; //45
+    public const uint AcceptFriendEvent = 2067; //45
     public const uint YouTubeVideoInformationEvent = 1295; //2395
     public const uint FollowFriendEvent = 848; //2280
     public const uint SaveBotActionEvent = 2921; //678g
     public const uint LetUserInEvent = 1781; //2356
     public const uint GetMarketplaceItemStatsEvent = 1561; //1203
-    public const uint GetSellablePetBreedsEvent = 599; //2505
+    public const uint GetSellablePetPalettesEvent = 599; //2505
     public const uint ForceOpenCalendarBoxEvent = 1275; //2879
     public const uint SetFriendBarStateEvent = 3841; //716
     public const uint DeleteRoomEvent = 439; //722
@@ -206,7 +212,7 @@ public static class ClientPacketHeader
     public const uint CraftSecretEvent = 3623; //1622
     public const uint GetGameListingEvent = 705; //2993
     public const uint SetRelationshipEvent = 1514; //2112
-    public const uint RequestBuddyEvent = 1706; //3775
+    public const uint RequestFriendEvent = 1706; //3775
     public const uint MemoryPerformanceEvent = 124; //731
     public const uint ToggleYouTubeVideoEvent = 1956; //890
     public const uint SetMannequinFigureEvent = 1909; //3936
@@ -221,10 +227,8 @@ public static class ClientPacketHeader
     public const uint LatencyTestEvent = 878; //1789
     public const uint GetSelectedBadgesEvent = 2735; //2226
     public const uint AddStickyNoteEvent = 3891; //425
-    public const uint ChangeNameEvent = 2709; //1067
     public const uint RideHorseEvent = 3387; //1440
     public const uint InitializeNewNavigatorEvent = 3375; //882
-    public const uint SetChatPreferenceEvent = 1045; //2006
     public const uint GetForumsListDataEvent = 3802; //3912
     public const uint ToggleMuteToolEvent = 1301; //2462
     public const uint UpdateGroupIdentityEvent = 1375; //1062
@@ -241,7 +245,7 @@ public static class ClientPacketHeader
     public const uint RemoveFavouriteRoomEvent = 3223; //855
     public const uint RespectUserEvent = 3812; //1955
     public const uint AddFavouriteRoomEvent = 3251; //3092
-    public const uint DeclineBuddyEvent = 3484; //835
+    public const uint DeclineFriendEvent = 3484; //835
     public const uint StartTypingEvent = 2826; //3362
     public const uint GetGroupFurniConfigEvent = 3902; //3046
     public const uint SendRoomInviteEvent = 1806; //2694
@@ -254,7 +258,6 @@ public static class ClientPacketHeader
     public const uint OpenBotActionEvent = 3236; //2544
     public const uint OpenCalendarBoxEvent = 1229; //724
     public const uint DeleteGroupPostEvent = 1991; //317
-    public const uint CheckValidNameEvent = 2507; //8
     public const uint UpdateGroupBadgeEvent = 1589; //2959
     public const uint PlaceObjectEvent = 1809; //579
     public const uint RemoveGroupFavouriteEvent = 226; //1412
@@ -274,7 +277,7 @@ public static class ClientPacketHeader
     public const uint DeleteStickyNoteEvent = 3885; //2777
     public const uint MuteUserEvent = 2101; //2997
     public const uint ApplyHorseEffectEvent = 3364; //870
-    public const uint GetClientVersionEvent = 4000; //4000
+    public const uint VersionCheckEvent = 4000; //4000
     public const uint OnBullyClickEvent = 254; //1932
     public const uint HabboSearchEvent = 1194; //3375
     public const uint PickTicketEvent = 1807; //3973
@@ -284,15 +287,14 @@ public static class ClientPacketHeader
     public const uint ManageGroupEvent = 737; //2547
     public const uint PlacePetEvent = 1495; //223
     public const uint EditRoomPromotionEvent = 816; //3707
-    public const uint GetCatalogOfferEvent = 362; //2180
     public const uint SaveFloorPlanModelEvent = 1936; //1287
     public const uint MoveWallItemEvent = 1778; //609
     public const uint ClientVariablesEvent = 1220; //1600
-    public const uint PingEvent = 509; //2584
+    public const uint PongEvent = 509; //2584
     public const uint DeleteGroupEvent = 114; //747
     public const uint UpdateGroupSettingsEvent = 2435; //3180
-    public const uint GetRecyclerRewardsEvent = 2152; //3258
-    public const uint PurchaseRoomPromotionEvent = 1542; //3078
+    public const uint GetRecyclerPrizesEvent = 2152; //3258
+    public const uint PurchaseRoomAdEvent = 1542; //3078
     public const uint PickUpBotEvent = 3058; //644
     public const uint GetOffersEvent = 2817; //442
     public const uint GetHabboGroupBadgesEvent = 3925; //301
@@ -312,4 +314,73 @@ public static class ClientPacketHeader
     public const uint GetRoomRightsEvent = 3937; //2734
     public const uint SendMsgEvent = 2409; //1981
     public const uint CloseTicketEvent = 1080; //50
+
+    //NotImplemented
+
+    //Camera
+    //public const uint InitCameraEvent =;
+    //public const uint PhotoCompetitionEvent =;
+    //public const uint PublishPhotoEvent =;
+    //public const uint PurchasePhotoEvent =;
+    //public const uint RenderRoomEvent =;
+    //public const uint RenderRoomThumbnailEvent =;
+
+    //campaign
+    //public const uint OpenCampaignCalendarDoorAsStaffEvent =;
+    //public const uint OpenCampaignCalendarDoorEvent =;
+
+    //catalog
+    //public const uint GetBonusRareInfoEvent =;
+    //public const uint BuildersClubQueryFurniCountEvent =;
+    //public const uint BuildersClubPlaceWallItemEvent =;
+    //public const uint BuildersClubPlaceRoomItemEvent =;
+    //public const uint GetBundleDiscountRulesetEvent =;
+    //public const uint GetCatalogPageExpirationEvent =;
+    //public const uint GetCatalogPageWithEarliestExpiryEvent =;
+    //public const uint GetDirectClubBuyAvailableEvent =;
+    //public const uint GetHabboBasicMembershipExtendOfferEvent =;
+    //public const uint GetLimitedOfferAppearingNextEvent =;
+    //public const uint GetHabboClubExtendOfferEvent =;
+    //public const uint GetIsOfferGiftableEvent =;
+    //public const uint GetNextTargetedOfferEvent =;
+    //public const uint GetSeasonalCalendarDailyOfferEvent =;
+    //public const uint MarkCatalogNewAdditionsPageOpenedEvent =;
+    //public const uint PurchaseBasicMembershipExtensionEvent =;
+    //public const uint PurchaseTargetedOfferEvent =;
+    //public const uint PurchaseVipMembershipExtensionEvent =;
+    //public const uint SelectClubGiftEvent =;
+    //public const uint SetTargetedOfferStateEvent =;
+    //public const uint ShopTargetedOfferViewedEvent =;
+
+
+    //recycler
+    //public const uint GetRecyclerStatusEvent =;
+    //public const uint RecyclerRecycleEvent =;
+
+
+    //FriendList
+    //public const uint FriendFurniConfirmLockEvent =;
+    //public const uint SetRelationshipStatusEvent =;
+    //public const uint VisitUserEvent =;
+
+    //competition
+    //public const uint ForwardToACompetitionRoomEvent =;
+    //public const uint ForwardToASubmittableRoomEvent =;
+    //public const uint ForwardToRandomCompetitionRoomEvent =;
+    //public const uint GetCurrentTimingCodeEvent =;
+    //public const uint GetIsUserPartOfCompetitionEvent =;
+    //public const uint GetSecondsUntilEvent =;
+    //public const uint RoomCompetitionInitEvent =;
+    //public const uint SubmitRoomToCompetitionEvent =;
+    //public const uint VoteForRoomEvent =;
+
+    //crafting
+    //public const uint CraftEvent =;
+    //public const uint CraftSecretEvent =;
+    //public const uint GetCraftableProductsEvent =;
+    //public const uint GetCraftingRecipeEvent =;
+    //public const uint GetCraftingRecipesAvailableEvent =;
+
+
+
 }
