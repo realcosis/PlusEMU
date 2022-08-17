@@ -3,7 +3,7 @@ using Plus.Communication.Packets.Outgoing.Game;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Games;
 
-namespace Plus.Communication.Packets.Incoming.Game;
+namespace Plus.Communication.Packets.Incoming.Game.Lobby;
 
 internal class JoinQueueEvent : IPacketEvent
 {
