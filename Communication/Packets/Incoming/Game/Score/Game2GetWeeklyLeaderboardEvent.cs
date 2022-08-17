@@ -1,7 +1,7 @@
 ﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Games;
 
-namespace Plus.Communication.Packets.Incoming.Game;
+namespace Plus.Communication.Packets.Incoming.Game.Score;
 
 internal class Game2GetWeeklyLeaderboardEvent : IPacketEvent
 {

@@ -381,6 +381,13 @@ public static class ClientPacketHeader
     //public const uint GetCraftingRecipeEvent =;
     //public const uint GetCraftingRecipesAvailableEvent =;
 
+    //game
+    //public const uint Game2ExitGameEvent =;
+    //public const uint Game2GameChatEvent =;
+    //public const uint Game2LoadStageReadyEvent =;
+    //public const uint Game2PlayAgainEvent =;
+
+
 
 
 }
