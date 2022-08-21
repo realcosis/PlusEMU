@@ -12,7 +12,7 @@ public class RoomData
 
     public RoomData(int id, string caption, string modelName, string ownerName, int ownerId, string password, int score, string type, string access, int usersNow, int usersMax, int category,
         string description,
-        string tags, string floor, string landscape, int allowPets, int allowPetsEating, int roomBlockingEnabled, int hidewall, int wallThickness, int floorThickness, string wallpaper,
+        string tags, string floor, string landscape, bool allowPets, bool allowPetsEating, bool roomBlockingEnabled, bool hidewall, int wallThickness, int floorThickness, string wallpaper,
         int muteSettings,
         int banSettings, int kickSettings, int chatMode, int chatSize, int chatSpeed, int extraFlood, int chatDistance, int tradeSettings, bool pushEnabled, bool pullEnabled, bool superPushEnabled,
         bool superPullEnabled, bool enablesEnabled, bool respectedNotificationsEnabled, bool petMorphsAllowed, int groupId, int salePrice, bool layEnabled, RoomModel model)
@@ -129,13 +129,13 @@ public class RoomData
     public string Floor { get; set; }
     public string Landscape { get; set; }
     // TODO @80O: Convert to bool
-    public int AllowPets { get; set; }
+    public bool AllowPets { get; set; }
     // TODO @80O: Convert to bool
-    public int AllowPetsEating { get; set; }
+    public bool AllowPetsEating { get; set; }
     // TODO @80O: Convert to bool
-    public int RoomBlockingEnabled { get; set; }
+    public bool RoomBlockingEnabled { get; set; }
     // TODO @80O: Convert to bool
-    public int Hidewall { get; set; }
+    public bool Hidewall { get; set; }
     public int WallThickness { get; set; }
     public int FloorThickness { get; set; }
     public string Wallpaper { get; set; }
