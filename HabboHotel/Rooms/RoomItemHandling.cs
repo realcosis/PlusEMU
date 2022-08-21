@@ -6,13 +6,11 @@ using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Core;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
-using Plus.HabboHotel.Items.Data.Moodlight;
-using Plus.HabboHotel.Items.Data.Toner;
 using Plus.HabboHotel.Items.Wired;
-using Plus.HabboHotel.Rooms.PathFinding;
 
 namespace Plus.HabboHotel.Rooms;
 
+[Obsolete("Everything in here is bad and whoever wrote this must've been high on some crack or something")]
 public class RoomItemHandling
 {
     private readonly ConcurrentDictionary<uint, Item> _floorItems;
@@ -371,14 +369,13 @@ public class RoomItemHandling
         {
             if (_movedItems.Count > 0)
             {
-                // TODO: Big string builder?
                 using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                 foreach (var item in _movedItems.Values.ToList())
                 {
                     if (!string.IsNullOrEmpty(item.LegacyDataString))
                     {
                         dbClient.SetQuery("UPDATE `items` SET `extra_data` = @edata" + item.Id + " WHERE `id` = '" + item.Id + "' LIMIT 1");
-                        dbClient.AddParameter("edata" + item.Id, item.LegacyDataString);
+                        dbClient.AddParameter("edata" + item.Id, item.ExtraData.Serialize());
                         dbClient.RunQuery();
                     }
                     if (item.IsWallItem && (!item.Definition.ItemName.Contains("wallpaper_single") || !item.Definition.ItemName.Contains("floor_single") ||

@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using Plus.HabboHotel.Items;
+﻿using Plus.HabboHotel.Items;
 
 namespace Plus.HabboHotel.Rooms.Games.Teams;
 

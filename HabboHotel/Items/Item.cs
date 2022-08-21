@@ -9,12 +9,12 @@ using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Rooms.Games.Freeze;
 using Plus.HabboHotel.Rooms.Games.Teams;
 using Plus.HabboHotel.Rooms.PathFinding;
+using Plus.HabboHotel.Users.Inventory.Furniture;
 
 namespace Plus.HabboHotel.Items;
 
 public class Item
 {
-
     public uint Id { get; set; }
     public uint OwnerId { get; set; }
     public uint RoomId { get; set; }
@@ -43,6 +43,7 @@ public class Item
     /// TODO @80O: Cleanup shit below
     private Room? _room;
     private bool _updateNeeded;
+    [Obsolete]
     public int BaseItem;
     public string Figure = string.Empty;
     public FreezePowerUp FreezePowerUp;
@@ -65,7 +66,7 @@ public class Item
 
     public int Value;
 
-    public Dictionary<int, ThreeDCoord> GetAffectedTiles { get; private set; }
+    public Dictionary<int, ThreeDCoord> GetAffectedTiles { get; private set; } = new();
 
     public int GetX { get; set; }
 
@@ -120,9 +121,9 @@ public class Item
         }
     }
 
-    public bool IsWallItem { get; }
+    public bool IsWallItem => Definition.Type == ItemType.Wall;
 
-    public bool IsFloorItem { get; }
+    public bool IsFloorItem => Definition.Type == ItemType.Floor;
 
     public Point SquareInFront
     {

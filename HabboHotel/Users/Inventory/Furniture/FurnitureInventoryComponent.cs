@@ -44,6 +44,11 @@ namespace Plus.HabboHotel.Users.Inventory.Furniture
             ItemType.Wall => "I",
             _ => throw new ArgumentException("Invalid ItemCategory!")
         };
+
+        public static IFurniObjectData CreateData(this ItemDefinition definition)
+        {
+            if (definition.InteractionType == InteractionType.Gift) return new MapDataFormat()
+        }
     }
 
     public class InventoryItem

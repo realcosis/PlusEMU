@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Plus.Database;
 using Plus.HabboHotel.Items.DataFormat;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users.Inventory.Furniture;
@@ -7,6 +8,7 @@ namespace Plus.HabboHotel.Items;
 
 public static class ItemLoader
 {
+
     public static List<Item> GetItemsForRoom(uint roomId, Room room)
     {
         var items = new List<Item>();
@@ -21,10 +23,21 @@ public static class ItemLoader
             {
                 if (PlusEnvironment.GetGame().GetItemManager().Items.TryGetValue(Convert.ToUInt32(row["base_item"]), out var data))
                 {
-                    // TODO @80O: Items refactor
-                    //items.Add(new Item(Convert.ToInt32(row["id"]), Convert.ToInt32(row["room_id"]), Convert.ToInt32(row["base_item"]), Convert.ToString(row["extra_data"]),
-                    //    Convert.ToInt32(row["x"]), Convert.ToInt32(row["y"]), Convert.ToDouble(row["z"]), Convert.ToInt32(row["rot"]), Convert.ToInt32(row["user_id"]),
-                    //    Convert.ToInt32(row["group_id"]), Convert.ToInt32(row["limited_number"]), Convert.ToInt32(row["limited_stack"]), Convert.ToString(row["wall_pos"]), room));
+                    items.Add(new()
+                    {
+                        Id = Convert.ToUInt32(row["id"]),
+                        UserId = Convert.ToInt32(row["user_id"]),
+                        Definition = data,
+                        ExtraData = FurniObjectData.Empty,
+                        GetX = Convert.ToInt32(row["x"]),
+                        GetY = Convert.ToInt32(row["y"]),
+                        GetZ = Convert.ToDouble(row["z"]),
+                        Rotation = Convert.ToInt32(row["rot"]),
+                        UniqueNumber = Convert.ToUInt32(row["limited_number"]),
+                        UniqueSeries = Convert.ToUInt32(row["limited_stack"]),
+                        WallCoordinates = Convert.ToString(row["wall_pos"]),
+                        RoomId = roomId
+                    });
                 }
             }
         }

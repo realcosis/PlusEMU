@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using Plus.Communication.Packets.Outgoing.Inventory.Pets;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Pets;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 
