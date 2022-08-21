@@ -18,7 +18,7 @@ namespace Plus.Communication.Flash
 
         public short ReadShort()
         {
-            var span = Buffer.Span.Slice(0, 2);
+            var span = Buffer.Span.Slice(0, sizeof(short));
             span.Reverse();
             var result = MemoryMarshal.Read<short>(span);
             Buffer = Buffer.Slice(sizeof(short));
@@ -26,7 +26,7 @@ namespace Plus.Communication.Flash
         }
         public ushort ReadUShort()
         {
-            var span = Buffer.Span.Slice(0, 2);
+            var span = Buffer.Span.Slice(0, sizeof(ushort));
             span.Reverse();
             var result = MemoryMarshal.Read<ushort>(span);
             Buffer = Buffer.Slice(sizeof(ushort));
@@ -35,14 +35,14 @@ namespace Plus.Communication.Flash
 
         public int ReadInt()
         {
-            var span = Buffer.Span.Slice(0, 4);
+            var span = Buffer.Span.Slice(0, sizeof(int));
             span.Reverse();
             var result = MemoryMarshal.Read<int>(span);
             Buffer = Buffer.Slice(sizeof(int));
             return result;
         }
 
-        public bool ReadBool() => ReadInt() == 1;
+        public bool ReadBool() => ReadByte() == 1;
 
         public string ReadString()
         {
