@@ -50,9 +50,9 @@ internal class SaveRoomSettingsEvent : IPacketEvent
             formattedTags.Append(tag);
         }
         var tradeSettings = packet.ReadInt(); //2 = All can trade, 1 = owner only, 0 = no trading.
-        var allowPets = packet.ReadBool() ? 1 : 0;
-        var allowPetsEat = packet.ReadBool() ? 1 : 0;
-        var roomBlockingEnabled = packet.ReadBool() ? 1 : 0;
+        var allowPets = packet.ReadBool() ? true : false;
+        var allowPetsEat = packet.ReadBool() ? true : false;
+        var roomBlockingEnabled = packet.ReadBool() ? true : false;
         var hidewall = packet.ReadBool() ? 1 : 0;
         var wallThickness = packet.ReadInt();
         var floorThickness = packet.ReadInt();
