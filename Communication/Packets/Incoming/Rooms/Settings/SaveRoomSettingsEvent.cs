@@ -53,7 +53,7 @@ internal class SaveRoomSettingsEvent : IPacketEvent
         var allowPets = packet.ReadBool() ? true : false;
         var allowPetsEat = packet.ReadBool() ? true : false;
         var roomBlockingEnabled = packet.ReadBool() ? true : false;
-        var hidewall = packet.ReadBool() ? 1 : 0;
+        var hidewall = packet.ReadBool() ? true : false;
         var wallThickness = packet.ReadInt();
         var floorThickness = packet.ReadInt();
         var whoMute = packet.ReadInt(); // mute
