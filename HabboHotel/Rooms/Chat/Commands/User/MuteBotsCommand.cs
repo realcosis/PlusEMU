@@ -23,7 +23,7 @@ internal class MuteBotsCommand : IChatCommand
         session.GetHabbo().AllowBotSpeech = !session.GetHabbo().AllowBotSpeech;
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.RunQuery("UPDATE `users` SET `bots_muted` = '" + (session.GetHabbo().AllowBotSpeech ? 1 : 0) + "' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
+            dbClient.RunQuery("UPDATE `users` SET `bots_muted` = '" + session.GetHabbo().AllowBotSpeech + "' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
         }
         if (session.GetHabbo().AllowBotSpeech)
             session.SendWhisper("Change successful, you can no longer see speech from bots.");

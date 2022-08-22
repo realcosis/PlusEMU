@@ -1,5 +1,6 @@
 ﻿using Plus.Database;
 using Plus.HabboHotel.GameClients;
+using Dapper;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.Moderator;
 
@@ -21,11 +22,10 @@ internal class DisableForcedFxCommand : IChatCommand
     public void Execute(GameClient session, Room room, string[] parameters)
     {
         session.GetHabbo().DisableForcedEffects = !session.GetHabbo().DisableForcedEffects;
-        using (var dbClient = _database.GetQueryReactor())
+        using (var connection = _database.Connection())
         {
-            dbClient.SetQuery("UPDATE `users` SET `disable_forced_effects` = @DisableForcedEffects WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
-            dbClient.AddParameter("DisableForcedEffects", (session.GetHabbo().DisableForcedEffects ? 1 : 0).ToString());
-            dbClient.RunQuery();
+            connection.Execute("UPDATE users SET disable_forced_effects = @DisableForcedEffects WHERE id = @userId LIMIT 1",
+                new { DisabledForcedEffects = session.GetHabbo().DisableForcedEffects, userId = session.GetHabbo().Id });
         }
         session.SendWhisper("Forced FX mode is now " + (session.GetHabbo().DisableForcedEffects ? "disabled!" : "enabled!"));
     }

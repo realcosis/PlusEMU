@@ -23,7 +23,7 @@ internal class MutePetsCommand : IChatCommand
         session.GetHabbo().AllowPetSpeech = !session.GetHabbo().AllowPetSpeech;
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.RunQuery("UPDATE `users` SET `pets_muted` = '" + (session.GetHabbo().AllowPetSpeech ? 1 : 0) + "' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
+            dbClient.RunQuery("UPDATE `users` SET `pets_muted` = '" + session.GetHabbo().AllowPetSpeech + "' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
         }
         if (session.GetHabbo().AllowPetSpeech)
             session.SendWhisper("Change successful, you can no longer see speech from pets.");

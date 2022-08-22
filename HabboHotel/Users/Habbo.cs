@@ -256,7 +256,7 @@ public class Habbo
         get
         {
             _habboSaved = true;
-            return "UPDATE `users` SET `online` = '0', `last_online` = '" + UnixTimestamp.GetNow() + "', `activity_points` = '" + Duckets + "', `credits` = '" + Credits +
+            return "UPDATE `users` SET `online` = false, `last_online` = '" + UnixTimestamp.GetNow() + "', `activity_points` = '" + Duckets + "', `credits` = '" + Credits +
                    "', `vip_points` = '" + Diamonds + "', `home_room` = '" + HomeRoom + "', `gotw_points` = '" + GotwPoints + "', `time_muted` = '" + TimeMuted + "',`friend_bar_state` = '" +
                    FriendBarStateUtility.GetInt(FriendbarState) + "' WHERE id = '" + Id + "' LIMIT 1;UPDATE `user_statistics` SET `roomvisits` = '" + _habboStats.RoomVisits + "', `onlineTime` = '" +
                    (UnixTimestamp.GetNow() - SessionStart + _habboStats.OnlineTime) + "', `respect` = '" + _habboStats.Respect + "', `respectGiven` = '" + _habboStats.RespectGiven +
@@ -328,7 +328,7 @@ public class Habbo
         {
             _habboSaved = true;
             using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-            dbClient.RunQuery("UPDATE `users` SET `online` = '0', `last_online` = '" + (int)UnixTimestamp.GetNow() + "', `activity_points` = '" + Duckets + "', `credits` = '" + Credits +
+            dbClient.RunQuery("UPDATE `users` SET `online` = false, `last_online` = '" + (int)UnixTimestamp.GetNow() + "', `activity_points` = '" + Duckets + "', `credits` = '" + Credits +
                               "', `vip_points` = '" + Diamonds + "', `home_room` = '" + HomeRoom + "', `gotw_points` = '" + GotwPoints + "', `time_muted` = '" + TimeMuted +
                               "',`friend_bar_state` = '" + FriendBarStateUtility.GetInt(FriendbarState) + "', `bubble_id` = '" + CustomBubbleId + "' WHERE id = '" + Id + "' LIMIT 1;UPDATE `user_statistics` SET `roomvisits` = '" +
                               _habboStats.RoomVisits + "', `onlineTime` = '" + (int)(UnixTimestamp.GetNow() - SessionStart + _habboStats.OnlineTime) + "', `respect` = '" + _habboStats.Respect +

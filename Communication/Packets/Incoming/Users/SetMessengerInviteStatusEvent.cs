@@ -1,6 +1,5 @@
 ﻿using Plus.Database;
 using Plus.HabboHotel.GameClients;
-using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Users;
 
@@ -20,7 +19,7 @@ internal class SetMessengerInviteStatusEvent : IPacketEvent
         using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("UPDATE `users` SET `ignore_invites` = @ignoreInvites WHERE `id` = @habboId LIMIT 1");
         dbClient.AddParameter("habboId", session.GetHabbo().Id);
-        dbClient.AddParameter("ignoreInvites", ConvertExtensions.ToStringEnumValue(allowMessengerInvites));
+        dbClient.AddParameter("ignoreInvites", allowMessengerInvites);
         dbClient.RunQuery();
         return Task.CompletedTask;
     }

@@ -1,6 +1,5 @@
 ﻿using Plus.Database;
 using Plus.HabboHotel.GameClients;
-using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Users;
 
@@ -20,7 +19,7 @@ internal class SetUserFocusPreferenceEvent : IPacketEvent
         using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("UPDATE `users` SET `focus_preference` = @focusPreference WHERE `id` = @habboId LIMIT 1");
         dbClient.AddParameter("habboId", session.GetHabbo().Id);
-        dbClient.AddParameter("focusPreference", ConvertExtensions.ToStringEnumValue(focusPreference));
+        dbClient.AddParameter("focusPreference", focusPreference);
         dbClient.RunQuery();
         return Task.CompletedTask;
     }
