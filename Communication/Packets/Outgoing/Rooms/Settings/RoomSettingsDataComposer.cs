@@ -26,10 +26,10 @@ public class RoomSettingsDataComposer : IServerPacket
         packet.WriteInteger(_room.Tags.Count);
         foreach (var tag in _room.Tags.ToArray()) packet.WriteString(tag);
         packet.WriteInteger(_room.TradeSettings); //Trade
-        packet.WriteInteger(_room.AllowPets); // allows pets in room - pet system lacking, so always off
-        packet.WriteInteger(_room.AllowPetsEating); // allows pets to eat your food - pet system lacking, so always off
-        packet.WriteInteger(_room.RoomBlockingEnabled);
-        packet.WriteInteger(_room.Hidewall);
+        packet.WriteInteger(_room.AllowPets ? 1 : 0); // allows pets in room - pet system lacking, so always off
+        packet.WriteInteger(_room.AllowPetsEating ? 1 : 0); // allows pets to eat your food - pet system lacking, so always off
+        packet.WriteInteger(_room.RoomBlockingEnabled ? 1 : 0);
+        packet.WriteInteger(_room.Hidewall ? 1 : 0);
         packet.WriteInteger(_room.WallThickness);
         packet.WriteInteger(_room.FloorThickness);
         packet.WriteInteger(_room.ChatMode); //Chat mode
