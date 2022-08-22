@@ -263,7 +263,7 @@ public class RoomManager : IRoomManager
             roomId = Convert.ToInt32(dbClient.InsertQuery());
         }
         var data = new RoomData(roomId, name, model.Id, session.GetHabbo().Username, session.GetHabbo().Id, "", 0, "public", "open", 0, maxVisitors, category, description, string.Empty,
-            floor, landscape, 1, 1, 0, 0, wallthick, floorthick, wallpaper, 1, 1, 1, 1, 1, 1, 1, 8, tradeSettings, true, true, true, true, true, true, true, 0, 0, true, model);
+            floor, landscape, true, true, false, false, wallthick, floorthick, wallpaper, 1, 1, 1, 1, 1, 1, 1, 8, tradeSettings, true, true, true, true, true, true, true, 0, 0, true, model);
         return data;
     }
 
