@@ -1,5 +1,6 @@
 ﻿using Plus.HabboHotel.GameClients;
 using Plus.Database;
+using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Preferences;
 
@@ -16,11 +17,11 @@ internal class SetChatPreferenceEvent : IPacketEvent
     {
         var chatPreference = packet.ReadBool();
         session.GetHabbo().ChatPreference = chatPreference;
-        using var dbClient = _database.GetQueryReactor();
-        dbClient.SetQuery("UPDATE `users` SET `chat_preference` = @chatPreference WHERE `id` = @habboId LIMIT 1");
-        dbClient.AddParameter("habboId", session.GetHabbo().Id);
-        dbClient.AddParameter("chatPreference", chatPreference);
-        dbClient.RunQuery();
-        return Task.CompletedTask;
+        using (var connection = _database.Connection())
+        {
+            connection.Execute("UPDATE users SET chat_preference = @chatPreference WHERE id = @userId LIMIT 1",
+            new { chatPreference = chatPreference, userId = session.GetHabbo().Id});
+            return Task.CompletedTask;
+        }
     }
 }
