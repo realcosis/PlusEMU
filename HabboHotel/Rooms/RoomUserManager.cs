@@ -786,7 +786,7 @@ public class RoomUserManager
                             }
                             _room.GetGameMap().GameMap[user.X, user.Y] = user.SqState; // REstore the old one
                             user.SqState = _room.GetGameMap().GameMap[user.SetX, user.SetY]; //Backup the new one
-                            if (_room.RoomBlockingEnabled == false)
+                            if (!_room.RoomBlockingEnabled == false)
                             {
                                 var users = _room.GetRoomUserManager().GetUserForSquare(nextX, nextY);
                                 if (users != null)
