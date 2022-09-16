@@ -20,13 +20,13 @@ internal class MessengerInitEvent : IPacketEvent
         session.Send(new MessengerInitComposer());
         var page = 0;
         if (!friends.Any())
-            session.Send(new BuddyListComposer(friends, session.GetHabbo(), 1, 0));
+            session.Send(new BuddyListComposer(friends, 1, 0));
         else
         {
-            var pages = (friends.Count() - 1) / 500 + 1;
+            var pages = (friends.Count - 1) / 500 + 1;
             foreach (ICollection<MessengerBuddy> batch in friends.Chunk(500))
             {
-                session.Send(new BuddyListComposer(batch.ToList(), session.GetHabbo(), pages, page));
+                session.Send(new BuddyListComposer(batch.ToList(), pages, page));
                 page++;
             }
         }
@@ -35,6 +35,5 @@ internal class MessengerInitEvent : IPacketEvent
         foreach (var (userId, report) in messages)
             foreach (var (message, secondsAgo) in report)
                 session.Send(new NewConsoleMessageComposer(userId, message, secondsAgo));
-        return;
     }
 }

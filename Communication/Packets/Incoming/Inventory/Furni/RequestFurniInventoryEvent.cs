@@ -10,7 +10,7 @@ internal class RequestFurniInventoryEvent : IPacketEvent
     {
         var items = session.GetHabbo().Inventory.Furniture.AllItems.ToList();
         var page = 0;
-        var pages = (items.Count() - 1) / 700 + 1;
+        var pages = (items.Count - 1) / 700 + 1;
         if (!items.Any())
             session.Send(new FurniListComposer(items.ToList(), 1, 1));
         else

@@ -64,7 +64,7 @@ internal class MatchPositionBox : IWiredItem, IWiredCycle
                 {
                     if (int.Parse(StringData.Split(';')[0]) == 1) //State
                     {
-                        if (part.Count() >= 4)
+                        if (part.Length >= 4)
                             SetState(ii, part[4]);
                         else
                             SetState(ii, "1");

@@ -677,7 +677,7 @@ public class Gamemap
         var items = GetAllRoomItemForSquare(square.X, square.Y);
         item = null;
         double highestZ = -1;
-        if (items != null && items.Count() > 0)
+        if (items != null && items.Count > 0)
         {
             foreach (var uItem in items.ToList())
             {

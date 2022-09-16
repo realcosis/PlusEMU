@@ -29,8 +29,8 @@ public class WiredTriggeRconfigComposer : IServerPacket
         if (_box is IWiredCycle cycle) packet.WriteInteger(cycle.Delay);
         packet.WriteInteger(0);
         packet.WriteInteger(WiredBoxTypeUtility.GetWiredId(_box.Type));
-        packet.WriteInteger(_blockedItems.Count());
-        if (_blockedItems.Count() > 0)
+        packet.WriteInteger(_blockedItems.Count);
+        if (_blockedItems.Count > 0)
             foreach (var itemId in _blockedItems.ToList())
                 packet.WriteInteger(itemId);
 

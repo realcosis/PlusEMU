@@ -93,7 +93,7 @@ public class WiredEffectConfigComposer : IServerPacket
             packet.WriteInteger(WiredBoxTypeUtility.GetWiredId(_box.Type));
             packet.WriteInteger(0);
         }
-        packet.WriteInteger(_blockedItems.Count()); // Incompatable items loop
+        packet.WriteInteger(_blockedItems.Count); // Incompatable items loop
         foreach (var itemId in _blockedItems.ToList())
             packet.WriteInteger(itemId);
 

@@ -17,7 +17,7 @@ public class HabboUserBadgesComposer : IServerPacket
     {
         packet.WriteInteger(_habbo.Id);
         var badges = _habbo.Inventory.Badges.EquippedBadges;
-        packet.WriteInteger(badges.Count());
+        packet.WriteInteger(badges.Count);
         foreach (var badge in badges)
         {
             packet.WriteInteger(badge.Slot);
