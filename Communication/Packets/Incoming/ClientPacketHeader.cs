@@ -144,7 +144,7 @@ public static class ClientPacketHeader
     public const uint GetMarketplaceItemStatsEvent = 1561; //1203
     public const uint GetSellablePetPalettesEvent = 599; //2505
     public const uint ForceOpenCalendarBoxEvent = 1275; //2879
-    public const uint SetFriendBarStateEvent = 3841; //716
+    public const uint SetUIFlagsEvent = 3841; //716
     public const uint DeleteRoomEvent = 439; //722
     public const uint SetSoundSettingsEvent = 608; //3820
     public const uint InitializeGameCenterEvent = 1825; //751

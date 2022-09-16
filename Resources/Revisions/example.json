@@ -94,7 +94,7 @@
     "GetMarketplaceItemStatsEvent": 1561,
     "GetSellablePetPalettesEvent": 599,
     "ForceOpenCalendarBoxEvent": 1275,
-    "SetFriendBarStateEvent": 3841,
+    "SetUIFlagsEvent": 3841,
     "DeleteRoomEvent": 439,
     "SetSoundSettingsEvent": 608,
     "InitializeGameCenterEvent": 1825,
