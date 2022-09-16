@@ -1,6 +1,6 @@
 ﻿using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Tracking;
+namespace Plus.Communication.Packets.Incoming.Handshake;
 
 internal class DisconnectEvent : IPacketEvent
 {
