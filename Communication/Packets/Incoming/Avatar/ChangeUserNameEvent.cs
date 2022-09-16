@@ -9,70 +9,68 @@ using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 using Plus.Utilities;
 using Dapper;
+using Plus.HabboHotel.Users.UserData;
 
 namespace Plus.Communication.Packets.Incoming.Avatar;
 
 internal class ChangeUserNameEvent : IPacketEvent
 {
+    private readonly IUserDataFactory _userDataFactory;
     private readonly IGameClientManager _clientManager;
     private readonly IRoomManager _roomManager;
     private readonly IAchievementManager _achievementManager;
     private readonly IDatabase _database;
 
-    public ChangeUserNameEvent(IGameClientManager clientManager, IRoomManager roomManager, IAchievementManager achievementManager, IDatabase database)
+    public ChangeUserNameEvent(IUserDataFactory userDataFactory, IGameClientManager clientManager, IRoomManager roomManager, IAchievementManager achievementManager, IDatabase database)
     {
+        _userDataFactory = userDataFactory;
         _clientManager = clientManager;
         _roomManager = roomManager;
         _achievementManager = achievementManager;
         _database = database;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public async Task Parse(GameClient session, IIncomingPacket packet)
     {
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
-            return Task.CompletedTask;
+            return;
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Username);
         if (user == null)
-            return Task.CompletedTask;
+            return;
         var newName = packet.ReadString();
         var oldName = session.GetHabbo().Username;
         if (newName == oldName)
         {
             session.GetHabbo().ChangeName(oldName);
             session.Send(new UpdateUsernameComposer(newName));
-            return Task.CompletedTask;
+            return;
         }
         if (!CanChangeName(session.GetHabbo()))
         {
             session.SendNotification("Oops, it appears you currently cannot change your username!");
-            return Task.CompletedTask;
+            return;
         }
-        bool inUse;
-        using (var connection = _database.Connection())
-        {
-            var checkUser = connection.ExecuteScalar<int>("SELECT COUNT(0) FROM `users` WHERE `username` = @name LIMIT 1", new { name = newName });
-            inUse = checkUser == 1;
-        }
+        var inUse = await _userDataFactory.HabboExists(newName);
+        if (inUse)
+            return;
         var letters = newName.ToLower().ToCharArray();
         const string allowedCharacters = "abcdefghijklmnopqrstuvwxyz.,_-;:?!1234567890";
         if (letters.Any(chr => !allowedCharacters.Contains(chr)))
-            return Task.CompletedTask;
+            return;
         if (!session.GetHabbo().GetPermissions().HasRight("mod_tool") && newName.ToLower().Contains("mod") || newName.ToLower().Contains("adm") || newName.ToLower().Contains("admin")
             || newName.ToLower().Contains("m0d") || newName.ToLower().Contains("mob") || newName.ToLower().Contains("m0b"))
-            return Task.CompletedTask;
+            return;
         if (!newName.ToLower().Contains("mod") && (session.GetHabbo().Rank == 2 || session.GetHabbo().Rank == 3))
-            return Task.CompletedTask;
+            return;
         if (newName.Length > 15)
-            return Task.CompletedTask;
+            return;
         if (newName.Length < 3)
-            return Task.CompletedTask;
-        if (inUse)
-            return Task.CompletedTask;
+            return;
         if (!_clientManager.UpdateClientUsername(session, oldName, newName))
         {
             session.SendNotification("Oops! An issue occoured whilst updating your username.");
-            return Task.CompletedTask;
+            return;
         }
         session.GetHabbo().ChangingName = false;
         room.GetRoomUserManager().RemoveUserFromRoom(session, true);
@@ -94,7 +92,7 @@ internal class ChangeUserNameEvent : IPacketEvent
         }
         _achievementManager.ProgressAchievement(session, "ACH_Name", 1);
         session.Send(new RoomForwardComposer(room.Id));
-        return Task.CompletedTask;
+        return;
     }
 
     private static bool CanChangeName(Habbo habbo)

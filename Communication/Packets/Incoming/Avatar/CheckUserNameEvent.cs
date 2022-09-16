@@ -3,70 +3,68 @@ using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms.Chat.Filter;
 using Dapper;
+using Plus.HabboHotel.Users.UserData;
 
 namespace Plus.Communication.Packets.Incoming.Avatar;
 
 internal class CheckUserNameEvent : IPacketEvent
 {
+    private readonly IUserDataFactory _userDataFactory;
     private readonly IWordFilterManager _wordFilterManager;
     private readonly IDatabase _database;
 
-    public CheckUserNameEvent(IWordFilterManager wordFilterManager, IDatabase database)
+    public CheckUserNameEvent(IUserDataFactory userDataFactory, IWordFilterManager wordFilterManager, IDatabase database)
     {
+        _userDataFactory = userDataFactory;
         _wordFilterManager = wordFilterManager;
         _database = database;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public async Task Parse(GameClient session, IIncomingPacket packet)
     {
-        bool inUse;
         var name = packet.ReadString();
-        using (var connection = _database.Connection())
-        {
-            var checkUser = connection.ExecuteScalar<int>("SELECT COUNT(0) FROM `users` WHERE `username` = @name LIMIT 1", new { name = name });
-            inUse = checkUser == 1;
-        }
+        var inUse = await _userDataFactory.HabboExists(name);
         var letters = name.ToLower().ToCharArray();
         const string allowedCharacters = "abcdefghijklmnopqrstuvwxyz.,_-;:?!1234567890";
         if (letters.Any(chr => !allowedCharacters.Contains(chr)))
         {
             session.Send(new NameChangeUpdateComposer(name, 4));
-            return Task.CompletedTask;
+            return;
         }
         if (_wordFilterManager.IsFiltered(name))
         {
             session.Send(new NameChangeUpdateComposer(name, 4));
-            return Task.CompletedTask;
+            return;
         }
         if (!session.GetHabbo().GetPermissions().HasRight("mod_tool") && name.ToLower().Contains("mod") || name.ToLower().Contains("adm") || name.ToLower().Contains("admin") ||
             name.ToLower().Contains("m0d"))
         {
             session.Send(new NameChangeUpdateComposer(name, 4));
-            return Task.CompletedTask;
+            return;
         }
         if (!name.ToLower().Contains("mod") && (session.GetHabbo().Rank == 2 || session.GetHabbo().Rank == 3))
         {
             session.Send(new NameChangeUpdateComposer(name, 4));
-            return Task.CompletedTask;
+            return;
         }
         if (name.Length > 15)
         {
             session.Send(new NameChangeUpdateComposer(name, 3));
-            return Task.CompletedTask;
+            return;
         }
         if (name.Length < 3)
         {
             session.Send(new NameChangeUpdateComposer(name, 2));
-            return Task.CompletedTask;
+            return;
         }
         if (inUse)
         {
             ICollection<string> suggestions = new List<string>();
             for (var i = 100; i < 103; i++) suggestions.Add(i.ToString());
             session.Send(new NameChangeUpdateComposer(name, 5, suggestions));
-            return Task.CompletedTask;
+            return;
         }
         session.Send(new NameChangeUpdateComposer(name, 0));
-        return Task.CompletedTask;
+        return;
     }
 }

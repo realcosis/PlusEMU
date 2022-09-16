@@ -36,6 +36,12 @@ public class UserDataFactory : IUserDataFactory
         return await connection.ExecuteScalarAsync<int>("SELECT COUNT(0) FROM `users` WHERE `id` = @userId LIMIT 1", new { userId }) != 0;
     }
 
+    public async Task<bool> HabboExists(string username)
+    {
+        using var connection = _database.Connection();
+        return await connection.ExecuteScalarAsync<int>("SELECT COUNT(0) FROM `users` WHERE `username` = @username LIMIT 1", new { username }) != 0;
+    }
+
     private async Task<Habbo> LoadHabboInfo(int userId)
     {
         using var connection = _database.Connection();
