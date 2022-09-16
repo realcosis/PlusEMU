@@ -4,5 +4,6 @@
     {
         Task<Habbo?> Create(int userId);
         Task<string> GetUsernameForHabboById(int userId);
+        Task<bool> HabboExists(int userId);
     }
 }
