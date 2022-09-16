@@ -1,6 +1,6 @@
 ﻿using Plus.Communication.Packets.Outgoing.Catalog;
 
-namespace Plus.Communication.Rcon.Commands.Hotel;
+namespace Plus.Communication.RCON.Commands.Hotel;
 
 internal class ReloadCatalogCommand : IRconCommand
 {

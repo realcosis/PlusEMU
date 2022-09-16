@@ -1,4 +1,4 @@
-﻿namespace Plus.Communication.Rcon.Commands.User;
+﻿namespace Plus.Communication.RCON.Commands.User;
 
 internal class TakeUserBadgeCommand : IRconCommand
 {

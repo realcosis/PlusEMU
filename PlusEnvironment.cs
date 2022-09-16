@@ -10,7 +10,6 @@ using Plus.Communication.Encryption.Keys;
 using Plus.Communication.Flash;
 using Plus.Communication.Nitro;
 using Plus.Communication.Packets.Outgoing.Moderation;
-using Plus.Communication.Rcon;
 using Plus.Communication.RCON;
 using Plus.Core;
 using Plus.Core.FigureData;

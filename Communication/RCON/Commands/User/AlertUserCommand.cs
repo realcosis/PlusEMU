@@ -1,6 +1,6 @@
 ﻿using Plus.Communication.Packets.Outgoing.Moderation;
 
-namespace Plus.Communication.Rcon.Commands.User;
+namespace Plus.Communication.RCON.Commands.User;
 
 internal class AlertUserCommand : IRconCommand
 {

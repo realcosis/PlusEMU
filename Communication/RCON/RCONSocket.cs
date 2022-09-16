@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using Plus.Communication.Rcon.Commands;
+using Plus.Communication.RCON.Commands;
 
-namespace Plus.Communication.Rcon;
+namespace Plus.Communication.RCON;
 
 public class RconSocket : IRconSocket
 {

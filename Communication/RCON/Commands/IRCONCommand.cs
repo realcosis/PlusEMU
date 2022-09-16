@@ -1,6 +1,6 @@
 ﻿using Plus.Utilities.DependencyInjection;
 
-namespace Plus.Communication.Rcon.Commands;
+namespace Plus.Communication.RCON.Commands;
 
 [Singleton]
 public interface IRconCommand

@@ -2,7 +2,7 @@
 using System.Text;
 using NLog;
 
-namespace Plus.Communication.Rcon;
+namespace Plus.Communication.RCON;
 
 public class RconConnection
 {

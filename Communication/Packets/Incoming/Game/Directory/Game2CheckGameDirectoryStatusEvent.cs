@@ -1,6 +1,6 @@
 using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Game.Ingame;
+namespace Plus.Communication.Packets.Incoming.Game.Directory;
 
 internal class Game2CheckGameDirectoryStatusEvent
 {

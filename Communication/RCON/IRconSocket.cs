@@ -1,6 +1,6 @@
-﻿using Plus.Communication.Rcon.Commands;
+﻿using Plus.Communication.RCON.Commands;
 
-namespace Plus.Communication.Rcon
+namespace Plus.Communication.RCON
 {
     public interface IRconSocket
     {

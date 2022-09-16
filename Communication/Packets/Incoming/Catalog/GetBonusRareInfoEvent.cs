@@ -1,6 +1,6 @@
 using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Packets.Incoming.Camera;
+namespace Plus.Communication.Packets.Incoming.Catalog;
 
 internal class GetBonusRareInfoEvent
 {

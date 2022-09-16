@@ -1,6 +1,6 @@
 ﻿using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 
-namespace Plus.Communication.Rcon.Commands.User;
+namespace Plus.Communication.RCON.Commands.User;
 
 internal class ReloadUserMottoCommand : IRconCommand
 {
