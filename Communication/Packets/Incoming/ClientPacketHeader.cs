@@ -150,7 +150,7 @@ public static class ClientPacketHeader
     public const uint InitializeGameCenterEvent = 1825; //751
     public const uint RedeemOfferCreditsEvent = 2879; //1207
     public const uint FriendListUpdateEvent = 1166; //2664
-    public const uint ConfirmLoveLockEvent = 3873; //2082
+    public const uint FriendFurniConfirmLockEvent = 3873; //2082
     public const uint UseHabboWheelEvent = 2148; //2651
     public const uint SaveRoomSettingsEvent = 3023; //2074
     public const uint ToggleMoodlightEvent = 14; //1826

@@ -100,7 +100,7 @@
     "InitializeGameCenterEvent": 1825,
     "RedeemOfferCreditsEvent": 2879,
     "FriendListUpdateEvent": 1166,
-    "ConfirmLoveLockEvent": 3873,
+    "FriendFurniConfirmLockEvent": 3873,
     "UseHabboWheelEvent": 2148,
     "SaveRoomSettingsEvent": 3023,
     "ToggleMoodlightEvent": 14,
