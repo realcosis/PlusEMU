@@ -22,33 +22,6 @@ public class ObjectsComposer : IServerPacket
         packet.WriteInteger(1);
         packet.WriteInteger(_room.OwnerId);
         packet.WriteString(_room.OwnerName);
-        packet.WriteInteger(_objects.Length);
-        foreach (var item in _objects)
-            WriteFloorItem(packet, item, Convert.ToInt32(item.UserId));
-
-    }
-
-    private void WriteFloorItem(IOutgoingPacket packet, Item item, int userId)
-    {
-        packet.WriteUInteger(item.Id);
-        packet.WriteInteger(item.Definition.SpriteId);
-        packet.WriteInteger(item.GetX);
-        packet.WriteInteger(item.GetY);
-        packet.WriteInteger(item.Rotation);
-        packet.WriteString(TextHandling.GetString(item.GetZ));
-        packet.WriteString(string.Empty);
-        if (item.UniqueNumber > 0)
-        {
-            packet.WriteInteger(1);
-            packet.WriteInteger(256);
-            packet.WriteString(item.LegacyDataString);
-            packet.WriteUInteger(item.UniqueNumber);
-            packet.WriteUInteger(item.UniqueSeries);
-        }
-        else
-            ItemBehaviourUtility.GenerateExtradata(item, packet);
-        packet.WriteInteger(-1); // to-do: check
-        packet.WriteInteger(item.Definition.Modes > 1 ? 1 : 0);
-        packet.WriteInteger(userId);
+        packet.Serialize(_objects);
     }
 }

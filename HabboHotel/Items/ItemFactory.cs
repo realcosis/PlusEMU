@@ -1,10 +1,18 @@
-﻿using Plus.HabboHotel.Items.DataFormat;
+﻿using Plus.Database;
+using Plus.HabboHotel.Items.DataFormat;
 using Plus.HabboHotel.Users;
 
 namespace Plus.HabboHotel.Items;
 
-public static class ItemFactory
+public class ItemFactory
 {
+    private readonly IDatabase _database;
+    public static ItemFactory Instance { get; set; }
+
+    public ItemFactory(IDatabase database)
+    {
+        _database = database;
+    }
     public static Item CreateSingleItemNullable(ItemDefinition definition, Habbo habbo, string extraData, string displayFlags, int groupId = 0, uint limitedNumber = 0, uint limitedStack = 0)
     {
         if (definition == null) throw new InvalidOperationException("Data cannot be null.");
