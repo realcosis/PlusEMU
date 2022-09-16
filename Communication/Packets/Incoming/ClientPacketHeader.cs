@@ -277,7 +277,7 @@ public static class ClientPacketHeader
     public const uint DeleteStickyNoteEvent = 3885; //2777
     public const uint MuteUserEvent = 2101; //2997
     public const uint ApplyHorseEffectEvent = 3364; //870
-    public const uint VersionCheckEvent = 4000; //4000
+    public const uint ClientHelloEvent = 4000; //4000
     public const uint OnBullyClickEvent = 254; //1932
     public const uint HabboSearchEvent = 1194; //3375
     public const uint PickTicketEvent = 1807; //3973
@@ -289,7 +289,7 @@ public static class ClientPacketHeader
     public const uint EditRoomPromotionEvent = 816; //3707
     public const uint SaveFloorPlanModelEvent = 1936; //1287
     public const uint MoveWallItemEvent = 1778; //609
-    public const uint ClientVariablesEvent = 1220; //1600
+    public const uint VersionCheckEvent = 1220; //1600
     public const uint PongEvent = 509; //2584
     public const uint DeleteGroupEvent = 114; //747
     public const uint UpdateGroupSettingsEvent = 2435; //3180
