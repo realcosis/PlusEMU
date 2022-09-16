@@ -1,4 +1,5 @@
 ﻿using Plus.Database;
+using Dapper;
 using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Rooms.Chat.Commands.User;
@@ -22,9 +23,10 @@ internal class DisableMimicCommand : IChatCommand
     {
         session.GetHabbo().AllowMimic = !session.GetHabbo().AllowMimic;
         session.SendWhisper("You're " + (session.GetHabbo().AllowMimic ? "now" : "no longer") + " able to be mimiced.");
-        using var dbClient = _database.GetQueryReactor();
-        dbClient.SetQuery("UPDATE `users` SET `allow_mimic` = @AllowMimic WHERE `id` = '" + session.GetHabbo().Id + "'");
-        dbClient.AddParameter("AllowMimic", PlusEnvironment.BoolToEnum(session.GetHabbo().AllowMimic));
-        dbClient.RunQuery();
+        using (var connection = _database.Connection())
+        {
+            connection.Execute("UPDATE users SET allow_mimic = @AllowMimic WHERE id = @userId LIMIT 1",
+                new { AllowMimic = session.GetHabbo().AllowMimic, userId = session.GetHabbo().Id });
+        }
     }
 }

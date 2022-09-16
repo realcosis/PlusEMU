@@ -28,7 +28,7 @@ internal class PlacePetEvent : IPacketEvent
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return Task.CompletedTask;
-        if (room.AllowPets == 0 && !room.CheckRights(session, true) || !room.CheckRights(session, true))
+        if (room.AllowPets == false && !room.CheckRights(session, true) || !room.CheckRights(session, true))
         {
             session.Send(new RoomErrorNotifComposer(1));
             return Task.CompletedTask;

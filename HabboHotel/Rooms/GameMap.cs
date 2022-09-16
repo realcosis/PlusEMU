@@ -236,7 +236,7 @@ public class Gamemap
         }
         Array.Clear(tmpItems, 0, tmpItems.Length);
         tmpItems = null;
-        if (_room.RoomBlockingEnabled == 0)
+        if (!_room.RoomBlockingEnabled)
         {
             foreach (var user in _room.GetRoomUserManager().GetUserList().ToList())
             {
@@ -614,7 +614,7 @@ public class Gamemap
     public bool CanWalk(int x, int y, bool @override)
     {
         if (@override) return true;
-        if (_room.GetRoomUserManager().GetUserForSquare(x, y) != null && _room.RoomBlockingEnabled == 0)
+        if (_room.GetRoomUserManager().GetUserForSquare(x, y) != null && !_room.RoomBlockingEnabled)
             return false;
         return true;
     }
@@ -858,7 +858,7 @@ public class Gamemap
          * 2 = last step
          * 3 = door
          * */
-        if (_room.RoomBlockingEnabled == 0 && SquareHasUsers(to.X, to.Y))
+        if (!_room.RoomBlockingEnabled && SquareHasUsers(to.X, to.Y))
             return false;
         var items = _room.GetGameMap().GetAllRoomItemForSquare(to.X, to.Y);
         if (items.Count > 0)

@@ -18,7 +18,7 @@ namespace Plus.HabboHotel.Friends
         public async Task<List<MessengerBuddy>> GetBuddiesForUser(int userId)
         {
             using var connection = _database.Connection();
-            var query = "SELECT users.id,users.username,users.motto,users.look,users.last_online,users.hide_inroom = '1' ,users.hide_online = '1' as AppearOffline, messenger_friendships.relationship FROM users JOIN messenger_friendships ON users.id = messenger_friendships.user_two_id  WHERE messenger_friendships.user_one_id = @userId";
+            var query = "SELECT users.id,users.username,users.motto,users.look,users.last_online,users.hide_inroom = true ,users.hide_online = true as AppearOffline, messenger_friendships.relationship FROM users JOIN messenger_friendships ON users.id = messenger_friendships.user_two_id  WHERE messenger_friendships.user_one_id = @userId";
             return (await connection.QueryAsync<MessengerBuddy>(query, new { userId })).ToList();
         }
 
@@ -55,14 +55,14 @@ namespace Plus.HabboHotel.Friends
         public async Task<MessengerBuddy> CreateBuddy(int userId)
         {
             using var connection = _database.Connection();
-            var buddy = await connection.QuerySingleAsync<MessengerBuddy>("SELECT users.id,users.username,users.motto,users.look,users.last_online,users.hide_inroom = '1' ,users.hide_online = '1' as AppearOffline FROM users WHERE id = @userId", new { userId });
+            var buddy = await connection.QuerySingleAsync<MessengerBuddy>("SELECT users.id,users.username,users.motto,users.look,users.last_online,users.hide_inroom = true ,users.hide_online = true as AppearOffline FROM users WHERE id = @userId", new { userId });
             return buddy;
         }
 
         public async Task<MessengerBuddy?> GetBuddy(int userId, int friendId)
         {
             using var connection = _database.Connection();
-            var buddy = await connection.QuerySingleOrDefaultAsync<MessengerBuddy>("SELECT users.id,users.username,users.motto,users.look,users.last_online,users.hide_inroom = '1' ,users.hide_online = '1' as AppearOffline, messenger_friendships.relationship FROM users INNER JOIN messenger_friendships ON users.id = messenger_friendships.user_two_id WHERE users.id = @friendId AND messenger_friendships.user_one_id = @userId", new { userId, friendId });
+            var buddy = await connection.QuerySingleOrDefaultAsync<MessengerBuddy>("SELECT users.id,users.username,users.motto,users.look,users.last_online,users.hide_inroom = true ,users.hide_online = true as AppearOffline, messenger_friendships.relationship FROM users INNER JOIN messenger_friendships ON users.id = messenger_friendships.user_two_id WHERE users.id = @friendId AND messenger_friendships.user_one_id = @userId", new { userId, friendId });
             return buddy;
         }
 
@@ -130,8 +130,8 @@ namespace Plus.HabboHotel.Friends
         public async Task<(int userId, bool blockFriendRequests)> CanReceiveFriendRequests(string name)
         {
             using var connection = _database.Connection();
-            var (userId, blocked) = await connection.QuerySingleOrDefaultAsync<(int, string)>("SELECT `id`,`block_newfriends` FROM `users` WHERE `username` = @name LIMIT 1", new { name });
-            return (userId, ConvertExtensions.EnumToBool(blocked));
+            var (userId, blocked) = await connection.QuerySingleOrDefaultAsync<(int, bool)>("SELECT `id`,`block_newfriends` FROM `users` WHERE `username` = @name LIMIT 1", new { name });
+            return (userId, blocked);
         }
     }
 }
