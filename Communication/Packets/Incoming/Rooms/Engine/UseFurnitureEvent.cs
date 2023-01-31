@@ -40,7 +40,7 @@ internal class UseFurnitureEvent : IPacketEvent
             if (!room.CheckRights(session, true))
                 return Task.CompletedTask;
             room.TonerData.Enabled = room.TonerData.Enabled == 0 ? 1 : 0;
-            room.SendPacket(new ObjectUpdateComposer(item, room.OwnerId));
+            room.SendPacket(new ObjectUpdateComposer(item));
             item.UpdateState();
             using var dbClient = _database.GetQueryReactor();
             dbClient.RunQuery("UPDATE `room_items_toner` SET `enabled` = '" + room.TonerData.Enabled + "' LIMIT 1");

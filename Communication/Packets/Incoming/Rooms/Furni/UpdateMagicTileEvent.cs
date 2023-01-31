@@ -21,7 +21,7 @@ internal class UpdateMagicTileEvent : IPacketEvent
         if (item == null)
             return Task.CompletedTask;
         item.GetZ = decimalHeight / 100.0;
-        room.SendPacket(new ObjectUpdateComposer(item, Convert.ToInt32(session.GetHabbo().Id)));
+        room.SendPacket(new ObjectUpdateComposer(item));
         room.SendPacket(new UpdateMagicTileComposer(itemId, decimalHeight));
         return Task.CompletedTask;
     }

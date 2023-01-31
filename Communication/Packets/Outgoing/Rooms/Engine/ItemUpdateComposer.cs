@@ -6,21 +6,19 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 public class ItemUpdateComposer : IServerPacket
 {
     private readonly Item _item;
-    private readonly int _userId;
     public uint MessageId => ServerPacketHeader.ItemUpdateComposer;
 
-    public ItemUpdateComposer(Item item, int userId)
+    public ItemUpdateComposer(Item item)
     {
         _item = item;
-        _userId = userId;
     }
 
     public void Compose(IOutgoingPacket packet)
     {
-        WriteWallItem(packet, _item, _userId);
+        WriteWallItem(packet, _item);
     }
 
-    private void WriteWallItem(IOutgoingPacket packet, Item item, int userId)
+    private void WriteWallItem(IOutgoingPacket packet, Item item)
     {
         packet.WriteString(item.Id.ToString());
         packet.WriteInteger(item.Definition.SpriteId);
@@ -36,6 +34,6 @@ public class ItemUpdateComposer : IServerPacket
         }
         packet.WriteInteger(-1);
         packet.WriteInteger(item.Definition.Modes > 1 ? 1 : 0);
-        packet.WriteInteger(userId);
+        packet.WriteUInt(item.OwnerId);
     }
 }

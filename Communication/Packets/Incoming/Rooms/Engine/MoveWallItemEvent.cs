@@ -34,7 +34,7 @@ internal class MoveWallItemEvent : IPacketEvent
             return Task.CompletedTask;
         }
         room.GetRoomItemHandler().UpdateItem(item);
-        room.SendPacket(new ItemUpdateComposer(item, room.OwnerId));
+        room.SendPacket(new ItemUpdateComposer(item));
         return Task.CompletedTask;
     }
 }

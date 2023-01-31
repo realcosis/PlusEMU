@@ -554,7 +554,7 @@ public class RoomItemHandling
         {
             UpdateItem(item);
             if (!onRoller && sendMessage)
-                _room.SendPacket(new ObjectUpdateComposer(item, _room.OwnerId));
+                _room.SendPacket(new ObjectUpdateComposer(item));
         }
         _room.GetGameMap().AddToMap(item);
         if (item.Definition.IsSeat)

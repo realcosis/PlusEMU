@@ -1083,18 +1083,13 @@ public class Item
         if (inRoom)
         {
             if (IsFloorItem)
-                GetRoom().SendPacket(new ObjectUpdateComposer(this, GetRoom().OwnerId));
+                GetRoom().SendPacket(new ObjectUpdateComposer(this));
             else
-                GetRoom().SendPacket(new ItemUpdateComposer(this, GetRoom().OwnerId));
+                GetRoom().SendPacket(new ItemUpdateComposer(this));
         }
     }
 
-    public void ResetBaseItem()
-    {
-        Definition = null;
-        Definition = Definition;
-    }
-
+    [Obsolete]
     public Room GetRoom()
     {
         if (_room != null)

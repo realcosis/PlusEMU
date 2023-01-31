@@ -8,13 +8,7 @@ public class ObjectUpdateComposer : IServerPacket
     private readonly Item _item;
     public uint MessageId => ServerPacketHeader.ObjectUpdateComposer;
 
-    public ObjectUpdateComposer(Item item)
-    {
-        _item = item;
-    }
+    public ObjectUpdateComposer(Item item) => _item = item;
 
-    public void Compose(IOutgoingPacket packet)
-    {
-        packet.Serialize(_item);
-    }
+    public void Compose(IOutgoingPacket packet) => packet.Serialize(_item);
 }

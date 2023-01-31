@@ -44,7 +44,7 @@ internal class UpdateGroupColoursEvent : IPacketEvent
                 if (item.Definition.InteractionType != InteractionType.GuildItem && item.Definition.InteractionType != InteractionType.GuildGate ||
                     item.Definition.InteractionType != InteractionType.GuildForum)
                     continue;
-                session.GetHabbo().CurrentRoom.SendPacket(new ObjectUpdateComposer(item, Convert.ToInt32(item.UserId)));
+                session.GetHabbo().CurrentRoom.SendPacket(new ObjectUpdateComposer(item));
             }
         }
         return Task.CompletedTask;

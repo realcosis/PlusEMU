@@ -13,8 +13,9 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine
             packet.WriteInteger(item.GetX);
             packet.WriteInteger(item.GetY);
             packet.WriteInteger(item.Rotation);
-            packet.WriteString(TextHandling.GetString(item.GetZ));
+            packet.WriteString(FormattableString.Invariant($"{item.GetZ}"));
             packet.WriteString(FormattableString.Invariant($"{item.Definition.Height}"));
+            packet.WriteUInt(0);
             ItemBehaviourUtility.Serialize(packet, item.ExtraData, item.UniqueNumber, item.UniqueSeries);
             packet.WriteInteger(-1); // to-do: check
             packet.WriteInteger(item.Definition.Modes > 1 ? 1 : 0);

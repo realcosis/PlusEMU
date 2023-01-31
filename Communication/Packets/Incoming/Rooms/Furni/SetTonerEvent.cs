@@ -46,7 +46,7 @@ internal class SetTonerEvent : IPacketEvent
         room.TonerData.Saturation = int2;
         room.TonerData.Lightness = int3;
         room.TonerData.Enabled = 1;
-        room.SendPacket(new ObjectUpdateComposer(item, room.OwnerId));
+        room.SendPacket(new ObjectUpdateComposer(item));
         item.UpdateState();
         return Task.CompletedTask;
     }

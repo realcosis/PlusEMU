@@ -98,7 +98,7 @@ internal class OpenGiftEvent : IPacketEvent
             return Task.CompletedTask;
         }
         present.MagicRemove = true;
-        room.SendPacket(new ObjectUpdateComposer(present, Convert.ToInt32(session.GetHabbo().Id)));
+        room.SendPacket(new ObjectUpdateComposer(present));
         var thread = new Thread(() => FinishOpenGift(session, baseItem, present, room, data));
         thread.Start();
         return Task.CompletedTask;

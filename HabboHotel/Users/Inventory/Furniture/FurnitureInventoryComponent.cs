@@ -10,6 +10,7 @@ namespace Plus.HabboHotel.Users.Inventory.Furniture
         Floor,
         Wall
     }
+
     public enum FurniCategory
     {
         Default = 1,
@@ -47,7 +48,8 @@ namespace Plus.HabboHotel.Users.Inventory.Furniture
 
         public static IFurniObjectData CreateData(this ItemDefinition definition)
         {
-            if (definition.InteractionType == InteractionType.Gift) return new MapDataFormat()
+            if (definition.InteractionType == InteractionType.Gift) return new MapDataFormat();
+            return EmptyDataFormat.Empty;
         }
     }
 
@@ -72,7 +74,7 @@ namespace Plus.HabboHotel.Users.Inventory.Furniture
         public IReadOnlyDictionary<uint, InventoryItem> Floor => _floorItems;
         public IReadOnlyDictionary<uint, InventoryItem> Wall => _wallItems;
 
-        public FurnitureInventoryComponent(List<InventoryItem> floorFurniture, List<InventoryItem> wallFurniture)
+        public FurnitureInventoryComponent(IEnumerable<InventoryItem> floorFurniture, IEnumerable<InventoryItem> wallFurniture)
         {
             _floorItems = new(floorFurniture.ToDictionary(f => f.Id));
             _wallItems = new(wallFurniture.ToDictionary(w => w.Id));
