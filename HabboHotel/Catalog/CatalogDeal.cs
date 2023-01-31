@@ -10,7 +10,7 @@ public class CatalogDeal
         Id = id;
         DisplayName = displayName;
         RoomId = roomId;
-        ItemDataList = new List<CatalogItem>();
+        ItemDataList = new();
         if (roomId != 0)
         {
             DataTable data = null;
@@ -40,11 +40,11 @@ public class CatalogDeal
         foreach (var split in splitItems)
         {
             var item = split.Split('*');
-            if (!int.TryParse(item[0], out var itemId) || !int.TryParse(item[1], out var amount))
+            if (!uint.TryParse(item[0], out var itemId) || !int.TryParse(item[1], out var amount))
                 continue;
-            if (!itemDataManager.GetItem(itemId, out var data))
+            if (!itemDataManager.Items.TryGetValue(itemId, out var data))
                 continue;
-            ItemDataList.Add(new CatalogItem(0, itemId, data, string.Empty, 0, 0, 0, 0, amount, 0, 0, false, "", "", 0));
+            ItemDataList.Add(new(0, itemId, data, string.Empty, 0, 0, 0, 0, amount, 0, 0, false, "", "", 0));
         }
     }
 

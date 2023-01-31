@@ -15,7 +15,7 @@ public class RoomManager : IRoomManager
 
     private readonly Dictionary<string, RoomModel> _roomModels;
 
-    private readonly ConcurrentDictionary<int, Room> _rooms;
+    private readonly ConcurrentDictionary<uint, Room> _rooms;
 
     private DateTime _cycleLastExecution;
 
@@ -44,7 +44,7 @@ public class RoomManager : IRoomManager
                         continue;
                     if (room.ProcessTask == null || room.ProcessTask.IsCompleted)
                     {
-                        room.ProcessTask = new Task(room.ProcessRoom);
+                        room.ProcessTask = new(room.ProcessRoom);
                         room.ProcessTask.Start();
                         room.IsLagging = 0;
                     }
@@ -78,7 +78,7 @@ public class RoomManager : IRoomManager
         foreach (DataRow row in data.Rows)
         {
             var model = Convert.ToString(row["id"]);
-            _roomModels.Add(model, new RoomModel(model, Convert.ToInt32(row["door_x"]), Convert.ToInt32(row["door_y"]), (double)row["door_z"], Convert.ToInt32(row["door_dir"]),
+            _roomModels.Add(model, new(model, Convert.ToInt32(row["door_x"]), Convert.ToInt32(row["door_y"]), (double)row["door_z"], Convert.ToInt32(row["door_dir"]),
                 Convert.ToString(row["heightmap"]), ConvertExtensions.EnumToBool(row["club_only"].ToString()), Convert.ToInt32(row["wall_height"]), false));
         }
     }
@@ -95,7 +95,7 @@ public class RoomManager : IRoomManager
         var model = Convert.ToString(row["id"]);
         if (!_roomModels.ContainsKey(model))
         {
-            _roomModels.Add(model, new RoomModel(model, Convert.ToInt32(row["door_x"]), Convert.ToInt32(row["door_y"]), Convert.ToDouble(row["door_z"]), Convert.ToInt32(row["door_dir"]),
+            _roomModels.Add(model, new(model, Convert.ToInt32(row["door_x"]), Convert.ToInt32(row["door_y"]), Convert.ToDouble(row["door_z"]), Convert.ToInt32(row["door_dir"]),
                 Convert.ToString(row["heightmap"]), ConvertExtensions.EnumToBool(row["club_only"].ToString()), Convert.ToInt32(row["wall_height"]), true));
         }
         return true;
@@ -133,12 +133,12 @@ public class RoomManager : IRoomManager
         return false;
     }
 
-    public void UnloadRoom(int roomId)
+    public void UnloadRoom(uint roomId)
     {
         if (_rooms.TryRemove(roomId, out var room)) room.Dispose();
     }
 
-    public bool TryLoadRoom(int roomId, out Room room)
+    public bool TryLoadRoom(uint roomId, out Room room)
     {
         Room inst = null;
         if (_rooms.TryGetValue(roomId, out inst))
@@ -227,7 +227,7 @@ public class RoomManager : IRoomManager
         return _rooms.Values.Where(x => x.Group != null && x.Access != RoomAccess.Invisible).OrderByDescending(x => x.Score).Take(amount).ToList();
     }
 
-    public List<Room> GetRoomsByIds(List<int> ids, int amount = 50)
+    public List<Room> GetRoomsByIds(List<uint> ids, int amount = 50)
     {
         return _rooms.Values.Where(x => ids.Contains(x.Id) && x.Access != RoomAccess.Invisible).OrderByDescending(x => x.UsersNow).Take(amount).ToList();
     }
@@ -238,7 +238,7 @@ public class RoomManager : IRoomManager
     }
 
 
-    public bool TryGetRoom(int roomId, out Room room) => _rooms.TryGetValue(roomId, out room);
+    public bool TryGetRoom(uint roomId, out Room room) => _rooms.TryGetValue(roomId, out room);
 
     public RoomData CreateRoom(GameClient session, string name, string description, int category, int maxVisitors, int tradeSettings, RoomModel model, string wallpaper = "0.0", string floor = "0.0",
         string landscape = "0.0", int wallthick = 0, int floorthick = 0)
@@ -248,7 +248,7 @@ public class RoomManager : IRoomManager
             session.SendNotification(PlusEnvironment.GetLanguageManager().TryGetValue("room.creation.name.too_short"));
             return null;
         }
-        var roomId = 0;
+        var roomId = 0u;
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
             dbClient.SetQuery(
@@ -260,7 +260,7 @@ public class RoomManager : IRoomManager
             dbClient.AddParameter("category", category);
             dbClient.AddParameter("usersmax", maxVisitors);
             dbClient.AddParameter("tradesettings", tradeSettings);
-            roomId = Convert.ToInt32(dbClient.InsertQuery());
+            roomId = Convert.ToUInt32(dbClient.InsertQuery());
         }
         var data = new RoomData(roomId, name, model.Id, session.GetHabbo().Username, session.GetHabbo().Id, "", 0, "public", "open", 0, maxVisitors, category, description, string.Empty,
             floor, landscape, true, true, false, false, wallthick, floorthick, wallpaper, 1, 1, 1, 1, 1, 1, 1, 8, tradeSettings, true, true, true, true, true, true, true, 0, 0, true, model);

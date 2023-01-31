@@ -17,23 +17,23 @@ internal class SetMannequinNameEvent : IPacketEvent
         var room = session.GetHabbo().CurrentRoom;
         if (room == null || !room.CheckRights(session, true))
             return Task.CompletedTask;
-        var itemId = packet.ReadInt();
+        var itemId = packet.ReadUInt();
         var name = packet.ReadString();
         var item = session.GetHabbo().CurrentRoom.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
-        if (item.ExtraData.Contains(Convert.ToChar(5)))
+        if (item.LegacyDataString.Contains(Convert.ToChar(5)))
         {
-            var flags = item.ExtraData.Split(Convert.ToChar(5));
-            item.ExtraData = flags[0] + Convert.ToChar(5) + flags[1] + Convert.ToChar(5) + name;
+            var flags = item.LegacyDataString.Split(Convert.ToChar(5));
+            item.LegacyDataString = flags[0] + Convert.ToChar(5) + flags[1] + Convert.ToChar(5) + name;
         }
         else
-            item.ExtraData = "m" + Convert.ToChar(5) + ".ch-210-1321.lg-285-92" + Convert.ToChar(5) + "Default Mannequin";
+            item.LegacyDataString = "m" + Convert.ToChar(5) + ".ch-210-1321.lg-285-92" + Convert.ToChar(5) + "Default Mannequin";
         using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `items` SET `extra_data` = @Ed WHERE `id` = @itemId LIMIT 1");
             dbClient.AddParameter("itemId", item.Id);
-            dbClient.AddParameter("Ed", item.ExtraData);
+            dbClient.AddParameter("Ed", item.LegacyDataString);
             dbClient.RunQuery();
         }
         item.UpdateState(true, true);

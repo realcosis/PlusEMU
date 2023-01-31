@@ -12,9 +12,9 @@ public class InteractorBanzaiTimer : IFurniInteractor
     {
         if (!hasRights) return;
         var oldValue = 0;
-        if (!int.TryParse(item.ExtraData, out oldValue))
+        if (!int.TryParse(item.LegacyDataString, out oldValue))
         {
-            item.ExtraData = "0";
+            item.LegacyDataString = "0";
             oldValue = 0;
         }
         if (request == 0 && oldValue == 0)
@@ -49,7 +49,7 @@ public class InteractorBanzaiTimer : IFurniInteractor
         {
             if (request == 1 && oldValue == 0)
             {
-                item.ExtraData = "30";
+                item.LegacyDataString = "30";
                 oldValue = 30;
             }
             if (!item.GetRoom().GetBanzai().IsBanzaiActive)
@@ -65,7 +65,7 @@ public class InteractorBanzaiTimer : IFurniInteractor
                 item.PendingReset = true;
             }
         }
-        item.ExtraData = Convert.ToString(oldValue);
+        item.LegacyDataString = Convert.ToString(oldValue);
         item.UpdateState();
     }
 
@@ -75,7 +75,7 @@ public class InteractorBanzaiTimer : IFurniInteractor
             item.GetRoom().GetBanzai().BanzaiEnd(true);
         item.PendingReset = true;
         item.UpdateNeeded = true;
-        item.ExtraData = "30";
+        item.LegacyDataString = "30";
         item.UpdateState();
         if (!item.GetRoom().GetBanzai().IsBanzaiActive)
             item.GetRoom().GetBanzai().BanzaiStart();

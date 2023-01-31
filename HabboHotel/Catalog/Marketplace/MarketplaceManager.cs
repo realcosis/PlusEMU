@@ -51,10 +51,10 @@ public class MarketplaceManager : IMarketplaceManager
 
     public double FormatTimestamp() => UnixTimestamp.GetNow() - 172800.0;
 
-    public int OfferCountForSprite(int spriteId)
+    public int OfferCountForSprite(uint spriteId)
     {
-        var dictionary = new Dictionary<int, MarketOffer>();
-        var dictionary2 = new Dictionary<int, int>();
+        var dictionary = new Dictionary<uint, MarketOffer>();
+        var dictionary2 = new Dictionary<uint, int>();
         foreach (var item in MarketItems)
         {
             if (dictionary.ContainsKey(item.SpriteId))
@@ -80,12 +80,12 @@ public class MarketplaceManager : IMarketplaceManager
 
     public int CalculateComissionPrice(float price) => Convert.ToInt32(Math.Ceiling(price / 100 * 1));
 
-    public async Task<bool> TryCancelOffer(Habbo habbo, int offerId)
+    public async Task<bool> TryCancelOffer(Habbo habbo, uint offerId)
     {
         var offer = await GetOffer(offerId);
         if (offer?.UserId != habbo.Id) return false;
 
-        var item = _itemDataManager.GetItemData(offer.ItemId);
+        _itemDataManager.Items.TryGetValue(offer.ItemId, out var item);
         if (item == null) return false;
 
         var giveItem = ItemFactory.CreateSingleItem(item, habbo, offer.ExtraData, offer.ExtraData, offer.FurniId,offer.LimitedNumber, offer.LimitedStack);
@@ -95,7 +95,7 @@ public class MarketplaceManager : IMarketplaceManager
         return true;
     }
 
-    public async Task<MarketOffer?> GetOffer(int offerId)
+    public async Task<MarketOffer?> GetOffer(uint offerId)
     {
         using var connection = _database.Connection();
         return await connection.QuerySingleOrDefaultAsync<MarketOffer>(
@@ -103,7 +103,7 @@ public class MarketplaceManager : IMarketplaceManager
             new { offerId });
     }
 
-    public async Task DeleteOffer(int offerId)
+    public async Task DeleteOffer(uint offerId)
     {
         using var connection = _database.Connection();
         await connection.ExecuteAsync("DELETE FROM `catalog_marketplace_offers` WHERE `offer_id` = @offerId LIMIT 1", new { offerId });

@@ -7,7 +7,7 @@ public class InteractorOneWayGate : IFurniInteractor
 {
     public void OnPlace(GameClient session, Item item)
     {
-        item.ExtraData = "0";
+        item.LegacyDataString = "0";
         if (item.InteractingUser != 0)
         {
             var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);
@@ -22,7 +22,7 @@ public class InteractorOneWayGate : IFurniInteractor
 
     public void OnRemove(GameClient session, Item item)
     {
-        item.ExtraData = "0";
+        item.LegacyDataString = "0";
         if (item.InteractingUser != 0)
         {
             var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);
@@ -43,7 +43,7 @@ public class InteractorOneWayGate : IFurniInteractor
         if (item.InteractingUser2 != user.UserId)
             item.InteractingUser2 = user.UserId;
         if (user == null) return;
-        if (item.GetBaseItem().InteractionType == InteractionType.OneWayGate)
+        if (item.Definition.InteractionType == InteractionType.OneWayGate)
         {
             if (user.Coordinate != item.SquareInFront && user.CanWalk)
             {

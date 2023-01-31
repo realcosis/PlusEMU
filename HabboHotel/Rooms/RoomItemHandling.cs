@@ -6,25 +6,23 @@ using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Core;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
-using Plus.HabboHotel.Items.Data.Moodlight;
-using Plus.HabboHotel.Items.Data.Toner;
 using Plus.HabboHotel.Items.Wired;
-using Plus.HabboHotel.Rooms.PathFinding;
 
 namespace Plus.HabboHotel.Rooms;
 
+[Obsolete("Everything in here is bad and whoever wrote this must've been high on some crack or something")]
 public class RoomItemHandling
 {
-    private readonly ConcurrentDictionary<int, Item> _floorItems;
+    private readonly ConcurrentDictionary<uint, Item> _floorItems;
 
-    private readonly ConcurrentDictionary<int, Item> _movedItems;
-    private readonly List<int> _rollerItemsMoved;
+    private readonly ConcurrentDictionary<uint, Item> _movedItems;
+    private readonly List<uint> _rollerItemsMoved;
     private readonly List<IServerPacket> _rollerMessages;
 
-    private readonly ConcurrentDictionary<int, Item> _rollers;
+    private readonly ConcurrentDictionary<uint, Item> _rollers;
     private readonly List<int> _rollerUsersMoved;
     private readonly Room _room;
-    private readonly ConcurrentDictionary<int, Item> _wallItems;
+    private readonly ConcurrentDictionary<uint, Item> _wallItems;
     private int _mRollerCycle;
     private int _mRollerSpeed;
 
@@ -39,14 +37,14 @@ public class RoomItemHandling
         GotRollers = false;
         _mRollerSpeed = 4;
         _mRollerCycle = 0;
-        _movedItems = new ConcurrentDictionary<int, Item>();
-        _rollers = new ConcurrentDictionary<int, Item>();
-        _wallItems = new ConcurrentDictionary<int, Item>();
-        _floorItems = new ConcurrentDictionary<int, Item>();
-        _rollerItemsMoved = new List<int>();
-        _rollerUsersMoved = new List<int>();
-        _rollerMessages = new List<IServerPacket>();
-        _roomItemUpdateQueue = new ConcurrentQueue<Item>();
+        _movedItems = new();
+        _rollers = new();
+        _wallItems = new();
+        _floorItems = new();
+        _rollerItemsMoved = new();
+        _rollerUsersMoved = new();
+        _rollerMessages = new();
+        _roomItemUpdateQueue = new();
     }
 
     public bool GotRollers { get; set; }
@@ -57,7 +55,7 @@ public class RoomItemHandling
 
     public IEnumerable<Item> GetWallAndFloor => _floorItems.Values.Concat(_wallItems.Values);
 
-    public void TryAddRoller(int itemId, Item roller)
+    public void TryAddRoller(uint itemId, Item roller)
     {
         _rollers.TryAdd(itemId, roller);
     }
@@ -72,7 +70,7 @@ public class RoomItemHandling
         _mRollerSpeed = p;
     }
 
-    public string WallPositionCheck(string wallPosition)
+    public string? WallPositionCheck(string wallPosition)
     {
         //:w=3,2 l=9,63 l
         try
@@ -92,7 +90,7 @@ public class RoomItemHandling
             var lengthY = int.Parse(lenD[1]);
             if (lengthX < -1 || lengthY < -1000 || lengthX > 700 || lengthY > 700)
                 return null;
-            return ":w=" + widthX + "," + widthY + " " + "l=" + lengthX + "," + lengthY + " " + posD[2];
+            return $":w={widthX},{widthY} l={lengthX},{lengthY} {posD[2]}";
         }
         catch
         {
@@ -130,7 +128,7 @@ public class RoomItemHandling
                     var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(item.UserId);
                     if (client != null)
                     {
-                        client.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
+                        client.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.LegacyDataString, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
                         client.Send(new FurniListUpdateComposer());
                     }
                     continue;
@@ -140,7 +138,7 @@ public class RoomItemHandling
             }
             else if (item.IsWallItem)
             {
-                if (string.IsNullOrWhiteSpace(item.WallCoord))
+                if (string.IsNullOrWhiteSpace(item.WallCoordinates))
                 {
                     using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                     {
@@ -148,11 +146,11 @@ public class RoomItemHandling
                         dbClient.AddParameter("WallPosition", ":w=0,2 l=11,53 l");
                         dbClient.RunQuery();
                     }
-                    item.WallCoord = ":w=0,2 l=11,53 l";
+                    item.WallCoordinates = ":w=0,2 l=11,53 l";
                 }
                 try
                 {
-                    item.WallCoord = WallPositionCheck(":" + item.WallCoord.Split(':')[1]);
+                    item.WallCoordinates = WallPositionCheck(":" + item.WallCoordinates.Split(':')[1]);
                 }
                 catch
                 {
@@ -162,7 +160,7 @@ public class RoomItemHandling
                         dbClient.AddParameter("WallPosition", ":w=0,2 l=11,53 l");
                         dbClient.RunQuery();
                     }
-                    item.WallCoord = ":w=0,2 l=11,53 l";
+                    item.WallCoordinates = ":w=0,2 l=11,53 l";
                 }
                 if (!_wallItems.ContainsKey(item.Id))
                     _wallItems.TryAdd(item.Id, item);
@@ -172,15 +170,15 @@ public class RoomItemHandling
         {
             if (item.IsRoller)
                 GotRollers = true;
-            else if (item.GetBaseItem().InteractionType == InteractionType.Moodlight)
+            else if (item.Definition.InteractionType == InteractionType.Moodlight)
             {
                 if (_room.MoodlightData == null)
-                    _room.MoodlightData = new MoodlightData(item.Id);
+                    _room.MoodlightData = new(item.Id);
             }
-            else if (item.GetBaseItem().InteractionType == InteractionType.Toner)
+            else if (item.Definition.InteractionType == InteractionType.Toner)
             {
                 if (_room.TonerData == null)
-                    _room.TonerData = new TonerData(item.Id);
+                    _room.TonerData = new(item.Id);
             }
             else if (item.IsWired)
             {
@@ -190,12 +188,12 @@ public class RoomItemHandling
                     continue;
                 _room.GetWired().LoadWiredBox(item);
             }
-            else if (item.GetBaseItem().InteractionType == InteractionType.Hopper)
+            else if (item.Definition.InteractionType == InteractionType.Hopper)
                 HopperCount++;
         }
     }
 
-    public Item GetItem(int pId)
+    public Item GetItem(uint pId)
     {
         if (_floorItems != null && _floorItems.ContainsKey(pId))
         {
@@ -212,16 +210,16 @@ public class RoomItemHandling
         return null;
     }
 
-    public void RemoveFurniture(GameClient session, int id)
+    public void RemoveFurniture(GameClient session, uint id)
     {
         var item = GetItem(id);
         if (item == null)
             return;
-        if (item.GetBaseItem().InteractionType == InteractionType.FootballGate)
+        if (item.Definition.InteractionType == InteractionType.FootballGate)
             _room.GetSoccer().UnRegisterGate(item);
-        if (item.GetBaseItem().InteractionType != InteractionType.Gift)
+        if (item.Definition.InteractionType != InteractionType.Gift)
             item.Interactor.OnRemove(session, item);
-        if (item.GetBaseItem().InteractionType == InteractionType.GuildGate)
+        if (item.Definition.InteractionType == InteractionType.GuildGate)
         {
             item.UpdateCounter = 0;
             item.UpdateNeeded = false;
@@ -253,7 +251,7 @@ public class RoomItemHandling
     private List<IServerPacket> CycleRollers()
     {
         if (!GotRollers)
-            return new List<IServerPacket>();
+            return new();
         if (_mRollerCycle >= _mRollerSpeed || _mRollerSpeed == 0)
         {
             _rollerItemsMoved.Clear();
@@ -270,7 +268,7 @@ public class RoomItemHandling
                 itemsOnNext = _room.GetGameMap().GetAllRoomItemForSquare(nextSquare.X, nextSquare.Y).ToList();
                 if (itemsOnRoller.Count > 10)
                     itemsOnRoller = _room.GetGameMap().GetRoomItemForSquare(roller.GetX, roller.GetY, roller.GetZ).Take(10).ToList();
-                var nextSquareIsRoller = itemsOnNext.Count(x => x.GetBaseItem().InteractionType == InteractionType.Roller) > 0;
+                var nextSquareIsRoller = itemsOnNext.Count(x => x.Definition.InteractionType == InteractionType.Roller) > 0;
                 var nextRollerClear = true;
                 var nextZ = 0.0;
                 var nextRoller = false;
@@ -301,7 +299,7 @@ public class RoomItemHandling
                             _room.GetRoomUserManager().GetUserForSquare(nextSquare.X, nextSquare.Y) == null)
                         {
                             if (!nextSquareIsRoller)
-                                nextZ = rItem.GetZ - roller.GetBaseItem().Height;
+                                nextZ = rItem.GetZ - roller.Definition.Height;
                             else
                                 nextZ = rItem.GetZ;
                             _rollerMessages.Add(UpdateItemOnRoller(rItem, nextSquare, roller.Id, nextZ));
@@ -311,13 +309,13 @@ public class RoomItemHandling
                 }
                 var rollerUser = _room.GetGameMap().GetRoomUsers(roller.Coordinate).FirstOrDefault();
                 if (rollerUser != null && !rollerUser.IsWalking && nextRollerClear &&
-                    _room.GetGameMap().IsValidStep(new Vector2D(roller.GetX, roller.GetY), new Vector2D(nextSquare.X, nextSquare.Y), true, false, true) &&
+                    _room.GetGameMap().IsValidStep(new(roller.GetX, roller.GetY), new(nextSquare.X, nextSquare.Y), true, false, true) &&
                     _room.GetGameMap().CanRollItemHere(nextSquare.X, nextSquare.Y) && _room.GetGameMap().GetFloorStatus(nextSquare) != 0)
                 {
                     if (!_rollerUsersMoved.Contains(rollerUser.HabboId))
                     {
                         if (!nextSquareIsRoller)
-                            nextZ = rollerUser.Z - roller.GetBaseItem().Height;
+                            nextZ = rollerUser.Z - roller.Definition.Height;
                         else
                             nextZ = rollerUser.Z;
                         rollerUser.IsRolling = true;
@@ -331,20 +329,20 @@ public class RoomItemHandling
             return _rollerMessages;
         }
         _mRollerCycle++;
-        return new List<IServerPacket>();
+        return new();
     }
 
-    public IServerPacket UpdateItemOnRoller(Item pItem, Point nextCoord, int pRolledId, double nextZ)
+    public IServerPacket UpdateItemOnRoller(Item pItem, Point nextCoord, uint pRolledId, double nextZ)
     {
         var mMessage = new SlideObjectBundleComposer(pItem.GetX, pItem.GetY, pItem.GetZ, nextCoord.X, nextCoord.Y, nextZ, pRolledId, 0, pItem.Id);
         SetFloorItem(pItem, nextCoord.X, nextCoord.Y, nextZ);
         return mMessage;
     }
 
-    public IServerPacket UpdateUserOnRoller(RoomUser pUser, Point pNextCoord, int pRollerId, double nextZ)
+    public IServerPacket UpdateUserOnRoller(RoomUser pUser, Point pNextCoord, uint pRollerId, double nextZ)
     {
         var mMessage = new SlideObjectBundleComposer(pUser.X, pUser.Y, pUser.Z, pNextCoord.X, pNextCoord.Y, nextZ, pRollerId, pUser.VirtualId, 0);
-        _room.GetGameMap().UpdateUserMovement(new Point(pUser.X, pUser.Y), new Point(pNextCoord.X, pNextCoord.Y), pUser);
+        _room.GetGameMap().UpdateUserMovement(new(pUser.X, pUser.Y), new(pNextCoord.X, pNextCoord.Y), pUser);
         _room.GetGameMap().GameMap[pUser.X, pUser.Y] = 1;
         pUser.X = pNextCoord.X;
         pUser.Y = pNextCoord.Y;
@@ -371,21 +369,20 @@ public class RoomItemHandling
         {
             if (_movedItems.Count > 0)
             {
-                // TODO: Big string builder?
                 using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                 foreach (var item in _movedItems.Values.ToList())
                 {
-                    if (!string.IsNullOrEmpty(item.ExtraData))
+                    if (!string.IsNullOrEmpty(item.LegacyDataString))
                     {
                         dbClient.SetQuery("UPDATE `items` SET `extra_data` = @edata" + item.Id + " WHERE `id` = '" + item.Id + "' LIMIT 1");
-                        dbClient.AddParameter("edata" + item.Id, item.ExtraData);
+                        dbClient.AddParameter("edata" + item.Id, item.ExtraData.Serialize());
                         dbClient.RunQuery();
                     }
-                    if (item.IsWallItem && (!item.GetBaseItem().ItemName.Contains("wallpaper_single") || !item.GetBaseItem().ItemName.Contains("floor_single") ||
-                                            !item.GetBaseItem().ItemName.Contains("landscape_single")))
+                    if (item.IsWallItem && (!item.Definition.ItemName.Contains("wallpaper_single") || !item.Definition.ItemName.Contains("floor_single") ||
+                                            !item.Definition.ItemName.Contains("landscape_single")))
                     {
                         dbClient.SetQuery("UPDATE `items` SET `wall_pos` = @wallPos WHERE `id` = '" + item.Id + "' LIMIT 1");
-                        dbClient.AddParameter("wallPos", item.WallCoord);
+                        dbClient.AddParameter("wallPos", item.WallCoordinates);
                         dbClient.RunQuery();
                     }
                     dbClient.RunQuery("UPDATE `items` SET `x` = '" + item.GetX + "', `y` = '" + item.GetY + "', `z` = '" + item.GetZ + "', `rot` = '" + item.Rotation + "' WHERE `id` = '" + item.Id +
@@ -406,18 +403,18 @@ public class RoomItemHandling
         {
             if (item.IsWired)
             {
-                if (item.GetBaseItem().WiredType == WiredBoxType.EffectRegenerateMaps &&
-                    _room.GetRoomItemHandler().GetFloor.Count(x => x.GetBaseItem().WiredType == WiredBoxType.EffectRegenerateMaps) > 0)
+                if (item.Definition.WiredType == WiredBoxType.EffectRegenerateMaps &&
+                    _room.GetRoomItemHandler().GetFloor.Count(x => x.Definition.WiredType == WiredBoxType.EffectRegenerateMaps) > 0)
                     return false;
             }
         }
         var itemsOnTile = GetFurniObjects(newX, newY);
-        if (item.GetBaseItem().InteractionType == InteractionType.Roller && itemsOnTile.Count(x => x.GetBaseItem().InteractionType == InteractionType.Roller && x.Id != item.Id) > 0)
+        if (item.Definition.InteractionType == InteractionType.Roller && itemsOnTile.Count(x => x.Definition.InteractionType == InteractionType.Roller && x.Id != item.Id) > 0)
             return false;
         if (!newItem)
             needsReAdd = _room.GetGameMap().RemoveFromMap(item);
-        var affectedTiles = Gamemap.GetAffectedTiles(item.GetBaseItem().Length, item.GetBaseItem().Width, newX, newY, newRot);
-        if (!_room.GetGameMap().ValidTile(newX, newY) || _room.GetGameMap().SquareHasUsers(newX, newY) && !item.GetBaseItem().IsSeat)
+        var affectedTiles = Gamemap.GetAffectedTiles(item.Definition.Length, item.Definition.Width, newX, newY, newRot);
+        if (!_room.GetGameMap().ValidTile(newX, newY) || _room.GetGameMap().SquareHasUsers(newX, newY) && !item.Definition.IsSeat)
         {
             if (needsReAdd)
                 _room.GetGameMap().AddToMap(item);
@@ -426,7 +423,7 @@ public class RoomItemHandling
         foreach (var tile in affectedTiles.Values)
         {
             if (!_room.GetGameMap().ValidTile(tile.X, tile.Y) ||
-                _room.GetGameMap().SquareHasUsers(tile.X, tile.Y) && !item.GetBaseItem().IsSeat)
+                _room.GetGameMap().SquareHasUsers(tile.X, tile.Y) && !item.Definition.IsSeat)
             {
                 if (needsReAdd) _room.GetGameMap().AddToMap(item);
                 return false;
@@ -440,11 +437,11 @@ public class RoomItemHandling
             if (!onRoller)
             {
                 // Make sure this tile is open and there are no users here
-                if (_room.GetGameMap().Model.SqState[newX, newY] != SquareState.Open && !item.GetBaseItem().IsSeat) return false;
+                if (_room.GetGameMap().Model.SqState[newX, newY] != SquareState.Open && !item.Definition.IsSeat) return false;
                 foreach (var tile in affectedTiles.Values)
                 {
                     if (_room.GetGameMap().Model.SqState[tile.X, tile.Y] != SquareState.Open &&
-                        !item.GetBaseItem().IsSeat)
+                        !item.Definition.IsSeat)
                     {
                         if (needsReAdd)
                         {
@@ -456,11 +453,11 @@ public class RoomItemHandling
                 }
 
                 // And that we have no users
-                if (!item.GetBaseItem().IsSeat && !item.IsRoller)
+                if (!item.Definition.IsSeat && !item.IsRoller)
                 {
                     foreach (var tile in affectedTiles.Values)
                     {
-                        if (_room.GetGameMap().GetRoomUsers(new Point(tile.X, tile.Y)).Count > 0)
+                        if (_room.GetGameMap().GetRoomUsers(new(tile.X, tile.Y)).Count > 0)
                         {
                             if (needsReAdd)
                                 _room.GetGameMap().AddToMap(item);
@@ -489,9 +486,9 @@ public class RoomItemHandling
                         continue;
                     if (I.Id == item.Id)
                         continue;
-                    if (I.GetBaseItem() == null)
+                    if (I.Definition == null)
                         continue;
-                    if (!I.GetBaseItem().Stackable)
+                    if (!I.Definition.Stackable)
                     {
                         if (needsReAdd)
                         {
@@ -516,7 +513,7 @@ public class RoomItemHandling
                         continue;
                     if (i.Id == item.Id)
                         continue;
-                    if (i.GetBaseItem().InteractionType == InteractionType.Stacktool)
+                    if (i.Definition.InteractionType == InteractionType.Stacktool)
                     {
                         newZ = i.GetZ;
                         break;
@@ -526,7 +523,7 @@ public class RoomItemHandling
             }
 
             // Verify the rotation is correct
-            if (newRot != 0 && newRot != 2 && newRot != 4 && newRot != 6 && newRot != 8 && !item.GetBaseItem().ExtraRot)
+            if (newRot != 0 && newRot != 2 && newRot != 4 && newRot != 6 && newRot != 8 && !item.Definition.ExtraRot)
                 newRot = 0;
         }
         else
@@ -557,14 +554,14 @@ public class RoomItemHandling
         {
             UpdateItem(item);
             if (!onRoller && sendMessage)
-                _room.SendPacket(new ObjectUpdateComposer(item, _room.OwnerId));
+                _room.SendPacket(new ObjectUpdateComposer(item));
         }
         _room.GetGameMap().AddToMap(item);
-        if (item.GetBaseItem().IsSeat)
+        if (item.Definition.IsSeat)
             updateRoomUserStatuses = true;
         if (updateRoomUserStatuses)
             _room.GetRoomUserManager().UpdateUserStatusses();
-        if (item.GetBaseItem().InteractionType == InteractionType.Tent || item.GetBaseItem().InteractionType == InteractionType.TentSmall)
+        if (item.Definition.InteractionType == InteractionType.Tent || item.Definition.InteractionType == InteractionType.TentSmall)
         {
             _room.RemoveTent(item.Id);
             _room.AddTent(item.Id);
@@ -576,17 +573,17 @@ public class RoomItemHandling
     }
 
 
-    public List<Item> GetFurniObjects(int x, int y) => _room.GetGameMap().GetCoordinatedItems(new Point(x, y));
+    public List<Item> GetFurniObjects(int x, int y) => _room.GetGameMap().GetCoordinatedItems(new(x, y));
 
     public bool SetFloorItem(Item item, int newX, int newY, double newZ)
     {
         if (_room == null)
             return false;
         _room.GetGameMap().RemoveFromMap(item);
-        item.SetState(newX, newY, newZ, Gamemap.GetAffectedTiles(item.GetBaseItem().Length, item.GetBaseItem().Width, newX, newY, item.Rotation));
-        if (item.GetBaseItem().InteractionType == InteractionType.Toner)
+        item.SetState(newX, newY, newZ, Gamemap.GetAffectedTiles(item.Definition.Length, item.Definition.Width, newX, newY, item.Rotation));
+        if (item.Definition.InteractionType == InteractionType.Toner)
             if (_room.TonerData == null)
-                _room.TonerData = new TonerData(item.Id);
+                _room.TonerData = new(item.Id);
         UpdateItem(item);
         _room.GetGameMap().AddItemToMap(item);
         return true;
@@ -602,19 +599,19 @@ public class RoomItemHandling
             return true;
         }
         item.Interactor.OnPlace(session, item);
-        if (item.GetBaseItem().InteractionType == InteractionType.Moodlight)
+        if (item.Definition.InteractionType == InteractionType.Moodlight)
         {
             if (_room.MoodlightData == null)
             {
-                _room.MoodlightData = new MoodlightData(item.Id);
-                item.ExtraData = _room.MoodlightData.GenerateExtraData();
+                _room.MoodlightData = new(item.Id);
+                item.LegacyDataString = _room.MoodlightData.GenerateExtraData();
             }
         }
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `items` SET `room_id` = '" + _room.RoomId + "', `x` = '" + item.GetX + "', `y` = '" + item.GetY + "', `z` = '" + item.GetZ + "', `rot` = '" + item.Rotation +
                               "', `wall_pos` = @WallPos WHERE `id` = '" + item.Id + "' LIMIT 1");
-            dbClient.AddParameter("WallPos", item.WallCoord);
+            dbClient.AddParameter("WallPos", item.WallCoordinates);
             dbClient.RunQuery();
         }
         _wallItems.TryAdd(item.Id, item);
@@ -687,16 +684,18 @@ public class RoomItemHandling
             if (item.IsFloorItem)
             {
                 _floorItems.TryRemove(item.Id, out var I);
-                session.GetHabbo().Inventory.Furniture.AddItem(I);
+                // TODO @80O: Items refactor
+                session.GetHabbo().Inventory.Furniture.AddItem(I.ToInventoryItem());
                 _room.SendPacket(new ObjectRemoveComposer(item, item.UserId));
             }
             else if (item.IsWallItem)
             {
                 _wallItems.TryRemove(item.Id, out var I);
-                session.GetHabbo().Inventory.Furniture.AddItem(I);
+                // TODO @80O: Items refactor
+                session.GetHabbo().Inventory.Furniture.AddItem(I.ToInventoryItem());
                 _room.SendPacket(new ItemRemoveComposer(item, item.UserId));
             }
-            session.Send(new FurniListAddComposer(item));
+            session.Send(new FurniListAddComposer(item.ToInventoryItem()));
         }
         _rollers.Clear();
         return items;
@@ -707,17 +706,17 @@ public class RoomItemHandling
     {
         try
         {
-            var dictionary = Gamemap.GetAffectedTiles(item.GetBaseItem().Length, item.GetBaseItem().Width, newX, newY, newRot);
+            var dictionary = Gamemap.GetAffectedTiles(item.Definition.Length, item.Definition.Width, newX, newY, newRot);
             if (!_room.GetGameMap().ValidTile(newX, newY))
                 return false;
-            foreach (var coord in dictionary.Values.ToList())
+            foreach (var coord in dictionary.Values)
             {
                 if (_room.GetGameMap().Model.DoorX == coord.X && _room.GetGameMap().Model.DoorY == coord.Y)
                     return false;
             }
             if (_room.GetGameMap().Model.DoorX == newX && _room.GetGameMap().Model.DoorY == newY)
                 return false;
-            foreach (var coord in dictionary.Values.ToList())
+            foreach (var coord in dictionary.Values)
             {
                 if (!_room.GetGameMap().ValidTile(coord.X, coord.Y))
                     return false;
@@ -727,16 +726,16 @@ public class RoomItemHandling
                 return false;
             if (_room.GetGameMap().Model.SqState[newX, newY] != SquareState.Open)
                 return false;
-            foreach (var coord in dictionary.Values.ToList())
+            foreach (var coord in dictionary.Values)
             {
                 if (_room.GetGameMap().Model.SqState[coord.X, coord.Y] != SquareState.Open)
                     return false;
             }
-            if (!item.GetBaseItem().IsSeat)
+            if (!item.Definition.IsSeat)
             {
                 if (_room.GetGameMap().SquareHasUsers(newX, newY))
                     return false;
-                foreach (var coord in dictionary.Values.ToList())
+                foreach (var coord in dictionary.Values)
                 {
                     if (_room.GetGameMap().SquareHasUsers(coord.X, coord.Y))
                         return false;
@@ -745,19 +744,19 @@ public class RoomItemHandling
             var furniObjects = GetFurniObjects(newX, newY);
             var collection = new List<Item>();
             var list3 = new List<Item>();
-            foreach (var coord in dictionary.Values.ToList())
+            foreach (var coord in dictionary.Values)
             {
                 var list4 = GetFurniObjects(coord.X, coord.Y);
                 if (list4 != null)
                     collection.AddRange(list4);
             }
             if (furniObjects == null)
-                furniObjects = new List<Item>();
+                furniObjects = new();
             list3.AddRange(furniObjects);
             list3.AddRange(collection);
-            foreach (var i in list3.ToList())
+            foreach (var i in list3)
             {
-                if (i.Id != item.Id && !i.GetBaseItem().Stackable)
+                if (i.Id != item.Id && !i.Definition.Stackable)
                     return false;
             }
             return true;

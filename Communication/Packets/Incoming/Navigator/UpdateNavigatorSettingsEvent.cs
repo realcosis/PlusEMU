@@ -15,7 +15,7 @@ internal class UpdateNavigatorSettingsEvent : IPacketEvent
 
     public async Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var roomId = packet.ReadInt();
+        var roomId = packet.ReadUInt();
         await _navigatorManager.SaveHomeRoom(session.GetHabbo(), roomId);
         session.Send(new NavigatorSettingsComposer(roomId));
     }

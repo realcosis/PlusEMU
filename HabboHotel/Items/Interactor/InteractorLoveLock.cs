@@ -20,19 +20,19 @@ public class InteractorLoveLock : IFurniInteractor
             return;
         if (Gamemap.TilesTouching(item.GetX, item.GetY, user.X, user.Y))
         {
-            if (item.ExtraData == null || item.ExtraData.Length <= 1 || !item.ExtraData.Contains(Convert.ToChar(5).ToString()))
+            if (item.LegacyDataString == null || item.LegacyDataString.Length <= 1 || !item.LegacyDataString.Contains(Convert.ToChar(5).ToString()))
             {
                 Point pointOne;
                 Point pointTwo;
                 switch (item.Rotation)
                 {
                     case 2:
-                        pointOne = new Point(item.GetX, item.GetY + 1);
-                        pointTwo = new Point(item.GetX, item.GetY - 1);
+                        pointOne = new(item.GetX, item.GetY + 1);
+                        pointTwo = new(item.GetX, item.GetY - 1);
                         break;
                     case 4:
-                        pointOne = new Point(item.GetX - 1, item.GetY);
-                        pointTwo = new Point(item.GetX + 1, item.GetY);
+                        pointOne = new(item.GetX - 1, item.GetY);
+                        pointTwo = new(item.GetX + 1, item.GetY);
                         break;
                     default:
                         return;

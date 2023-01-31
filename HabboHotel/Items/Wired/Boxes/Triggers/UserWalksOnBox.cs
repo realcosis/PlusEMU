@@ -12,13 +12,13 @@ internal class UserWalksOnBox : IWiredItem
         Instance = instance;
         Item = item;
         StringData = "";
-        SetItems = new ConcurrentDictionary<int, Item>();
+        SetItems = new();
     }
 
     public Room Instance { get; set; }
     public Item Item { get; set; }
     public WiredBoxType Type => WiredBoxType.TriggerWalkOnFurni;
-    public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public ConcurrentDictionary<uint, Item> SetItems { get; set; }
     public string StringData { get; set; }
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
@@ -32,7 +32,7 @@ internal class UserWalksOnBox : IWiredItem
         var furniCount = packet.ReadInt();
         for (var i = 0; i < furniCount; i++)
         {
-            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadInt());
+            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadUInt());
             if (selectedItem != null)
                 SetItems.TryAdd(selectedItem.Id, selectedItem);
         }

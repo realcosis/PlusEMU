@@ -28,42 +28,40 @@ public class ItemDataManager : IItemDataManager
                 {
                     try
                     {
-                        var id = Convert.ToInt32(row["id"]);
-                        var spriteId = Convert.ToInt32(row["sprite_id"]);
-                        var itemName = Convert.ToString(row["item_name"]);
-                        var publicName = Convert.ToString(row["public_name"]);
-                        var type = row["type"].ToString();
-                        var width = Convert.ToInt32(row["width"]);
-                        var length = Convert.ToInt32(row["length"]);
-                        var height = Convert.ToDouble(row["stack_height"]);
-                        var allowStack = row["can_stack"].ToString() == "1";
-                        var allowWalk = row["is_walkable"].ToString() == "1";
-                        var allowSit =row["can_sit"].ToString() == "1";
-                        var allowRecycle = row["allow_recycle"].ToString() == "1";
-                        var allowTrade = row["allow_trade"].ToString() == "1";
-                        var allowMarketplace = row["allow_marketplace_sell"].ToString() == "1";
-                        var allowGift = row["allow_gift"].ToString()    == "1";
-                        var allowInventoryStack = row["allow_inventory_stack"].ToString() == "1";
-                        var interactionType = InteractionTypes.GetTypeFromString(row["interaction_type"].ToString());
-                        var behaviourData = Convert.ToInt32(row["behaviour_data"]);
-                        var cycleCount = Convert.ToInt32(row["interaction_modes_count"]);
-                        var vendingIds = Convert.ToString(row["vending_ids"]);
-                        var heightAdjustable = Convert.ToString(row["height_adjustable"]);
-                        var effectId = Convert.ToInt32(row["effect_id"]);
-                        var isRare = row["is_rare"].ToString() == "1";
-                        var extraRot = row["extra_rot"].ToString() == "1";
-                        if (!Gifts.ContainsKey(spriteId))
+                        var definition = new ItemDefinition
                         {
-                            Gifts.Add(spriteId,
-                                new ItemDefinition(id, spriteId, itemName, publicName, type, width, length, height, allowStack, allowWalk, allowSit, allowRecycle, allowTrade, allowMarketplace, allowGift,
-                                    allowInventoryStack, interactionType, behaviourData, cycleCount, vendingIds, heightAdjustable, effectId, isRare, extraRot));
-                        }
-                        if (!Items.ContainsKey(id))
-                        {
-                            Items.Add(id,
-                                new ItemDefinition(id, spriteId, itemName, publicName, type, width, length, height, allowStack, allowWalk, allowSit, allowRecycle, allowTrade, allowMarketplace, allowGift,
-                                    allowInventoryStack, interactionType, behaviourData, cycleCount, vendingIds, heightAdjustable, effectId, isRare, extraRot));
-                        }
+                            Id = Convert.ToUInt32(row["id"]),
+                            SpriteId = Convert.ToInt32(row["sprite_id"]),
+                            ItemName = Convert.ToString(row["item_name"]),
+                            PublicName = Convert.ToString(row["public_name"]),
+                            Type = string.Equals(row["type"].ToString(), "s", StringComparison.OrdinalIgnoreCase) ? ItemType.Floor : ItemType.Wall,
+                            Width = Convert.ToInt32(row["width"]),
+                            Length = Convert.ToInt32(row["length"]),
+                            Height = Convert.ToDouble(row["stack_height"]),
+                            Stackable = row["can_stack"].ToString() == "1",
+                            Walkable = row["is_walkable"].ToString() == "1",
+                            IsSeat = row["can_sit"].ToString() == "1",
+                            AllowEcotronRecycle = row["allow_recycle"].ToString() == "1",
+                            AllowTrade = row["allow_trade"].ToString() == "1",
+                            AllowMarketplaceSell = row["allow_marketplace_sell"].ToString() == "1",
+                            AllowGift = row["allow_gift"].ToString() == "1",
+                            AllowInventoryStack = row["allow_inventory_stack"].ToString() == "1",
+                            InteractionType = InteractionTypes.GetTypeFromString(row["interaction_type"].ToString()),
+                            BehaviourData = Convert.ToInt32(row["behaviour_data"]),
+                            Modes = Convert.ToInt32(row["interaction_modes_count"]),
+                            VendingIds = (!string.IsNullOrEmpty(Convert.ToString(row["vending_ids"])) && Convert.ToString(row["vending_ids"]) != "0")
+                                ? Convert.ToString(row["vending_ids"]).Split(",").Select(int.Parse).ToList()
+                                : new(0),
+                            AdjustableHeights = (!string.IsNullOrEmpty(Convert.ToString(row["height_adjustable"])) && Convert.ToString(row["height_adjustable"]) != "0")
+                                ? Convert.ToString(row["height_adjustable"]).Split(",").Select(double.Parse).ToList()
+                                : new(0),
+                            EffectId = Convert.ToInt32(row["effect_id"]),
+                            IsRare = row["is_rare"].ToString() == "1",
+                            ExtraRot = row["extra_rot"].ToString() == "1",
+                        };
+
+                        Gifts.TryAdd(definition.SpriteId, definition.Id);
+                        Items.Add(definition.Id, definition);
                     }
                     catch (Exception e)
                     {
@@ -77,21 +75,6 @@ public class ItemDataManager : IItemDataManager
         _logger.LogInformation("Item Manager -> LOADED");
     }
 
-    [Obsolete("Cannot use this in an async context!")]
-    public bool GetItem(int id, out ItemDefinition item)
-    {
-        if (Items.TryGetValue(id, out item))
-            return true;
-        return false;
-    }
-
-    public ItemDefinition? GetItemData(int id)
-    {
-        if (Items.TryGetValue(id, out var item))
-            return item;
-        return null;
-    }
-
     public ItemDefinition GetItemByName(string name)
     {
         foreach (var entry in Items)
@@ -101,12 +84,5 @@ public class ItemDataManager : IItemDataManager
                 return item;
         }
         return null;
-    }
-
-    public bool GetGift(int spriteId, out ItemDefinition item)
-    {
-        if (Gifts.TryGetValue(spriteId, out item))
-            return true;
-        return false;
     }
 }

@@ -11,7 +11,7 @@ public class ClothingManager : IClothingManager
     public ClothingManager(IDatabase database)
     {
         _database = database;
-        _clothing = new Dictionary<int, ClothingItem>();
+        _clothing = new();
     }
 
     public ICollection<ClothingItem> GetClothingAllParts => _clothing.Values;
@@ -29,7 +29,7 @@ public class ClothingManager : IClothingManager
         if (data != null)
         {
             foreach (DataRow row in data.Rows)
-                _clothing.Add(Convert.ToInt32(row["id"]), new ClothingItem(Convert.ToInt32(row["id"]), Convert.ToString(row["clothing_name"]), Convert.ToString(row["clothing_parts"])));
+                _clothing.Add(Convert.ToInt32(row["id"]), new(Convert.ToInt32(row["id"]), Convert.ToString(row["clothing_name"]), Convert.ToString(row["clothing_parts"])));
         }
     }
 

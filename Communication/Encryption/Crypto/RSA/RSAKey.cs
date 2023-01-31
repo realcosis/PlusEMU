@@ -77,7 +77,7 @@ public class RsaKey
         Console.WriteLine(D.ToString(16));
     }
 
-    public static RsaKey ParsePublicKey(string n, string e) => new RsaKey(new BigInteger(n, 16), Convert.ToInt32(e, 16), 0, 0, 0, 0, 0, 0);
+    public static RsaKey ParsePublicKey(string n, string e) => new(new(n, 16), Convert.ToInt32(e, 16), 0, 0, 0, 0, 0, 0);
 
     public static RsaKey ParsePrivateKey(string n, string e,
         string d,
@@ -86,9 +86,9 @@ public class RsaKey
         string coeff = null)
     {
         if (p == null)
-            return new RsaKey(new BigInteger(n, 16), Convert.ToInt32(e, 16), new BigInteger(d, 16), 0, 0, 0, 0, 0);
-        return new RsaKey(new BigInteger(n, 16), Convert.ToInt32(e, 16), new BigInteger(d, 16), new BigInteger(p, 16), new BigInteger(q, 16),
-            new BigInteger(dmp1, 16), new BigInteger(dmq1, 16), new BigInteger(coeff, 16));
+            return new(new(n, 16), Convert.ToInt32(e, 16), new(d, 16), 0, 0, 0, 0, 0);
+        return new(new(n, 16), Convert.ToInt32(e, 16), new(d, 16), new(p, 16), new(q, 16),
+            new(dmp1, 16), new(dmq1, 16), new(coeff, 16));
     }
 
     public int GetBlockSize() => (N.bitCount() + 7) / 8;

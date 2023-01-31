@@ -11,7 +11,7 @@ internal class RegenerateMapsBox : IWiredItem
         Instance = instance;
         Item = item;
         StringData = "";
-        SetItems = new ConcurrentDictionary<int, Item>();
+        SetItems = new();
     }
 
     public Room Instance { get; set; }
@@ -19,7 +19,7 @@ internal class RegenerateMapsBox : IWiredItem
 
     public WiredBoxType Type => WiredBoxType.EffectRegenerateMaps;
 
-    public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public ConcurrentDictionary<uint, Item> SetItems { get; set; }
     public string StringData { get; set; }
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }

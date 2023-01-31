@@ -17,7 +17,7 @@ internal class GetMarketplaceItemStatsEvent : IPacketEvent
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
         var itemId = packet.ReadInt();
-        var spriteId = packet.ReadInt();
+        var spriteId = packet.ReadUInt();
         DataRow row;
         using (var dbClient = _database.GetQueryReactor())
         {

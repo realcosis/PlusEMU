@@ -21,7 +21,7 @@ internal class MoveObjectEvent : IPacketEvent
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
-        var itemId = packet.ReadInt();
+        var itemId = packet.ReadUInt();
         if (itemId == 0)
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
@@ -34,7 +34,7 @@ internal class MoveObjectEvent : IPacketEvent
                 item = room.GetRoomItemHandler().GetItem(itemId);
                 if (item == null)
                     return Task.CompletedTask;
-                session.Send(new ObjectUpdateComposer(item, room.OwnerId));
+                session.Send(new ObjectUpdateComposer(item));
                 return Task.CompletedTask;
             }
         }
@@ -54,7 +54,7 @@ internal class MoveObjectEvent : IPacketEvent
             _questManager.ProgressUserQuest(session, QuestType.FurniRotate);
         if (!room.GetRoomItemHandler().SetFloorItem(session, item, x, y, rotation, false, false, true))
         {
-            room.SendPacket(new ObjectUpdateComposer(item, room.OwnerId));
+            room.SendPacket(new ObjectUpdateComposer(item));
             return Task.CompletedTask;
         }
         if (item.GetZ >= 0.1)

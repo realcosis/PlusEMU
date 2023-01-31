@@ -13,13 +13,13 @@ public class TradingComponent
     {
         _currentId = 1;
         _instance = instance;
-        _activeTrades = new ConcurrentDictionary<int, Trade>();
+        _activeTrades = new();
     }
 
     public bool StartTrade(RoomUser player1, RoomUser player2, out Trade trade)
     {
         _currentId++;
-        trade = new Trade(_currentId, player1, player2, _instance);
+        trade = new(_currentId, player1, player2, _instance);
         return _activeTrades.TryAdd(_currentId, trade);
     }
 

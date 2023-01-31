@@ -21,7 +21,7 @@ internal class DeleteRoomEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var roomId = packet.ReadInt();
+        var roomId = packet.ReadUInt();
         if (roomId == 0)
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(roomId, out var room))
@@ -33,7 +33,7 @@ internal class DeleteRoomEvent : IPacketEvent
         {
             if (item == null)
                 continue;
-            if (item.GetBaseItem().InteractionType == InteractionType.Moodlight)
+            if (item.Definition.InteractionType == InteractionType.Moodlight)
             {
                 using var dbClient = _database.GetQueryReactor();
                 dbClient.SetQuery("DELETE FROM `room_items_moodlight` WHERE `item_id` = @itemId LIMIT 1");
@@ -48,7 +48,7 @@ internal class DeleteRoomEvent : IPacketEvent
             if (targetClient != null && targetClient.GetHabbo() != null) //Again, do we have an active client?
             {
                 room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
-                targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.ExtraData, item.GroupId, true, true, item.LimitedNo, item.LimitedTot);
+                targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.LegacyDataString, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
                 targetClient.Send(new FurniListUpdateComposer());
             }
             else //No, query time.

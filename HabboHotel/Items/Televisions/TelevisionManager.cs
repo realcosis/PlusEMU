@@ -32,7 +32,7 @@ public class TelevisionManager : ITelevisionManager
                 foreach (DataRow row in getData.Rows)
                 {
                     Televisions.Add(Convert.ToInt32(row["id"]),
-                        new TelevisionItem(Convert.ToInt32(row["id"]), row["youtube_id"].ToString(), row["title"].ToString(), row["description"].ToString(),
+                        new(Convert.ToInt32(row["id"]), row["youtube_id"].ToString(), row["title"].ToString(), row["description"].ToString(),
                             ConvertExtensions.EnumToBool(row["enabled"].ToString())));
                 }
             }

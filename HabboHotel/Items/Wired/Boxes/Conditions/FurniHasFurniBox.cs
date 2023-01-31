@@ -10,7 +10,7 @@ internal class FurniHasFurniBox : IWiredItem
     {
         Instance = instance;
         Item = item;
-        SetItems = new ConcurrentDictionary<int, Item>();
+        SetItems = new();
     }
 
     public Room Instance { get; set; }
@@ -19,7 +19,7 @@ internal class FurniHasFurniBox : IWiredItem
 
     public WiredBoxType Type => WiredBoxType.ConditionFurniHasFurni;
 
-    public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public ConcurrentDictionary<uint, Item> SetItems { get; set; }
 
     public string StringData { get; set; }
 
@@ -36,7 +36,7 @@ internal class FurniHasFurniBox : IWiredItem
         var furniCount = packet.ReadInt();
         for (var i = 0; i < furniCount; i++)
         {
-            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadInt());
+            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadUInt());
             if (selectedItem != null)
                 SetItems.TryAdd(selectedItem.Id, selectedItem);
         }

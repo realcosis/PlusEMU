@@ -24,7 +24,7 @@ internal class ApplyHorseEffectEvent : IPacketEvent
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return Task.CompletedTask;
-        var itemId = packet.ReadInt();
+        var itemId = packet.ReadUInt();
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
@@ -60,7 +60,7 @@ internal class ApplyHorseEffectEvent : IPacketEvent
         else if (item.Definition.InteractionType == InteractionType.HorseHairstyle)
         {
             var parse = 100;
-            var hairType = item.GetBaseItem().ItemName.Split('_')[2];
+            var hairType = item.Definition.ItemName.Split('_')[2];
             parse = parse + int.Parse(hairType);
             petUser.PetData.PetHair = parse;
             using (var dbClient = _database.GetQueryReactor())
@@ -75,7 +75,7 @@ internal class ApplyHorseEffectEvent : IPacketEvent
         else if (item.Definition.InteractionType == InteractionType.HorseHairDye)
         {
             var hairDye = 48;
-            var hairType = item.GetBaseItem().ItemName.Split('_')[2];
+            var hairType = item.Definition.ItemName.Split('_')[2];
             hairDye = hairDye + int.Parse(hairType);
             petUser.PetData.HairDye = hairDye;
             using (var dbClient = _database.GetQueryReactor())
@@ -89,7 +89,7 @@ internal class ApplyHorseEffectEvent : IPacketEvent
         }
         else if (item.Definition.InteractionType == InteractionType.HorseBodyDye)
         {
-            var race = item.GetBaseItem().ItemName.Split('_')[2];
+            var race = item.Definition.ItemName.Split('_')[2];
             var parse = int.Parse(race);
             var raceLast = 2 + parse * 4 - 4;
             if (parse == 13)

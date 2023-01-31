@@ -11,10 +11,10 @@ public interface IMarketplaceManager
     int AvgPriceForSprite(int spriteId);
     string FormatTimestampString();
     double FormatTimestamp();
-    int OfferCountForSprite(int spriteId);
+    int OfferCountForSprite(uint spriteId);
     int CalculateComissionPrice(float price);
 
-    Task<bool> TryCancelOffer(Habbo habbo, int offerId);
-    Task<MarketOffer?> GetOffer(int offerId);
-    Task DeleteOffer(int offerId);
+    Task<bool> TryCancelOffer(Habbo habbo, uint offerId);
+    Task<MarketOffer?> GetOffer(uint offerId);
+    Task DeleteOffer(uint offerId);
 }

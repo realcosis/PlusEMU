@@ -19,14 +19,14 @@ internal class UpdateStickyNoteEvent : IPacketEvent
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return Task.CompletedTask;
-        var item = room.GetRoomItemHandler().GetItem(packet.ReadInt());
-        if (item == null || item.GetBaseItem().InteractionType != InteractionType.Postit)
+        var item = room.GetRoomItemHandler().GetItem(packet.ReadUInt());
+        if (item == null || item.Definition.InteractionType != InteractionType.Postit)
             return Task.CompletedTask;
         var color = packet.ReadString();
         var text = packet.ReadString();
         if (!room.CheckRights(session))
         {
-            if (!text.StartsWith(item.ExtraData))
+            if (!text.StartsWith(item.LegacyDataString))
                 return Task.CompletedTask; // we can only ADD stuff! older stuff changed, this is not allowed
         }
         switch (color)
@@ -39,7 +39,7 @@ internal class UpdateStickyNoteEvent : IPacketEvent
             default:
                 return Task.CompletedTask; // invalid color
         }
-        item.ExtraData = color + " " + text;
+        item.LegacyDataString = color + " " + text;
         item.UpdateState(true, true);
         return Task.CompletedTask;
     }

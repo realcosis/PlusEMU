@@ -17,7 +17,7 @@ internal class SaveEnforcedCategorySettingsEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        if (!_roomManager.TryGetRoom(packet.ReadInt(), out var room))
+        if (!_roomManager.TryGetRoom(packet.ReadUInt(), out var room))
             return Task.CompletedTask;
         if (!room.CheckRights(session, true))
             return Task.CompletedTask;

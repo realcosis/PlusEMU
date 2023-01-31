@@ -6,7 +6,7 @@ public class ClothingItem
     {
         Id = id;
         ClothingName = name;
-        PartIds = new List<int>();
+        PartIds = new();
         if (partIds.Contains(","))
             foreach (var partId in partIds.Split(','))
                 PartIds.Add(int.Parse(partId));

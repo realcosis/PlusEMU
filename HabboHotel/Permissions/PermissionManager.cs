@@ -39,7 +39,7 @@ public sealed class PermissionManager : IPermissionManager
             if (getPermissions != null)
             {
                 foreach (DataRow row in getPermissions.Rows)
-                    _permissions.Add(Convert.ToInt32(row["id"]), new Permission(Convert.ToInt32(row["id"]), Convert.ToString(row["permission"]), Convert.ToString(row["description"])));
+                    _permissions.Add(Convert.ToInt32(row["id"]), new(Convert.ToInt32(row["id"]), Convert.ToString(row["permission"]), Convert.ToString(row["description"])));
             }
         }
         using (var dbClient = _database.GetQueryReactor())
@@ -49,7 +49,7 @@ public sealed class PermissionManager : IPermissionManager
             if (getCommands != null)
             {
                 foreach (DataRow row in getCommands.Rows)
-                    _commands.Add(Convert.ToString(row["command"]), new PermissionCommand(Convert.ToString(row["command"]), Convert.ToInt32(row["group_id"]), Convert.ToInt32(row["subscription_id"])));
+                    _commands.Add(Convert.ToString(row["command"]), new(Convert.ToString(row["command"]), Convert.ToInt32(row["group_id"]), Convert.ToInt32(row["subscription_id"])));
             }
         }
         using (var dbClient = _database.GetQueryReactor())
@@ -59,7 +59,7 @@ public sealed class PermissionManager : IPermissionManager
             if (getPermissionGroups != null)
             {
                 foreach (DataRow row in getPermissionGroups.Rows)
-                    _permissionGroups.Add(Convert.ToInt32(row["id"]), new PermissionGroup(Convert.ToString("name"), Convert.ToString("description"), Convert.ToString("badge")));
+                    _permissionGroups.Add(Convert.ToInt32(row["id"]), new(Convert.ToString("name"), Convert.ToString("description"), Convert.ToString("badge")));
             }
         }
         using (var dbClient = _database.GetQueryReactor())

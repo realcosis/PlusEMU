@@ -8,12 +8,12 @@ public class PetLocale : IPetLocale
 
     public PetLocale()
     {
-        _values = new Dictionary<string, string[]>();
+        _values = new();
     }
 
     public void Init()
     {
-        _values = new Dictionary<string, string[]>();
+        _values = new();
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
         dbClient.SetQuery("SELECT * FROM `bots_pet_responses`");
         var pets = dbClient.GetTable();

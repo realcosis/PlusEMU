@@ -6,11 +6,11 @@ namespace Plus.Communication.Packets.Outgoing.Groups;
 public class GroupFurniSettingsComposer : IServerPacket
 {
     private readonly Group _group;
-    private readonly int _itemId;
+    private readonly uint _itemId;
     private readonly int _userId;
     public uint MessageId => ServerPacketHeader.GroupFurniSettingsComposer;
 
-    public GroupFurniSettingsComposer(Group group, int itemId, int userId)
+    public GroupFurniSettingsComposer(Group group, uint itemId, int userId)
     {
         _group = group;
         _itemId = itemId;
@@ -19,10 +19,10 @@ public class GroupFurniSettingsComposer : IServerPacket
 
     public void Compose(IOutgoingPacket packet)
     {
-        packet.WriteInteger(_itemId); //Item Id
+        packet.WriteUInteger(_itemId); //Item Id
         packet.WriteInteger(_group.Id); //Group Id?
         packet.WriteString(_group.Name);
-        packet.WriteInteger(_group.RoomId); //RoomId
+        packet.WriteUInteger(_group.RoomId); //RoomId
         packet.WriteBoolean(_group.IsMember(_userId)); //Member?
         packet.WriteBoolean(_group.ForumEnabled); //Has a forum
     }

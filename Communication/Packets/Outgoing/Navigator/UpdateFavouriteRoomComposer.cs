@@ -4,12 +4,12 @@ namespace Plus.Communication.Packets.Outgoing.Navigator;
 
 public class UpdateFavouriteRoomComposer : IServerPacket
 {
-    private readonly int _roomId;
+    private readonly uint _roomId;
     private readonly bool _added;
 
     public uint MessageId => ServerPacketHeader.UpdateFavouriteRoomComposer;
 
-    public UpdateFavouriteRoomComposer(int roomId, bool added)
+    public UpdateFavouriteRoomComposer(uint roomId, bool added)
     {
         _roomId = roomId;
         _added = added;
@@ -17,7 +17,7 @@ public class UpdateFavouriteRoomComposer : IServerPacket
 
     public void Compose(IOutgoingPacket packet)
     {
-        packet.WriteInteger(_roomId);
+        packet.WriteUInteger(_roomId);
         packet.WriteBoolean(_added);
     }
 }

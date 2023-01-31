@@ -12,12 +12,12 @@ namespace Plus.HabboHotel.Rooms.Instance;
 public class WiredComponent
 {
     private readonly Room _room;
-    private readonly ConcurrentDictionary<int, IWiredItem> _wiredItems;
+    private readonly ConcurrentDictionary<uint, IWiredItem> _wiredItems;
 
     public WiredComponent(Room instance) //, RoomItem Items)
     {
         _room = instance;
-        _wiredItems = new ConcurrentDictionary<int, IWiredItem>();
+        _wiredItems = new();
     }
 
     public void OnCycle()
@@ -84,7 +84,7 @@ public class WiredComponent
                         sId = str.Split(':')[0];
                     if (int.TryParse(str, out id) || int.TryParse(sId, out id))
                     {
-                        var selectedItem = _room.GetRoomItemHandler().GetItem(Convert.ToInt32(id));
+                        var selectedItem = _room.GetRoomItemHandler().GetItem(Convert.ToUInt32(id));
                         if (selectedItem == null)
                             continue;
                         newBox.SetItems.TryAdd(selectedItem.Id, selectedItem);
@@ -108,7 +108,7 @@ public class WiredComponent
 
     public IWiredItem GenerateNewBox(Item item)
     {
-        switch (item.GetBaseItem().WiredType)
+        switch (item.Definition.WiredType)
         {
             case WiredBoxType.TriggerRoomEnter:
                 return new RoomEnterBox(_room, item);
@@ -232,13 +232,13 @@ public class WiredComponent
         return null;
     }
 
-    public bool IsTrigger(Item item) => item.GetBaseItem().InteractionType == InteractionType.WiredTrigger;
+    public bool IsTrigger(Item item) => item.Definition.InteractionType == InteractionType.WiredTrigger;
 
-    public bool IsEffect(Item item) => item.GetBaseItem().InteractionType == InteractionType.WiredEffect;
+    public bool IsEffect(Item item) => item.Definition.InteractionType == InteractionType.WiredEffect;
 
-    public bool IsCondition(Item item) => item.GetBaseItem().InteractionType == InteractionType.WiredCondition;
+    public bool IsCondition(Item item) => item.Definition.InteractionType == InteractionType.WiredCondition;
 
-    public bool OtherBoxHasItem(IWiredItem box, int itemId)
+    public bool OtherBoxHasItem(IWiredItem box, uint itemId)
     {
         if (box == null)
             return false;
@@ -367,9 +367,9 @@ public class WiredComponent
 
     public void OnEvent(Item item)
     {
-        if (item.ExtraData == "1")
+        if (item.LegacyDataString == "1")
             return;
-        item.ExtraData = "1";
+        item.LegacyDataString = "1";
         item.UpdateState(false, true);
         item.RequestUpdate(2, true);
     }
@@ -381,11 +381,11 @@ public class WiredComponent
         if (item is IWiredCycle) cycle = (IWiredCycle)item;
         foreach (var I in item.SetItems.Values)
         {
-            var selectedItem = _room.GetRoomItemHandler().GetItem(Convert.ToInt32(I.Id));
+            var selectedItem = _room.GetRoomItemHandler().GetItem(Convert.ToUInt32(I.Id));
             if (selectedItem == null)
                 continue;
             if (item.Type == WiredBoxType.EffectMatchPosition || item.Type == WiredBoxType.ConditionMatchStateAndPosition || item.Type == WiredBoxType.ConditionDontMatchStateAndPosition)
-                items += I.Id + ":" + I.GetX + "," + I.GetY + "," + I.GetZ + "," + I.Rotation + "," + I.ExtraData + ";";
+                items += I.Id + ":" + I.GetX + "," + I.GetY + "," + I.GetZ + "," + I.Rotation + "," + I.LegacyDataString + ";";
             else
                 items += I.Id + ";";
         }
@@ -403,13 +403,12 @@ public class WiredComponent
 
     public bool AddBox(IWiredItem item) => _wiredItems.TryAdd(item.Item.Id, item);
 
-    public bool TryRemove(int itemId)
+    public bool TryRemove(uint itemId)
     {
-        IWiredItem item = null;
-        return _wiredItems.TryRemove(itemId, out item);
+        return _wiredItems.TryRemove(itemId, out _);
     }
 
-    public bool TryGet(int id, out IWiredItem item) => _wiredItems.TryGetValue(id, out item);
+    public bool TryGet(uint id, out IWiredItem item) => _wiredItems.TryGetValue(id, out item);
 
     public void Cleanup()
     {

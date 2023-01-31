@@ -22,7 +22,7 @@ public class GetGuestRoomResultComposer : IServerPacket
     public void Compose(IOutgoingPacket packet)
     {
         packet.WriteBoolean(_isLoading);
-        packet.WriteInteger(_data.Id);
+        packet.WriteUInteger(_data.Id);
         packet.WriteString(_data.Name);
         packet.WriteInteger(_data.OwnerId);
         packet.WriteString(_data.OwnerName);

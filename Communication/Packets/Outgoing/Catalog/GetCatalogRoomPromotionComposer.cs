@@ -21,7 +21,7 @@ public class GetCatalogRoomPromotionComposer : IServerPacket
         packet.WriteInteger(_usersRooms.Count); //Count of rooms?
         foreach (var room in _usersRooms)
         {
-            packet.WriteInteger(room.Id);
+            packet.WriteUInteger(room.Id);
             packet.WriteString(room.Name);
             packet.WriteBoolean(true);
         }

@@ -28,7 +28,7 @@ public class TalentTrackManager : ITalentTrackManager
             foreach (DataRow row in data.Rows)
             {
                 _citizenshipLevels.Add(Convert.ToInt32(row["level"]),
-                    new TalentTrackLevel(Convert.ToString(row["type"]), Convert.ToInt32(row["level"]), Convert.ToString(row["data_actions"]), Convert.ToString(row["data_gifts"])));
+                    new(Convert.ToString(row["type"]), Convert.ToInt32(row["level"]), Convert.ToString(row["data_actions"]), Convert.ToString(row["data_gifts"])));
             }
         }
         _logger.LogInformation("Loaded " + _citizenshipLevels.Count + " talent track levels");

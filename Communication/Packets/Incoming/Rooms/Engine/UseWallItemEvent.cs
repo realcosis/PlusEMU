@@ -22,7 +22,7 @@ internal class UseWallItemEvent : IPacketEvent
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return Task.CompletedTask;
-        var itemId = packet.ReadInt();
+        var itemId = packet.ReadUInt();
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
@@ -30,7 +30,7 @@ internal class UseWallItemEvent : IPacketEvent
         var request = packet.ReadInt();
         item.Interactor.OnTrigger(session, item, request, hasRights);
         item.GetRoom().GetWired().TriggerEvent(WiredBoxType.TriggerStateChanges, session.GetHabbo(), item);
-        _questManager.ProgressUserQuest(session, QuestType.ExploreFindItem, item.GetBaseItem().Id);
+        _questManager.ProgressUserQuest(session, QuestType.ExploreFindItem, (int)item.Definition.Id);
         return Task.CompletedTask;
     }
 }

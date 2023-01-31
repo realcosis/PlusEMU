@@ -100,7 +100,7 @@ internal class SaveBotActionEvent : IPacketEvent
                 dbClient.SetQuery("SELECT `text` FROM `bots_speech` WHERE `bot_id` = @id");
                 dbClient.AddParameter("id", botId);
                 var botSpeech = dbClient.GetTable();
-                foreach (DataRow speech in botSpeech.Rows) roomBot.RandomSpeech.Add(new RandomSpeech(Convert.ToString(speech["text"]), botId));
+                foreach (DataRow speech in botSpeech.Rows) roomBot.RandomSpeech.Add(new(Convert.ToString(speech["text"]), botId));
                 break;
             }
             case 3:

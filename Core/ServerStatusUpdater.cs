@@ -26,7 +26,7 @@ public class ServerStatusUpdater : IDisposable, IServerStatusUpdater
 
     public void Init()
     {
-        _timer = new Timer(OnTick, null, TimeSpan.FromSeconds(UpdateInSeconds), TimeSpan.FromSeconds(UpdateInSeconds));
+        _timer = new(OnTick, null, TimeSpan.FromSeconds(UpdateInSeconds), TimeSpan.FromSeconds(UpdateInSeconds));
         Console.Title = "Plus Emulator - 0 users online - 0 rooms loaded - 0 day(s) 0 hour(s) uptime";
         _logger.LogInformation("Server Status Updater has been started.");
     }

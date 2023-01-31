@@ -25,7 +25,7 @@ public class OpenGiftComposer : IServerPacket
         packet.WriteString(_definition.Type.ToString());
         packet.WriteInteger(_definition.SpriteId);
         packet.WriteString(_definition.ItemName);
-        packet.WriteInteger(_item.Id);
+        packet.WriteUInteger(_item.Id);
         packet.WriteString(_definition.Type.ToString());
         packet.WriteBoolean(_itemIsInRoom); //Is it in the room?
         packet.WriteString(_text);

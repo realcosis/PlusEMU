@@ -24,7 +24,7 @@ public class ModeratorTicketChatlogComposer : IServerPacket
         packet.WriteInteger(_ticket.Id);
         packet.WriteInteger(_ticket.Sender?.Id ?? 0);
         packet.WriteInteger(_ticket.Reported?.Id ?? 0);
-        packet.WriteInteger(_roomData.Id);
+        packet.WriteUInteger(_roomData.Id);
         packet.WriteByte(1);
         packet.WriteShort(2); //Count
         packet.WriteString("roomName");
@@ -32,7 +32,7 @@ public class ModeratorTicketChatlogComposer : IServerPacket
         packet.WriteString(_roomData.Name);
         packet.WriteString("roomId");
         packet.WriteByte(1);
-        packet.WriteInteger(_roomData.Id);
+        packet.WriteUInteger(_roomData.Id);
         packet.WriteShort((short)_ticket.ReportedChats.Count);
         foreach (var chat in _ticket.ReportedChats)
         {

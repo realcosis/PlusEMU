@@ -17,7 +17,7 @@ public class InteractorScoreboard : IFurniInteractor
         // Request 3 - Reset with UI/Wired/Double click
 
         // Find out what number we are on right now
-        if (!int.TryParse(item.ExtraData, out var oldValue)) oldValue = 0;
+        if (!int.TryParse(item.LegacyDataString, out var oldValue)) oldValue = 0;
 
         // Decrease value with red button
         if (oldValue >= 0 && oldValue <= 99 && request == 1)
@@ -43,14 +43,14 @@ public class InteractorScoreboard : IFurniInteractor
             oldValue = 0;
             item.PendingReset = true;
         }
-        item.ExtraData = oldValue.ToString();
+        item.LegacyDataString = oldValue.ToString();
         item.UpdateState();
     }
 
     public void OnWiredTrigger(Item item)
     {
         // Always reset scoreboard on Wired trigger
-        item.ExtraData = "0";
+        item.LegacyDataString = "0";
         item.UpdateState();
     }
 }

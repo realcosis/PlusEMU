@@ -19,7 +19,7 @@ public class GroupCreationWindowComposer : IServerPacket
         packet.WriteInteger(_rooms.Count); //Room count that the user has.
         foreach (var room in _rooms)
         {
-            packet.WriteInteger(room.Id); //Room Id
+            packet.WriteUInteger(room.Id); //Room Id
             packet.WriteString(room.Name); //Room Name
             packet.WriteBoolean(false); //What?
         }

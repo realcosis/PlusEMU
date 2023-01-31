@@ -31,7 +31,7 @@ public class GroupMembersComposer : IServerPacket
     {
         packet.WriteInteger(_group.Id);
         packet.WriteString(_group.Name);
-        packet.WriteInteger(_group.RoomId);
+        packet.WriteUInteger(_group.RoomId);
         packet.WriteString(_group.Badge);
         packet.WriteInteger(_membersCount);
         packet.WriteInteger(_members.Count);

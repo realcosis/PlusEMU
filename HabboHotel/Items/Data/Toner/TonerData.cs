@@ -6,11 +6,11 @@ public class TonerData
 {
     public int Enabled;
     public int Hue;
-    public int ItemId;
+    public uint ItemId;
     public int Lightness;
     public int Saturation;
 
-    public TonerData(int item)
+    public TonerData(uint item)
     {
         ItemId = item;
         DataRow row;

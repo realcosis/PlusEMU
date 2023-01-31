@@ -15,7 +15,7 @@ internal class TradingOfferItemEvent : IPacketEvent
         var roomUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (roomUser == null)
             return Task.CompletedTask;
-        var itemId = packet.ReadInt();
+        var itemId = packet.ReadUInt();
         if (!roomUser.IsTrading)
         {
             session.Send(new TradingClosedComposer(session.GetHabbo().Id));
@@ -39,7 +39,7 @@ internal class TradingOfferItemEvent : IPacketEvent
         trade.RemoveAccepted();
         if (tradeUser.OfferedItems.Count <= 499)
         {
-            var totalLtDs = tradeUser.OfferedItems.Count(x => x.Value.LimitedNo > 0);
+            var totalLtDs = tradeUser.OfferedItems.Count(x => x.Value.UniqueNumber > 0);
             if (totalLtDs < 9)
                 tradeUser.OfferedItems.Add(item.Id, item);
         }

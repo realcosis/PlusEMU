@@ -6,36 +6,34 @@ namespace Plus.Communication.Packets.Outgoing.Rooms.Engine;
 public class ItemUpdateComposer : IServerPacket
 {
     private readonly Item _item;
-    private readonly int _userId;
     public uint MessageId => ServerPacketHeader.ItemUpdateComposer;
 
-    public ItemUpdateComposer(Item item, int userId)
+    public ItemUpdateComposer(Item item)
     {
         _item = item;
-        _userId = userId;
     }
 
     public void Compose(IOutgoingPacket packet)
     {
-        WriteWallItem(packet, _item, _userId);
+        WriteWallItem(packet, _item);
     }
 
-    private void WriteWallItem(IOutgoingPacket packet, Item item, int userId)
+    private void WriteWallItem(IOutgoingPacket packet, Item item)
     {
         packet.WriteString(item.Id.ToString());
-        packet.WriteInteger(item.GetBaseItem().SpriteId);
-        packet.WriteString(item.WallCoord);
-        switch (item.GetBaseItem().InteractionType)
+        packet.WriteInteger(item.Definition.SpriteId);
+        packet.WriteString(item.WallCoordinates);
+        switch (item.Definition.InteractionType)
         {
             case InteractionType.Postit:
-                packet.WriteString(item.ExtraData.Split(' ')[0]);
+                packet.WriteString(item.LegacyDataString.Split(' ')[0]);
                 break;
             default:
-                packet.WriteString(item.ExtraData);
+                packet.WriteString(item.LegacyDataString);
                 break;
         }
         packet.WriteInteger(-1);
-        packet.WriteInteger(item.GetBaseItem().Modes > 1 ? 1 : 0);
-        packet.WriteInteger(userId);
+        packet.WriteInteger(item.Definition.Modes > 1 ? 1 : 0);
+        packet.WriteUInt(item.OwnerId);
     }
 }

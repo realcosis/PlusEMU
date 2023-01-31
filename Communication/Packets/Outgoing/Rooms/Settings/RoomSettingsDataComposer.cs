@@ -16,7 +16,7 @@ public class RoomSettingsDataComposer : IServerPacket
 
     public void Compose(IOutgoingPacket packet)
     {
-        packet.WriteInteger(_room.RoomId);
+        packet.WriteUInteger(_room.RoomId);
         packet.WriteString(_room.Name);
         packet.WriteString(_room.Description);
         packet.WriteInteger(RoomAccessUtility.GetRoomAccessPacketNum(_room.Access));

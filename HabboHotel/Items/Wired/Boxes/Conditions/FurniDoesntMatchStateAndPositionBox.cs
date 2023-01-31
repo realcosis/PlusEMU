@@ -10,7 +10,7 @@ internal class FurniDoesntMatchStateAndPositionBox : IWiredItem
     {
         Instance = instance;
         Item = item;
-        SetItems = new ConcurrentDictionary<int, Item>();
+        SetItems = new();
     }
 
     public Room Instance { get; set; }
@@ -19,7 +19,7 @@ internal class FurniDoesntMatchStateAndPositionBox : IWiredItem
 
     public WiredBoxType Type => WiredBoxType.ConditionDontMatchStateAndPosition;
 
-    public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public ConcurrentDictionary<uint, Item> SetItems { get; set; }
 
     public string StringData { get; set; }
 
@@ -39,7 +39,7 @@ internal class FurniDoesntMatchStateAndPositionBox : IWiredItem
         var furniCount = packet.ReadInt();
         for (var i = 0; i < furniCount; i++)
         {
-            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadInt());
+            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadUInt());
             if (selectedItem != null)
                 SetItems.TryAdd(selectedItem.Id, selectedItem);
         }
@@ -60,14 +60,14 @@ internal class FurniDoesntMatchStateAndPositionBox : IWiredItem
             {
                 if (string.IsNullOrEmpty(I))
                     continue;
-                var ii = Instance.GetRoomItemHandler().GetItem(Convert.ToInt32(I.Split(':')[0]));
+                var ii = Instance.GetRoomItemHandler().GetItem(Convert.ToUInt32(I.Split(':')[0]));
                 if (ii == null)
                     continue;
                 var partsString = I.Split(':');
                 var part = partsString[1].Split(',');
                 if (int.Parse(StringData.Split(';')[0]) == 1) //State
                 {
-                    if (ii.ExtraData == part[4])
+                    if (ii.LegacyDataString == part[4])
                         return false;
                 }
                 if (int.Parse(StringData.Split(';')[1]) == 1) //Direction

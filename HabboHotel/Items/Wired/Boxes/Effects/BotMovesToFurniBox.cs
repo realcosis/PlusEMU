@@ -11,13 +11,13 @@ internal class BotMovesToFurniBox : IWiredItem
     {
         Instance = instance;
         Item = item;
-        SetItems = new ConcurrentDictionary<int, Item>();
+        SetItems = new();
     }
 
     public Room Instance { get; set; }
     public Item Item { get; set; }
     public WiredBoxType Type => WiredBoxType.EffectBotMovesToFurniBox;
-    public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public ConcurrentDictionary<uint, Item> SetItems { get; set; }
     public string StringData { get; set; }
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
@@ -31,7 +31,7 @@ internal class BotMovesToFurniBox : IWiredItem
         var furniCount = packet.ReadInt();
         for (var i = 0; i < furniCount; i++)
         {
-            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadInt());
+            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadUInt());
             if (selectedItem != null)
                 SetItems.TryAdd(selectedItem.Id, selectedItem);
         }
@@ -67,7 +67,7 @@ internal class BotMovesToFurniBox : IWiredItem
             return false;
         if (user.IsWalking) user.ClearMovement(true);
         user.BotData.ForcedMovement = true;
-        user.BotData.TargetCoordinate = new Point(item.GetX, item.GetY);
+        user.BotData.TargetCoordinate = new(item.GetX, item.GetY);
         user.MoveTo(item.GetX, item.GetY);
         return true;
     }

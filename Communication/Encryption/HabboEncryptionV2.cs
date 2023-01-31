@@ -14,7 +14,7 @@ public static class HabboEncryptionV2
     public static void Initialize(RsaKeys keys)
     {
         _rsa = RsaKey.ParsePrivateKey(keys.N, keys.E, keys.D);
-        _diffieHellman = new DiffieHellman();
+        _diffieHellman = new();
     }
 
     private static string GetRsaStringEncrypted(string message)
@@ -56,7 +56,7 @@ public static class HabboEncryptionV2
             var cbytes = Converter.HexStringToBytes(publicKey);
             var publicKeyBytes = _rsa.Verify(cbytes);
             var publicKeyString = Encoding.Default.GetString(publicKeyBytes);
-            return _diffieHellman.CalculateSharedKey(new BigInteger(publicKeyString, 10));
+            return _diffieHellman.CalculateSharedKey(new(publicKeyString, 10));
         }
         catch
         {

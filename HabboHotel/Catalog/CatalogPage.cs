@@ -17,16 +17,16 @@ public class CatalogPage
         Template = template;
         foreach (var str in pageStrings1.Split('|'))
         {
-            if (PageStrings1 == null) PageStrings1 = new List<string>();
+            if (PageStrings1 == null) PageStrings1 = new();
             PageStrings1.Add(str);
         }
         foreach (var str in pageStrings2.Split('|'))
         {
-            if (PageStrings2 == null) PageStrings2 = new List<string>();
+            if (PageStrings2 == null) PageStrings2 = new();
             PageStrings2.Add(str);
         }
         Items = items;
-        ItemOffers = new Dictionary<int, CatalogItem>();
+        ItemOffers = new();
         foreach (var i in flatOffers.Keys)
         {
             if (flatOffers[i] == id)

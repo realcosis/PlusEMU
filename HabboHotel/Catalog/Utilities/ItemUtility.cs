@@ -1,4 +1,5 @@
 ﻿using Plus.HabboHotel.Items;
+using Plus.HabboHotel.Users.Inventory.Furniture;
 
 namespace Plus.HabboHotel.Catalog.Utilities;
 
@@ -7,7 +8,7 @@ public static class ItemUtility
     public static bool CanGiftItem(CatalogItem item)
     {
         if (!item.Definition.AllowGift || item.IsLimited || item.Amount > 1 || item.Definition.InteractionType == InteractionType.Exchange ||
-            item.Definition.InteractionType == InteractionType.Badge || item.Definition.Type != 's' && item.Definition.Type != 'i' || item.CostDiamonds > 0 ||
+            item.Definition.InteractionType == InteractionType.Badge || item.Definition.Type != ItemType.Floor && item.Definition.Type != ItemType.Wall || item.CostDiamonds > 0 ||
             item.Definition.InteractionType == InteractionType.Teleport || item.Definition.InteractionType == InteractionType.Deal)
             return false;
         if (item.Definition.IsRare)
@@ -25,7 +26,7 @@ public static class ItemUtility
         return true;
     }
 
-    public static int GetSaddleId(int saddle)
+    public static uint GetSaddleId(int saddle)
     {
         switch (saddle)
         {
@@ -39,7 +40,7 @@ public static class ItemUtility
 
     public static bool IsRare(Item item)
     {
-        if (item.LimitedNo > 0)
+        if (item.UniqueNumber > 0)
             return true;
         if (item.Definition.IsRare)
             return true;

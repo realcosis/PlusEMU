@@ -14,8 +14,8 @@ public interface INavigatorManager
     ICollection<SearchResultList> GetSearchResultLists();
     bool TryGetTopLevelItem(int id, out TopLevelItem topLevelItem);
     bool TryGetSearchResultList(int id, out SearchResultList searchResultList);
-    bool TryGetFeaturedRoom(int roomId, out FeaturedRoom publicRoom);
+    bool TryGetFeaturedRoom(uint roomId, out FeaturedRoom publicRoom);
     ICollection<FeaturedRoom> GetFeaturedRooms();
     Task<Dictionary<int, SavedSearch>> LoadUserNavigatorPreferences(int habboId);
-    Task SaveHomeRoom(Habbo habbo, int roomId);
+    Task SaveHomeRoom(Habbo habbo, uint roomId);
 }

@@ -58,19 +58,19 @@ public class GroupManager : IGroupManager
             switch (groupItem["type"].ToString())
             {
                 case "base":
-                    _bases.Add(new GroupBadgeParts(Convert.ToInt32(groupItem["id"]), groupItem["firstvalue"].ToString(), groupItem["secondvalue"].ToString()));
+                    _bases.Add(new(Convert.ToInt32(groupItem["id"]), groupItem["firstvalue"].ToString(), groupItem["secondvalue"].ToString()));
                     break;
                 case "symbol":
-                    _symbols.Add(new GroupBadgeParts(Convert.ToInt32(groupItem["id"]), groupItem["firstvalue"].ToString(), groupItem["secondvalue"].ToString()));
+                    _symbols.Add(new(Convert.ToInt32(groupItem["id"]), groupItem["firstvalue"].ToString(), groupItem["secondvalue"].ToString()));
                     break;
                 case "color":
-                    _baseColours.Add(new GroupColours(Convert.ToInt32(groupItem["id"]), groupItem["firstvalue"].ToString()));
+                    _baseColours.Add(new(Convert.ToInt32(groupItem["id"]), groupItem["firstvalue"].ToString()));
                     break;
                 case "color2":
-                    _symbolColours.Add(Convert.ToInt32(groupItem["id"]), new GroupColours(Convert.ToInt32(groupItem["id"]), groupItem["firstvalue"].ToString()));
+                    _symbolColours.Add(Convert.ToInt32(groupItem["id"]), new(Convert.ToInt32(groupItem["id"]), groupItem["firstvalue"].ToString()));
                     break;
                 case "color3":
-                    _backgroundColours.Add(Convert.ToInt32(groupItem["id"]), new GroupColours(Convert.ToInt32(groupItem["id"]), groupItem["firstvalue"].ToString()));
+                    _backgroundColours.Add(Convert.ToInt32(groupItem["id"]), new(Convert.ToInt32(groupItem["id"]), groupItem["firstvalue"].ToString()));
                     break;
             }
         }
@@ -91,8 +91,8 @@ public class GroupManager : IGroupManager
             var row = dbClient.GetRow();
             if (row != null)
             {
-                group = new Group(
-                    Convert.ToInt32(row["id"]), Convert.ToString(row["name"]), Convert.ToString(row["desc"]), Convert.ToString(row["badge"]), Convert.ToInt32(row["room_id"]),
+                group = new(
+                    Convert.ToInt32(row["id"]), Convert.ToString(row["name"]), Convert.ToString(row["desc"]), Convert.ToString(row["badge"]), Convert.ToUInt32(row["room_id"]),
                     Convert.ToInt32(row["owner_id"]),
                     Convert.ToInt32(row["created"]), Convert.ToInt32(row["state"]), Convert.ToInt32(row["colour1"]), Convert.ToInt32(row["colour2"]), Convert.ToInt32(row["admindeco"]),
                     Convert.ToInt32(row["forum_enabled"]) == 1);
@@ -103,9 +103,9 @@ public class GroupManager : IGroupManager
         return false;
     }
 
-    public bool TryCreateGroup(Habbo player, string name, string description, int roomId, string badge, int colour1, int colour2, out Group group)
+    public bool TryCreateGroup(Habbo player, string name, string description, uint roomId, string badge, int colour1, int colour2, out Group @group)
     {
-        group = new Group(0, name, description, badge, roomId, player.Id, (int)UnixTimestamp.GetNow(), 0, colour1, colour2, 0, false);
+        group = new(0, name, description, badge, roomId, player.Id, (int)UnixTimestamp.GetNow(), 0, colour1, colour2, 0, false);
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(badge))
             return false;
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();

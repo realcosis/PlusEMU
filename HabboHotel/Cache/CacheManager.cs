@@ -40,7 +40,7 @@ public class CacheManager : ICacheManager
         {
             if (client.GetHabbo() != null)
             {
-                user = new UserCache(id, client.GetHabbo().Username, client.GetHabbo().Motto, client.GetHabbo().Look);
+                user = new(id, client.GetHabbo().Username, client.GetHabbo().Motto, client.GetHabbo().Look);
                 _usersCached.TryAdd(id, user);
                 return user;
             }
@@ -51,7 +51,7 @@ public class CacheManager : ICacheManager
         var dRow = dbClient.GetRow();
         if (dRow != null)
         {
-            user = new UserCache(id, dRow["username"].ToString(), dRow["motto"].ToString(), dRow["look"].ToString());
+            user = new(id, dRow["username"].ToString(), dRow["motto"].ToString(), dRow["look"].ToString());
             _usersCached.TryAdd(id, user);
         }
         return user;

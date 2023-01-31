@@ -1,25 +1,88 @@
 ﻿using System.Collections.Concurrent;
 using Plus.HabboHotel.Items;
+using Plus.HabboHotel.Items.DataFormat;
 
 namespace Plus.HabboHotel.Users.Inventory.Furniture
 {
+
+    public enum ItemType
+    {
+        Floor,
+        Wall
+    }
+
+    public enum FurniCategory
+    {
+        Default = 1,
+        WallPaper,
+        Floor,
+        Landscape,
+        PostIt,
+        Poster,
+        SoundSet,
+        TraxSong,
+        Present,
+        EcotronBox,
+        Trophy,
+        CreditFurni,
+        PetShampoo,
+        PetCustomPart,
+        PetCustomPartShampoo,
+        PetSaddle,
+        GuildFurni,
+        GameFurni,
+        MonsterplantSeed,
+        MonsterplantRevival,
+        MonsterplantRebreed,
+        MonsterplantFertilize
+    }
+
+    public static class ItemTypeExtensions
+    {
+        public static string ToCharCode(this ItemType category) => category switch
+        {
+            ItemType.Floor => "S",
+            ItemType.Wall => "I",
+            _ => throw new ArgumentException("Invalid ItemCategory!")
+        };
+
+        public static IFurniObjectData CreateData(this ItemDefinition definition)
+        {
+            if (definition.InteractionType == InteractionType.Gift) return new MapDataFormat();
+            return EmptyDataFormat.Empty;
+        }
+    }
+
+    public class InventoryItem
+    {
+        public uint Id { get; set; }
+        public uint OwnerId { get; set; }
+        public bool IsFloorItem => Definition.Type == ItemType.Floor;
+        public bool IsWallItem => Definition.Type == ItemType.Wall;
+        public ItemDefinition Definition { get; set; } = null!;
+        public IFurniObjectData ExtraData { get; set; } = FurniObjectData.Empty;
+
+        public uint UniqueNumber;
+        public uint UniqueSeries;
+    }
+
     public class FurnitureInventoryComponent
     {
-        private readonly ConcurrentDictionary<int, Item> _floorItems;
-        private readonly ConcurrentDictionary<int, Item> _wallItems;
+        private readonly ConcurrentDictionary<uint, InventoryItem> _floorItems;
+        private readonly ConcurrentDictionary<uint, InventoryItem> _wallItems;
 
-        public IReadOnlyDictionary<int, Item> Floor => _floorItems;
-        public IReadOnlyDictionary<int, Item> Wall => _wallItems;
+        public IReadOnlyDictionary<uint, InventoryItem> Floor => _floorItems;
+        public IReadOnlyDictionary<uint, InventoryItem> Wall => _wallItems;
 
-        public FurnitureInventoryComponent(List<Item> floorFurniture, List<Item> wallFurniture)
+        public FurnitureInventoryComponent(IEnumerable<InventoryItem> floorFurniture, IEnumerable<InventoryItem> wallFurniture)
         {
             _floorItems = new(floorFurniture.ToDictionary(f => f.Id));
             _wallItems = new(wallFurniture.ToDictionary(w => w.Id));
         }
 
-        public IEnumerable<Item> GetItems => _floorItems.Values.Concat(_wallItems.Values);
+        public IEnumerable<InventoryItem> GetItems => _floorItems.Values.Concat(_wallItems.Values);
 
-        public IEnumerable<Item> AllItems => _floorItems.Values.Concat(_wallItems.Values);
+        public IEnumerable<InventoryItem> AllItems => _floorItems.Values.Concat(_wallItems.Values);
 
         public void ClearItems()
         {
@@ -27,7 +90,7 @@ namespace Plus.HabboHotel.Users.Inventory.Furniture
             _wallItems.Clear();
         }
 
-        public Item? GetItem(int itemId)
+        public InventoryItem? GetItem(uint itemId)
         {
             if (_floorItems.TryGetValue(itemId, out var item))
                 return item;
@@ -36,7 +99,7 @@ namespace Plus.HabboHotel.Users.Inventory.Furniture
             return null;
         }
 
-        public bool AddItem(Item item)
+        public bool AddItem(InventoryItem item)
         {
             if (item.IsFloorItem)
                 return _floorItems.TryAdd(item.Id, item);
@@ -46,8 +109,8 @@ namespace Plus.HabboHotel.Users.Inventory.Furniture
                 throw new InvalidOperationException("Item did not match neither floor or wall item");
         }
 
-        public bool HasItem(int itemId) => _floorItems.ContainsKey(itemId) || _wallItems.ContainsKey(itemId);
+        public bool HasItem(uint itemId) => _floorItems.ContainsKey(itemId) || _wallItems.ContainsKey(itemId);
 
-        public bool RemoveItem(int itemId) => _floorItems.TryRemove(itemId, out _) || _wallItems.TryRemove(itemId, out _);
+        public bool RemoveItem(uint itemId) => _floorItems.TryRemove(itemId, out _) || _wallItems.TryRemove(itemId, out _);
     }
 }

@@ -10,8 +10,8 @@ public interface IRoomManager
     bool LoadModel(string id);
     void ReloadModel(string id);
     bool TryGetModel(string id, out RoomModel model);
-    void UnloadRoom(int roomId);
-    bool TryLoadRoom(int roomId, out Room room);
+    void UnloadRoom(uint roomId);
+    bool TryLoadRoom(uint roomId, out Room room);
     List<Room> SearchGroupRooms(string query);
     List<Room> SearchTaggedRooms(string query);
     List<Room> GetPopularRooms(int category, int amount = 50);
@@ -21,9 +21,9 @@ public interface IRoomManager
     List<Room> GetOnGoingRoomPromotions(int mode, int amount = 50);
     List<Room> GetPromotedRooms(int categoryId, int amount = 50);
     List<Room> GetGroupRooms(int amount = 50);
-    List<Room> GetRoomsByIds(List<int> ids, int amount = 50);
+    List<Room> GetRoomsByIds(List<uint> ids, int amount = 50);
     Room TryGetRandomLoadedRoom();
-    bool TryGetRoom(int roomId, out Room room);
+    bool TryGetRoom(uint roomId, out Room room);
 
     RoomData CreateRoom(GameClient session, string name, string description, int category, int maxVisitors, int tradeSettings, RoomModel model, string wallpaper = "0.0", string floor = "0.0",
         string landscape = "0.0", int wallthick = 0, int floorthick = 0);

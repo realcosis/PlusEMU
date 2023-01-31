@@ -18,7 +18,7 @@ internal class GotoCommand : IChatCommand
             session.SendWhisper("You must specify a room id!");
             return;
         }
-        if (!int.TryParse(parameters[0], out var roomId))
+        if (!uint.TryParse(parameters[0], out var roomId))
             session.SendWhisper("You must enter a valid room ID");
         else
         {

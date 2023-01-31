@@ -13,8 +13,6 @@ namespace Plus.HabboHotel.Users.Authentication
         private readonly IUserDataFactory _userDataFactory;
         private readonly IDatabase _database;
 
-        public event EventHandler<HabboEventArgs>? HabboLoggedIn;
-
         public Authenticator(IEnumerable<IAuthenticationTask> authenticationTasks, IGameClientManager gameClientManager, IUserDataFactory userDataFactory, IDatabase database)
         {
             _authenticationTasks = authenticationTasks;
@@ -27,7 +25,7 @@ namespace Plus.HabboHotel.Users.Authentication
         {
             sso = sso.Trim();
             if (string.IsNullOrEmpty(sso))
-                return AuthenticationError.EmptySSO;//|| sso.Length < 15)
+                return AuthenticationError.EmptySSO;
 
             if (!Debugger.IsAttached && sso.Length < 15)
                 return AuthenticationError.InvalidSSO;
@@ -84,7 +82,6 @@ namespace Plus.HabboHotel.Users.Authentication
         {
             foreach (var task in _authenticationTasks)
                 await task.UserLoggedIn(habbo);
-            HabboLoggedIn?.Invoke(this, new(habbo));
         }
 
         private async Task OnHabboDisconnected(Habbo habbo)

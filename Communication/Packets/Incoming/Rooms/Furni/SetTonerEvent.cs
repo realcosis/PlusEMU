@@ -25,7 +25,7 @@ internal class SetTonerEvent : IPacketEvent
         if (room.TonerData == null)
             return Task.CompletedTask;
         var item = room.GetRoomItemHandler().GetItem(room.TonerData.ItemId);
-        if (item == null || item.GetBaseItem().InteractionType != InteractionType.Toner)
+        if (item == null || item.Definition.InteractionType != InteractionType.Toner)
             return Task.CompletedTask;
         packet.ReadInt(); //id
         var int1 = packet.ReadInt();
@@ -46,7 +46,7 @@ internal class SetTonerEvent : IPacketEvent
         room.TonerData.Saturation = int2;
         room.TonerData.Lightness = int3;
         room.TonerData.Enabled = 1;
-        room.SendPacket(new ObjectUpdateComposer(item, room.OwnerId));
+        room.SendPacket(new ObjectUpdateComposer(item));
         item.UpdateState();
         return Task.CompletedTask;
     }

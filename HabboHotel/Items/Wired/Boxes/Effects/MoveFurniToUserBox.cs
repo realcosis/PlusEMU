@@ -15,7 +15,7 @@ internal class MoveFurniToUserBox : IWiredItem, IWiredCycle
     {
         Instance = instance;
         Item = item;
-        SetItems = new ConcurrentDictionary<int, Item>();
+        SetItems = new();
         TickCount = Delay;
         _requested = false;
     }
@@ -61,7 +61,7 @@ internal class MoveFurniToUserBox : IWiredItem, IWiredCycle
                     {
                         if (coordinateItem == null || coordinateItem.Id == item.Id)
                             continue;
-                        if (!coordinateItem.GetBaseItem().Walkable)
+                        if (!coordinateItem.Definition.Walkable)
                         {
                             _next = 0;
                             canBePlaced = false;
@@ -69,7 +69,7 @@ internal class MoveFurniToUserBox : IWiredItem, IWiredCycle
                         }
                         if (coordinateItem.TotalHeight > newZ)
                             newZ = coordinateItem.TotalHeight;
-                        if (canBePlaced && !coordinateItem.GetBaseItem().Stackable)
+                        if (canBePlaced && !coordinateItem.Definition.Stackable)
                             canBePlaced = false;
                     }
                     if (canBePlaced && point != item.Coordinate)
@@ -91,7 +91,7 @@ internal class MoveFurniToUserBox : IWiredItem, IWiredCycle
 
     public WiredBoxType Type => WiredBoxType.EffectMoveFurniToNearestUser;
 
-    public ConcurrentDictionary<int, Item> SetItems { get; set; }
+    public ConcurrentDictionary<uint, Item> SetItems { get; set; }
     public string StringData { get; set; }
     public bool BoolData { get; set; }
     public string ItemsData { get; set; }
@@ -105,7 +105,7 @@ internal class MoveFurniToUserBox : IWiredItem, IWiredCycle
         var furniCount = packet.ReadInt();
         for (var i = 0; i < furniCount; i++)
         {
-            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadInt());
+            var selectedItem = Instance.GetRoomItemHandler().GetItem(packet.ReadUInt());
             if (selectedItem != null && !Instance.GetWired().OtherBoxHasItem(this, selectedItem.Id))
                 SetItems.TryAdd(selectedItem.Id, selectedItem);
         }

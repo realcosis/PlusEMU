@@ -32,7 +32,7 @@ public class ItemsComposer : IServerPacket
         packet.WriteInteger(item.Definition.SpriteId);
         try
         {
-            packet.WriteString(item.WallCoord);
+            packet.WriteString(item.WallCoordinates);
         }
         catch
         {

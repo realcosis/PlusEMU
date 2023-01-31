@@ -19,7 +19,7 @@ public class PromotableRoomsComposer : IServerPacket
         packet.WriteInteger(_rooms.Count);
         foreach (var data in _rooms)
         {
-            packet.WriteInteger(data.Id);
+            packet.WriteUInteger(data.Id);
             packet.WriteString(data.Name);
             packet.WriteBoolean(false);
         }

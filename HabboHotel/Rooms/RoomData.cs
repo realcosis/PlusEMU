@@ -10,7 +10,7 @@ public class RoomData
 
     public List<string> Tags;
 
-    public RoomData(int id, string caption, string modelName, string ownerName, int ownerId, string password, int score, string type, string access, int usersNow, int usersMax, int category,
+    public RoomData(uint id, string caption, string modelName, string ownerName, int ownerId, string password, int score, string type, string access, int usersNow, int usersMax, int category,
         string description,
         string tags, string floor, string landscape, bool allowPets, bool allowPetsEating, bool roomBlockingEnabled, bool hidewall, int wallThickness, int floorThickness, string wallpaper,
         int muteSettings,
@@ -113,7 +113,7 @@ public class RoomData
         Model = data.Model;
     }
 
-    public int Id { get; set; }
+    public uint Id { get; set; }
     public string Name { get; set; }
     public string ModelName { get; set; }
     public string OwnerName { get; set; }
@@ -178,7 +178,7 @@ public class RoomData
         {
             if (Convert.ToDouble(getPromotion["timestamp_expire"]) > UnixTimestamp.GetNow())
             {
-                Promotion = new RoomPromotion(Convert.ToString(getPromotion["title"]), Convert.ToString(getPromotion["description"]), Convert.ToDouble(getPromotion["timestamp_start"]),
+                Promotion = new(Convert.ToString(getPromotion["title"]), Convert.ToString(getPromotion["description"]), Convert.ToDouble(getPromotion["timestamp_start"]),
                     Convert.ToDouble(getPromotion["timestamp_expire"]), Convert.ToInt32(getPromotion["category_id"]));
             }
         }

@@ -53,8 +53,9 @@ public class Habbo
     public ArrayList FavoriteRooms = new();
     public Dictionary<int, int> Quests = new();
 
-    public List<int> RatedRooms = new();
+    public List<uint> RatedRooms = new();
 
+    // TODO @80O: Convert to uint
     public int Id { get; set; }
 
     public string Username { get; set; } = string.Empty;
@@ -69,10 +70,6 @@ public class Habbo
 
     public string Gender { get; set; } = string.Empty;
 
-    public string FootballLook { get; set; } = string.Empty;
-
-    public string FootballGender { get; set; } = string.Empty;
-
     public int Credits { get; set; }
 
     public int Duckets { get; set; }
@@ -81,7 +78,7 @@ public class Habbo
 
     public int GotwPoints { get; set; }
 
-    public int HomeRoom { get; set; }
+    public uint HomeRoom { get; set; }
 
     public double LastOnline { get; set; }
 
@@ -97,25 +94,17 @@ public class Habbo
 
     public bool FocusPreference { get; set; }
 
-    public bool IsExpert { get; set; }
-
     public int VipRank { get; set; }
-
-    public int TempInt { get; set; }
 
     public bool AllowTradingRequests { get; set; }
 
     public bool AllowUserFollowing { get; set; }
-
-    public bool AllowFriendRequests { get; set; }
 
     public bool AllowMessengerInvites { get; set; }
 
     public bool AllowPetSpeech { get; set; }
 
     public bool AllowBotSpeech { get; set; }
-
-    public bool AllowPublicRoomStatus { get; set; }
 
     public bool AllowConsoleMessages { get; set; } = true;
 
@@ -127,13 +116,7 @@ public class Habbo
 
     public bool IgnorePublicWhispers { get; set; }
 
-    public bool PlayingFastFood { get; set; }
-
     public FriendBarState FriendbarState { get; set; }
-
-    public int ChristmasDay { get; set; }
-
-    public int WantsToRideHorse { get; set; }
 
     public int TimeAfk { get; set; }
 
@@ -141,15 +124,13 @@ public class Habbo
 
     public bool ChangingName { get; set; }
 
-    public int FriendCount { get; set; }
-
     public double FloodTime { get; set; }
 
     public int BannedPhraseCount { get; set; }
 
     public bool RoomAuthOk { get; set; }
 
-    public int CurrentRoomId { get; set; }
+    public uint CurrentRoomId { get; set; }
 
     public int QuestLastCompleted { get; set; }
 
@@ -163,17 +144,17 @@ public class Habbo
 
     public double SessionStart { get; set; }
 
-    public int TentId { get; set; }
+    public uint TentId { get; set; }
 
-    public int HopperId { get; set; }
+    public uint HopperId { get; set; }
 
     public bool IsHopping { get; set; }
 
-    public int TeleporterId { get; set; }
+    public uint TeleporterId { get; set; }
 
     public bool IsTeleporting { get; set; }
 
-    public int TeleportingRoomId { get; set; }
+    public uint TeleportingRoomId { get; set; }
 
     public bool HasSpoken { get; set; }
 
@@ -185,15 +166,7 @@ public class Habbo
 
     public bool WiredInteraction { get; set; }
 
-    public bool InventoryAlert { get; set; }
-
-    public bool IgnoreBobbaFilter { get; set; }
-
-    public bool WiredTeleporting { get; set; }
-
     public int CustomBubbleId { get; set; }
-
-    public bool OnHelperDuty { get; set; }
 
     public int FastfoodScore { get; set; }
 
@@ -208,8 +181,6 @@ public class Habbo
     public DateTime LastMottoUpdateTime { get; set; }
 
     public DateTime LastClothingUpdateTime { get; set; }
-
-    public DateTime LastForumMessageUpdateTime { get; set; }
 
     public int GiftPurchasingWarnings { get; set; }
 
@@ -264,19 +235,19 @@ public class Habbo
 
     public bool InitProcess()
     {
-        _process = new ProcessComponent();
+        _process = new();
         return _process.Init(this);
     }
 
     public bool InitFx()
     {
-        _fx = new EffectsComponent();
+        _fx = new();
         return _fx.Init(this);
     }
 
     public bool InitClothing()
     {
-        _clothing = new ClothingComponent();
+        _clothing = new();
         return _clothing.Init(this);
     }
 
@@ -424,7 +395,7 @@ public class Habbo
         dbClient.RunQuery();
     }
 
-    public void PrepareRoom(int id, string password)
+    public void PrepareRoom(uint id, string password)
     {
         if (GetClient() == null || GetClient().GetHabbo() == null)
             return;

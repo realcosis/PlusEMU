@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Drawing;
 using Plus.Communication.Packets.Outgoing.Handshake;
 using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
@@ -34,9 +33,9 @@ public class RoomUserManager
     public RoomUserManager(Room room)
     {
         _room = room;
-        _users = new ConcurrentDictionary<int, RoomUser>();
-        _pets = new ConcurrentDictionary<int, RoomUser>();
-        _bots = new ConcurrentDictionary<int, RoomUser>();
+        _users = new();
+        _pets = new();
+        _bots = new();
         _primaryPrivateUserId = 0;
         _secondaryPrivateUserId = 0;
         PetCount = 0;
@@ -115,7 +114,7 @@ public class RoomUserManager
         OnRemove(user);
     }
 
-    public RoomUser GetUserForSquare(int x, int y) => _room.GetGameMap().GetRoomUsers(new Point(x, y)).FirstOrDefault();
+    public RoomUser GetUserForSquare(int x, int y) => _room.GetGameMap().GetRoomUsers(new(x, y)).FirstOrDefault();
 
     public bool AddAvatarToRoom(GameClient session)
     {
@@ -163,23 +162,23 @@ public class RoomUserManager
             {
                 if (session.GetHabbo().IsTeleporting)
                 {
-                    item.ExtraData = "2";
+                    item.LegacyDataString = "2";
                     item.UpdateState(false, true);
                     user.SetPos(item.GetX, item.GetY, item.GetZ);
                     user.SetRot(item.Rotation, false);
                     item.InteractingUser2 = session.GetHabbo().Id;
-                    item.ExtraData = "0";
+                    item.LegacyDataString = "0";
                     item.UpdateState(false, true);
                 }
                 else if (session.GetHabbo().IsHopping)
                 {
-                    item.ExtraData = "1";
+                    item.LegacyDataString = "1";
                     item.UpdateState(false, true);
                     user.SetPos(item.GetX, item.GetY, item.GetZ);
                     user.SetRot(item.Rotation, false);
                     user.AllowOverride = false;
                     item.InteractingUser2 = session.GetHabbo().Id;
-                    item.ExtraData = "2";
+                    item.LegacyDataString = "2";
                     item.UpdateState(false, true);
                 }
             }
@@ -349,7 +348,7 @@ public class RoomUserManager
                     RemoveBot(toRemove.VirtualId, false);
                 }
             }
-            _room.GetGameMap().RemoveUserFromMap(user, new Point(user.X, user.Y));
+            _room.GetGameMap().RemoveUserFromMap(user, new(user.X, user.Y));
         }
         catch (Exception e)
         {
@@ -363,7 +362,7 @@ public class RoomUserManager
             _room.GetGameMap().GameMap[user.SetX, user.SetY] = user.SqState;
         else
             _room.GetGameMap().GameMap[user.X, user.Y] = user.SqState;
-        _room.GetGameMap().RemoveUserFromMap(user, new Point(user.X, user.Y));
+        _room.GetGameMap().RemoveUserFromMap(user, new(user.X, user.Y));
         _room.SendPacket(new UserRemoveComposer(user.VirtualId));
         RoomUser toRemove = null;
         if (_users.TryRemove(user.InternalRoomId, out toRemove))
@@ -601,11 +600,11 @@ public class RoomUserManager
                 }
                 if (user.SetStep)
                 {
-                    if (_room.GetGameMap().IsValidStep2(user, new Vector2D(user.X, user.Y), new Vector2D(user.SetX, user.SetY), user.GoalX == user.SetX && user.GoalY == user.SetY, user.AllowOverride))
+                    if (_room.GetGameMap().IsValidStep2(user, new(user.X, user.Y), new(user.SetX, user.SetY), user.GoalX == user.SetX && user.GoalY == user.SetY, user.AllowOverride))
                     {
                         if (!user.RidingHorse)
-                            _room.GetGameMap().UpdateUserMovement(new Point(user.Coordinate.X, user.Coordinate.Y), new Point(user.SetX, user.SetY), user);
-                        var coordinatedItems = _room.GetGameMap().GetCoordinatedItems(new Point(user.X, user.Y));
+                            _room.GetGameMap().UpdateUserMovement(new(user.Coordinate.X, user.Coordinate.Y), new(user.SetX, user.SetY), user);
+                        var coordinatedItems = _room.GetGameMap().GetCoordinatedItems(new(user.X, user.Y));
                         foreach (var item in coordinatedItems.ToList()) item.UserWalksOffFurni(user);
                         if (!user.IsBot)
                         {
@@ -633,7 +632,7 @@ public class RoomUserManager
                             toRemove.Add(user);
                             continue;
                         }
-                        var items = _room.GetGameMap().GetCoordinatedItems(new Point(user.X, user.Y));
+                        var items = _room.GetGameMap().GetCoordinatedItems(new(user.X, user.Y));
                         foreach (var item in items.ToList()) item.UserWalksOnFurni(user);
                         UpdateUserStatus(user, true);
                     }
@@ -645,7 +644,7 @@ public class RoomUserManager
                 {
                     if (user.Path.Count > 1)
                         user.Path.Clear();
-                    user.Path = PathFinder.FindPath(user, _room.GetGameMap().DiagonalEnabled, _room.GetGameMap(), new Vector2D(user.X, user.Y), new Vector2D(user.GoalX, user.GoalY));
+                    user.Path = PathFinder.FindPath(user, _room.GetGameMap().DiagonalEnabled, _room.GetGameMap(), new(user.X, user.Y), new(user.GoalX, user.GoalY));
                     if (user.Path.Count > 1)
                     {
                         user.PathStep = 1;
@@ -713,7 +712,7 @@ public class RoomUserManager
                         var nextX = nextStep.X;
                         var nextY = nextStep.Y;
                         user.RemoveStatus("mv");
-                        if (_room.GetGameMap().IsValidStep2(user, new Vector2D(user.X, user.Y), new Vector2D(nextX, nextY), user.GoalX == nextX && user.GoalY == nextY, user.AllowOverride))
+                        if (_room.GetGameMap().IsValidStep2(user, new(user.X, user.Y), new(nextX, nextY), user.GoalX == nextX && user.GoalY == nextY, user.AllowOverride))
                         {
                             var nextZ = _room.GetGameMap().SqAbsoluteHeight(nextX, nextY);
                             if (!user.IsBot)
@@ -900,25 +899,25 @@ public class RoomUserManager
             {
                 if (item == null)
                     continue;
-                if (item.GetBaseItem().IsSeat)
+                if (item.Definition.IsSeat)
                 {
                     if (!user.Statusses.ContainsKey("sit"))
                     {
                         if (!user.Statusses.ContainsKey("sit"))
-                            user.Statusses.Add("sit", TextHandling.GetString(item.GetBaseItem().Height));
+                            user.Statusses.Add("sit", TextHandling.GetString(item.Definition.Height));
                     }
                     user.Z = item.GetZ;
                     user.RotHead = item.Rotation;
                     user.RotBody = item.Rotation;
                     user.UpdateNeeded = true;
                 }
-                switch (item.GetBaseItem().InteractionType)
+                switch (item.Definition.InteractionType)
                 {
                     case InteractionType.Bed:
                     case InteractionType.TentSmall:
                         {
                             if (!user.Statusses.ContainsKey("lay"))
-                                user.Statusses.Add("lay", TextHandling.GetString(item.GetBaseItem().Height) + " null");
+                                user.Statusses.Add("lay", TextHandling.GetString(item.Definition.Height) + " null");
                             user.Z = item.GetZ;
                             user.RotHead = item.Rotation;
                             user.RotBody = item.Rotation;
@@ -1017,12 +1016,12 @@ public class RoomUserManager
                                 return;
                             if (!user.IsBot)
                             {
-                                if (item == null || item.GetBaseItem() == null || user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().Effects() == null)
+                                if (item == null || item.Definition == null || user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().Effects() == null)
                                     return;
-                                if (item.GetBaseItem().EffectId == 0 && user.GetClient().GetHabbo().Effects().CurrentEffect == 0)
+                                if (item.Definition.EffectId == 0 && user.GetClient().GetHabbo().Effects().CurrentEffect == 0)
                                     return;
-                                user.GetClient().GetHabbo().Effects().ApplyEffect(item.GetBaseItem().EffectId);
-                                item.ExtraData = "1";
+                                user.GetClient().GetHabbo().Effects().ApplyEffect(item.Definition.EffectId);
+                                item.LegacyDataString = "1";
                                 item.UpdateState(false, true);
                                 item.RequestUpdate(2, true);
                             }

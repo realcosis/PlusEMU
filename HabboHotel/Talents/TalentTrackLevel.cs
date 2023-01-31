@@ -12,15 +12,15 @@ public class TalentTrackLevel
         Level = level;
         foreach (var str in dataActions.Split('|'))
         {
-            if (Actions == null) Actions = new List<string>();
+            if (Actions == null) Actions = new();
             Actions.Add(str);
         }
         foreach (var str in dataGifts.Split('|'))
         {
-            if (Gifts == null) Gifts = new List<string>();
+            if (Gifts == null) Gifts = new();
             Gifts.Add(str);
         }
-        _subLevels = new Dictionary<int, TalentTrackSubLevel>();
+        _subLevels = new();
         Init();
     }
 
@@ -45,7 +45,7 @@ public class TalentTrackLevel
             foreach (DataRow row in getTable.Rows)
             {
                 _subLevels.Add(Convert.ToInt32(row["sub_level"]),
-                    new TalentTrackSubLevel(Convert.ToInt32(row["sub_level"]), Convert.ToString(row["badge_code"]), Convert.ToInt32(row["required_progress"])));
+                    new(Convert.ToInt32(row["sub_level"]), Convert.ToString(row["badge_code"]), Convert.ToInt32(row["required_progress"])));
             }
         }
     }

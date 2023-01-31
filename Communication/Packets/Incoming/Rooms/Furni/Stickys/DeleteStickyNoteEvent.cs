@@ -24,10 +24,10 @@ internal class DeleteStickyNoteEvent : IPacketEvent
             return Task.CompletedTask;
         if (!room.CheckRights(session))
             return Task.CompletedTask;
-        var item = room.GetRoomItemHandler().GetItem(packet.ReadInt());
+        var item = room.GetRoomItemHandler().GetItem(packet.ReadUInt());
         if (item == null)
             return Task.CompletedTask;
-        if (item.GetBaseItem().InteractionType == InteractionType.Postit || item.GetBaseItem().InteractionType == InteractionType.CameraPicture)
+        if (item.Definition.InteractionType == InteractionType.Postit || item.Definition.InteractionType == InteractionType.CameraPicture)
         {
             room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
             using var dbClient = _database.GetQueryReactor();

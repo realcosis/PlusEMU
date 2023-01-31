@@ -2,6 +2,7 @@
 using Plus.HabboHotel.Catalog.Utilities;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
+using Plus.HabboHotel.Users.Inventory.Furniture;
 
 namespace Plus.Communication.Packets.Outgoing.Catalog;
 
@@ -72,7 +73,7 @@ public class CatalogPageComposer : IServerPacket
                         packet.WriteString("b");
                         packet.WriteString(item.Badge);
                     }
-                    packet.WriteString(item.Definition.Type.ToString());
+                    packet.WriteString(item.Definition.Type.ToCharCode().ToLower());
                     if (item.Definition.Type.ToString().ToLower() == "b")
                     {
                         //This is just a badge, append the name.
@@ -96,8 +97,8 @@ public class CatalogPageComposer : IServerPacket
                         packet.WriteBoolean(item.IsLimited); // IsLimited
                         if (item.IsLimited)
                         {
-                            packet.WriteInteger(item.LimitedEditionStack);
-                            packet.WriteInteger(item.LimitedEditionStack - item.LimitedEditionSells);
+                            packet.WriteUInteger(item.LimitedEditionStack);
+                            packet.WriteUInteger(item.LimitedEditionStack - item.LimitedEditionSells);
                         }
                     }
                 }

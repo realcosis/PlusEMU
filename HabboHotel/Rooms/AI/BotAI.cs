@@ -5,12 +5,12 @@ namespace Plus.HabboHotel.Rooms.AI;
 public abstract class BotAi
 {
     private Room _room;
-    private int _roomId;
+    private uint _roomId;
     private RoomUser _roomUser;
     private int _roomUserId;
     public int BaseId;
 
-    public void Init(int baseId, int roomUserId, int roomId, RoomUser user, Room room)
+    public void Init(int baseId, int roomUserId, uint roomId, RoomUser user, Room room)
     {
         BaseId = baseId;
         _roomUserId = roomUserId;

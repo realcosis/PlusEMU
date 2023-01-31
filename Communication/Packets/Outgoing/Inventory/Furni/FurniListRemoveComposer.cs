@@ -4,16 +4,16 @@ namespace Plus.Communication.Packets.Outgoing.Inventory.Furni;
 
 public class FurniListRemoveComposer : IServerPacket
 {
-    private readonly int _id;
+    private readonly uint _id;
     public uint MessageId => ServerPacketHeader.FurniListRemoveComposer;
 
-    public FurniListRemoveComposer(int id)
+    public FurniListRemoveComposer(uint id)
     {
         _id = id;
     }
 
     public void Compose(IOutgoingPacket packet)
     {
-        packet.WriteInteger(_id);
+        packet.WriteUInteger(_id);
     }
 }

@@ -16,11 +16,11 @@ public class ItemAddComposer : IServerPacket
     public void Compose(IOutgoingPacket packet)
     {
         packet.WriteString(_item.Id.ToString());
-        packet.WriteInteger(_item.GetBaseItem().SpriteId);
-        packet.WriteString(_item.WallCoord != null ? _item.WallCoord : string.Empty);
+        packet.WriteInteger(_item.Definition.SpriteId);
+        packet.WriteString(_item.WallCoordinates != null ? _item.WallCoordinates : string.Empty);
         ItemBehaviourUtility.GenerateWallExtradata(_item, packet);
         packet.WriteInteger(-1);
-        packet.WriteInteger(_item.GetBaseItem().Modes > 1 ? 1 : 0); // Type New R63 ('use bottom')
+        packet.WriteInteger(_item.Definition.Modes > 1 ? 1 : 0); // Type New R63 ('use bottom')
         packet.WriteInteger(_item.UserId);
         packet.WriteString(_item.Username);
     }

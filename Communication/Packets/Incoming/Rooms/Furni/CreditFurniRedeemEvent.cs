@@ -34,7 +34,7 @@ internal class CreditFurniRedeemEvent : IPacketEvent
             session.SendNotification("The hotel managers have temporarilly disabled exchanging!");
             return Task.CompletedTask;
         }
-        var exchange = room.GetRoomItemHandler().GetItem(packet.ReadInt());
+        var exchange = room.GetRoomItemHandler().GetItem(packet.ReadUInt());
         if (exchange == null)
             return Task.CompletedTask;
         if (exchange.Definition.InteractionType != InteractionType.Exchange)

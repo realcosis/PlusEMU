@@ -12,7 +12,7 @@ public class DatabaseConnection : IDatabaseClient
 
     public DatabaseConnection(string connectionString)
     {
-        _con = new MySqlConnection(connectionString);
+        _con = new(connectionString);
         _adapter = new NormalQueryReactor(this);
     }
 

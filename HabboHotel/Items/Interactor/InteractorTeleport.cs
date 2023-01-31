@@ -7,7 +7,7 @@ public class InteractorTeleport : IFurniInteractor
 {
     public void OnPlace(GameClient session, Item item)
     {
-        item.ExtraData = "0";
+        item.LegacyDataString = "0";
         if (item.InteractingUser != 0)
         {
             var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);
@@ -34,7 +34,7 @@ public class InteractorTeleport : IFurniInteractor
 
     public void OnRemove(GameClient session, Item item)
     {
-        item.ExtraData = "0";
+        item.LegacyDataString = "0";
         if (item.InteractingUser != 0)
         {
             var user = item.GetRoom().GetRoomUserManager().GetRoomUserByHabbo(item.InteractingUser);

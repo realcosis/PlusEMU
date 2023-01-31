@@ -13,7 +13,7 @@ internal abstract class SaveWiredConfigEvent : IPacketEvent
         var room = session.GetHabbo().CurrentRoom;
         if (room == null || !room.CheckRights(session, false, true))
             return Task.CompletedTask;
-        var itemId = packet.ReadInt();
+        var itemId = packet.ReadUInt();
         session.Send(new HideWiredConfigComposer());
         var selectedItem = room.GetRoomItemHandler().GetItem(itemId);
         if (selectedItem == null)

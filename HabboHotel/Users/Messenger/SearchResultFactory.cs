@@ -17,7 +17,7 @@ public static class SearchResultFactory
         if (dTable != null)
         {
             foreach (DataRow dRow in dTable.Rows)
-                results.Add(new SearchResult(Convert.ToInt32(dRow[0]), Convert.ToString(dRow[1]), Convert.ToString(dRow[2]), Convert.ToString(dRow[3]), dRow[4].ToString()));
+                results.Add(new(Convert.ToInt32(dRow[0]), Convert.ToString(dRow[1]), Convert.ToString(dRow[2]), Convert.ToString(dRow[3]), dRow[4].ToString()));
         }
         return results;
     }

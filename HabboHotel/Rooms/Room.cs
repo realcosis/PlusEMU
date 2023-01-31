@@ -26,7 +26,7 @@ public class Room : RoomData
 
     private readonly FilterComponent _filterComponent;
 
-    private readonly Dictionary<int, List<RoomUser>> _tents;
+    private readonly Dictionary<uint, List<RoomUser>> _tents;
     private readonly TradingComponent _tradingComponent;
     private readonly WiredComponent _wiredComponent;
     private BattleBanzai _banzai;
@@ -65,15 +65,15 @@ public class Room : RoomData
         Unloaded = false;
         IdleTime = 0;
         RoomMuted = false;
-        MutedUsers = new Dictionary<int, double>();
-        _tents = new Dictionary<int, List<RoomUser>>();
-        _gamemap = new Gamemap(this, data.Model);
-        _roomItemHandling = new RoomItemHandling(this);
-        _roomUserManager = new RoomUserManager(this);
-        _filterComponent = new FilterComponent(this);
-        _wiredComponent = new WiredComponent(this);
-        _bansComponent = new BansComponent(this);
-        _tradingComponent = new TradingComponent(this);
+        MutedUsers = new();
+        _tents = new();
+        _gamemap = new(this, data.Model);
+        _roomItemHandling = new(this);
+        _roomUserManager = new(this);
+        _filterComponent = new(this);
+        _wiredComponent = new(this);
+        _bansComponent = new(this);
+        _tradingComponent = new(this);
         GetRoomItemHandler().LoadFurniture();
         GetGameMap().GenerateMaps();
         LoadPromotions();
@@ -92,7 +92,7 @@ public class Room : RoomData
 
     public int UserCount => _roomUserManager.GetRoomUsers().Count;
 
-    public int RoomId => Id;
+    public uint RoomId => Id;
 
     public bool CanTradeInRoom => true;
 
@@ -100,7 +100,7 @@ public class Room : RoomData
 
     public RoomItemHandling GetRoomItemHandler()
     {
-        if (_roomItemHandling == null) _roomItemHandling = new RoomItemHandling(this);
+        if (_roomItemHandling == null) _roomItemHandling = new(this);
         return _roomItemHandling;
     }
 
@@ -109,7 +109,7 @@ public class Room : RoomData
     public Soccer GetSoccer()
     {
         if (_soccer == null)
-            _soccer = new Soccer(this);
+            _soccer = new(this);
         return _soccer;
     }
 
@@ -130,28 +130,28 @@ public class Room : RoomData
     public BattleBanzai GetBanzai()
     {
         if (_banzai == null)
-            _banzai = new BattleBanzai(this);
+            _banzai = new(this);
         return _banzai;
     }
 
     public Freeze GetFreeze()
     {
         if (_freeze == null)
-            _freeze = new Freeze(this);
+            _freeze = new(this);
         return _freeze;
     }
 
     public GameManager GetGameManager()
     {
         if (_gameManager == null)
-            _gameManager = new GameManager(this);
+            _gameManager = new(this);
         return _gameManager;
     }
 
     public GameItemHandler GetGameItemHandler()
     {
         if (_gameItemHandler == null)
-            _gameItemHandler = new GameItemHandler(this);
+            _gameItemHandler = new(this);
         return _gameItemHandler;
     }
 
@@ -185,9 +185,9 @@ public class Room : RoomData
             dbClient.SetQuery("SELECT `text` FROM `bots_speech` WHERE `bot_id` = '" + Convert.ToInt32(bot["id"]) + "'");
             var botSpeech = dbClient.GetTable();
             var speeches = new List<RandomSpeech>();
-            foreach (DataRow speech in botSpeech.Rows) speeches.Add(new RandomSpeech(Convert.ToString(speech["text"]), Convert.ToInt32(bot["id"])));
+            foreach (DataRow speech in botSpeech.Rows) speeches.Add(new(Convert.ToString(speech["text"]), Convert.ToInt32(bot["id"])));
             _roomUserManager.DeployBot(
-                new RoomBot(Convert.ToInt32(bot["id"]), Convert.ToInt32(bot["room_id"]), Convert.ToString(bot["ai_type"]), Convert.ToString(bot["walk_mode"]), Convert.ToString(bot["name"]),
+                new(Convert.ToInt32(bot["id"]), Convert.ToUInt32(bot["room_id"]), Convert.ToString(bot["ai_type"]), Convert.ToString(bot["walk_mode"]), Convert.ToString(bot["name"]),
                     Convert.ToString(bot["motto"]), Convert.ToString(bot["look"]), int.Parse(bot["x"].ToString()), int.Parse(bot["y"].ToString()), int.Parse(bot["z"].ToString()),
                     int.Parse(bot["rotation"].ToString()), 0, 0, 0, 0, ref speeches, "M", 0, Convert.ToInt32(bot["user_id"].ToString()), Convert.ToBoolean(bot["automatic_chat"]),
                     Convert.ToInt32(bot["speaking_interval"]), ConvertExtensions.EnumToBool(bot["mix_sentences"].ToString()), Convert.ToInt32(bot["chat_bubble"])), null);
@@ -209,7 +209,7 @@ public class Room : RoomData
             var mRow = dbClient.GetRow();
             if (mRow == null)
                 continue;
-            var pet = new Pet(Convert.ToInt32(row["id"]), Convert.ToInt32(row["user_id"]), Convert.ToInt32(row["room_id"]), Convert.ToString(row["name"]), Convert.ToInt32(mRow["type"]),
+            var pet = new Pet(Convert.ToInt32(row["id"]), Convert.ToInt32(row["user_id"]), Convert.ToUInt32(row["room_id"]), Convert.ToString(row["name"]), Convert.ToInt32(mRow["type"]),
                 Convert.ToString(mRow["race"]),
                 Convert.ToString(mRow["color"]), Convert.ToInt32(mRow["experience"]), Convert.ToInt32(mRow["energy"]), Convert.ToInt32(mRow["nutrition"]), Convert.ToInt32(mRow["respect"]),
                 Convert.ToDouble(mRow["createstamp"]), Convert.ToInt32(row["x"]), Convert.ToInt32(row["y"]),
@@ -217,7 +217,7 @@ public class Room : RoomData
                 Convert.ToString(mRow["gnome_clothing"]));
             var rndSpeechList = new List<RandomSpeech>();
             _roomUserManager.DeployBot(
-                new RoomBot(pet.PetId, RoomId, "pet", "freeroam", pet.Name, "", pet.Look, pet.X, pet.Y, Convert.ToInt32(pet.Z), 0, 0, 0, 0, 0, ref rndSpeechList, "", 0, pet.OwnerId, false, 0, false,
+                new(pet.PetId, RoomId, "pet", "freeroam", pet.Name, "", pet.Look, pet.X, pet.Y, Convert.ToInt32(pet.Z), 0, 0, 0, 0, 0, ref rndSpeechList, "", 0, pet.OwnerId, false, 0, false,
                     0), pet);
         }
     }
@@ -232,7 +232,7 @@ public class Room : RoomData
 
     public void LoadRights()
     {
-        UsersWithRights = new List<int>();
+        UsersWithRights = new();
         if (Group != null)
             return;
         DataTable data = null;
@@ -249,7 +249,7 @@ public class Room : RoomData
 
     private void LoadFilter()
     {
-        WordFilterList = new List<string>();
+        WordFilterList = new();
         DataTable data = null;
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
@@ -307,9 +307,9 @@ public class Room : RoomData
         string key = null;
         foreach (var item in GetRoomItemHandler().GetFurniObjects(ball.GetX, ball.GetY).ToList())
         {
-            if (item.GetBaseItem().ItemName.StartsWith("fball_goal_"))
+            if (item.Definition.ItemName.StartsWith("fball_goal_"))
             {
-                key = item.GetBaseItem().ItemName.Split(new[] { '_' })[2];
+                key = item.Definition.ItemName.Split(new[] { '_' })[2];
                 user.UnIdle();
                 user.DanceId = 0;
                 PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(user.GetClient(), "ACH_FootballGoalScored", 1);
@@ -318,15 +318,15 @@ public class Room : RoomData
         }
         if (key != null)
         {
-            if (predicate == null) predicate = p => p.GetBaseItem().ItemName == "fball_score_" + key;
+            if (predicate == null) predicate = p => p.Definition.ItemName == "fball_score_" + key;
             foreach (var item2 in GetRoomItemHandler().GetFloor.Where(predicate).ToList())
             {
-                if (item2.GetBaseItem().ItemName == "fball_score_" + key)
+                if (item2.Definition.ItemName == "fball_score_" + key)
                 {
-                    if (!string.IsNullOrEmpty(item2.ExtraData))
-                        item2.ExtraData = (Convert.ToInt32(item2.ExtraData) + 1).ToString();
+                    if (!string.IsNullOrEmpty(item2.LegacyDataString))
+                        item2.LegacyDataString = (Convert.ToInt32(item2.LegacyDataString) + 1).ToString();
                     else
-                        item2.ExtraData = "1";
+                        item2.LegacyDataString = "1";
                     item2.UpdateState();
                 }
             }
@@ -465,14 +465,14 @@ public class Room : RoomData
         session.Send(new ItemsComposer(GetRoomItemHandler().GetWall.ToArray(), this));
     }
 
-    public void AddTent(int tentId)
+    public void AddTent(uint tentId)
     {
         if (_tents.ContainsKey(tentId))
             _tents.Remove(tentId);
-        _tents.Add(tentId, new List<RoomUser>());
+        _tents.Add(tentId, new());
     }
 
-    public void RemoveTent(int tentId)
+    public void RemoveTent(uint tentId)
     {
         if (!_tents.ContainsKey(tentId))
             return;
@@ -487,31 +487,31 @@ public class Room : RoomData
             _tents.Remove(tentId);
     }
 
-    public void AddUserToTent(int tentId, RoomUser user)
+    public void AddUserToTent(uint tentId, RoomUser user)
     {
         if (user != null && user.GetClient() != null && user.GetClient().GetHabbo() != null)
         {
             if (!_tents.ContainsKey(tentId))
-                _tents.Add(tentId, new List<RoomUser>());
+                _tents.Add(tentId, new());
             if (!_tents[tentId].Contains(user))
                 _tents[tentId].Add(user);
             user.GetClient().GetHabbo().TentId = tentId;
         }
     }
 
-    public void RemoveUserFromTent(int tentId, RoomUser user)
+    public void RemoveUserFromTent(uint tentId, RoomUser user)
     {
         if (user != null && user.GetClient() != null && user.GetClient().GetHabbo() != null)
         {
             if (!_tents.ContainsKey(tentId))
-                _tents.Add(tentId, new List<RoomUser>());
+                _tents.Add(tentId, new());
             if (_tents[tentId].Contains(user))
                 _tents[tentId].Remove(user);
             user.GetClient().GetHabbo().TentId = 0;
         }
     }
 
-    public void SendToTent(int id, int tentId, IServerPacket packet)
+    public void SendToTent(int id, uint tentId, IServerPacket packet)
     {
         if (!_tents.ContainsKey(tentId))
             return;

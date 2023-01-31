@@ -24,7 +24,7 @@ public class ModeratorUserRoomVisitsComposer : IServerPacket
         packet.WriteInteger(_visits.Count);
         foreach (var (key, roomData) in _visits)
         {
-            packet.WriteInteger(roomData.Id);
+            packet.WriteUInteger(roomData.Id);
             packet.WriteString(roomData.Name);
             packet.WriteInteger(UnixTimestamp.FromUnixTimestamp(key).Hour);
             packet.WriteInteger(UnixTimestamp.FromUnixTimestamp(key).Minute);

@@ -27,7 +27,7 @@ internal class PurchaseGroupEvent : IPacketEvent
     {
         var name = _wordFilterManager.CheckMessage(packet.ReadString());
         var description = _wordFilterManager.CheckMessage(packet.ReadString());
-        var roomId = packet.ReadInt();
+        var roomId = packet.ReadUInt();
         var mainColour = packet.ReadInt();
         var secondaryColour = packet.ReadInt();
         packet.ReadInt(); //unknown

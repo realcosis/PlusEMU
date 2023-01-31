@@ -7,6 +7,7 @@ using Plus.HabboHotel.Cache;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Rooms;
+using Plus.HabboHotel.Users.Inventory.Furniture;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni;
 
@@ -30,7 +31,7 @@ internal class OpenGiftEvent : IPacketEvent
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
             return Task.CompletedTask;
-        var presentId = packet.ReadInt();
+        var presentId = packet.ReadUInt();
         var present = room.GetRoomItemHandler().GetItem(presentId);
         if (present == null)
             return Task.CompletedTask;
@@ -56,7 +57,7 @@ internal class OpenGiftEvent : IPacketEvent
             session.Send(new FurniListRemoveComposer(present.Id));
             return Task.CompletedTask;
         }
-        if (!int.TryParse(present.ExtraData.Split(Convert.ToChar(5))[2], out var purchaserId))
+        if (!int.TryParse(present.LegacyDataString.Split(Convert.ToChar(5))[2], out var purchaserId))
         {
             session.SendNotification("Oops! Appears there was a bug with this gift.\nWe'll just get rid of it for you.");
             room.GetRoomItemHandler().RemoveFurniture(null, present.Id);
@@ -83,7 +84,7 @@ internal class OpenGiftEvent : IPacketEvent
             session.Send(new FurniListRemoveComposer(present.Id));
             return Task.CompletedTask;
         }
-        if (!_itemDataManger.GetItem(Convert.ToInt32(data["base_id"]), out var baseItem))
+        if (!_itemDataManger.Items.TryGetValue(Convert.ToUInt32(data["base_id"]), out var baseItem))
         {
             session.SendNotification("Oops, it appears that the item within the gift is no longer in the hotel!");
             room.GetRoomItemHandler().RemoveFurniture(null, present.Id);
@@ -97,7 +98,7 @@ internal class OpenGiftEvent : IPacketEvent
             return Task.CompletedTask;
         }
         present.MagicRemove = true;
-        room.SendPacket(new ObjectUpdateComposer(present, Convert.ToInt32(session.GetHabbo().Id)));
+        room.SendPacket(new ObjectUpdateComposer(present));
         var thread = new Thread(() => FinishOpenGift(session, baseItem, present, room, data));
         thread.Start();
         return Task.CompletedTask;
@@ -121,9 +122,9 @@ internal class OpenGiftEvent : IPacketEvent
                 dbClient.RunQuery("DELETE FROM `user_presents` WHERE `item_id` = " + present.Id + " LIMIT 1");
             }
             present.BaseItem = Convert.ToInt32(row["base_id"]);
-            present.ResetBaseItem();
-            present.ExtraData = !string.IsNullOrEmpty(Convert.ToString(row["extra_data"])) ? Convert.ToString(row["extra_data"]) : "";
-            if (present.Definition.Type == 's')
+            // present.ResetBaseItem(); // TODO @80O: Disabled in item refactor
+            present.LegacyDataString = !string.IsNullOrEmpty(Convert.ToString(row["extra_data"])) ? Convert.ToString(row["extra_data"]) : "";
+            if (present.Definition.Type == ItemType.Floor)
             {
                 if (!room.GetRoomItemHandler().SetFloorItem(session, present, present.GetX, present.GetY, present.Rotation, true, false, true))
                 {
@@ -146,7 +147,7 @@ internal class OpenGiftEvent : IPacketEvent
                 }
                 itemIsInRoom = false;
             }
-            session.Send(new OpenGiftComposer(present.Definition, present.ExtraData, present, itemIsInRoom));
+            session.Send(new OpenGiftComposer(present.Definition, present.LegacyDataString, present, itemIsInRoom));
             session.Send(new FurniListUpdateComposer());
         }
         catch

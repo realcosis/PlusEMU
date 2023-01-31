@@ -6,7 +6,7 @@ internal static class RoomAppender
 {
     public static void WriteRoom(IOutgoingPacket packet, RoomData data, RoomPromotion promotion)
     {
-        packet.WriteInteger(data.Id);
+        packet.WriteUInteger(data.Id);
         packet.WriteString(data.Name);
         packet.WriteInteger(data.OwnerId);
         packet.WriteString(data.OwnerName);

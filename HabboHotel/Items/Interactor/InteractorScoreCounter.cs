@@ -9,7 +9,7 @@ public class InteractorScoreCounter : IFurniInteractor
     {
         if (item.Team == Team.None)
             return;
-        item.ExtraData = item.GetRoom().GetGameManager().Points[Convert.ToInt32(item.Team)].ToString();
+        item.LegacyDataString = item.GetRoom().GetGameManager().Points[Convert.ToInt32(item.Team)].ToString();
         item.UpdateState(false, true);
     }
 
@@ -19,22 +19,22 @@ public class InteractorScoreCounter : IFurniInteractor
     {
         if (!hasRights) return;
         var oldValue = 0;
-        if (!int.TryParse(item.ExtraData, out oldValue)) { }
+        if (!int.TryParse(item.LegacyDataString, out oldValue)) { }
         if (request == 1)
             oldValue++;
         else if (request == 2)
             oldValue--;
         else if (request == 3) oldValue = 0;
-        item.ExtraData = oldValue.ToString();
+        item.LegacyDataString = oldValue.ToString();
         item.UpdateState(false, true);
     }
 
     public void OnWiredTrigger(Item item)
     {
         var oldValue = 0;
-        if (!int.TryParse(item.ExtraData, out oldValue)) { }
+        if (!int.TryParse(item.LegacyDataString, out oldValue)) { }
         oldValue++;
-        item.ExtraData = oldValue.ToString();
+        item.LegacyDataString = oldValue.ToString();
         item.UpdateState(false, true);
     }
 }

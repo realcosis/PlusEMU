@@ -76,7 +76,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
         }
         if (!ItemUtility.CanGiftItem(item))
             return Task.CompletedTask;
-        if (!_itemManager.GetGift(spriteId, out var presentData) || presentData.InteractionType != InteractionType.Gift)
+        if (!_itemManager.Gifts.TryGetValue(spriteId, out var presentId) || !_itemManager.Items.TryGetValue(presentId, out var presentData) || presentData.InteractionType != InteractionType.Gift)
             return Task.CompletedTask;
         if (session.GetHabbo().Credits < item.CostCredits)
         {
@@ -190,7 +190,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
             //Here we're clearing up a record, this is dumb, but okay.
             connection.Execute("DELETE FROM `items` WHERE `id` = @deleteId LIMIT 1", new { deleteId = newItemId});
         }
-        var giveItem = ItemFactory.CreateGiftItem(presentData, habbo, extra_data, extra_data, newItemId);
+        var giveItem = ItemFactory.CreateGiftItem(presentData, habbo, extra_data, extra_data, newItemId).ToInventoryItem();
         if (giveItem != null)
         {
             var receiver = _gameClientManager.GetClientByUserId(habbo.Id);

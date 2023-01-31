@@ -36,7 +36,7 @@ public class RoomUser
     public bool FreezeInteracting;
     public int FreezeLives;
     public bool Frozen;
-    public int GateId;
+    public uint GateId;
 
     public int GoalX; //byte
     public int GoalY; //byte
@@ -68,7 +68,7 @@ public class RoomUser
     public int PrevTime;
     public bool RidingHorse = false;
     public int RollerDelay = 0;
-    public int RoomId;
+    public uint RoomId;
     public int RotBody; //byte
     public int RotHead; //byte
 
@@ -93,7 +93,7 @@ public class RoomUser
     public int Y; //byte
     public double Z;
 
-    public RoomUser(int habboId, int roomId, int virtualId, Room room)
+    public RoomUser(int habboId, uint roomId, int virtualId, Room room)
     {
         Freezed = false;
         HabboId = habboId;
@@ -107,7 +107,7 @@ public class RoomUser
         RotHead = 0;
         RotBody = 0;
         UpdateNeeded = true;
-        Statusses = new Dictionary<string, string>();
+        Statusses = new();
         TeleDelay = -1;
         _mRoom = room;
         AllowOverride = false;
@@ -430,7 +430,7 @@ public class RoomUser
         if (TeleportEnabled)
         {
             UnIdle();
-            GetRoom().SendPacket(GetRoom().GetRoomItemHandler().UpdateUserOnRoller(this, new Point(pX, pY), 0, GetRoom().GetGameMap().SqAbsoluteHeight(GoalX, GoalY)));
+            GetRoom().SendPacket(GetRoom().GetRoomItemHandler().UpdateUserOnRoller(this, new(pX, pY), 0, GetRoom().GetGameMap().SqAbsoluteHeight(GoalX, GoalY)));
             if (Statusses.ContainsKey("sit"))
                 Z -= 0.35;
             UpdateNeeded = true;

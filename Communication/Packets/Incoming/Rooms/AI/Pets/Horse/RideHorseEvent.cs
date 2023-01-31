@@ -53,8 +53,8 @@ internal class RideHorseEvent : IPacketEvent
                     pet.Statusses.Clear();
                 var newX2 = user.X;
                 var newY2 = user.Y;
-                room.SendPacket(room.GetRoomItemHandler().UpdateUserOnRoller(pet, new Point(newX2, newY2), 0, room.GetGameMap().SqAbsoluteHeight(newX2, newY2)));
-                room.SendPacket(room.GetRoomItemHandler().UpdateUserOnRoller(user, new Point(newX2, newY2), 0, room.GetGameMap().SqAbsoluteHeight(newX2, newY2) + 1));
+                room.SendPacket(room.GetRoomItemHandler().UpdateUserOnRoller(pet, new(newX2, newY2), 0, room.GetGameMap().SqAbsoluteHeight(newX2, newY2)));
+                room.SendPacket(room.GetRoomItemHandler().UpdateUserOnRoller(user, new(newX2, newY2), 0, room.GetGameMap().SqAbsoluteHeight(newX2, newY2) + 1));
                 user.MoveTo(newX2, newY2);
                 pet.ClearMovement(true);
                 user.RidingHorse = true;
@@ -82,7 +82,7 @@ internal class RideHorseEvent : IPacketEvent
                 user.HorseId = 0;
                 pet.RidingHorse = false;
                 pet.HorseId = 0;
-                user.MoveTo(new Point(user.X + 2, user.Y + 2));
+                user.MoveTo(new(user.X + 2, user.Y + 2));
                 user.ApplyEffect(-1);
                 user.UpdateNeeded = true;
                 pet.UpdateNeeded = true;

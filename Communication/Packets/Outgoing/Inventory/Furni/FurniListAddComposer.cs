@@ -1,41 +1,33 @@
-﻿using Plus.HabboHotel.Catalog.Utilities;
-using Plus.HabboHotel.GameClients;
+﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
+using Plus.HabboHotel.Users.Inventory.Furniture;
 
 namespace Plus.Communication.Packets.Outgoing.Inventory.Furni;
 
 public class FurniListAddComposer : IServerPacket
 {
-    private readonly Item _item;
+    private readonly InventoryItem _item;
     public uint MessageId => ServerPacketHeader.FurniListAddComposer;
 
-    public FurniListAddComposer(Item item)
+    public FurniListAddComposer(InventoryItem item)
     {
         _item = item;
     }
 
     public void Compose(IOutgoingPacket packet)
     {
-        packet.WriteInteger(_item.Id);
-        packet.WriteString(_item.GetBaseItem().Type.ToString().ToUpper());
-        packet.WriteInteger(_item.Id);
-        packet.WriteInteger(_item.GetBaseItem().SpriteId);
-        if (_item.LimitedNo > 0)
-        {
-            packet.WriteInteger(1);
-            packet.WriteInteger(256);
-            packet.WriteString(_item.ExtraData);
-            packet.WriteInteger(_item.LimitedNo);
-            packet.WriteInteger(_item.LimitedTot);
-        }
-        else
-            ItemBehaviourUtility.GenerateExtradata(_item, packet);
-        packet.WriteBoolean(_item.GetBaseItem().AllowEcotronRecycle);
-        packet.WriteBoolean(_item.GetBaseItem().AllowTrade);
-        packet.WriteBoolean(_item.LimitedNo == 0 && _item.GetBaseItem().AllowInventoryStack);
-        packet.WriteBoolean(ItemUtility.IsRare(_item));
+        packet.WriteUInteger(_item.Id);
+        packet.WriteString(_item.Definition.Type.ToCharCode());
+        packet.WriteUInteger(_item.Id);
+        packet.WriteInteger(_item.Definition.SpriteId);
+        packet.WriteInteger((int)_item.Definition.Category);
+        ItemBehaviourUtility.Serialize(packet, _item.ExtraData, _item.UniqueNumber, _item.UniqueSeries);
+        packet.WriteBoolean(_item.Definition.AllowEcotronRecycle);
+        packet.WriteBoolean(_item.Definition.AllowTrade);
+        packet.WriteBoolean(_item.UniqueNumber == 0 && _item.Definition.AllowInventoryStack);
+        packet.WriteBoolean(_item.Definition.AllowMarketplaceSell);
         packet.WriteInteger(-1); //Seconds to expiration.
-        packet.WriteBoolean(true);
+        packet.WriteBoolean(false); // HasRentPeriodStarted
         packet.WriteInteger(-1); //Item RoomId
         if (!_item.IsWallItem)
         {

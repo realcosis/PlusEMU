@@ -11,13 +11,13 @@ public class SlideObjectBundleComposer : IServerPacket
     private readonly int _toX;
     private readonly int _toY;
     private readonly double _toZ;
-    private readonly int _rollerId;
+    private readonly uint _rollerId;
     private readonly int _avatarId;
-    private readonly int _itemId;
+    private readonly uint _itemId;
 
     public uint MessageId => ServerPacketHeader.SlideObjectBundleComposer;
 
-    public SlideObjectBundleComposer(int fromX, int fromY, double fromZ, int toX, int toY, double toZ, int rollerId, int avatarId, int itemId)
+    public SlideObjectBundleComposer(int fromX, int fromY, double fromZ, int toX, int toY, double toZ, uint rollerId, int avatarId, uint itemId)
     {
         _fromX = fromX;
         _fromY = fromY;
@@ -39,15 +39,15 @@ public class SlideObjectBundleComposer : IServerPacket
         packet.WriteInteger(_toY);
         packet.WriteInteger(isItem ? 1 : 0);
         if (isItem)
-            packet.WriteInteger(_itemId);
+            packet.WriteUInteger(_itemId);
         else
         {
-            packet.WriteInteger(_rollerId);
+            packet.WriteUInteger(_rollerId);
             packet.WriteInteger(2);
             packet.WriteInteger(_avatarId);
         }
         packet.WriteString(TextHandling.GetString(_fromZ));
         packet.WriteString(TextHandling.GetString(_toZ));
-        if (isItem) packet.WriteInteger(_rollerId);
+        if (isItem) packet.WriteUInteger(_rollerId);
     }
 }

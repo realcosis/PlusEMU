@@ -7,11 +7,11 @@ public class BotResponse
     public BotResponse(string botAi, string keywords, string responseText, string responseMode, string responseBeverages)
     {
         AiType = BotUtility.GetAiFromString(botAi);
-        Keywords = new List<string>();
+        Keywords = new();
         foreach (var keyword in keywords.Split(',')) Keywords.Add(keyword.ToLower());
         ResponseText = responseText;
         ResponseType = responseMode;
-        BeverageIds = new List<int>();
+        BeverageIds = new();
         if (responseBeverages.Contains(","))
         {
             foreach (var vendingId in responseBeverages.Split(','))

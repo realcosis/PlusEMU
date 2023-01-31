@@ -13,7 +13,7 @@ public sealed class NavigatorManager : INavigatorManager
     private readonly IDatabase _database;
     private readonly ILogger<NavigatorManager> _logger;
 
-    private readonly Dictionary<int, FeaturedRoom> _featuredRooms;
+    private readonly Dictionary<uint, FeaturedRoom> _featuredRooms;
     private readonly Dictionary<int, SearchResultList> _searchResultLists;
     private readonly Dictionary<int, TopLevelItem> _topLevelItems;
 
@@ -25,11 +25,11 @@ public sealed class NavigatorManager : INavigatorManager
         _searchResultLists = new Dictionary<int, SearchResultList>();
 
         //Does this need to be dynamic?
-        _topLevelItems.Add(1, new TopLevelItem(1, "official_view", "", ""));
-        _topLevelItems.Add(2, new TopLevelItem(2, "hotel_view", "", ""));
-        _topLevelItems.Add(3, new TopLevelItem(3, "roomads_view", "", ""));
-        _topLevelItems.Add(4, new TopLevelItem(4, "myworld_view", "", ""));
-        _featuredRooms = new Dictionary<int, FeaturedRoom>();
+        _topLevelItems.Add(1, new(1, "official_view", "", ""));
+        _topLevelItems.Add(2, new(2, "hotel_view", "", ""));
+        _topLevelItems.Add(3, new(3, "roomads_view", "", ""));
+        _topLevelItems.Add(4, new(4, "myworld_view", "", ""));
+        _featuredRooms = new();
     }
 
     public void Init()
@@ -52,7 +52,7 @@ public sealed class NavigatorManager : INavigatorManager
                         if (!_searchResultLists.ContainsKey(Convert.ToInt32(row["id"])))
                         {
                             _searchResultLists.Add(Convert.ToInt32(row["id"]),
-                                new SearchResultList(Convert.ToInt32(row["id"]), Convert.ToString(row["category"]), Convert.ToString(row["category_identifier"]), Convert.ToString(row["public_name"]),
+                                new(Convert.ToInt32(row["id"]), Convert.ToString(row["category"]), Convert.ToString(row["category_identifier"]), Convert.ToString(row["public_name"]),
                                     true, -1, Convert.ToInt32(row["required_rank"]), NavigatorViewModeUtility.GetViewModeByString(Convert.ToString(row["view_mode"])),
                                     Convert.ToString(row["category_type"]), Convert.ToString(row["search_allowance"]), Convert.ToInt32(row["order_id"])));
                         }
@@ -67,10 +67,10 @@ public sealed class NavigatorManager : INavigatorManager
                 {
                     if (Convert.ToInt32(row["enabled"]) == 1)
                     {
-                        if (!_featuredRooms.ContainsKey(Convert.ToInt32(row["room_id"])))
+                        if (!_featuredRooms.ContainsKey(Convert.ToUInt32(row["room_id"])))
                         {
-                            _featuredRooms.Add(Convert.ToInt32(row["room_id"]),
-                                new FeaturedRoom(Convert.ToInt32(row["room_id"]), Convert.ToString(row["caption"]), Convert.ToString(row["description"]), Convert.ToString(row["image_url"])));
+                            _featuredRooms.Add(Convert.ToUInt32(row["room_id"]),
+                                new(Convert.ToInt32(row["room_id"]), Convert.ToString(row["caption"]), Convert.ToString(row["description"]), Convert.ToString(row["image_url"])));
                         }
                     }
                 }
@@ -127,7 +127,7 @@ public sealed class NavigatorManager : INavigatorManager
 
     public bool TryGetSearchResultList(int id, out SearchResultList searchResultList) => _searchResultLists.TryGetValue(id, out searchResultList);
 
-    public bool TryGetFeaturedRoom(int roomId, out FeaturedRoom publicRoom) => _featuredRooms.TryGetValue(roomId, out publicRoom);
+    public bool TryGetFeaturedRoom(uint roomId, out FeaturedRoom publicRoom) => _featuredRooms.TryGetValue(roomId, out publicRoom);
 
     public ICollection<FeaturedRoom> GetFeaturedRooms() => _featuredRooms.Values;
 
@@ -141,7 +141,7 @@ public sealed class NavigatorManager : INavigatorManager
             })).ToDictionary(search => search.Id);
     }
 
-    public async Task SaveHomeRoom(Habbo habbo, int roomId)
+    public async Task SaveHomeRoom(Habbo habbo, uint roomId)
     {
         habbo.HomeRoom = roomId;
 

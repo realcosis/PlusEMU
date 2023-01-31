@@ -14,7 +14,7 @@ internal class SaveBrandingItemEvent : IPacketEvent
             return Task.CompletedTask;
         if (!room.CheckRights(session, true) || !session.GetHabbo().GetPermissions().HasRight("room_item_save_branding_items"))
             return Task.CompletedTask;
-        var itemId = packet.ReadInt();
+        var itemId = packet.ReadUInt();
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null)
             return Task.CompletedTask;
@@ -23,7 +23,7 @@ internal class SaveBrandingItemEvent : IPacketEvent
             var data = packet.ReadInt();
             var brandData = "state" + Convert.ToChar(9) + "0";
             for (var i = 1; i <= data; i++) brandData = brandData + Convert.ToChar(9) + packet.ReadString();
-            item.ExtraData = brandData;
+            item.LegacyDataString = brandData;
         }
         else if (item.Definition.InteractionType == InteractionType.FxProvider)
         {

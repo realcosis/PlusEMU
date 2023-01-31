@@ -66,7 +66,7 @@ internal class PickUpPetEvent : IPacketEvent
             {
                 userRiding.RidingHorse = false;
                 userRiding.ApplyEffect(-1);
-                userRiding.MoveTo(new Point(userRiding.X + 1, userRiding.Y + 1));
+                userRiding.MoveTo(new(userRiding.X + 1, userRiding.Y + 1));
             }
             else
                 pet.RidingHorse = false;
