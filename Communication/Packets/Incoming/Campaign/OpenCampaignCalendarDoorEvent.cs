@@ -2,7 +2,7 @@ using Plus.HabboHotel.GameClients;
 
 namespace Plus.Communication.Packets.Incoming.Campaign;
 
-internal class OpenCampaignCalendarDoorEvent
+internal class OpenCampaignCalendarDoorEvent : IPacketEvent
 {
-    public Task Parse(GameClient session) => throw new NotImplementedException();
+    public Task Parse(GameClient session, IIncomingPacket packet) => throw new NotImplementedException();
 }
