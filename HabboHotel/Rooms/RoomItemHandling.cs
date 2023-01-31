@@ -70,7 +70,7 @@ public class RoomItemHandling
         _mRollerSpeed = p;
     }
 
-    public string WallPositionCheck(string wallPosition)
+    public string? WallPositionCheck(string wallPosition)
     {
         //:w=3,2 l=9,63 l
         try
@@ -90,7 +90,7 @@ public class RoomItemHandling
             var lengthY = int.Parse(lenD[1]);
             if (lengthX < -1 || lengthY < -1000 || lengthX > 700 || lengthY > 700)
                 return null;
-            return ":w=" + widthX + "," + widthY + " " + "l=" + lengthX + "," + lengthY + " " + posD[2];
+            return $":w={widthX},{widthY} l={lengthX},{lengthY} {posD[2]}";
         }
         catch
         {
