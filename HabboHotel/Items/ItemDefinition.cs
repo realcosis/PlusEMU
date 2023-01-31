@@ -1,4 +1,5 @@
-﻿using Plus.HabboHotel.Items.Wired;
+﻿using System.Globalization;
+using Plus.HabboHotel.Items.Wired;
 
 namespace Plus.HabboHotel.Items;
 
@@ -28,7 +29,7 @@ public class ItemDefinition
         BehaviourData = behaviourData;
         Modes = modes;
         VendingIds = (!string.IsNullOrEmpty(vendingIds) && vendingIds != "0") ? vendingIds.Split(",").Select(int.Parse).ToList() : new(0);
-        AdjustableHeights = (!string.IsNullOrEmpty(adjustableHeights) && adjustableHeights != "0") ? adjustableHeights.Split(",").Select(double.Parse).ToList() : new(0);
+        AdjustableHeights = (!string.IsNullOrEmpty(adjustableHeights) && adjustableHeights != "0") ? adjustableHeights.Split(",").Select(s => double.Parse(s, NumberStyles.Any)).ToList() : new(0);
         EffectId = effectId;
         var wiredId = 0;
         if (InteractionType == InteractionType.WiredCondition || InteractionType == InteractionType.WiredTrigger || InteractionType == InteractionType.WiredEffect)

@@ -28,40 +28,27 @@ namespace Plus.HabboHotel.Users;
 public class Habbo
 {
     private HabboStats _habboStats;
-
-    //Room related
-
+    
     private readonly DateTime _timeCached;
 
     private GameClient _client;
     private ClothingComponent _clothing;
-
-    //Player saving.
+    
     private bool _disconnected;
-
-    //Fastfood
-
-    //Counters
     private EffectsComponent _fx;
 
     private bool _habboSaved;
-
-    //Advertising reporting system.
-
-    //Generic player values.
+    
     public IgnoresComponent IgnoresComponent { get; set; }
     public InventoryComponent Inventory { get; private set; }
-
-    //Anti-script placeholders.
+    
     private HabboMessenger _messenger;
 
     private NavigatorPreferences _navigatorPreferences;
     private PermissionComponent _permissions;
-
-    //Just random fun stuff.
+    
     private ProcessComponent _process;
-
-    //Values generated within the game.
+    
     public ConcurrentDictionary<string, UserAchievement> Achievements = new();
     public ArrayList FavoriteRooms = new();
     public Dictionary<int, int> Quests = new();
