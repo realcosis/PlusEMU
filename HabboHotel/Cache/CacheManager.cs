@@ -15,7 +15,7 @@ public class CacheManager : ICacheManager
     {
         _process = processComponent;
         _logger = logger;
-        _usersCached = new ConcurrentDictionary<int, UserCache>();
+        _usersCached = new();
     }
 
     public void Init()

@@ -12,7 +12,7 @@ public class TalentTrackManager : ITalentTrackManager
     public TalentTrackManager(ILogger<TalentTrackManager> logger)
     {
         _logger = logger;
-        _citizenshipLevels = new Dictionary<int, TalentTrackLevel>();
+        _citizenshipLevels = new();
     }
 
     public void Init()

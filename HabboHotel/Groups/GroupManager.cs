@@ -23,13 +23,13 @@ public class GroupManager : IGroupManager
     public GroupManager(ILogger<GroupManager> logger)
     {
         _logger = logger;
-        _groupLoadingSync = new object();
-        _groups = new ConcurrentDictionary<int, Group>();
-        _bases = new List<GroupBadgeParts>();
-        _symbols = new List<GroupBadgeParts>();
-        _baseColours = new List<GroupColours>();
-        _symbolColours = new Dictionary<int, GroupColours>();
-        _backgroundColours = new Dictionary<int, GroupColours>();
+        _groupLoadingSync = new();
+        _groups = new();
+        _bases = new();
+        _symbols = new();
+        _baseColours = new();
+        _symbolColours = new();
+        _backgroundColours = new();
     }
 
 

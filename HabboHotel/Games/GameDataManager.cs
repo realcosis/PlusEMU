@@ -15,7 +15,7 @@ public class GameDataManager : IGameDataManager
     {
         _database = database;
         _logger = logger;
-        _games = new Dictionary<int, GameData>();
+        _games = new();
     }
 
     public ICollection<GameData> GameData => _games.Values;

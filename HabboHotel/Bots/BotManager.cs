@@ -17,7 +17,7 @@ public class BotManager : IBotManager
     {
         _database = database;
         _logger = logger;
-        _responses = new List<BotResponse>();
+        _responses = new();
     }
 
     public void Init()

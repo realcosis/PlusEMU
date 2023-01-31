@@ -21,8 +21,8 @@ public sealed class NavigatorManager : INavigatorManager
     {
         _database = database;
         _logger = logger;
-        _topLevelItems = new Dictionary<int, TopLevelItem>();
-        _searchResultLists = new Dictionary<int, SearchResultList>();
+        _topLevelItems = new();
+        _searchResultLists = new();
 
         //Does this need to be dynamic?
         _topLevelItems.Add(1, new(1, "official_view", "", ""));

@@ -19,7 +19,7 @@ public class BadgeManager : IBadgeManager
     {
         _database = database;
         _logger = logger;
-        _badges = new Dictionary<string, BadgeDefinition>();
+        _badges = new();
     }
 
 

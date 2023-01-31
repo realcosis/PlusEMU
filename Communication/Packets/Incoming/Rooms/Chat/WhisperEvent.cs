@@ -88,7 +88,7 @@ public class WhisperEvent : IPacketEvent
             session.SendWhisper("Oops, this user has their whispers disabled!");
             return Task.CompletedTask;
         }
-        _chatlogManager.StoreChatlog(new ChatlogEntry(session.GetHabbo().Id, room.Id, "<Whisper to " + toUser + ">: " + message, UnixTimestamp.GetNow(), session.GetHabbo(), room));
+        _chatlogManager.StoreChatlog(new(session.GetHabbo().Id, room.Id, "<Whisper to " + toUser + ">: " + message, UnixTimestamp.GetNow(), session.GetHabbo(), room));
         if (_wordFilterManager.CheckBannedWords(message))
         {
             session.GetHabbo().BannedPhraseCount++;

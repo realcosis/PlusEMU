@@ -30,7 +30,7 @@ public class WardrobeLoader : IWardrobeLoader
 
         using var connection = _database.Connection();
         var savedLooks = await connection.QueryAsync<SavedLook>("SELECT `slot_id`,`look`,`gender` FROM `user_wardrobe` WHERE `user_id` = @userId", new { userId });
-        return new Wardrobe
+        return new()
         {
             SavedLooks = savedLooks.ToList()
         };

@@ -17,9 +17,9 @@ public class FigureDataManager : IFigureDataManager
     public FigureDataManager(ILogger<FigureDataManager> logger)
     {
         _logger = logger;
-        _palettes = new Dictionary<int, Palette>();
-        _setTypes = new Dictionary<string, FigureSet>();
-        _requirements = new List<string>
+        _palettes = new();
+        _setTypes = new();
+        _requirements = new()
         {
             "hd",
             "ch",
@@ -77,7 +77,7 @@ public class FigureDataManager : IFigureDataManager
         }
 
         //Faceless.
-        _setTypes["hd"].Sets.Add(99999, new Set(99999, "U", 0, true, false, false));
+        _setTypes["hd"].Sets.Add(99999, new(99999, "U", 0, true, false, false));
         _logger.LogInformation("Loaded " + _palettes.Count + " Color Palettes");
         _logger.LogInformation("Loaded " + _setTypes.Count + " Set Types");
     }

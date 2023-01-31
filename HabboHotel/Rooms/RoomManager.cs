@@ -23,9 +23,9 @@ public class RoomManager : IRoomManager
     public RoomManager(ILogger<RoomManager> logger)
     {
         _logger = logger;   
-        _roomModels = new Dictionary<string, RoomModel>();
+        _roomModels = new();
         _rooms = new ConcurrentDictionary<int, Room>();
-        _roomLoadingSync = new object();
+        _roomLoadingSync = new();
     }
 
     public int Count => _rooms.Count;

@@ -12,7 +12,7 @@ public sealed class ChatStyleManager : IChatStyleManager
     public ChatStyleManager(ILogger<ChatStyleManager> logger)
     {
         _logger = logger;
-        _styles = new Dictionary<int, ChatStyle>();
+        _styles = new();
     }
 
     public void Init()

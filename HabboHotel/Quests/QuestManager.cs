@@ -24,8 +24,8 @@ public class QuestManager : IQuestManager
         _database = database;
         _messengerDataLoader = messengerDataLoader;
         _logger = logger;
-        _quests = new Dictionary<int, Quest>();
-        _questCount = new Dictionary<string, int>();
+        _quests = new();
+        _questCount = new();
     }
 
     public void Init()

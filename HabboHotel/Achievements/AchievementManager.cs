@@ -24,7 +24,7 @@ public class AchievementManager : IAchievementManager
         _database = database;
         _badgeManager = badgeManager;
         _logger = logger;
-        Achievements = new Dictionary<string, Achievement>();
+        Achievements = new();
     }
 
     public void Init()

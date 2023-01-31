@@ -31,12 +31,12 @@ public class CatalogManager : ICatalogManager
         _voucherManager = voucherManager;
         _clothingManager = clothingManager;
         _logger = logger;
-        _itemOffers = new Dictionary<int, int>();
-        _pages = new Dictionary<int, CatalogPage>();
-        _botPresets = new Dictionary<int, CatalogBot>();
-        _items = new Dictionary<int, Dictionary<int, CatalogItem>>();
-        _deals = new Dictionary<int, CatalogDeal>();
-        _promotions = new Dictionary<int, CatalogPromotion>();
+        _itemOffers = new();
+        _pages = new();
+        _botPresets = new();
+        _items = new();
+        _deals = new();
+        _promotions = new();
     }
 
     public Dictionary<int, int> ItemOffers => _itemOffers;
