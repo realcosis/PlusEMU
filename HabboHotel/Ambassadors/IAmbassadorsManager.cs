@@ -1,9 +1,8 @@
 ﻿using Plus.HabboHotel.Users;
 
-namespace Plus.HabboHotel.Ambassadors
+namespace Plus.HabboHotel.Ambassadors;
+
+public interface IAmbassadorsManager
 {
-    public interface IAmbassadorsManager
-    {
-        Task Warn(Habbo ambassador, Habbo target, string message);
-    }
+    Task Warn(Habbo ambassador, Habbo target, string message);
 }

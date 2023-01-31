@@ -23,10 +23,8 @@ internal class DisableMimicCommand : IChatCommand
     {
         session.GetHabbo().AllowMimic = !session.GetHabbo().AllowMimic;
         session.SendWhisper("You're " + (session.GetHabbo().AllowMimic ? "now" : "no longer") + " able to be mimiced.");
-        using (var connection = _database.Connection())
-        {
-            connection.Execute("UPDATE users SET allow_mimic = @AllowMimic WHERE id = @userId LIMIT 1",
-                new { AllowMimic = session.GetHabbo().AllowMimic, userId = session.GetHabbo().Id });
-        }
+        using var connection = _database.Connection();
+        connection.Execute("UPDATE users SET allow_mimic = @AllowMimic WHERE id = @userId LIMIT 1",
+            new { AllowMimic = session.GetHabbo().AllowMimic, userId = session.GetHabbo().Id });
     }
 }

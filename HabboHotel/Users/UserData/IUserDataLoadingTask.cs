@@ -1,16 +1,15 @@
 ﻿using Plus.Utilities.DependencyInjection;
 
-namespace Plus.HabboHotel.Users.UserData
+namespace Plus.HabboHotel.Users.UserData;
+
+[Singleton]
+public interface IUserDataLoadingTask
 {
-    [Singleton]
-    public interface IUserDataLoadingTask
-    {
-        /// <summary>
-        /// Decorate the Habbo object.
-        /// UserId as well as username is guaranteed to be set.
-        /// </summary>
-        /// <param name="habbo"></param>
-        /// <returns></returns>
-        Task Load(Habbo habbo);
-    }
+    /// <summary>
+    /// Decorate the Habbo object.
+    /// UserId as well as username is guaranteed to be set.
+    /// </summary>
+    /// <param name="habbo"></param>
+    /// <returns></returns>
+    Task Load(Habbo habbo);
 }

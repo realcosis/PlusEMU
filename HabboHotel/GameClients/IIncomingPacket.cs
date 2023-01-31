@@ -1,17 +1,16 @@
-﻿namespace Plus.HabboHotel.GameClients
+﻿namespace Plus.HabboHotel.GameClients;
+
+public interface IIncomingPacket
 {
-    public interface IIncomingPacket
-    {
-        int MessageId { get; set; }
-        Memory<byte> Buffer { get; }
-        byte ReadByte();
-        short ReadShort();
-        int ReadInt();
-        uint ReadUInt();
-        bool ReadBool();
-        string ReadString();
-        bool HasDataRemaining();
-        byte[] ReadFixedValue();
-        void ReadBytes(Span<byte> destination);
-    }
+    int MessageId { get; set; }
+    Memory<byte> Buffer { get; }
+    byte ReadByte();
+    short ReadShort();
+    int ReadInt();
+    uint ReadUInt();
+    bool ReadBool();
+    string ReadString();
+    bool HasDataRemaining();
+    byte[] ReadFixedValue();
+    void ReadBytes(Span<byte> destination);
 }

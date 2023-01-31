@@ -1,10 +1,9 @@
 ﻿using Plus.Utilities.DependencyInjection;
 
-namespace Plus.Core
+namespace Plus.Core;
+
+[Singleton]
+public interface IStartable
 {
-    [Singleton]
-    public interface IStartable
-    {
-        Task Start();
-    }
+    Task Start();
 }

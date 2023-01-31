@@ -1,8 +1,7 @@
-﻿namespace Plus.HabboHotel.Users.Messenger
+﻿namespace Plus.HabboHotel.Users.Messenger;
+
+public enum FriendRequestError
 {
-    public enum FriendRequestError
-    {
-        NoFriendRequest,
-        AlreadyOutstandingFriendRequest
-    }
+    NoFriendRequest,
+    AlreadyOutstandingFriendRequest
 }

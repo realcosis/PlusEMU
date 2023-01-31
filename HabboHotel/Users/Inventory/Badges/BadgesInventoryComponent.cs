@@ -1,38 +1,37 @@
 ﻿using System.Collections.Concurrent;
 using Plus.HabboHotel.Users.Badges;
 
-namespace Plus.HabboHotel.Users.Inventory.Badges
+namespace Plus.HabboHotel.Users.Inventory.Badges;
+
+public class BadgesInventoryComponent
 {
-    public class BadgesInventoryComponent
+    private readonly ConcurrentDictionary<string, Badge> _badges;
+
+    public IReadOnlyDictionary<string, Badge> Badges => _badges;
+
+    public BadgesInventoryComponent(Dictionary<string, Badge> badges)
     {
-        private readonly ConcurrentDictionary<string, Badge> _badges;
+        _badges = new(badges);
+    }
 
-        public IReadOnlyDictionary<string, Badge> Badges => _badges;
+    public Badge? GetBadge(string badge)
+    {
+        if (_badges.TryGetValue(badge, out var b))
+            return b;
+        return null;
+    }
 
-        public BadgesInventoryComponent(Dictionary<string, Badge> badges)
-        {
-            _badges = new(badges);
-        }
+    public bool HasBadge(string badge) => _badges.ContainsKey(badge);
 
-        public Badge? GetBadge(string badge)
-        {
-            if (_badges.TryGetValue(badge, out var b))
-                return b;
-            return null;
-        }
+    public void AddBadge(Badge badge) => _badges.TryAdd(badge.Code, badge);
 
-        public bool HasBadge(string badge) => _badges.ContainsKey(badge);
+    public void RemoveBadge(string badge) => _badges.TryRemove(badge, out _);
 
-        public void AddBadge(Badge badge) => _badges.TryAdd(badge.Code, badge);
+    public List<Badge> EquippedBadges => _badges.Values.Where(badge => badge.Slot > 0).ToList();
 
-        public void RemoveBadge(string badge) => _badges.TryRemove(badge, out _);
-
-        public List<Badge> EquippedBadges => _badges.Values.Where(badge => badge.Slot > 0).ToList();
-
-        public void ClearWearingBadges()
-        {
-            foreach (var (_, badge) in _badges)
-                badge.Slot = 0;
-        }
+    public void ClearWearingBadges()
+    {
+        foreach (var (_, badge) in _badges)
+            badge.Slot = 0;
     }
 }

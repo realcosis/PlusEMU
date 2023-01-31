@@ -1,11 +1,10 @@
-﻿namespace Plus.HabboHotel.Users.Ignores
+﻿namespace Plus.HabboHotel.Users.Ignores;
+
+public class IgnoreStatusUpdatedEventArgs : EventArgs
 {
-    public class IgnoreStatusUpdatedEventArgs : EventArgs
+    public IgnoreStatusUpdatedEventArgs(int userId)
     {
-        public IgnoreStatusUpdatedEventArgs(int userId)
-        {
-            UserId = userId;
-        }
-        public int UserId { get; }
+        UserId = userId;
     }
+    public int UserId { get; }
 }

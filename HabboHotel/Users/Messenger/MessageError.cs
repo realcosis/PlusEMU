@@ -1,9 +1,8 @@
-﻿namespace Plus.HabboHotel.Users.Messenger
+﻿namespace Plus.HabboHotel.Users.Messenger;
+
+public enum MessageError
 {
-    public enum MessageError
-    {
-        NotAFriend,
-        EmptyMessage,
-        Flooding
-    }
+    NotAFriend,
+    EmptyMessage,
+    Flooding
 }

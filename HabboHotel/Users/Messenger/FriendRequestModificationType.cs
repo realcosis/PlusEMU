@@ -1,10 +1,9 @@
-﻿namespace Plus.HabboHotel.Users.Messenger
+﻿namespace Plus.HabboHotel.Users.Messenger;
+
+public enum FriendRequestModificationType
 {
-    public enum FriendRequestModificationType
-    {
-        Received,
-        Sent,
-        Accepted,
-        Declined
-    }
+    Received,
+    Sent,
+    Accepted,
+    Declined
 }

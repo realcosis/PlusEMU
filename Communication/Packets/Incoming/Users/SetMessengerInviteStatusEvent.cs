@@ -13,15 +13,12 @@ internal class SetMessengerInviteStatusEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public async Task Parse(GameClient session, IIncomingPacket packet)
     {
         var allowMessengerInvites = packet.ReadBool();
         session.GetHabbo().AllowMessengerInvites = allowMessengerInvites;
-        using (var connection = _database.Connection())
-        {
-            connection.Execute("UPDATE users SET ignore_invites = @ignoreInvites WHERE id = @userId LIMIT 1",
+        using var connection = _database.Connection();
+        await connection.ExecuteAsync("UPDATE users SET ignore_invites = @ignoreInvites WHERE id = @userId LIMIT 1",
             new { ignoreInvites = allowMessengerInvites, userId = session.GetHabbo().Id });
-            return Task.CompletedTask;
-        }
     }
 }

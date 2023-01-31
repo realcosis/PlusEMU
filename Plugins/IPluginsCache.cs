@@ -1,7 +1,6 @@
-﻿namespace Plus.Plugins
-{
-    public interface IPluginsCache
-    {
+﻿namespace Plus.Plugins;
 
-    }
+public interface IPluginsCache
+{
+
 }

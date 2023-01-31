@@ -1,13 +1,12 @@
 ﻿using Plus.Utilities.DependencyInjection;
 
-namespace Plus.HabboHotel.Rooms.Chat.Commands
+namespace Plus.HabboHotel.Rooms.Chat.Commands;
+
+[Singleton]
+public interface ICommandBase
 {
-    [Singleton]
-    public interface ICommandBase
-    {
-        string Key { get; }
-        string PermissionRequired { get; }
-        string Parameters { get; }
-        string Description { get; }
-    }
+    string Key { get; }
+    string PermissionRequired { get; }
+    string Parameters { get; }
+    string Description { get; }
 }

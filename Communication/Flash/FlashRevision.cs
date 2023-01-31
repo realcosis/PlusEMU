@@ -1,8 +1,7 @@
-﻿namespace Plus.Communication.Flash
+﻿namespace Plus.Communication.Flash;
+
+public class FlashRevision
 {
-    public class FlashRevision
-    {
-        public string Revision { get; set; } = string.Empty;
-        public Dictionary<int, int> HeaderMapping { get; set; } = new();
-    }
+    public string Revision { get; set; } = string.Empty;
+    public Dictionary<int, int> HeaderMapping { get; set; } = new();
 }

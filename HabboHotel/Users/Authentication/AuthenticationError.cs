@@ -1,10 +1,9 @@
-﻿namespace Plus.HabboHotel.Users.Authentication
+﻿namespace Plus.HabboHotel.Users.Authentication;
+
+public enum AuthenticationError
 {
-    public enum AuthenticationError
-    {
-        EmptySSO,
-        InvalidSSO,
-        NoAccountFound,
-        LoginProhibited
-    }
+    EmptySSO,
+    InvalidSSO,
+    NoAccountFound,
+    LoginProhibited
 }

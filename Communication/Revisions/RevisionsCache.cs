@@ -4,85 +4,84 @@ using Plus.Communication.Packets.Incoming;
 using Plus.Communication.Packets.Outgoing;
 using Plus.Core;
 
-namespace Plus.Communication.Revisions
+namespace Plus.Communication.Revisions;
+
+public class RevisionsCache : IRevisionsCache, IStartable
 {
-    public class RevisionsCache : IRevisionsCache, IStartable
+    public IReadOnlyDictionary<string, Revision> Revisions { get; set; }
+    public Revision InternalRevision { get; private set; }
+
+    private string? _directory;
+    public string Location => _directory ??= Path.Join(Directory.GetCurrentDirectory(), "revisions");
+
+    private static readonly JsonSerializerOptions SerializerOptions = new()
     {
-        public IReadOnlyDictionary<string, Revision> Revisions { get; set; }
-        public Revision InternalRevision { get; private set; }
+        PropertyNameCaseInsensitive = true,
+        WriteIndented = true,
+    };
 
-        private string? _directory;
-        public string Location => _directory ??= Path.Join(Directory.GetCurrentDirectory(), "revisions");
+    public async Task Start()
+    {
+        LoadInternalRevision();
+        await LoadRevisions();
+        Validate();
+    }
 
-        private static readonly JsonSerializerOptions SerializerOptions = new()
+    private void LoadInternalRevision()
+    {
+        var incomingHeaders = typeof(ClientPacketHeader).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).ToDictionary(field => field.Name, field => (uint)field.GetRawConstantValue());
+        var outgoingHeaders = typeof(ServerPacketHeader).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).ToDictionary(field => field.Name, field => (uint)field.GetRawConstantValue());
+        InternalRevision = new()
         {
-            PropertyNameCaseInsensitive = true,
-            WriteIndented = true,
+            Name = "PRODUCTION-201701242205-837386173",
+            IncomingHeaders = incomingHeaders,
+            IncomingIdToInternalIdMapping = incomingHeaders.Where(kvp => kvp.Value > 0).ToDictionary(kvp => kvp.Value, kvp => kvp.Value),
+            OutgoingHeaders = outgoingHeaders,
+            InternalIdToOutgoingIdMapping = outgoingHeaders.Where(kvp => kvp.Value > 0).ToDictionary(kvp => kvp.Value, kvp => kvp.Value)
         };
 
-        public async Task Start()
+        if (!Directory.Exists(Location))
+            Directory.CreateDirectory(Location);
+
+        File.WriteAllText(Path.Join(Location, "example.json"), JsonSerializer.Serialize(InternalRevision, SerializerOptions));
+    }
+
+    private async Task LoadRevisions()
+    {
+        var revisions = new Dictionary<string, Revision>();
+        foreach (var file in Directory.GetFiles(Location).Where(f => f.EndsWith(".json")))
         {
-            LoadInternalRevision();
-            await LoadRevisions();
-            Validate();
+            var revision = JsonSerializer.Deserialize<Revision>(await File.ReadAllTextAsync(file), SerializerOptions);
+            if (revision.Name.Equals(InternalRevision.Name)) continue;
+            revisions[revision.Name] = revision;
         }
+        revisions[InternalRevision.Name] = InternalRevision;
+        Revisions = revisions;
+    }
 
-        private void LoadInternalRevision()
+    private void Validate()
+    {
+        foreach (var revision in Revisions.Values)
         {
-            var incomingHeaders = typeof(ClientPacketHeader).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).ToDictionary(field => field.Name, field => (uint)field.GetRawConstantValue());
-            var outgoingHeaders = typeof(ServerPacketHeader).GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy).ToDictionary(field => field.Name, field => (uint)field.GetRawConstantValue());
-            InternalRevision = new()
+            var undefinedIncoming = revision.IncomingHeaders.Keys.Where(key => !InternalRevision.IncomingHeaders.ContainsKey(key)).ToList();
+            var undefinedOutgoing = revision.OutgoingHeaders.Keys.Where(key => !InternalRevision.OutgoingHeaders.ContainsKey(key)).ToList();
+
+            if (undefinedIncoming.Any())
             {
-                Name = "PRODUCTION-201701242205-837386173",
-                IncomingHeaders = incomingHeaders,
-                IncomingIdToInternalIdMapping = incomingHeaders.Where(kvp => kvp.Value > 0).ToDictionary(kvp => kvp.Value, kvp => kvp.Value),
-                OutgoingHeaders = outgoingHeaders,
-                InternalIdToOutgoingIdMapping = outgoingHeaders.Where(kvp => kvp.Value > 0).ToDictionary(kvp => kvp.Value, kvp => kvp.Value)
-            };
-
-            if (!Directory.Exists(Location))
-                Directory.CreateDirectory(Location);
-
-            File.WriteAllText(Path.Join(Location, "example.json"), JsonSerializer.Serialize(InternalRevision, SerializerOptions));
-        }
-
-        private async Task LoadRevisions()
-        {
-            var revisions = new Dictionary<string, Revision>();
-            foreach (var file in Directory.GetFiles(Location).Where(f => f.EndsWith(".json")))
-            {
-                var revision = JsonSerializer.Deserialize<Revision>(await File.ReadAllTextAsync(file), SerializerOptions);
-                if (revision.Name.Equals(InternalRevision.Name)) continue;
-                revisions[revision.Name] = revision;
+                Console.WriteLine($"{revision.Name}: Missing Incoming Headers ({undefinedIncoming.Count}):");
+                foreach (var incoming in undefinedIncoming)
+                    Console.WriteLine(incoming);
             }
-            revisions[InternalRevision.Name] = InternalRevision;
-            Revisions = revisions;
-        }
-
-        private void Validate()
-        {
-            foreach (var revision in Revisions.Values)
+            if (undefinedOutgoing.Any())
             {
-                var undefinedIncoming = revision.IncomingHeaders.Keys.Where(key => !InternalRevision.IncomingHeaders.ContainsKey(key)).ToList();
-                var undefinedOutgoing = revision.OutgoingHeaders.Keys.Where(key => !InternalRevision.OutgoingHeaders.ContainsKey(key)).ToList();
-
-                if (undefinedIncoming.Any())
-                {
-                    Console.WriteLine($"{revision.Name}: Missing Incoming Headers ({undefinedIncoming.Count}):");
-                    foreach (var incoming in undefinedIncoming)
-                        Console.WriteLine(incoming);
-                }
-                if (undefinedOutgoing.Any())
-                {
-                    Console.WriteLine($"{revision.Name}: Missing Outgoing Headers ({undefinedOutgoing.Count}):");
-                    foreach (var outgoing in undefinedOutgoing)
-                        Console.WriteLine(outgoing);
-                }
-
-
-                revision.IncomingIdToInternalIdMapping = revision.IncomingHeaders.Where(kvp => kvp.Value > 0).ToDictionary(kvp => kvp.Value, kvp => InternalRevision.IncomingHeaders[kvp.Key]);
-                revision.InternalIdToOutgoingIdMapping = revision.OutgoingHeaders.Where(kvp => kvp.Value > 0).ToDictionary(kvp => InternalRevision.OutgoingHeaders[kvp.Key], kvp => kvp.Value);
+                Console.WriteLine($"{revision.Name}: Missing Outgoing Headers ({undefinedOutgoing.Count}):");
+                foreach (var outgoing in undefinedOutgoing)
+                    Console.WriteLine(outgoing);
             }
+
+
+            revision.IncomingIdToInternalIdMapping = revision.IncomingHeaders.Where(kvp => kvp.Value > 0).ToDictionary(kvp => kvp.Value, kvp => InternalRevision.IncomingHeaders[kvp.Key]);
+            revision.InternalIdToOutgoingIdMapping = revision.OutgoingHeaders.Where(kvp => kvp.Value > 0).ToDictionary(kvp => InternalRevision.OutgoingHeaders[kvp.Key], kvp => kvp.Value);
         }
     }
 }

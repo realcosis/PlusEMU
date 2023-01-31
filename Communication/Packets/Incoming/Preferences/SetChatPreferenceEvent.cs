@@ -13,15 +13,12 @@ internal class SetChatPreferenceEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public async Task Parse(GameClient session, IIncomingPacket packet)
     {
         var chatPreference = packet.ReadBool();
         session.GetHabbo().ChatPreference = chatPreference;
-        using (var connection = _database.Connection())
-        {
-            connection.Execute("UPDATE users SET chat_preference = @chatPreference WHERE id = @userId LIMIT 1",
-            new { chatPreference = chatPreference, userId = session.GetHabbo().Id});
-            return Task.CompletedTask;
-        }
+        using var connection = _database.Connection();
+        await connection.ExecuteAsync("UPDATE users SET chat_preference = @chatPreference WHERE id = @userId LIMIT 1",
+            new { chatPreference, userId = session.GetHabbo().Id});
     }
 }

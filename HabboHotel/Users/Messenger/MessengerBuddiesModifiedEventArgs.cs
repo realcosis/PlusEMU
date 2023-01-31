@@ -1,11 +1,10 @@
-﻿namespace Plus.HabboHotel.Users.Messenger
+﻿namespace Plus.HabboHotel.Users.Messenger;
+
+public class MessengerBuddiesModifiedEventArgs : EventArgs
 {
-    public class MessengerBuddiesModifiedEventArgs : EventArgs
+    public Dictionary<MessengerBuddy, BuddyModificationType> Changes { get; }
+    public MessengerBuddiesModifiedEventArgs(Dictionary<MessengerBuddy, BuddyModificationType> changes)
     {
-        public Dictionary<MessengerBuddy, BuddyModificationType> Changes { get; }
-        public MessengerBuddiesModifiedEventArgs(Dictionary<MessengerBuddy, BuddyModificationType> changes)
-        {
-            Changes = changes;
-        }
+        Changes = changes;
     }
 }

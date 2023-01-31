@@ -1,10 +1,9 @@
-﻿namespace Plus.HabboHotel.Users.UserData
+﻿namespace Plus.HabboHotel.Users.UserData;
+
+public interface IUserDataFactory
 {
-    public interface IUserDataFactory
-    {
-        Task<Habbo?> Create(int userId);
-        Task<string> GetUsernameForHabboById(int userId);
-        Task<bool> HabboExists(int userId);
-        Task<bool> HabboExists(string username);
-    }
+    Task<Habbo?> Create(int userId);
+    Task<string> GetUsernameForHabboById(int userId);
+    Task<bool> HabboExists(int userId);
+    Task<bool> HabboExists(string username);
 }

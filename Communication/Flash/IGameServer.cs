@@ -1,12 +1,11 @@
 ﻿using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Flash
-{
-    public interface IGameServer
-    {
-        bool Start();
-        bool Stop();
+namespace Plus.Communication.Flash;
 
-        Task PacketReceived(GameClient client, uint messageId, IIncomingPacket packet);
-    }
+public interface IGameServer
+{
+    bool Start();
+    bool Stop();
+
+    Task PacketReceived(GameClient client, uint messageId, IIncomingPacket packet);
 }

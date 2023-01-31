@@ -1,7 +1,6 @@
-﻿namespace Plus.HabboHotel.Users.Ignores
+﻿namespace Plus.HabboHotel.Users.Ignores;
+
+public interface IIgnoredUsersService
 {
-    public interface IIgnoredUsersService
-    {
-        Task<List<string>> GetIgnoredUsersByName(IReadOnlyCollection<int> userIds);
-    }
+    Task<List<string>> GetIgnoredUsersByName(IReadOnlyCollection<int> userIds);
 }

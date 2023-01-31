@@ -6,42 +6,41 @@ using Plus.Communication.Packets;
 using Plus.Communication.Revisions;
 using Plus.HabboHotel.GameClients;
 
-namespace Plus.Communication.Nitro
+namespace Plus.Communication.Nitro;
+
+public class NitroServerConfiguration : IGameServerOptions
 {
-    public class NitroServerConfiguration : IGameServerOptions
+    public string Name { get; set; }
+    public int Port { get; set; }
+    public string Hostname { get; set; }
+}
+
+public interface INitroServer : IGameServer
+{
+}
+
+public class NitroServer : WebsocketGameServer<NitroServerConfiguration>, INitroServer
+{
+    public NitroServer(IOptions<NitroServerConfiguration> options, NitroClientFactory clientFactory, IPacketManager packetManager) : base(options, clientFactory, packetManager) { }
+}
+
+
+public class NitroClientFactory : IGameClientFactory<WsSessionProxy, WsServer>
+{
+    private readonly FlashPacketFactory _packetFactory;
+    private readonly IRevisionsCache _revisionsCache;
+
+    public NitroClientFactory(FlashPacketFactory packetFactory, IRevisionsCache revisionsCache)
     {
-        public string Name { get; set; }
-        public int Port { get; set; }
-        public string Hostname { get; set; }
+        _packetFactory = packetFactory;
+        _revisionsCache = revisionsCache;
     }
 
-    public interface INitroServer : IGameServer
+    public WsSessionProxy Create(WsServer server)
     {
-    }
-
-    public class NitroServer : WebsocketGameServer<NitroServerConfiguration>, INitroServer
-    {
-        public NitroServer(IOptions<NitroServerConfiguration> options, NitroClientFactory clientFactory, IPacketManager packetManager) : base(options, clientFactory, packetManager) { }
-    }
-
-
-    public class NitroClientFactory : IGameClientFactory<WsSessionProxy, WsServer>
-    {
-        private readonly FlashPacketFactory _packetFactory;
-        private readonly IRevisionsCache _revisionsCache;
-
-        public NitroClientFactory(FlashPacketFactory packetFactory, IRevisionsCache revisionsCache)
-        {
-            _packetFactory = packetFactory;
-            _revisionsCache = revisionsCache;
-        }
-
-        public WsSessionProxy Create(WsServer server)
-        {
-            var flashClient = new FlashGameClient((NitroServer)server, _packetFactory)
-                { Revision = _revisionsCache.InternalRevision };
-            var wsSession = new WsSessionProxy((NitroServer)server, flashClient);
-            return wsSession;
-        }
+        var flashClient = new FlashGameClient((NitroServer)server, _packetFactory)
+            { Revision = _revisionsCache.InternalRevision };
+        var wsSession = new WsSessionProxy((NitroServer)server, flashClient);
+        return wsSession;
     }
 }

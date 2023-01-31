@@ -1,10 +1,9 @@
 ﻿using Plus.Utilities.DependencyInjection;
 
-namespace Plus.Plugins
+namespace Plus.Plugins;
+
+[Singleton]
+public interface IPlugin
 {
-    [Singleton]
-    public interface IPlugin
-    {
-        void Start();
-    }
+    void Start();
 }
