@@ -24,7 +24,7 @@ public class RoomManager : IRoomManager
     {
         _logger = logger;   
         _roomModels = new();
-        _rooms = new ConcurrentDictionary<int, Room>();
+        _rooms = new();
         _roomLoadingSync = new();
     }
 

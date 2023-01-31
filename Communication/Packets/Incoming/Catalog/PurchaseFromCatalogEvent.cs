@@ -357,7 +357,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
             }
         }
         if (!string.IsNullOrEmpty(item.Badge) &&
-            _badgeManager.TryGetBadge(item.Badge, out var badge) &&
+            _badgeManager.Badges.TryGetValue(item.Badge, out var badge) &&
             (string.IsNullOrEmpty(badge.RequiredRight) || session.GetHabbo().GetPermissions().HasRight(badge.RequiredRight)))
             await _badgeManager.GiveBadge(session.GetHabbo(), badge.Code);
         session.Send(new PurchaseOkComposer(item, item.Definition));

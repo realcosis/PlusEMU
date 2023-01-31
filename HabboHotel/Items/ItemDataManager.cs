@@ -1,13 +1,14 @@
 ﻿using System.Data;
 using Microsoft.Extensions.Logging;
+using Plus.HabboHotel.Users.Inventory.Furniture;
 
 namespace Plus.HabboHotel.Items;
 
 public class ItemDataManager : IItemDataManager
 {
     private readonly ILogger<ItemDataManager> _logger;
-    public Dictionary<int, ItemDefinition> Gifts = new(0); //<SpriteId, Item>
-    public Dictionary<int, ItemDefinition> Items = new(0);
+    public Dictionary<int, uint> Gifts { get; } = new(0); //<SpriteId, Item>
+    public Dictionary<uint, ItemDefinition> Items { get; } = new(0);
 
     public ItemDataManager(ILogger<ItemDataManager> logger)
     {

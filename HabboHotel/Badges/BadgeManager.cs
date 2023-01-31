@@ -1,4 +1,4 @@
-﻿using System.Data;
+﻿using System.Diagnostics.CodeAnalysis;
 using Dapper;
 using Microsoft.Extensions.Logging;
 using Plus.Communication.Packets.Outgoing.Inventory.Badges;
@@ -13,7 +13,9 @@ public class BadgeManager : IBadgeManager
 {
     private readonly IDatabase _database;
     private readonly ILogger<BadgeManager> _logger;
-    private readonly Dictionary<string, BadgeDefinition> _badges;
+
+    private Dictionary<string, BadgeDefinition> _badges;
+    public IReadOnlyDictionary<string, BadgeDefinition> Badges => _badges;
 
     public BadgeManager(IDatabase database, ILogger<BadgeManager> logger)
     {
@@ -22,32 +24,19 @@ public class BadgeManager : IBadgeManager
         _badges = new();
     }
 
-
-
-    public void Init()
+    public async Task Init()
     {
-        using (var dbClient = _database.GetQueryReactor())
-        {
-            dbClient.SetQuery("SELECT * FROM `badge_definitions`;");
-            var data = dbClient.GetTable();
-            foreach (DataRow row in data.Rows)
-            {
-                var code = Convert.ToString(row["code"]).ToUpper();
-                if (!_badges.ContainsKey(code))
-                    _badges.Add(code, new(code, Convert.ToString(row["required_right"])));
-            }
-        }
-        _logger.LogInformation("Loaded " + _badges.Count + " badge definitions.");
+        using var connection = _database.Connection();
+        _badges = (await connection.QueryAsync<BadgeDefinition>("SELECT * FROM badge_definitions")).ToDictionary(definition => definition.Code.ToUpper());
+        _logger.LogInformation("Loaded " + Badges.Count + " badge definitions.");
     }
-
-    public bool TryGetBadge(string code, out BadgeDefinition badge) => _badges.TryGetValue(code.ToUpper(), out badge);
 
     public async Task GiveBadge(Habbo habbo, string code)
     {
         if (habbo.Inventory.Badges.HasBadge(code))
             return;
-        BadgeDefinition badge = null;
-        if (!TryGetBadge(code.ToUpper(), out badge) || badge.RequiredRight.Length > 0 && !habbo.GetPermissions().HasRight(badge.RequiredRight))
+
+        if (!_badges.TryGetValue(code.ToUpper(), out var badge) || badge.RequiredRight.Length > 0 && !habbo.GetPermissions().HasRight(badge.RequiredRight))
             return;
 
         using var connection = _database.Connection();

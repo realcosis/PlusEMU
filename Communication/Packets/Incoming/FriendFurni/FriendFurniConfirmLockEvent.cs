@@ -16,13 +16,13 @@ internal class FriendFurniConfirmLockEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var pId = packet.ReadInt();
+        var pId = packet.ReadUInt();
         var isConfirmed = packet.ReadBool();
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
             return Task.CompletedTask;
         var item = room.GetRoomItemHandler().GetItem(pId);
-        if (item == null || item.GetBaseItem() == null || item.GetBaseItem().InteractionType != InteractionType.Lovelock)
+        if (item == null || item.Definition == null || item.Definition.InteractionType != InteractionType.Lovelock)
             return Task.CompletedTask;
         var userOneId = item.InteractingUser;
         var userTwoId = item.InteractingUser2;
@@ -60,7 +60,7 @@ internal class FriendFurniConfirmLockEvent : IPacketEvent
             item.InteractingUser2 = 0;
             return Task.CompletedTask;
         }
-        if (item.ExtraData.Contains(Convert.ToChar(5).ToString()))
+        if (item.ExtraData.Serialize().Contains(Convert.ToChar(5).ToString()))
         {
             userTwo.CanWalk = true;
             userTwo.GetClient().SendNotification("It appears this love lock has already been locked.");
@@ -94,8 +94,8 @@ internal class FriendFurniConfirmLockEvent : IPacketEvent
         }
         if (userOne.LlPartner == 0 || userTwo.LlPartner == 0)
             return Task.CompletedTask;
-        item.ExtraData = "1" + (char)5 + userOne.GetUsername() + (char)5 + userTwo.GetUsername() + (char)5 + userOne.GetClient().GetHabbo().Look + (char)5 + userTwo.GetClient().GetHabbo().Look +
-                         (char)5 + DateTime.Now.ToString("dd/MM/yyyy");
+        item.ExtraData.Store("1" + (char)5 + userOne.GetUsername() + (char)5 + userTwo.GetUsername() + (char)5 + userOne.GetClient().GetHabbo().Look + (char)5 + userTwo.GetClient().GetHabbo().Look +
+                         (char)5 + DateTime.Now.ToString("dd/MM/yyyy"));
         item.InteractingUser = 0;
         item.InteractingUser2 = 0;
         userOne.LlPartner = 0;

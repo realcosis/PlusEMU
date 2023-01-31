@@ -2,12 +2,6 @@
 
 public class BadgeDefinition
 {
-    public BadgeDefinition(string code, string requiredRight)
-    {
-        Code = code;
-        RequiredRight = requiredRight;
-    }
-
-    public string Code { get; }
-    public string RequiredRight { get; }
+    public string Code { get; init; } = string.Empty;
+    public string RequiredRight { get; init; } = string.Empty;
 }

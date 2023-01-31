@@ -12,7 +12,7 @@ namespace Plus.HabboHotel.Catalog;
 public class CatalogManager : ICatalogManager
 {
     private readonly ILogger<CatalogManager> _logger;
-    private readonly Dictionary<int, CatalogBot> _botPresets;
+    private readonly Dictionary<uint, CatalogBot> _botPresets;
     private readonly Dictionary<int, CatalogDeal> _deals;
     private readonly Dictionary<int, Dictionary<int, CatalogItem>> _items;
     private readonly Dictionary<int, CatalogPage> _pages;
