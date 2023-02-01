@@ -44,6 +44,7 @@ public class RoomManager : IRoomManager
                         continue;
                     if (room.ProcessTask == null || room.ProcessTask.IsCompleted)
                     {
+                        room.ProcessTask?.Dispose();
                         room.ProcessTask = new(room.ProcessRoom);
                         room.ProcessTask.Start();
                         room.IsLagging = 0;
