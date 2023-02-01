@@ -128,7 +128,7 @@ public class RoomItemHandling
                     var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(item.UserId);
                     if (client != null)
                     {
-                        client.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.LegacyDataString, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
+                        client.GetHabbo().Inventory.Furniture.AddItem(item.ToInventoryItem());
                         client.Send(new FurniListUpdateComposer());
                     }
                     continue;

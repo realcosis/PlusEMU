@@ -27,27 +27,28 @@ namespace Plus.HabboHotel.Users;
 
 public class Habbo
 {
-    private HabboStats _habboStats;
+    public HabboStats HabboStats { get; set; }
 
     private readonly DateTime _timeCached;
 
-    private GameClient _client;
-    private ClothingComponent _clothing;
+    public GameClient Client { get; set; }
+    public ClothingComponent Clothing { get; set; }
 
     private bool _disconnected;
-    private EffectsComponent _fx;
+    public EffectsComponent Fx { get; set; }
 
     private bool _habboSaved;
 
     public IgnoresComponent IgnoresComponent { get; set; }
-    public InventoryComponent Inventory { get; private set; }
+    public InventoryComponent Inventory { get; set; }
 
-    private HabboMessenger _messenger;
+    public HabboMessenger Messenger { get; set; }
 
-    private NavigatorPreferences _navigatorPreferences;
-    private PermissionComponent _permissions;
+    public NavigatorPreferences NavigatorPreferences { get; set; }
+    public PermissionComponent Permissions { get; set; }
 
-    private ProcessComponent _process;
+    [Obsolete("Should be deleted /refactored to standalone service")]
+    private ProcessComponent Process { get; set; }
 
     public ConcurrentDictionary<string, UserAchievement> Achievements = new();
     public ArrayList FavoriteRooms = new();
@@ -203,16 +204,16 @@ public class Habbo
             _habboSaved = true;
             return "UPDATE `users` SET `online` = false, `last_online` = '" + UnixTimestamp.GetNow() + "', `activity_points` = '" + Duckets + "', `credits` = '" + Credits +
                    "', `vip_points` = '" + Diamonds + "', `home_room` = '" + HomeRoom + "', `gotw_points` = '" + GotwPoints + "', `time_muted` = '" + TimeMuted + "',`friend_bar_state` = '" +
-                   FriendBarStateUtility.GetInt(FriendbarState) + "' WHERE id = '" + Id + "' LIMIT 1;UPDATE `user_statistics` SET `roomvisits` = '" + _habboStats.RoomVisits + "', `onlineTime` = '" +
-                   (UnixTimestamp.GetNow() - SessionStart + _habboStats.OnlineTime) + "', `respect` = '" + _habboStats.Respect + "', `respectGiven` = '" + _habboStats.RespectGiven +
-                   "', `giftsGiven` = '" + _habboStats.GiftsGiven + "', `giftsReceived` = '" + _habboStats.GiftsReceived + "', `dailyRespectPoints` = '" + _habboStats.DailyRespectPoints +
-                   "', `dailyPetRespectPoints` = '" + _habboStats.DailyPetRespectPoints + "', `AchievementScore` = '" + _habboStats.AchievementPoints + "', `quest_id` = '" + _habboStats.QuestId +
-                   "', `quest_progress` = '" + _habboStats.QuestProgress + "', `groupid` = '" + _habboStats.FavouriteGroupId + "',`forum_posts` = '" + _habboStats.ForumPosts + "' WHERE `id` = '" +
+                   FriendBarStateUtility.GetInt(FriendbarState) + "' WHERE id = '" + Id + "' LIMIT 1;UPDATE `user_statistics` SET `roomvisits` = '" + HabboStats.RoomVisits + "', `onlineTime` = '" +
+                   (UnixTimestamp.GetNow() - SessionStart + HabboStats.OnlineTime) + "', `respect` = '" + HabboStats.Respect + "', `respectGiven` = '" + HabboStats.RespectGiven +
+                   "', `giftsGiven` = '" + HabboStats.GiftsGiven + "', `giftsReceived` = '" + HabboStats.GiftsReceived + "', `dailyRespectPoints` = '" + HabboStats.DailyRespectPoints +
+                   "', `dailyPetRespectPoints` = '" + HabboStats.DailyPetRespectPoints + "', `AchievementScore` = '" + HabboStats.AchievementPoints + "', `quest_id` = '" + HabboStats.QuestId +
+                   "', `quest_progress` = '" + HabboStats.QuestProgress + "', `groupid` = '" + HabboStats.FavouriteGroupId + "',`forum_posts` = '" + HabboStats.ForumPosts + "' WHERE `id` = '" +
                    Id + "' LIMIT 1;";
         }
     }
 
-    public HabboStats GetStats() => _habboStats;
+    public HabboStats GetStats() => HabboStats;
 
     public bool CacheExpired()
     {
@@ -222,20 +223,20 @@ public class Habbo
 
     public bool InitProcess()
     {
-        _process = new();
-        return _process.Init(this);
+        Process = new();
+        return Process.Init(this);
     }
 
     public bool InitFx()
     {
-        _fx = new();
-        return _fx.Init(this);
+        Fx = new();
+        return Fx.Init(this);
     }
 
     public bool InitClothing()
     {
-        _clothing = new();
-        return _clothing.Init(this);
+        Clothing = new();
+        return Clothing.Init(this);
     }
 
     [Obsolete("Each loading task should be moved to their own IUserDataLoadingTask")]
@@ -243,7 +244,7 @@ public class Habbo
     {
         // Move each of these loading tasks to their own IUserDataLoadingTask implementation.
         //foreach (var id in data.FavouritedRooms) FavoriteRooms.Add(id);
-        _client = client;
+        Client = client;
         //Quests = data.Quests;
         _disconnected = false;
         InitFx();
@@ -251,7 +252,7 @@ public class Habbo
     }
 
 
-    public PermissionComponent GetPermissions() => _permissions;
+    public PermissionComponent GetPermissions() => Permissions;
 
     public event EventHandler? Disconnected;
     public void OnDisconnect()
@@ -263,8 +264,8 @@ public class Habbo
 
         try
         {
-            if (_process != null)
-                _process.Dispose();
+            if (Process != null)
+                Process.Dispose();
         }
         catch { }
         _disconnected = true;
@@ -276,28 +277,28 @@ public class Habbo
             dbClient.RunQuery("UPDATE `users` SET `online` = false, `last_online` = '" + (int)UnixTimestamp.GetNow() + "', `activity_points` = '" + Duckets + "', `credits` = '" + Credits +
                               "', `vip_points` = '" + Diamonds + "', `home_room` = '" + HomeRoom + "', `gotw_points` = '" + GotwPoints + "', `time_muted` = '" + TimeMuted +
                               "',`friend_bar_state` = '" + FriendBarStateUtility.GetInt(FriendbarState) + "', `bubble_id` = '" + CustomBubbleId + "' WHERE id = '" + Id + "' LIMIT 1;UPDATE `user_statistics` SET `roomvisits` = '" +
-                              _habboStats.RoomVisits + "', `onlineTime` = '" + (int)(UnixTimestamp.GetNow() - SessionStart + _habboStats.OnlineTime) + "', `respect` = '" + _habboStats.Respect +
-                              "', `respectGiven` = '" + _habboStats.RespectGiven + "', `giftsGiven` = '" + _habboStats.GiftsGiven + "', `giftsReceived` = '" + _habboStats.GiftsReceived +
-                              "', `dailyRespectPoints` = '" + _habboStats.DailyRespectPoints + "', `dailyPetRespectPoints` = '" + _habboStats.DailyPetRespectPoints + "', `AchievementScore` = '" +
-                              _habboStats.AchievementPoints + "', `quest_id` = '" + _habboStats.QuestId + "', `quest_progress` = '" + _habboStats.QuestProgress + "', `groupid` = '" +
-                              _habboStats.FavouriteGroupId + "',`forum_posts` = '" + _habboStats.ForumPosts + "' WHERE `id` = '" + Id + "' LIMIT 1;");
+                              HabboStats.RoomVisits + "', `onlineTime` = '" + (int)(UnixTimestamp.GetNow() - SessionStart + HabboStats.OnlineTime) + "', `respect` = '" + HabboStats.Respect +
+                              "', `respectGiven` = '" + HabboStats.RespectGiven + "', `giftsGiven` = '" + HabboStats.GiftsGiven + "', `giftsReceived` = '" + HabboStats.GiftsReceived +
+                              "', `dailyRespectPoints` = '" + HabboStats.DailyRespectPoints + "', `dailyPetRespectPoints` = '" + HabboStats.DailyPetRespectPoints + "', `AchievementScore` = '" +
+                              HabboStats.AchievementPoints + "', `quest_id` = '" + HabboStats.QuestId + "', `quest_progress` = '" + HabboStats.QuestProgress + "', `groupid` = '" +
+                              HabboStats.FavouriteGroupId + "',`forum_posts` = '" + HabboStats.ForumPosts + "' WHERE `id` = '" + Id + "' LIMIT 1;");
             if (GetPermissions().HasRight("mod_tickets"))
                 dbClient.RunQuery("UPDATE `moderation_tickets` SET `status` = 'open', `moderator_id` = '0' WHERE `status` ='picked' AND `moderator_id` = '" + Id + "'");
         }
         Dispose();
-        _client = null;
+        Client = null;
     }
 
     public void Dispose()
     {
         if (InRoom && CurrentRoom != null)
-            CurrentRoom.GetRoomUserManager().RemoveUserFromRoom(_client, false);
-        if (_fx != null)
-            _fx.Dispose();
-        if (_clothing != null)
-            _clothing.Dispose();
-        if (_permissions != null)
-            _permissions.Dispose();
+            CurrentRoom.GetRoomUserManager().RemoveUserFromRoom(Client, false);
+        if (Fx != null)
+            Fx.Dispose();
+        if (Clothing != null)
+            Clothing.Dispose();
+        if (Permissions != null)
+            Permissions.Dispose();
     }
 
     public void CheckCreditsTimer()
@@ -317,38 +318,19 @@ public class Habbo
                 }
                 Credits += creditUpdate;
                 Duckets += ducketUpdate;
-                _client.Send(new CreditBalanceComposer(Credits));
-                _client.Send(new HabboActivityPointNotificationComposer(Duckets, ducketUpdate));
+                Client.Send(new CreditBalanceComposer(Credits));
+                Client.Send(new HabboActivityPointNotificationComposer(Duckets, ducketUpdate));
                 CreditsUpdateTick = Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("user.currency_scheduler.tick"));
             }
         }
         catch { }
     }
 
-    public GameClient GetClient()
-    {
-        if (_client != null)
-            return _client;
-        return PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(Id);
-    }
+    public GameClient GetClient() => Client;
 
-    public HabboMessenger GetMessenger() => _messenger;
+    public EffectsComponent Effects() => Fx;
 
-    public void SetInventoryComponent(InventoryComponent inventory)
-    {
-        Inventory = inventory;
-    }
-
-    public NavigatorPreferences GetNavigatorSearches() => _navigatorPreferences;
-
-    public void SetNavigatorPreferences(NavigatorPreferences navigatorPreferences)
-    {
-        _navigatorPreferences = navigatorPreferences;
-    }
-
-    public EffectsComponent Effects() => _fx;
-
-    public ClothingComponent GetClothing() => _clothing;
+    public ClothingComponent GetClothing() => Clothing;
 
     public int GetQuestProgress(int p)
     {
@@ -372,7 +354,7 @@ public class Habbo
         SaveKey("last_change", LastNameChange.ToString());
     }
 
-    public void SaveChatBubble(string customBubbleID) => SaveKey("bubble_id", customBubbleID);
+    public void SaveChatBubble(string customBubbleId) => SaveKey("bubble_id", customBubbleId);
 
     public void SaveKey(string key, string value)
     {
@@ -386,6 +368,7 @@ public class Habbo
     {
         if (GetClient() == null || GetClient().GetHabbo() == null)
             return;
+
         if (GetClient().GetHabbo().InRoom)
         {
             var oldRoom = GetClient().GetHabbo().CurrentRoom;
@@ -396,8 +379,7 @@ public class Habbo
             GetClient().Send(new CloseConnectionComposer());
             return;
         }
-        Room room = null;
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryLoadRoom(id, out room))
+        if (!PlusEnvironment.GetGame().GetRoomManager().TryLoadRoom(id, out var room))
         {
             GetClient().Send(new CloseConnectionComposer());
             return;
@@ -483,20 +465,5 @@ public class Habbo
             PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(GetClient(), "ACH_RoomEntry", 1);
         }
         return true;
-    }
-
-    public void SetStats(HabboStats stats)
-    {
-        _habboStats = stats;
-    }
-
-    public void SetPermissions(PermissionComponent permissions)
-    {
-        _permissions = permissions;
-    }
-
-    public void SetMessenger(HabboMessenger messenger)
-    {
-        _messenger = messenger;
     }
 }

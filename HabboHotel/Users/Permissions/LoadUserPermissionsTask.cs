@@ -14,7 +14,7 @@ internal class LoadUserPermissionsTask : IUserDataLoadingTask
 
     public Task Load(Habbo habbo)
     {
-        habbo.SetPermissions(new(_permissionManager.GetPermissionsForPlayer(habbo), _permissionManager.GetCommandsForPlayer(habbo)));
+        habbo.Permissions = new(_permissionManager.GetPermissionsForPlayer(habbo), _permissionManager.GetCommandsForPlayer(habbo));
         return Task.CompletedTask;
     }
 }

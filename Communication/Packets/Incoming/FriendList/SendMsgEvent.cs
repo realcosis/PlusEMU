@@ -17,7 +17,7 @@ internal class SendMsgEvent : IPacketEvent
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
         var userId = packet.ReadInt();
-        var friend = session.GetHabbo().GetMessenger().GetFriend(userId);
+        var friend = session.GetHabbo().Messenger.GetFriend(userId);
         if (friend == null)
             session.Send(new InstantMessageErrorComposer(MessengerMessageErrors.NotFriends, userId));
         var message = _wordFilterManager.CheckMessage(packet.ReadString());
@@ -29,7 +29,7 @@ internal class SendMsgEvent : IPacketEvent
             return Task.CompletedTask;
         }
 
-        var error = session.GetHabbo().GetMessenger().SendMessage(friend, message);
+        var error = session.GetHabbo().Messenger.SendMessage(friend, message);
         if (error == MessageError.Flooding)
             session.SendNotification("You cannot send a message, you have flooded the console.\n\nYou can send a message in 60 seconds.");
 

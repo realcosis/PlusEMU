@@ -158,8 +158,7 @@ internal static class NavigatorHandler
                 {
                     if (group == null)
                         continue;
-                    RoomData data = null;
-                    if (!RoomFactory.TryGetData((uint)group.RoomId, out data))
+                    if (!RoomFactory.TryGetData((uint)group.RoomId, out var data))
                         continue;
                     if (!myGroups.Contains(data))
                         myGroups.Add(data);
@@ -173,9 +172,9 @@ internal static class NavigatorHandler
             case NavigatorCategoryType.MyFriendsRooms:
             {
                 var roomIds = new List<uint>();
-                if (session == null || session.GetHabbo() == null || session.GetHabbo().GetMessenger() == null)
+                if (session == null || session.GetHabbo() == null || session.GetHabbo().Messenger == null)
                     return;
-                foreach (var buddy in session.GetHabbo().GetMessenger().Friends.Values.Where(p => p.InRoom))
+                foreach (var buddy in session.GetHabbo().Messenger.Friends.Values.Where(p => p.InRoom))
                 {
                     if (buddy == null || !buddy.InRoom || buddy.Id == session.GetHabbo().Id)
                         continue;
@@ -184,8 +183,8 @@ internal static class NavigatorHandler
                 }
                 var myFriendsRooms = PlusEnvironment.GetGame().GetRoomManager().GetRoomsByIds(roomIds.ToList());
                 packet.WriteInteger(myFriendsRooms.Count);
-                foreach (RoomData data in myFriendsRooms.ToList()) RoomAppender.WriteRoom(packet, data, data.Promotion);
-                myFriendsRooms = null;
+                foreach (var data in myFriendsRooms.ToList())
+                    RoomAppender.WriteRoom(packet, data, data.Promotion);
                 break;
             }
             case NavigatorCategoryType.MyRights:
@@ -193,16 +192,14 @@ internal static class NavigatorHandler
                 var myRights = new List<RoomData>();
                 if (session != null)
                 {
-                    DataTable getRights = null;
                     using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
                     dbClient.SetQuery("SELECT `room_id` FROM `room_rights` WHERE `user_id` = @UserId LIMIT @FetchLimit");
                     dbClient.AddParameter("UserId", session.GetHabbo().Id);
                     dbClient.AddParameter("FetchLimit", limit);
-                    getRights = dbClient.GetTable();
+                    var getRights = dbClient.GetTable();
                     foreach (DataRow row in getRights.Rows)
                     {
-                        RoomData data = null;
-                        if (!RoomFactory.TryGetData(Convert.ToUInt32(row["room_id"]), out data))
+                        if (!RoomFactory.TryGetData(Convert.ToUInt32(row["room_id"]), out var data))
                             continue;
                         if (!myRights.Contains(data))
                             myRights.Add(data);

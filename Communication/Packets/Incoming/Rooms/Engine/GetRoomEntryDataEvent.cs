@@ -27,8 +27,8 @@ internal class GetRoomEntryDataEvent : IPacketEvent
             return Task.CompletedTask; //TODO: Remove?
         }
         room.SendObjects(session);
-        if (session.GetHabbo().GetMessenger() != null)
-            session.GetHabbo().GetMessenger().NotifyChangesToFriends();
+        if (session.GetHabbo().Messenger != null)
+            session.GetHabbo().Messenger.NotifyChangesToFriends();
         if (session.GetHabbo().GetStats().QuestId > 0)
             _questManager.QuestReminder(session, session.GetHabbo().GetStats().QuestId);
         session.Send(new RoomEntryInfoComposer(room.RoomId, room.CheckRights(session, true)));

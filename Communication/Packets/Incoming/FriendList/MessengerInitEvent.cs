@@ -16,7 +16,7 @@ internal class MessengerInitEvent : IPacketEvent
 
     public async Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var friends = session.GetHabbo().GetMessenger().Friends.Values.ToList();
+        var friends = session.GetHabbo().Messenger.Friends.Values.ToList();
         session.Send(new MessengerInitComposer());
         var page = 0;
         if (!friends.Any())

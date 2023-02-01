@@ -48,7 +48,7 @@ internal class DeleteRoomEvent : IPacketEvent
             if (targetClient != null && targetClient.GetHabbo() != null) //Again, do we have an active client?
             {
                 room.GetRoomItemHandler().RemoveFurniture(targetClient, item.Id);
-                targetClient.GetHabbo().Inventory.AddNewItem(item.Id, item.BaseItem, item.LegacyDataString, item.GroupId, true, true, item.UniqueNumber, item.UniqueSeries);
+                targetClient.GetHabbo().Inventory.Furniture.AddItem(item.ToInventoryItem());
                 targetClient.Send(new FurniListUpdateComposer());
             }
             else //No, query time.

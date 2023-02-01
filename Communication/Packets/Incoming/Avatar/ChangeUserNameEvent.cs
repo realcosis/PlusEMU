@@ -75,7 +75,7 @@ internal class ChangeUserNameEvent : IPacketEvent
         session.GetHabbo().ChangingName = false;
         room.GetRoomUserManager().RemoveUserFromRoom(session, true);
         session.GetHabbo().ChangeName(newName);
-        session.GetHabbo().GetMessenger().NotifyChangesToFriends();
+        session.GetHabbo().Messenger.NotifyChangesToFriends();
         session.Send(new UpdateUsernameComposer(newName));
         room.SendPacket(new UserNameChangeComposer(room.Id, user.VirtualId, newName));
         using (var connection = _database.Connection())

@@ -39,7 +39,7 @@ internal class SendRoomInviteEvent : IPacketEvent
             message = message.Substring(0, 121);
         foreach (var userId in targets)
         {
-            if (!session.GetHabbo().GetMessenger().FriendshipExists(userId))
+            if (!session.GetHabbo().Messenger.FriendshipExists(userId))
                 continue;
             var client = _clientManager.GetClientByUserId(userId);
             if (client == null || client.GetHabbo() == null || client.GetHabbo().AllowMessengerInvites || client.GetHabbo().AllowConsoleMessages == false)

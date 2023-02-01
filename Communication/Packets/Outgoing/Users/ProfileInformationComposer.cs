@@ -31,9 +31,9 @@ public class ProfileInformationComposer : IServerPacket
         packet.WriteString(origin.ToString("dd/MM/yyyy"));
         packet.WriteInteger(_habbo.GetStats().AchievementPoints);
         packet.WriteInteger(_friendCount); // Friend Count
-        packet.WriteBoolean(_habbo.Id != _session.GetHabbo().Id && _session.GetHabbo().GetMessenger().FriendshipExists(_habbo.Id)); //  Is friend
-        packet.WriteBoolean(_habbo.Id != _session.GetHabbo().Id && !_session.GetHabbo().GetMessenger().FriendshipExists(_habbo.Id) &&
-                            _session.GetHabbo().GetMessenger().OutstandingFriendRequests.Contains(_habbo.Id)); // Sent friend request
+        packet.WriteBoolean(_habbo.Id != _session.GetHabbo().Id && _session.GetHabbo().Messenger.FriendshipExists(_habbo.Id)); //  Is friend
+        packet.WriteBoolean(_habbo.Id != _session.GetHabbo().Id && !_session.GetHabbo().Messenger.FriendshipExists(_habbo.Id) &&
+                            _session.GetHabbo().Messenger.OutstandingFriendRequests.Contains(_habbo.Id)); // Sent friend request
         packet.WriteBoolean(PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(_habbo.Id) != null);
         packet.WriteInteger(_groups.Count);
         foreach (var group in _groups)

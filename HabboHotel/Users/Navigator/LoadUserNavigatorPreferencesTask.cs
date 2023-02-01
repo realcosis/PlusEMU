@@ -12,8 +12,5 @@ internal class LoadUserNavigatorPreferencesTask : IUserDataLoadingTask
         _navigatorManager = navigatorManager;
     }
 
-    public async Task Load(Habbo habbo)
-    {
-        habbo.SetNavigatorPreferences(new(new(await _navigatorManager.LoadUserNavigatorPreferences(habbo.Id))));
-    }
+    public async Task Load(Habbo habbo) => habbo.NavigatorPreferences = new(new(await _navigatorManager.LoadUserNavigatorPreferences(habbo.Id)));
 }

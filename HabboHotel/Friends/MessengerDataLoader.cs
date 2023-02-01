@@ -68,10 +68,10 @@ internal class MessengerDataLoader : IMessengerDataLoader
 
     public void BroadcastStatusUpdate(Habbo habbo, MessengerEventTypes eventType, string value)
     {
-        foreach (var client in habbo.GetMessenger().Friends.Keys.Select(f => PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(f)))
+        foreach (var client in habbo.Messenger.Friends.Keys.Select(f => PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(f)))
         {
             if (client == null) continue;
-            var messenger = client.GetHabbo().GetMessenger();
+            var messenger = client.GetHabbo().Messenger;
             if (!messenger.Friends.TryGetValue(habbo.Id, out var buddy)) continue;
             messenger.UpdateFriendStatus(buddy, eventType, value);
         }

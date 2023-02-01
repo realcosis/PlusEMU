@@ -18,13 +18,12 @@ internal class LoadUserInventoryTask : IUserDataLoadingTask
     public async Task Load(Habbo habbo)
     {
         var items = ItemLoader.GetItemsForUser((uint)habbo.Id);
-        habbo.SetInventoryComponent(new()
+        habbo.Inventory = new()
         {
-            UserId = habbo.Id,
             Badges = new((await _badgeManager.LoadBadgesForHabbo(habbo.Id)).ToDictionary(badge => badge.Code)),
             Furniture = new(items.Where(i => i.IsFloorItem).ToList(), items.Where(i => i.IsWallItem).ToList()),
             Pets = new(PetLoader.GetPetsForUser(habbo.Id)),
             Bots = new(BotLoader.GetBotsForUser(habbo.Id))
-        });
+        };
     }
 }

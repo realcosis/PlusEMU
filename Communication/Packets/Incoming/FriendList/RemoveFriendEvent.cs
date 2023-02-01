@@ -14,9 +14,9 @@ internal class RemoveFriendEvent : IPacketEvent
         for (var i = 0; i < amount; i++)
         {
             var id = packet.ReadInt();
-            var friend = session.GetHabbo().GetMessenger().GetFriend(id);
+            var friend = session.GetHabbo().Messenger.GetFriend(id);
             if (friend == null) continue;
-            session.GetHabbo().GetMessenger().RemoveFriend(friend);
+            session.GetHabbo().Messenger.RemoveFriend(friend);
         }
         return Task.CompletedTask;
     }

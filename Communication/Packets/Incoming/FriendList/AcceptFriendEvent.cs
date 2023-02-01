@@ -12,7 +12,7 @@ internal class AcceptFriendEvent : IPacketEvent
         else if (amount < 0)
             return Task.CompletedTask;
 
-        var messenger = session.GetHabbo().GetMessenger();
+        var messenger = session.GetHabbo().Messenger;
 
         for (var i = 0; i < amount; i++)
         {

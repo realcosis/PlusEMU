@@ -22,7 +22,7 @@ internal class SetRelationshipEvent : IPacketEvent
     {
         var user = packet.ReadInt();
         var type = packet.ReadInt();
-        var friend = session.GetHabbo().GetMessenger().GetFriend(user);
+        var friend = session.GetHabbo().Messenger.GetFriend(user);
         if (friend == null)
         {
             session.Send(new BroadcastMessageAlertComposer("Oops, you can only set a relationship where a friendship exists."));
@@ -36,7 +36,7 @@ internal class SetRelationshipEvent : IPacketEvent
 
         friend.Relationship = type;
         await _messengerDataLoader.SetRelationship(session.GetHabbo().Id, friend.Id, friend.Relationship);
-        session.GetHabbo().GetMessenger().UpdateFriend(friend);
+        session.GetHabbo().Messenger.UpdateFriend(friend);
         return;
     }
 }

@@ -17,7 +17,7 @@ internal class HabboSearchEvent : IPacketEvent
         var results = SearchResultFactory.GetSearchResult(query);
         foreach (var result in results.ToList())
         {
-            if (session.GetHabbo().GetMessenger().FriendshipExists(result.UserId))
+            if (session.GetHabbo().Messenger.FriendshipExists(result.UserId))
                 friends.Add(result);
             else
                 othersUsers.Add(result);

@@ -276,7 +276,7 @@ public class RoomUserManager
                 }
 
                 //Session.GetHabbo().CurrentRoomId = 0;
-                    session.GetHabbo().GetMessenger()?.NotifyChangesToFriends();
+                    session.GetHabbo().Messenger?.NotifyChangesToFriends();
                 using (var dbClient = PlusEnvironment.GetDatabaseManager().Connection())
                 {
                     dbClient.Execute("UPDATE user_roomvisits SET exit_timestamp = @exitTimestamp WHERE room_id = @roomId AND user_id = @userId ORDER BY exit_timestamp DESC LIMIT 1",

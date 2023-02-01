@@ -50,7 +50,7 @@ internal class LoadStatisticsLoginTask : IUserDataLoadingTask
                 if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(stats.FavouriteGroupId, out g))
                     stats.FavouriteGroupId = 0;
 
-                habbo.SetStats(stats);
+                habbo.HabboStats  = stats;
             }
             catch (Exception e)
             {

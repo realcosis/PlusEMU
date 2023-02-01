@@ -16,7 +16,7 @@ public class GetRelationshipsComposer : IServerPacket
     public void Compose(IOutgoingPacket packet)
     {
         packet.WriteInteger(_habbo.Id);
-        var relationships = _habbo.GetMessenger().Friends.Values.Where(f => f.Relationship > 0).GroupBy(f => f.Relationship).ToDictionary(f => f.Key, f => (f.First(), f.Count()));
+        var relationships = _habbo.Messenger.Friends.Values.Where(f => f.Relationship > 0).GroupBy(f => f.Relationship).ToDictionary(f => f.Key, f => (f.First(), f.Count()));
         packet.WriteInteger(relationships.Count); // Count
         foreach (var (type, (friend, count)) in relationships)
         {
