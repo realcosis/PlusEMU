@@ -61,8 +61,7 @@ public class BansComponent
         var banTime = _bans[userId] - UnixTimestamp.GetNow();
         if (banTime <= 0)
         {
-            double time;
-            _bans.TryRemove(userId, out time);
+            _bans.TryRemove(userId, out var time);
             using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
             dbClient.SetQuery("DELETE FROM `room_bans` WHERE `room_id` = @rid AND `user_id` = @uid;");
             dbClient.AddParameter("rid", _instance.Id);

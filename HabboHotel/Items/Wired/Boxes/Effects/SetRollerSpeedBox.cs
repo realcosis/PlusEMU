@@ -30,14 +30,12 @@ internal class SetRollerSpeedBox : IWiredItem
         var unknown = packet.ReadInt();
         var message = packet.ReadString();
         StringData = message;
-        int speed;
-        if (!int.TryParse(StringData, out speed)) StringData = "";
+        if (!int.TryParse(StringData, out var speed)) StringData = "";
     }
 
     public bool Execute(params object[] @params)
     {
-        int speed;
-        if (int.TryParse(StringData, out speed)) Instance.GetRoomItemHandler().SetSpeed(speed);
+        if (int.TryParse(StringData, out var speed)) Instance.GetRoomItemHandler().SetSpeed(speed);
         return true;
     }
 }

@@ -35,9 +35,8 @@ public class Freeze
 
     public void RemoveExitTile(uint id)
     {
-        Item temp;
         if (ExitTeleports.ContainsKey(id))
-            ExitTeleports.TryRemove(id, out temp);
+            ExitTeleports.TryRemove(id, out var temp);
     }
 
     public Item GetRandomExitTile() => ExitTeleports.Values.ToList()[Random.Shared.Next(0, ExitTeleports.Count)];

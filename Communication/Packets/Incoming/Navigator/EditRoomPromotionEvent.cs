@@ -40,8 +40,7 @@ internal class EditRoomPromotionEvent : IPacketEvent
             dbClient.AddParameter("desc", desc);
             dbClient.RunQuery();
         }
-        Room room;
-        if (!_roomManager.TryGetRoom(Convert.ToUInt32(roomId), out room))
+        if (!_roomManager.TryGetRoom(Convert.ToUInt32(roomId), out var room))
             return Task.CompletedTask;
         data.Promotion.Name = name;
         data.Promotion.Description = desc;

@@ -34,8 +34,7 @@ internal class GiveCommand : ITargetChatCommand
                     session.SendWhisper("Oops, it appears that you do not have the permissions to use this command!");
                     break;
                 }
-                int amount;
-                if (int.TryParse(parameters[2], out amount))
+                if (int.TryParse(parameters[2], out var amount))
                 {
                     target.Credits = target.Credits += amount;
                     target.GetClient().Send(new CreditBalanceComposer(target.Credits));
@@ -55,8 +54,7 @@ internal class GiveCommand : ITargetChatCommand
                     session.SendWhisper("Oops, it appears that you do not have the permissions to use this command!");
                     break;
                 }
-                int amount;
-                if (int.TryParse(parameters[2], out amount))
+                if (int.TryParse(parameters[2], out var amount))
                 {
                     target.Duckets += amount;
                     target.GetClient().Send(new HabboActivityPointNotificationComposer(target.Duckets, amount));
@@ -75,8 +73,7 @@ internal class GiveCommand : ITargetChatCommand
                     session.SendWhisper("Oops, it appears that you do not have the permissions to use this command!");
                     break;
                 }
-                int amount;
-                if (int.TryParse(parameters[2], out amount))
+                if (int.TryParse(parameters[2], out var amount))
                 {
                     target.Diamonds += amount;
                     target.GetClient().Send(new HabboActivityPointNotificationComposer(target.Diamonds, amount, 5));
@@ -96,8 +93,7 @@ internal class GiveCommand : ITargetChatCommand
                     session.SendWhisper("Oops, it appears that you do not have the permissions to use this command!");
                     break;
                 }
-                int amount;
-                if (int.TryParse(parameters[2], out amount))
+                if (int.TryParse(parameters[2], out var amount))
                 {
                     target.GotwPoints = target.GotwPoints + amount;
                     target.GetClient().Send(new HabboActivityPointNotificationComposer(target.GotwPoints, amount, 103));

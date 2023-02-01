@@ -28,8 +28,7 @@ internal class MuteCommand : ITargetChatCommand
             session.SendWhisper("Oops, you cannot mute that user.");
             return Task.CompletedTask;
         }
-        double time;
-        if (double.TryParse(parameters[0], out time))
+        if (double.TryParse(parameters[0], out var time))
         {
             if (time > 600 && !session.GetHabbo().GetPermissions().HasRight("mod_mute_limit_override"))
                 time = 600;

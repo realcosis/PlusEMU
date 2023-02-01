@@ -52,8 +52,7 @@ internal class BotGivesHandItemBox : IWiredItem
             if (!Instance.GetGameMap().CanWalk(actor.SquareBehind.X, actor.SquareBehind.Y, false))
                 return false;
             var data = StringData.Split(';');
-            int drinkId;
-            if (!int.TryParse(data[1], out drinkId))
+            if (!int.TryParse(data[1], out var drinkId))
                 return false;
             user.CarryItem(drinkId);
             user.BotData.TargetUser = actor.HabboId;

@@ -54,8 +54,7 @@ internal class ExecuteWiredStacksBox : IWiredItem
         {
             if (item == null || !Instance.GetRoomItemHandler().GetFloor.Contains(item) || !item.IsWired)
                 continue;
-            IWiredItem wiredItem;
-            if (Instance.GetWired().TryGet(item.Id, out wiredItem))
+            if (Instance.GetWired().TryGet(item.Id, out var wiredItem))
             {
                 if (wiredItem.Type == WiredBoxType.EffectExecuteWiredStacks)
                     continue;

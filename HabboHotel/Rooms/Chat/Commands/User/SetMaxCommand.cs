@@ -27,8 +27,7 @@ internal class SetMaxCommand : IChatCommand
             session.SendWhisper("Please enter a value for the room visitor limit.");
             return;
         }
-        int maxAmount;
-        if (int.TryParse(parameters[0], out maxAmount))
+        if (int.TryParse(parameters[0], out var maxAmount))
         {
             if (maxAmount == 0)
             {

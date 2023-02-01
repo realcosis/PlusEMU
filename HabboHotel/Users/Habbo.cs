@@ -389,8 +389,7 @@ public class Habbo
         if (GetClient().GetHabbo().InRoom)
         {
             var oldRoom = GetClient().GetHabbo().CurrentRoom;
-            if (oldRoom != null)
-                oldRoom.GetRoomUserManager().RemoveUserFromRoom(GetClient(), false);
+            oldRoom?.GetRoomUserManager().RemoveUserFromRoom(GetClient(), false);
         }
         if (GetClient().GetHabbo().IsTeleporting && GetClient().GetHabbo().TeleportingRoomId != id)
         {

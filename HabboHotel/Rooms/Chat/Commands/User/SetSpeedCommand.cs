@@ -20,8 +20,7 @@ internal class SetSpeedCommand : IChatCommand
             session.SendWhisper("Please enter a value for the roller speed.");
             return;
         }
-        int speed;
-        if (int.TryParse(parameters[0], out speed))
+        if (int.TryParse(parameters[0], out var speed))
             session.GetHabbo().CurrentRoom.GetRoomItemHandler().SetSpeed(speed);
         else
             session.SendWhisper("Invalid amount, please enter a valid number.");

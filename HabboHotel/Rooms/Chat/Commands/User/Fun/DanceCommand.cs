@@ -22,8 +22,7 @@ internal class DanceCommand : IChatCommand
             session.SendWhisper("Please enter an ID of a dance.");
             return;
         }
-        int danceId;
-        if (int.TryParse(parameters[0], out danceId))
+        if (int.TryParse(parameters[0], out var danceId))
         {
             if (danceId > 4 || danceId < 0)
             {

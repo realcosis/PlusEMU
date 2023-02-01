@@ -43,8 +43,7 @@ internal class TradeBanCommand : ITargetChatCommand
             session.SendWhisper("You have successfully removed " + target.Username + "'s trade ban.");
             return Task.CompletedTask;
         }
-        double days;
-        if (double.TryParse(parameters[0], out days))
+        if (double.TryParse(parameters[0], out var days))
         {
             if (days < 1)
                 days = 1;
