@@ -47,7 +47,7 @@ public class WhisperEvent : IPacketEvent
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
             return Task.CompletedTask;
-        if (!session.GetHabbo().GetPermissions().HasRight("mod_tool") && room.CheckMute(session))
+        if (!session.GetHabbo().Permissions.HasRight("mod_tool") && room.CheckMute(session))
         {
             session.SendWhisper("Oops, you're currently muted.");
             return Task.CompletedTask;
@@ -69,13 +69,13 @@ public class WhisperEvent : IPacketEvent
             session.Send(new MutedComposer(session.GetHabbo().TimeMuted));
             return Task.CompletedTask;
         }
-        if (!session.GetHabbo().GetPermissions().HasRight("word_filter_override"))
+        if (!session.GetHabbo().Permissions.HasRight("word_filter_override"))
             message = _wordFilterManager.CheckMessage(message);
         if (!_chatStyleManager.TryGetStyle(colour, out var style) ||
-            style.RequiredRight.Length > 0 && !session.GetHabbo().GetPermissions().HasRight(style.RequiredRight))
+            style.RequiredRight.Length > 0 && !session.GetHabbo().Permissions.HasRight(style.RequiredRight))
             colour = 0;
         user.LastBubble = session.GetHabbo().CustomBubbleId == 0 ? colour : session.GetHabbo().CustomBubbleId;
-        if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
+        if (!session.GetHabbo().Permissions.HasRight("mod_tool"))
         {
             if (user.IncrementAndCheckFlood(out var muteTime))
             {
@@ -83,7 +83,7 @@ public class WhisperEvent : IPacketEvent
                 return Task.CompletedTask;
             }
         }
-        if (!user2.GetClient().GetHabbo().ReceiveWhispers && !session.GetHabbo().GetPermissions().HasRight("room_whisper_override"))
+        if (!user2.GetClient().GetHabbo().ReceiveWhispers && !session.GetHabbo().Permissions.HasRight("room_whisper_override"))
         {
             session.SendWhisper("Oops, this user has their whispers disabled!");
             return Task.CompletedTask;

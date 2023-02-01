@@ -14,7 +14,7 @@ internal class ModerationMuteEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().GetPermissions().HasRight("mod_mute"))
+        if (!session.GetHabbo().Permissions.HasRight("mod_mute"))
             return Task.CompletedTask;
         var userId = packet.ReadInt();
         packet.ReadString(); //message
@@ -27,7 +27,7 @@ internal class ModerationMuteEvent : IPacketEvent
             session.SendWhisper("An error occoured whilst finding that user in the database.");
             return Task.CompletedTask;
         }
-        if (habbo.GetPermissions().HasRight("mod_mute") && !session.GetHabbo().GetPermissions().HasRight("mod_mute_any"))
+        if (habbo.Permissions.HasRight("mod_mute") && !session.GetHabbo().Permissions.HasRight("mod_mute_any"))
         {
             session.SendWhisper("Oops, you cannot mute that user.");
             return Task.CompletedTask;
@@ -36,10 +36,10 @@ internal class ModerationMuteEvent : IPacketEvent
         {
             dbClient.RunQuery("UPDATE `users` SET `time_muted` = '" + length + "' WHERE `id` = '" + habbo.Id + "' LIMIT 1");
         }
-        if (habbo.GetClient() != null)
+        if (habbo.Client != null)
         {
             habbo.TimeMuted = length;
-            habbo.GetClient().SendNotification("You have been muted by a moderator for " + length + " seconds!");
+            habbo.Client.SendNotification("You have been muted by a moderator for " + length + " seconds!");
         }
         return Task.CompletedTask;
     }

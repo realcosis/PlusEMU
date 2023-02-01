@@ -85,18 +85,18 @@ internal sealed class ProcessComponent
             if (_player.MessengerSpamTime <= 0)
                 _player.MessengerSpamCount = 0;
             _player.TimeAfk += 1;
-            if (_player.GetStats().RespectsTimestamp != DateTime.Today.ToString("MM/dd"))
+            if (_player.HabboStats.RespectsTimestamp != DateTime.Today.ToString("MM/dd"))
             {
-                _player.GetStats().RespectsTimestamp = DateTime.Today.ToString("MM/dd");
+                _player.HabboStats.RespectsTimestamp = DateTime.Today.ToString("MM/dd");
                 using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
                     dbClient.RunQuery("UPDATE `user_statistics` SET `dailyRespectPoints` = '" + (_player.Rank == 1 && _player.VipRank == 0 ? 10 : _player.VipRank == 1 ? 15 : 20) +
                                       "', `dailyPetRespectPoints` = '" + (_player.Rank == 1 && _player.VipRank == 0 ? 10 : _player.VipRank == 1 ? 15 : 20) + "', `respectsTimestamp` = '" +
                                       DateTime.Today.ToString("MM/dd") + "' WHERE `id` = '" + _player.Id + "' LIMIT 1");
                 }
-                _player.GetStats().DailyRespectPoints = _player.Rank == 1 && _player.VipRank == 0 ? 10 : _player.VipRank == 1 ? 15 : 20;
-                _player.GetStats().DailyPetRespectPoints = _player.Rank == 1 && _player.VipRank == 0 ? 10 : _player.VipRank == 1 ? 15 : 20;
-                if (_player.GetClient() != null) _player.GetClient().Send(new UserObjectComposer(_player));
+                _player.HabboStats.DailyRespectPoints = _player.Rank == 1 && _player.VipRank == 0 ? 10 : _player.VipRank == 1 ? 15 : 20;
+                _player.HabboStats.DailyPetRespectPoints = _player.Rank == 1 && _player.VipRank == 0 ? 10 : _player.VipRank == 1 ? 15 : 20;
+                if (_player.Client != null) _player.Client.Send(new UserObjectComposer(_player));
             }
             if (_player.GiftPurchasingWarnings < 15)
                 _player.GiftPurchasingWarnings = 0;
@@ -104,10 +104,10 @@ internal sealed class ProcessComponent
                 _player.MottoUpdateWarnings = 0;
             if (_player.ClothingUpdateWarnings < 15)
                 _player.ClothingUpdateWarnings = 0;
-            if (_player.GetClient() != null)
-                PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(_player.GetClient(), "ACH_AllTimeHotelPresence", 1);
+            if (_player.Client != null)
+                PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(_player.Client, "ACH_AllTimeHotelPresence", 1);
             _player.CheckCreditsTimer();
-            _player.Effects().CheckEffectExpiry(_player);
+            _player.Effects.CheckEffectExpiry(_player);
 
             // END CODE
 

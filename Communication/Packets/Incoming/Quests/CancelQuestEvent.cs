@@ -18,7 +18,7 @@ internal class CancelQuestEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var quest = _questManager.GetQuest(session.GetHabbo().GetStats().QuestId);
+        var quest = _questManager.GetQuest(session.GetHabbo().HabboStats.QuestId);
         if (quest == null)
             return Task.CompletedTask;
         using (var dbClient = _database.GetQueryReactor())
@@ -26,7 +26,7 @@ internal class CancelQuestEvent : IPacketEvent
             dbClient.RunQuery("DELETE FROM `user_quests` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND `quest_id` = '" + quest.Id + "';" +
                               "UPDATE `user_statistics` SET `quest_id` = '0' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
         }
-        session.GetHabbo().GetStats().QuestId = 0;
+        session.GetHabbo().HabboStats.QuestId = 0;
         session.Send(new QuestAbortedComposer());
         _questManager.GetList(session, null);
         return Task.CompletedTask;

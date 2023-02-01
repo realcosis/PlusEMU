@@ -34,7 +34,7 @@ public class QuestStartedComposer : IServerPacket
         packet.WriteInteger(quest == null ? 0 : quest.Category.Contains("xmas2012") ? 0 : amountInCat); // Total quests in this cat
         packet.WriteInteger(quest?.RewardType ?? 3); // Reward type (1 = Snowflakes, 2 = Love hearts, 3 = Pixels, 4 = Seashells, everything else is pixels
         packet.WriteInteger(quest?.Id ?? 0); // Quest id
-        packet.WriteBoolean(quest != null && session.GetHabbo().GetStats().QuestId == quest.Id); // Quest started
+        packet.WriteBoolean(quest != null && session.GetHabbo().HabboStats.QuestId == quest.Id); // Quest started
         packet.WriteString(quest == null ? string.Empty : quest.ActionName);
         packet.WriteString(quest == null ? string.Empty : quest.DataBit);
         packet.WriteInteger(quest?.Reward ?? 0);

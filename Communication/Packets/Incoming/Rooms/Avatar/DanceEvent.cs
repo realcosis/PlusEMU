@@ -25,7 +25,7 @@ internal class DanceEvent : RoomPacketEvent
             danceId = 0;
         if (danceId > 0 && user.CarryItemId > 0)
             user.CarryItem(0);
-        if (session.GetHabbo().Effects().CurrentEffect > 0)
+        if (session.GetHabbo().Effects.CurrentEffect > 0)
             room.SendPacket(new AvatarEffectComposer(user.VirtualId, 0));
         user.DanceId = danceId;
         room.SendPacket(new DanceComposer(user, danceId));

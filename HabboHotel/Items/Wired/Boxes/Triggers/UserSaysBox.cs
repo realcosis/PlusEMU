@@ -55,7 +55,7 @@ internal class UserSaysBox : IWiredItem
                     return false;
                 Instance.GetWired().OnEvent(condition.Item);
             }
-            player.GetClient().Send(new WhisperComposer(user.VirtualId, message, 0, 0));
+            player.Client.Send(new WhisperComposer(user.VirtualId, message, 0, 0));
             //Check the ICollection to find the random addon effect.
             var hasRandomEffectAddon = effects.Count(x => x.Type == WiredBoxType.AddonRandomEffect) > 0;
             if (hasRandomEffectAddon)

@@ -7,7 +7,7 @@ internal class RemoveGroupFavouriteEvent : IPacketEvent
 {
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        session.GetHabbo().GetStats().FavouriteGroupId = 0;
+        session.GetHabbo().HabboStats.FavouriteGroupId = 0;
         if (session.GetHabbo().InRoom)
         {
             var user = session.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);

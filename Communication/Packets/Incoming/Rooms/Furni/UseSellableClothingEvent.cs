@@ -59,8 +59,8 @@ internal class UseSellableClothingEvent : IPacketEvent
 
         //Remove the item.
         room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
-        session.GetHabbo().GetClothing().AddClothing(clothing.ClothingName, clothing.PartIds);
-        session.Send(new FigureSetIdsComposer(session.GetHabbo().GetClothing().GetClothingParts));
+        session.GetHabbo().Clothing.AddClothing(clothing.ClothingName, clothing.PartIds);
+        session.Send(new FigureSetIdsComposer(session.GetHabbo().Clothing.GetClothingParts));
         session.Send(new RoomNotificationComposer("figureset.redeemed.success"));
         session.SendWhisper("If for some reason cannot see your new clothing, reload the hotel!");
         return Task.CompletedTask;

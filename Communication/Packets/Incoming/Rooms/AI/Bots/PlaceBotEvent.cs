@@ -40,7 +40,7 @@ internal class PlaceBotEvent : RoomPacketEvent
                 continue;
             botCount += 1;
         }
-        if (botCount >= 5 && !session.GetHabbo().GetPermissions().HasRight("bot_place_any_override"))
+        if (botCount >= 5 && !session.GetHabbo().Permissions.HasRight("bot_place_any_override"))
         {
             session.SendNotification("Sorry; 5 bots per room only!");
             return Task.CompletedTask;

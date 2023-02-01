@@ -25,11 +25,11 @@ internal class SetGroupFavouriteEvent : IPacketEvent
             return Task.CompletedTask;
         if (!_groupManager.TryGetGroup(groupId, out var group))
             return Task.CompletedTask;
-        session.GetHabbo().GetStats().FavouriteGroupId = group.Id;
+        session.GetHabbo().HabboStats.FavouriteGroupId = group.Id;
         using (var connection = _database.Connection())
         {
             connection.Execute("UPDATE `user_statistics` SET `groupid` = @groupId WHERE `id` = @userId LIMIT 1",
-                new { groupId = session.GetHabbo().GetStats().FavouriteGroupId, userId = session.GetHabbo().Id });
+                new { groupId = session.GetHabbo().HabboStats.FavouriteGroupId, userId = session.GetHabbo().Id });
         }
         if (session.GetHabbo().InRoom && session.GetHabbo().CurrentRoom != null)
         {

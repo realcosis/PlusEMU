@@ -21,7 +21,7 @@ internal class RespectUserEvent : RoomPacketEvent
 
     public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (session.GetHabbo().GetStats().DailyRespectPoints <= 0)
+        if (session.GetHabbo().HabboStats.DailyRespectPoints <= 0)
             return Task.CompletedTask;
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(packet.ReadInt());
         if (user == null || user.GetClient() == null || user.GetClient().GetHabbo().Id == session.GetHabbo().Id || user.IsBot)
@@ -32,11 +32,11 @@ internal class RespectUserEvent : RoomPacketEvent
         _questManager.ProgressUserQuest(session, QuestType.SocialRespect);
         _achievementManager.ProgressAchievement(session, "ACH_RespectGiven", 1);
         _achievementManager.ProgressAchievement(user.GetClient(), "ACH_RespectEarned", 1);
-        session.GetHabbo().GetStats().DailyRespectPoints -= 1;
-        session.GetHabbo().GetStats().RespectGiven += 1;
-        user.GetClient().GetHabbo().GetStats().Respect += 1;
+        session.GetHabbo().HabboStats.DailyRespectPoints -= 1;
+        session.GetHabbo().HabboStats.RespectGiven += 1;
+        user.GetClient().GetHabbo().HabboStats.Respect += 1;
         if (room.RespectNotificationsEnabled)
-            room.SendPacket(new RespectNotificationComposer(user.GetClient().GetHabbo().Id, user.GetClient().GetHabbo().GetStats().Respect));
+            room.SendPacket(new RespectNotificationComposer(user.GetClient().GetHabbo().Id, user.GetClient().GetHabbo().HabboStats.Respect));
         room.SendPacket(new ActionComposer(thisUser.VirtualId, 7));
         return Task.CompletedTask;
     }

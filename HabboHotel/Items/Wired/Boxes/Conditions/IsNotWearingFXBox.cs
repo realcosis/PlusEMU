@@ -38,7 +38,7 @@ internal class IsNotWearingFxBox : IWiredItem
         var player = (Habbo)@params[0];
         if (player == null)
             return false;
-        if (player.Effects().CurrentEffect != int.Parse(StringData))
+        if (player.Effects.CurrentEffect != int.Parse(StringData))
             return true;
         return false;
     }

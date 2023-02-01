@@ -41,10 +41,10 @@ internal class GiveUserBadgeBox : IWiredItem
         if (@params == null || @params.Length == 0)
             return false;
         var owner = PlusEnvironment.GetHabboById(Item.UserId);
-        if (owner == null || !owner.GetPermissions().HasRight("room_item_wired_rewards"))
+        if (owner == null || !owner.Permissions.HasRight("room_item_wired_rewards"))
             return false;
         var player = (Habbo)@params[0];
-        if (player == null || player.GetClient() == null)
+        if (player == null || player.Client == null)
             return false;
         var user = player.CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(player.Username);
         if (user == null)
@@ -52,12 +52,12 @@ internal class GiveUserBadgeBox : IWiredItem
         if (string.IsNullOrEmpty(StringData))
             return false;
         if (player.Inventory.Badges.HasBadge(StringData))
-            player.GetClient().Send(new WhisperComposer(user.VirtualId, "Oops, it appears you have already recieved this badge!", 0, user.LastBubble));
+            player.Client.Send(new WhisperComposer(user.VirtualId, "Oops, it appears you have already recieved this badge!", 0, user.LastBubble));
         else
         {
             //player.Inventory.Badges.GiveBadge(StringData, true, player.GetClient());
             // TODO @80O: Inject BadgeManager
-            player.GetClient().SendNotification("You have recieved a badge!");
+            player.Client.SendNotification("You have recieved a badge!");
         }
         return true;
     }

@@ -132,7 +132,7 @@ public class RoomUser
 
     public bool IsPet => IsBot && BotData.IsPet;
 
-    public int CurrentEffect => GetClient().GetHabbo().Effects().CurrentEffect;
+    public int CurrentEffect => GetClient().GetHabbo().Effects.CurrentEffect;
 
 
     public bool IsDancing
@@ -162,7 +162,7 @@ public class RoomUser
                 return false;
             if (GetClient() == null || GetClient().GetHabbo() == null)
                 return true;
-            if (GetClient().GetHabbo().GetPermissions().HasRight("mod_tool") || GetRoom().OwnerId == HabboId)
+            if (GetClient().GetHabbo().Permissions.HasRight("mod_tool") || GetRoom().OwnerId == HabboId)
                 return false;
             if (GetRoom().Id == 1649919)
                 return false;
@@ -330,11 +330,11 @@ public class RoomUser
             ChatSpamTicks = 8;
         else if (ChatSpamCount >= 6)
         {
-            if (GetClient().GetHabbo().GetPermissions().HasRight("events_staff"))
+            if (GetClient().GetHabbo().Permissions.HasRight("events_staff"))
                 muteTime = 3;
-            else if (GetClient().GetHabbo().GetPermissions().HasRight("gold_vip"))
+            else if (GetClient().GetHabbo().Permissions.HasRight("gold_vip"))
                 muteTime = 7;
-            else if (GetClient().GetHabbo().GetPermissions().HasRight("silver_vip"))
+            else if (GetClient().GetHabbo().Permissions.HasRight("silver_vip"))
                 muteTime = 10;
             else
                 muteTime = 20;
@@ -352,7 +352,7 @@ public class RoomUser
         if (_mRoom.GetWired().TriggerEvent(WiredBoxType.TriggerUserSays, GetClient().GetHabbo(), message))
             return;
         GetClient().GetHabbo().HasSpoken = true;
-        if (_mRoom.WordFilterList.Count > 0 && !GetClient().GetHabbo().GetPermissions().HasRight("word_filter_override")) message = _mRoom.GetFilter().CheckMessage(message);
+        if (_mRoom.WordFilterList.Count > 0 && !GetClient().GetHabbo().Permissions.HasRight("word_filter_override")) message = _mRoom.GetFilter().CheckMessage(message);
         IServerPacket packet = null;
         if (shout)
             packet = new ShoutComposer(VirtualId, message, PlusEnvironment.GetGame().GetChatManager().GetEmotions().GetEmotionsForText(message), colour);
@@ -530,9 +530,9 @@ public class RoomUser
             _mRoom.SendPacket(new AvatarEffectComposer(VirtualId, effectId));
             return;
         }
-        if (IsBot || GetClient() == null || GetClient().GetHabbo() == null || GetClient().GetHabbo().Effects() == null)
+        if (IsBot || GetClient() == null || GetClient().GetHabbo() == null || GetClient().GetHabbo().Effects == null)
             return;
-        GetClient().GetHabbo().Effects().ApplyEffect(effectId);
+        GetClient().GetHabbo().Effects.ApplyEffect(effectId);
     }
 
 

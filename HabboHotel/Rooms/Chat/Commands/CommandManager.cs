@@ -47,7 +47,7 @@ public class CommandManager : ICommandManager
             {
                 if (!string.IsNullOrEmpty(cmdList.Value.PermissionRequired))
                 {
-                    if (!session.GetHabbo().GetPermissions().HasCommand(cmdList.Value.PermissionRequired))
+                    if (!session.GetHabbo().Permissions.HasCommand(cmdList.Value.PermissionRequired))
                         continue;
                 }
                 list.Append(":" + cmdList.Key + " " + cmdList.Value.Parameters + " - " + cmdList.Value.Description + "\n");
@@ -64,11 +64,11 @@ public class CommandManager : ICommandManager
         var parameters = split.Length > 1 ? split[1..] : Array.Empty<string>();
         if (_commands.TryGetValue(key.ToLower(), out var command))
         {
-            if (session.GetHabbo().GetPermissions().HasRight("mod_tool"))
+            if (session.GetHabbo().Permissions.HasRight("mod_tool"))
                 LogCommand(session.GetHabbo().Id, message, session.GetHabbo().MachineId);
             if (!string.IsNullOrEmpty(command.PermissionRequired))
             {
-                if (!session.GetHabbo().GetPermissions().HasCommand(command.PermissionRequired))
+                if (!session.GetHabbo().Permissions.HasCommand(command.PermissionRequired))
                     return false;
             }
             session.GetHabbo().ChatCommand = command;

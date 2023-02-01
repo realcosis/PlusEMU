@@ -21,7 +21,7 @@ internal class CloseTicketEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
+        if (!session.GetHabbo().Permissions.HasRight("mod_tool"))
             return Task.CompletedTask;
         var result = packet.ReadInt(); // 1 = useless, 2 = abusive, 3 = resolved
         packet.ReadInt(); //junk

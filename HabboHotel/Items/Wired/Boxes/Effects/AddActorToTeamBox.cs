@@ -50,8 +50,8 @@ internal class AddActorToTeamBox : IWiredItem
                     team.OnUserLeave(user);
                 user.Team = toJoin;
                 team.AddUser(user);
-                if (user.GetClient().GetHabbo().Effects().CurrentEffect != Convert.ToInt32(toJoin + 39))
-                    user.GetClient().GetHabbo().Effects().ApplyEffect(Convert.ToInt32(toJoin + 39));
+                if (user.GetClient().GetHabbo().Effects.CurrentEffect != Convert.ToInt32(toJoin + 39))
+                    user.GetClient().GetHabbo().Effects.ApplyEffect(Convert.ToInt32(toJoin + 39));
             }
         }
         return true;

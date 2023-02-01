@@ -56,9 +56,9 @@ internal class RemoveGroupMemberEvent : IPacketEvent
                     "DELETE FROM `group_memberships` WHERE `group_id` = @groupId AND `user_id` = @userId", new { groupId = groupId, userId = userId });
             }
             session.Send(new GroupInfoComposer(group, session));
-            if (session.GetHabbo().GetStats().FavouriteGroupId == groupId)
+            if (session.GetHabbo().HabboStats.FavouriteGroupId == groupId)
             {
-                session.GetHabbo().GetStats().FavouriteGroupId = 0;
+                session.GetHabbo().HabboStats.FavouriteGroupId = 0;
                 using (var connection = _database.Connection())
                 {
                     connection.Execute("UPDATE `user_statistics` SET `groupid` = '0' WHERE `id` = @userId LIMIT 1", new { userId = userId });

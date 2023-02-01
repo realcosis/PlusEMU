@@ -173,7 +173,7 @@ public class GroupManager : IGroupManager
     public Dictionary<int, string> GetAllBadgesInRoom(Room room)
     {
         var badges = new Dictionary<int, string>();
-        foreach (var groupIds in room.GetRoomUserManager().GetRoomUsers().Select(user => user.GetClient()?.GetHabbo()?.GetStats().FavouriteGroupId ?? 0).Where(g => g > 0).Distinct())
+        foreach (var groupIds in room.GetRoomUserManager().GetRoomUsers().Select(user => (user.GetClient()?.GetHabbo()).HabboStats.FavouriteGroupId ?? 0).Where(g => g > 0).Distinct())
         {
             if (!TryGetGroup(groupIds, out var group))
                 continue;

@@ -31,7 +31,7 @@ internal class SaveBotActionEvent : IPacketEvent
             return Task.CompletedTask;
         if (!room.GetRoomUserManager().TryGetBot(botId, out var bot))
             return Task.CompletedTask;
-        if (bot.BotData.OwnerId != session.GetHabbo().Id && !session.GetHabbo().GetPermissions().HasRight("bot_edit_any_override"))
+        if (bot.BotData.OwnerId != session.GetHabbo().Id && !session.GetHabbo().Permissions.HasRight("bot_edit_any_override"))
             return Task.CompletedTask;
         var roomBot = bot.BotData;
         if (roomBot == null)

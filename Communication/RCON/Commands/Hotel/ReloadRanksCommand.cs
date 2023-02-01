@@ -12,9 +12,9 @@ internal class ReloadRanksCommand : IRconCommand
         PlusEnvironment.GetGame().GetPermissionManager().Init();
         foreach (var client in PlusEnvironment.GetGame().GetClientManager().GetClients.ToList())
         {
-            if (client == null || client.GetHabbo() == null || client.GetHabbo().GetPermissions() == null)
+            if (client == null || client.GetHabbo() == null || client.GetHabbo().Permissions == null)
                 continue;
-            client.GetHabbo().GetPermissions().Init(client.GetHabbo());
+            client.GetHabbo().Permissions.Init(client.GetHabbo());
         }
         return Task.FromResult(true);
     }

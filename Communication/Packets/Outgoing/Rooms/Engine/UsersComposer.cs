@@ -36,11 +36,11 @@ public class UsersComposer : IServerPacket
             Group group = null;
             if (habbo != null)
             {
-                if (habbo.GetStats() != null)
+                if (habbo.HabboStats != null)
                 {
-                    if (habbo.GetStats().FavouriteGroupId > 0)
+                    if (habbo.HabboStats.FavouriteGroupId > 0)
                     {
-                        if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(habbo.GetStats().FavouriteGroupId, out group))
+                        if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(habbo.HabboStats.FavouriteGroupId, out group))
                             group = null;
                     }
                 }
@@ -71,7 +71,7 @@ public class UsersComposer : IServerPacket
                     packet.WriteString("");
                 }
                 packet.WriteString(""); //Whats this? TG: Swim Figure
-                packet.WriteInteger(habbo.GetStats().AchievementPoints); //Achievement score
+                packet.WriteInteger(habbo.HabboStats.AchievementPoints); //Achievement score
                 packet.WriteBoolean(false); //Builders club? TG: Is Moderator
             //}
             //else if (habbo.PetId > 0 && habbo.PetId != 100)

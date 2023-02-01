@@ -18,7 +18,7 @@ internal class RoomAlertCommand : IChatCommand
             session.SendWhisper("Please enter a message you'd like to send to the room.");
             return;
         }
-        if (!session.GetHabbo().GetPermissions().HasRight("mod_alert") && room.OwnerId != session.GetHabbo().Id)
+        if (!session.GetHabbo().Permissions.HasRight("mod_alert") && room.OwnerId != session.GetHabbo().Id)
         {
             session.SendWhisper("You can only Room Alert in your own room!");
             return;

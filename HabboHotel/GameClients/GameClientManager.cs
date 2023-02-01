@@ -101,7 +101,7 @@ public class GameClientManager : IGameClientManager
         {
             if (client == null || client.GetHabbo() == null)
                 continue;
-            if (client.GetHabbo().GetPermissions().HasRight("mod_tool") && !client.GetHabbo().GetPermissions().HasRight("staff_ignore_mod_alert"))
+            if (client.GetHabbo().Permissions.HasRight("mod_tool") && !client.GetHabbo().Permissions.HasRight("staff_ignore_mod_alert"))
             {
                 try
                 {
@@ -139,7 +139,7 @@ public class GameClientManager : IGameClientManager
         {
             if (client == null || client.GetHabbo() == null)
                 continue;
-            if (client.GetHabbo().GetPermissions().HasRight("mod_tool") && !client.GetHabbo().GetPermissions().HasRight("staff_ignore_advertisement_reports"))
+            if (client.GetHabbo().Permissions.HasRight("mod_tool") && !client.GetHabbo().Permissions.HasRight("staff_ignore_advertisement_reports"))
                 client.Send(new MotdNotificationComposer(builder.ToString()));
         }
     }
@@ -153,7 +153,7 @@ public class GameClientManager : IGameClientManager
                 continue;
             if (!string.IsNullOrEmpty(fuse))
             {
-                if (!client.GetHabbo().GetPermissions().HasRight(fuse))
+                if (!client.GetHabbo().Permissions.HasRight(fuse))
                     continue;
             }
             client.Send(packet);

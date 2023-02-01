@@ -67,7 +67,7 @@ public class PetInformationComposer : IServerPacket
             packet.WriteInteger(100);
             packet.WriteInteger(100);
             packet.WriteInteger(100);
-            packet.WriteInteger(_habbo.GetStats().Respect);
+            packet.WriteInteger(_habbo.HabboStats.Respect);
             packet.WriteInteger(_habbo.Id);
             packet.WriteInteger(Convert.ToInt32(Math.Floor((UnixTimestamp.GetNow() - _habbo.AccountCreated) / 86400))); //How?
             packet.WriteString(_habbo.Username);

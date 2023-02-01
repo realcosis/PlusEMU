@@ -29,7 +29,7 @@ internal class GetCurrentQuestEvent : IPacketEvent
             dbClient.RunQuery("REPLACE INTO `user_quests`(`user_id`,`quest_id`) VALUES (" + session.GetHabbo().Id + ", " + nextQuest.Id + ")");
             dbClient.RunQuery("UPDATE `user_statistics` SET `quest_id` = '" + nextQuest.Id + "' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
         }
-        session.GetHabbo().GetStats().QuestId = nextQuest.Id;
+        session.GetHabbo().HabboStats.QuestId = nextQuest.Id;
         _questManager.GetList(session, null);
         session.Send(new QuestStartedComposer(session, nextQuest));
         return Task.CompletedTask;

@@ -34,7 +34,7 @@ internal class SetMaxCommand : IChatCommand
                 maxAmount = 10;
                 session.SendWhisper("visitor amount too low, visitor amount has been set to 10.");
             }
-            else if (maxAmount > 200 && !session.GetHabbo().GetPermissions().HasRight("override_command_setmax_limit"))
+            else if (maxAmount > 200 && !session.GetHabbo().Permissions.HasRight("override_command_setmax_limit"))
             {
                 maxAmount = 200;
                 session.SendWhisper("visitor amount too high for your rank, visitor amount has been set to 200.");

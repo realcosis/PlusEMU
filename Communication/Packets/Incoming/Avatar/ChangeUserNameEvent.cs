@@ -58,7 +58,7 @@ internal class ChangeUserNameEvent : IPacketEvent
         const string allowedCharacters = "abcdefghijklmnopqrstuvwxyz.,_-;:?!1234567890";
         if (letters.Any(chr => !allowedCharacters.Contains(chr)))
             return;
-        if (!session.GetHabbo().GetPermissions().HasRight("mod_tool") && newName.ToLower().Contains("mod") || newName.ToLower().Contains("adm") || newName.ToLower().Contains("admin")
+        if (!session.GetHabbo().Permissions.HasRight("mod_tool") && newName.ToLower().Contains("mod") || newName.ToLower().Contains("adm") || newName.ToLower().Contains("admin")
             || newName.ToLower().Contains("m0d") || newName.ToLower().Contains("mob") || newName.ToLower().Contains("m0b"))
             return;
         if (!newName.ToLower().Contains("mod") && (session.GetHabbo().Rank == 2 || session.GetHabbo().Rank == 3))
@@ -105,7 +105,7 @@ internal class ChangeUserNameEvent : IPacketEvent
             return true;
         if (habbo.Rank == 1 && habbo.VipRank == 3)
             return true;
-        if (habbo.GetPermissions().HasRight("mod_tool"))
+        if (habbo.Permissions.HasRight("mod_tool"))
             return true;
         return false;
     }

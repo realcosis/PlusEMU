@@ -22,7 +22,7 @@ internal class AlertCommand : ITargetChatCommand
             return Task.CompletedTask;
         }
         var message = CommandManager.MergeParams(parameters);
-        habbo.GetClient().SendNotification($"{session.GetHabbo().Username} alerted you with the following message:\n\n{message}");
+        habbo.Client.SendNotification($"{session.GetHabbo().Username} alerted you with the following message:\n\n{message}");
         session.SendWhisper($"Alert successfully sent to {habbo.Username}");
         return Task.CompletedTask;
     }

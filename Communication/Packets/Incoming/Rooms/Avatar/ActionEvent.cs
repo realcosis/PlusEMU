@@ -22,7 +22,7 @@ public class ActionEvent : RoomPacketEvent
             return Task.CompletedTask;
         if (user.DanceId > 0)
             user.DanceId = 0;
-        if (session.GetHabbo().Effects().CurrentEffect > 0)
+        if (session.GetHabbo().Effects.CurrentEffect > 0)
             room.SendPacket(new AvatarEffectComposer(user.VirtualId, 0));
         user.UnIdle();
         room.SendPacket(new ActionComposer(user.VirtualId, action));

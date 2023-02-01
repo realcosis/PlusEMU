@@ -53,7 +53,7 @@ public class QuestListComposer : IServerPacket
         message.WriteInteger(quest == null ? 0 : quest.Category.Contains("xmas2012") ? 0 : amountInCat); // Total quests in this cat
         message.WriteInteger(quest?.RewardType ?? 3); // Reward type (1 = Snowflakes, 2 = Love hearts, 3 = Pixels, 4 = Seashells, everything else is pixels
         message.WriteInteger(quest?.Id ?? 0); // Quest id
-        message.WriteBoolean(quest != null && session.GetHabbo().GetStats().QuestId == quest.Id); // Quest started
+        message.WriteBoolean(quest != null && session.GetHabbo().HabboStats.QuestId == quest.Id); // Quest started
         message.WriteString(quest == null ? string.Empty : quest.ActionName);
         message.WriteString(quest == null ? string.Empty : quest.DataBit);
         message.WriteInteger(quest?.Reward ?? 0);

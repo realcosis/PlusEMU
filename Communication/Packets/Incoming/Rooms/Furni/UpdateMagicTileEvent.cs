@@ -13,7 +13,7 @@ internal class UpdateMagicTileEvent : IPacketEvent
         var room = session.GetHabbo().CurrentRoom;
         if (room == null)
             return Task.CompletedTask;
-        if (!room.CheckRights(session, false, true) && !session.GetHabbo().GetPermissions().HasRight("room_item_use_any_stack_tile"))
+        if (!room.CheckRights(session, false, true) && !session.GetHabbo().Permissions.HasRight("room_item_use_any_stack_tile"))
             return Task.CompletedTask;
         var itemId = packet.ReadUInt();
         var decimalHeight = packet.ReadInt();

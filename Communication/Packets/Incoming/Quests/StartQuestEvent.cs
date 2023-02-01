@@ -27,7 +27,7 @@ internal class StartQuestEvent : IPacketEvent
             dbClient.RunQuery("REPLACE INTO `user_quests` (`user_id`,`quest_id`) VALUES ('" + session.GetHabbo().Id + "', '" + quest.Id + "')");
             dbClient.RunQuery("UPDATE `user_statistics` SET `quest_id` = '" + quest.Id + "' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
         }
-        session.GetHabbo().GetStats().QuestId = quest.Id;
+        session.GetHabbo().HabboStats.QuestId = quest.Id;
         _questManager.GetList(session, null);
         session.Send(new QuestStartedComposer(session, quest));
         return Task.CompletedTask;

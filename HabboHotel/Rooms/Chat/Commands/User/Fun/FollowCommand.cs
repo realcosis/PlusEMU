@@ -37,7 +37,7 @@ internal class FollowCommand : ITargetChatCommand
             session.SendWhisper("That user currently isn't in a room!");
             return Task.CompletedTask;
         }
-        if (target.CurrentRoom.Access != RoomAccess.Open && !session.GetHabbo().GetPermissions().HasRight("mod_tool"))
+        if (target.CurrentRoom.Access != RoomAccess.Open && !session.GetHabbo().Permissions.HasRight("mod_tool"))
         {
             session.SendWhisper("Oops, the room that user is either locked, passworded or invisible. You cannot follow!");
             return Task.CompletedTask;

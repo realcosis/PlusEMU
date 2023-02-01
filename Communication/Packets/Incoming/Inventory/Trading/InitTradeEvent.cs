@@ -42,7 +42,7 @@ internal class InitTradeEvent : IPacketEvent
             using var connection = _database.Connection();
             connection.Execute("UPDATE `user_info` SET `trading_locked` = '0' WHERE `id` = @userId LIMIT 1", new { userId = session.GetHabbo().Id });
         }
-        if (!session.GetHabbo().GetPermissions().HasRight("room_trade_override"))
+        if (!session.GetHabbo().Permissions.HasRight("room_trade_override"))
         {
             if (room.TradeSettings == 0)
             {

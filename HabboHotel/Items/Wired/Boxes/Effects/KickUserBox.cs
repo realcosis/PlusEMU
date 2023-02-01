@@ -41,7 +41,7 @@ internal class KickUserBox : IWiredItem, IWiredCycle
                 var player = (Habbo)_toKick.Dequeue();
                 if (player == null || !player.InRoom || player.CurrentRoom != Instance)
                     continue;
-                Instance.GetRoomUserManager().RemoveUserFromRoom(player.GetClient(), true);
+                Instance.GetRoomUserManager().RemoveUserFromRoom(player.Client, true);
             }
         }
         TickCount = 3;
@@ -79,13 +79,13 @@ internal class KickUserBox : IWiredItem, IWiredCycle
             var user = Instance.GetRoomUserManager().GetRoomUserByHabbo(player.Id);
             if (user == null)
                 return false;
-            if (player.GetPermissions().HasRight("mod_tool") || Instance.OwnerId == player.Id)
+            if (player.Permissions.HasRight("mod_tool") || Instance.OwnerId == player.Id)
             {
-                player.GetClient().Send(new WhisperComposer(user.VirtualId, "Wired Kick Exception: Unkickable Player", 0, 0));
+                player.Client.Send(new WhisperComposer(user.VirtualId, "Wired Kick Exception: Unkickable Player", 0, 0));
                 return false;
             }
             _toKick.Enqueue(player);
-            player.GetClient().Send(new WhisperComposer(user.VirtualId, StringData, 0, 0));
+            player.Client.Send(new WhisperComposer(user.VirtualId, StringData, 0, 0));
         }
         return true;
     }

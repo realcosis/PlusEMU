@@ -39,7 +39,7 @@ internal class PickupObjectEvent : IPacketEvent
             itemRights = true;
         else if (room.Group != null && room.CheckRights(session, false, true)) //Room has a group, this user has group rights.
             itemRights = true;
-        else if (session.GetHabbo().GetPermissions().HasRight("room_item_take"))
+        else if (session.GetHabbo().Permissions.HasRight("room_item_take"))
             itemRights = true;
         if (itemRights)
         {
@@ -54,7 +54,7 @@ internal class PickupObjectEvent : IPacketEvent
             {
                 await connection.ExecuteAsync("DELETE FROM `room_items_toner` WHERE `id` = @id LIMIT 1", new { id = item.Id });
             }
-            if (item.UserId == session.GetHabbo().Id || session.GetHabbo().GetPermissions().HasRight("room_item_take"))
+            if (item.UserId == session.GetHabbo().Id || session.GetHabbo().Permissions.HasRight("room_item_take"))
             {
                 room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
                 session.GetHabbo().Inventory.Furniture.AddItem(item.ToInventoryItem());

@@ -41,7 +41,7 @@ internal class ShowMessageBox : IWiredItem
         if (@params == null || @params.Length == 0)
             return false;
         var player = (Habbo)@params[0];
-        if (player == null || player.GetClient() == null || string.IsNullOrWhiteSpace(StringData))
+        if (player == null || player.Client == null || string.IsNullOrWhiteSpace(StringData))
             return false;
         var user = player.CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(player.Username);
         if (user == null)
@@ -55,7 +55,7 @@ internal class ShowMessageBox : IWiredItem
             message = message.Replace("%USERCOUNT%", player.CurrentRoom.UserCount.ToString());
         if (StringData.Contains("%USERSONLINE%"))
             message = message.Replace("%USERSONLINE%", PlusEnvironment.GetGame().GetClientManager().Count.ToString());
-        player.GetClient().Send(new WhisperComposer(user.VirtualId, message, 0, 34));
+        player.Client.Send(new WhisperComposer(user.VirtualId, message, 0, 34));
         return true;
     }
 }

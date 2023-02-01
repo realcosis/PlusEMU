@@ -7,7 +7,7 @@ internal class ModeratorActionEvent : IPacketEvent
 {
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().GetPermissions().HasRight("mod_caution"))
+        if (!session.GetHabbo().Permissions.HasRight("mod_caution"))
             return Task.CompletedTask;
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;

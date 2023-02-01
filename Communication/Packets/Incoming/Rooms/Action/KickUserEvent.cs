@@ -27,7 +27,7 @@ internal class KickUserEvent : IPacketEvent
             return Task.CompletedTask;
 
         //Cannot kick owner or moderators.
-        if (room.CheckRights(user.GetClient(), true) || user.GetClient().GetHabbo().GetPermissions().HasRight("mod_tool"))
+        if (room.CheckRights(user.GetClient(), true) || user.GetClient().GetHabbo().Permissions.HasRight("mod_tool"))
             return Task.CompletedTask;
         room.GetRoomUserManager().RemoveUserFromRoom(user.GetClient(), true, true);
         _achievementManager.ProgressAchievement(session, "ACH_SelfModKickSeen", 1);

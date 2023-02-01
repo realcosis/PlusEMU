@@ -19,7 +19,7 @@ internal class EnableCommand : IChatCommand
             session.SendWhisper("You must enter an effect ID!");
             return;
         }
-        if (!room.EnablesEnabled && !session.GetHabbo().GetPermissions().HasRight("mod_tool"))
+        if (!room.EnablesEnabled && !session.GetHabbo().Permissions.HasRight("mod_tool"))
         {
             session.SendWhisper("Oops, it appears that the room owner has disabled the ability to use the enable command in here.");
             return;
@@ -41,16 +41,16 @@ internal class EnableCommand : IChatCommand
             return;
         if (effectId > int.MaxValue || effectId < int.MinValue)
             return;
-        if ((effectId == 102 || effectId == 187) && !session.GetHabbo().GetPermissions().HasRight("mod_tool"))
+        if ((effectId == 102 || effectId == 187) && !session.GetHabbo().Permissions.HasRight("mod_tool"))
         {
             session.SendWhisper("Sorry, only staff members can use this effects.");
             return;
         }
-        if (effectId == 178 && !session.GetHabbo().GetPermissions().HasRight("gold_vip") && !session.GetHabbo().GetPermissions().HasRight("events_staff"))
+        if (effectId == 178 && !session.GetHabbo().Permissions.HasRight("gold_vip") && !session.GetHabbo().Permissions.HasRight("events_staff"))
         {
             session.SendWhisper("Sorry, only Gold VIP and Events Staff members can use this effect.");
             return;
         }
-        session.GetHabbo().Effects().ApplyEffect(effectId);
+        session.GetHabbo().Effects.ApplyEffect(effectId);
     }
 }

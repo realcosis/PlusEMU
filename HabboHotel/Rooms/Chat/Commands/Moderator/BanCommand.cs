@@ -27,7 +27,7 @@ internal class BanCommand : ITargetChatCommand
 
     public Task Execute(GameClient session, Room room, Habbo target, string[] parameters)
     {
-        if (target.GetPermissions().HasRight("mod_soft_ban") && !session.GetHabbo().GetPermissions().HasRight("mod_ban_any"))
+        if (target.Permissions.HasRight("mod_soft_ban") && !session.GetHabbo().Permissions.HasRight("mod_ban_any"))
         {
             session.SendWhisper("Oops, you cannot ban that user.");
             return Task.CompletedTask;
@@ -49,7 +49,7 @@ internal class BanCommand : ITargetChatCommand
             dbClient.RunQuery($"UPDATE `user_info` SET `bans` = `bans` + '1' WHERE `user_id` = '{target.Id}' LIMIT 1");
         }
         _moderationManager.BanUser(session.GetHabbo().Username, ModerationBanType.Username, target.Username, reason, expire);
-        target.GetClient().Disconnect();
+        target.Client.Disconnect();
         session.SendWhisper($"Success, you have account banned the user '{username}' for {hours} hour(s) with the reason '{reason}'!");
         return Task.CompletedTask;
     }

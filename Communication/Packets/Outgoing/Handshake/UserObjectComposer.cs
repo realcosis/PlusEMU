@@ -22,9 +22,9 @@ public class UserObjectComposer : IServerPacket
         packet.WriteString(_habbo.Motto);
         packet.WriteString("");
         packet.WriteBoolean(false);
-        packet.WriteInteger(_habbo.GetStats().Respect);
-        packet.WriteInteger(_habbo.GetStats().DailyRespectPoints);
-        packet.WriteInteger(_habbo.GetStats().DailyPetRespectPoints);
+        packet.WriteInteger(_habbo.HabboStats.Respect);
+        packet.WriteInteger(_habbo.HabboStats.DailyRespectPoints);
+        packet.WriteInteger(_habbo.HabboStats.DailyPetRespectPoints);
         packet.WriteBoolean(false); // Friends stream active
         packet.WriteString(_habbo.LastOnline.ToString()); // last online?
         packet.WriteBoolean(_habbo.ChangingName); // Can change name

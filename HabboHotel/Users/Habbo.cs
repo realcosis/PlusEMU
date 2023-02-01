@@ -35,7 +35,7 @@ public class Habbo
     public ClothingComponent Clothing { get; set; }
 
     private bool _disconnected;
-    public EffectsComponent Fx { get; set; }
+    public EffectsComponent Effects { get; set; }
 
     private bool _habboSaved;
 
@@ -213,8 +213,6 @@ public class Habbo
         }
     }
 
-    public HabboStats GetStats() => HabboStats;
-
     public bool CacheExpired()
     {
         var span = DateTime.Now - _timeCached;
@@ -229,8 +227,8 @@ public class Habbo
 
     public bool InitFx()
     {
-        Fx = new();
-        return Fx.Init(this);
+        Effects = new();
+        return Effects.Init(this);
     }
 
     public bool InitClothing()
@@ -251,8 +249,6 @@ public class Habbo
         InitClothing();
     }
 
-
-    public PermissionComponent GetPermissions() => Permissions;
 
     public event EventHandler? Disconnected;
     public void OnDisconnect()
@@ -282,7 +278,7 @@ public class Habbo
                               "', `dailyRespectPoints` = '" + HabboStats.DailyRespectPoints + "', `dailyPetRespectPoints` = '" + HabboStats.DailyPetRespectPoints + "', `AchievementScore` = '" +
                               HabboStats.AchievementPoints + "', `quest_id` = '" + HabboStats.QuestId + "', `quest_progress` = '" + HabboStats.QuestProgress + "', `groupid` = '" +
                               HabboStats.FavouriteGroupId + "',`forum_posts` = '" + HabboStats.ForumPosts + "' WHERE `id` = '" + Id + "' LIMIT 1;");
-            if (GetPermissions().HasRight("mod_tickets"))
+            if (Permissions.HasRight("mod_tickets"))
                 dbClient.RunQuery("UPDATE `moderation_tickets` SET `status` = 'open', `moderator_id` = '0' WHERE `status` ='picked' AND `moderator_id` = '" + Id + "'");
         }
         Dispose();
@@ -293,8 +289,8 @@ public class Habbo
     {
         if (InRoom && CurrentRoom != null)
             CurrentRoom.GetRoomUserManager().RemoveUserFromRoom(Client, false);
-        if (Fx != null)
-            Fx.Dispose();
+        if (Effects != null)
+            Effects.Dispose();
         if (Clothing != null)
             Clothing.Dispose();
         if (Permissions != null)
@@ -326,11 +322,6 @@ public class Habbo
         catch { }
     }
 
-    public GameClient GetClient() => Client;
-
-    public EffectsComponent Effects() => Fx;
-
-    public ClothingComponent GetClothing() => Clothing;
 
     public int GetQuestProgress(int p)
     {
@@ -366,85 +357,85 @@ public class Habbo
 
     public void PrepareRoom(uint id, string password)
     {
-        if (GetClient() == null || GetClient().GetHabbo() == null)
+        if (Client == null || Client.GetHabbo() == null)
             return;
 
-        if (GetClient().GetHabbo().InRoom)
+        if (Client.GetHabbo().InRoom)
         {
-            var oldRoom = GetClient().GetHabbo().CurrentRoom;
-            oldRoom?.GetRoomUserManager().RemoveUserFromRoom(GetClient(), false);
+            var oldRoom = Client.GetHabbo().CurrentRoom;
+            oldRoom?.GetRoomUserManager().RemoveUserFromRoom(Client, false);
         }
-        if (GetClient().GetHabbo().IsTeleporting && GetClient().GetHabbo().TeleportingRoomId != id)
+        if (Client.GetHabbo().IsTeleporting && Client.GetHabbo().TeleportingRoomId != id)
         {
-            GetClient().Send(new CloseConnectionComposer());
+            Client.Send(new CloseConnectionComposer());
             return;
         }
         if (!PlusEnvironment.GetGame().GetRoomManager().TryLoadRoom(id, out var room))
         {
-            GetClient().Send(new CloseConnectionComposer());
+            Client.Send(new CloseConnectionComposer());
             return;
         }
         if (room.IsCrashed)
         {
-            GetClient().SendNotification("This room has crashed! :(");
-            GetClient().Send(new CloseConnectionComposer());
+            Client.SendNotification("This room has crashed! :(");
+            Client.Send(new CloseConnectionComposer());
             return;
         }
-        GetClient().GetHabbo().CurrentRoom = room;
-        if (room.GetRoomUserManager().UserCount >= room.UsersMax && !GetClient().GetHabbo().GetPermissions().HasRight("room_enter_full") && GetClient().GetHabbo().Id != room.OwnerId)
+        Client.GetHabbo().CurrentRoom = room;
+        if (room.GetRoomUserManager().UserCount >= room.UsersMax && !Client.GetHabbo().Permissions.HasRight("room_enter_full") && Client.GetHabbo().Id != room.OwnerId)
         {
-            GetClient().Send(new CantConnectComposer(1));
-            GetClient().Send(new CloseConnectionComposer());
+            Client.Send(new CantConnectComposer(1));
+            Client.Send(new CloseConnectionComposer());
             return;
         }
-        if (!GetPermissions().HasRight("room_ban_override") && room.GetBans().IsBanned(Id))
+        if (!Permissions.HasRight("room_ban_override") && room.GetBans().IsBanned(Id))
         {
             RoomAuthOk = false;
-            GetClient().GetHabbo().RoomAuthOk = false;
-            GetClient().Send(new CantConnectComposer(4));
-            GetClient().Send(new CloseConnectionComposer());
+            Client.GetHabbo().RoomAuthOk = false;
+            Client.Send(new CantConnectComposer(4));
+            Client.Send(new CloseConnectionComposer());
             return;
         }
-        GetClient().Send(new OpenConnectionComposer());
-        if (!room.CheckRights(GetClient(), true, true) && !GetClient().GetHabbo().IsTeleporting && !GetClient().GetHabbo().IsHopping)
+        Client.Send(new OpenConnectionComposer());
+        if (!room.CheckRights(Client, true, true) && !Client.GetHabbo().IsTeleporting && !Client.GetHabbo().IsHopping)
         {
-            if (room.Access == RoomAccess.Doorbell && !GetClient().GetHabbo().GetPermissions().HasRight("room_enter_locked"))
+            if (room.Access == RoomAccess.Doorbell && !Client.GetHabbo().Permissions.HasRight("room_enter_locked"))
             {
                 if (room.UserCount > 0)
                 {
-                    GetClient().Send(new DoorbellComposer(""));
-                    room.SendPacket(new DoorbellComposer(GetClient().GetHabbo().Username), true);
+                    Client.Send(new DoorbellComposer(""));
+                    room.SendPacket(new DoorbellComposer(Client.GetHabbo().Username), true);
                     return;
                 }
-                GetClient().Send(new FlatAccessDeniedComposer(""));
-                GetClient().Send(new CloseConnectionComposer());
+                Client.Send(new FlatAccessDeniedComposer(""));
+                Client.Send(new CloseConnectionComposer());
                 return;
             }
-            if (room.Access == RoomAccess.Password && !GetClient().GetHabbo().GetPermissions().HasRight("room_enter_locked"))
+            if (room.Access == RoomAccess.Password && !Client.GetHabbo().Permissions.HasRight("room_enter_locked"))
             {
                 if (password.ToLower() != room.Password.ToLower() || string.IsNullOrWhiteSpace(password))
                 {
-                    GetClient().Send(new GenericErrorComposer(-100002));
-                    GetClient().Send(new CloseConnectionComposer());
+                    Client.Send(new GenericErrorComposer(-100002));
+                    Client.Send(new CloseConnectionComposer());
                     return;
                 }
             }
         }
         if (!EnterRoom(room))
-            GetClient().Send(new CloseConnectionComposer());
+            Client.Send(new CloseConnectionComposer());
     }
 
     public bool EnterRoom(Room room)
     {
         if (room == null)
-            GetClient().Send(new CloseConnectionComposer());
-        GetClient().Send(new RoomReadyComposer(room.RoomId, room.ModelName));
+            Client.Send(new CloseConnectionComposer());
+        Client.Send(new RoomReadyComposer(room.RoomId, room.ModelName));
         if (room.Wallpaper != "0.0")
-            GetClient().Send(new RoomPropertyComposer("wallpaper", room.Wallpaper));
+            Client.Send(new RoomPropertyComposer("wallpaper", room.Wallpaper));
         if (room.Floor != "0.0")
-            GetClient().Send(new RoomPropertyComposer("floor", room.Floor));
-        GetClient().Send(new RoomPropertyComposer("landscape", room.Landscape));
-        GetClient().Send(new RoomRatingComposer(room.Score, !(GetClient().GetHabbo().RatedRooms.Contains(room.RoomId) || room.OwnerId == GetClient().GetHabbo().Id)));
+            Client.Send(new RoomPropertyComposer("floor", room.Floor));
+        Client.Send(new RoomPropertyComposer("landscape", room.Landscape));
+        Client.Send(new RoomRatingComposer(room.Score, !(Client.GetHabbo().RatedRooms.Contains(room.RoomId) || room.OwnerId == Client.GetHabbo().Id)));
 
 
         using (var dbClient = PlusEnvironment.GetDatabaseManager().Connection())
@@ -452,8 +443,8 @@ public class Habbo
             dbClient.Execute("INSERT INTO user_roomvisits (user_id,room_id,entry_timestamp,exit_timestamp) VALUES (@userId, @roomId, @entryTimestamp, @exitTimestamp)",
                 new
                 {
-                    userId = GetClient().GetHabbo().Id,
-                    roomId = GetClient().GetHabbo().CurrentRoom.RoomId,
+                    userId = Client.GetHabbo().Id,
+                    roomId = Client.GetHabbo().CurrentRoom.RoomId,
                     entryTimestamp = UnixTimestamp.GetNow(),
                     exitTimestamp = 0,
                 });
@@ -461,8 +452,8 @@ public class Habbo
 
         if (room.OwnerId != Id)
         {
-            GetClient().GetHabbo().GetStats().RoomVisits += 1;
-            PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(GetClient(), "ACH_RoomEntry", 1);
+            Client.GetHabbo().HabboStats.RoomVisits += 1;
+            PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(Client, "ACH_RoomEntry", 1);
         }
         return true;
     }

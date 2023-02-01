@@ -26,7 +26,7 @@ internal class DeleteRoomEvent : IPacketEvent
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(roomId, out var room))
             return Task.CompletedTask;
-        if (room.OwnerId != session.GetHabbo().Id && !session.GetHabbo().GetPermissions().HasRight("room_delete_any"))
+        if (room.OwnerId != session.GetHabbo().Id && !session.GetHabbo().Permissions.HasRight("room_delete_any"))
             return Task.CompletedTask;
         var itemsToRemove = new List<Item>();
         foreach (var item in room.GetRoomItemHandler().GetWallAndFloor.ToList())

@@ -20,7 +20,7 @@ internal abstract class SaveWiredConfigEvent : IPacketEvent
             return Task.CompletedTask;
         if (!session.GetHabbo().CurrentRoom.GetWired().TryGet(itemId, out var box))
             return Task.CompletedTask;
-        if (box.Type == WiredBoxType.EffectGiveUserBadge && !session.GetHabbo().GetPermissions().HasRight("room_item_wired_rewards"))
+        if (box.Type == WiredBoxType.EffectGiveUserBadge && !session.GetHabbo().Permissions.HasRight("room_item_wired_rewards"))
         {
             session.SendNotification("You don't have the correct permissions to do this.");
             return Task.CompletedTask;

@@ -29,7 +29,7 @@ internal class MuteUserEvent : IPacketEvent
         var target = room.GetRoomUserManager().GetRoomUserByHabbo(PlusEnvironment.GetUsernameById(userId));
         if (target == null)
             return Task.CompletedTask;
-        if (target.GetClient().GetHabbo().GetPermissions().HasRight("mod_tool"))
+        if (target.GetClient().GetHabbo().Permissions.HasRight("mod_tool"))
             return Task.CompletedTask;
         if (room.MutedUsers.ContainsKey(userId))
         {

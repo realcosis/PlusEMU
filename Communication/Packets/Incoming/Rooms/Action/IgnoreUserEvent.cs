@@ -24,7 +24,7 @@ internal class IgnoreUserEvent : IPacketEvent
             return Task.CompletedTask;
         var username = packet.ReadString();
         var player = PlusEnvironment.GetGame().GetClientManager().GetClientByUsername(username)?.GetHabbo();
-        if (player == null || player.GetPermissions().HasRight("mod_tool"))
+        if (player == null || player.Permissions.HasRight("mod_tool"))
             return Task.CompletedTask;
         if (session.GetHabbo().IgnoresComponent.IsIgnored(player.Id))
             return Task.CompletedTask;

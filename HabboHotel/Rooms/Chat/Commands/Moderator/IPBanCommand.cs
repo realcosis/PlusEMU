@@ -27,7 +27,7 @@ internal class IpBanCommand : ITargetChatCommand
 
     public Task Execute(GameClient session, Room room, Habbo target, string[] parameters)
     {
-        if (target.GetPermissions().HasRight("mod_tool") && !session.GetHabbo().GetPermissions().HasRight("mod_ban_any"))
+        if (target.Permissions.HasRight("mod_tool") && !session.GetHabbo().Permissions.HasRight("mod_ban_any"))
         {
             session.SendWhisper("Oops, you cannot ban that user.");
             return Task.CompletedTask;
@@ -49,7 +49,7 @@ internal class IpBanCommand : ITargetChatCommand
         if (!string.IsNullOrEmpty(ipAddress))
             _moderationManager.BanUser(session.GetHabbo().Username, ModerationBanType.Ip, ipAddress, reason, expire);
         _moderationManager.BanUser(session.GetHabbo().Username, ModerationBanType.Username, target.Username, reason, expire);
-        target.GetClient().Disconnect();
+        target.Client.Disconnect();
         session.SendWhisper("Success, you have IP and account banned the user '" + username + "' for '" + reason + "'!");
         return Task.CompletedTask;
     }

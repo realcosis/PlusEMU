@@ -20,7 +20,7 @@ public class UserChangeComposer : IServerPacket
         _look = user.GetClient().GetHabbo().Look;
         _gender = user.GetClient().GetHabbo().Gender;
         _motto = user.GetClient().GetHabbo().Motto;
-        _achievementScore = user.GetClient().GetHabbo().GetStats().AchievementPoints;
+        _achievementScore = user.GetClient().GetHabbo().HabboStats.AchievementPoints;
     }
     public UserChangeComposer(RoomBot user)
     {

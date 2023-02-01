@@ -20,7 +20,7 @@ internal class ReloadUserVipRankCommand : IRconCommand
             dbClient.AddParameter("userId", userId);
             client.GetHabbo().VipRank = dbClient.GetInteger();
         }
-        client.GetHabbo().GetPermissions().Init(client.GetHabbo());
+        client.GetHabbo().Permissions.Init(client.GetHabbo());
         return Task.FromResult(true);
     }
 }

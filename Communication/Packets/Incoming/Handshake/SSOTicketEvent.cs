@@ -35,13 +35,13 @@ public class SsoTicketEvent : IPacketEvent
             session.Send(new AuthenticationOkComposer());
 
             // TODO @80O: Move to individual incoming message handlers.
-            session.Send(new AvatarEffectsComposer(session.GetHabbo().Effects().GetAllEffects));
+            session.Send(new AvatarEffectsComposer(session.GetHabbo().Effects.GetAllEffects));
             session.Send(new NavigatorSettingsComposer(session.GetHabbo().HomeRoom));
             session.Send(new FavouritesComposer(session.GetHabbo().FavoriteRooms));
-            session.Send(new FigureSetIdsComposer(session.GetHabbo().GetClothing().GetClothingParts));
+            session.Send(new FigureSetIdsComposer(session.GetHabbo().Clothing.GetClothingParts));
             session.Send(new UserRightsComposer(session.GetHabbo().Rank, session.GetHabbo().IsAmbassador));
             session.Send(new AvailabilityStatusComposer());
-            session.Send(new AchievementScoreComposer(session.GetHabbo().GetStats().AchievementPoints));
+            session.Send(new AchievementScoreComposer(session.GetHabbo().HabboStats.AchievementPoints));
             session.Send(new BuildersClubMembershipComposer());
             session.Send(new CfhTopicsInitComposer(PlusEnvironment.GetGame().GetModerationManager().UserActionPresets));
             session.Send(new BadgeDefinitionsComposer(PlusEnvironment.GetGame().GetAchievementManager().Achievements));
@@ -69,9 +69,9 @@ public class SsoTicketEvent : IPacketEvent
             }
             if (!PlusEnvironment.GetGame().GetCacheManager().ContainsUser(session.GetHabbo().Id))
                 PlusEnvironment.GetGame().GetCacheManager().GenerateUser(session.GetHabbo().Id);
-            session.GetHabbo().Look = PlusEnvironment.GetFigureManager().ProcessFigure(session.GetHabbo().Look, session.GetHabbo().Gender, session.GetHabbo().GetClothing().GetClothingParts, true);
+            session.GetHabbo().Look = PlusEnvironment.GetFigureManager().ProcessFigure(session.GetHabbo().Look, session.GetHabbo().Gender, session.GetHabbo().Clothing.GetClothingParts, true);
             session.GetHabbo().InitProcess();
-            if (session.GetHabbo().GetPermissions().HasRight("mod_tickets"))
+            if (session.GetHabbo().Permissions.HasRight("mod_tickets"))
             {
                 session.Send(new ModeratorInitComposer(
                     PlusEnvironment.GetGame().GetModerationManager().UserMessagePresets,

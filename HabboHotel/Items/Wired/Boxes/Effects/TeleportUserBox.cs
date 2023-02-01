@@ -82,8 +82,8 @@ internal class TeleportUserBox : IWiredItem, IWiredCycle
         var player = (Habbo)@params[0];
         if (player == null)
             return false;
-        if (player.Effects() != null)
-            player.Effects().ApplyEffect(4);
+        if (player.Effects != null)
+            player.Effects.ApplyEffect(4);
         _queue.Enqueue(player);
         return true;
     }
@@ -122,7 +122,7 @@ internal class TeleportUserBox : IWiredItem, IWiredCycle
             return;
         room.GetGameMap().TeleportToItem(user, item);
         room.GetRoomUserManager().UpdateUserStatusses();
-        if (player.Effects() != null)
-            player.Effects().ApplyEffect(0);
+        if (player.Effects != null)
+            player.Effects.ApplyEffect(0);
     }
 }

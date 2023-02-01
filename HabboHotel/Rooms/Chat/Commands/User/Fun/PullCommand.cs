@@ -16,7 +16,7 @@ internal class PullCommand : ITargetChatCommand
 
     public Task Execute(GameClient session, Room room, Habbo target, string[] parameters)
     {
-        if (!room.PullEnabled && !session.GetHabbo().GetPermissions().HasRight("room_override_custom_config"))
+        if (!room.PullEnabled && !session.GetHabbo().Permissions.HasRight("room_override_custom_config"))
         {
             session.SendWhisper("Oops, it appears that the room owner has disabled the ability to use the pull command in here.");
             return Task.CompletedTask;

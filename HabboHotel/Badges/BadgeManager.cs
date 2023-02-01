@@ -36,7 +36,7 @@ public class BadgeManager : IBadgeManager
         if (habbo.Inventory.Badges.HasBadge(code))
             return;
 
-        if (!_badges.TryGetValue(code.ToUpper(), out var badge) || badge.RequiredRight.Length > 0 && !habbo.GetPermissions().HasRight(badge.RequiredRight))
+        if (!_badges.TryGetValue(code.ToUpper(), out var badge) || badge.RequiredRight.Length > 0 && !habbo.Permissions.HasRight(badge.RequiredRight))
             return;
 
         using var connection = _database.Connection();
@@ -46,8 +46,8 @@ public class BadgeManager : IBadgeManager
             badge = badge.Code
         });
         habbo.Inventory.Badges.AddBadge(new(code, 0));
-            habbo.GetClient().Send(new BadgesComposer(habbo.GetClient()));
-            habbo.GetClient().Send(new FurniListNotificationComposer(1, 4));
+            habbo.Client.Send(new BadgesComposer(habbo.Client));
+            habbo.Client.Send(new FurniListNotificationComposer(1, 4));
     }
 
     public async Task RemoveBadge(Habbo habbo, string badge)

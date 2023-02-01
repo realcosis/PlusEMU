@@ -35,10 +35,10 @@ internal class TradeBanCommand : ITargetChatCommand
             {
                 dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '0' WHERE `user_id` = '" + target.Id + "' LIMIT 1");
             }
-            if (target.GetClient() != null)
+            if (target.Client != null)
             {
                 target.TradingLockExpiry = 0;
-                target.GetClient().SendNotification("Your outstanding trade ban has been removed.");
+                target.Client.SendNotification("Your outstanding trade ban has been removed.");
             }
             session.SendWhisper("You have successfully removed " + target.Username + "'s trade ban.");
             return Task.CompletedTask;
@@ -54,10 +54,10 @@ internal class TradeBanCommand : ITargetChatCommand
             {
                 dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '" + length + "', `trading_locks_count` = `trading_locks_count` + '1' WHERE `user_id` = '" + target.Id + "' LIMIT 1");
             }
-            if (target.GetClient() != null)
+            if (target.Client != null)
             {
                 target.TradingLockExpiry = length;
-                target.GetClient().SendNotification("You have been trade banned for " + days + " day(s)!");
+                target.Client.SendNotification("You have been trade banned for " + days + " day(s)!");
             }
             session.SendWhisper("You have successfully trade banned " + target.Username + " for " + days + " day(s).");
         }

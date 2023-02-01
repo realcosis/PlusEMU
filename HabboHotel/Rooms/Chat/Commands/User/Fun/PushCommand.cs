@@ -16,7 +16,7 @@ internal class PushCommand : ITargetChatCommand
 
     public Task Execute(GameClient session, Room room, Habbo target, string[] parameters)
     {
-        if (!room.PushEnabled && !session.GetHabbo().GetPermissions().HasRight("room_override_custom_config"))
+        if (!room.PushEnabled && !session.GetHabbo().Permissions.HasRight("room_override_custom_config"))
         {
             session.SendWhisper("Oops, it appears that the room owner has disabled the ability to use the push command in here.");
             return Task.CompletedTask;

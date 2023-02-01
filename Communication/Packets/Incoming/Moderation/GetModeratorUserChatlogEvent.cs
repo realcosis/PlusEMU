@@ -21,7 +21,7 @@ internal class GetModeratorUserChatlogEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
+        if (!session.GetHabbo().Permissions.HasRight("mod_tool"))
             return Task.CompletedTask;
         var data = PlusEnvironment.GetHabboById(packet.ReadInt());
         if (data == null)

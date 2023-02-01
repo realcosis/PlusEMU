@@ -35,7 +35,7 @@ internal class SubmitBullyReportEvent : IPacketEvent
             session.SendNotification("Reports can only be sent per 5 minutes!");
             return Task.CompletedTask;
         }
-        if (client.GetHabbo().GetPermissions().HasRight("mod_tool")) //Reporting staff, nope!
+        if (client.GetHabbo().Permissions.HasRight("mod_tool")) //Reporting staff, nope!
         {
             session.SendNotification("Sorry, you cannot report staff members via this tool.");
             return Task.CompletedTask;

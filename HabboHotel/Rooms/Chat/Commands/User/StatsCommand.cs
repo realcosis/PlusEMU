@@ -14,7 +14,7 @@ internal class StatsCommand : IChatCommand
 
     public void Execute(GameClient session, Room room, string[] parameters)
     {
-        var minutes = session.GetHabbo().GetStats().OnlineTime / 60;
+        var minutes = session.GetHabbo().HabboStats.OnlineTime / 60;
         var hours = minutes / 60;
         var onlineTime = Convert.ToInt32(hours);
         var s = onlineTime == 1 ? "" : "s";
@@ -25,7 +25,7 @@ internal class StatsCommand : IChatCommand
         habboInfo.Append("Duckets: " + session.GetHabbo().Duckets + "\r");
         habboInfo.Append("Diamonds: " + session.GetHabbo().Diamonds + "\r");
         habboInfo.Append("Online Time: " + onlineTime + " Hour" + s + "\r");
-        habboInfo.Append("Respects: " + session.GetHabbo().GetStats().Respect + "\r");
+        habboInfo.Append("Respects: " + session.GetHabbo().HabboStats.Respect + "\r");
         habboInfo.Append("GOTW Points: " + session.GetHabbo().GotwPoints + "\r\r");
         session.SendNotification(habboInfo.ToString());
     }

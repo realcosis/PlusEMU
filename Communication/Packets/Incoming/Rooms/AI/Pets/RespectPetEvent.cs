@@ -20,7 +20,7 @@ internal class RespectPetEvent : RoomPacketEvent
 
     public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().InRoom || session.GetHabbo().GetStats() == null || session.GetHabbo().GetStats().DailyPetRespectPoints == 0)
+        if (!session.GetHabbo().InRoom || session.GetHabbo().HabboStats == null || session.GetHabbo().HabboStats.DailyPetRespectPoints == 0)
             return Task.CompletedTask;
         var thisUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (thisUser == null)
@@ -48,9 +48,9 @@ internal class RespectPetEvent : RoomPacketEvent
             _achievementManager.ProgressAchievement(targetUser.GetClient(), "ACH_RespectEarned", 1);
 
             //Take away from pet respect points, just in-case users abuse this..
-            session.GetHabbo().GetStats().DailyPetRespectPoints -= 1;
-            session.GetHabbo().GetStats().RespectGiven += 1;
-            targetUser.GetClient().GetHabbo().GetStats().Respect += 1;
+            session.GetHabbo().HabboStats.DailyPetRespectPoints -= 1;
+            session.GetHabbo().HabboStats.RespectGiven += 1;
+            targetUser.GetClient().GetHabbo().HabboStats.Respect += 1;
 
             //Apply the effect.
             thisUser.CarryItemId = 999999999;
@@ -64,7 +64,7 @@ internal class RespectPetEvent : RoomPacketEvent
         }
         if (pet == null || pet.PetData == null || pet.RoomId != session.GetHabbo().CurrentRoom.RoomId)
             return Task.CompletedTask;
-        session.GetHabbo().GetStats().DailyPetRespectPoints -= 1;
+        session.GetHabbo().HabboStats.DailyPetRespectPoints -= 1;
         _achievementManager.ProgressAchievement(session, "ACH_PetRespectGiver", 1);
         thisUser.CarryItemId = 999999999;
         thisUser.CarryTimer = 5;

@@ -27,7 +27,7 @@ internal class MakeSayCommand : ITargetChatCommand
             {
                 if (targetUser.GetClient() != null && targetUser.GetClient().GetHabbo() != null)
                 {
-                    if (!targetUser.GetClient().GetHabbo().GetPermissions().HasRight("mod_make_say_any"))
+                    if (!targetUser.GetClient().GetHabbo().Permissions.HasRight("mod_make_say_any"))
                         room.SendPacket(new ChatComposer(targetUser.VirtualId, message, 0, targetUser.LastBubble));
                     else
                         session.SendWhisper("You cannot use makesay on this user.");

@@ -28,7 +28,7 @@ internal class BanUserEvent : IPacketEvent
             return Task.CompletedTask;
         if (room.OwnerId == userId)
             return Task.CompletedTask;
-        if (user.GetClient().GetHabbo().GetPermissions().HasRight("mod_tool"))
+        if (user.GetClient().GetHabbo().Permissions.HasRight("mod_tool"))
             return Task.CompletedTask;
         long time = 0;
         if (r.ToLower().Contains("hour"))

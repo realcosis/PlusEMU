@@ -27,7 +27,7 @@ internal class MipCommand : ITargetChatCommand
 
     public Task Execute(GameClient session, Room room, Habbo target, string[] parameters)
     {
-        if (target.GetPermissions().HasRight("mod_tool") && !session.GetHabbo().GetPermissions().HasRight("mod_ban_any"))
+        if (target.Permissions.HasRight("mod_tool") && !session.GetHabbo().Permissions.HasRight("mod_ban_any"))
         {
             session.SendWhisper("Oops, you cannot ban that user.");
             return Task.CompletedTask;
@@ -51,7 +51,7 @@ internal class MipCommand : ITargetChatCommand
         _moderationManager.BanUser(session.GetHabbo().Username, ModerationBanType.Username, target.Username, reason, expire);
         if (!string.IsNullOrEmpty(target.MachineId))
             _moderationManager.BanUser(session.GetHabbo().Username, ModerationBanType.Machine, target.MachineId, reason, expire);
-        target.GetClient().Disconnect();
+        target.Client.Disconnect();
         session.SendWhisper("Success, you have machine, IP and account banned the user '" + username + "' for '" + reason + "'!");
         return Task.CompletedTask;
     }

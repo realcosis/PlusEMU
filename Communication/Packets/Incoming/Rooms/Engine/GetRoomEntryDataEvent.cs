@@ -29,8 +29,8 @@ internal class GetRoomEntryDataEvent : IPacketEvent
         room.SendObjects(session);
         if (session.GetHabbo().Messenger != null)
             session.GetHabbo().Messenger.NotifyChangesToFriends();
-        if (session.GetHabbo().GetStats().QuestId > 0)
-            _questManager.QuestReminder(session, session.GetHabbo().GetStats().QuestId);
+        if (session.GetHabbo().HabboStats.QuestId > 0)
+            _questManager.QuestReminder(session, session.GetHabbo().HabboStats.QuestId);
         session.Send(new RoomEntryInfoComposer(room.RoomId, room.CheckRights(session, true)));
         session.Send(new RoomVisualizationSettingsComposer(room.WallThickness, room.FloorThickness, Convert.ToBoolean(room.Hidewall)));
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Username);

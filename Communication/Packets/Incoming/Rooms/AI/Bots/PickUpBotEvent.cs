@@ -27,7 +27,7 @@ internal class PickUpBotEvent : IPacketEvent
             return Task.CompletedTask;
         if (!room.GetRoomUserManager().TryGetBot(botId, out var botUser))
             return Task.CompletedTask;
-        if (session.GetHabbo().Id != botUser.BotData.OwnerId && !session.GetHabbo().GetPermissions().HasRight("bot_place_any_override"))
+        if (session.GetHabbo().Id != botUser.BotData.OwnerId && !session.GetHabbo().Permissions.HasRight("bot_place_any_override"))
         {
             session.SendWhisper("You can only pick up your own bots!");
             return Task.CompletedTask;

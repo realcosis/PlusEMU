@@ -18,7 +18,7 @@ internal class ManageGroupEvent : IPacketEvent
         var groupId = packet.ReadInt();
         if (!_groupManager.TryGetGroup(groupId, out var group))
             return Task.CompletedTask;
-        if (group.CreatorId != session.GetHabbo().Id && !session.GetHabbo().GetPermissions().HasRight("group_management_override"))
+        if (group.CreatorId != session.GetHabbo().Id && !session.GetHabbo().Permissions.HasRight("group_management_override"))
             return Task.CompletedTask;
         session.Send(new ManageGroupComposer(group, group.Badge.Replace("b", "").Split('s')));
         return Task.CompletedTask;

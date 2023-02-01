@@ -22,7 +22,7 @@ internal class GetModeratorRoomChatlogEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
+        if (!session.GetHabbo().Permissions.HasRight("mod_tool"))
             return Task.CompletedTask;
         packet.ReadInt(); //junk
         var roomId = packet.ReadUInt();

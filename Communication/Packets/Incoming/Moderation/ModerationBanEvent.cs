@@ -20,7 +20,7 @@ internal class ModerationBanEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().GetPermissions().HasRight("mod_soft_ban"))
+        if (!session.GetHabbo().Permissions.HasRight("mod_soft_ban"))
             return Task.CompletedTask;
         var userId = packet.ReadInt();
         var message = packet.ReadString();
@@ -37,7 +37,7 @@ internal class ModerationBanEvent : IPacketEvent
             session.SendWhisper("An error occoured whilst finding that user in the database.");
             return Task.CompletedTask;
         }
-        if (habbo.GetPermissions().HasRight("mod_tool") && !session.GetHabbo().GetPermissions().HasRight("mod_ban_any"))
+        if (habbo.Permissions.HasRight("mod_tool") && !session.GetHabbo().Permissions.HasRight("mod_ban_any"))
         {
             session.SendWhisper("Oops, you cannot ban that user.");
             return Task.CompletedTask;

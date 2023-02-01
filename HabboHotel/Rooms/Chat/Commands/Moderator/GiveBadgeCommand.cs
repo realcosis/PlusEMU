@@ -33,7 +33,7 @@ internal class GiveBadgeCommand : ITargetChatCommand
         {
             _badgeManager.GiveBadge(target, badgeCode).Wait();
             if (target.Id != session.GetHabbo().Id)
-                target.GetClient().SendNotification("You have just been given a badge!");
+                target.Client.SendNotification("You have just been given a badge!");
             else
                 session.SendWhisper("You have successfully given yourself the badge " + parameters[2] + "!");
         }

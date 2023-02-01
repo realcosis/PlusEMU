@@ -22,8 +22,8 @@ internal class ReloadUserRankCommand : IRconCommand
             dbClient.AddParameter("userId", userId);
             client.GetHabbo().Rank = dbClient.GetInteger();
         }
-        client.GetHabbo().GetPermissions().Init(client.GetHabbo());
-        if (client.GetHabbo().GetPermissions().HasRight("mod_tickets"))
+        client.GetHabbo().Permissions.Init(client.GetHabbo());
+        if (client.GetHabbo().Permissions.HasRight("mod_tickets"))
         {
             client.Send(new ModeratorInitComposer(
                 PlusEnvironment.GetGame().GetModerationManager().UserMessagePresets,

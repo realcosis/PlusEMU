@@ -36,7 +36,7 @@ internal class FlagMeCommand : IChatCommand
             return true;
         if (habbo.Rank == 1 && habbo.VipRank == 3)
             return true;
-        if (habbo.GetPermissions().HasRight("mod_tool"))
+        if (habbo.Permissions.HasRight("mod_tool"))
             return true;
         return false;
     }

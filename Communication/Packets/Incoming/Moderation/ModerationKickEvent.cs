@@ -16,7 +16,7 @@ internal class ModerationKickEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().GetPermissions().HasRight("mod_kick"))
+        if (!session.GetHabbo().Permissions.HasRight("mod_kick"))
             return Task.CompletedTask;
         var userId = packet.ReadInt();
         packet.ReadString(); //message

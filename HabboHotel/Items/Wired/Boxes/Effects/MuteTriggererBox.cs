@@ -46,16 +46,16 @@ internal class MuteTriggererBox : IWiredItem
         var user = Instance.GetRoomUserManager().GetRoomUserByHabbo(player.Id);
         if (user == null)
             return false;
-        if (player.GetPermissions().HasRight("mod_tool") || Instance.OwnerId == player.Id)
+        if (player.Permissions.HasRight("mod_tool") || Instance.OwnerId == player.Id)
         {
-            player.GetClient().Send(new WhisperComposer(user.VirtualId, "Wired Mute Exception: Unmutable Player", 0, 0));
+            player.Client.Send(new WhisperComposer(user.VirtualId, "Wired Mute Exception: Unmutable Player", 0, 0));
             return false;
         }
         var time = StringData != null ? int.Parse(StringData.Split(';')[0]) : 0;
         var message = StringData != null ? StringData.Split(';')[1] : "No message!";
         if (time > 0)
         {
-            player.GetClient().Send(new WhisperComposer(user.VirtualId, "Wired Mute: Muted for " + time + "! Message: " + message, 0, 0));
+            player.Client.Send(new WhisperComposer(user.VirtualId, "Wired Mute: Muted for " + time + "! Message: " + message, 0, 0));
             if (!Instance.MutedUsers.ContainsKey(player.Id))
                 Instance.MutedUsers.Add(player.Id, UnixTimestamp.GetNow() + time * 60);
             else

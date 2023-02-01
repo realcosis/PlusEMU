@@ -23,8 +23,8 @@ internal class LayCommand : IChatCommand
         }
         if (user.Statusses.ContainsKey("sit") || user.IsSitting || user.RidingHorse || user.IsWalking)
             return;
-        if (session.GetHabbo().Effects().CurrentEffect > 0)
-            session.GetHabbo().Effects().ApplyEffect(0);
+        if (session.GetHabbo().Effects.CurrentEffect > 0)
+            session.GetHabbo().Effects.ApplyEffect(0);
         if (!user.Statusses.ContainsKey("lay"))
         {
             if (user.RotBody % 2 == 0)

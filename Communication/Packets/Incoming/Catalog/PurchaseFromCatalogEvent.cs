@@ -303,9 +303,9 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                 break;
             case "e":
                 AvatarEffect effect;
-                if (session.GetHabbo().Effects().HasEffect(item.Definition.SpriteId))
+                if (session.GetHabbo().Effects.HasEffect(item.Definition.SpriteId))
                 {
-                    effect = session.GetHabbo().Effects().GetEffectNullable(item.Definition.SpriteId);
+                    effect = session.GetHabbo().Effects.GetEffectNullable(item.Definition.SpriteId);
                     if (effect != null) effect.AddToQuantity();
                 }
                 else
@@ -358,7 +358,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
         }
         if (!string.IsNullOrEmpty(item.Badge) &&
             _badgeManager.Badges.TryGetValue(item.Badge, out var badge) &&
-            (string.IsNullOrEmpty(badge.RequiredRight) || session.GetHabbo().GetPermissions().HasRight(badge.RequiredRight)))
+            (string.IsNullOrEmpty(badge.RequiredRight) || session.GetHabbo().Permissions.HasRight(badge.RequiredRight)))
             await _badgeManager.GiveBadge(session.GetHabbo(), badge.Code);
         session.Send(new PurchaseOkComposer(item, item.Definition));
         session.Send(new FurniListUpdateComposer());

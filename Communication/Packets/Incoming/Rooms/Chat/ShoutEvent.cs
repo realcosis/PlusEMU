@@ -55,7 +55,7 @@ public class ShoutEvent : IPacketEvent
             message = message.Substring(0, 100);
         var colour = packet.ReadInt();
         if (!_chatStyleManager.TryGetStyle(colour, out var style) ||
-            style.RequiredRight.Length > 0 && !session.GetHabbo().GetPermissions().HasRight(style.RequiredRight))
+            style.RequiredRight.Length > 0 && !session.GetHabbo().Permissions.HasRight(style.RequiredRight))
             colour = 0;
         user.LastBubble = session.GetHabbo().CustomBubbleId == 0 ? colour : session.GetHabbo().CustomBubbleId;
         if (UnixTimestamp.GetNow() < session.GetHabbo().FloodTime && session.GetHabbo().FloodTime != 0)
@@ -65,12 +65,12 @@ public class ShoutEvent : IPacketEvent
             session.Send(new MutedComposer(session.GetHabbo().TimeMuted));
             return;
         }
-        if (!session.GetHabbo().GetPermissions().HasRight("room_ignore_mute") && room.CheckMute(session))
+        if (!session.GetHabbo().Permissions.HasRight("room_ignore_mute") && room.CheckMute(session))
         {
             session.SendWhisper("Oops, you're currently muted.");
             return;
         }
-        if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
+        if (!session.GetHabbo().Permissions.HasRight("mod_tool"))
         {
             if (user.IncrementAndCheckFlood(out var muteTime))
             {
@@ -96,7 +96,7 @@ public class ShoutEvent : IPacketEvent
             session.Send(new ShoutComposer(user.VirtualId, message, 0, colour));
             return;
         }
-        if (!session.GetHabbo().GetPermissions().HasRight("word_filter_override"))
+        if (!session.GetHabbo().Permissions.HasRight("word_filter_override"))
             message = _wordFilterManager.CheckMessage(message);
         _questManager.ProgressUserQuest(session, QuestType.SocialChat);
         user.UnIdle();

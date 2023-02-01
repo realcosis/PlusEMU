@@ -33,7 +33,7 @@ internal class BubbleCommand : IChatCommand
             session.SendWhisper("Please enter a valid number.");
             return;
         }
-        if (!_chatStyleManager.TryGetStyle(bubble, out var style) || style.RequiredRight.Length > 0 && !session.GetHabbo().GetPermissions().HasRight(style.RequiredRight))
+        if (!_chatStyleManager.TryGetStyle(bubble, out var style) || style.RequiredRight.Length > 0 && !session.GetHabbo().Permissions.HasRight(style.RequiredRight))
         {
             session.SendWhisper("Oops, you cannot use this bubble due to a rank requirement, sorry!");
             return;

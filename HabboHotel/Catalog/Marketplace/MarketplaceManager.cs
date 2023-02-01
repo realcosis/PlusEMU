@@ -89,8 +89,8 @@ public class MarketplaceManager : IMarketplaceManager
         if (item == null) return false;
 
         var giveItem = ItemFactory.CreateSingleItem(item, habbo, offer.ExtraData, offer.ExtraData, offer.FurniId,offer.LimitedNumber, offer.LimitedStack);
-        habbo.GetClient().Send(new FurniListNotificationComposer(giveItem.Id, 1));
-        habbo.GetClient().Send(new FurniListUpdateComposer());
+        habbo.Client.Send(new FurniListNotificationComposer(giveItem.Id, 1));
+        habbo.Client.Send(new FurniListUpdateComposer());
         await DeleteOffer(offerId);
         return true;
     }

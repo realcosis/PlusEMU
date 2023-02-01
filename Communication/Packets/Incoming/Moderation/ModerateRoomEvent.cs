@@ -19,7 +19,7 @@ internal class ModerateRoomEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().GetPermissions().HasRight("mod_tool"))
+        if (!session.GetHabbo().Permissions.HasRight("mod_tool"))
             return Task.CompletedTask;
         if (!_roomManager.TryGetRoom(packet.ReadUInt(), out var room))
             return Task.CompletedTask;
