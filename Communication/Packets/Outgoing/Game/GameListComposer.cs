@@ -15,7 +15,7 @@ public class GameListComposer : IServerPacket
 
     public void Compose(IOutgoingPacket packet)
     {
-        packet.WriteInteger(PlusEnvironment.Game.GetGameDataManager().GetCount()); //Game count
+        packet.WriteInteger(PlusEnvironment.Game.GameDataManager.GetCount()); //Game count
         foreach (var game in _games)
         {
             packet.WriteInteger(game.Id);

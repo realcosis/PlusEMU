@@ -43,7 +43,7 @@ public class QuestListComposer : IServerPacket
     {
         if (message == null || session == null)
             return;
-        var amountInCat = PlusEnvironment.GetGame().GetQuestManager().GetAmountOfQuestsInCategory(category);
+        var amountInCat = PlusEnvironment.Game.QuestManager.GetAmountOfQuestsInCategory(category);
         var number = quest == null ? amountInCat : quest.Number - 1;
         var userProgress = quest == null ? 0 : session.GetHabbo().GetQuestProgress(quest.Id);
         if (quest != null && quest.IsCompleted(userProgress))

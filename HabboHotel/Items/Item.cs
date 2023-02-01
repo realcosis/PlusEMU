@@ -1094,7 +1094,7 @@ public class Item
     {
         if (_room != null)
             return _room;
-        if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(RoomId, out var room))
+        if (PlusEnvironment.Game.RoomManager.TryGetRoom(RoomId, out var room))
             return room;
         return null;
     }

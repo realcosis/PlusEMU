@@ -277,7 +277,7 @@ public class RoomUserManager
 
                 //Session.GetHabbo().CurrentRoomId = 0;
                     session.GetHabbo().Messenger?.NotifyChangesToFriends();
-                using (var dbClient = PlusEnvironment.GetDatabaseManager().Connection())
+                using (var dbClient = PlusEnvironment.DatabaseManager.Connection())
                 {
                     dbClient.Execute("UPDATE user_roomvisits SET exit_timestamp = @exitTimestamp WHERE room_id = @roomId AND user_id = @userId ORDER BY exit_timestamp DESC LIMIT 1",
                         new
@@ -395,7 +395,7 @@ public class RoomUserManager
     {
         UserCount = count;
         _room.UsersNow = count;
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.RunQuery($"UPDATE `rooms` SET `users_now` = '{count}' WHERE `id` = '{_room.RoomId}' LIMIT 1");
     }
 
@@ -446,7 +446,7 @@ public class RoomUserManager
 
     public void UpdatePets()
     {
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         foreach (var pet in GetPets().ToList())
         {
             if (pet == null)
@@ -476,7 +476,7 @@ public class RoomUserManager
 
     private void UpdateBots()
     {
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         foreach (var user in GetRoomUsers().ToList())
         {
             if (user == null || !user.IsBot)
@@ -827,7 +827,7 @@ public class RoomUserManager
             }
             foreach (var userToRemove in toRemove.ToList())
             {
-                var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(userToRemove.HabboId);
+                var client = PlusEnvironment.Game.ClientManager.GetClientByUserId(userToRemove.HabboId);
                 if (client != null)
                     RemoveUserFromRoom(client, true);
                 else
@@ -1170,7 +1170,7 @@ public class RoomUserManager
         UpdatePets();
         UpdateBots();
         _room.UsersNow = 0;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             dbClient.RunQuery($"UPDATE `rooms` SET `users_now` = '0' WHERE `id` = '{_room.Id}' LIMIT 1");
         }

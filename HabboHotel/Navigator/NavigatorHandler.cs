@@ -58,7 +58,7 @@ internal static class NavigatorHandler
                 else if (query.ToLower().StartsWith("tag:"))
                 {
                     query = query.Remove(0, 4);
-                    ICollection<Room> tagMatches = PlusEnvironment.Game.GetRoomManager().SearchTaggedRooms(query);
+                    ICollection<Room> tagMatches = PlusEnvironment.Game.RoomManager.SearchTaggedRooms(query);
                     packet.WriteInteger(tagMatches.Count);
                     foreach (RoomData data in tagMatches.ToList()) RoomAppender.WriteRoom(packet, data, data.Promotion);
                     tagMatches = null;
@@ -66,7 +66,7 @@ internal static class NavigatorHandler
                 else if (query.ToLower().StartsWith("group:"))
                 {
                     query = query.Remove(0, 6);
-                    ICollection<Room> groupRooms = PlusEnvironment.Game.GetRoomManager().SearchGroupRooms(query);
+                    ICollection<Room> groupRooms = PlusEnvironment.Game.RoomManager.SearchGroupRooms(query);
                     packet.WriteInteger(groupRooms.Count);
                     foreach (RoomData data in groupRooms.ToList()) RoomAppender.WriteRoom(packet, data, data.Promotion);
                     groupRooms = null;
@@ -107,7 +107,7 @@ internal static class NavigatorHandler
             }
             case NavigatorCategoryType.Popular:
             {
-                var popularRooms = PlusEnvironment.Game.GetRoomManager().GetPopularRooms(-1, limit);
+                var popularRooms = PlusEnvironment.Game.RoomManager.GetPopularRooms(-1, limit);
                 packet.WriteInteger(popularRooms.Count);
                 foreach (RoomData data in popularRooms.ToList()) RoomAppender.WriteRoom(packet, data, data.Promotion);
                 popularRooms = null;
@@ -115,7 +115,7 @@ internal static class NavigatorHandler
             }
             case NavigatorCategoryType.Recommended:
             {
-                var recommendedRooms = PlusEnvironment.Game.GetRoomManager().GetRecommendedRooms(limit);
+                var recommendedRooms = PlusEnvironment.Game.RoomManager.GetRecommendedRooms(limit);
                 packet.WriteInteger(recommendedRooms.Count);
                 foreach (RoomData data in recommendedRooms.ToList()) RoomAppender.WriteRoom(packet, data, data.Promotion);
                 recommendedRooms = null;
@@ -123,7 +123,7 @@ internal static class NavigatorHandler
             }
             case NavigatorCategoryType.Category:
             {
-                var getRoomsByCategory = PlusEnvironment.Game.GetRoomManager().GetRoomsByCategory(result.Id, limit);
+                var getRoomsByCategory = PlusEnvironment.Game.RoomManager.GetRoomsByCategory(result.Id, limit);
                 packet.WriteInteger(getRoomsByCategory.Count);
                 foreach (RoomData data in getRoomsByCategory.ToList()) RoomAppender.WriteRoom(packet, data, data.Promotion);
                 getRoomsByCategory = null;
@@ -155,7 +155,7 @@ internal static class NavigatorHandler
             case NavigatorCategoryType.MyGroups:
             {
                 var myGroups = new List<RoomData>();
-                foreach (var group in PlusEnvironment.Game.GetGroupManager().GetGroupsForUser(session.GetHabbo().Id).ToList())
+                foreach (var group in PlusEnvironment.Game.GroupManager.GetGroupsForUser(session.GetHabbo().Id).ToList())
                 {
                     if (group == null)
                         continue;
@@ -182,7 +182,7 @@ internal static class NavigatorHandler
                     if (!roomIds.Contains(buddy.CurrentRoom.Id))
                         roomIds.Add(buddy.CurrentRoom.Id);
                 }
-                var myFriendsRooms = PlusEnvironment.Game.GetRoomManager().GetRoomsByIds(roomIds.ToList());
+                var myFriendsRooms = PlusEnvironment.Game.RoomManager.GetRoomsByIds(roomIds.ToList());
                 packet.WriteInteger(myFriendsRooms.Count);
                 foreach (var data in myFriendsRooms.ToList())
                     RoomAppender.WriteRoom(packet, data, data.Promotion);
@@ -213,7 +213,7 @@ internal static class NavigatorHandler
             }
             case NavigatorCategoryType.TopPromotions:
             {
-                var getPopularPromotions = PlusEnvironment.Game.GetRoomManager().GetOnGoingRoomPromotions(16, limit);
+                var getPopularPromotions = PlusEnvironment.Game.RoomManager.GetOnGoingRoomPromotions(16, limit);
                 packet.WriteInteger(getPopularPromotions.Count);
                 foreach (RoomData data in getPopularPromotions.ToList()) RoomAppender.WriteRoom(packet, data, data.Promotion);
                 getPopularPromotions = null;
@@ -221,7 +221,7 @@ internal static class NavigatorHandler
             }
             case NavigatorCategoryType.PromotionCategory:
             {
-                var getPromotedRooms = PlusEnvironment.Game.GetRoomManager().GetPromotedRooms(result.OrderId, limit);
+                var getPromotedRooms = PlusEnvironment.Game.RoomManager.GetPromotedRooms(result.OrderId, limit);
                 packet.WriteInteger(getPromotedRooms.Count);
                 foreach (RoomData data in getPromotedRooms.ToList()) RoomAppender.WriteRoom(packet, data, data.Promotion);
                 getPromotedRooms = null;

@@ -28,8 +28,6 @@ namespace Plus.HabboHotel;
 // This class will be obsolete. Do not reference to Game().<Service> but inject it instead.
 public class Game : IGame
 {
-    private readonly IPacketManager _packetManager;
-    private readonly ILandingViewManager _landingViewManager; //TODO: Rename class
     private readonly IGameClientManager _clientManager;
     private readonly IModerationManager _moderationManager;
     private readonly IItemDataManager _itemDataManager;
@@ -57,8 +55,7 @@ public class Game : IGame
     private bool _cycleEnded;
     private Task _gameCycle;
 
-    public Game(IPacketManager packetManager,
-        ILandingViewManager landingViewManager,
+    public Game(
         IGameClientManager gameClientManager,
         IModerationManager moderationManager,
         IItemDataManager itemDataManager,
@@ -80,8 +77,6 @@ public class Game : IGame
         ISubscriptionManager subscriptionManager,
         IPermissionManager permissionManager)
     {
-        _packetManager = packetManager;
-        _landingViewManager = landingViewManager;
         _clientManager = gameClientManager;
         _moderationManager = moderationManager;
         _itemDataManager = itemDataManager;
@@ -153,45 +148,29 @@ public class Game : IGame
         while (!_cycleEnded) Thread.Sleep(_cycleSleepTime);
     }
 
-    public IPacketManager GetPacketManager() => _packetManager;
+    public IGameClientManager ClientManager => _clientManager;
 
-    public IGameClientManager GetClientManager() => _clientManager;
+    public ICatalogManager Catalog => _catalogManager;
 
-    public ICatalogManager GetCatalog() => _catalogManager;
+    public INavigatorManager Navigator => _navigatorManager;
 
-    public INavigatorManager GetNavigator() => _navigatorManager;
+    public IItemDataManager ItemManager => _itemDataManager;
 
-    public IItemDataManager GetItemManager() => _itemDataManager;
+    public IRoomManager RoomManager => _roomManager;
 
-    public IRoomManager GetRoomManager() => _roomManager;
+    public IAchievementManager AchievementManager => _achievementManager;
 
-    public IAchievementManager GetAchievementManager() => _achievementManager;
+    public ISubscriptionManager SubscriptionManager => _subscriptionManager;
 
-    public ITalentTrackManager GetTalentTrackManager() => _talentTrackManager;
+    public IQuestManager QuestManager => _questManager;
 
-    public IModerationManager GetModerationManager() => _moderationManager;
+    public IGroupManager GroupManager => _groupManager;
 
-    public IPermissionManager GetPermissionManager() => _permissionManager;
+    public IChatManager ChatManager => _chatManager;
 
-    public ISubscriptionManager GetSubscriptionManager() => _subscriptionManager;
+    public IGameDataManager GameDataManager => _gameDataManager;
 
-    public IQuestManager GetQuestManager() => _questManager;
+    public IBotManager BotManager => _botManager;
 
-    public IGroupManager GetGroupManager() => _groupManager;
-
-    public ILandingViewManager GetLandingManager() => _landingViewManager;
-
-    public ITelevisionManager GetTelevisionManager() => _televisionManager;
-
-    public IChatManager GetChatManager() => _chatManager;
-
-    public IGameDataManager GetGameDataManager() => _gameDataManager;
-
-    public IBotManager GetBotManager() => _botManager;
-
-    public ICacheManager GetCacheManager() => _cacheManager;
-
-    public IRewardManager GetRewardManager() => _rewardManager;
-
-    public IBadgeManager GetBadgeManager() => _badgeManager;
+    public ICacheManager CacheManager => _cacheManager;
 }

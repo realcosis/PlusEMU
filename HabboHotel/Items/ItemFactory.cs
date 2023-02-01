@@ -29,7 +29,7 @@ public class ItemFactory : IItemFactory
             UniqueSeries = limitedStack,
             GroupId = groupId
         };
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery(
             "INSERT INTO `items` (base_item,user_id,room_id,x,y,z,wall_pos,rot,extra_data,`limited_number`,`limited_stack`) VALUES (@did,@uid,@rid,@x,@y,@z,@wall_pos,@rot,@extra_data, @limited_number, @limited_stack)");
         dbClient.AddParameter("did", definition.Id);
@@ -69,7 +69,7 @@ public class ItemFactory : IItemFactory
             },
             UniqueNumber = limitedNumber,
             UniqueSeries = limitedStack
-        }; using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        }; using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery(
             "INSERT INTO `items` (`id`,base_item,user_id,room_id,x,y,z,wall_pos,rot,extra_data,`limited_number`,`limited_stack`) VALUES (@id, @did,@uid,@rid,@x,@y,@z,@wall_pos,@rot,@extra_data, @limited_number, @limited_stack)");
         dbClient.AddParameter("id", itemId);
@@ -102,7 +102,7 @@ public class ItemFactory : IItemFactory
             UniqueNumber = limitedNumber,
             UniqueSeries = limitedStack,
         };
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery(
             "INSERT INTO `items` (`id`,base_item,user_id,room_id,x,y,z,wall_pos,rot,extra_data,`limited_number`,`limited_stack`) VALUES (@id, @did,@uid,@rid,@x,@y,@z,@wall_pos,@rot,@extra_data, @limited_number, @limited_stack)");
         dbClient.AddParameter("id", itemId);
@@ -125,7 +125,7 @@ public class ItemFactory : IItemFactory
     {
         if (definition == null) throw new InvalidOperationException("Data cannot be null.");
         var items = new List<Item>();
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         for (var i = 0; i < amount; i++)
         {
             dbClient.SetQuery("INSERT INTO `items` (base_item,user_id,room_id,x,y,z,wall_pos,rot,extra_data) VALUES(@did,@uid,@rid,@x,@y,@z,@wallpos,@rot,@flags);");
@@ -165,7 +165,7 @@ public class ItemFactory : IItemFactory
     public List<Item> CreateTeleporterItems(ItemDefinition definition, Habbo habbo, int groupId = 0)
     {
         var items = new List<Item>();
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery("INSERT INTO `items` (base_item,user_id,room_id,x,y,z,wall_pos,rot,extra_data) VALUES(@did,@uid,@rid,@x,@y,@z,@wallpos,@rot,@flags);");
         dbClient.AddParameter("did", definition.Id);
         dbClient.AddParameter("uid", habbo.Id);
@@ -214,7 +214,7 @@ public class ItemFactory : IItemFactory
 
     public void CreateMoodlightData(Item item)
     {
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery("INSERT INTO `room_items_moodlight` (`id`, `enabled`, `current_preset`, `preset_one`, `preset_two`, `preset_three`) VALUES (@id, '0', 1, @preset, @preset, @preset);");
         dbClient.AddParameter("id", item.Id);
         dbClient.AddParameter("preset", "#000000,255,0");
@@ -223,7 +223,7 @@ public class ItemFactory : IItemFactory
 
     public void CreateTonerData(Item item)
     {
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery("INSERT INTO `room_items_toner` (`id`, `data1`, `data2`, `data3`, `enabled`) VALUES (@id, 0, 0, 0, '0')");
         dbClient.AddParameter("id", item.Id);
         dbClient.RunQuery();

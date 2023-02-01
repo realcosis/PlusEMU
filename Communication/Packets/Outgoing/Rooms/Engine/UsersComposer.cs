@@ -40,7 +40,7 @@ public class UsersComposer : IServerPacket
                 {
                     if (habbo.HabboStats.FavouriteGroupId > 0)
                     {
-                        if (!PlusEnvironment.Game.GetGroupManager().TryGetGroup(habbo.HabboStats.FavouriteGroupId, out group))
+                        if (!PlusEnvironment.Game.GroupManager.TryGetGroup(habbo.HabboStats.FavouriteGroupId, out group))
                             group = null;
                     }
                 }

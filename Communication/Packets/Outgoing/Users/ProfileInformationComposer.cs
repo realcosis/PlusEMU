@@ -34,15 +34,15 @@ public class ProfileInformationComposer : IServerPacket
         packet.WriteBoolean(_habbo.Id != _session.GetHabbo().Id && _session.GetHabbo().Messenger.FriendshipExists(_habbo.Id)); //  Is friend
         packet.WriteBoolean(_habbo.Id != _session.GetHabbo().Id && !_session.GetHabbo().Messenger.FriendshipExists(_habbo.Id) &&
                             _session.GetHabbo().Messenger.OutstandingFriendRequests.Contains(_habbo.Id)); // Sent friend request
-        packet.WriteBoolean(PlusEnvironment.Game.GetClientManager().GetClientByUserId(_habbo.Id) != null);
+        packet.WriteBoolean(PlusEnvironment.Game.ClientManager.GetClientByUserId(_habbo.Id) != null);
         packet.WriteInteger(_groups.Count);
         foreach (var group in _groups)
         {
             packet.WriteInteger(group.Id);
             packet.WriteString(group.Name);
             packet.WriteString(group.Badge);
-            packet.WriteString(PlusEnvironment.Game.GetGroupManager().GetColourCode(group.Colour1, true));
-            packet.WriteString(PlusEnvironment.Game.GetGroupManager().GetColourCode(group.Colour2, false));
+            packet.WriteString(PlusEnvironment.Game.GroupManager.GetColourCode(group.Colour1, true));
+            packet.WriteString(PlusEnvironment.Game.GroupManager.GetColourCode(group.Colour2, false));
             packet.WriteBoolean(_habbo.HabboStats.FavouriteGroupId == group.Id); // todo favs
             packet.WriteInteger(0); //what the fuck
             packet.WriteBoolean(group?.ForumEnabled ?? true); //HabboTalk

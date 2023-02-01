@@ -7,7 +7,7 @@ public static class RoomFactory
     public static List<RoomData> GetRoomsDataByOwnerSortByName(int ownerId)
     {
         var data = new List<RoomData>();
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery("SELECT `username`, `rooms`.* FROM `users` INNER JOIN `rooms` ON `owner` = `users`.`id` WHERE `users`.`id` = @ownerid ORDER BY `caption`;");
         dbClient.AddParameter("ownerid", ownerId);
         var rooms = dbClient.GetTable();
@@ -15,11 +15,11 @@ public static class RoomFactory
         {
             foreach (DataRow row in rooms.Rows)
             {
-                if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(Convert.ToUInt32(row["id"]), out var room))
+                if (PlusEnvironment.Game.RoomManager.TryGetRoom(Convert.ToUInt32(row["id"]), out var room))
                     data.Add(room);
                 else
                 {
-                    if (!PlusEnvironment.GetGame().GetRoomManager().TryGetModel(Convert.ToString(row["model_name"]), out var model)) continue;
+                    if (!PlusEnvironment.Game.RoomManager.TryGetModel(Convert.ToString(row["model_name"]), out var model)) continue;
                     data.Add(new(Convert.ToUInt32(row["id"]), Convert.ToString(row["caption"]), Convert.ToString(row["model_name"]), Convert.ToString(row["username"]),
                         Convert.ToInt32(row["owner"]),
                         Convert.ToString(row["password"]), Convert.ToInt32(row["score"]), Convert.ToString(row["roomtype"]), Convert.ToString(row["state"]), Convert.ToInt32(row["users_now"]),
@@ -43,12 +43,12 @@ public static class RoomFactory
 
     public static bool TryGetData(uint roomId, out RoomData data)
     {
-        if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(roomId, out var room))
+        if (PlusEnvironment.Game.RoomManager.TryGetRoom(roomId, out var room))
         {
             data = room;
             return true;
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `rooms`.*, `users`.`username` FROM `rooms` INNER JOIN `users` ON `users`.`id` = `rooms`.`owner` WHERE `rooms`.`id` = @id LIMIT 1");
             dbClient.AddParameter("id", roomId);
@@ -56,7 +56,7 @@ public static class RoomFactory
             if (row != null)
             {
                 RoomModel model = null;
-                if (!PlusEnvironment.GetGame().GetRoomManager().TryGetModel(Convert.ToString(row["model_name"]), out model))
+                if (!PlusEnvironment.Game.RoomManager.TryGetModel(Convert.ToString(row["model_name"]), out model))
                 {
                     data = null;
                     return false;

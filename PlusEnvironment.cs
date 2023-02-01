@@ -207,10 +207,10 @@ public class PlusEnvironment : IPlusEnvironment
     public static string GetUsernameById(int userId)
     {
         var name = "Unknown User";
-        var client = Game.GetClientManager().GetClientByUserId(userId);
+        var client = Game.ClientManager.GetClientByUserId(userId);
         if (client != null && client.GetHabbo() != null)
             return client.GetHabbo().Username;
-        var user = Game.GetCacheManager().GenerateUser(userId);
+        var user = Game.CacheManager.GenerateUser(userId);
         if (user != null)
             return user.Username;
         using (var dbClient = DatabaseManager.GetQueryReactor())
@@ -229,7 +229,7 @@ public class PlusEnvironment : IPlusEnvironment
     {
         try
         {
-            var client = Game.GetClientManager().GetClientByUserId(userId);
+            var client = Game.ClientManager.GetClientByUserId(userId);
             if (client != null)
             {
                 var user = client.GetHabbo();
@@ -295,14 +295,12 @@ public class PlusEnvironment : IPlusEnvironment
         Console.Clear();
         Log.Info("Server shutting down...");
         Console.Title = "PLUS EMULATOR: SHUTTING DOWN!";
-        Game.GetClientManager().SendPacket(new BroadcastMessageAlertComposer(LanguageManager.TryGetValue("server.shutdown.message")));
+        Game.ClientManager.SendPacket(new BroadcastMessageAlertComposer(LanguageManager.TryGetValue("server.shutdown.message")));
         Game.StopGameLoop();
         Thread.Sleep(2500);
         _flashServer.Stop();
-        if (Game.GetPacketManager() is IDisposable disposable)
-            disposable.Dispose();
-        Game.GetClientManager().CloseAll(); //Close all connections
-        Game.GetRoomManager().Dispose(); //Stop the game loop.
+        Game.ClientManager.CloseAll(); //Close all connections
+        Game.RoomManager.Dispose(); //Stop the game loop.
         if (!Debugger.IsAttached)
         {
             using var dbClient = _database.GetQueryReactor();

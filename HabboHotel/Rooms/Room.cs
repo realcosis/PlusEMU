@@ -310,7 +310,7 @@ public class Room : RoomData
                 key = item.Definition.ItemName.Split(new[] { '_' })[2];
                 user.UnIdle();
                 user.DanceId = 0;
-                PlusEnvironment.Game.GetAchievementManager().ProgressAchievement(user.GetClient(), "ACH_FootballGoalScored", 1);
+                PlusEnvironment.Game.AchievementManager.ProgressAchievement(user.GetClient(), "ACH_FootballGoalScored", 1);
                 SendPacket(new ActionComposer(user.VirtualId, 1));
             }
         }
@@ -344,7 +344,7 @@ public class Room : RoomData
             if (HasActivePromotion && Promotion.HasExpired) EndPromotion();
             if (IdleTime >= 60 && !HasActivePromotion)
             {
-                PlusEnvironment.Game.GetRoomManager().UnloadRoom(Id);
+                PlusEnvironment.Game.RoomManager.UnloadRoom(Id);
                 return;
             }
             try
@@ -420,7 +420,7 @@ public class Room : RoomData
             ExceptionLogger.LogException(e3);
         }
         IsCrashed = true;
-        PlusEnvironment.Game.GetRoomManager().UnloadRoom(Id);
+        PlusEnvironment.Game.RoomManager.UnloadRoom(Id);
     }
 
 

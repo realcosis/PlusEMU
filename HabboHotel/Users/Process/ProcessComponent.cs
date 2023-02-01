@@ -104,7 +104,7 @@ internal sealed class ProcessComponent
             if (_player.ClothingUpdateWarnings < 15)
                 _player.ClothingUpdateWarnings = 0;
             if (_player.Client != null)
-                PlusEnvironment.Game.GetAchievementManager().ProgressAchievement(_player.Client, "ACH_AllTimeHotelPresence", 1);
+                PlusEnvironment.Game.AchievementManager.ProgressAchievement(_player.Client, "ACH_AllTimeHotelPresence", 1);
             _player.CheckCreditsTimer();
             _player.Effects.CheckEffectExpiry(_player);
 

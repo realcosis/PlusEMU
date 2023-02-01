@@ -50,7 +50,7 @@ public class CatalogPageComposer : IServerPacket
                 if (item.Definition.InteractionType == InteractionType.Deal || item.Definition.InteractionType == InteractionType.Roomdeal)
                 {
                     CatalogDeal deal = null;
-                    if (!PlusEnvironment.Game.GetCatalog().TryGetDeal(item.Definition.BehaviourData, out deal))
+                    if (!PlusEnvironment.Game.Catalog.TryGetDeal(item.Definition.BehaviourData, out deal))
                         packet.WriteInteger(0); //Count
                     else
                     {
@@ -87,7 +87,7 @@ public class CatalogPageComposer : IServerPacket
                         else if (item.Definition.InteractionType == InteractionType.Bot) //Bots
                         {
                             CatalogBot catalogBot = null;
-                            if (!PlusEnvironment.Game.GetCatalog().TryGetBot(item.ItemId, out catalogBot))
+                            if (!PlusEnvironment.Game.Catalog.TryGetBot(item.ItemId, out catalogBot))
                                 packet.WriteString("hd-180-7.ea-1406-62.ch-210-1321.hr-831-49.ca-1813-62.sh-295-1321.lg-285-92");
                             else
                                 packet.WriteString(catalogBot.Figure);
@@ -112,8 +112,8 @@ public class CatalogPageComposer : IServerPacket
             packet.WriteInteger(0);
         packet.WriteInteger(-1);
         packet.WriteBoolean(false);
-        packet.WriteInteger(PlusEnvironment.Game.GetCatalog().GetPromotions().ToList().Count); //Count
-        foreach (var promotion in PlusEnvironment.Game.GetCatalog().GetPromotions().ToList())
+        packet.WriteInteger(PlusEnvironment.Game.Catalog.GetPromotions().ToList().Count); //Count
+        foreach (var promotion in PlusEnvironment.Game.Catalog.GetPromotions().ToList())
         {
             packet.WriteInteger(promotion.Id);
             packet.WriteString(promotion.Title);

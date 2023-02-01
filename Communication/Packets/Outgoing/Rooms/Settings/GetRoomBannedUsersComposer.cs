@@ -19,7 +19,7 @@ public class GetRoomBannedUsersComposer : IServerPacket
         packet.WriteInteger(_instance.GetBans().BannedUsers().Count); //Count
         foreach (var id in _instance.GetBans().BannedUsers().ToList())
         {
-            var data = PlusEnvironment.Game.GetCacheManager().GenerateUser(id);
+            var data = PlusEnvironment.Game.CacheManager.GenerateUser(id);
             if (data == null)
             {
                 packet.WriteInteger(0);

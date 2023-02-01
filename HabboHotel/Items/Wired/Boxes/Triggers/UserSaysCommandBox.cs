@@ -43,7 +43,7 @@ internal class UserSaysCommandBox : IWiredItem
             return false;
         if (BoolData && Instance.OwnerId != player.Id || string.IsNullOrWhiteSpace(StringData))
             return false;
-        if (!PlusEnvironment.Game.GetChatManager().GetCommands().TryGetCommand(StringData.Replace(":", "").ToLower(), out var chatCommand))
+        if (!PlusEnvironment.Game.ChatManager.GetCommands().TryGetCommand(StringData.Replace(":", "").ToLower(), out var chatCommand))
             return false;
         if (player.ChatCommand == chatCommand)
         {

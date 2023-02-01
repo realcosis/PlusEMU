@@ -21,8 +21,8 @@ public class GroupFurniConfigComposer : IServerPacket
             packet.WriteInteger(group.Id);
             packet.WriteString(group.Name);
             packet.WriteString(group.Badge);
-            packet.WriteString(PlusEnvironment.Game.GetGroupManager().GetColourCode(group.Colour1, true)); // TODO @80O: Pass by constructor / attach to Group object
-            packet.WriteString(PlusEnvironment.Game.GetGroupManager().GetColourCode(group.Colour2, false)); // TODO @80O: Pass by constructor / attach to Group object
+            packet.WriteString(PlusEnvironment.Game.GroupManager.GetColourCode(group.Colour1, true)); // TODO @80O: Pass by constructor / attach to Group object
+            packet.WriteString(PlusEnvironment.Game.GroupManager.GetColourCode(group.Colour2, false)); // TODO @80O: Pass by constructor / attach to Group object
             packet.WriteBoolean(false);
             packet.WriteInteger(group.CreatorId);
             packet.WriteBoolean(group.ForumEnabled);

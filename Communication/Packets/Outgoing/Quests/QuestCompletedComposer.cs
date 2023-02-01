@@ -18,7 +18,7 @@ public class QuestCompletedComposer : IServerPacket
 
     public void Compose(IOutgoingPacket packet)
     {
-        var amountInCat = PlusEnvironment.Game.GetQuestManager().GetAmountOfQuestsInCategory(_quest.Category);
+        var amountInCat = PlusEnvironment.Game.QuestManager.GetAmountOfQuestsInCategory(_quest.Category);
         var number = _quest?.Number ?? amountInCat;
         var userProgress = _quest == null ? 0 : _session.GetHabbo().GetQuestProgress(_quest.Id);
         packet.WriteString(_quest.Category);

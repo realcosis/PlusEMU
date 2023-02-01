@@ -21,7 +21,7 @@ public static class ItemLoader
         {
             foreach (DataRow row in table.Rows)
             {
-                if (PlusEnvironment.Game.GetItemManager().Items.TryGetValue(Convert.ToUInt32(row["base_item"]), out var data))
+                if (PlusEnvironment.Game.ItemManager.Items.TryGetValue(Convert.ToUInt32(row["base_item"]), out var data))
                 {
                     items.Add(new()
                     {
@@ -57,7 +57,7 @@ public static class ItemLoader
         {
             foreach (DataRow row in items.Rows)
             {
-                if (PlusEnvironment.Game.GetItemManager().Items.TryGetValue(Convert.ToUInt32(row["base_item"]), out var data))
+                if (PlusEnvironment.Game.ItemManager.Items.TryGetValue(Convert.ToUInt32(row["base_item"]), out var data))
                 {
                     I.Add(new()
                     {

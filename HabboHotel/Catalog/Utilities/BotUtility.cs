@@ -10,7 +10,7 @@ public static class BotUtility
     public static Bot CreateBot(ItemDefinition itemDefinition, int ownerId)
     {
         DataRow bot = null;
-        if (!PlusEnvironment.Game.GetCatalog().TryGetBot(itemDefinition.Id, out var cataBot))
+        if (!PlusEnvironment.Game.Catalog.TryGetBot(itemDefinition.Id, out var cataBot))
             return null;
         using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {

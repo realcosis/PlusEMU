@@ -52,7 +52,7 @@ public class PetBot : BotAi
             {
                 if (user.GetClient().GetHabbo().Username == pet.PetData.OwnerName)
                 {
-                    var speech = PlusEnvironment.Game.GetChatManager().GetPetLocale().GetValue($"welcome.speech.pet{pet.PetData.Type}");
+                    var speech = PlusEnvironment.Game.ChatManager.GetPetLocale().GetValue($"welcome.speech.pet{pet.PetData.Type}");
                     var rSpeech = speech[Random.Shared.Next(0, speech.Length)];
                     pet.Chat(rSpeech);
                 }
@@ -76,7 +76,7 @@ public class PetBot : BotAi
             if (pet != null)
             {
                 RemovePetStatus();
-                var speech = PlusEnvironment.Game.GetChatManager().GetPetLocale().GetValue($"speech.pet{pet.PetData.Type}");
+                var speech = PlusEnvironment.Game.ChatManager.GetPetLocale().GetValue($"speech.pet{pet.PetData.Type}");
                 var rSpeech = speech[Random.Shared.Next(0, speech.Length)];
                 if (rSpeech.Length != 3)
                     pet.Chat(rSpeech);
@@ -138,14 +138,14 @@ public class PetBot : BotAi
         //    Pet.Statusses.Add("gst thr", TextHandling.GetString(Pet.Z));
         if (message.ToLower().StartsWith($"{pet.PetData.Name.ToLower()} ") && user.GetClient().GetHabbo().Username.ToLower() == pet.PetData.OwnerName.ToLower() ||
             message.ToLower().StartsWith($"{pet.PetData.Name.ToLower()} ") &&
-            PlusEnvironment.Game.GetChatManager().GetPetCommands().TryInvoke(message.Substring(pet.PetData.Name.ToLower().Length + 1)) == 8)
+            PlusEnvironment.Game.ChatManager.GetPetCommands().TryInvoke(message.Substring(pet.PetData.Name.ToLower().Length + 1)) == 8)
         {
             var command = message.Substring(pet.PetData.Name.ToLower().Length + 1);
             var r = Random.Shared.Next(1, 8 + 1); // Made Random
-            if (pet.PetData.Energy > 10 && r < 6 || pet.PetData.Level > 15 || PlusEnvironment.Game.GetChatManager().GetPetCommands().TryInvoke(command) == 8)
+            if (pet.PetData.Energy > 10 && r < 6 || pet.PetData.Level > 15 || PlusEnvironment.Game.ChatManager.GetPetCommands().TryInvoke(command) == 8)
             {
                 RemovePetStatus(); // Remove Status
-                switch (PlusEnvironment.Game.GetChatManager().GetPetCommands().TryInvoke(command))
+                switch (PlusEnvironment.Game.ChatManager.GetPetCommands().TryInvoke(command))
                 {
                     // TODO - Level you can use the commands at...
                     case 1:
@@ -258,7 +258,7 @@ public class PetBot : BotAi
                     case 46:
                         break;
                     default:
-                        var speech = PlusEnvironment.Game.GetChatManager().GetPetLocale().GetValue("pet.unknowncommand");
+                        var speech = PlusEnvironment.Game.ChatManager.GetPetLocale().GetValue("pet.unknowncommand");
                         pet.Chat(speech[Random.Shared.Next(0, speech.Length)]);
                         break;
                 }
@@ -269,7 +269,7 @@ public class PetBot : BotAi
                 RemovePetStatus(); // Remove Status
                 if (pet.PetData.Energy < 10)
                 {
-                    var speech = PlusEnvironment.Game.GetChatManager().GetPetLocale().GetValue("pet.tired");
+                    var speech = PlusEnvironment.Game.ChatManager.GetPetLocale().GetValue("pet.tired");
                     pet.Chat(speech[Random.Shared.Next(0, speech.Length)]);
                     pet.Statusses.Add("lay", TextHandling.GetString(pet.Z));
                     pet.UpdateNeeded = true;
@@ -279,7 +279,7 @@ public class PetBot : BotAi
                 }
                 else
                 {
-                    var speech = PlusEnvironment.Game.GetChatManager().GetPetLocale().GetValue("pet.lazy");
+                    var speech = PlusEnvironment.Game.ChatManager.GetPetLocale().GetValue("pet.lazy");
                     pet.Chat(speech[Random.Shared.Next(0, speech.Length)]);
                     pet.PetData.PetEnergy(false); // Remove Energy
                 }

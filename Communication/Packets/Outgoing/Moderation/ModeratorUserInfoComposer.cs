@@ -24,7 +24,7 @@ public class ModeratorUserInfoComposer : IServerPacket
         packet.WriteString(_user != null ? Convert.ToString(_user["look"]) : "Unknown");
         packet.WriteInteger(_user != null ? Convert.ToInt32(Math.Ceiling((UnixTimestamp.GetNow() - Convert.ToDouble(_user["account_created"])) / 60)) : 0);
         packet.WriteInteger(_user != null ? Convert.ToInt32(Math.Ceiling((UnixTimestamp.GetNow() - Convert.ToDouble(_user["last_online"])) / 60)) : 0);
-        packet.WriteBoolean(_user != null ? PlusEnvironment.Game.GetClientManager().GetClientByUserId(Convert.ToInt32(_user["id"])) != null : false);
+        packet.WriteBoolean(_user != null ? PlusEnvironment.Game.ClientManager.GetClientByUserId(Convert.ToInt32(_user["id"])) != null : false);
         packet.WriteInteger(_info != null ? Convert.ToInt32(_info["cfhs"]) : 0);
         packet.WriteInteger(_info != null ? Convert.ToInt32(_info["cfhs_abusive"]) : 0);
         packet.WriteInteger(_info != null ? Convert.ToInt32(_info["cautions"]) : 0);

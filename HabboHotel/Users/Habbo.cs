@@ -259,7 +259,7 @@ public class Habbo
         }
         catch { }
         _disconnected = true;
-        PlusEnvironment.Game.GetClientManager().UnregisterClient(Id, Username);
+        PlusEnvironment.Game.ClientManager.UnregisterClient(Id, Username);
         if (!_habboSaved)
         {
             _habboSaved = true;
@@ -295,7 +295,7 @@ public class Habbo
                 var creditUpdate = Convert.ToInt32(PlusEnvironment.SettingsManager.TryGetValue("user.currency_scheduler.credit_reward"));
                 var ducketUpdate = Convert.ToInt32(PlusEnvironment.SettingsManager.TryGetValue("user.currency_scheduler.ducket_reward"));
                 SubscriptionData subData = null;
-                if (PlusEnvironment.Game.GetSubscriptionManager().TryGetSubscriptionData(VipRank, out subData))
+                if (PlusEnvironment.Game.SubscriptionManager.TryGetSubscriptionData(VipRank, out subData))
                 {
                     creditUpdate += subData.Credits;
                     ducketUpdate += subData.Duckets;
@@ -356,7 +356,7 @@ public class Habbo
             Client.Send(new CloseConnectionComposer());
             return;
         }
-        if (!PlusEnvironment.Game.GetRoomManager().TryLoadRoom(id, out var room))
+        if (!PlusEnvironment.Game.RoomManager.TryLoadRoom(id, out var room))
         {
             Client.Send(new CloseConnectionComposer());
             return;
@@ -437,7 +437,7 @@ public class Habbo
         if (room.OwnerId != Id)
         {
             Client.GetHabbo().HabboStats.RoomVisits += 1;
-            PlusEnvironment.Game.GetAchievementManager().ProgressAchievement(Client, "ACH_RoomEntry", 1);
+            PlusEnvironment.Game.AchievementManager.ProgressAchievement(Client, "ACH_RoomEntry", 1);
         }
         return true;
     }

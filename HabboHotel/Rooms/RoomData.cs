@@ -60,7 +60,7 @@ public class RoomData
         ReverseRollers = false;
         LayEnabled = layEnabled;
         if (groupId > 0)
-            PlusEnvironment.Game.GetGroupManager().TryGetGroup(groupId, out _group);
+            PlusEnvironment.Game.GroupManager.TryGetGroup(groupId, out _group);
         LoadPromotions();
         Model = model;
     }
