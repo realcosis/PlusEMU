@@ -268,7 +268,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_vouchers' permission.");
                     break;
                 }
-                _catalogManager.GetVoucherManager().Init();
+                _catalogManager.VoucherManager.Init();
                 session.SendWhisper("Catalogue vouche cache successfully updated.");
                 break;
             }

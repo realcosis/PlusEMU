@@ -24,7 +24,7 @@ internal class NavigatorSearchEvent : IPacketEvent
         }
         else
         {
-            categories = _navigatorManager.GetCategorysForSearch(category);
+            categories = _navigatorManager.GetCategoriessForSearch(category);
             if (categories.Count == 0)
             {
                 //Are we going in deep?!

@@ -13,14 +13,14 @@ public interface ICatalogManager
     bool TryGetBot(uint itemId, out CatalogBot bot);
     bool TryGetPage(int pageId, out CatalogPage page);
     bool TryGetDeal(int dealId, out CatalogDeal deal);
-    ICollection<CatalogPage> GetPages();
-    ICollection<CatalogPromotion> GetPromotions();
-    [Obsolete("Use dependency injection instead.")]
-    IMarketplaceManager GetMarketplace();
-    [Obsolete("Use dependency injection instead.")]
-    IPetRaceManager GetPetRaceManager();
-    [Obsolete("Use dependency injection instead.")]
-    IVoucherManager GetVoucherManager();
-    [Obsolete("Use dependency injection instead.")]
-    IClothingManager GetClothingManager();
+    ICollection<CatalogPage> Pages { get; }
+    ICollection<CatalogPromotion> Promotions { get; }
+
+    [Obsolete("Use dependency injection instead.")] IMarketplaceManager Marketplace { get; }
+
+    [Obsolete("Use dependency injection instead.")] IPetRaceManager PetRaceManager { get; }
+
+    [Obsolete("Use dependency injection instead.")] IVoucherManager VoucherManager { get; }
+
+    [Obsolete("Use dependency injection instead.")] IClothingManager ClothingManager { get; }
 }

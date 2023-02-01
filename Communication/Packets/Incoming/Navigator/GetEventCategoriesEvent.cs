@@ -15,7 +15,7 @@ internal class GetEventCategoriesEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var categories = _navigatorManager.GetEventCategories();
+        var categories = _navigatorManager.EventCategories;
         session.Send(new NavigatorFlatCatsComposer(categories));
         return Task.CompletedTask;
     }

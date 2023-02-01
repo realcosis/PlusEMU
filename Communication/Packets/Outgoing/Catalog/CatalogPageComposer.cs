@@ -112,8 +112,8 @@ public class CatalogPageComposer : IServerPacket
             packet.WriteInteger(0);
         packet.WriteInteger(-1);
         packet.WriteBoolean(false);
-        packet.WriteInteger(PlusEnvironment.Game.Catalog.GetPromotions().ToList().Count); //Count
-        foreach (var promotion in PlusEnvironment.Game.Catalog.GetPromotions().ToList())
+        packet.WriteInteger(PlusEnvironment.Game.Catalog.Promotions.ToList().Count); //Count
+        foreach (var promotion in PlusEnvironment.Game.Catalog.Promotions.ToList())
         {
             packet.WriteInteger(promotion.Id);
             packet.WriteString(promotion.Title);

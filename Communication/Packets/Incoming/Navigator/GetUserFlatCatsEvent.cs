@@ -15,7 +15,7 @@ public class GetUserFlatCatsEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var categories = _navigatorManager.GetFlatCategories();
+        var categories = _navigatorManager.FlatCategories;
         session.Send(new UserFlatCatsComposer(categories, session.GetHabbo().Rank));
         return Task.CompletedTask;
     }

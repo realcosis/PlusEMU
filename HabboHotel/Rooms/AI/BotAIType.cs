@@ -4,6 +4,5 @@ public enum BotAiType
 {
     Pet,
     Generic,
-    Bartender,
-    CasinoBot
+    Bartender
 }

@@ -197,7 +197,7 @@ public class FigureDataManager : IFigureDataManager
         }
         if (clothingParts != null)
         {
-            var purchasableParts = _catalogManager.GetClothingManager().GetClothingAllParts;
+            var purchasableParts = _catalogManager.ClothingManager.GetClothingAllParts;
             figureParts = rebuildFigure.TrimEnd('.').Split('.');
             foreach (var part in figureParts.ToList())
             {

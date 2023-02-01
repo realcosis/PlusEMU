@@ -15,7 +15,7 @@ internal class InitializeNewNavigatorEvent : IPacketEvent
 
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
-        var topLevelItems = _navigatorManager.GetTopLevelItems();
+        var topLevelItems = _navigatorManager.TopLevelItems;
         session.Send(new NavigatorMetaDataParserComposer(topLevelItems));
         session.Send(new NavigatorLiftedRoomsComposer());
         session.Send(new NavigatorCollapsedCategoriesComposer());

@@ -6,16 +6,16 @@ namespace Plus.HabboHotel.Navigator;
 public interface INavigatorManager
 {
     void Init();
-    List<SearchResultList> GetCategorysForSearch(string category);
-    ICollection<SearchResultList> GetResultByIdentifier(string category);
-    ICollection<SearchResultList> GetFlatCategories();
-    ICollection<SearchResultList> GetEventCategories();
-    ICollection<TopLevelItem> GetTopLevelItems();
-    ICollection<SearchResultList> GetSearchResultLists();
+    List<SearchResultList> GetCategoriessForSearch(string category);
+    IReadOnlyCollection<SearchResultList> GetResultByIdentifier(string category);
+    IReadOnlyCollection<SearchResultList> FlatCategories { get; }
+    IReadOnlyCollection<SearchResultList> EventCategories { get; }
+    IReadOnlyCollection<TopLevelItem> TopLevelItems { get; }
+    IReadOnlyCollection<SearchResultList> SearchResultLists { get; }
     bool TryGetTopLevelItem(int id, out TopLevelItem topLevelItem);
     bool TryGetSearchResultList(int id, out SearchResultList searchResultList);
     bool TryGetFeaturedRoom(uint roomId, out FeaturedRoom publicRoom);
-    ICollection<FeaturedRoom> GetFeaturedRooms();
+    IReadOnlyCollection<FeaturedRoom> FeaturedRooms { get; }
     Task<Dictionary<int, SavedSearch>> LoadUserNavigatorPreferences(int habboId);
     Task SaveHomeRoom(Habbo habbo, uint roomId);
 }

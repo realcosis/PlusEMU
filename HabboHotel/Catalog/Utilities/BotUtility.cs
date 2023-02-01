@@ -35,8 +35,6 @@ public static class BotUtility
                 return BotAiType.Generic;
             case "bartender":
                 return BotAiType.Bartender;
-            case "casino_bot":
-                return BotAiType.CasinoBot;
             default:
                 return BotAiType.Generic;
         }

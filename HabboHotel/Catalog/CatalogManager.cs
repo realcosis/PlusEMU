@@ -154,15 +154,15 @@ public class CatalogManager : ICatalogManager
 
     public bool TryGetDeal(int dealId, out CatalogDeal deal) => _deals.TryGetValue(dealId, out deal);
 
-    public ICollection<CatalogPage> GetPages() => _pages.Values;
+    public ICollection<CatalogPage> Pages => _pages.Values;
 
-    public ICollection<CatalogPromotion> GetPromotions() => _promotions.Values;
+    public ICollection<CatalogPromotion> Promotions => _promotions.Values;
 
-    public IMarketplaceManager GetMarketplace() => _marketplace;
+    public IMarketplaceManager Marketplace => _marketplace;
 
-    public IPetRaceManager GetPetRaceManager() => _petRaceManager;
+    public IPetRaceManager PetRaceManager => _petRaceManager;
 
-    public IVoucherManager GetVoucherManager() => _voucherManager;
+    public IVoucherManager VoucherManager => _voucherManager;
 
-    public IClothingManager GetClothingManager() => _clothingManager;
+    public IClothingManager ClothingManager => _clothingManager;
 }

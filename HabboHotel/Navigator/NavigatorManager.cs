@@ -38,11 +38,10 @@ public sealed class NavigatorManager : INavigatorManager
             _searchResultLists.Clear();
         if (_featuredRooms.Count > 0)
             _featuredRooms.Clear();
-        DataTable table = null;
         using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `navigator_categories` ORDER BY `id` ASC");
-            table = dbClient.GetTable();
+            var table = dbClient.GetTable();
             if (table != null)
             {
                 foreach (DataRow row in table.Rows)
@@ -79,49 +78,17 @@ public sealed class NavigatorManager : INavigatorManager
         _logger.LogInformation("Navigator -> LOADED");
     }
 
-    public List<SearchResultList> GetCategorysForSearch(string category)
-    {
-        var categorys =
-            from cat in _searchResultLists
-            where cat.Value.Category == category
-            orderby cat.Value.OrderId
-            select cat.Value;
-        return categorys.ToList();
-    }
+    public List<SearchResultList> GetCategoriessForSearch(string category) => _searchResultLists.Where(cat => cat.Value.Category == category).OrderBy(cat => cat.Value.OrderId).Select(cat => cat.Value).ToList();
 
-    public ICollection<SearchResultList> GetResultByIdentifier(string category)
-    {
-        var categorys =
-            from cat in _searchResultLists
-            where cat.Value.CategoryIdentifier == category
-            orderby cat.Value.OrderId
-            select cat.Value;
-        return categorys.ToList();
-    }
+    public IReadOnlyCollection<SearchResultList> GetResultByIdentifier(string category) => _searchResultLists.Where(cat => cat.Value.CategoryIdentifier == category).OrderBy(cat => cat.Value.OrderId).Select(cat => cat.Value).ToList();
 
-    public ICollection<SearchResultList> GetFlatCategories()
-    {
-        var categorys =
-            from cat in _searchResultLists
-            where cat.Value.CategoryType == NavigatorCategoryType.Category
-            orderby cat.Value.OrderId
-            select cat.Value;
-        return categorys.ToList();
-    }
+    public IReadOnlyCollection<SearchResultList> FlatCategories => _searchResultLists.Where(cat => cat.Value.CategoryType == NavigatorCategoryType.Category).OrderBy(cat => cat.Value.OrderId).Select(cat => cat.Value).ToList();
 
-    public ICollection<SearchResultList> GetEventCategories()
-    {
-        var categorys =
-            from cat in _searchResultLists
-            where cat.Value.CategoryType == NavigatorCategoryType.PromotionCategory
-            orderby cat.Value.OrderId
-            select cat.Value;
-        return categorys.ToList();
-    }
+    public IReadOnlyCollection<SearchResultList> EventCategories => _searchResultLists.Where(cat => cat.Value.CategoryType == NavigatorCategoryType.PromotionCategory).OrderBy(cat => cat.Value.OrderId).Select(cat => cat.Value).ToList();
 
-    public ICollection<TopLevelItem> GetTopLevelItems() => _topLevelItems.Values;
+    public IReadOnlyCollection<TopLevelItem> TopLevelItems => _topLevelItems.Values;
 
-    public ICollection<SearchResultList> GetSearchResultLists() => _searchResultLists.Values;
+    public IReadOnlyCollection<SearchResultList> SearchResultLists => _searchResultLists.Values;
 
     public bool TryGetTopLevelItem(int id, out TopLevelItem topLevelItem) => _topLevelItems.TryGetValue(id, out topLevelItem);
 
@@ -129,27 +96,22 @@ public sealed class NavigatorManager : INavigatorManager
 
     public bool TryGetFeaturedRoom(uint roomId, out FeaturedRoom publicRoom) => _featuredRooms.TryGetValue(roomId, out publicRoom);
 
-    public ICollection<FeaturedRoom> GetFeaturedRooms() => _featuredRooms.Values;
+    public IReadOnlyCollection<FeaturedRoom> FeaturedRooms => _featuredRooms.Values;
 
     public async Task<Dictionary<int, SavedSearch>> LoadUserNavigatorPreferences(int userId)
     {
         using var connection = _database.Connection();
-        return (await connection.QueryAsync<SavedSearch>("SELECT `id`,`filter`,`search_code` as search FROM `user_saved_searches` WHERE `user_id` = @userId",
-            new
-            {
-                userId
-            })).ToDictionary(search => search.Id);
+        return (await connection.QueryAsync<SavedSearch>("SELECT `id`,`filter`,`search_code` as search FROM `user_saved_searches` WHERE `user_id` = @userId", new { userId })).ToDictionary(search => search.Id);
     }
 
     public async Task SaveHomeRoom(Habbo habbo, uint roomId)
     {
         habbo.HomeRoom = roomId;
 
-        if (!RoomFactory.TryGetData(roomId, out var _))
+        if (!RoomFactory.TryGetData(roomId, out _))
             return;
 
         using var connection = _database.Connection();
-        await connection.ExecuteAsync("UPDATE users SET home_room = @roomid WHERE id = @userid LIMIT 1",
-            new { roomid = roomId, userid = habbo.Id });
+        await connection.ExecuteAsync("UPDATE users SET home_room = @roomid WHERE id = @userid LIMIT 1", new { roomid = roomId, userid = habbo.Id });
     }
 }
