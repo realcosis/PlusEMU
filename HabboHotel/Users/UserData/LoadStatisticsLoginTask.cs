@@ -2,15 +2,23 @@
 using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Subscriptions;
 using System.Data;
+using Plus.Database;
 
 namespace Plus.HabboHotel.Users.UserData;
 
 internal class LoadStatisticsLoginTask : IUserDataLoadingTask
 {
+    private readonly IDatabase _database;
+
+    public LoadStatisticsLoginTask(IDatabase database)
+    {
+        _database = database;
+    }
+
     public Task Load(Habbo habbo)
     {
         DataRow statRow = null;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery(
                 "SELECT `id`,`roomvisits`,`onlinetime`,`respect`,`respectgiven`,`giftsgiven`,`giftsreceived`,`dailyrespectpoints`,`dailypetrespectpoints`,`achievementscore`,`quest_id`,`quest_progress`,`groupid`,`tickets_answered`,`respectstimestamp`,`forum_posts` FROM `user_statistics` WHERE `id` = @user_id LIMIT 1");

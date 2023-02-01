@@ -7,6 +7,13 @@ namespace Plus.Communication.Packets.Incoming.FriendList;
 
 internal class HabboSearchEvent : IPacketEvent
 {
+    private readonly ISearchResultFactory _searchResultFactory;
+
+    public HabboSearchEvent(ISearchResultFactory searchResultFactory)
+    {
+        _searchResultFactory = searchResultFactory;
+    }
+
     public Task Parse(GameClient session, IIncomingPacket packet)
     {
         var query = StringCharFilter.Escape(packet.ReadString().Replace("%", ""));
@@ -14,7 +21,7 @@ internal class HabboSearchEvent : IPacketEvent
             return Task.CompletedTask;
         var friends = new List<SearchResult>();
         var othersUsers = new List<SearchResult>();
-        var results = SearchResultFactory.GetSearchResult(query);
+        var results = _searchResultFactory.GetSearchResult(query);
         foreach (var result in results.ToList())
         {
             if (session.GetHabbo().Messenger.FriendshipExists(result.UserId))

@@ -1,4 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
+using Plus.Database;
+using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Core;
 
@@ -6,17 +9,23 @@ public class ServerStatusUpdater : IDisposable, IServerStatusUpdater
 {
     private const int UpdateInSeconds = 30;
     private readonly ILogger<ServerStatusUpdater> _logger;
+    private readonly IDatabase _database;
+    private readonly IGameClientManager _gameClientManager;
+    private readonly IRoomManager _roomManager;
 
-    public ServerStatusUpdater(ILogger<ServerStatusUpdater> logger)
+    public ServerStatusUpdater(ILogger<ServerStatusUpdater> logger, IDatabase database, IGameClientManager gameClientManager, IRoomManager roomManager)
     {
         _logger = logger;
+        _database = database;
+        _gameClientManager = gameClientManager;
+        _roomManager = roomManager;
     }
 
     private Timer _timer;
 
     public void Dispose()
     {
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.RunQuery("UPDATE `server_status` SET `users_online` = '0', `loaded_rooms` = '0'");
         }
@@ -39,10 +48,10 @@ public class ServerStatusUpdater : IDisposable, IServerStatusUpdater
     private void UpdateOnlineUsers()
     {
         var uptime = DateTime.Now - PlusEnvironment.ServerStarted;
-        var usersOnline = PlusEnvironment.GetGame().GetClientManager().Count;
-        var roomCount = PlusEnvironment.GetGame().GetRoomManager().Count;
+        var usersOnline = _gameClientManager.Count;
+        var roomCount = _roomManager.Count;
         Console.Title = $"Plus Emulator - {usersOnline} users online - {roomCount} rooms loaded - {uptime.Days} day(s) {uptime.Hours} hour(s) uptime";
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("UPDATE `server_status` SET `users_online` = @users, `loaded_rooms` = @loadedRooms LIMIT 1;");
         dbClient.AddParameter("users", usersOnline);
         dbClient.AddParameter("loadedRooms", roomCount);

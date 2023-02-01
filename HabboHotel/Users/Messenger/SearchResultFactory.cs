@@ -1,13 +1,21 @@
 ﻿using System.Data;
+using Plus.Database;
 
 namespace Plus.HabboHotel.Users.Messenger;
 
-public static class SearchResultFactory
+public class SearchResultFactory : ISearchResultFactory
 {
-    public static List<SearchResult> GetSearchResult(string query)
+    private readonly IDatabase _database;
+
+    public SearchResultFactory(IDatabase database)
+    {
+        _database = database;
+    }
+
+    public List<SearchResult> GetSearchResult(string query)
     {
         DataTable dTable;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `id`,`username`,`motto`,`look`,`last_online` FROM users WHERE username LIKE @query LIMIT 50");
             dbClient.AddParameter("query", $"{query}%");

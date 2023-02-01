@@ -1,15 +1,22 @@
 ﻿using System.Data;
+using Plus.Database;
 using Plus.HabboHotel.Rooms.AI;
 
 namespace Plus.HabboHotel.Users.Inventory.Pets;
 
-internal static class PetLoader
+internal class PetLoader : IPetLoader
 {
-    public static List<Pet> GetPetsForUser(int userId)
+    private readonly IDatabase _database;
+
+    public PetLoader(IDatabase database)
+    {
+        _database = database;
+    }
+    public List<Pet> GetPetsForUser(int userId)
     {
         var pets = new List<Pet>();
         DataTable data = null;
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery($"SELECT `id`,`user_id`,`room_id`,`name`,`x`,`y`,`z` FROM `bots` WHERE `user_id` = '{userId}' AND `room_id` = '0' AND `ai_type` = 'pet'");
         data = dbClient.GetTable();
         if (data != null)
