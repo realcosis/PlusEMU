@@ -414,9 +414,9 @@ public class Item
                                     user.AllowOverride = false;
                                     if (user.TeleDelay == 0)
                                     {
-                                        var roomHopId = ItemHopperFinder.GetAHopper((uint)user.RoomId); // TODO @80O: Remove cast
+                                        var roomHopId = ItemHopperFinder.GetAHopper(user.RoomId); // TODO @80O: Remove cast
                                         var nextHopperId = ItemHopperFinder.GetHopperId(roomHopId);
-                                        if (!user.IsBot && user != null && user.GetClient() != null &&
+                                        if (!user.IsBot && user.GetClient() != null &&
                                             user.GetClient().GetHabbo() != null)
                                         {
                                             user.GetClient().GetHabbo().IsHopping = true;

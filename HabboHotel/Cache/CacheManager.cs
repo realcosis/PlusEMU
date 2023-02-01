@@ -1,7 +1,9 @@
 ﻿using System.Collections.Concurrent;
 using Microsoft.Extensions.Logging;
+using Plus.Database;
 using Plus.HabboHotel.Cache.Process;
 using Plus.HabboHotel.Cache.Type;
+using Plus.HabboHotel.GameClients;
 
 namespace Plus.HabboHotel.Cache;
 
@@ -9,11 +11,15 @@ public class CacheManager : ICacheManager
 {
     private readonly ILogger<CacheManager> _logger;
     private readonly IProcessComponent _process;
+    private readonly IDatabase _database;
+    private readonly IGameClientManager _gameClientManager;
     private readonly ConcurrentDictionary<int, UserCache> _usersCached;
 
-    public CacheManager(IProcessComponent processComponent, ILogger<CacheManager> logger)
+    public CacheManager(IProcessComponent processComponent, IDatabase database, IGameClientManager gameClientManager, ILogger<CacheManager> logger)
     {
         _process = processComponent;
+        _database = database;
+        _gameClientManager = gameClientManager;
         _logger = logger;
         _usersCached = new();
     }
@@ -35,7 +41,7 @@ public class CacheManager : ICacheManager
             if (TryGetUser(id, out user))
                 return user;
         }
-        var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(id);
+        var client = _gameClientManager.GetClientByUserId(id);
         if (client != null)
         {
             if (client.GetHabbo() != null)
@@ -45,7 +51,7 @@ public class CacheManager : ICacheManager
                 return user;
             }
         }
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("SELECT `username`, `motto`, `look` FROM users WHERE id = @id LIMIT 1");
         dbClient.AddParameter("id", id);
         var dRow = dbClient.GetRow();

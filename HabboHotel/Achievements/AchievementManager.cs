@@ -16,11 +16,13 @@ public class AchievementManager : IAchievementManager
 
     public Dictionary<string, Achievement> Achievements { get; private set; }
 
+    private readonly IAchievementLevelFactory _achievementLevelFactory;
     private readonly IDatabase _database;
     private readonly IBadgeManager _badgeManager;
 
-    public AchievementManager(IDatabase database, IBadgeManager badgeManager, ILogger<AchievementManager> logger)
+    public AchievementManager(IAchievementLevelFactory achievementLevelFactory, IDatabase database, IBadgeManager badgeManager, ILogger<AchievementManager> logger)
     {
+        _achievementLevelFactory = achievementLevelFactory;
         _database = database;
         _badgeManager = badgeManager;
         _logger = logger;
@@ -29,7 +31,7 @@ public class AchievementManager : IAchievementManager
 
     public void Init()
     {
-        Achievements = AchievementLevelFactory.GetAchievementLevels();
+        Achievements = _achievementLevelFactory.GetAchievementLevels();
     }
 
     public bool ProgressAchievement(GameClient session, string group, int progress, bool fromBeginning = false)

@@ -1,24 +1,27 @@
 ﻿using System.Data;
 using Microsoft.Extensions.Logging;
+using Plus.Database;
 
 namespace Plus.HabboHotel.Talents;
 
 public class TalentTrackManager : ITalentTrackManager
 {
     private readonly ILogger<TalentTrackManager> _logger;
+    private readonly IDatabase _database;
 
     private readonly Dictionary<int, TalentTrackLevel> _citizenshipLevels;
 
-    public TalentTrackManager(ILogger<TalentTrackManager> logger)
+    public TalentTrackManager(ILogger<TalentTrackManager> logger, IDatabase database)
     {
         _logger = logger;
+        _database = database;
         _citizenshipLevels = new();
     }
 
     public void Init()
     {
         DataTable data = null;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `type`,`level`,`data_actions`,`data_gifts` FROM `talents`");
             data = dbClient.GetTable();

@@ -2,6 +2,8 @@
 using System.Data;
 using Microsoft.Extensions.Logging;
 using Plus.Core;
+using Plus.Core.Language;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.Utilities;
 
@@ -10,6 +12,8 @@ namespace Plus.HabboHotel.Rooms;
 public class RoomManager : IRoomManager
 {
     private readonly ILogger<RoomManager> _logger;
+    private readonly IDatabase _database;
+    private readonly ILanguageManager _languageManager;
 
     private readonly object _roomLoadingSync;
 
@@ -20,9 +24,11 @@ public class RoomManager : IRoomManager
     private DateTime _cycleLastExecution;
 
 
-    public RoomManager(ILogger<RoomManager> logger)
+    public RoomManager(ILogger<RoomManager> logger, IDatabase database, ILanguageManager languageManager)
     {
-        _logger = logger;   
+        _logger = logger;
+        _database = database;
+        _languageManager = languageManager;
         _roomModels = new();
         _rooms = new();
         _roomLoadingSync = new();
@@ -71,7 +77,7 @@ public class RoomManager : IRoomManager
     {
         if (_roomModels.Count > 0)
             _roomModels.Clear();
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("SELECT id,door_x,door_y,door_z,door_dir,heightmap,club_only,poolmap,`wall_height` FROM `room_models` WHERE `custom` = '0'");
         var data = dbClient.GetTable();
         if (data == null)
@@ -87,7 +93,7 @@ public class RoomManager : IRoomManager
     public bool LoadModel(string id)
     {
         DataRow row = null;
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("SELECT id,door_x,door_y,door_z,door_dir,heightmap,club_only,poolmap,`wall_height` FROM `room_models` WHERE `custom` = '1' AND `id` = @modelId LIMIT 1");
         dbClient.AddParameter("modelId", id);
         row = dbClient.GetRow();
@@ -246,11 +252,11 @@ public class RoomManager : IRoomManager
     {
         if (name.Length < 3)
         {
-            session.SendNotification(PlusEnvironment.GetLanguageManager().TryGetValue("room.creation.name.too_short"));
+            session.SendNotification(_languageManager.TryGetValue("room.creation.name.too_short"));
             return null;
         }
         var roomId = 0u;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery(
                 "INSERT INTO `rooms` (`roomtype`,`caption`,`description`,`owner`,`model_name`,`category`,`users_max`,`trade_settings`) VALUES ('private',@caption,@description,@UserId,@model,@category,@usersmax,@tradesettings)");
@@ -278,7 +284,7 @@ public class RoomManager : IRoomManager
         {
             if (room == null)
                 continue;
-            PlusEnvironment.GetGame().GetRoomManager().UnloadRoom(room.Id);
+            UnloadRoom(room.Id);
             Console.Clear();
             _logger.LogInformation("<<- SERVER SHUTDOWN ->> ROOM ITEM SAVE: " + string.Format("{0:0.##}", (double)i / length * 100) + "%");
             i++;

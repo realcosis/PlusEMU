@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Microsoft.Extensions.Logging;
+using Plus.Database;
 using Plus.HabboHotel.Catalog.Clothing;
 using Plus.HabboHotel.Catalog.Marketplace;
 using Plus.HabboHotel.Catalog.Pets;
@@ -20,16 +21,18 @@ public class CatalogManager : ICatalogManager
     private Dictionary<int, int> _itemOffers;
 
     private readonly IClothingManager _clothingManager;
+    private readonly IDatabase _database;
     private readonly IMarketplaceManager _marketplace;
     private readonly IPetRaceManager _petRaceManager;
     private readonly IVoucherManager _voucherManager;
 
-    public CatalogManager(IMarketplaceManager marketplace, IPetRaceManager petRaceManager, IVoucherManager voucherManager, IClothingManager clothingManager, ILogger<CatalogManager> logger)
+    public CatalogManager(IMarketplaceManager marketplace, IPetRaceManager petRaceManager, IVoucherManager voucherManager, IClothingManager clothingManager, IDatabase database, ILogger<CatalogManager> logger)
     {
         _marketplace = marketplace;
         _petRaceManager = petRaceManager;
         _voucherManager = voucherManager;
         _clothingManager = clothingManager;
+        _database = database;
         _logger = logger;
         _itemOffers = new();
         _pages = new();
@@ -55,7 +58,7 @@ public class CatalogManager : ICatalogManager
             _deals.Clear();
         if (_promotions.Count > 0)
             _promotions.Clear();
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery(
                 "SELECT `id`,`item_id`,`catalog_name`,`cost_credits`,`cost_pixels`,`cost_diamonds`,`amount`,`page_id`,`limited_sells`,`limited_stack`,`offer_active`,`extradata`,`badge`,`offer_id` FROM `catalog_items`");

@@ -1,14 +1,18 @@
-﻿namespace Plus.HabboHotel.Rooms.Chat.Logs;
+﻿using Plus.Database;
+
+namespace Plus.HabboHotel.Rooms.Chat.Logs;
 
 public sealed class ChatlogManager : IChatlogManager
 {
+    private readonly IDatabase _database;
     private const int FlushOnCount = 10;
 
     private readonly List<ChatlogEntry> _chatlogs;
     private readonly ReaderWriterLockSlim _lock;
 
-    public ChatlogManager()
+    public ChatlogManager(IDatabase database)
     {
+        _database = database;
         _chatlogs = new();
         _lock = new(LockRecursionPolicy.NoRecursion);
     }
@@ -32,7 +36,7 @@ public sealed class ChatlogManager : IChatlogManager
         _lock.EnterWriteLock();
         if (_chatlogs.Count > 0)
         {
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = _database.GetQueryReactor();
             foreach (var entry in _chatlogs)
             {
                 dbClient.SetQuery("INSERT INTO chatlogs (`user_id`, `room_id`, `timestamp`, `message`) VALUES " + "(@uid, @rid, @time, @msg)");

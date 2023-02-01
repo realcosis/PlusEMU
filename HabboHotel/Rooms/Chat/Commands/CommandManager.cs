@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Text;
 using Plus.Communication.Packets.Outgoing.Notifications;
+using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items.Wired;
 
@@ -9,6 +10,7 @@ namespace Plus.HabboHotel.Rooms.Chat.Commands;
 public class CommandManager : ICommandManager
 {
     private readonly IGameClientManager _gameClientManager;
+    private readonly IDatabase _database;
     /// <summary>
     /// Commands registered for use.
     /// </summary>
@@ -21,9 +23,10 @@ public class CommandManager : ICommandManager
     /// <summary>
     /// The default initializer for the CommandManager
     /// </summary>
-    public CommandManager(IEnumerable<ICommandBase> commands, IGameClientManager gameClientManager)
+    public CommandManager(IEnumerable<ICommandBase> commands, IGameClientManager gameClientManager, IDatabase database)
     {
         _gameClientManager = gameClientManager;
+        _database = database;
         _commands = new(commands.ToDictionary(command => command.Key));
     }
 
@@ -132,7 +135,7 @@ public class CommandManager : ICommandManager
 
     public void LogCommand(int userId, string data, string machineId)
     {
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("INSERT INTO `logs_client_staff` (`user_id`,`data_string`,`machine_id`, `timestamp`) VALUES (@UserId,@Data,@MachineId,@Timestamp)");
         dbClient.AddParameter("UserId", userId);
         dbClient.AddParameter("Data", data);

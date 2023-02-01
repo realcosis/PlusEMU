@@ -1,23 +1,26 @@
 ﻿using System.Data;
 using Microsoft.Extensions.Logging;
+using Plus.Database;
 
 namespace Plus.HabboHotel.Subscriptions;
 
 public class SubscriptionManager : ISubscriptionManager
 {
     private readonly ILogger<SubscriptionManager> _logger;
+    private readonly IDatabase _database;
     private readonly Dictionary<int, SubscriptionData> _subscriptions = new();
 
-    public SubscriptionManager(ILogger<SubscriptionManager> logger)
+    public SubscriptionManager(ILogger<SubscriptionManager> logger, IDatabase database)
     {
         _logger = logger;
+        _database = database;
     }
 
     public void Init()
     {
         if (_subscriptions.Count > 0)
             _subscriptions.Clear();
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `subscriptions`;");
             var getSubscriptions = dbClient.GetTable();

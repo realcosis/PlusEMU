@@ -1,5 +1,7 @@
 ﻿using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
+using Plus.Database;
 using Plus.Utilities;
 
 namespace Plus.HabboHotel.Items.Televisions;
@@ -7,10 +9,12 @@ namespace Plus.HabboHotel.Items.Televisions;
 public class TelevisionManager : ITelevisionManager
 {
     private readonly ILogger<TelevisionManager> _logger;
+    private readonly IDatabase _database;
 
-    public TelevisionManager(ILogger<TelevisionManager> logger)
+    public TelevisionManager(ILogger<TelevisionManager> logger, IDatabase database)
     {
         _logger = logger;
+        _database = database;
     }
 
     public Dictionary<int, TelevisionItem> Televisions { get; } = new();
@@ -22,11 +26,10 @@ public class TelevisionManager : ITelevisionManager
     {
         if (Televisions.Count > 0)
             Televisions.Clear();
-        DataTable getData = null;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `items_youtube` ORDER BY `id` DESC");
-            getData = dbClient.GetTable();
+            var getData = dbClient.GetTable();
             if (getData != null)
             {
                 foreach (DataRow row in getData.Rows)
@@ -40,7 +43,7 @@ public class TelevisionManager : ITelevisionManager
         _logger.LogInformation("Television Items -> LOADED");
     }
 
-    public bool TryGet(int itemId, out TelevisionItem televisionItem)
+    public bool TryGet(int itemId, [NotNullWhen(true)] out TelevisionItem? televisionItem)
     {
         if (Televisions.TryGetValue(itemId, out televisionItem))
             return true;

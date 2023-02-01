@@ -1,17 +1,20 @@
 ﻿using System.Data;
 using Microsoft.Extensions.Logging;
+using Plus.Database;
 
 namespace Plus.HabboHotel.Rooms.Chat.Styles;
 
 public sealed class ChatStyleManager : IChatStyleManager
 {
     private readonly ILogger<ChatStyleManager> _logger;
+    private readonly IDatabase _database;
 
     private readonly Dictionary<int, ChatStyle> _styles;
 
-    public ChatStyleManager(ILogger<ChatStyleManager> logger)
+    public ChatStyleManager(ILogger<ChatStyleManager> logger, IDatabase database)
     {
         _logger = logger;
+        _database = database;
         _styles = new();
     }
 
@@ -20,7 +23,7 @@ public sealed class ChatStyleManager : IChatStyleManager
         if (_styles.Count > 0)
             _styles.Clear();
         DataTable table = null;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `room_chat_styles`;");
             table = dbClient.GetTable();

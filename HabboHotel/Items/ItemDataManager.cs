@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Microsoft.Extensions.Logging;
+using Plus.Database;
 using Plus.HabboHotel.Users.Inventory.Furniture;
 
 namespace Plus.HabboHotel.Items;
@@ -7,19 +8,21 @@ namespace Plus.HabboHotel.Items;
 public class ItemDataManager : IItemDataManager
 {
     private readonly ILogger<ItemDataManager> _logger;
+    private readonly IDatabase _database;
     public Dictionary<int, uint> Gifts { get; } = new(0); //<SpriteId, Item>
     public Dictionary<uint, ItemDefinition> Items { get; } = new(0);
 
-    public ItemDataManager(ILogger<ItemDataManager> logger)
+    public ItemDataManager(ILogger<ItemDataManager> logger, IDatabase database)
     {
         _logger = logger;
+        _database = database;
     }
 
     public void Init()
     {
         if (Items.Count > 0)
             Items.Clear();
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `furniture`");
             var itemData = dbClient.GetTable();

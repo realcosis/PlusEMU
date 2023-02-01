@@ -6,6 +6,7 @@ namespace Plus.HabboHotel.Navigator;
 
 internal static class NavigatorHandler
 {
+    // Fuck me
     public static void Search(IOutgoingPacket packet, SearchResultList result, string query, GameClient session, int limit)
     {
         if (session == null)

@@ -1,13 +1,16 @@
 ﻿using System.Data;
+using Plus.Database;
 
 namespace Plus.HabboHotel.Catalog.Vouchers;
 
 public class VoucherManager : IVoucherManager
 {
+    private readonly IDatabase _database;
     private readonly Dictionary<string, Voucher> _vouchers;
 
-    public VoucherManager()
+    public VoucherManager(IDatabase database)
     {
+        _database = database;
         _vouchers = new();
     }
 
@@ -16,7 +19,7 @@ public class VoucherManager : IVoucherManager
         if (_vouchers.Count > 0)
             _vouchers.Clear();
         DataTable data = null;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `voucher`,`type`,`value`,`current_uses`,`max_uses` FROM `catalog_vouchers` WHERE `enabled` = '1'");
             data = dbClient.GetTable();

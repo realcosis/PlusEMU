@@ -121,7 +121,7 @@ public class GameClientManager : IGameClientManager
         builder.Append($"Reporter: {reporter.GetHabbo().Username}\r");
         builder.Append($"Reported User: {target.GetHabbo().Username}\r\r");
         builder.Append($"{target.GetHabbo().Username}s last 10 messages:\r\r");
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery($"SELECT `message` FROM `chatlogs` WHERE `user_id` = '{target.GetHabbo().Id}' ORDER BY `id` DESC LIMIT 10");
             var logs = dbClient.GetTable();
@@ -193,7 +193,7 @@ public class GameClientManager : IGameClientManager
             {
                 try
                 {
-                    using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                    using (var dbClient = _database.GetQueryReactor())
                     {
                         dbClient.RunQuery(client.GetHabbo().GetQueryString);
                     }

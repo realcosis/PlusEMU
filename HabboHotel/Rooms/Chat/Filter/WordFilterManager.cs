@@ -1,15 +1,18 @@
 ﻿using System.Data;
 using System.Text.RegularExpressions;
+using Plus.Database;
 using Plus.Utilities;
 
 namespace Plus.HabboHotel.Rooms.Chat.Filter;
 
 public sealed class WordFilterManager : IWordFilterManager
 {
+    private readonly IDatabase _database;
     private readonly List<WordFilter> _filteredWords;
 
-    public WordFilterManager()
+    public WordFilterManager(IDatabase database)
     {
+        _database = database;
         _filteredWords = new();
     }
 
@@ -18,7 +21,7 @@ public sealed class WordFilterManager : IWordFilterManager
         if (_filteredWords.Count > 0)
             _filteredWords.Clear();
         DataTable data = null;
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("SELECT * FROM `wordfilter`");
         data = dbClient.GetTable();
         if (data != null)

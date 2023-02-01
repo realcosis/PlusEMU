@@ -1,15 +1,18 @@
 ﻿using System.Data;
+using Plus.Database;
 
 namespace Plus.HabboHotel.Rooms.Chat.Pets.Commands;
 
 public class PetCommandManager : IPetCommandManager
 {
+    private readonly IDatabase _database;
     private readonly Dictionary<string, string> _commandDatabase;
     private readonly Dictionary<int, string> _commandRegister;
     private readonly Dictionary<string, PetCommand> _petCommands;
 
-    public PetCommandManager()
+    public PetCommandManager(IDatabase database)
     {
+        _database = database;
         _petCommands = new();
         _commandRegister = new();
         _commandDatabase = new();
@@ -21,7 +24,7 @@ public class PetCommandManager : IPetCommandManager
         _commandRegister.Clear();
         _commandDatabase.Clear();
         DataTable table = null;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `bots_pet_commands`");
             table = dbClient.GetTable();
@@ -34,10 +37,8 @@ public class PetCommandManager : IPetCommandManager
                 }
             }
         }
-        foreach (var pair in _commandRegister)
+        foreach (var (commandId, commandStringedId) in _commandRegister)
         {
-            var commandId = pair.Key;
-            var commandStringedId = pair.Value;
             var commandInput = _commandDatabase[$"{commandStringedId}.input"].Split(',');
             foreach (var command in commandInput) _petCommands.Add(command, new(commandId, command));
         }
@@ -45,8 +46,7 @@ public class PetCommandManager : IPetCommandManager
 
     public int TryInvoke(string input)
     {
-        PetCommand command = null;
-        if (_petCommands.TryGetValue(input.ToLower(), out command))
+        if (_petCommands.TryGetValue(input.ToLower(), out var command))
             return command.Id;
         return 0;
     }

@@ -1,13 +1,21 @@
 ﻿using System.Data;
+using Plus.Database;
 
 namespace Plus.HabboHotel.Achievements;
 
-public static class AchievementLevelFactory
+public class AchievementLevelFactory : IAchievementLevelFactory
 {
-    public static Dictionary<string, Achievement> GetAchievementLevels()
+    private readonly IDatabase _database;
+
+    public AchievementLevelFactory(IDatabase database)
+    {
+        _database = database;
+    }
+
+    public Dictionary<string, Achievement> GetAchievementLevels()
     {
         var achievements = new Dictionary<string, Achievement>();
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("SELECT `id`,`category`,`group_name`,`level`,`reward_pixels`,`reward_points`,`progress_needed`,`game_id` FROM `achievements`");
         var table = dbClient.GetTable();
         if (table != null)
