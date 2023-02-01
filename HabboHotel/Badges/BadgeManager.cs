@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Dapper;
+﻿using Dapper;
 using Microsoft.Extensions.Logging;
 using Plus.Communication.Packets.Outgoing.Inventory.Badges;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;

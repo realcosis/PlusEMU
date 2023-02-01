@@ -6,7 +6,6 @@ using Dapper;
 using Microsoft.Extensions.Options;
 using NLog;
 using Plus.Communication.Encryption;
-using Plus.Communication.Encryption.Keys;
 using Plus.Communication.Flash;
 using Plus.Communication.Nitro;
 using Plus.Communication.Packets.Outgoing.Moderation;

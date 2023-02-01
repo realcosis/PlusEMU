@@ -1,10 +1,8 @@
 ﻿using System.Data;
-using System.Drawing;
 using Plus.Communication.Packets.Outgoing.Inventory.Bots;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
-using Plus.HabboHotel.Rooms.AI;
 using Plus.HabboHotel.Rooms.AI.Speech;
 using Plus.Utilities;
 

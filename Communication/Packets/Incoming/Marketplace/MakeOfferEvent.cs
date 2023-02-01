@@ -2,7 +2,6 @@
 using Plus.Communication.Packets.Outgoing.Marketplace;
 using Plus.Database;
 using Plus.HabboHotel.Catalog.Marketplace;
-using Plus.HabboHotel.Catalog.Utilities;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Inventory.Furniture;
 using Plus.Utilities;

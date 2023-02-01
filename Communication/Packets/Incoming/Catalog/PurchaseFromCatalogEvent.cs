@@ -15,7 +15,6 @@ using Plus.HabboHotel.Catalog;
 using Plus.HabboHotel.Catalog.Utilities;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
-using Plus.HabboHotel.Quests;
 using Plus.HabboHotel.Users.Effects;
 using Dapper;
 

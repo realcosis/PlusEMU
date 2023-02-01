@@ -1,6 +1,5 @@
 ﻿using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
-using Plus.HabboHotel.Items.Data.Toner;
 using Plus.HabboHotel.Items.DataFormat;
 using Plus.HabboHotel.Users.Inventory.Furniture;
 

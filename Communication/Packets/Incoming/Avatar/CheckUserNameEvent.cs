@@ -2,7 +2,6 @@
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms.Chat.Filter;
-using Dapper;
 using Plus.HabboHotel.Users.UserData;
 
 namespace Plus.Communication.Packets.Incoming.Avatar;

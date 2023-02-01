@@ -1,6 +1,5 @@
 ﻿using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.HabboHotel.GameClients;
-using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Users.Inventory.Furniture;
 
 namespace Plus.Communication.Packets.Incoming.Inventory.Furni;

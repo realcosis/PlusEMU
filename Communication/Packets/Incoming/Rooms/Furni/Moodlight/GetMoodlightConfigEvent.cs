@@ -1,7 +1,6 @@
 ﻿using Plus.Communication.Packets.Outgoing.Rooms.Furni.Moodlight;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
-using Plus.HabboHotel.Items.Data.Moodlight;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni.Moodlight;

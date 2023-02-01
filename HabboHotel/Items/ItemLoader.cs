@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using Plus.Database;
 using Plus.HabboHotel.Items.DataFormat;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users.Inventory.Furniture;

@@ -8,7 +8,6 @@ using Microsoft.Extensions.Logging;
 using Plus.Communication.Packets;
 using Plus.Communication.Packets.Outgoing.Handshake;
 using Plus.Communication.Packets.Outgoing.Notifications;
-using Plus.Core;
 using Plus.Database;
 using Plus.HabboHotel.Users.Messenger;
 
