@@ -241,15 +241,9 @@ public sealed class ModerationManager : IModerationManager
 
     public bool TryGetTicket(int ticketId, out ModerationTicket ticket) => _modTickets.TryGetValue(ticketId, out ticket);
 
-    public bool UserHasTickets(int userId)
-    {
-        return _modTickets.Count(x => x.Value.Sender.Id == userId && x.Value.Answered == false) > 0;
-    }
+    public bool UserHasTickets(int userId) => _modTickets.Any(x => x.Value.Sender.Id == userId && x.Value.Answered == false);
 
-    public ModerationTicket GetTicketBySenderId(int userId)
-    {
-        return _modTickets.FirstOrDefault(x => x.Value.Sender.Id == userId).Value;
-    }
+    public ModerationTicket GetTicketBySenderId(int userId) => _modTickets.FirstOrDefault(x => x.Value.Sender.Id == userId).Value;
 
     /// <summary>
     /// Runs a quick check to see if a ban record is cached in the server.
@@ -273,8 +267,7 @@ public sealed class ModerationManager : IModerationManager
             }
 
             //And finally, let us remove the ban record from the cache.
-            if (_bans.ContainsKey(key))
-                _bans.Remove(key);
+            _bans.Remove(key);
             return false;
         }
         return false;

@@ -9,6 +9,5 @@ internal class GetClubGiftInfoEvent : IPacketEvent
     {
         session.Send(new ClubGiftsComposer());
         return Task.CompletedTask;
-        return Task.CompletedTask;
     }
 }
