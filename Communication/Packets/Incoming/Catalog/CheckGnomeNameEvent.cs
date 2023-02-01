@@ -1,14 +1,13 @@
-﻿using Plus.Communication.Packets.Outgoing.Catalog;
+﻿using Dapper;
+using Plus.Communication.Packets.Incoming.Rooms;
+using Plus.Communication.Packets.Outgoing.Catalog;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Database;
 using Plus.HabboHotel.Catalog.Utilities;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Items;
-using Plus.HabboHotel.Rooms.AI;
-using Plus.HabboHotel.Rooms.AI.Speech;
-using Dapper;
-using Plus.Communication.Packets.Incoming.Rooms;
 using Plus.HabboHotel.Rooms;
+using Plus.HabboHotel.Rooms.AI.Speech;
 
 namespace Plus.Communication.Packets.Incoming.Catalog;
 
@@ -16,11 +15,13 @@ internal class CheckGnomeNameEvent : RoomPacketEvent
 {
     private readonly IDatabase _database;
     private readonly IItemDataManager _itemDataManager;
+    private readonly IItemFactory _itemFactory;
 
-    public CheckGnomeNameEvent(IDatabase database, IItemDataManager itemDataManager)
+    public CheckGnomeNameEvent(IDatabase database, IItemDataManager itemDataManager, IItemFactory itemFactory)
     {
         _database = database;
         _itemDataManager = itemDataManager;
+        _itemFactory = itemFactory;
     }
 
     public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
@@ -79,7 +80,7 @@ internal class CheckGnomeNameEvent : RoomPacketEvent
         //Give the food.
         if (_itemDataManager.Items.TryGetValue(320, out var petFood))
         {
-            var food = ItemFactory.CreateSingleItemNullable(petFood, session.GetHabbo(), "", "").ToInventoryItem();
+            var food = _itemFactory.CreateSingleItemNullable(petFood, session.GetHabbo(), "", "").ToInventoryItem();
             if (food != null)
             {
                 session.GetHabbo().Inventory.Furniture.AddItem(food);

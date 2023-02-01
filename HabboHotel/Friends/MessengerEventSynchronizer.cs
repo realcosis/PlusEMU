@@ -36,10 +36,9 @@ internal class MessengerEventSynchronizer : IAuthenticationTask
         foreach (var friend in habbo.Messenger.Friends.Values)
         {
             var friendHabbo = friend.Habbo;
-            if (friendHabbo == null) continue;
-            var me = friendHabbo.Messenger.GetFriend(habbo.Id);
+            var me = friendHabbo?.Messenger.GetFriend(habbo.Id);
             if (me == null) continue;
-            friendHabbo.Messenger.UpdateFriend(me);
+            friendHabbo?.Messenger.UpdateFriend(me);
         }
     }
 

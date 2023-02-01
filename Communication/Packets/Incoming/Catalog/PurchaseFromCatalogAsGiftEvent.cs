@@ -25,6 +25,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
     private readonly IAchievementManager _achievementManager;
     private readonly IGameClientManager _gameClientManager;
     private readonly IQuestManager _questManager;
+    private readonly IItemFactory _itemFactory;
 
     public PurchaseFromCatalogAsGiftEvent(ICatalogManager catalogManager,
         ISettingsManager settingsManager,
@@ -32,7 +33,8 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
         IDatabase database,
         IAchievementManager achievementManager,
         IGameClientManager gameClientManager,
-        IQuestManager questManager)
+        IQuestManager questManager,
+        IItemFactory itemFactory)
     {
         _catalogManager = catalogManager;
         _settingsManager = settingsManager;
@@ -41,6 +43,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
         _achievementManager = achievementManager;
         _gameClientManager = gameClientManager;
         _questManager = questManager;
+        _itemFactory = itemFactory;
     }
 
     public Task Parse(GameClient session, IIncomingPacket packet)
@@ -190,7 +193,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
             //Here we're clearing up a record, this is dumb, but okay.
             connection.Execute("DELETE FROM `items` WHERE `id` = @deleteId LIMIT 1", new { deleteId = newItemId});
         }
-        var giveItem = ItemFactory.CreateGiftItem(presentData, habbo, extra_data, extra_data, newItemId).ToInventoryItem();
+        var giveItem = _itemFactory.CreateGiftItem(presentData, habbo, extra_data, extra_data, newItemId).ToInventoryItem();
         if (giveItem != null)
         {
             var receiver = _gameClientManager.GetClientByUserId(habbo.Id);

@@ -16,12 +16,14 @@ internal class BuyOfferEvent : IPacketEvent
     private readonly IMarketplaceManager _marketplace;
     private readonly IItemDataManager _itemDataManager;
     private readonly IDatabase _database;
+    private readonly IItemFactory _itemFactory;
 
-    public BuyOfferEvent(IMarketplaceManager marketplace, IItemDataManager itemDataManager, IDatabase database)
+    public BuyOfferEvent(IMarketplaceManager marketplace, IItemDataManager itemDataManager, IDatabase database, IItemFactory itemFactory)
     {
         _marketplace = marketplace;
         _itemDataManager = itemDataManager;
         _database = database;
+        _itemFactory = itemFactory;
     }
 
     public Task Parse(GameClient session, IIncomingPacket packet)
@@ -71,7 +73,7 @@ internal class BuyOfferEvent : IPacketEvent
             }
             session.GetHabbo().Credits -= Convert.ToInt32(row["total_price"]);
             session.Send(new CreditBalanceComposer(session.GetHabbo().Credits));
-            var giveItem = ItemFactory.CreateSingleItem(item, session.GetHabbo(), Convert.ToString(row["extra_data"]), Convert.ToString(row["extra_data"]), Convert.ToUInt32(row["furni_id"]),
+            var giveItem = _itemFactory.CreateSingleItem(item, session.GetHabbo(), Convert.ToString(row["extra_data"]), Convert.ToString(row["extra_data"]), Convert.ToUInt32(row["furni_id"]),
                 Convert.ToUInt32(row["limited_number"]), Convert.ToUInt32(row["limited_stack"])).ToInventoryItem();
             if (giveItem != null)
             {

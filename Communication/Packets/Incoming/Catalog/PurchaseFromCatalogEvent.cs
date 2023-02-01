@@ -27,28 +27,25 @@ public class PurchaseFromCatalogEvent : IPacketEvent
     private readonly IDatabase _database;
     private readonly ISettingsManager _settingsManager;
     private readonly IAchievementManager _achievementManager;
-    private readonly IQuestManager _questManager;
-    private readonly IGameClientManager _gameClientManager;
     private readonly IItemDataManager _itemManager;
     private readonly IBadgeManager _badgeManager;
+    private readonly IItemFactory _itemFactory;
 
     public PurchaseFromCatalogEvent(ICatalogManager catalogManager,
         IDatabase database,
         ISettingsManager settingsManager,
         IAchievementManager achievementManager,
-        IQuestManager questManager,
-        IGameClientManager gameClientManager,
         IItemDataManager itemManager,
-        IBadgeManager badgeManager)
+        IBadgeManager badgeManager,
+        IItemFactory itemFactory)
     {
         _catalogManager = catalogManager;
         _database = database;
         _settingsManager = settingsManager;
         _achievementManager = achievementManager;
-        _questManager = questManager;
-        _gameClientManager = gameClientManager;
         _itemManager = itemManager;
         _badgeManager = badgeManager;
+        _itemFactory = itemFactory;
     }
     public async Task Parse(GameClient session, IIncomingPacket packet)
     {
@@ -204,12 +201,12 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                     default:
                         if (amountPurchase > 1)
                         {
-                            var items = ItemFactory.CreateMultipleItems(item.Definition, session.GetHabbo(), extraData, amountPurchase);
+                            var items = _itemFactory.CreateMultipleItems(item.Definition, session.GetHabbo(), extraData, amountPurchase);
                             if (items != null) generatedGenericItems.AddRange(items);
                         }
                         else
                         {
-                            newItem = ItemFactory.CreateSingleItemNullable(item.Definition, session.GetHabbo(), extraData, extraData, 0, limitedEditionSells, limitedEditionStack);
+                            newItem = _itemFactory.CreateSingleItemNullable(item.Definition, session.GetHabbo(), extraData, extraData, 0, limitedEditionSells, limitedEditionStack);
                             if (newItem != null) generatedGenericItems.Add(newItem);
                         }
                         break;
@@ -218,12 +215,12 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                     case InteractionType.GuildForum:
                         if (amountPurchase > 1)
                         {
-                            var items = ItemFactory.CreateMultipleItems(item.Definition, session.GetHabbo(), extraData, amountPurchase, Convert.ToInt32(extraData));
+                            var items = _itemFactory.CreateMultipleItems(item.Definition, session.GetHabbo(), extraData, amountPurchase, Convert.ToInt32(extraData));
                             if (items != null) generatedGenericItems.AddRange(items);
                         }
                         else
                         {
-                            newItem = ItemFactory.CreateSingleItemNullable(item.Definition, session.GetHabbo(), extraData, extraData, Convert.ToInt32(extraData));
+                            newItem = _itemFactory.CreateSingleItemNullable(item.Definition, session.GetHabbo(), extraData, extraData, Convert.ToInt32(extraData));
                             if (newItem != null) generatedGenericItems.Add(newItem);
                         }
                         break;
@@ -231,7 +228,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                     case InteractionType.Teleport:
                         for (var i = 0; i < amountPurchase; i++)
                         {
-                            var teleItems = ItemFactory.CreateTeleporterItems(item.Definition, session.GetHabbo());
+                            var teleItems = _itemFactory.CreateTeleporterItems(item.Definition, session.GetHabbo());
                             if (teleItems != null) generatedGenericItems.AddRange(teleItems);
                         }
                         break;
@@ -239,20 +236,20 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                     {
                         if (amountPurchase > 1)
                         {
-                            var items = ItemFactory.CreateMultipleItems(item.Definition, session.GetHabbo(), extraData, amountPurchase);
+                            var items = _itemFactory.CreateMultipleItems(item.Definition, session.GetHabbo(), extraData, amountPurchase);
                             if (items != null)
                             {
                                 generatedGenericItems.AddRange(items);
-                                foreach (var I in items) ItemFactory.CreateMoodlightData(I);
+                                foreach (var I in items) _itemFactory.CreateMoodlightData(I);
                             }
                         }
                         else
                         {
-                            newItem = ItemFactory.CreateSingleItemNullable(item.Definition, session.GetHabbo(), extraData, extraData);
+                            newItem = _itemFactory.CreateSingleItemNullable(item.Definition, session.GetHabbo(), extraData, extraData);
                             if (newItem != null)
                             {
                                 generatedGenericItems.Add(newItem);
-                                ItemFactory.CreateMoodlightData(newItem);
+                                _itemFactory.CreateMoodlightData(newItem);
                             }
                         }
                     }
@@ -261,20 +258,20 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                     {
                         if (amountPurchase > 1)
                         {
-                            var items = ItemFactory.CreateMultipleItems(item.Definition, session.GetHabbo(), extraData, amountPurchase);
+                            var items = _itemFactory.CreateMultipleItems(item.Definition, session.GetHabbo(), extraData, amountPurchase);
                             if (items != null)
                             {
                                 generatedGenericItems.AddRange(items);
-                                foreach (var I in items) ItemFactory.CreateTonerData(I);
+                                foreach (var I in items) _itemFactory.CreateTonerData(I);
                             }
                         }
                         else
                         {
-                            newItem = ItemFactory.CreateSingleItemNullable(item.Definition, session.GetHabbo(), extraData, extraData);
+                            newItem = _itemFactory.CreateSingleItemNullable(item.Definition, session.GetHabbo(), extraData, extraData);
                             if (newItem != null)
                             {
                                 generatedGenericItems.Add(newItem);
-                                ItemFactory.CreateTonerData(newItem);
+                                _itemFactory.CreateTonerData(newItem);
                             }
                         }
                     }
@@ -285,7 +282,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                         {
                             foreach (var catalogItem in deal.ItemDataList.ToList())
                             {
-                                var items = ItemFactory.CreateMultipleItems(catalogItem.Definition, session.GetHabbo(), "", amountPurchase);
+                                var items = _itemFactory.CreateMultipleItems(catalogItem.Definition, session.GetHabbo(), "", amountPurchase);
                                 if (items != null) generatedGenericItems.AddRange(items);
                             }
                         }
@@ -344,7 +341,7 @@ public class PurchaseFromCatalogEvent : IPacketEvent
                         session.Send(new PetInventoryComposer(session.GetHabbo().Inventory.Pets.Pets.Values.ToList()));
                         if (_itemManager.Items.TryGetValue(320, out var petFood))
                         {
-                            var food = ItemFactory.CreateSingleItemNullable(petFood, session.GetHabbo(), "", "").ToInventoryItem();
+                            var food = _itemFactory.CreateSingleItemNullable(petFood, session.GetHabbo(), "", "").ToInventoryItem();
                             if (food != null)
                             {
                                 session.GetHabbo().Inventory.Furniture.AddItem(food);

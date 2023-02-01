@@ -1,18 +1,20 @@
-﻿using Plus.HabboHotel.Users.Messenger;
-using Dapper;
+﻿using Dapper;
 using Plus.Database;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users;
-using Plus.Utilities;
+using Plus.HabboHotel.Users.Messenger;
 
 namespace Plus.HabboHotel.Friends;
 
 internal class MessengerDataLoader : IMessengerDataLoader
 {
     private readonly IDatabase _database;
+    private readonly IGameClientManager _gameClientManager;
 
-    public MessengerDataLoader(IDatabase database)
+    public MessengerDataLoader(IDatabase database, IGameClientManager gameClientManager)
     {
         _database = database;
+        _gameClientManager = gameClientManager;
     }
 
     public async Task<List<MessengerBuddy>> GetBuddiesForUser(int userId)
@@ -68,7 +70,7 @@ internal class MessengerDataLoader : IMessengerDataLoader
 
     public void BroadcastStatusUpdate(Habbo habbo, MessengerEventTypes eventType, string value)
     {
-        foreach (var client in habbo.Messenger.Friends.Keys.Select(f => PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(f)))
+        foreach (var client in habbo.Messenger.Friends.Keys.Select(f => _gameClientManager.GetClientByUserId(f)))
         {
             if (client == null) continue;
             var messenger = client.GetHabbo().Messenger;

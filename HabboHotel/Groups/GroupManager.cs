@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Data;
 using Microsoft.Extensions.Logging;
+using Plus.Database;
 using Plus.HabboHotel.Rooms;
 using Plus.HabboHotel.Users;
 using Plus.Utilities;
@@ -10,6 +11,7 @@ namespace Plus.HabboHotel.Groups;
 public class GroupManager : IGroupManager
 {
     private readonly ILogger<GroupManager> _logger;
+    private readonly IDatabase _database;
     private readonly Dictionary<int, GroupColours> _backgroundColours;
     private readonly List<GroupColours> _baseColours;
 
@@ -20,9 +22,10 @@ public class GroupManager : IGroupManager
     private readonly Dictionary<int, GroupColours> _symbolColours;
     private readonly List<GroupBadgeParts> _symbols;
 
-    public GroupManager(ILogger<GroupManager> logger)
+    public GroupManager(ILogger<GroupManager> logger, IDatabase database)
     {
         _logger = logger;
+        _database = database;
         _groupLoadingSync = new();
         _groups = new();
         _bases = new();
@@ -50,7 +53,7 @@ public class GroupManager : IGroupManager
         _baseColours.Clear();
         _symbolColours.Clear();
         _backgroundColours.Clear();
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("SELECT `id`,`type`,`firstvalue`,`secondvalue` FROM `groups_items` WHERE `enabled` = '1'");
         var groupItems = dbClient.GetTable();
         foreach (DataRow groupItem in groupItems.Rows)
@@ -85,7 +88,7 @@ public class GroupManager : IGroupManager
         {
             if (_groups.ContainsKey(id))
                 return _groups.TryGetValue(id, out group);
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = _database.GetQueryReactor();
             dbClient.SetQuery("SELECT * FROM `groups` WHERE `id` = @id LIMIT 1");
             dbClient.AddParameter("id", id);
             var row = dbClient.GetRow();
@@ -108,7 +111,7 @@ public class GroupManager : IGroupManager
         group = new(0, name, description, badge, roomId, player.Id, (int)UnixTimestamp.GetNow(), 0, colour1, colour2, 0, false);
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(badge))
             return false;
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery(
             "INSERT INTO `groups` (`name`, `desc`, `badge`, `owner_id`, `created`, `room_id`, `state`, `colour1`, `colour2`, `admindeco`) VALUES (@name, @desc, @badge, @owner, UNIX_TIMESTAMP(), @room, '0', @colour1, @colour2, '0')");
         dbClient.AddParameter("name", group.Name);
@@ -155,7 +158,7 @@ public class GroupManager : IGroupManager
     public List<Group> GetGroupsForUser(int userId)
     {
         var groups = new List<Group>();
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = _database.GetQueryReactor();
         dbClient.SetQuery("SELECT g.id FROM `group_memberships` AS m RIGHT JOIN `groups` AS g ON m.group_id = g.id WHERE m.user_id = @user");
         dbClient.AddParameter("user", userId);
         var getGroups = dbClient.GetTable();
@@ -173,7 +176,7 @@ public class GroupManager : IGroupManager
     public Dictionary<int, string> GetAllBadgesInRoom(Room room)
     {
         var badges = new Dictionary<int, string>();
-        foreach (var groupIds in room.GetRoomUserManager().GetRoomUsers().Select(user => (user.GetClient()?.GetHabbo()).HabboStats.FavouriteGroupId ?? 0).Where(g => g > 0).Distinct())
+        foreach (var groupIds in room.GetRoomUserManager().GetRoomUsers().Select(user => user.GetClient()?.GetHabbo().HabboStats.FavouriteGroupId ?? 0).Where(g => g > 0).Distinct())
         {
             if (!TryGetGroup(groupIds, out var group))
                 continue;

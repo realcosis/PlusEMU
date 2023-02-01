@@ -4,7 +4,7 @@ using Plus.HabboHotel.Users;
 
 namespace Plus.HabboHotel.Items;
 
-public class ItemFactory
+public class ItemFactory : IItemFactory
 {
     private readonly IDatabase _database;
     public static ItemFactory Instance { get; set; }
@@ -13,7 +13,8 @@ public class ItemFactory
     {
         _database = database;
     }
-    public static Item CreateSingleItemNullable(ItemDefinition definition, Habbo habbo, string extraData, string displayFlags, int groupId = 0, uint limitedNumber = 0, uint limitedStack = 0)
+
+    public Item CreateSingleItemNullable(ItemDefinition definition, Habbo habbo, string extraData, string displayFlags, int groupId = 0, uint limitedNumber = 0, uint limitedStack = 0)
     {
         if (definition == null) throw new InvalidOperationException("Data cannot be null.");
         var item = new Item()
@@ -53,7 +54,7 @@ public class ItemFactory
         return item;
     }
 
-    public static Item CreateSingleItem(ItemDefinition definition, Habbo habbo, string extraData, string displayFlags, uint itemId, uint limitedNumber = 0, uint limitedStack = 0)
+    public Item CreateSingleItem(ItemDefinition definition, Habbo habbo, string extraData, string displayFlags, uint itemId, uint limitedNumber = 0, uint limitedStack = 0)
     {
         if (definition == null) throw new InvalidOperationException("Data cannot be null.");
 
@@ -87,7 +88,7 @@ public class ItemFactory
         return item;
     }
 
-    public static Item CreateGiftItem(ItemDefinition definition, Habbo habbo, string extraData, string displayFlags, int itemId, uint limitedNumber = 0, uint limitedStack = 0)
+    public Item CreateGiftItem(ItemDefinition definition, Habbo habbo, string extraData, string displayFlags, int itemId, uint limitedNumber = 0, uint limitedStack = 0)
     {
         if (definition == null) throw new InvalidOperationException("Data cannot be null.");
         var item = new Item()
@@ -120,7 +121,7 @@ public class ItemFactory
         return item;
     }
 
-    public static List<Item> CreateMultipleItems(ItemDefinition definition, Habbo habbo, string extraData, int amount, int groupId = 0)
+    public List<Item> CreateMultipleItems(ItemDefinition definition, Habbo habbo, string extraData, int amount, int groupId = 0)
     {
         if (definition == null) throw new InvalidOperationException("Data cannot be null.");
         var items = new List<Item>();
@@ -161,7 +162,7 @@ public class ItemFactory
         return items;
     }
 
-    public static List<Item> CreateTeleporterItems(ItemDefinition definition, Habbo habbo, int groupId = 0)
+    public List<Item> CreateTeleporterItems(ItemDefinition definition, Habbo habbo, int groupId = 0)
     {
         var items = new List<Item>();
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
@@ -211,7 +212,7 @@ public class ItemFactory
         return items;
     }
 
-    public static void CreateMoodlightData(Item item)
+    public void CreateMoodlightData(Item item)
     {
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
         dbClient.SetQuery("INSERT INTO `room_items_moodlight` (`id`, `enabled`, `current_preset`, `preset_one`, `preset_two`, `preset_three`) VALUES (@id, '0', 1, @preset, @preset, @preset);");
@@ -220,7 +221,7 @@ public class ItemFactory
         dbClient.RunQuery();
     }
 
-    public static void CreateTonerData(Item item)
+    public void CreateTonerData(Item item)
     {
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
         dbClient.SetQuery("INSERT INTO `room_items_toner` (`id`, `data1`, `data2`, `data3`, `enabled`) VALUES (@id, 0, 0, 0, '0')");

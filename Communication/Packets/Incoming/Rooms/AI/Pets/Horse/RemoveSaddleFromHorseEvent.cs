@@ -15,12 +15,14 @@ internal class RemoveSaddleFromHorseEvent : IPacketEvent
     private readonly IRoomManager _roomManager;
     private readonly IItemDataManager _itemDataManager;
     private readonly IDatabase _database;
+    private readonly IItemFactory _itemFactory;
 
-    public RemoveSaddleFromHorseEvent(IRoomManager roomManager, IItemDataManager itemDataManager ,IDatabase database)
+    public RemoveSaddleFromHorseEvent(IRoomManager roomManager, IItemDataManager itemDataManager, IDatabase database, IItemFactory itemFactory)
     {
         _roomManager = roomManager;
         _itemDataManager = itemDataManager;
         _database = database;
+        _itemFactory = itemFactory;
     }
 
     public Task Parse(GameClient session, IIncomingPacket packet)
@@ -47,7 +49,7 @@ internal class RemoveSaddleFromHorseEvent : IPacketEvent
         //Give the saddle back to the user.
         if (!_itemDataManager.Items.TryGetValue(saddleId, out var itemData))
             return Task.CompletedTask;
-        var item = ItemFactory.CreateSingleItemNullable(itemData, session.GetHabbo(), "", "").ToInventoryItem();
+        var item = _itemFactory.CreateSingleItemNullable(itemData, session.GetHabbo(), "", "").ToInventoryItem();
         if (item != null)
         {
             session.GetHabbo().Inventory.Furniture.AddItem(item);

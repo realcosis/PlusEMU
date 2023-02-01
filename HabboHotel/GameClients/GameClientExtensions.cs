@@ -9,7 +9,7 @@ public static class GameClientExtensions
     {
         if (client.GetHabbo() == null || client.GetHabbo().CurrentRoom == null)
             return;
-        var user = client.GetHabbo().CurrentRoom.GetRoomUserManager().GetRoomUserByHabbo(client.GetHabbo().Username);
+        var user = client.GetHabbo().CurrentRoom?.GetRoomUserManager().GetRoomUserByHabbo(client.GetHabbo().Username);
         if (user == null)
             return;
         client.Send(new WhisperComposer(user.VirtualId, message, 0, colour == 0 ? user.LastBubble : colour));

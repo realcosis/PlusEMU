@@ -11,15 +11,17 @@ public class MarketplaceManager : IMarketplaceManager
 {
     private readonly IDatabase _database;
     private readonly IItemDataManager _itemDataManager;
+    private readonly IItemFactory _itemFactory;
     public Dictionary<int, int> MarketAverages { get; } = new();
     public Dictionary<int, int> MarketCounts { get; } = new();
     public List<int> MarketItemKeys { get; } = new();
     public List<MarketOffer> MarketItems { get; } = new();
 
-    public MarketplaceManager(IDatabase database, IItemDataManager itemDataManager)
+    public MarketplaceManager(IDatabase database, IItemDataManager itemDataManager, IItemFactory itemFactory)
     {
         _database = database;
         _itemDataManager = itemDataManager;
+        _itemFactory = itemFactory;
     }
     public int AvgPriceForSprite(int spriteId)
     {
@@ -30,7 +32,7 @@ public class MarketplaceManager : IMarketplaceManager
             if (MarketCounts[spriteId] > 0) return MarketAverages[spriteId] / MarketCounts[spriteId];
             return 0;
         }
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery($"SELECT `avgprice` FROM `catalog_marketplace_data` WHERE `sprite` = '{spriteId}' LIMIT 1");
             num = dbClient.GetInteger();
@@ -88,7 +90,7 @@ public class MarketplaceManager : IMarketplaceManager
         _itemDataManager.Items.TryGetValue(offer.ItemId, out var item);
         if (item == null) return false;
 
-        var giveItem = ItemFactory.CreateSingleItem(item, habbo, offer.ExtraData, offer.ExtraData, offer.FurniId,offer.LimitedNumber, offer.LimitedStack);
+        var giveItem = _itemFactory.CreateSingleItem(item, habbo, offer.ExtraData, offer.ExtraData, offer.FurniId,offer.LimitedNumber, offer.LimitedStack);
         habbo.Client.Send(new FurniListNotificationComposer(giveItem.Id, 1));
         habbo.Client.Send(new FurniListUpdateComposer());
         await DeleteOffer(offerId);
