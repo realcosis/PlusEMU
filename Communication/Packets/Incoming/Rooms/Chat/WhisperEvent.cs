@@ -88,13 +88,13 @@ public class WhisperEvent : IPacketEvent
             session.SendWhisper("Oops, this user has their whispers disabled!");
             return Task.CompletedTask;
         }
-        _chatlogManager.StoreChatlog(new(session.GetHabbo().Id, room.Id, "<Whisper to " + toUser + ">: " + message, UnixTimestamp.GetNow(), session.GetHabbo(), room));
+        _chatlogManager.StoreChatlog(new(session.GetHabbo().Id, room.Id, $"<Whisper to {toUser}>: {message}", UnixTimestamp.GetNow(), session.GetHabbo(), room));
         if (_wordFilterManager.CheckBannedWords(message))
         {
             session.GetHabbo().BannedPhraseCount++;
             if (session.GetHabbo().BannedPhraseCount >= Convert.ToInt32(_settingsManager.TryGetValue("room.chat.filter.banned_phrases.chances")))
             {
-                _moderationManager.BanUser("System", ModerationBanType.Username, session.GetHabbo().Username, "Spamming banned phrases (" + message + ")",
+                _moderationManager.BanUser("System", ModerationBanType.Username, session.GetHabbo().Username, $"Spamming banned phrases ({message})",
                     UnixTimestamp.GetNow() + 78892200);
                 session.Disconnect();
                 return Task.CompletedTask;
@@ -118,7 +118,7 @@ public class WhisperEvent : IPacketEvent
                 if (notifiable != null && notifiable.HabboId != user2.HabboId && notifiable.HabboId != user.HabboId)
                 {
                     if (notifiable.GetClient() != null && notifiable.GetClient().GetHabbo() != null && !notifiable.GetClient().GetHabbo().IgnorePublicWhispers)
-                        notifiable.GetClient().Send(new WhisperComposer(user.VirtualId, "[Whisper to " + toUser + "] " + message, 0, user.LastBubble));
+                        notifiable.GetClient().Send(new WhisperComposer(user.VirtualId, $"[Whisper to {toUser}] {message}", 0, user.LastBubble));
                 }
             }
         }

@@ -24,7 +24,7 @@ internal class FollowCommand : ITargetChatCommand
     {
         if (target.CurrentRoom == session.GetHabbo().CurrentRoom)
         {
-            session.SendWhisper("Hey you, open your eyes! " + target.Username + " is in this room!");
+            session.SendWhisper($"Hey you, open your eyes! {target.Username} is in this room!");
             return Task.CompletedTask;
         }
         if (target.Username == session.GetHabbo().Username)

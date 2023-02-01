@@ -10,15 +10,14 @@ internal static class PetLoader
         var pets = new List<Pet>();
         DataTable data = null;
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-        dbClient.SetQuery("SELECT `id`,`user_id`,`room_id`,`name`,`x`,`y`,`z` FROM `bots` WHERE `user_id` = '" + userId + "' AND `room_id` = '0' AND `ai_type` = 'pet'");
+        dbClient.SetQuery($"SELECT `id`,`user_id`,`room_id`,`name`,`x`,`y`,`z` FROM `bots` WHERE `user_id` = '{userId}' AND `room_id` = '0' AND `ai_type` = 'pet'");
         data = dbClient.GetTable();
         if (data != null)
         {
             foreach (DataRow row in data.Rows)
             {
                 dbClient.SetQuery(
-                    "SELECT `type`,`race`,`color`,`experience`,`energy`,`nutrition`,`respect`,`createstamp`,`have_saddle`,`anyone_ride`,`hairdye`,`pethair`,`gnome_clothing` FROM `bots_petdata` WHERE `id` = '" +
-                    Convert.ToInt32(row["id"]) + "' LIMIT 1");
+                    $"SELECT `type`,`race`,`color`,`experience`,`energy`,`nutrition`,`respect`,`createstamp`,`have_saddle`,`anyone_ride`,`hairdye`,`pethair`,`gnome_clothing` FROM `bots_petdata` WHERE `id` = '{Convert.ToInt32(row["id"])}' LIMIT 1");
                 var mRow = dbClient.GetRow();
                 if (mRow != null)
                 {

@@ -175,14 +175,13 @@ public class Room : RoomData
     {
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
         dbClient.SetQuery(
-            "SELECT `id`,`room_id`,`name`,`motto`,`look`,`x`,`y`,`z`,`rotation`,`gender`,`user_id`,`ai_type`,`walk_mode`,`automatic_chat`,`speaking_interval`,`mix_sentences`,`chat_bubble` FROM `bots` WHERE `room_id` = '" +
-            RoomId + "' AND `ai_type` != 'pet'");
+            $"SELECT `id`,`room_id`,`name`,`motto`,`look`,`x`,`y`,`z`,`rotation`,`gender`,`user_id`,`ai_type`,`walk_mode`,`automatic_chat`,`speaking_interval`,`mix_sentences`,`chat_bubble` FROM `bots` WHERE `room_id` = '{RoomId}' AND `ai_type` != 'pet'");
         var data = dbClient.GetTable();
         if (data == null)
             return;
         foreach (DataRow bot in data.Rows)
         {
-            dbClient.SetQuery("SELECT `text` FROM `bots_speech` WHERE `bot_id` = '" + Convert.ToInt32(bot["id"]) + "'");
+            dbClient.SetQuery($"SELECT `text` FROM `bots_speech` WHERE `bot_id` = '{Convert.ToInt32(bot["id"])}'");
             var botSpeech = dbClient.GetTable();
             var speeches = new List<RandomSpeech>();
             foreach (DataRow speech in botSpeech.Rows) speeches.Add(new(Convert.ToString(speech["text"]), Convert.ToInt32(bot["id"])));
@@ -197,15 +196,14 @@ public class Room : RoomData
     public void InitPets()
     {
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-        dbClient.SetQuery("SELECT `id`,`user_id`,`room_id`,`name`,`x`,`y`,`z` FROM `bots` WHERE `room_id` = '" + RoomId + "' AND `ai_type` = 'pet'");
+        dbClient.SetQuery($"SELECT `id`,`user_id`,`room_id`,`name`,`x`,`y`,`z` FROM `bots` WHERE `room_id` = '{RoomId}' AND `ai_type` = 'pet'");
         var data = dbClient.GetTable();
         if (data == null)
             return;
         foreach (DataRow row in data.Rows)
         {
             dbClient.SetQuery(
-                "SELECT `type`,`race`,`color`,`experience`,`energy`,`nutrition`,`respect`,`createstamp`,`have_saddle`,`anyone_ride`,`hairdye`,`pethair`,`gnome_clothing` FROM `bots_petdata` WHERE `id` = '" +
-                row[0] + "' LIMIT 1");
+                $"SELECT `type`,`race`,`color`,`experience`,`energy`,`nutrition`,`respect`,`createstamp`,`have_saddle`,`anyone_ride`,`hairdye`,`pethair`,`gnome_clothing` FROM `bots_petdata` WHERE `id` = '{row[0]}' LIMIT 1");
             var mRow = dbClient.GetRow();
             if (mRow == null)
                 continue;
@@ -318,10 +316,10 @@ public class Room : RoomData
         }
         if (key != null)
         {
-            if (predicate == null) predicate = p => p.Definition.ItemName == "fball_score_" + key;
+            if (predicate == null) predicate = p => p.Definition.ItemName == $"fball_score_{key}";
             foreach (var item2 in GetRoomItemHandler().GetFloor.Where(predicate).ToList())
             {
-                if (item2.Definition.ItemName == "fball_score_" + key)
+                if (item2.Definition.ItemName == $"fball_score_{key}")
                 {
                     if (!string.IsNullOrEmpty(item2.LegacyDataString))
                         item2.LegacyDataString = (Convert.ToInt32(item2.LegacyDataString) + 1).ToString();

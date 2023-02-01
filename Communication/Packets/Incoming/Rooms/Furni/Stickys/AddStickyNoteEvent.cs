@@ -19,7 +19,7 @@ internal class AddStickyNoteEvent : RoomPacketEvent
             return Task.CompletedTask;
         try
         {
-            var wallPossition = room.GetRoomItemHandler().WallPositionCheck(":" + locationData.Split(':')[1]);
+            var wallPossition = room.GetRoomItemHandler().WallPositionCheck($":{locationData.Split(':')[1]}");
             var roomItem = item.ToRoomObject();
             roomItem.WallCoordinates = wallPossition;
             if (room.GetRoomItemHandler().SetWallItem(session, roomItem))

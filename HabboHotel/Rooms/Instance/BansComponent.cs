@@ -27,7 +27,7 @@ public class BansComponent
         _bans = new();
         DataTable getBans = null;
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-        dbClient.SetQuery("SELECT `user_id`, `expire` FROM `room_bans` WHERE `room_id` = " + _instance.Id + " AND `expire` > UNIX_TIMESTAMP();");
+        dbClient.SetQuery($"SELECT `user_id`, `expire` FROM `room_bans` WHERE `room_id` = {_instance.Id} AND `expire` > UNIX_TIMESTAMP();");
         getBans = dbClient.GetTable();
         if (getBans != null)
             foreach (DataRow row in getBans.Rows)
@@ -93,7 +93,7 @@ public class BansComponent
         DataTable getBans = null;
         var bans = new List<int>();
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-        dbClient.SetQuery("SELECT `user_id` FROM `room_bans` WHERE `room_id` = '" + _instance.Id + "' AND `expire` > UNIX_TIMESTAMP();");
+        dbClient.SetQuery($"SELECT `user_id` FROM `room_bans` WHERE `room_id` = '{_instance.Id}' AND `expire` > UNIX_TIMESTAMP();");
         getBans = dbClient.GetTable();
         if (getBans != null)
         {

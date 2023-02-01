@@ -20,7 +20,7 @@ internal class RedeemOfferCreditsEvent : IPacketEvent
         DataTable table;
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.SetQuery("SELECT `asking_price` FROM `catalog_marketplace_offers` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND `state` = '2'");
+            dbClient.SetQuery($"SELECT `asking_price` FROM `catalog_marketplace_offers` WHERE `user_id` = '{session.GetHabbo().Id}' AND `state` = '2'");
             table = dbClient.GetTable();
         }
         if (table != null)
@@ -32,7 +32,7 @@ internal class RedeemOfferCreditsEvent : IPacketEvent
                 session.Send(new CreditBalanceComposer(session.GetHabbo().Credits));
             }
             using var dbClient = _database.GetQueryReactor();
-            dbClient.RunQuery("DELETE FROM `catalog_marketplace_offers` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND `state` = '2'");
+            dbClient.RunQuery($"DELETE FROM `catalog_marketplace_offers` WHERE `user_id` = '{session.GetHabbo().Id}' AND `state` = '2'");
         }
         return Task.CompletedTask;
     }

@@ -36,8 +36,8 @@ internal class RoomBadgeCommand : IChatCommand
                 user.GetClient().SendNotification("You have just been given a badge!");
             }
             else
-                user.GetClient().SendWhisper(session.GetHabbo().Username + " tried to give you a badge, but you already have it!");
+                user.GetClient().SendWhisper($"{session.GetHabbo().Username} tried to give you a badge, but you already have it!");
         }
-        session.SendWhisper("You have successfully given every user in this room the " + badgeCode + " badge!");
+        session.SendWhisper($"You have successfully given every user in this room the {badgeCode} badge!");
     }
 }

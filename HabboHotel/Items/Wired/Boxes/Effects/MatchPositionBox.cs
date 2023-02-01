@@ -126,7 +126,7 @@ internal class MatchPositionBox : IWiredItem, IWiredCycle
             if (selectedItem != null)
                 SetItems.TryAdd(selectedItem.Id, selectedItem);
         }
-        StringData = state + ";" + direction + ";" + placement;
+        StringData = $"{state};{direction};{placement}";
         var delay = packet.ReadInt();
         Delay = delay;
     }

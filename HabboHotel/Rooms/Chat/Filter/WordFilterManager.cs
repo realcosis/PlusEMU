@@ -50,9 +50,9 @@ public sealed class WordFilterManager : IWordFilterManager
                 foreach (var word in words.ToList())
                 {
                     if (word.ToLower() == filter.Word)
-                        message += filter.Replacement + " ";
+                        message += $"{filter.Replacement} ";
                     else
-                        message += word + " ";
+                        message += $"{word} ";
                 }
             }
         }

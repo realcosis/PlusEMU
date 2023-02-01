@@ -39,7 +39,7 @@ public class CommandManager : ICommandManager
             return false;
         if (!message.StartsWith(_prefix))
             return false;
-        if (message == _prefix + "commands")
+        if (message == $"{_prefix}commands")
         {
             var list = new StringBuilder();
             list.Append("This is the list of commands you have available:\n");
@@ -50,7 +50,7 @@ public class CommandManager : ICommandManager
                     if (!session.GetHabbo().Permissions.HasCommand(cmdList.Value.PermissionRequired))
                         continue;
                 }
-                list.Append(":" + cmdList.Key + " " + cmdList.Value.Parameters + " - " + cmdList.Value.Description + "\n");
+                list.Append($":{cmdList.Key} {cmdList.Value.Parameters} - {cmdList.Value.Description}\n");
             }
             session.Send(new MotdNotificationComposer(list.ToString()));
             return true;

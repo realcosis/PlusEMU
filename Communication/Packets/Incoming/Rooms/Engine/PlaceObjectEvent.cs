@@ -36,7 +36,7 @@ internal class PlaceObjectEvent : RoomPacketEvent
         }
         if (room.GetRoomItemHandler().GetWallAndFloor.Count() > Convert.ToInt32(_settingsManager.TryGetValue("room.item.placement_limit")))
         {
-            session.SendNotification("You cannot have more than " + Convert.ToInt32(_settingsManager.TryGetValue("room.item.placement_limit")) + " items in a room!");
+            session.SendNotification($"You cannot have more than {Convert.ToInt32(_settingsManager.TryGetValue("room.item.placement_limit"))} items in a room!");
             return Task.CompletedTask;
         }
         var inventoryItem = session.GetHabbo().Inventory.Furniture.GetItem(itemId);

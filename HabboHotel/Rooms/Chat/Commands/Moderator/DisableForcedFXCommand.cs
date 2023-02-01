@@ -27,6 +27,6 @@ internal class DisableForcedFxCommand : IChatCommand
             connection.Execute("UPDATE users SET disable_forced_effects = @DisableForcedEffects WHERE id = @userId LIMIT 1",
                 new { DisabledForcedEffects = session.GetHabbo().DisableForcedEffects, userId = session.GetHabbo().Id });
         }
-        session.SendWhisper("Forced FX mode is now " + (session.GetHabbo().DisableForcedEffects ? "disabled!" : "enabled!"));
+        session.SendWhisper($"Forced FX mode is now {(session.GetHabbo().DisableForcedEffects ? "disabled!" : "enabled!")}");
     }
 }

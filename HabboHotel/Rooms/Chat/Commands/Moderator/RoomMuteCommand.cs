@@ -24,7 +24,7 @@ internal class RoomMuteCommand : IChatCommand
         var roomUsers = room.GetRoomUserManager().GetRoomUsers();
         if (roomUsers.Count > 0)
         {
-            var whisperMessage = "This room has been muted because: " + message;
+            var whisperMessage = $"This room has been muted because: {message}";
             foreach (var user in roomUsers)
             {
                 if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null || user.GetClient().GetHabbo().Username == session.GetHabbo().Username)

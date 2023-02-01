@@ -17,7 +17,7 @@ internal class ModeratorActionEvent : IPacketEvent
         var alertMode = packet.ReadInt();
         var alertMessage = packet.ReadString();
         var isCaution = alertMode != 3;
-        alertMessage = isCaution ? "Caution from Moderator:\n\n" + alertMessage : "Message from Moderator:\n\n" + alertMessage;
+        alertMessage = isCaution ? $"Caution from Moderator:\n\n{alertMessage}" : $"Message from Moderator:\n\n{alertMessage}";
         session.GetHabbo().CurrentRoom.SendPacket(new BroadcastMessageAlertComposer(alertMessage));
         return Task.CompletedTask;
     }

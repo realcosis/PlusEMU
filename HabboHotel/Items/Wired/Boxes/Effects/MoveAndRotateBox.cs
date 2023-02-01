@@ -118,7 +118,7 @@ internal class MoveAndRotateBox : IWiredItem, IWiredCycle
             if (selectedItem != null && !Instance.GetWired().OtherBoxHasItem(this, selectedItem.Id))
                 SetItems.TryAdd(selectedItem.Id, selectedItem);
         }
-        StringData = movement + ";" + rotation;
+        StringData = $"{movement};{rotation}";
         Delay = packet.ReadInt();
     }
 

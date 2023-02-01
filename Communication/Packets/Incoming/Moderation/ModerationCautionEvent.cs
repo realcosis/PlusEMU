@@ -25,7 +25,7 @@ internal class ModerationCautionEvent : IPacketEvent
             return Task.CompletedTask;
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.RunQuery("UPDATE `user_info` SET `cautions` = `cautions` + '1' WHERE `user_id` = '" + client.GetHabbo().Id + "' LIMIT 1");
+            dbClient.RunQuery($"UPDATE `user_info` SET `cautions` = `cautions` + '1' WHERE `user_id` = '{client.GetHabbo().Id}' LIMIT 1");
         }
         client.SendNotification(message);
         return Task.CompletedTask;

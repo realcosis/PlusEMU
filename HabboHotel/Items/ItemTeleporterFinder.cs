@@ -7,7 +7,7 @@ public static class ItemTeleporterFinder
     public static uint GetLinkedTele(uint teleId)
     {
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-        dbClient.SetQuery("SELECT `tele_two_id` FROM `room_items_tele_links` WHERE `tele_one_id` = '" + teleId + "' LIMIT 1");
+        dbClient.SetQuery($"SELECT `tele_two_id` FROM `room_items_tele_links` WHERE `tele_one_id` = '{teleId}' LIMIT 1");
         var row = dbClient.GetRow();
         if (row == null) return 0;
         return Convert.ToUInt32(row[0]);
@@ -18,7 +18,7 @@ public static class ItemTeleporterFinder
         if (pRoom.GetRoomItemHandler().GetItem(teleId) != null)
             return pRoom.RoomId;
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-        dbClient.SetQuery("SELECT `room_id` FROM `items` WHERE `id` = " + teleId + " LIMIT 1");
+        dbClient.SetQuery($"SELECT `room_id` FROM `items` WHERE `id` = {teleId} LIMIT 1");
         var row = dbClient.GetRow();
         if (row == null) return 0;
         return Convert.ToUInt32(row[0]);

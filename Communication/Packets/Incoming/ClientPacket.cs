@@ -25,7 +25,7 @@ public class ClientPacket
         _pointer = 0;
     }
 
-    public override string ToString() => "[" + Id + "] BODY: " + PlusEnvironment.GetDefaultEncoding().GetString(_body).Replace(Convert.ToChar(0).ToString(), "[0]");
+    public override string ToString() => $"[{Id}] BODY: {PlusEnvironment.GetDefaultEncoding().GetString(_body).Replace(Convert.ToChar(0).ToString(), "[0]")}";
 
     public void AdvancePointer(int i)
     {

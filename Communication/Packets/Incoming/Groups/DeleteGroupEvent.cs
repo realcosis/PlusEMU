@@ -36,8 +36,8 @@ internal class DeleteGroupEvent : IPacketEvent
         if (group.MemberCount >= Convert.ToInt32(_settingsManager.TryGetValue("group.delete.member.limit")) &&
             !session.GetHabbo().Permissions.HasRight("group_delete_limit_override"))
         {
-            session.SendNotification("Oops, your group exceeds the maximum amount of members (" + Convert.ToInt32(_settingsManager.TryGetValue("group.delete.member.limit")) +
-                                     ") a group can exceed before being eligible for deletion. Seek assistance from a staff member.");
+            session.SendNotification(
+                $"Oops, your group exceeds the maximum amount of members ({Convert.ToInt32(_settingsManager.TryGetValue("group.delete.member.limit"))}) a group can exceed before being eligible for deletion. Seek assistance from a staff member.");
             return Task.CompletedTask;
         }
         if (!_roomManager.TryGetRoom(group.RoomId, out var room))

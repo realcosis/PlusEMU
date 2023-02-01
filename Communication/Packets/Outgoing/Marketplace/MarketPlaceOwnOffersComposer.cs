@@ -19,9 +19,9 @@ public class MarketPlaceOwnOffersComposer : IServerPacket
         var i = 0;
         DataTable table = null;
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-        dbClient.SetQuery("SELECT timestamp, state, offer_id, item_type, sprite_id, total_price, limited_number, limited_stack FROM catalog_marketplace_offers WHERE user_id = '" + _userId + "'");
+        dbClient.SetQuery($"SELECT timestamp, state, offer_id, item_type, sprite_id, total_price, limited_number, limited_stack FROM catalog_marketplace_offers WHERE user_id = '{_userId}'");
         table = dbClient.GetTable();
-        dbClient.SetQuery("SELECT SUM(asking_price) FROM catalog_marketplace_offers WHERE state = '2' AND user_id = '" + _userId + "'");
+        dbClient.SetQuery($"SELECT SUM(asking_price) FROM catalog_marketplace_offers WHERE state = '2' AND user_id = '{_userId}'");
         i = dbClient.GetInteger();
         packet.WriteInteger(i);
         if (table != null)

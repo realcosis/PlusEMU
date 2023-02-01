@@ -72,7 +72,7 @@ internal sealed class ProcessComponent
             if (_timerRunning)
             {
                 _timerLagging = true;
-                Log.Warn("<Player " + _player.Id + "> Server can't keep up, Player timer is lagging behind.");
+                Log.Warn($"<Player {_player.Id}> Server can't keep up, Player timer is lagging behind.");
                 return;
             }
             _resetEvent.Reset();
@@ -90,9 +90,8 @@ internal sealed class ProcessComponent
                 _player.HabboStats.RespectsTimestamp = DateTime.Today.ToString("MM/dd");
                 using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                 {
-                    dbClient.RunQuery("UPDATE `user_statistics` SET `dailyRespectPoints` = '" + (_player.Rank == 1 && _player.VipRank == 0 ? 10 : _player.VipRank == 1 ? 15 : 20) +
-                                      "', `dailyPetRespectPoints` = '" + (_player.Rank == 1 && _player.VipRank == 0 ? 10 : _player.VipRank == 1 ? 15 : 20) + "', `respectsTimestamp` = '" +
-                                      DateTime.Today.ToString("MM/dd") + "' WHERE `id` = '" + _player.Id + "' LIMIT 1");
+                    dbClient.RunQuery(
+                        $"UPDATE `user_statistics` SET `dailyRespectPoints` = '{(_player.Rank == 1 && _player.VipRank == 0 ? 10 : _player.VipRank == 1 ? 15 : 20)}', `dailyPetRespectPoints` = '{(_player.Rank == 1 && _player.VipRank == 0 ? 10 : _player.VipRank == 1 ? 15 : 20)}', `respectsTimestamp` = '{DateTime.Today:MM/dd}' WHERE `id` = '{_player.Id}' LIMIT 1");
                 }
                 _player.HabboStats.DailyRespectPoints = _player.Rank == 1 && _player.VipRank == 0 ? 10 : _player.VipRank == 1 ? 15 : 20;
                 _player.HabboStats.DailyPetRespectPoints = _player.Rank == 1 && _player.VipRank == 0 ? 10 : _player.VipRank == 1 ? 15 : 20;

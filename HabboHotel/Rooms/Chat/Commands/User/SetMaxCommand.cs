@@ -40,10 +40,10 @@ internal class SetMaxCommand : IChatCommand
                 session.SendWhisper("visitor amount too high for your rank, visitor amount has been set to 200.");
             }
             else
-                session.SendWhisper("visitor amount set to " + maxAmount + ".");
+                session.SendWhisper($"visitor amount set to {maxAmount}.");
             room.UsersMax = maxAmount;
             using var dbClient = _database.GetQueryReactor();
-            dbClient.RunQuery("UPDATE `rooms` SET `users_max` = " + maxAmount + " WHERE `id` = '" + room.Id + "' LIMIT 1");
+            dbClient.RunQuery($"UPDATE `rooms` SET `users_max` = {maxAmount} WHERE `id` = '{room.Id}' LIMIT 1");
         }
         else
             session.SendWhisper("Invalid amount, please enter a valid number.");

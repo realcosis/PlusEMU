@@ -32,8 +32,8 @@ internal class ApplyHorseEffectEvent : RoomPacketEvent
             petUser.PetData.Saddle = 9;
             using (var dbClient = _database.GetQueryReactor())
             {
-                dbClient.RunQuery("UPDATE `bots_petdata` SET `have_saddle` = '9' WHERE `id` = '" + petUser.PetData.PetId + "' LIMIT 1");
-                dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
+                dbClient.RunQuery($"UPDATE `bots_petdata` SET `have_saddle` = '9' WHERE `id` = '{petUser.PetData.PetId}' LIMIT 1");
+                dbClient.RunQuery($"DELETE FROM `items` WHERE `id` = '{item.Id}' LIMIT 1");
             }
 
             //We only want to use this if we're successful.
@@ -44,8 +44,8 @@ internal class ApplyHorseEffectEvent : RoomPacketEvent
             petUser.PetData.Saddle = 10;
             using (var dbClient = _database.GetQueryReactor())
             {
-                dbClient.RunQuery("UPDATE `bots_petdata` SET `have_saddle` = '10' WHERE `id` = '" + petUser.PetData.PetId + "' LIMIT 1");
-                dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
+                dbClient.RunQuery($"UPDATE `bots_petdata` SET `have_saddle` = '10' WHERE `id` = '{petUser.PetData.PetId}' LIMIT 1");
+                dbClient.RunQuery($"DELETE FROM `items` WHERE `id` = '{item.Id}' LIMIT 1");
             }
 
             //We only want to use this if we're successful.
@@ -59,8 +59,8 @@ internal class ApplyHorseEffectEvent : RoomPacketEvent
             petUser.PetData.PetHair = parse;
             using (var dbClient = _database.GetQueryReactor())
             {
-                dbClient.RunQuery("UPDATE `bots_petdata` SET `pethair` = '" + petUser.PetData.PetHair + "' WHERE `id` = '" + petUser.PetData.PetId + "' LIMIT 1");
-                dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
+                dbClient.RunQuery($"UPDATE `bots_petdata` SET `pethair` = '{petUser.PetData.PetHair}' WHERE `id` = '{petUser.PetData.PetId}' LIMIT 1");
+                dbClient.RunQuery($"DELETE FROM `items` WHERE `id` = '{item.Id}' LIMIT 1");
             }
 
             //We only want to use this if we're successful.
@@ -74,8 +74,8 @@ internal class ApplyHorseEffectEvent : RoomPacketEvent
             petUser.PetData.HairDye = hairDye;
             using (var dbClient = _database.GetQueryReactor())
             {
-                dbClient.RunQuery("UPDATE `bots_petdata` SET `hairdye` = '" + petUser.PetData.HairDye + "' WHERE `id` = '" + petUser.PetData.PetId + "' LIMIT 1");
-                dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
+                dbClient.RunQuery($"UPDATE `bots_petdata` SET `hairdye` = '{petUser.PetData.HairDye}' WHERE `id` = '{petUser.PetData.PetId}' LIMIT 1");
+                dbClient.RunQuery($"DELETE FROM `items` WHERE `id` = '{item.Id}' LIMIT 1");
             }
 
             //We only want to use this if we're successful.
@@ -97,8 +97,8 @@ internal class ApplyHorseEffectEvent : RoomPacketEvent
             petUser.PetData.Race = raceLast.ToString();
             using (var dbClient = _database.GetQueryReactor())
             {
-                dbClient.RunQuery("UPDATE `bots_petdata` SET `race` = '" + petUser.PetData.Race + "' WHERE `id` = '" + petUser.PetData.PetId + "' LIMIT 1");
-                dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
+                dbClient.RunQuery($"UPDATE `bots_petdata` SET `race` = '{petUser.PetData.Race}' WHERE `id` = '{petUser.PetData.PetId}' LIMIT 1");
+                dbClient.RunQuery($"DELETE FROM `items` WHERE `id` = '{item.Id}' LIMIT 1");
             }
 
             //We only want to use this if we're successful.

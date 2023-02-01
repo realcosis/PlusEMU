@@ -88,18 +88,18 @@ internal class SaveFloorPlanModelEvent : RoomPacketEvent
             wallHeight = 0;
         if (wallHeight > 15)
             wallHeight = 15;
-        var modelName = "model_bc_" + room.Id;
-        map += '\r' + new string('x', sizeX);
+        var modelName = $"model_bc_{room.Id}";
+        map += $"\r{new string('x', sizeX)}";
         using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `room_models` WHERE `id` = @model AND `custom` = '1' LIMIT 1");
-            dbClient.AddParameter("model", "model_bc_" + room.Id);
+            dbClient.AddParameter("model", $"model_bc_{room.Id}");
             var row = dbClient.GetRow();
             if (row == null) //The row is still null, let's insert instead.
             {
                 dbClient.SetQuery(
                     "INSERT INTO `room_models` (`id`,`door_x`,`door_y`, `door_z`, `door_dir`,`heightmap`,`custom`,`wall_height`) VALUES (@ModelName, @DoorX, @DoorY, @DoorZ, @DoorDirection, @Map,'1',@WallHeight)");
-                dbClient.AddParameter("ModelName", "model_bc_" + room.Id);
+                dbClient.AddParameter("ModelName", $"model_bc_{room.Id}");
                 dbClient.AddParameter("DoorX", doorX);
                 dbClient.AddParameter("DoorY", doorY);
                 dbClient.AddParameter("DoorDirection", doorDirection);
@@ -112,7 +112,7 @@ internal class SaveFloorPlanModelEvent : RoomPacketEvent
             {
                 dbClient.SetQuery(
                     "UPDATE `room_models` SET `heightmap` = @Map, `door_x` = @DoorX, `door_y` = @DoorY, `door_z` = @DoorZ,  `door_dir` = @DoorDirection, `wall_height` = @WallHeight WHERE `id` = @ModelName LIMIT 1");
-                dbClient.AddParameter("ModelName", "model_bc_" + room.Id);
+                dbClient.AddParameter("ModelName", $"model_bc_{room.Id}");
                 dbClient.AddParameter("Map", map);
                 dbClient.AddParameter("DoorX", doorX);
                 dbClient.AddParameter("DoorY", doorY);
@@ -123,7 +123,7 @@ internal class SaveFloorPlanModelEvent : RoomPacketEvent
             }
             dbClient.SetQuery("UPDATE `rooms` SET `model_name` = @ModelName, `wallthick` = @WallThick, `floorthick` = @FloorThick WHERE `id` = @roomId LIMIT 1");
             dbClient.AddParameter("roomId", room.Id);
-            dbClient.AddParameter("ModelName", "model_bc_" + room.Id);
+            dbClient.AddParameter("ModelName", $"model_bc_{room.Id}");
             dbClient.AddParameter("WallThick", wallThick);
             dbClient.AddParameter("FloorThick", floorThick);
             dbClient.RunQuery();

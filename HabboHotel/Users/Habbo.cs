@@ -202,14 +202,8 @@ public class Habbo
         get
         {
             _habboSaved = true;
-            return "UPDATE `users` SET `online` = false, `last_online` = '" + UnixTimestamp.GetNow() + "', `activity_points` = '" + Duckets + "', `credits` = '" + Credits +
-                   "', `vip_points` = '" + Diamonds + "', `home_room` = '" + HomeRoom + "', `gotw_points` = '" + GotwPoints + "', `time_muted` = '" + TimeMuted + "',`friend_bar_state` = '" +
-                   FriendBarStateUtility.GetInt(FriendbarState) + "' WHERE id = '" + Id + "' LIMIT 1;UPDATE `user_statistics` SET `roomvisits` = '" + HabboStats.RoomVisits + "', `onlineTime` = '" +
-                   (UnixTimestamp.GetNow() - SessionStart + HabboStats.OnlineTime) + "', `respect` = '" + HabboStats.Respect + "', `respectGiven` = '" + HabboStats.RespectGiven +
-                   "', `giftsGiven` = '" + HabboStats.GiftsGiven + "', `giftsReceived` = '" + HabboStats.GiftsReceived + "', `dailyRespectPoints` = '" + HabboStats.DailyRespectPoints +
-                   "', `dailyPetRespectPoints` = '" + HabboStats.DailyPetRespectPoints + "', `AchievementScore` = '" + HabboStats.AchievementPoints + "', `quest_id` = '" + HabboStats.QuestId +
-                   "', `quest_progress` = '" + HabboStats.QuestProgress + "', `groupid` = '" + HabboStats.FavouriteGroupId + "',`forum_posts` = '" + HabboStats.ForumPosts + "' WHERE `id` = '" +
-                   Id + "' LIMIT 1;";
+            return
+                $"UPDATE `users` SET `online` = false, `last_online` = '{UnixTimestamp.GetNow()}', `activity_points` = '{Duckets}', `credits` = '{Credits}', `vip_points` = '{Diamonds}', `home_room` = '{HomeRoom}', `gotw_points` = '{GotwPoints}', `time_muted` = '{TimeMuted}',`friend_bar_state` = '{FriendBarStateUtility.GetInt(FriendbarState)}' WHERE id = '{Id}' LIMIT 1;UPDATE `user_statistics` SET `roomvisits` = '{HabboStats.RoomVisits}', `onlineTime` = '{(UnixTimestamp.GetNow() - SessionStart + HabboStats.OnlineTime)}', `respect` = '{HabboStats.Respect}', `respectGiven` = '{HabboStats.RespectGiven}', `giftsGiven` = '{HabboStats.GiftsGiven}', `giftsReceived` = '{HabboStats.GiftsReceived}', `dailyRespectPoints` = '{HabboStats.DailyRespectPoints}', `dailyPetRespectPoints` = '{HabboStats.DailyPetRespectPoints}', `AchievementScore` = '{HabboStats.AchievementPoints}', `quest_id` = '{HabboStats.QuestId}', `quest_progress` = '{HabboStats.QuestProgress}', `groupid` = '{HabboStats.FavouriteGroupId}',`forum_posts` = '{HabboStats.ForumPosts}' WHERE `id` = '{Id}' LIMIT 1;";
         }
     }
 
@@ -270,16 +264,10 @@ public class Habbo
         {
             _habboSaved = true;
             using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-            dbClient.RunQuery("UPDATE `users` SET `online` = false, `last_online` = '" + (int)UnixTimestamp.GetNow() + "', `activity_points` = '" + Duckets + "', `credits` = '" + Credits +
-                              "', `vip_points` = '" + Diamonds + "', `home_room` = '" + HomeRoom + "', `gotw_points` = '" + GotwPoints + "', `time_muted` = '" + TimeMuted +
-                              "',`friend_bar_state` = '" + FriendBarStateUtility.GetInt(FriendbarState) + "', `bubble_id` = '" + CustomBubbleId + "' WHERE id = '" + Id + "' LIMIT 1;UPDATE `user_statistics` SET `roomvisits` = '" +
-                              HabboStats.RoomVisits + "', `onlineTime` = '" + (int)(UnixTimestamp.GetNow() - SessionStart + HabboStats.OnlineTime) + "', `respect` = '" + HabboStats.Respect +
-                              "', `respectGiven` = '" + HabboStats.RespectGiven + "', `giftsGiven` = '" + HabboStats.GiftsGiven + "', `giftsReceived` = '" + HabboStats.GiftsReceived +
-                              "', `dailyRespectPoints` = '" + HabboStats.DailyRespectPoints + "', `dailyPetRespectPoints` = '" + HabboStats.DailyPetRespectPoints + "', `AchievementScore` = '" +
-                              HabboStats.AchievementPoints + "', `quest_id` = '" + HabboStats.QuestId + "', `quest_progress` = '" + HabboStats.QuestProgress + "', `groupid` = '" +
-                              HabboStats.FavouriteGroupId + "',`forum_posts` = '" + HabboStats.ForumPosts + "' WHERE `id` = '" + Id + "' LIMIT 1;");
+            dbClient.RunQuery(
+                $"UPDATE `users` SET `online` = false, `last_online` = '{(int)UnixTimestamp.GetNow()}', `activity_points` = '{Duckets}', `credits` = '{Credits}', `vip_points` = '{Diamonds}', `home_room` = '{HomeRoom}', `gotw_points` = '{GotwPoints}', `time_muted` = '{TimeMuted}',`friend_bar_state` = '{FriendBarStateUtility.GetInt(FriendbarState)}', `bubble_id` = '{CustomBubbleId}' WHERE id = '{Id}' LIMIT 1;UPDATE `user_statistics` SET `roomvisits` = '{HabboStats.RoomVisits}', `onlineTime` = '{(int)(UnixTimestamp.GetNow() - SessionStart + HabboStats.OnlineTime)}', `respect` = '{HabboStats.Respect}', `respectGiven` = '{HabboStats.RespectGiven}', `giftsGiven` = '{HabboStats.GiftsGiven}', `giftsReceived` = '{HabboStats.GiftsReceived}', `dailyRespectPoints` = '{HabboStats.DailyRespectPoints}', `dailyPetRespectPoints` = '{HabboStats.DailyPetRespectPoints}', `AchievementScore` = '{HabboStats.AchievementPoints}', `quest_id` = '{HabboStats.QuestId}', `quest_progress` = '{HabboStats.QuestProgress}', `groupid` = '{HabboStats.FavouriteGroupId}',`forum_posts` = '{HabboStats.ForumPosts}' WHERE `id` = '{Id}' LIMIT 1;");
             if (Permissions.HasRight("mod_tickets"))
-                dbClient.RunQuery("UPDATE `moderation_tickets` SET `status` = 'open', `moderator_id` = '0' WHERE `status` ='picked' AND `moderator_id` = '" + Id + "'");
+                dbClient.RunQuery($"UPDATE `moderation_tickets` SET `status` = 'open', `moderator_id` = '0' WHERE `status` ='picked' AND `moderator_id` = '{Id}'");
         }
         Dispose();
         Client = null;
@@ -325,15 +313,13 @@ public class Habbo
 
     public int GetQuestProgress(int p)
     {
-        var progress = 0;
-        Quests.TryGetValue(p, out progress);
+        Quests.TryGetValue(p, out var progress);
         return progress;
     }
 
     public UserAchievement GetAchievementData(string p)
     {
-        UserAchievement achievement = null;
-        Achievements.TryGetValue(p, out achievement);
+        Achievements.TryGetValue(p, out var achievement);
         return achievement;
     }
 
@@ -350,7 +336,7 @@ public class Habbo
     public void SaveKey(string key, string value)
     {
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-        dbClient.SetQuery("UPDATE `users` SET " + key + " = @value WHERE `id` = '" + Id + "' LIMIT 1;");
+        dbClient.SetQuery($"UPDATE `users` SET {key} = @value WHERE `id` = '{Id}' LIMIT 1;");
         dbClient.AddParameter("value", value);
         dbClient.RunQuery();
     }
@@ -381,7 +367,6 @@ public class Habbo
             Client.Send(new CloseConnectionComposer());
             return;
         }
-        Client.GetHabbo().CurrentRoom = room;
         if (room.GetRoomUserManager().UserCount >= room.UsersMax && !Client.GetHabbo().Permissions.HasRight("room_enter_full") && Client.GetHabbo().Id != room.OwnerId)
         {
             Client.Send(new CantConnectComposer(1));
@@ -428,7 +413,8 @@ public class Habbo
     public bool EnterRoom(Room room)
     {
         if (room == null)
-            Client.Send(new CloseConnectionComposer());
+            return false;
+        Client.GetHabbo().CurrentRoom = room;
         Client.Send(new RoomReadyComposer(room.RoomId, room.ModelName));
         if (room.Wallpaper != "0.0")
             Client.Send(new RoomPropertyComposer("wallpaper", room.Wallpaper));
@@ -436,8 +422,6 @@ public class Habbo
             Client.Send(new RoomPropertyComposer("floor", room.Floor));
         Client.Send(new RoomPropertyComposer("landscape", room.Landscape));
         Client.Send(new RoomRatingComposer(room.Score, !(Client.GetHabbo().RatedRooms.Contains(room.RoomId) || room.OwnerId == Client.GetHabbo().Id)));
-
-
         using (var dbClient = PlusEnvironment.GetDatabaseManager().Connection())
         {
             dbClient.Execute("INSERT INTO user_roomvisits (user_id,room_id,entry_timestamp,exit_timestamp) VALUES (@userId, @roomId, @entryTimestamp, @exitTimestamp)",

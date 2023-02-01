@@ -363,7 +363,7 @@ internal class UpdateCommand : IChatCommand
                 break;
             }
             default:
-                session.SendWhisper("'" + updateVariable + "' is not a valid thing to reload.");
+                session.SendWhisper($"'{updateVariable}' is not a valid thing to reload.");
                 break;
         }
     }

@@ -23,8 +23,8 @@ internal class CancelQuestEvent : IPacketEvent
             return Task.CompletedTask;
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.RunQuery("DELETE FROM `user_quests` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND `quest_id` = '" + quest.Id + "';" +
-                              "UPDATE `user_statistics` SET `quest_id` = '0' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
+            dbClient.RunQuery(
+                $"DELETE FROM `user_quests` WHERE `user_id` = '{session.GetHabbo().Id}' AND `quest_id` = '{quest.Id}';UPDATE `user_statistics` SET `quest_id` = '0' WHERE `id` = '{session.GetHabbo().Id}' LIMIT 1");
         }
         session.GetHabbo().HabboStats.QuestId = 0;
         session.Send(new QuestAbortedComposer());

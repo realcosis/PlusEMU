@@ -41,16 +41,16 @@ internal class ModerateRoomEvent : IPacketEvent
         {
             if (setName && setLock)
             {
-                dbClient.RunQuery("UPDATE `rooms` SET `caption` = 'Inappropriate to Hotel Management', `description` = 'Inappropriate to Hotel Management', `tags` = '', `state` = '1' WHERE `id` = '" +
-                                  room.RoomId + "' LIMIT 1");
+                dbClient.RunQuery(
+                    $"UPDATE `rooms` SET `caption` = 'Inappropriate to Hotel Management', `description` = 'Inappropriate to Hotel Management', `tags` = '', `state` = '1' WHERE `id` = '{room.RoomId}' LIMIT 1");
             }
             else if (setName)
             {
-                dbClient.RunQuery("UPDATE `rooms` SET `caption` = 'Inappropriate to Hotel Management', `description` = 'Inappropriate to Hotel Management', `tags` = '' WHERE `id` = '" + room.RoomId +
-                                  "' LIMIT 1");
+                dbClient.RunQuery(
+                    $"UPDATE `rooms` SET `caption` = 'Inappropriate to Hotel Management', `description` = 'Inappropriate to Hotel Management', `tags` = '' WHERE `id` = '{room.RoomId}' LIMIT 1");
             }
             else if (setLock)
-                dbClient.RunQuery("UPDATE `rooms` SET `state` = '1', `tags` = '' WHERE `id` = '" + room.RoomId + "' LIMIT 1");
+                dbClient.RunQuery($"UPDATE `rooms` SET `state` = '1', `tags` = '' WHERE `id` = '{room.RoomId}' LIMIT 1");
         }
         room.SendPacket(new RoomSettingsSavedComposer(room.RoomId));
         room.SendPacket(new RoomInfoUpdatedComposer(room.RoomId));

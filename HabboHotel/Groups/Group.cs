@@ -99,7 +99,7 @@ public class Group
             {
                 var userId = Convert.ToInt32(row["user_id"]);
                 if (_members.Contains(userId) || _administrators.Contains(userId))
-                    dbClient.RunQuery("DELETE FROM `group_requests` WHERE `group_id` = '" + Id + "' AND `user_id` = '" + userId + "'");
+                    dbClient.RunQuery($"DELETE FROM `group_requests` WHERE `group_id` = '{Id}' AND `user_id` = '{userId}'");
                 else if (!_requests.Contains(userId)) _requests.Add(userId);
             }
         }

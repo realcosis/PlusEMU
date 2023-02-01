@@ -17,15 +17,15 @@ public class MoodlightData
         DataRow row = null;
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
-            dbClient.SetQuery("SELECT enabled,current_preset,preset_one,preset_two,preset_three FROM room_items_moodlight WHERE item_id = '" + itemId + "' LIMIT 1");
+            dbClient.SetQuery($"SELECT enabled,current_preset,preset_one,preset_two,preset_three FROM room_items_moodlight WHERE item_id = '{itemId}' LIMIT 1");
             row = dbClient.GetRow();
         }
         if (row == null)
         {
             using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-            dbClient.RunQuery("INSERT INTO `room_items_moodlight` (item_id,enabled,current_preset,preset_one,preset_two,preset_three) VALUES (" + itemId +
-                              ",0,1,'#000000,255,0','#000000,255,0','#000000,255,0')");
-            dbClient.SetQuery("SELECT enabled,current_preset,preset_one,preset_two,preset_three FROM room_items_moodlight WHERE item_id=" + itemId + " LIMIT 1");
+            dbClient.RunQuery(
+                $"INSERT INTO `room_items_moodlight` (item_id,enabled,current_preset,preset_one,preset_two,preset_three) VALUES ({itemId},0,1,'#000000,255,0','#000000,255,0','#000000,255,0')");
+            dbClient.SetQuery($"SELECT enabled,current_preset,preset_one,preset_two,preset_three FROM room_items_moodlight WHERE item_id={itemId} LIMIT 1");
             row = dbClient.GetRow();
         }
         Enabled = PlusEnvironment.EnumToBool(row["enabled"].ToString());
@@ -40,14 +40,14 @@ public class MoodlightData
     {
         Enabled = true;
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-        dbClient.RunQuery("UPDATE room_items_moodlight SET enabled = 1 WHERE item_id = '" + ItemId + "' LIMIT 1");
+        dbClient.RunQuery($"UPDATE room_items_moodlight SET enabled = 1 WHERE item_id = '{ItemId}' LIMIT 1");
     }
 
     public void Disable()
     {
         Enabled = false;
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-        dbClient.RunQuery("UPDATE room_items_moodlight SET enabled = 0 WHERE item_id = '" + ItemId + "' LIMIT 1");
+        dbClient.RunQuery($"UPDATE room_items_moodlight SET enabled = 0 WHERE item_id = '{ItemId}' LIMIT 1");
     }
 
     public void UpdatePreset(int preset, string color, int intensity, bool bgOnly, bool hax = false)
@@ -69,7 +69,7 @@ public class MoodlightData
         }
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
-            dbClient.SetQuery("UPDATE room_items_moodlight SET preset_" + pr + " = '@color," + intensity + "," + PlusEnvironment.BoolToEnum(bgOnly) + "' WHERE item_id = '" + ItemId + "' LIMIT 1");
+            dbClient.SetQuery($"UPDATE room_items_moodlight SET preset_{pr} = '@color,{intensity},{PlusEnvironment.BoolToEnum(bgOnly)}' WHERE item_id = '{ItemId}' LIMIT 1");
             dbClient.AddParameter("color", color);
             dbClient.RunQuery();
         }

@@ -21,7 +21,7 @@ internal class SetSoundSettingsEvent : IPacketEvent
             var vol = packet.ReadInt();
             if (vol < 0 || vol > 100) vol = 100;
             if (i < 2)
-                volume += vol + ",";
+                volume += $"{vol},";
             else
                 volume += vol;
         }

@@ -37,8 +37,8 @@ internal class IpBanCommand : ITargetChatCommand
         var username = target.Username;
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.RunQuery("UPDATE `user_info` SET `bans` = `bans` + '1' WHERE `user_id` = '" + target.Id + "' LIMIT 1");
-            dbClient.SetQuery("SELECT `ip_last` FROM `users` WHERE `id` = '" + target.Id + "' LIMIT 1");
+            dbClient.RunQuery($"UPDATE `user_info` SET `bans` = `bans` + '1' WHERE `user_id` = '{target.Id}' LIMIT 1");
+            dbClient.SetQuery($"SELECT `ip_last` FROM `users` WHERE `id` = '{target.Id}' LIMIT 1");
             ipAddress = dbClient.GetString();
         }
         string reason;
@@ -50,7 +50,7 @@ internal class IpBanCommand : ITargetChatCommand
             _moderationManager.BanUser(session.GetHabbo().Username, ModerationBanType.Ip, ipAddress, reason, expire);
         _moderationManager.BanUser(session.GetHabbo().Username, ModerationBanType.Username, target.Username, reason, expire);
         target.Client.Disconnect();
-        session.SendWhisper("Success, you have IP and account banned the user '" + username + "' for '" + reason + "'!");
+        session.SendWhisper($"Success, you have IP and account banned the user '{username}' for '{reason}'!");
         return Task.CompletedTask;
     }
 }

@@ -29,7 +29,7 @@ internal class BotFollowsUserBox : IWiredItem
         var botConfiguration = packet.ReadString();
         if (SetItems.Count > 0)
             SetItems.Clear();
-        StringData = followMode + ";" + botConfiguration;
+        StringData = $"{followMode};{botConfiguration}";
     }
 
     public bool Execute(params object[] @params)

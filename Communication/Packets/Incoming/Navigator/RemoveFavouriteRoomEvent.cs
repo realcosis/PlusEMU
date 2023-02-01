@@ -19,7 +19,7 @@ public class RemoveFavouriteRoomEvent : IPacketEvent
         session.GetHabbo().FavoriteRooms.Remove(id);
         session.Send(new UpdateFavouriteRoomComposer(id, false));
         using var dbClient = _database.GetQueryReactor();
-        dbClient.RunQuery("DELETE FROM user_favorites WHERE user_id = " + session.GetHabbo().Id + " AND room_id = " + id + " LIMIT 1");
+        dbClient.RunQuery($"DELETE FROM user_favorites WHERE user_id = {session.GetHabbo().Id} AND room_id = {id} LIMIT 1");
         return Task.CompletedTask;
     }
 }

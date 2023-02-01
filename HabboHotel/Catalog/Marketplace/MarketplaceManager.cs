@@ -32,9 +32,9 @@ public class MarketplaceManager : IMarketplaceManager
         }
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
-            dbClient.SetQuery("SELECT `avgprice` FROM `catalog_marketplace_data` WHERE `sprite` = '" + spriteId + "' LIMIT 1");
+            dbClient.SetQuery($"SELECT `avgprice` FROM `catalog_marketplace_data` WHERE `sprite` = '{spriteId}' LIMIT 1");
             num = dbClient.GetInteger();
-            dbClient.SetQuery("SELECT `sold` FROM `catalog_marketplace_data` WHERE `sprite` = '" + spriteId + "' LIMIT 1");
+            dbClient.SetQuery($"SELECT `sold` FROM `catalog_marketplace_data` WHERE `sprite` = '{spriteId}' LIMIT 1");
             num2 = dbClient.GetInteger();
         }
         MarketAverages.Add(spriteId, num);

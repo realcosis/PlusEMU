@@ -164,7 +164,7 @@ public sealed class ModerationManager : IModerationManager
                         }
                         else
                         {
-                            dbClient.SetQuery("DELETE FROM `bans` WHERE `bantype` = '" + BanTypeUtility.FromModerationBanType(ban.Type) + "' AND `value` = @Key LIMIT 1");
+                            dbClient.SetQuery($"DELETE FROM `bans` WHERE `bantype` = '{BanTypeUtility.FromModerationBanType(ban.Type)}' AND `value` = @Key LIMIT 1");
                             dbClient.AddParameter("Key", value);
                             dbClient.RunQuery();
                         }
@@ -205,7 +205,7 @@ public sealed class ModerationManager : IModerationManager
                         }
                         else
                         {
-                            dbClient.SetQuery("DELETE FROM `bans` WHERE `bantype` = '" + BanTypeUtility.FromModerationBanType(ban.Type) + "' AND `value` = @Key LIMIT 1");
+                            dbClient.SetQuery($"DELETE FROM `bans` WHERE `bantype` = '{BanTypeUtility.FromModerationBanType(ban.Type)}' AND `value` = @Key LIMIT 1");
                             dbClient.AddParameter("Key", value);
                             dbClient.RunQuery();
                         }
@@ -221,8 +221,8 @@ public sealed class ModerationManager : IModerationManager
         var banType = type == ModerationBanType.Ip ? "ip" : type == ModerationBanType.Machine ? "machine" : "user";
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.SetQuery("REPLACE INTO `bans` (`bantype`, `value`, `reason`, `expire`, `added_by`,`added_date`) VALUES ('" + banType + "', '" + banValue + "', @reason, " + expireTimestamp +
-                              ", '" + mod + "', '" + PlusEnvironment.GetUnixTimestamp() + "');");
+            dbClient.SetQuery(
+                $"REPLACE INTO `bans` (`bantype`, `value`, `reason`, `expire`, `added_by`,`added_date`) VALUES ('{banType}', '{banValue}', @reason, {expireTimestamp}, '{mod}', '{PlusEnvironment.GetUnixTimestamp()}');");
             dbClient.AddParameter("reason", reason);
             dbClient.RunQuery();
         }
@@ -267,7 +267,7 @@ public sealed class ModerationManager : IModerationManager
             //This ban has expired, let us quickly remove it here.
             using (var dbClient = _database.GetQueryReactor())
             {
-                dbClient.SetQuery("DELETE FROM `bans` WHERE `bantype` = '" + BanTypeUtility.FromModerationBanType(ban.Type) + "' AND `value` = @Key LIMIT 1");
+                dbClient.SetQuery($"DELETE FROM `bans` WHERE `bantype` = '{BanTypeUtility.FromModerationBanType(ban.Type)}' AND `value` = @Key LIMIT 1");
                 dbClient.AddParameter("Key", key);
                 dbClient.RunQuery();
             }

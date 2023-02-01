@@ -34,12 +34,12 @@ internal class ModerationMuteEvent : IPacketEvent
         }
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.RunQuery("UPDATE `users` SET `time_muted` = '" + length + "' WHERE `id` = '" + habbo.Id + "' LIMIT 1");
+            dbClient.RunQuery($"UPDATE `users` SET `time_muted` = '{length}' WHERE `id` = '{habbo.Id}' LIMIT 1");
         }
         if (habbo.Client != null)
         {
             habbo.TimeMuted = length;
-            habbo.Client.SendNotification("You have been muted by a moderator for " + length + " seconds!");
+            habbo.Client.SendNotification($"You have been muted by a moderator for {length} seconds!");
         }
         return Task.CompletedTask;
     }

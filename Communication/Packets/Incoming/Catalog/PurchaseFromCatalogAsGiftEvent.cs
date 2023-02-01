@@ -165,10 +165,10 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
                     itemExtraData = "1,1,1,#000000,255";
                     break;
                 case InteractionType.Trophy:
-                    itemExtraData = session.GetHabbo().Username + Convert.ToChar(9) + DateTime.Now.Day + "-" + DateTime.Now.Month + "-" + DateTime.Now.Year + Convert.ToChar(9) + data;
+                    itemExtraData = $"{session.GetHabbo().Username}{Convert.ToChar(9)}{DateTime.Now.Day}-{DateTime.Now.Month}-{DateTime.Now.Year}{Convert.ToChar(9)}{data}";
                     break;
                 case InteractionType.Mannequin:
-                    itemExtraData = "m" + Convert.ToChar(5) + ".ch-210-1321.lg-285-92" + Convert.ToChar(5) + "Default Mannequin";
+                    itemExtraData = $"m{Convert.ToChar(5)}.ch-210-1321.lg-285-92{Convert.ToChar(5)}Default Mannequin";
                     break;
                 case InteractionType.BadgeDisplay:
                     if (!session.GetHabbo().Inventory.Badges.HasBadge(data))
@@ -176,7 +176,7 @@ public class PurchaseFromCatalogAsGiftEvent : IPacketEvent
                         session.Send(new BroadcastMessageAlertComposer("Oops, it appears that you do not own this badge."));
                         return Task.CompletedTask;
                     }
-                    itemExtraData = data + Convert.ToChar(9) + session.GetHabbo().Username + Convert.ToChar(9) + DateTime.Now.Day + "-" + DateTime.Now.Month + "-" + DateTime.Now.Year;
+                    itemExtraData = $"{data}{Convert.ToChar(9)}{session.GetHabbo().Username}{Convert.ToChar(9)}{DateTime.Now.Day}-{DateTime.Now.Month}-{DateTime.Now.Year}";
                     break;
                 default:
                     itemExtraData = data;

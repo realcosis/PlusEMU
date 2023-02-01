@@ -39,12 +39,12 @@ internal class ModerationTradeLockEvent : IPacketEvent
             days = 365;
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.RunQuery("UPDATE `user_info` SET `trading_locked` = '" + length + "', `trading_locks_count` = `trading_locks_count` + '1' WHERE `user_id` = '" + habbo.Id + "' LIMIT 1");
+            dbClient.RunQuery($"UPDATE `user_info` SET `trading_locked` = '{length}', `trading_locks_count` = `trading_locks_count` + '1' WHERE `user_id` = '{habbo.Id}' LIMIT 1");
         }
         if (habbo.Client != null)
         {
             habbo.TradingLockExpiry = length;
-            habbo.Client.SendNotification("You have been trade banned for " + days + " day(s)!\r\rReason:\r\r" + message);
+            habbo.Client.SendNotification($"You have been trade banned for {days} day(s)!\r\rReason:\r\r{message}");
         }
         return Task.CompletedTask;
     }

@@ -12,5 +12,5 @@ public class CreditBalanceComposer : IServerPacket
         _creditsBalance = creditsBalance;
     }
 
-    public void Compose(IOutgoingPacket packet) => packet.WriteString(_creditsBalance + ".0");
+    public void Compose(IOutgoingPacket packet) => packet.WriteString($"{_creditsBalance}.0");
 }

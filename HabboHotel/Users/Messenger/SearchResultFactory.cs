@@ -10,7 +10,7 @@ public static class SearchResultFactory
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `id`,`username`,`motto`,`look`,`last_online` FROM users WHERE username LIKE @query LIMIT 50");
-            dbClient.AddParameter("query", query + "%");
+            dbClient.AddParameter("query", $"{query}%");
             dTable = dbClient.GetTable();
         }
         var results = new List<SearchResult>();

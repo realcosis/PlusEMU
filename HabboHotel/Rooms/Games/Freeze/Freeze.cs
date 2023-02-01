@@ -349,7 +349,7 @@ public class Freeze
             }
         }
         item.FreezePowerUp = FreezePowerUp.None;
-        item.LegacyDataString = "1" + item.LegacyDataString;
+        item.LegacyDataString = $"1{item.LegacyDataString}";
         item.UpdateState(false, true);
     }
 

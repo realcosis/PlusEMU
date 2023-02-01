@@ -43,7 +43,7 @@ internal class FurniDoesntMatchStateAndPositionBox : IWiredItem
             if (selectedItem != null)
                 SetItems.TryAdd(selectedItem.Id, selectedItem);
         }
-        StringData = state + ";" + direction + ";" + placement;
+        StringData = $"{state};{direction};{placement}";
     }
 
     public bool Execute(params object[] @params)

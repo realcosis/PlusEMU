@@ -55,7 +55,7 @@ internal class SellRoomCommand : IChatCommand
         {
             if (user == null || user.GetClient() == null)
                 continue;
-            user.GetClient().SendWhisper("Attention! This room has been put up for sale, you can buy it now for " + price + " credits! Use the :buyroom command.");
+            user.GetClient().SendWhisper($"Attention! This room has been put up for sale, you can buy it now for {price} credits! Use the :buyroom command.");
         }
     }
 }

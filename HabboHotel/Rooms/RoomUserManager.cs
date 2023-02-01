@@ -396,7 +396,7 @@ public class RoomUserManager
         UserCount = count;
         _room.UsersNow = count;
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-        dbClient.RunQuery("UPDATE `rooms` SET `users_now` = '" + count + "' WHERE `id` = '" + _room.RoomId + "' LIMIT 1");
+        dbClient.RunQuery($"UPDATE `rooms` SET `users_now` = '{count}' WHERE `id` = '{_room.RoomId}' LIMIT 1");
     }
 
     public RoomUser GetRoomUserByVirtualId(int virtualId)
@@ -453,23 +453,22 @@ public class RoomUserManager
                 continue;
             if (pet.DbState == PetDatabaseUpdateState.NeedsInsert)
             {
-                dbClient.SetQuery("INSERT INTO `bots` (`id`,`user_id`,`room_id`,`name`,`x`,`y`,`z`) VALUES ('" + pet.PetId + "','" + pet.OwnerId + "','" + pet.RoomId + "',@name,'0','0','0')");
+                dbClient.SetQuery($"INSERT INTO `bots` (`id`,`user_id`,`room_id`,`name`,`x`,`y`,`z`) VALUES ('{pet.PetId}','{pet.OwnerId}','{pet.RoomId}',@name,'0','0','0')");
                 dbClient.AddParameter("name", pet.Name);
                 dbClient.RunQuery();
-                dbClient.SetQuery("INSERT INTO `bots_petdata` (`type`,`race`,`color`,`experience`,`energy`,`createstamp`,`nutrition`,`respect`) VALUES ('" + pet.Type + "',@race,@color,'0','100','" +
-                                  pet.CreationStamp + "','0','0')");
-                dbClient.AddParameter(pet.PetId + "race", pet.Race);
-                dbClient.AddParameter(pet.PetId + "color", pet.Color);
+                dbClient.SetQuery(
+                    $"INSERT INTO `bots_petdata` (`type`,`race`,`color`,`experience`,`energy`,`createstamp`,`nutrition`,`respect`) VALUES ('{pet.Type}',@race,@color,'0','100','{pet.CreationStamp}','0','0')");
+                dbClient.AddParameter($"{pet.PetId}race", pet.Race);
+                dbClient.AddParameter($"{pet.PetId}color", pet.Color);
                 dbClient.RunQuery();
             }
             else if (pet.DbState == PetDatabaseUpdateState.NeedsUpdate)
             {
                 //Surely this can be *99 better? // TODO
                 var user = GetRoomUserByVirtualId(pet.VirtualId);
-                dbClient.RunQuery("UPDATE `bots` SET room_id = " + pet.RoomId + ", x = " + (user?.X ?? 0) + ", Y = " + (user?.Y ?? 0) + ", Z = " + (user?.Z ?? 0) + " WHERE `id` = '" + pet.PetId +
-                                  "' LIMIT 1");
-                dbClient.RunQuery("UPDATE `bots_petdata` SET `experience` = '" + pet.Experience + "', `energy` = '" + pet.Energy + "', `nutrition` = '" + pet.Nutrition + "', `respect` = '" +
-                                  pet.Respect + "' WHERE `id` = '" + pet.PetId + "' LIMIT 1");
+                dbClient.RunQuery($"UPDATE `bots` SET room_id = {pet.RoomId}, x = {(user?.X ?? 0)}, Y = {(user?.Y ?? 0)}, Z = {(user?.Z ?? 0)} WHERE `id` = '{pet.PetId}' LIMIT 1");
+                dbClient.RunQuery(
+                    $"UPDATE `bots_petdata` SET `experience` = '{pet.Experience}', `energy` = '{pet.Energy}', `nutrition` = '{pet.Nutrition}', `respect` = '{pet.Respect}' WHERE `id` = '{pet.PetId}' LIMIT 1");
             }
             pet.DbState = PetDatabaseUpdateState.Updated;
         }
@@ -757,13 +756,13 @@ public class RoomUserManager
                             {
                                 var horse = GetRoomUserByVirtualId(user.HorseId);
                                 if (horse != null)
-                                    horse.SetStatus("mv", nextX + "," + nextY + "," + TextHandling.GetString(nextZ));
-                                user.SetStatus("mv", +nextX + "," + nextY + "," + TextHandling.GetString(nextZ + 1));
+                                    horse.SetStatus("mv", $"{nextX},{nextY},{TextHandling.GetString(nextZ)}");
+                                user.SetStatus("mv", $"{+nextX},{nextY},{TextHandling.GetString(nextZ + 1)}");
                                 user.UpdateNeeded = true;
                                 horse.UpdateNeeded = true;
                             }
                             else
-                                user.SetStatus("mv", nextX + "," + nextY + "," + TextHandling.GetString(nextZ));
+                                user.SetStatus("mv", $"{nextX},{nextY},{TextHandling.GetString(nextZ)}");
                             var newRot = Rotation.Calculate(user.X, user.Y, nextX, nextY, user.MoonwalkEnabled);
                             user.RotBody = newRot;
                             user.RotHead = newRot;
@@ -920,7 +919,7 @@ public class RoomUserManager
                     case InteractionType.TentSmall:
                         {
                             if (!user.Statusses.ContainsKey("lay"))
-                                user.Statusses.Add("lay", TextHandling.GetString(item.Definition.Height) + " null");
+                                user.Statusses.Add("lay", $"{TextHandling.GetString(item.Definition.Height)} null");
                             user.Z = item.GetZ;
                             user.RotHead = item.Rotation;
                             user.RotBody = item.Rotation;
@@ -1173,7 +1172,7 @@ public class RoomUserManager
         _room.UsersNow = 0;
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
-            dbClient.RunQuery("UPDATE `rooms` SET `users_now` = '0' WHERE `id` = '" + _room.Id + "' LIMIT 1");
+            dbClient.RunQuery($"UPDATE `rooms` SET `users_now` = '0' WHERE `id` = '{_room.Id}' LIMIT 1");
         }
         _users.Clear();
         _pets.Clear();

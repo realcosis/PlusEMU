@@ -22,7 +22,7 @@ internal class ModifyWhoCanRideHorseEvent : RoomPacketEvent
         pet.PetData.AnyoneCanRide = pet.PetData.AnyoneCanRide == 1 ? 0 : 1;
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.RunQuery("UPDATE `bots_petdata` SET `anyone_ride` = '" + pet.PetData.AnyoneCanRide + "' WHERE `id` = '" + petId + "' LIMIT 1");
+            dbClient.RunQuery($"UPDATE `bots_petdata` SET `anyone_ride` = '{pet.PetData.AnyoneCanRide}' WHERE `id` = '{petId}' LIMIT 1");
         }
         room.SendPacket(new PetInformationComposer(pet.PetData));
         return Task.CompletedTask;

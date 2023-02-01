@@ -281,7 +281,7 @@ public class WiredComponent
                 {
                     if (box == null)
                         continue;
-                    if (message.Contains(" " + box.StringData) || message.Contains(box.StringData + " ") || message == box.StringData) finished = box.Execute(@params);
+                    if (message.Contains($" {box.StringData}") || message.Contains($"{box.StringData} ") || message == box.StringData) finished = box.Execute(@params);
                 }
                 return finished;
             }
@@ -385,9 +385,9 @@ public class WiredComponent
             if (selectedItem == null)
                 continue;
             if (item.Type == WiredBoxType.EffectMatchPosition || item.Type == WiredBoxType.ConditionMatchStateAndPosition || item.Type == WiredBoxType.ConditionDontMatchStateAndPosition)
-                items += I.Id + ":" + I.GetX + "," + I.GetY + "," + I.GetZ + "," + I.Rotation + "," + I.LegacyDataString + ";";
+                items += $"{I.Id}:{I.GetX},{I.GetY},{I.GetZ},{I.Rotation},{I.LegacyDataString};";
             else
-                items += I.Id + ";";
+                items += $"{I.Id};";
         }
         if (item.Type == WiredBoxType.EffectMatchPosition || item.Type == WiredBoxType.ConditionMatchStateAndPosition || item.Type == WiredBoxType.ConditionDontMatchStateAndPosition)
             item.ItemsData = items;

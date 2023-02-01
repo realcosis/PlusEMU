@@ -31,7 +31,7 @@ internal class GiveRoomScoreEvent : RoomPacketEvent
         }
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.RunQuery("UPDATE rooms SET score = '" + room.Score + "' WHERE id = '" + room.RoomId + "' LIMIT 1");
+            dbClient.RunQuery($"UPDATE rooms SET score = '{room.Score}' WHERE id = '{room.RoomId}' LIMIT 1");
         }
         session.GetHabbo().RatedRooms.Add(room.RoomId);
         session.Send(new RoomRatingComposer(room.Score, !(session.GetHabbo().RatedRooms.Contains(room.RoomId) || room.CheckRights(session, true))));

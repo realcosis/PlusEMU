@@ -51,7 +51,7 @@ internal class UpdateFigureDataEvent : IPacketEvent
         session.GetHabbo().Gender = gender.ToLower();
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.SetQuery("UPDATE `users` SET `look` = @look, `gender` = @gender WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
+            dbClient.SetQuery($"UPDATE `users` SET `look` = @look, `gender` = @gender WHERE `id` = '{session.GetHabbo().Id}' LIMIT 1");
             dbClient.AddParameter("look", look);
             dbClient.AddParameter("gender", gender);
             dbClient.RunQuery();

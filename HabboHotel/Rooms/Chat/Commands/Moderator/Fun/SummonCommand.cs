@@ -28,7 +28,7 @@ internal class SummonCommand : ITargetChatCommand
             session.SendWhisper("Get a life.");
             return Task.CompletedTask;
         }
-        target.Client.SendNotification("You have been summoned to " + session.GetHabbo().Username + "!");
+        target.Client.SendNotification($"You have been summoned to {session.GetHabbo().Username}!");
         if (!target.InRoom)
             target.Client.Send(new RoomForwardComposer(session.GetHabbo().CurrentRoom!.Id));
         else

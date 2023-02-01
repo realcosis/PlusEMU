@@ -78,7 +78,7 @@ internal class PlaceBotEvent : RoomPacketEvent
         room.GetGameMap().UpdateUserMovement(new(x, y), new(x, y), botUser);
         if (!session.GetHabbo().Inventory.Bots.RemoveBot(botId))
         {
-            Console.WriteLine("Error whilst removing Bot: " + bot.Id);
+            Console.WriteLine($"Error whilst removing Bot: {bot.Id}");
             return Task.CompletedTask;
         }
         session.Send(new BotInventoryComposer(session.GetHabbo().Inventory.Bots.Bots.Values.ToList()));

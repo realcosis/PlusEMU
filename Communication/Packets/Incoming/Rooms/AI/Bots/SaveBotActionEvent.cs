@@ -54,7 +54,7 @@ internal class SaveBotActionEvent : IPacketEvent
                 room.SendPacket(userChangeComposer);
 
                 using var dbClient = _database.GetQueryReactor();
-                dbClient.SetQuery("UPDATE `bots` SET `look` = @look, `gender` = '" + session.GetHabbo().Gender + "' WHERE `id` = '" + bot.BotData.Id + "' LIMIT 1");
+                dbClient.SetQuery($"UPDATE `bots` SET `look` = @look, `gender` = '{session.GetHabbo().Gender}' WHERE `id` = '{bot.BotData.Id}' LIMIT 1");
                 dbClient.AddParameter("look", session.GetHabbo().Look);
                 dbClient.RunQuery();
 
@@ -81,7 +81,7 @@ internal class SaveBotActionEvent : IPacketEvent
                 roomBot.SpeakingInterval = Convert.ToInt32(speakingInterval);
                 roomBot.MixSentences = Convert.ToBoolean(mixChat);
                 using var dbClient = _database.GetQueryReactor();
-                dbClient.RunQuery("DELETE FROM `bots_speech` WHERE `bot_id` = '" + bot.BotData.Id + "'");
+                dbClient.RunQuery($"DELETE FROM `bots_speech` WHERE `bot_id` = '{bot.BotData.Id}'");
                 for (var i = 0; i <= speechData.Length - 1; i++)
                 {
                     speechData[i] = Regex.Replace(speechData[i], "<(.|\\n)*?>", string.Empty);
@@ -110,7 +110,7 @@ internal class SaveBotActionEvent : IPacketEvent
                 else
                     bot.BotData.WalkingMode = "stand";
                 using var dbClient = _database.GetQueryReactor();
-                dbClient.RunQuery("UPDATE `bots` SET `walk_mode` = '" + bot.BotData.WalkingMode + "' WHERE `id` = '" + bot.BotData.Id + "' LIMIT 1");
+                dbClient.RunQuery($"UPDATE `bots` SET `walk_mode` = '{bot.BotData.WalkingMode}' WHERE `id` = '{bot.BotData.Id}' LIMIT 1");
                 break;
             }
             case 4:
@@ -144,7 +144,7 @@ internal class SaveBotActionEvent : IPacketEvent
                 bot.BotData.Name = dataString;
                 using (var dbClient = _database.GetQueryReactor())
                 {
-                    dbClient.SetQuery("UPDATE `bots` SET `name` = @name WHERE `id` = '" + bot.BotData.Id + "' LIMIT 1");
+                    dbClient.SetQuery($"UPDATE `bots` SET `name` = @name WHERE `id` = '{bot.BotData.Id}' LIMIT 1");
                     dbClient.AddParameter("name", dataString);
                     dbClient.RunQuery();
                 }

@@ -32,7 +32,7 @@ public class GroupInfoComposer : IServerPacket
         packet.WriteInteger(_group.CreatorId == _session.GetHabbo().Id ? 3 : _group.HasRequest(_session.GetHabbo().Id) ? 2 : _group.IsMember(_session.GetHabbo().Id) ? 1 : 0);
         packet.WriteInteger(_group.MemberCount); // Members
         packet.WriteBoolean(false); //?? CHANGED
-        packet.WriteString(origin.Day + "-" + origin.Month + "-" + origin.Year);
+        packet.WriteString($"{origin.Day}-{origin.Month}-{origin.Year}");
         packet.WriteBoolean(_group.CreatorId == _session.GetHabbo().Id);
         packet.WriteBoolean(_group.IsAdmin(_session.GetHabbo().Id)); // admin
         packet.WriteString(PlusEnvironment.GetUsernameById(_group.CreatorId));

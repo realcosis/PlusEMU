@@ -27,7 +27,7 @@ public class AddFavouriteRoomEvent : IPacketEvent
         session.GetHabbo().FavoriteRooms.Add(roomId);
         session.Send(new UpdateFavouriteRoomComposer(roomId, true));
         using var dbClient = _database.GetQueryReactor();
-        dbClient.RunQuery("INSERT INTO user_favorites (user_id,room_id) VALUES (" + session.GetHabbo().Id + "," + roomId + ")");
+        dbClient.RunQuery($"INSERT INTO user_favorites (user_id,room_id) VALUES ({session.GetHabbo().Id},{roomId})");
         return Task.CompletedTask;
     }
 }

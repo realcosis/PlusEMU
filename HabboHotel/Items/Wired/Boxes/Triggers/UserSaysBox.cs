@@ -44,7 +44,7 @@ internal class UserSaysBox : IWiredItem
         var message = Convert.ToString(@params[1]);
         if (BoolData && Instance.OwnerId != player.Id || player == null || string.IsNullOrWhiteSpace(message) || string.IsNullOrWhiteSpace(StringData))
             return false;
-        if (message.Contains(" " + StringData) || message.Contains(StringData + " ") || message == StringData)
+        if (message.Contains($" {StringData}") || message.Contains($"{StringData} ") || message == StringData)
         {
             player.WiredInteraction = true;
             var effects = Instance.GetWired().GetEffects(this);

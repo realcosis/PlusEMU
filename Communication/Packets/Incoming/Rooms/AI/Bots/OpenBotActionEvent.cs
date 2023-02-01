@@ -17,7 +17,7 @@ internal class OpenBotActionEvent : IPacketEvent
         if (!room.GetRoomUserManager().TryGetBot(botId, out var botUser))
             return Task.CompletedTask;
         var botSpeech = "";
-        foreach (var speech in botUser.BotData.RandomSpeech.ToList()) botSpeech += speech.Message + "\n";
+        foreach (var speech in botUser.BotData.RandomSpeech.ToList()) botSpeech += $"{speech.Message}\n";
         botSpeech += ";#;";
         botSpeech += botUser.BotData.AutomaticChat;
         botSpeech += ";#;";

@@ -25,7 +25,7 @@ internal class DeleteStickyNoteEvent : RoomPacketEvent
         {
             room.GetRoomItemHandler().RemoveFurniture(session, item.Id);
             using var dbClient = _database.GetQueryReactor();
-            dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
+            dbClient.RunQuery($"DELETE FROM `items` WHERE `id` = '{item.Id}' LIMIT 1");
         }
         return Task.CompletedTask;
     }

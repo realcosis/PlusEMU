@@ -361,7 +361,7 @@ public class RoomUser
         if (GetClient().GetHabbo().TentId > 0)
         {
             _mRoom.SendToTent(GetClient().GetHabbo().Id, GetClient().GetHabbo().TentId, packet);
-            packet = new WhisperComposer(VirtualId, "[Tent Chat] " + message, 0, colour);
+            packet = new WhisperComposer(VirtualId, $"[Tent Chat] {message}", 0, colour);
             var toNotify = _mRoom.GetRoomUserManager().GetRoomUserByRank(2);
             if (toNotify.Count > 0)
             {

@@ -88,7 +88,7 @@ public class PlusEnvironment : IPlusEnvironment
         Console.WriteLine("                  / ____/ / /_/ (__  ) /___/ /  / / /_/ /  ");
         Console.WriteLine(@"                 /_/   /_/\__,_/____/_____/_/  /_/\____/ ");
         Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("                                " + PrettyVersion + " <Build " + PrettyBuild + ">");
+        Console.WriteLine($"                                {PrettyVersion} <Build {PrettyBuild}>");
         Console.WriteLine("                                http://PlusIndustry.com");
         Console.WriteLine("");
         Console.Title = "Loading Plus Emulator";
@@ -132,7 +132,7 @@ public class PlusEnvironment : IPlusEnvironment
             _game.StartGameLoop();
             var timeUsed = DateTime.Now - ServerStarted;
             Console.WriteLine();
-            Log.Info("EMULATOR -> READY! (" + timeUsed.Seconds + " s, " + timeUsed.Milliseconds + " ms)");
+            Log.Info($"EMULATOR -> READY! ({timeUsed.Seconds} s, {timeUsed.Milliseconds} ms)");
         }
 #pragma warning disable CS0168 // The variable 'e' is declared but never used
         catch (KeyNotFoundException e)
@@ -145,14 +145,14 @@ public class PlusEnvironment : IPlusEnvironment
         }
         catch (InvalidOperationException e)
         {
-            Log.Error("Failed to initialize PlusEmulator: " + e.Message);
+            Log.Error($"Failed to initialize PlusEmulator: {e.Message}");
             Log.Error("Press any key to shut down ...");
             Console.ReadKey(true);
             return false;
         }
         catch (Exception e)
         {
-            Log.Error("Fatal error during startup: " + e);
+            Log.Error($"Fatal error during startup: {e}");
             Log.Error("Press a key to exit");
             Console.ReadKey();
             return false;

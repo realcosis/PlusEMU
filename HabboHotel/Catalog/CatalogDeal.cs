@@ -33,7 +33,7 @@ public class CatalogDeal
                         roomItems.Add(itemId, 1);
                 }
             }
-            foreach (var roomItem in roomItems) items += roomItem.Key + "*" + roomItem.Value + ";";
+            foreach (var roomItem in roomItems) items += $"{roomItem.Key}*{roomItem.Value};";
             if (roomItems.Count > 0) items = items.Remove(items.Length - 1);
         }
         var splitItems = items.Split(';');

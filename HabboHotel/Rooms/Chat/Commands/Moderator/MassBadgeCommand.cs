@@ -38,7 +38,7 @@ internal class MassBadgeCommand : IChatCommand
                 client.SendNotification("You have just been given a badge!");
             }
             else
-                client.SendWhisper(session.GetHabbo().Username + " tried to give you a badge, but you already have it!");
+                client.SendWhisper($"{session.GetHabbo().Username} tried to give you a badge, but you already have it!");
         }
         session.SendWhisper($"You have successfully given every user in this hotel the {badgeCode} badge!");
     }

@@ -26,7 +26,7 @@ internal class UserCountInRoomBox : IWiredItem
         var unknown = packet.ReadInt();
         var countOne = packet.ReadInt();
         var countTwo = packet.ReadInt();
-        StringData = countOne + ";" + countTwo;
+        StringData = $"{countOne};{countTwo}";
     }
 
     public bool Execute(params object[] @params)

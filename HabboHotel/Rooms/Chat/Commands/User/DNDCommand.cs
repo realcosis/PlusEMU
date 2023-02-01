@@ -14,6 +14,6 @@ internal class DndCommand : IChatCommand
     public void Execute(GameClient session, Room room, string[] parameters)
     {
         session.GetHabbo().AllowConsoleMessages = !session.GetHabbo().AllowConsoleMessages;
-        session.SendWhisper("You're " + (session.GetHabbo().AllowConsoleMessages ? "now" : "no longer") + " accepting console messages.");
+        session.SendWhisper($"You're {(session.GetHabbo().AllowConsoleMessages ? "now" : "no longer")} accepting console messages.");
     }
 }

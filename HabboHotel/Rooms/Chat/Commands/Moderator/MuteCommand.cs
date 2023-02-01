@@ -34,14 +34,14 @@ internal class MuteCommand : ITargetChatCommand
                 time = 600;
             using (var dbClient = _database.GetQueryReactor())
             {
-                dbClient.RunQuery("UPDATE `users` SET `time_muted` = '" + time + "' WHERE `id` = '" + target.Id + "' LIMIT 1");
+                dbClient.RunQuery($"UPDATE `users` SET `time_muted` = '{time}' WHERE `id` = '{target.Id}' LIMIT 1");
             }
             if (target.Client != null)
             {
                 target.TimeMuted = time;
-                target.Client.SendNotification("You have been muted by a moderator for " + time + " seconds!");
+                target.Client.SendNotification($"You have been muted by a moderator for {time} seconds!");
             }
-            session.SendWhisper("You have successfully muted " + target.Username + " for " + time + " seconds.");
+            session.SendWhisper($"You have successfully muted {target.Username} for {time} seconds.");
         }
         else
             session.SendWhisper("Please enter a valid integer.");

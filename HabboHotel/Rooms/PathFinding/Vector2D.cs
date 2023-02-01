@@ -35,7 +35,7 @@ public class Vector2D
 
     public override int GetHashCode() => (X + " " + Y).GetHashCode();
 
-    public override string ToString() => X + ", " + Y;
+    public override string ToString() => $"{X}, {Y}";
 
     public static Vector2D operator +(Vector2D one, Vector2D two) => new(one.X + two.X, one.Y + two.Y);
 

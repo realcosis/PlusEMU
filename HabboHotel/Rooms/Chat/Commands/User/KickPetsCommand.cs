@@ -59,9 +59,9 @@ internal class KickPetsCommand : IChatCommand
             }
             if (session.GetHabbo().Inventory.Pets.AddPet(pet)) session.Send(new PetInventoryComposer(session.GetHabbo().Inventory.Pets.Pets.Values.ToList()));
             using var dbClient = _database.GetQueryReactor();
-            dbClient.RunQuery("UPDATE `bots` SET `room_id` = '0', `x` = '0', `Y` = '0', `Z` = '0' WHERE `id` = '" + pet.PetId + "' LIMIT 1");
-            dbClient.RunQuery("UPDATE `bots_petdata` SET `experience` = '" + pet.Experience + "', `energy` = '" + pet.Energy + "', `nutrition` = '" + pet.Nutrition + "', `respect` = '" + pet.Respect +
-                              "' WHERE `id` = '" + pet.PetId + "' LIMIT 1");
+            dbClient.RunQuery($"UPDATE `bots` SET `room_id` = '0', `x` = '0', `Y` = '0', `Z` = '0' WHERE `id` = '{pet.PetId}' LIMIT 1");
+            dbClient.RunQuery(
+                $"UPDATE `bots_petdata` SET `experience` = '{pet.Experience}', `energy` = '{pet.Energy}', `nutrition` = '{pet.Nutrition}', `respect` = '{pet.Respect}' WHERE `id` = '{pet.PetId}' LIMIT 1");
         }
         session.SendWhisper("All pets have been kicked from the room.");
     }

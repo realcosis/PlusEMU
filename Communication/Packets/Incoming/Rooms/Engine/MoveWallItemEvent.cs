@@ -24,7 +24,7 @@ internal class MoveWallItemEvent : RoomPacketEvent
             return Task.CompletedTask;
         try
         {
-            var wallPos = room.GetRoomItemHandler().WallPositionCheck(":" + wallPositionData.Split(':')[1]);
+            var wallPos = room.GetRoomItemHandler().WallPositionCheck($":{wallPositionData.Split(':')[1]}");
             item.WallCoordinates = wallPos;
         }
         catch

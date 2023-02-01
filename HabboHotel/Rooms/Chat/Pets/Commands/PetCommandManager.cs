@@ -30,7 +30,7 @@ public class PetCommandManager : IPetCommandManager
                 foreach (DataRow row in table.Rows)
                 {
                     _commandRegister.Add(Convert.ToInt32(row[0]), row[1].ToString());
-                    _commandDatabase.Add(row[1] + ".input", row[2].ToString());
+                    _commandDatabase.Add($"{row[1]}.input", row[2].ToString());
                 }
             }
         }
@@ -38,7 +38,7 @@ public class PetCommandManager : IPetCommandManager
         {
             var commandId = pair.Key;
             var commandStringedId = pair.Value;
-            var commandInput = _commandDatabase[commandStringedId + ".input"].Split(',');
+            var commandInput = _commandDatabase[$"{commandStringedId}.input"].Split(',');
             foreach (var command in commandInput) _petCommands.Add(command, new(commandId, command));
         }
     }

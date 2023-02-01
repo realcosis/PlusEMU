@@ -94,8 +94,8 @@ internal class FriendFurniConfirmLockEvent : IPacketEvent
         }
         if (userOne.LlPartner == 0 || userTwo.LlPartner == 0)
             return Task.CompletedTask;
-        item.ExtraData.Store("1" + (char)5 + userOne.GetUsername() + (char)5 + userTwo.GetUsername() + (char)5 + userOne.GetClient().GetHabbo().Look + (char)5 + userTwo.GetClient().GetHabbo().Look +
-                         (char)5 + DateTime.Now.ToString("dd/MM/yyyy"));
+        item.ExtraData.Store(
+            $"1{(char)5}{userOne.GetUsername()}{(char)5}{userTwo.GetUsername()}{(char)5}{userOne.GetClient().GetHabbo().Look}{(char)5}{userTwo.GetClient().GetHabbo().Look}{(char)5}{DateTime.Now:dd/MM/yyyy}");
         item.InteractingUser = 0;
         item.InteractingUser2 = 0;
         userOne.LlPartner = 0;

@@ -26,6 +26,6 @@ public class PetLocale : IPetLocale
     {
         if (_values.TryGetValue(key, out var value))
             return value;
-        return new[] { "Unknown pet speach:" + key };
+        return new[] { $"Unknown pet speach:{key}" };
     }
 }

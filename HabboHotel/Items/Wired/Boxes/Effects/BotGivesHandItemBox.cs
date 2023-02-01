@@ -29,7 +29,7 @@ internal class BotGivesHandItemBox : IWiredItem
         var botName = packet.ReadString();
         if (SetItems.Count > 0)
             SetItems.Clear();
-        StringData = botName + ";" + drinkId;
+        StringData = $"{botName};{drinkId}";
     }
 
     public bool Execute(params object[] @params)

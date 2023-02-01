@@ -32,8 +32,7 @@ public class InteractorHopper : IFurniInteractor
         item.GetRoom().GetRoomItemHandler().HopperCount--;
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
-            dbClient.SetQuery("DELETE FROM items_hopper WHERE item_id=@hid OR room_id=" + item.GetRoom().RoomId +
-                              " LIMIT 1");
+            dbClient.SetQuery($"DELETE FROM items_hopper WHERE item_id=@hid OR room_id={item.GetRoom().RoomId} LIMIT 1");
             dbClient.AddParameter("hid", item.Id);
             dbClient.RunQuery();
         }

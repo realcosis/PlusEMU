@@ -63,12 +63,12 @@ internal class DeleteRoomEvent : IPacketEvent
         _roomManager.UnloadRoom(room.Id);
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.RunQuery("DELETE FROM `user_roomvisits` WHERE `room_id` = '" + roomId + "'");
-            dbClient.RunQuery("DELETE FROM `rooms` WHERE `id` = '" + roomId + "' LIMIT 1");
-            dbClient.RunQuery("DELETE FROM `user_favorites` WHERE `room_id` = '" + roomId + "'");
-            dbClient.RunQuery("DELETE FROM `items` WHERE `room_id` = '" + roomId + "'");
-            dbClient.RunQuery("DELETE FROM `room_rights` WHERE `room_id` = '" + roomId + "'");
-            dbClient.RunQuery("UPDATE `users` SET `home_room` = '0' WHERE `home_room` = '" + roomId + "'");
+            dbClient.RunQuery($"DELETE FROM `user_roomvisits` WHERE `room_id` = '{roomId}'");
+            dbClient.RunQuery($"DELETE FROM `rooms` WHERE `id` = '{roomId}' LIMIT 1");
+            dbClient.RunQuery($"DELETE FROM `user_favorites` WHERE `room_id` = '{roomId}'");
+            dbClient.RunQuery($"DELETE FROM `items` WHERE `room_id` = '{roomId}'");
+            dbClient.RunQuery($"DELETE FROM `room_rights` WHERE `room_id` = '{roomId}'");
+            dbClient.RunQuery($"UPDATE `users` SET `home_room` = '0' WHERE `home_room` = '{roomId}'");
         }
         _roomManager.UnloadRoom(room.Id);
         return Task.CompletedTask;

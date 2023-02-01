@@ -33,7 +33,7 @@ public class RconConnection
                 return;
             }
             var data = Encoding.Default.GetString(_buffer, 0, bytes);
-            if (!PlusEnvironment.GetRconSocket().GetCommands().Parse(data)) Log.Error("Failed to execute a MUS command. Raw data: " + data);
+            if (!PlusEnvironment.GetRconSocket().GetCommands().Parse(data)) Log.Error($"Failed to execute a MUS command. Raw data: {data}");
         }
         catch (Exception e)
         {

@@ -123,7 +123,7 @@ public class RoomItemHandling
                 {
                     using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                     {
-                        dbClient.RunQuery("UPDATE `items` SET `room_id` = '0' WHERE `id` = '" + item.Id + "' LIMIT 1");
+                        dbClient.RunQuery($"UPDATE `items` SET `room_id` = '0' WHERE `id` = '{item.Id}' LIMIT 1");
                     }
                     var client = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(item.UserId);
                     if (client != null)
@@ -142,7 +142,7 @@ public class RoomItemHandling
                 {
                     using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                     {
-                        dbClient.SetQuery("UPDATE `items` SET `wall_pos` = @WallPosition WHERE `id` = '" + item.Id + "' LIMIT 1");
+                        dbClient.SetQuery($"UPDATE `items` SET `wall_pos` = @WallPosition WHERE `id` = '{item.Id}' LIMIT 1");
                         dbClient.AddParameter("WallPosition", ":w=0,2 l=11,53 l");
                         dbClient.RunQuery();
                     }
@@ -150,13 +150,13 @@ public class RoomItemHandling
                 }
                 try
                 {
-                    item.WallCoordinates = WallPositionCheck(":" + item.WallCoordinates.Split(':')[1]);
+                    item.WallCoordinates = WallPositionCheck($":{item.WallCoordinates.Split(':')[1]}");
                 }
                 catch
                 {
                     using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
                     {
-                        dbClient.SetQuery("UPDATE `items` SET `wall_pos` = @WallPosition WHERE `id` = '" + item.Id + "' LIMIT 1");
+                        dbClient.SetQuery($"UPDATE `items` SET `wall_pos` = @WallPosition WHERE `id` = '{item.Id}' LIMIT 1");
                         dbClient.AddParameter("WallPosition", ":w=0,2 l=11,53 l");
                         dbClient.RunQuery();
                     }
@@ -374,19 +374,18 @@ public class RoomItemHandling
                 {
                     if (!string.IsNullOrEmpty(item.LegacyDataString))
                     {
-                        dbClient.SetQuery("UPDATE `items` SET `extra_data` = @edata" + item.Id + " WHERE `id` = '" + item.Id + "' LIMIT 1");
-                        dbClient.AddParameter("edata" + item.Id, item.ExtraData.Serialize());
+                        dbClient.SetQuery($"UPDATE `items` SET `extra_data` = @edata{item.Id} WHERE `id` = '{item.Id}' LIMIT 1");
+                        dbClient.AddParameter($"edata{item.Id}", item.ExtraData.Serialize());
                         dbClient.RunQuery();
                     }
                     if (item.IsWallItem && (!item.Definition.ItemName.Contains("wallpaper_single") || !item.Definition.ItemName.Contains("floor_single") ||
                                             !item.Definition.ItemName.Contains("landscape_single")))
                     {
-                        dbClient.SetQuery("UPDATE `items` SET `wall_pos` = @wallPos WHERE `id` = '" + item.Id + "' LIMIT 1");
+                        dbClient.SetQuery($"UPDATE `items` SET `wall_pos` = @wallPos WHERE `id` = '{item.Id}' LIMIT 1");
                         dbClient.AddParameter("wallPos", item.WallCoordinates);
                         dbClient.RunQuery();
                     }
-                    dbClient.RunQuery("UPDATE `items` SET `x` = '" + item.GetX + "', `y` = '" + item.GetY + "', `z` = '" + item.GetZ + "', `rot` = '" + item.Rotation + "' WHERE `id` = '" + item.Id +
-                                      "' LIMIT 1");
+                    dbClient.RunQuery($"UPDATE `items` SET `x` = '{item.GetX}', `y` = '{item.GetY}', `z` = '{item.GetZ}', `rot` = '{item.Rotation}' WHERE `id` = '{item.Id}' LIMIT 1");
                 }
             }
         }
@@ -567,8 +566,7 @@ public class RoomItemHandling
             _room.AddTent(item.Id);
         }
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
-        dbClient.RunQuery("UPDATE `items` SET `room_id` = '" + _room.RoomId + "', `x` = '" + item.GetX + "', `y` = '" + item.GetY + "', `z` = '" + item.GetZ + "', `rot` = '" + item.Rotation +
-                          "' WHERE `id` = '" + item.Id + "' LIMIT 1");
+        dbClient.RunQuery($"UPDATE `items` SET `room_id` = '{_room.RoomId}', `x` = '{item.GetX}', `y` = '{item.GetY}', `z` = '{item.GetZ}', `rot` = '{item.Rotation}' WHERE `id` = '{item.Id}' LIMIT 1");
         return true;
     }
 
@@ -609,8 +607,8 @@ public class RoomItemHandling
         }
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
-            dbClient.SetQuery("UPDATE `items` SET `room_id` = '" + _room.RoomId + "', `x` = '" + item.GetX + "', `y` = '" + item.GetY + "', `z` = '" + item.GetZ + "', `rot` = '" + item.Rotation +
-                              "', `wall_pos` = @WallPos WHERE `id` = '" + item.Id + "' LIMIT 1");
+            dbClient.SetQuery(
+                $"UPDATE `items` SET `room_id` = '{_room.RoomId}', `x` = '{item.GetX}', `y` = '{item.GetY}', `z` = '{item.GetZ}', `rot` = '{item.Rotation}', `wall_pos` = @WallPos WHERE `id` = '{item.Id}' LIMIT 1");
             dbClient.AddParameter("WallPos", item.WallCoordinates);
             dbClient.RunQuery();
         }

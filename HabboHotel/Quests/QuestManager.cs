@@ -120,15 +120,15 @@ public class QuestManager : IQuestManager
         }
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.RunQuery("UPDATE `user_quests` SET `progress` = '" + totalProgress + "' WHERE `user_id` = '" + session.GetHabbo().Id + "' AND `quest_id` = '" + quest.Id + "' LIMIT 1");
+            dbClient.RunQuery($"UPDATE `user_quests` SET `progress` = '{totalProgress}' WHERE `user_id` = '{session.GetHabbo().Id}' AND `quest_id` = '{quest.Id}' LIMIT 1");
             if (completeQuest)
-                dbClient.RunQuery("UPDATE `user_statistics` SET `quest_id` = '0' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
+                dbClient.RunQuery($"UPDATE `user_statistics` SET `quest_id` = '0' WHERE `id` = '{session.GetHabbo().Id}' LIMIT 1");
         }
         session.GetHabbo().Quests[session.GetHabbo().HabboStats.QuestId] = totalProgress;
         session.Send(new QuestStartedComposer(session, quest));
         if (completeQuest)
         {
-            _messengerDataLoader.BroadcastStatusUpdate(session.GetHabbo(), MessengerEventTypes.QuestCompleted, quest.Category + "." + quest.Name);
+            _messengerDataLoader.BroadcastStatusUpdate(session.GetHabbo(), MessengerEventTypes.QuestCompleted, $"{quest.Category}.{quest.Name}");
             session.GetHabbo().HabboStats.QuestId = 0;
             session.GetHabbo().QuestLastCompleted = quest.Id;
             session.Send(new QuestCompletedComposer(session, quest));

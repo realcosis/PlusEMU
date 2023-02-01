@@ -204,7 +204,7 @@ public class ItemFactory
             ExtraData = new LegacyDataFormat(),
             GroupId = groupId
         };
-        dbClient.SetQuery("INSERT INTO `room_items_tele_links` (`tele_one_id`, `tele_two_id`) VALUES (" + item1Id + ", " + item2Id + "), (" + item2Id + ", " + item1Id + ")");
+        dbClient.SetQuery($"INSERT INTO `room_items_tele_links` (`tele_one_id`, `tele_two_id`) VALUES ({item1Id}, {item2Id}), ({item2Id}, {item1Id})");
         dbClient.RunQuery();
         items.Add(item1);
         items.Add(item2);

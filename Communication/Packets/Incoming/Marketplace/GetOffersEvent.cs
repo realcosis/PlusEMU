@@ -27,11 +27,11 @@ internal class GetOffersEvent : IPacketEvent
         DataTable table;
         var builder = new StringBuilder();
         string str;
-        builder.Append("WHERE `state` = '1' AND `timestamp` >= " + _marketplaceManager.FormatTimestampString());
+        builder.Append($"WHERE `state` = '1' AND `timestamp` >= {_marketplaceManager.FormatTimestampString()}");
         if (minCost >= 0)
-            builder.Append(" AND `total_price` > " + minCost);
+            builder.Append($" AND `total_price` > {minCost}");
         if (maxCost >= 0)
-            builder.Append(" AND `total_price` < " + maxCost);
+            builder.Append($" AND `total_price` < {maxCost}");
         switch (filterMode)
         {
             case 1:
@@ -43,8 +43,8 @@ internal class GetOffersEvent : IPacketEvent
         }
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.SetQuery("SELECT `offer_id`, `item_type`, `sprite_id`, `total_price`, `limited_number`,`limited_stack` FROM `catalog_marketplace_offers` " + builder + " " + str + " LIMIT 500");
-            dbClient.AddParameter("search_query", "%" + searchQuery + "%");
+            dbClient.SetQuery($"SELECT `offer_id`, `item_type`, `sprite_id`, `total_price`, `limited_number`,`limited_stack` FROM `catalog_marketplace_offers` {builder} {str} LIMIT 500");
+            dbClient.AddParameter("search_query", $"%{searchQuery}%");
             if (searchQuery.Length >= 1) builder.Append(" AND `public_name` LIKE @search_query");
             table = dbClient.GetTable();
         }

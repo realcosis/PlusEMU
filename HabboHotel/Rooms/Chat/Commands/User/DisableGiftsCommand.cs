@@ -21,9 +21,9 @@ internal class DisableGiftsCommand : IChatCommand
     public void Execute(GameClient session, Room room, string[] parameters)
     {
         session.GetHabbo().AllowGifts = !session.GetHabbo().AllowGifts;
-        session.SendWhisper("You're " + (session.GetHabbo().AllowGifts ? "now" : "no longer") + " accepting gifts.");
+        session.SendWhisper($"You're {(session.GetHabbo().AllowGifts ? "now" : "no longer")} accepting gifts.");
         using var dbClient = _database.GetQueryReactor();
-        dbClient.SetQuery("UPDATE `users` SET `allow_gifts` = @AllowGifts WHERE `id` = '" + session.GetHabbo().Id + "'");
+        dbClient.SetQuery($"UPDATE `users` SET `allow_gifts` = @AllowGifts WHERE `id` = '{session.GetHabbo().Id}'");
         dbClient.AddParameter("AllowGifts", session.GetHabbo().AllowGifts);
         dbClient.RunQuery();
     }

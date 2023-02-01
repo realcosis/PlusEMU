@@ -35,7 +35,7 @@ public class FigureDataManager : IFigureDataManager
             _setTypes.Clear();
         var projectSolutionPath = Directory.GetCurrentDirectory();
         var xDoc = new XmlDocument();
-        xDoc.Load(projectSolutionPath + "//Config//figuredata.xml");
+        xDoc.Load($"{projectSolutionPath}//Config//figuredata.xml");
         var colors = xDoc.GetElementsByTagName("colors");
         foreach (XmlNode node in colors)
         {
@@ -67,7 +67,7 @@ public class FigureDataManager : IFigureDataManager
                         if (subb.Attributes["type"] != null)
                         {
                             _setTypes[child.Attributes["type"].Value].Sets[Convert.ToInt32(sub.Attributes["id"].Value)].Parts.Add(
-                                Convert.ToInt32(subb.Attributes["id"].Value) + "-" + subb.Attributes["type"].Value,
+                                $"{Convert.ToInt32(subb.Attributes["id"].Value)}-{subb.Attributes["type"].Value}",
                                 new(Convert.ToInt32(subb.Attributes["id"].Value), SetTypeUtility.GetSetType(child.Attributes["type"].Value),
                                     Convert.ToInt32(subb.Attributes["colorable"].Value) == 1, Convert.ToInt32(subb.Attributes["index"].Value), Convert.ToInt32(subb.Attributes["colorindex"].Value)));
                         }
@@ -168,9 +168,9 @@ public class FigureDataManager : IFigureDataManager
                         colorId = GetRandomColor(figureSet.PalletId);
                     }
                     if (secondColorId == 0)
-                        rebuildFigure = rebuildFigure + type + "-" + partId + "-" + colorId + ".";
+                        rebuildFigure = $"{rebuildFigure}{type}-{partId}-{colorId}.";
                     else
-                        rebuildFigure = rebuildFigure + type + "-" + partId + "-" + colorId + "-" + secondColorId + ".";
+                        rebuildFigure = $"{rebuildFigure}{type}-{partId}-{colorId}-{secondColorId}.";
                 }
             }
         }
@@ -187,7 +187,7 @@ public class FigureDataManager : IFigureDataManager
                     {
                         var partId = figureSet.Sets.FirstOrDefault(x => x.Value.Gender == gender || x.Value.Gender == "U").Value.Id;
                         var colorId = GetRandomColor(figureSet.PalletId);
-                        rebuildFigure = rebuildFigure + requirement + "-" + partId + "-" + colorId + ".";
+                        rebuildFigure = $"{rebuildFigure}{requirement}-{partId}-{colorId}.";
                     }
                 }
             }
@@ -211,7 +211,7 @@ public class FigureDataManager : IFigureDataManager
                             {
                                 partId = figureSet.Sets.FirstOrDefault(x => x.Value.Gender == gender || x.Value.Gender == "U").Value.Id;
                                 var colorId = GetRandomColor(figureSet.PalletId);
-                                rebuildFigure = rebuildFigure + type + "-" + partId + "-" + colorId + ".";
+                                rebuildFigure = $"{rebuildFigure}{type}-{partId}-{colorId}.";
                             }
                         }
                     }

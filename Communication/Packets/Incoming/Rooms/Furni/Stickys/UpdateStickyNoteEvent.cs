@@ -28,7 +28,7 @@ internal class UpdateStickyNoteEvent : RoomPacketEvent
             default:
                 return Task.CompletedTask; // invalid color
         }
-        item.LegacyDataString = color + " " + text;
+        item.LegacyDataString = $"{color} {text}";
         item.UpdateState(true, true);
         return Task.CompletedTask;
     }

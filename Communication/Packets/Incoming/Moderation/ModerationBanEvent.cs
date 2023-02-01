@@ -45,7 +45,7 @@ internal class ModerationBanEvent : IPacketEvent
         message = message ?? "No reason specified.";
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.RunQuery("UPDATE `user_info` SET `bans` = `bans` + '1' WHERE `user_id` = '" + habbo.Id + "' LIMIT 1");
+            dbClient.RunQuery($"UPDATE `user_info` SET `bans` = `bans` + '1' WHERE `user_id` = '{habbo.Id}' LIMIT 1");
         }
         if (ipBan == false && machineBan == false)
             _moderationManager.BanUser(session.GetHabbo().Username, ModerationBanType.Username, habbo.Username, message, length);

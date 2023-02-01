@@ -28,7 +28,7 @@ internal class SetMannequinNameEvent : IPacketEvent
             item.LegacyDataString = flags[0] + Convert.ToChar(5) + flags[1] + Convert.ToChar(5) + name;
         }
         else
-            item.LegacyDataString = "m" + Convert.ToChar(5) + ".ch-210-1321.lg-285-92" + Convert.ToChar(5) + "Default Mannequin";
+            item.LegacyDataString = $"m{Convert.ToChar(5)}.ch-210-1321.lg-285-92{Convert.ToChar(5)}Default Mannequin";
         using (var dbClient = _database.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE `items` SET `extra_data` = @Ed WHERE `id` = @itemId LIMIT 1");

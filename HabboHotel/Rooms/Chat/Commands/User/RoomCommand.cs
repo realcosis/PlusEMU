@@ -41,13 +41,13 @@ internal class RoomCommand : IChatCommand
                 var list = new StringBuilder("");
                 list.AppendLine("Room Command List");
                 list.AppendLine("-------------------------");
-                list.AppendLine("Pet Morphs: " + (room.PetMorphsAllowed ? "enabled" : "disabled"));
-                list.AppendLine("Pull: " + (room.PullEnabled ? "enabled" : "disabled"));
-                list.AppendLine("Push: " + (room.PushEnabled ? "enabled" : "disabled"));
-                list.AppendLine("Super Pull: " + (room.SuperPullEnabled ? "enabled" : "disabled"));
-                list.AppendLine("Super Push: " + (room.SuperPushEnabled ? "enabled" : "disabled"));
-                list.AppendLine("Respect: " + (room.RespectNotificationsEnabled ? "enabled" : "disabled"));
-                list.AppendLine("Enables: " + (room.EnablesEnabled ? "enabled" : "disabled"));
+                list.AppendLine($"Pet Morphs: {(room.PetMorphsAllowed ? "enabled" : "disabled")}");
+                list.AppendLine($"Pull: {(room.PullEnabled ? "enabled" : "disabled")}");
+                list.AppendLine($"Push: {(room.PushEnabled ? "enabled" : "disabled")}");
+                list.AppendLine($"Super Pull: {(room.SuperPullEnabled ? "enabled" : "disabled")}");
+                list.AppendLine($"Super Push: {(room.SuperPushEnabled ? "enabled" : "disabled")}");
+                list.AppendLine($"Respect: {(room.RespectNotificationsEnabled ? "enabled" : "disabled")}");
+                list.AppendLine($"Enables: {(room.EnablesEnabled ? "enabled" : "disabled")}");
                 session.SendNotification(list.ToString());
                 break;
             }
@@ -61,7 +61,7 @@ internal class RoomCommand : IChatCommand
                     dbClient.AddParameter("pushEnabled", ConvertExtensions.ToStringEnumValue(room.PushEnabled));
                     dbClient.RunQuery();
                 }
-                session.SendWhisper("Push mode is now " + (room.PushEnabled ? "enabled!" : "disabled!"));
+                session.SendWhisper($"Push mode is now {(room.PushEnabled ? "enabled!" : "disabled!")}");
                 break;
             }
             case "spush":
@@ -74,7 +74,7 @@ internal class RoomCommand : IChatCommand
                     dbClient.AddParameter("sPushEnabled", ConvertExtensions.ToStringEnumValue(room.SuperPushEnabled));
                     dbClient.RunQuery();
                 }
-                session.SendWhisper("Super Push mode is now " + (room.SuperPushEnabled ? "enabled!" : "disabled!"));
+                session.SendWhisper($"Super Push mode is now {(room.SuperPushEnabled ? "enabled!" : "disabled!")}");
                 break;
             }
             case "spull":
@@ -87,7 +87,7 @@ internal class RoomCommand : IChatCommand
                     dbClient.AddParameter("sPullEnabled", ConvertExtensions.ToStringEnumValue(room.SuperPullEnabled));
                     dbClient.RunQuery();
                 }
-                session.SendWhisper("Super Pull mode is now " + (room.SuperPullEnabled ? "enabled!" : "disabled!"));
+                session.SendWhisper($"Super Pull mode is now {(room.SuperPullEnabled ? "enabled!" : "disabled!")}");
                 break;
             }
             case "pull":
@@ -100,7 +100,7 @@ internal class RoomCommand : IChatCommand
                     dbClient.AddParameter("pullEnabled", ConvertExtensions.ToStringEnumValue(room.PullEnabled));
                     dbClient.RunQuery();
                 }
-                session.SendWhisper("Pull mode is now " + (room.PullEnabled ? "enabled!" : "disabled!"));
+                session.SendWhisper($"Pull mode is now {(room.PullEnabled ? "enabled!" : "disabled!")}");
                 break;
             }
             case "enable":
@@ -114,7 +114,7 @@ internal class RoomCommand : IChatCommand
                     dbClient.AddParameter("enablesEnabled", ConvertExtensions.ToStringEnumValue(room.EnablesEnabled));
                     dbClient.RunQuery();
                 }
-                session.SendWhisper("Enables mode set to " + (room.EnablesEnabled ? "enabled!" : "disabled!"));
+                session.SendWhisper($"Enables mode set to {(room.EnablesEnabled ? "enabled!" : "disabled!")}");
                 break;
             }
             case "respect":
@@ -127,7 +127,7 @@ internal class RoomCommand : IChatCommand
                     dbClient.AddParameter("respectNotificationsEnabled", ConvertExtensions.ToStringEnumValue(room.RespectNotificationsEnabled));
                     dbClient.RunQuery();
                 }
-                session.SendWhisper("Respect notifications mode set to " + (room.RespectNotificationsEnabled ? "enabled!" : "disabled!"));
+                session.SendWhisper($"Respect notifications mode set to {(room.RespectNotificationsEnabled ? "enabled!" : "disabled!")}");
                 break;
             }
             case "pets":
@@ -141,7 +141,7 @@ internal class RoomCommand : IChatCommand
                     dbClient.AddParameter("petMorphsAllowed", ConvertExtensions.ToStringEnumValue(room.PetMorphsAllowed));
                     dbClient.RunQuery();
                 }
-                session.SendWhisper("Human pet morphs notifications mode set to " + (room.PetMorphsAllowed ? "enabled!" : "disabled!"));
+                session.SendWhisper($"Human pet morphs notifications mode set to {(room.PetMorphsAllowed ? "enabled!" : "disabled!")}");
                 if (!room.PetMorphsAllowed)
                 {
                     foreach (var user in room.GetRoomUserManager().GetRoomUsers())

@@ -127,7 +127,7 @@ public class GroupManager : IGroupManager
         dbClient.AddParameter("gid", group.Id);
         dbClient.AddParameter("rid", group.RoomId);
         dbClient.RunQuery();
-        dbClient.RunQuery("DELETE FROM `room_rights` WHERE `room_id` = '" + roomId + "'");
+        dbClient.RunQuery($"DELETE FROM `room_rights` WHERE `room_id` = '{roomId}'");
         return true;
     }
 

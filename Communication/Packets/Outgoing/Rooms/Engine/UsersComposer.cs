@@ -122,8 +122,8 @@ public class UsersComposer : IServerPacket
 
             //base.WriteString("26 30 ffffff 5 3 302 4 2 201 11 1 102 12 0 -1 28 4 401 24");
             packet.WriteString(user.BotData.Look.ToLower() + (user.PetData.Saddle > 0
-                ? " 3 2 " + user.PetData.PetHair + " " + user.PetData.HairDye + " 3 " + user.PetData.PetHair + " " + user.PetData.HairDye + " 4 " + user.PetData.Saddle + " 0"
-                : " 2 2 " + user.PetData.PetHair + " " + user.PetData.HairDye + " 3 " + user.PetData.PetHair + " " + user.PetData.HairDye + ""));
+                ? $" 3 2 {user.PetData.PetHair} {user.PetData.HairDye} 3 {user.PetData.PetHair} {user.PetData.HairDye} 4 {user.PetData.Saddle} 0"
+                : $" 2 2 {user.PetData.PetHair} {user.PetData.HairDye} 3 {user.PetData.PetHair} {user.PetData.HairDye}"));
             packet.WriteInteger(user.VirtualId);
             packet.WriteInteger(user.X);
             packet.WriteInteger(user.Y);

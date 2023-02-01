@@ -33,7 +33,7 @@ internal class MuteTriggererBox : IWiredItem
         var unknown = packet.ReadInt();
         var time = packet.ReadInt();
         var message = packet.ReadString();
-        StringData = time + ";" + message;
+        StringData = $"{time};{message}";
     }
 
     public bool Execute(params object[] @params)
@@ -55,7 +55,7 @@ internal class MuteTriggererBox : IWiredItem
         var message = StringData != null ? StringData.Split(';')[1] : "No message!";
         if (time > 0)
         {
-            player.Client.Send(new WhisperComposer(user.VirtualId, "Wired Mute: Muted for " + time + "! Message: " + message, 0, 0));
+            player.Client.Send(new WhisperComposer(user.VirtualId, $"Wired Mute: Muted for {time}! Message: {message}", 0, 0));
             if (!Instance.MutedUsers.ContainsKey(player.Id))
                 Instance.MutedUsers.Add(player.Id, UnixTimestamp.GetNow() + time * 60);
             else

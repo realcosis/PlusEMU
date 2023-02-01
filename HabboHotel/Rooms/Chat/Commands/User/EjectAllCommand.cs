@@ -44,7 +44,7 @@ internal class EjectAllCommand : IChatCommand
                 {
                     room.GetRoomItemHandler().RemoveFurniture(null, item.Id);
                     using var dbClient = _database.GetQueryReactor();
-                    dbClient.RunQuery("UPDATE `items` SET `room_id` = '0' WHERE `id` = '" + item.Id + "' LIMIT 1");
+                    dbClient.RunQuery($"UPDATE `items` SET `room_id` = '0' WHERE `id` = '{item.Id}' LIMIT 1");
                 }
             }
         }
@@ -65,7 +65,7 @@ internal class EjectAllCommand : IChatCommand
                 {
                     room.GetRoomItemHandler().RemoveFurniture(null, item.Id);
                     using var dbClient = _database.GetQueryReactor();
-                    dbClient.RunQuery("UPDATE `items` SET `room_id` = '0' WHERE `id` = '" + item.Id + "' LIMIT 1");
+                    dbClient.RunQuery($"UPDATE `items` SET `room_id` = '0' WHERE `id` = '{item.Id}' LIMIT 1");
                 }
             }
         }

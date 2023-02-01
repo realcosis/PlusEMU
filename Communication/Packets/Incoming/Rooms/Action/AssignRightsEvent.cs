@@ -34,7 +34,7 @@ internal class AssignRightsEvent : RoomPacketEvent
         room.UsersWithRights.Add(userId);
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.RunQuery("INSERT INTO `room_rights` (`room_id`,`user_id`) VALUES ('" + room.RoomId + "','" + userId + "')");
+            dbClient.RunQuery($"INSERT INTO `room_rights` (`room_id`,`user_id`) VALUES ('{room.RoomId}','{userId}')");
         }
         var roomUser = room.GetRoomUserManager().GetRoomUserByHabbo(userId);
         if (roomUser != null && !roomUser.IsBot)

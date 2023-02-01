@@ -27,20 +27,20 @@ public static class ConsoleCommands
                 {
                     var notice = inputData.Substring(6);
                     PlusEnvironment.GetGame().GetClientManager()
-                        .SendPacket(new BroadcastMessageAlertComposer(PlusEnvironment.GetLanguageManager().TryGetValue("server.console.alert") + "\n\n" + notice));
+                        .SendPacket(new BroadcastMessageAlertComposer($"{PlusEnvironment.GetLanguageManager().TryGetValue("server.console.alert")}\n\n{notice}"));
                     Log.Info("Alert successfully sent.");
                     break;
                 }
                 default:
                 {
-                    Log.Error(parameters[0].ToLower() + " is an unknown or unsupported command. Type help for more information");
+                    Log.Error($"{parameters[0].ToLower()} is an unknown or unsupported command. Type help for more information");
                     break;
                 }
             }
         }
         catch (Exception e)
         {
-            Log.Error("Error in command [" + inputData + "]: " + e);
+            Log.Error($"Error in command [{inputData}]: {e}");
         }
     }
 }

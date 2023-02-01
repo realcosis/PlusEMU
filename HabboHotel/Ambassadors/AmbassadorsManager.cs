@@ -21,15 +21,16 @@ public class AmbassadorsManager : IAmbassadorsManager
         if (!ambassador.Client.GetHabbo().IsAmbassador)
             return;
 
-        if (target == null)
-            return;
-
         using var connection = _database.Connection();
         await connection.ExecuteAsync("INSERT INTO `ambassador_logs` (`user_id`,`target`,`sanctions_type`,`timestamp`) VALUES (@user_id,@target_name,@sanctions_type,@timestamp)",
-            new { user_id = ambassador.Id, target_name = target.Username, sanctions_type = message, timestamp = UnixTimestamp.GetNow() });
-
-        ambassador.Client.SendWhisper("You have successfully warned " + target.Username + ".");
-
+            new
+            {
+                user_id = ambassador.Id,
+                target_name = target.Username,
+                sanctions_type = message,
+                timestamp = UnixTimestamp.GetNow()
+            });
+        ambassador.Client.SendWhisper($"You have successfully warned {target.Username}.");
         target.Client.Send(new RoomNotificationComposer("ambassador.alert.warning", "message", "${notification.ambassador.alert.warning.message}"));
     }
 }

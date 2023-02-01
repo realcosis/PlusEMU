@@ -66,9 +66,9 @@ internal class PickUpPetEvent : RoomPacketEvent
         if (data != null)
         {
             using var dbClient = _database.GetQueryReactor();
-            dbClient.RunQuery("UPDATE `bots` SET `room_id` = '0', `x` = '0', `Y` = '0', `Z` = '0' WHERE `id` = '" + data.PetId + "' LIMIT 1");
-            dbClient.RunQuery("UPDATE `bots_petdata` SET `experience` = '" + data.Experience + "', `energy` = '" + data.Energy + "', `nutrition` = '" + data.Nutrition + "', `respect` = '" +
-                              data.Respect + "' WHERE `id` = '" + data.PetId + "' LIMIT 1");
+            dbClient.RunQuery($"UPDATE `bots` SET `room_id` = '0', `x` = '0', `Y` = '0', `Z` = '0' WHERE `id` = '{data.PetId}' LIMIT 1");
+            dbClient.RunQuery(
+                $"UPDATE `bots_petdata` SET `experience` = '{data.Experience}', `energy` = '{data.Energy}', `nutrition` = '{data.Nutrition}', `respect` = '{data.Respect}' WHERE `id` = '{data.PetId}' LIMIT 1");
         }
         if (data.OwnerId != session.GetHabbo().Id)
         {

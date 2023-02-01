@@ -32,7 +32,7 @@ internal static class NavigatorHandler
                                 dbClient.SetQuery("SELECT `id` FROM `users` WHERE `username` = @username LIMIT 1");
                                 dbClient.AddParameter("username", query.Remove(0, 6));
                                 userId = dbClient.GetInteger();
-                                dbClient.SetQuery("SELECT * FROM `rooms` WHERE `owner` = '" + userId + "' and `state` != 'invisible' ORDER BY `users_now` DESC LIMIT 50");
+                                dbClient.SetQuery($"SELECT * FROM `rooms` WHERE `owner` = '{userId}' and `state` != 'invisible' ORDER BY `users_now` DESC LIMIT 50");
                                 getRooms = dbClient.GetTable();
                             }
                         }
@@ -79,7 +79,7 @@ internal static class NavigatorHandler
                         {
                             dbClient.SetQuery(
                                 "SELECT `id`,`caption`,`description`,`roomtype`,`owner`,`state`,`category`,`users_now`,`users_max`,`model_name`,`score`,`allow_pets`,`allow_pets_eat`,`room_blocking_disabled`,`allow_hidewall`,`password`,`wallpaper`,`floor`,`landscape`,`floorthick`,`wallthick`,`mute_settings`,`kick_settings`,`ban_settings`,`chat_mode`,`chat_speed`,`chat_size`,`trade_settings`,`group_id`,`tags`,`push_enabled`,`pull_enabled`,`enables_enabled`,`respect_notifications_enabled`,`pet_morphs_allowed`,`spush_enabled`,`spull_enabled`,`sale_price` FROM rooms WHERE `caption` LIKE @query ORDER BY `users_now` DESC LIMIT 50");
-                            dbClient.AddParameter("query", query + "%");
+                            dbClient.AddParameter("query", $"{query}%");
                             table = dbClient.GetTable();
                         }
                         var results = new List<RoomData>();

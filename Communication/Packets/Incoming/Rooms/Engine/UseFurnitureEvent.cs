@@ -37,7 +37,7 @@ internal class UseFurnitureEvent : RoomPacketEvent
             room.SendPacket(new ObjectUpdateComposer(item));
             item.UpdateState();
             using var dbClient = _database.GetQueryReactor();
-            dbClient.RunQuery("UPDATE `room_items_toner` SET `enabled` = '" + room.TonerData.Enabled + "' LIMIT 1");
+            dbClient.RunQuery($"UPDATE `room_items_toner` SET `enabled` = '{room.TonerData.Enabled}' LIMIT 1");
             return Task.CompletedTask;
         }
         if (item.Definition.InteractionType == InteractionType.GnomeBox && item.UserId == session.GetHabbo().Id) session.Send(new GnomeBoxComposer(item.Id));

@@ -35,7 +35,7 @@ internal class EditRoomPromotionEvent : IPacketEvent
         }
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.SetQuery("UPDATE `room_promotions` SET `title` = @title, `description` = @desc WHERE `room_id` = " + roomId + " LIMIT 1");
+            dbClient.SetQuery($"UPDATE `room_promotions` SET `title` = @title, `description` = @desc WHERE `room_id` = {roomId} LIMIT 1");
             dbClient.AddParameter("title", name);
             dbClient.AddParameter("desc", desc);
             dbClient.RunQuery();

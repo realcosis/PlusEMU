@@ -41,7 +41,7 @@ internal class RemoveSaddleFromHorseEvent : IPacketEvent
         petUser.PetData.Saddle = 0;
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.RunQuery("UPDATE `bots_petdata` SET `have_saddle` = '0' WHERE `id` = '" + petUser.PetData.PetId + "' LIMIT 1");
+            dbClient.RunQuery($"UPDATE `bots_petdata` SET `have_saddle` = '0' WHERE `id` = '{petUser.PetData.PetId}' LIMIT 1");
         }
 
         //Give the saddle back to the user.

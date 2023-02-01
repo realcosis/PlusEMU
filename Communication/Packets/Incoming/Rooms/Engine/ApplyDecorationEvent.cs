@@ -68,10 +68,10 @@ internal class ApplyDecorationEvent : RoomPacketEvent
         }
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.SetQuery("UPDATE `rooms` SET `" + decorationKey + "` = @extradata WHERE `id` = '" + room.RoomId + "' LIMIT 1");
+            dbClient.SetQuery($"UPDATE `rooms` SET `{decorationKey}` = @extradata WHERE `id` = '{room.RoomId}' LIMIT 1");
             dbClient.AddParameter("extradata", item.ExtraData);
             dbClient.RunQuery();
-            dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
+            dbClient.RunQuery($"DELETE FROM `items` WHERE `id` = '{item.Id}' LIMIT 1");
         }
         session.GetHabbo().Inventory.Furniture.RemoveItem(item.Id);
         session.Send(new FurniListRemoveComposer(item.Id));

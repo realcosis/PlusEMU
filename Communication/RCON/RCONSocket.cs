@@ -28,7 +28,7 @@ public class RconSocket : IRconSocket
         }
         catch (Exception e)
         {
-            throw new ArgumentException("Could not set up Rcon socket:\n" + e);
+            throw new ArgumentException($"Could not set up Rcon socket:\n{e}");
         }
     }
 

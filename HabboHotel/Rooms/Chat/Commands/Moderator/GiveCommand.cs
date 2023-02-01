@@ -39,8 +39,8 @@ internal class GiveCommand : ITargetChatCommand
                     target.Credits = target.Credits += amount;
                     target.Client.Send(new CreditBalanceComposer(target.Credits));
                     if (target.Id != session.GetHabbo().Id)
-                        target.Client.SendNotification(session.GetHabbo().Username + " has given you " + amount + " Credit(s)!");
-                    session.SendWhisper("Successfully given " + amount + " Credit(s) to " + target.Username + "!");
+                        target.Client.SendNotification($"{session.GetHabbo().Username} has given you {amount} Credit(s)!");
+                    session.SendWhisper($"Successfully given {amount} Credit(s) to {target.Username}!");
                     break;
                 }
                 session.SendWhisper("Oops, that appears to be an invalid amount!");
@@ -59,8 +59,8 @@ internal class GiveCommand : ITargetChatCommand
                     target.Duckets += amount;
                     target.Client.Send(new HabboActivityPointNotificationComposer(target.Duckets, amount));
                     if (target.Id != session.GetHabbo().Id)
-                        target.Client.SendNotification(session.GetHabbo().Username + " has given you " + amount + " Ducket(s)!");
-                    session.SendWhisper("Successfully given " + amount + " Ducket(s) to " + target.Username + "!");
+                        target.Client.SendNotification($"{session.GetHabbo().Username} has given you {amount} Ducket(s)!");
+                    session.SendWhisper($"Successfully given {amount} Ducket(s) to {target.Username}!");
                     break;
                 }
                 session.SendWhisper("Oops, that appears to be an invalid amount!");
@@ -78,8 +78,8 @@ internal class GiveCommand : ITargetChatCommand
                     target.Diamonds += amount;
                     target.Client.Send(new HabboActivityPointNotificationComposer(target.Diamonds, amount, 5));
                     if (target.Id != session.GetHabbo().Id)
-                        target.Client.SendNotification(session.GetHabbo().Username + " has given you " + amount + " Diamond(s)!");
-                    session.SendWhisper("Successfully given " + amount + " Diamond(s) to " + target.Username + "!");
+                        target.Client.SendNotification($"{session.GetHabbo().Username} has given you {amount} Diamond(s)!");
+                    session.SendWhisper($"Successfully given {amount} Diamond(s) to {target.Username}!");
                     break;
                 }
                 session.SendWhisper("Oops, that appears to be an invalid amount!");
@@ -98,15 +98,15 @@ internal class GiveCommand : ITargetChatCommand
                     target.GotwPoints = target.GotwPoints + amount;
                     target.Client.Send(new HabboActivityPointNotificationComposer(target.GotwPoints, amount, 103));
                     if (target.Id != session.GetHabbo().Id)
-                        target.Client.SendNotification(session.GetHabbo().Username + " has given you " + amount + " GOTW Point(s)!");
-                    session.SendWhisper("Successfully given " + amount + " GOTW point(s) to " + target.Username + "!");
+                        target.Client.SendNotification($"{session.GetHabbo().Username} has given you {amount} GOTW Point(s)!");
+                    session.SendWhisper($"Successfully given {amount} GOTW point(s) to {target.Username}!");
                     break;
                 }
                 session.SendWhisper("Oops, that appears to be an invalid amount!");
                 break;
             }
             default:
-                session.SendWhisper("'" + updateVal + "' is not a valid currency!");
+                session.SendWhisper($"'{updateVal}' is not a valid currency!");
                 break;
         }
         return Task.CompletedTask;

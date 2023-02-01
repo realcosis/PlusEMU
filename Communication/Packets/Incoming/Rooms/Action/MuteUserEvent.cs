@@ -39,7 +39,7 @@ internal class MuteUserEvent : IPacketEvent
                 return Task.CompletedTask;
         }
         room.MutedUsers.Add(userId, UnixTimestamp.GetNow() + time * 60);
-        target.GetClient().SendWhisper("The room owner has muted you for " + time + " minutes!");
+        target.GetClient().SendWhisper($"The room owner has muted you for {time} minutes!");
         _achievementManager.ProgressAchievement(session, "ACH_SelfModMuteSeen", 1);
         return Task.CompletedTask;
     }

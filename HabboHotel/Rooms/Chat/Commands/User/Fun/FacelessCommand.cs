@@ -38,14 +38,14 @@ internal class FacelessCommand : IChatCommand
                     headParts[1] = "99999";
                 else
                     return;
-                session.GetHabbo().Look = session.GetHabbo().Look.Replace(part, "hd-" + headParts[1] + "-" + headParts[2]);
+                session.GetHabbo().Look = session.GetHabbo().Look.Replace(part, $"hd-{headParts[1]}-{headParts[2]}");
                 break;
             }
         }
         session.GetHabbo().Look = _figureDataManager.ProcessFigure(session.GetHabbo().Look, session.GetHabbo().Gender, session.GetHabbo().Clothing.GetClothingParts, true);
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.RunQuery("UPDATE `users` SET `look` = '" + session.GetHabbo().Look + "' WHERE `id` = '" + session.GetHabbo().Id + "' LIMIT 1");
+            dbClient.RunQuery($"UPDATE `users` SET `look` = '{session.GetHabbo().Look}' WHERE `id` = '{session.GetHabbo().Id}' LIMIT 1");
         }
         session.Send(new UserChangeComposer(user, true));
         session.GetHabbo().CurrentRoom.SendPacket(new UserChangeComposer(user, false));

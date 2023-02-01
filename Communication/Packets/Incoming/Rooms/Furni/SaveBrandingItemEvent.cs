@@ -21,7 +21,7 @@ internal class SaveBrandingItemEvent : IPacketEvent
         if (item.Definition.InteractionType == InteractionType.Background)
         {
             var data = packet.ReadInt();
-            var brandData = "state" + Convert.ToChar(9) + "0";
+            var brandData = $"state{Convert.ToChar(9)}0";
             for (var i = 1; i <= data; i++) brandData = brandData + Convert.ToChar(9) + packet.ReadString();
             item.LegacyDataString = brandData;
         }

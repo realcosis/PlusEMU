@@ -30,7 +30,7 @@ internal class ConvertCreditsCommand : IChatCommand
             DataTable table = null;
             using (var dbClient = _database.GetQueryReactor())
             {
-                dbClient.SetQuery("SELECT `id` FROM `items` WHERE `user_id` = '" + session.GetHabbo().Id + "' AND (`room_id`=  '0' OR `room_id` = '')");
+                dbClient.SetQuery($"SELECT `id` FROM `items` WHERE `user_id` = '{session.GetHabbo().Id}' AND (`room_id`=  '0' OR `room_id` = '')");
                 table = dbClient.GetTable();
             }
             if (table == null)
@@ -47,7 +47,7 @@ internal class ConvertCreditsCommand : IChatCommand
                     if (item == null || item.Definition.InteractionType != InteractionType.Exchange)
                         continue;
                     var value = item.Definition.BehaviourData;
-                    dbClient.RunQuery("DELETE FROM `items` WHERE `id` = '" + item.Id + "' LIMIT 1");
+                    dbClient.RunQuery($"DELETE FROM `items` WHERE `id` = '{item.Id}' LIMIT 1");
                     session.GetHabbo().Inventory.Furniture.RemoveItem(item.Id);
                     session.Send(new FurniListRemoveComposer(item.Id));
                     totalValue += value;
@@ -59,7 +59,7 @@ internal class ConvertCreditsCommand : IChatCommand
                 }
             }
             if (totalValue > 0)
-                session.SendNotification("All credits have successfully been converted!\r\r(Total value: " + totalValue + " credits!");
+                session.SendNotification($"All credits have successfully been converted!\r\r(Total value: {totalValue} credits!");
             else
                 session.SendNotification("It appears you don't have any exchangeable items!");
         }

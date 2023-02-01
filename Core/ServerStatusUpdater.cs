@@ -41,7 +41,7 @@ public class ServerStatusUpdater : IDisposable, IServerStatusUpdater
         var uptime = DateTime.Now - PlusEnvironment.ServerStarted;
         var usersOnline = PlusEnvironment.GetGame().GetClientManager().Count;
         var roomCount = PlusEnvironment.GetGame().GetRoomManager().Count;
-        Console.Title = "Plus Emulator - " + usersOnline + " users online - " + roomCount + " rooms loaded - " + uptime.Days + " day(s) " + uptime.Hours + " hour(s) uptime";
+        Console.Title = $"Plus Emulator - {usersOnline} users online - {roomCount} rooms loaded - {uptime.Days} day(s) {uptime.Hours} hour(s) uptime";
         using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
         dbClient.SetQuery("UPDATE `server_status` SET `users_online` = @users, `loaded_rooms` = @loadedRooms LIMIT 1;");
         dbClient.AddParameter("users", usersOnline);

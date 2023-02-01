@@ -40,6 +40,6 @@ internal class BubbleCommand : IChatCommand
         }
         user.LastBubble = bubble;
         session.GetHabbo().CustomBubbleId = bubble;
-        session.SendWhisper("Bubble set to: " + bubble);
+        session.SendWhisper($"Bubble set to: {bubble}");
     }
 }

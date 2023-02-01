@@ -32,7 +32,7 @@ internal class GetModeratorUserChatlogEvent : IPacketEvent
         _chatlogManager.FlushAndSave();
         var chatlogs = new List<KeyValuePair<RoomData, List<ChatlogEntry>>>();
         using var dbClient = _database.GetQueryReactor();
-        dbClient.SetQuery("SELECT `room_id`,`entry_timestamp`,`exit_timestamp` FROM `user_roomvisits` WHERE `user_id` = '" + data.Id + "' ORDER BY `entry_timestamp` DESC LIMIT 7");
+        dbClient.SetQuery($"SELECT `room_id`,`entry_timestamp`,`exit_timestamp` FROM `user_roomvisits` WHERE `user_id` = '{data.Id}' ORDER BY `entry_timestamp` DESC LIMIT 7");
         var getLogs = dbClient.GetTable();
         if (getLogs != null)
         {
@@ -52,8 +52,8 @@ internal class GetModeratorUserChatlogEvent : IPacketEvent
     {
         var chats = new List<ChatlogEntry>();
         using var dbClient = _database.GetQueryReactor();
-        dbClient.SetQuery("SELECT `user_id`, `timestamp`, `message` FROM `chatlogs` WHERE `room_id` = " + roomData.Id + " AND `timestamp` > " + timeEnter + " AND `timestamp` < " + timeExit +
-                          " ORDER BY `timestamp` DESC LIMIT 100");
+        dbClient.SetQuery(
+            $"SELECT `user_id`, `timestamp`, `message` FROM `chatlogs` WHERE `room_id` = {roomData.Id} AND `timestamp` > {timeEnter} AND `timestamp` < {timeExit} ORDER BY `timestamp` DESC LIMIT 100");
         var data = dbClient.GetTable();
         if (data != null)
         {

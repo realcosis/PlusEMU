@@ -19,7 +19,7 @@ internal class JoinQueueEvent : IPacketEvent
         GameData gameData = null;
         if (_gameDataManager.TryGetGame(gameId, out gameData))
         {
-            var ssoTicket = "HABBOON-Fastfood-" + GenerateSso(32) + "-" + session.GetHabbo().Id;
+            var ssoTicket = $"HABBOON-Fastfood-{GenerateSso(32)}-{session.GetHabbo().Id}";
             session.Send(new JoinQueueComposer(gameData.Id));
             session.Send(new LoadGameComposer(gameData, ssoTicket));
         }

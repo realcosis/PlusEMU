@@ -118,12 +118,12 @@ public class GameClientManager : IGameClientManager
             return;
         var builder = new StringBuilder();
         builder.Append("New report submitted!\r\r");
-        builder.Append("Reporter: " + reporter.GetHabbo().Username + "\r");
-        builder.Append("Reported User: " + target.GetHabbo().Username + "\r\r");
-        builder.Append(target.GetHabbo().Username + "s last 10 messages:\r\r");
+        builder.Append($"Reporter: {reporter.GetHabbo().Username}\r");
+        builder.Append($"Reported User: {target.GetHabbo().Username}\r\r");
+        builder.Append($"{target.GetHabbo().Username}s last 10 messages:\r\r");
         using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
         {
-            dbClient.SetQuery("SELECT `message` FROM `chatlogs` WHERE `user_id` = '" + target.GetHabbo().Id + "' ORDER BY `id` DESC LIMIT 10");
+            dbClient.SetQuery($"SELECT `message` FROM `chatlogs` WHERE `user_id` = '{target.GetHabbo().Id}' ORDER BY `id` DESC LIMIT 10");
             var logs = dbClient.GetTable();
             if (logs != null)
             {
@@ -131,7 +131,7 @@ public class GameClientManager : IGameClientManager
                 foreach (DataRow log in logs.Rows)
                 {
                     number -= 1;
-                    builder.Append(number + ": " + Convert.ToString(log["message"]) + "\r");
+                    builder.Append($"{number}: {Convert.ToString(log["message"])}\r");
                 }
             }
         }
