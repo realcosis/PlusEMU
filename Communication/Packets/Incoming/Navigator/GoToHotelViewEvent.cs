@@ -1,26 +1,14 @@
-﻿using Plus.HabboHotel.GameClients;
+﻿using Plus.Communication.Packets.Incoming.Rooms;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Navigator;
 
-internal class GoToHotelViewEvent : IPacketEvent
+internal class GoToHotelViewEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
-
-    public GoToHotelViewEvent(IRoomManager roomManager)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        _roomManager = roomManager;
-    }
-
-    public Task Parse(GameClient session, IIncomingPacket packet)
-    {
-        if (session.GetHabbo().InRoom)
-        {
-            if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var oldRoom))
-                return Task.CompletedTask;
-            if (oldRoom.GetRoomUserManager() != null)
-                oldRoom.GetRoomUserManager().RemoveUserFromRoom(session, true);
-        }
+        room.GetRoomUserManager()?.RemoveUserFromRoom(session, true);
         return Task.CompletedTask;
     }
 }

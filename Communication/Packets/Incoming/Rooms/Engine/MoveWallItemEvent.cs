@@ -4,7 +4,7 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Engine;
 
-internal class MoveWallItemEvent : IPacketEvent
+internal class MoveWallItemEvent : RoomPacketEvent
 {
     private readonly IRoomManager _roomManager;
 
@@ -13,10 +13,8 @@ internal class MoveWallItemEvent : IPacketEvent
         _roomManager = roomManager;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         if (!room.CheckRights(session))
             return Task.CompletedTask;
         var itemId = packet.ReadUInt();

@@ -131,7 +131,7 @@ public class RoomUserManager
         session.GetHabbo().TentId = 0;
         var personalId = _secondaryPrivateUserId++;
         user.InternalRoomId = personalId;
-        session.GetHabbo().CurrentRoomId = _room.RoomId;
+        session.GetHabbo().CurrentRoom = _room;
         if (!_users.TryAdd(personalId, user))
             return false;
         var model = _room.GetGameMap().Model;
@@ -235,6 +235,7 @@ public class RoomUserManager
                 session.Send(new CloseConnectionComposer());
             if (session.GetHabbo().TentId > 0)
                 session.GetHabbo().TentId = 0;
+            session.GetHabbo().CurrentRoom = null;
             var user = GetRoomUserByHabbo(session.GetHabbo().Id);
             if (user != null)
             {
@@ -280,7 +281,7 @@ public class RoomUserManager
                         new
                         {
                             userId = session.GetHabbo().Id,
-                            roomId = session.GetHabbo().CurrentRoomId,
+                            roomId = session.GetHabbo().CurrentRoom!.Id,
                             exitTimestamp = UnixTimestamp.GetNow(),
                         });
 
@@ -544,7 +545,7 @@ public class RoomUserManager
             return false;
         if (user.GetClient().GetHabbo() == null)
             return false;
-        if (user.GetClient().GetHabbo().CurrentRoomId != _room.RoomId)
+        if (user.GetClient().GetHabbo().CurrentRoom != _room)
             return false;
         return true;
     }
@@ -1033,8 +1034,8 @@ public class RoomUserManager
                             {
                                 if (user == null || user.GetClient() == null || user.GetClient().GetHabbo() == null)
                                     continue;
-                                Room room;
-                                if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(user.GetClient().GetHabbo().CurrentRoomId, out room))
+                                var room = user.GetClient().GetHabbo().CurrentRoom;
+                                if (room == null)
                                     return;
                                 if (!ItemTeleporterFinder.IsTeleLinked(item.Id, room))
                                     user.UnlockWalking();

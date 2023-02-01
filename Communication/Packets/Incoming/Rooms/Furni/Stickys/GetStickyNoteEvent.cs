@@ -5,21 +5,10 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni.Stickys;
 
-internal class GetStickyNoteEvent : IPacketEvent
+internal class GetStickyNoteEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
-
-    public GetStickyNoteEvent(IRoomManager roomManager)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        _roomManager = roomManager;
-    }
-
-    public Task Parse(GameClient session, IIncomingPacket packet)
-    {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         var item = room.GetRoomItemHandler().GetItem(packet.ReadUInt());
         if (item == null || item.Definition.InteractionType != InteractionType.Postit)
             return Task.CompletedTask;

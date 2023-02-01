@@ -6,21 +6,10 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni.Moodlight;
 
-internal class GetMoodlightConfigEvent : IPacketEvent
+internal class GetMoodlightConfigEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
-
-    public GetMoodlightConfigEvent(IRoomManager roomManager)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        _roomManager = roomManager;
-    }
-
-    public Task Parse(GameClient session, IIncomingPacket packet)
-    {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         if (!room.CheckRights(session, true))
             return Task.CompletedTask;
         if (room.MoodlightData == null)

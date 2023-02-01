@@ -6,23 +6,17 @@ using Plus.HabboHotel.Rooms.Chat.Pets.Locale;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse;
 
-internal class RideHorseEvent : IPacketEvent
+internal class RideHorseEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
     private readonly IPetLocale _petLocale;
 
-    public RideHorseEvent(IRoomManager roomManager, IPetLocale petLocale)
+    public RideHorseEvent(IPetLocale petLocale)
     {
-        _roomManager = roomManager;
         _petLocale = petLocale;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (user == null)
             return Task.CompletedTask;

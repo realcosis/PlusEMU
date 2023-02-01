@@ -8,25 +8,19 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni;
 
-internal class CreditFurniRedeemEvent : IPacketEvent
+internal class CreditFurniRedeemEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
     private readonly ISettingsManager _settingsManager;
     private readonly IDatabase _database;
 
-    public CreditFurniRedeemEvent(IRoomManager roomManager, ISettingsManager settingsManager, IDatabase database)
+    public CreditFurniRedeemEvent(ISettingsManager settingsManager, IDatabase database)
     {
-        _roomManager = roomManager;
         _settingsManager = settingsManager;
         _database = database;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         if (!room.CheckRights(session, true))
             return Task.CompletedTask;
         if (_settingsManager.TryGetValue("room.item.exchangeables.enabled") != "1")

@@ -43,8 +43,9 @@ internal class SetActivatedBadgesEvent : IPacketEvent
                         new { slot = slot, badge = badge, userId = session.GetHabbo().Id });
         }
         _questManager.ProgressUserQuest(session, QuestType.ProfileBadge);
-        if (session.GetHabbo().InRoom && _roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            room.SendPacket(new HabboUserBadgesComposer(session.GetHabbo()));
+
+        if (session.GetHabbo().InRoom)
+            session.GetHabbo().CurrentRoom?.SendPacket(new HabboUserBadgesComposer(session.GetHabbo()));
         else
             session.Send(new HabboUserBadgesComposer(session.GetHabbo()));
         return Task.CompletedTask;

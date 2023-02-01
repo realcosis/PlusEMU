@@ -27,7 +27,7 @@ internal class RemoveSaddleFromHorseEvent : IPacketEvent
     {
         if (!session.GetHabbo().InRoom)
             return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (!_roomManager.TryGetRoom(session.GetHabbo( ).CurrentRoom!.Id, out var room))
             return Task.CompletedTask;
         if (!room.GetRoomUserManager().TryGetPet(packet.ReadInt(), out var petUser))
             return Task.CompletedTask;

@@ -9,25 +9,19 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Engine;
 
-internal class UseFurnitureEvent : IPacketEvent
+internal class UseFurnitureEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
     private readonly IQuestManager _questManager;
     private readonly IDatabase _database;
 
-    public UseFurnitureEvent(IRoomManager roomManager, IQuestManager questManager, IDatabase database)
+    public UseFurnitureEvent(IQuestManager questManager, IDatabase database)
     {
-        _roomManager = roomManager;
         _questManager = questManager;
         _database = database;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         var itemId = packet.ReadUInt();
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null)

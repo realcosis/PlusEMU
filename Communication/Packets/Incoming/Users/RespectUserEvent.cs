@@ -1,4 +1,5 @@
-﻿using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
+﻿using Plus.Communication.Packets.Incoming.Rooms;
+using Plus.Communication.Packets.Outgoing.Rooms.Avatar;
 using Plus.Communication.Packets.Outgoing.Users;
 using Plus.HabboHotel.Achievements;
 using Plus.HabboHotel.GameClients;
@@ -7,24 +8,20 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Users;
 
-internal class RespectUserEvent : IPacketEvent
+internal class RespectUserEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
     private readonly IAchievementManager _achievementManager;
     private readonly IQuestManager _questManager;
 
-    public RespectUserEvent(IRoomManager roomManager, IAchievementManager achievementManager, IQuestManager questManager)
+    public RespectUserEvent(IAchievementManager achievementManager, IQuestManager questManager)
     {
-        _roomManager = roomManager;
         _achievementManager = achievementManager;
         _questManager = questManager;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().InRoom || session.GetHabbo().GetStats().DailyRespectPoints <= 0)
-            return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
+        if (session.GetHabbo().GetStats().DailyRespectPoints <= 0)
             return Task.CompletedTask;
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(packet.ReadInt());
         if (user == null || user.GetClient() == null || user.GetClient().GetHabbo().Id == session.GetHabbo().Id || user.IsBot)

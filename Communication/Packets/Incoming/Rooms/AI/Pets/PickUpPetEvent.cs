@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using Plus.Communication.Packets.Outgoing.Inventory.Pets;
+﻿using Plus.Communication.Packets.Outgoing.Inventory.Pets;
 using Plus.Communication.Packets.Outgoing.Rooms.Engine;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
@@ -7,27 +6,19 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets;
 
-internal class PickUpPetEvent : IPacketEvent
+internal class PickUpPetEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
     private readonly IGameClientManager _clientManager;
     private readonly IDatabase _database;
 
-    public PickUpPetEvent(IRoomManager roomManager, IGameClientManager _clientManager, IDatabase database)
+    public PickUpPetEvent(IGameClientManager clientManager, IDatabase database)
     {
-        _roomManager = roomManager;
-        _clientManager = _clientManager;
+        _clientManager = clientManager;
         _database = database;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-     
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
-            
         var petId = packet.ReadInt();
         if (!room.GetRoomUserManager().TryGetPet(petId, out var pet))
         {

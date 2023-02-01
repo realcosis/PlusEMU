@@ -3,21 +3,10 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Avatar;
 
-internal class DropHandItemEvent : IPacketEvent
+internal class DropHandItemEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
-
-    public DropHandItemEvent(IRoomManager roomManager)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        _roomManager = roomManager;
-    }
-
-    public Task Parse(GameClient session, IIncomingPacket packet)
-    {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (user == null)
             return Task.CompletedTask;

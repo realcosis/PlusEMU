@@ -28,27 +28,27 @@ namespace Plus.HabboHotel.Users;
 public class Habbo
 {
     private HabboStats _habboStats;
-    
+
     private readonly DateTime _timeCached;
 
     private GameClient _client;
     private ClothingComponent _clothing;
-    
+
     private bool _disconnected;
     private EffectsComponent _fx;
 
     private bool _habboSaved;
-    
+
     public IgnoresComponent IgnoresComponent { get; set; }
     public InventoryComponent Inventory { get; private set; }
-    
+
     private HabboMessenger _messenger;
 
     private NavigatorPreferences _navigatorPreferences;
     private PermissionComponent _permissions;
-    
+
     private ProcessComponent _process;
-    
+
     public ConcurrentDictionary<string, UserAchievement> Achievements = new();
     public ArrayList FavoriteRooms = new();
     public Dictionary<int, int> Quests = new();
@@ -84,7 +84,7 @@ public class Habbo
 
     public double AccountCreated { get; set; }
 
-    public List<int> ClientVolume { get; set; } = new() { 0, 0, 0};
+    public List<int> ClientVolume { get; set; } = new() { 0, 0, 0 };
 
     public double LastNameChange { get; set; }
 
@@ -129,8 +129,6 @@ public class Habbo
     public int BannedPhraseCount { get; set; }
 
     public bool RoomAuthOk { get; set; }
-
-    public uint CurrentRoomId { get; set; }
 
     public int QuestLastCompleted { get; set; }
 
@@ -194,20 +192,9 @@ public class Habbo
 
     public bool SessionClothingBlocked { get; set; }
 
-    public bool InRoom => CurrentRoomId >= 1 && CurrentRoom != null;
+    public bool InRoom => CurrentRoom != null;
 
-    public Room? CurrentRoom
-    {
-        // TODO: Cache Room instead of fetching it from RoomManager
-        get
-        {
-            if (CurrentRoomId <= 0)
-                return null;
-            if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(CurrentRoomId, out var room))
-                return room;
-            return null;
-        }
-    }
+    public Room? CurrentRoom { get; set; }
 
     public string GetQueryString
     {
@@ -401,10 +388,8 @@ public class Habbo
             return;
         if (GetClient().GetHabbo().InRoom)
         {
-            Room oldRoom = null;
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(GetClient().GetHabbo().CurrentRoomId, out oldRoom))
-                return;
-            if (oldRoom.GetRoomUserManager() != null)
+            var oldRoom = GetClient().GetHabbo().CurrentRoom;
+            if (oldRoom != null)
                 oldRoom.GetRoomUserManager().RemoveUserFromRoom(GetClient(), false);
         }
         if (GetClient().GetHabbo().IsTeleporting && GetClient().GetHabbo().TeleportingRoomId != id)
@@ -424,7 +409,7 @@ public class Habbo
             GetClient().Send(new CloseConnectionComposer());
             return;
         }
-        GetClient().GetHabbo().CurrentRoomId = room.RoomId;
+        GetClient().GetHabbo().CurrentRoom = room;
         if (room.GetRoomUserManager().UserCount >= room.UsersMax && !GetClient().GetHabbo().GetPermissions().HasRight("room_enter_full") && GetClient().GetHabbo().Id != room.OwnerId)
         {
             GetClient().Send(new CantConnectComposer(1));
@@ -487,7 +472,7 @@ public class Habbo
                 new
                 {
                     userId = GetClient().GetHabbo().Id,
-                    roomId = GetClient().GetHabbo().CurrentRoomId,
+                    roomId = GetClient().GetHabbo().CurrentRoom.RoomId,
                     entryTimestamp = UnixTimestamp.GetNow(),
                     exitTimestamp = 0,
                 });

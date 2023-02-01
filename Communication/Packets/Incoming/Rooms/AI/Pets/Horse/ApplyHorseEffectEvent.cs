@@ -7,23 +7,17 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse;
 
-internal class ApplyHorseEffectEvent : IPacketEvent
+internal class ApplyHorseEffectEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
     private readonly IDatabase _database;
 
-    public ApplyHorseEffectEvent(IRoomManager roomManager, IDatabase database)
+    public ApplyHorseEffectEvent(IDatabase database)
     {
-        _roomManager = roomManager;
         _database = database;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         var itemId = packet.ReadUInt();
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null)

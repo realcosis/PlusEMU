@@ -10,27 +10,21 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Engine;
 
-internal class ApplyDecorationEvent : IPacketEvent
+internal class ApplyDecorationEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
     private readonly IAchievementManager _achievementManager;
     private readonly IQuestManager _questManager;
     private readonly IDatabase _database;
 
-    public ApplyDecorationEvent(IRoomManager roomManager, IAchievementManager achievementManager, IQuestManager questManager, IDatabase database)
+    public ApplyDecorationEvent(IAchievementManager achievementManager, IQuestManager questManager, IDatabase database)
     {
-        _roomManager = roomManager;
         _achievementManager = achievementManager;
         _questManager = questManager;
         _database = database;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         if (!room.CheckRights(session, true))
             return Task.CompletedTask;
         var item = session.GetHabbo().Inventory.Furniture.GetItem(packet.ReadUInt());

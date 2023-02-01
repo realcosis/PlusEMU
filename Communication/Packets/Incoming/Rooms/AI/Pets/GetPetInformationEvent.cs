@@ -27,7 +27,7 @@ internal class GetPetInformationEvent : IPacketEvent
         }
 
         //Continue as a regular pet..
-        if (pet.RoomId != session.GetHabbo().CurrentRoomId || pet.PetData == null)
+        if (pet.RoomId != session.GetHabbo().CurrentRoom?.RoomId || pet.PetData == null)
             return Task.CompletedTask;
         session.Send(new PetInformationComposer(pet.PetData));
         return Task.CompletedTask;

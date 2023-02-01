@@ -45,7 +45,7 @@ internal class PullCommand : ITargetChatCommand
             session.SendWhisper("Please don't pull that user out of the room :(!");
             return Task.CompletedTask; ;
         }
-        if (target.CurrentRoomId == session.GetHabbo().CurrentRoomId && Math.Abs(thisUser.X - targetUser.X) < 3 && Math.Abs(thisUser.Y - targetUser.Y) < 3)
+        if (target.CurrentRoom!.Id == session.GetHabbo().CurrentRoom!.Id && Math.Abs(thisUser.X - targetUser.X) < 3 && Math.Abs(thisUser.Y - targetUser.Y) < 3)
         {
             room.SendPacket(new ChatComposer(thisUser.VirtualId, "*pulls " + parameters[1] + " to them*", 0, thisUser.LastBubble));
             if (thisUser.RotBody % 2 != 0) 

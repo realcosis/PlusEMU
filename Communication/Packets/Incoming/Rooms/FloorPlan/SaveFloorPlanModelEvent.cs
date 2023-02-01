@@ -6,7 +6,7 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.FloorPlan;
 
-internal class SaveFloorPlanModelEvent : IPacketEvent
+internal class SaveFloorPlanModelEvent : RoomPacketEvent
 {
     private readonly IRoomManager _roomManager;
     private readonly IDatabase _database;
@@ -17,12 +17,9 @@ internal class SaveFloorPlanModelEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-        var room = session.GetHabbo().CurrentRoom;
-        if (room == null || session.GetHabbo().CurrentRoomId != room.Id || !room.CheckRights(session, true))
+        if (!room.CheckRights(session, true))
             return Task.CompletedTask;
         char[] validLetters =
         {

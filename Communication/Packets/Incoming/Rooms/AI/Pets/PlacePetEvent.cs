@@ -9,7 +9,7 @@ using Plus.HabboHotel.Rooms.AI.Speech;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets;
 
-internal class PlacePetEvent : IPacketEvent
+internal class PlacePetEvent : RoomPacketEvent
 {
     private readonly ILogger<PlacePetEvent> _logger;
     private readonly IRoomManager _roomManager;
@@ -22,12 +22,8 @@ internal class PlacePetEvent : IPacketEvent
         _logger = logger;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         if (room.AllowPets == false && !room.CheckRights(session, true) || !room.CheckRights(session, true))
         {
             session.Send(new RoomErrorNotifComposer(1));

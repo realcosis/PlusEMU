@@ -7,10 +7,12 @@ using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Rooms.AI;
 using Plus.HabboHotel.Rooms.AI.Speech;
 using Dapper;
+using Plus.Communication.Packets.Incoming.Rooms;
+using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Catalog;
 
-internal class CheckGnomeNameEvent : IPacketEvent
+internal class CheckGnomeNameEvent : RoomPacketEvent
 {
     private readonly IDatabase _database;
     private readonly IItemDataManager _itemDataManager;
@@ -21,13 +23,8 @@ internal class CheckGnomeNameEvent : IPacketEvent
         _itemDataManager = itemDataManager;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-        var room = session.GetHabbo().CurrentRoom;
-        if (room == null)
-            return Task.CompletedTask;
         var itemId = packet.ReadUInt();
         var item = room.GetRoomItemHandler().GetItem(itemId);
         if (item == null || item.Definition == null || item.UserId != session.GetHabbo().Id || item.Definition.InteractionType != InteractionType.GnomeBox)
@@ -66,7 +63,7 @@ internal class CheckGnomeNameEvent : IPacketEvent
             return Task.CompletedTask;
         }
         var rndSpeechList = new List<RandomSpeech>();
-        pet.RoomId = session.GetHabbo().CurrentRoomId;
+        pet.RoomId = room.RoomId;
         pet.GnomeClothing = RandomClothing();
 
         //Update the pets gnome clothing.

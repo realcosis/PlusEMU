@@ -4,19 +4,10 @@ using Plus.HabboHotel.Rooms.PathFinding;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Avatar;
 
-internal class LookToEvent : IPacketEvent
+internal class LookToEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
-
-    public LookToEvent(IRoomManager roomManager)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        _roomManager = roomManager;
-    }
-
-    public Task Parse(GameClient session, IIncomingPacket packet)
-    {
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         var user = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (user == null)
             return Task.CompletedTask;

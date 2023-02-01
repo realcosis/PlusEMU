@@ -8,26 +8,22 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Action;
 
-internal class AssignRightsEvent : IPacketEvent
+internal class AssignRightsEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
     private readonly ILanguageManager _languageManager;
     private readonly ICacheManager _chacheManager;
     private readonly IDatabase _database;
 
-    public AssignRightsEvent(IRoomManager roomManager, ILanguageManager languageManager, ICacheManager cacheManager, IDatabase database)
+    public AssignRightsEvent(ILanguageManager languageManager, ICacheManager cacheManager, IDatabase database)
     {
-        _roomManager = roomManager;
         _languageManager = languageManager;
         _chacheManager = cacheManager;
         _database = database;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
         var userId = packet.ReadInt();
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         if (!room.CheckRights(session, true))
             return Task.CompletedTask;
         if (room.UsersWithRights.Contains(userId))

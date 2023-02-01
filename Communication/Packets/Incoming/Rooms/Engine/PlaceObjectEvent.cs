@@ -8,7 +8,7 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Engine;
 
-internal class PlaceObjectEvent : IPacketEvent
+internal class PlaceObjectEvent : RoomPacketEvent
 {
     private readonly IRoomManager _roomManager;
     private readonly ISettingsManager _settingsManager;
@@ -22,12 +22,8 @@ internal class PlaceObjectEvent : IPacketEvent
     }
 
     /// TODO @80O: Unfuck this mess
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         var rawData = packet.ReadString();
         var data = rawData.Split(' ');
         if (!uint.TryParse(data[0], out var itemId))

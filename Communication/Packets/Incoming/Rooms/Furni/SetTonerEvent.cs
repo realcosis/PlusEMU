@@ -6,20 +6,16 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Furni;
 
-internal class SetTonerEvent : IPacketEvent
+internal class SetTonerEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
     private readonly IDatabase _database;
-    public SetTonerEvent(IRoomManager roomManager, IDatabase database)
+    public SetTonerEvent(IDatabase database)
     {
-        _roomManager = roomManager;
         _database = database;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         if (!room.CheckRights(session, true))
             return Task.CompletedTask;
         if (room.TonerData == null)

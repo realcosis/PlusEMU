@@ -7,24 +7,20 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets;
 
-internal class RespectPetEvent : IPacketEvent
+internal class RespectPetEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
     private readonly IAchievementManager _achievementManager;
     private readonly IQuestManager _questManager;
 
-    public RespectPetEvent(IRoomManager roomManager, IAchievementManager achievementManager, IQuestManager questManager)
+    public RespectPetEvent(IAchievementManager achievementManager, IQuestManager questManager)
     {
-        _roomManager = roomManager;
         _achievementManager = achievementManager;
         _questManager = questManager;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
         if (!session.GetHabbo().InRoom || session.GetHabbo().GetStats() == null || session.GetHabbo().GetStats().DailyPetRespectPoints == 0)
-            return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
             return Task.CompletedTask;
         var thisUser = room.GetRoomUserManager().GetRoomUserByHabbo(session.GetHabbo().Id);
         if (thisUser == null)
@@ -66,7 +62,7 @@ internal class RespectPetEvent : IPacketEvent
             room.SendPacket(new CarryObjectComposer(thisUser.VirtualId, thisUser.CarryItemId));
             return Task.CompletedTask;
         }
-        if (pet == null || pet.PetData == null || pet.RoomId != session.GetHabbo().CurrentRoomId)
+        if (pet == null || pet.PetData == null || pet.RoomId != session.GetHabbo().CurrentRoom.RoomId)
             return Task.CompletedTask;
         session.GetHabbo().GetStats().DailyPetRespectPoints -= 1;
         _achievementManager.ProgressAchievement(session, "ACH_PetRespectGiver", 1);

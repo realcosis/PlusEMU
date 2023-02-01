@@ -17,6 +17,6 @@ internal class CoordsCommand : IChatCommand
         if (thisUser == null)
             return;
         session.SendNotification("X: " + thisUser.X + "\n - Y: " + thisUser.Y + "\n - Z: " + thisUser.Z + "\n - Rot: " + thisUser.RotBody + ", sqState: " +
-                                 room.GetGameMap().GameMap[thisUser.X, thisUser.Y] + "\n\n - RoomID: " + session.GetHabbo().CurrentRoomId);
+                                 room.GetGameMap().GameMap[thisUser.X, thisUser.Y] + "\n\n - RoomID: " + session.GetHabbo().CurrentRoom.RoomId);
     }
 }

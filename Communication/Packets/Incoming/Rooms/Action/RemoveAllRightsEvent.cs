@@ -7,7 +7,7 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Action;
 
-internal class RemoveAllRightsEvent : IPacketEvent
+internal class RemoveAllRightsEvent : RoomPacketEvent
 {
     private readonly IRoomManager _roomManager;
     private readonly IDatabase _database;
@@ -18,12 +18,9 @@ internal class RemoveAllRightsEvent : IPacketEvent
         _database = database;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var instance))
-            return Task.CompletedTask;
+        var instance = room;
         if (!instance.CheckRights(session, true))
             return Task.CompletedTask;
         foreach (var userId in new List<int>(instance.UsersWithRights))

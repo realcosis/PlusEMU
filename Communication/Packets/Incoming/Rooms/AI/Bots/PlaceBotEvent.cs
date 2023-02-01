@@ -10,23 +10,17 @@ using Plus.Utilities;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Bots;
 
-internal class PlaceBotEvent : IPacketEvent
+internal class PlaceBotEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
     private readonly IDatabase _database;
 
-    public PlaceBotEvent(IRoomManager roomManager, IDatabase database)
+    public PlaceBotEvent(IDatabase database)
     {
-        _roomManager = roomManager;
         _database = database;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         if (!room.CheckRights(session, true))
             return Task.CompletedTask;
         var botId = packet.ReadInt();
@@ -77,7 +71,7 @@ internal class PlaceBotEvent : IPacketEvent
             foreach (DataRow speech in botSpeech.Rows) botSpeechList.Add(new(Convert.ToString(speech["text"]), bot.Id));
         }
         var botUser = room.GetRoomUserManager().DeployBot(
-            new(bot.Id, session.GetHabbo().CurrentRoomId, Convert.ToString(getData["ai_type"]), Convert.ToString(getData["walk_mode"]), bot.Name, "", bot.Figure, x, y, 0, 4, 0, 0, 0, 0,
+            new(bot.Id, room.RoomId, Convert.ToString(getData["ai_type"]), Convert.ToString(getData["walk_mode"]), bot.Name, "", bot.Figure, x, y, 0, 4, 0, 0, 0, 0,
                 ref botSpeechList, "", 0, bot.OwnerId, ConvertExtensions.EnumToBool(getData["automatic_chat"].ToString()), Convert.ToInt32(getData["speaking_interval"]),
                 ConvertExtensions.EnumToBool(getData["mix_sentences"].ToString()), Convert.ToInt32(getData["chat_bubble"])), null);
         botUser.Chat("Hello!");

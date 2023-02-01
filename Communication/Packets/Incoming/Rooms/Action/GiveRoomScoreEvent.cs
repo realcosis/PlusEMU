@@ -5,22 +5,16 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Action;
 
-internal class GiveRoomScoreEvent : IPacketEvent
+internal class GiveRoomScoreEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
     private readonly IDatabase _database;
 
-    public GiveRoomScoreEvent(IRoomManager roomManager, IDatabase database)
+    public GiveRoomScoreEvent(IDatabase database)
     {
-        _roomManager = roomManager;
         _database = database;
     }
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         if (session.GetHabbo().RatedRooms.Contains(room.RoomId) || room.CheckRights(session, true))
             return Task.CompletedTask;
         var rating = packet.ReadInt();

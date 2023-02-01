@@ -56,7 +56,7 @@ public class PurchaseRoomAdEvent : IPacketEvent
         if (!session.GetHabbo().Inventory.Badges.HasBadge("RADZZ"))
             await _badgeManager.GiveBadge(session.GetHabbo(), "RADZZ");
         session.Send(new PurchaseOkComposer());
-        if (session.GetHabbo().InRoom && session.GetHabbo().CurrentRoomId == roomId)
+        if (session.GetHabbo().InRoom && session.GetHabbo().CurrentRoom.Id == roomId)
             session.GetHabbo().CurrentRoom?.SendPacket(new RoomEventComposer(data, data.Promotion));
         _messengerDataLoader.BroadcastStatusUpdate(session.GetHabbo(), MessengerEventTypes.EventStarted, name);
     }

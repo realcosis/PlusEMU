@@ -5,21 +5,17 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.Action;
 
-internal class LetUserInEvent : IPacketEvent
+internal class LetUserInEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
     private readonly IGameClientManager _clientManager;
 
-    public LetUserInEvent(IRoomManager roomManager, IGameClientManager clientManager)
+    public LetUserInEvent(IGameClientManager clientManager)
     {
-        _roomManager = roomManager;
         _clientManager = clientManager;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         if (!room.CheckRights(session))
             return Task.CompletedTask;
         var name = packet.ReadString();

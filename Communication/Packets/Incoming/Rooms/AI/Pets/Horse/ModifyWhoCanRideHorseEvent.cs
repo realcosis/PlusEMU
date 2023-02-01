@@ -5,23 +5,17 @@ using Plus.HabboHotel.Rooms;
 
 namespace Plus.Communication.Packets.Incoming.Rooms.AI.Pets.Horse;
 
-internal class ModifyWhoCanRideHorseEvent : IPacketEvent
+internal class ModifyWhoCanRideHorseEvent : RoomPacketEvent
 {
-    private readonly IRoomManager _roomManager;
     private readonly IDatabase _database;
 
-    public ModifyWhoCanRideHorseEvent(IRoomManager roomManager, IDatabase database)
+    public ModifyWhoCanRideHorseEvent(IDatabase database)
     {
-        _roomManager = roomManager;
         _database = database;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public override Task Parse(Room room, GameClient session, IIncomingPacket packet)
     {
-        if (!session.GetHabbo().InRoom)
-            return Task.CompletedTask;
-        if (!_roomManager.TryGetRoom(session.GetHabbo().CurrentRoomId, out var room))
-            return Task.CompletedTask;
         var petId = packet.ReadInt();
         if (!room.GetRoomUserManager().TryGetPet(petId, out var pet))
             return Task.CompletedTask;
