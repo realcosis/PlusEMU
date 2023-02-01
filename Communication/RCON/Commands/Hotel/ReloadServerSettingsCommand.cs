@@ -9,7 +9,7 @@ internal class ReloadServerSettingsCommand : IRconCommand
 
     public Task<bool> TryExecute(string[] parameters)
     {
-        PlusEnvironment.GetSettingsManager().Reload();
+        PlusEnvironment.SettingsManager.Reload();
         return Task.FromResult(true);
     }
 }

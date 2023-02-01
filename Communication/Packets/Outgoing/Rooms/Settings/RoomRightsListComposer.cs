@@ -19,7 +19,7 @@ public class RoomRightsListComposer : IServerPacket
         packet.WriteInteger(_instance.UsersWithRights.Count);
         foreach (var id in _instance.UsersWithRights.ToList())
         {
-            var data = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(id);
+            var data = PlusEnvironment.Game.GetCacheManager().GenerateUser(id);
             if (data == null)
             {
                 packet.WriteInteger(0);

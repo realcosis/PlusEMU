@@ -259,11 +259,11 @@ public class Habbo
         }
         catch { }
         _disconnected = true;
-        PlusEnvironment.GetGame().GetClientManager().UnregisterClient(Id, Username);
+        PlusEnvironment.Game.GetClientManager().UnregisterClient(Id, Username);
         if (!_habboSaved)
         {
             _habboSaved = true;
-            using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+            using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
             dbClient.RunQuery(
                 $"UPDATE `users` SET `online` = false, `last_online` = '{(int)UnixTimestamp.GetNow()}', `activity_points` = '{Duckets}', `credits` = '{Credits}', `vip_points` = '{Diamonds}', `home_room` = '{HomeRoom}', `gotw_points` = '{GotwPoints}', `time_muted` = '{TimeMuted}',`friend_bar_state` = '{FriendBarStateUtility.GetInt(FriendbarState)}', `bubble_id` = '{CustomBubbleId}' WHERE id = '{Id}' LIMIT 1;UPDATE `user_statistics` SET `roomvisits` = '{HabboStats.RoomVisits}', `onlineTime` = '{(int)(UnixTimestamp.GetNow() - SessionStart + HabboStats.OnlineTime)}', `respect` = '{HabboStats.Respect}', `respectGiven` = '{HabboStats.RespectGiven}', `giftsGiven` = '{HabboStats.GiftsGiven}', `giftsReceived` = '{HabboStats.GiftsReceived}', `dailyRespectPoints` = '{HabboStats.DailyRespectPoints}', `dailyPetRespectPoints` = '{HabboStats.DailyPetRespectPoints}', `AchievementScore` = '{HabboStats.AchievementPoints}', `quest_id` = '{HabboStats.QuestId}', `quest_progress` = '{HabboStats.QuestProgress}', `groupid` = '{HabboStats.FavouriteGroupId}',`forum_posts` = '{HabboStats.ForumPosts}' WHERE `id` = '{Id}' LIMIT 1;");
             if (Permissions.HasRight("mod_tickets"))
@@ -292,10 +292,10 @@ public class Habbo
             CreditsUpdateTick--;
             if (CreditsUpdateTick <= 0)
             {
-                var creditUpdate = Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("user.currency_scheduler.credit_reward"));
-                var ducketUpdate = Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("user.currency_scheduler.ducket_reward"));
+                var creditUpdate = Convert.ToInt32(PlusEnvironment.SettingsManager.TryGetValue("user.currency_scheduler.credit_reward"));
+                var ducketUpdate = Convert.ToInt32(PlusEnvironment.SettingsManager.TryGetValue("user.currency_scheduler.ducket_reward"));
                 SubscriptionData subData = null;
-                if (PlusEnvironment.GetGame().GetSubscriptionManager().TryGetSubscriptionData(VipRank, out subData))
+                if (PlusEnvironment.Game.GetSubscriptionManager().TryGetSubscriptionData(VipRank, out subData))
                 {
                     creditUpdate += subData.Credits;
                     ducketUpdate += subData.Duckets;
@@ -304,7 +304,7 @@ public class Habbo
                 Duckets += ducketUpdate;
                 Client.Send(new CreditBalanceComposer(Credits));
                 Client.Send(new HabboActivityPointNotificationComposer(Duckets, ducketUpdate));
-                CreditsUpdateTick = Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("user.currency_scheduler.tick"));
+                CreditsUpdateTick = Convert.ToInt32(PlusEnvironment.SettingsManager.TryGetValue("user.currency_scheduler.tick"));
             }
         }
         catch { }
@@ -335,7 +335,7 @@ public class Habbo
 
     public void SaveKey(string key, string value)
     {
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery($"UPDATE `users` SET {key} = @value WHERE `id` = '{Id}' LIMIT 1;");
         dbClient.AddParameter("value", value);
         dbClient.RunQuery();
@@ -356,7 +356,7 @@ public class Habbo
             Client.Send(new CloseConnectionComposer());
             return;
         }
-        if (!PlusEnvironment.GetGame().GetRoomManager().TryLoadRoom(id, out var room))
+        if (!PlusEnvironment.Game.GetRoomManager().TryLoadRoom(id, out var room))
         {
             Client.Send(new CloseConnectionComposer());
             return;
@@ -422,7 +422,7 @@ public class Habbo
             Client.Send(new RoomPropertyComposer("floor", room.Floor));
         Client.Send(new RoomPropertyComposer("landscape", room.Landscape));
         Client.Send(new RoomRatingComposer(room.Score, !(Client.GetHabbo().RatedRooms.Contains(room.RoomId) || room.OwnerId == Client.GetHabbo().Id)));
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().Connection())
+        using (var dbClient = PlusEnvironment.DatabaseManager.Connection())
         {
             dbClient.Execute("INSERT INTO user_roomvisits (user_id,room_id,entry_timestamp,exit_timestamp) VALUES (@userId, @roomId, @entryTimestamp, @exitTimestamp)",
                 new
@@ -437,7 +437,7 @@ public class Habbo
         if (room.OwnerId != Id)
         {
             Client.GetHabbo().HabboStats.RoomVisits += 1;
-            PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(Client, "ACH_RoomEntry", 1);
+            PlusEnvironment.Game.GetAchievementManager().ProgressAchievement(Client, "ACH_RoomEntry", 1);
         }
         return true;
     }

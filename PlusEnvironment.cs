@@ -207,13 +207,13 @@ public class PlusEnvironment : IPlusEnvironment
     public static string GetUsernameById(int userId)
     {
         var name = "Unknown User";
-        var client = GetGame().GetClientManager().GetClientByUserId(userId);
+        var client = Game.GetClientManager().GetClientByUserId(userId);
         if (client != null && client.GetHabbo() != null)
             return client.GetHabbo().Username;
-        var user = GetGame().GetCacheManager().GenerateUser(userId);
+        var user = Game.GetCacheManager().GenerateUser(userId);
         if (user != null)
             return user.Username;
-        using (var dbClient = GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = DatabaseManager.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `username` FROM `users` WHERE `id` = @id LIMIT 1");
             dbClient.AddParameter("id", userId);
@@ -229,7 +229,7 @@ public class PlusEnvironment : IPlusEnvironment
     {
         try
         {
-            var client = GetGame().GetClientManager().GetClientByUserId(userId);
+            var client = Game.GetClientManager().GetClientByUserId(userId);
             if (client != null)
             {
                 var user = client.GetHabbo();
@@ -275,7 +275,7 @@ public class PlusEnvironment : IPlusEnvironment
     {
         try
         {
-            using var dbClient = GetDatabaseManager().GetQueryReactor();
+            using var dbClient = DatabaseManager.GetQueryReactor();
             dbClient.SetQuery("SELECT `id` FROM `users` WHERE `username` = @user LIMIT 1");
             dbClient.AddParameter("user", userName);
             var id = dbClient.GetInteger();
@@ -295,14 +295,14 @@ public class PlusEnvironment : IPlusEnvironment
         Console.Clear();
         Log.Info("Server shutting down...");
         Console.Title = "PLUS EMULATOR: SHUTTING DOWN!";
-        GetGame().GetClientManager().SendPacket(new BroadcastMessageAlertComposer(GetLanguageManager().TryGetValue("server.shutdown.message")));
-        GetGame().StopGameLoop();
+        Game.GetClientManager().SendPacket(new BroadcastMessageAlertComposer(LanguageManager.TryGetValue("server.shutdown.message")));
+        Game.StopGameLoop();
         Thread.Sleep(2500);
         _flashServer.Stop();
-        if (GetGame().GetPacketManager() is IDisposable disposable)
+        if (Game.GetPacketManager() is IDisposable disposable)
             disposable.Dispose();
-        GetGame().GetClientManager().CloseAll(); //Close all connections
-        GetGame().GetRoomManager().Dispose(); //Stop the game loop.
+        Game.GetClientManager().CloseAll(); //Close all connections
+        Game.GetRoomManager().Dispose(); //Stop the game loop.
         if (!Debugger.IsAttached)
         {
             using var dbClient = _database.GetQueryReactor();
@@ -319,20 +319,20 @@ public class PlusEnvironment : IPlusEnvironment
     public static Encoding GetDefaultEncoding() => _defaultEncoding;
 
     [Obsolete("Use dependency injection instead and inject required services.")]
-    public static IGame GetGame() => _game;
+    public static IGame Game => _game;
 
-    public static IRconSocket GetRconSocket() => _rcon;
+    public static IRconSocket RconSocket => _rcon;
 
-    public static IFigureDataManager GetFigureManager() => _figureManager;
+    public static IFigureDataManager FigureManager => _figureManager;
 
     [Obsolete("Inject IDatabase instead")]
-    public static IDatabase GetDatabaseManager() => _database;
+    public static IDatabase DatabaseManager => _database;
 
-    public static ILanguageManager GetLanguageManager() => _languageManager;
+    public static ILanguageManager LanguageManager => _languageManager;
 
-    public static ISettingsManager GetSettingsManager() => _settingsManager;
+    public static ISettingsManager SettingsManager => _settingsManager;
 
-    public static ICollection<Habbo> GetUsersCached() => _usersCached.Values;
+    public static ICollection<Habbo> CachedUsers => _usersCached.Values;
 
     public static bool RemoveFromCache(int id, out Habbo data) => _usersCached.TryRemove(id, out data);
 }

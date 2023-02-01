@@ -303,7 +303,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_locale' permission.");
                     break;
                 }
-                PlusEnvironment.GetLanguageManager().Reload();
+                PlusEnvironment.LanguageManager.Reload();
                 session.SendWhisper("Locale cache successfully updated.");
                 break;
             }

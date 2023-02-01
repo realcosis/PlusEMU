@@ -19,7 +19,7 @@ public class MarketplaceItemStatsComposer : IServerPacket
     public void Compose(IOutgoingPacket packet)
     {
         packet.WriteInteger(_averagePrice); //Avg price in last 7 days.
-        packet.WriteInteger(PlusEnvironment.GetGame().GetCatalog().GetMarketplace().OfferCountForSprite(_spriteId));
+        packet.WriteInteger(PlusEnvironment.Game.GetCatalog().GetMarketplace().OfferCountForSprite(_spriteId));
         packet.WriteInteger(0); //No idea.
         packet.WriteInteger(0); //No idea.
         packet.WriteInteger(_itemId);

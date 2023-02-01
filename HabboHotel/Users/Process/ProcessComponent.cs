@@ -88,7 +88,7 @@ internal sealed class ProcessComponent
             if (_player.HabboStats.RespectsTimestamp != DateTime.Today.ToString("MM/dd"))
             {
                 _player.HabboStats.RespectsTimestamp = DateTime.Today.ToString("MM/dd");
-                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
                 {
                     dbClient.RunQuery(
                         $"UPDATE `user_statistics` SET `dailyRespectPoints` = '{(_player.Rank == 1 && _player.VipRank == 0 ? 10 : _player.VipRank == 1 ? 15 : 20)}', `dailyPetRespectPoints` = '{(_player.Rank == 1 && _player.VipRank == 0 ? 10 : _player.VipRank == 1 ? 15 : 20)}', `respectsTimestamp` = '{DateTime.Today:MM/dd}' WHERE `id` = '{_player.Id}' LIMIT 1");
@@ -104,7 +104,7 @@ internal sealed class ProcessComponent
             if (_player.ClothingUpdateWarnings < 15)
                 _player.ClothingUpdateWarnings = 0;
             if (_player.Client != null)
-                PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(_player.Client, "ACH_AllTimeHotelPresence", 1);
+                PlusEnvironment.Game.GetAchievementManager().ProgressAchievement(_player.Client, "ACH_AllTimeHotelPresence", 1);
             _player.CheckCreditsTimer();
             _player.Effects.CheckEffectExpiry(_player);
 

@@ -31,7 +31,7 @@ public class MarketPlaceOffersComposer : IServerPacket
             packet.WriteUInteger(value.LimitedStack);
             packet.WriteInteger(value.TotalPrice);
             packet.WriteInteger(0);
-            packet.WriteInteger(PlusEnvironment.GetGame().GetCatalog().GetMarketplace().AvgPriceForSprite((int)value.SpriteId));
+            packet.WriteInteger(PlusEnvironment.Game.GetCatalog().GetMarketplace().AvgPriceForSprite((int)value.SpriteId));
             packet.WriteInteger(_dictionary2[value.SpriteId]);
         }
         packet.WriteInteger(_dictionary.Count); //Item count to show how many were found.

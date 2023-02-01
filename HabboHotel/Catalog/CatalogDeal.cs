@@ -14,7 +14,7 @@ public class CatalogDeal
         if (roomId != 0)
         {
             DataTable data = null;
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
             {
                 dbClient.SetQuery(
                     "SELECT `items`.base_item, COALESCE(`items_groups`.`group_id`, 0) AS `group_id` FROM `items` LEFT OUTER JOIN `items_groups` ON `items`.`id` = `items_groups`.`id` WHERE `items`.`room_id` = @rid;");

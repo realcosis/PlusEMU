@@ -69,7 +69,7 @@ public sealed class ProcessComponent : IProcessComponent
             _resetEvent.Reset();
 
             // BEGIN CODE
-            var cacheList = PlusEnvironment.GetGame().GetCacheManager().GetUserCache().ToList();
+            var cacheList = PlusEnvironment.Game.GetCacheManager().GetUserCache().ToList();
             if (cacheList.Count > 0)
             {
                 foreach (var cache in cacheList)
@@ -79,7 +79,7 @@ public sealed class ProcessComponent : IProcessComponent
                         if (cache == null)
                             continue;
                         if (cache.IsExpired())
-                            PlusEnvironment.GetGame().GetCacheManager().TryRemoveUser(cache.Id, out _);
+                            PlusEnvironment.Game.GetCacheManager().TryRemoveUser(cache.Id, out _);
                     }
                     catch (Exception e)
                     {
@@ -87,7 +87,7 @@ public sealed class ProcessComponent : IProcessComponent
                     }
                 }
             }
-            var cachedUsers = PlusEnvironment.GetUsersCached().ToList();
+            var cachedUsers = PlusEnvironment.CachedUsers.ToList();
             if (cachedUsers.Count > 0)
             {
                 foreach (var data in cachedUsers)

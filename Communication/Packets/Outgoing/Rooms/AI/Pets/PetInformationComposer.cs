@@ -21,7 +21,7 @@ public class PetInformationComposer : IServerPacket
     {
         if (_pet != null)
         {
-            if (!PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(_pet.RoomId, out var room))
+            if (!PlusEnvironment.Game.GetRoomManager().TryGetRoom(_pet.RoomId, out var room))
                 return;
             packet.WriteInteger(_pet.PetId);
             packet.WriteString(_pet.Name);

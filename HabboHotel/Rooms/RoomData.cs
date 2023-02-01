@@ -60,7 +60,7 @@ public class RoomData
         ReverseRollers = false;
         LayEnabled = layEnabled;
         if (groupId > 0)
-            PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(groupId, out _group);
+            PlusEnvironment.Game.GetGroupManager().TryGetGroup(groupId, out _group);
         LoadPromotions();
         Model = model;
     }
@@ -171,7 +171,7 @@ public class RoomData
     public void LoadPromotions()
     {
         DataRow getPromotion = null;
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery($"SELECT * FROM `room_promotions` WHERE `room_id` = {Id} LIMIT 1;");
         getPromotion = dbClient.GetRow();
         if (getPromotion != null)

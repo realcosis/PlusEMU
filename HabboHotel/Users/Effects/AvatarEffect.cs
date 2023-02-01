@@ -50,7 +50,7 @@ public sealed class AvatarEffect
     public bool Activate()
     {
         var tsNow = UnixTimestamp.GetNow();
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery("UPDATE `user_effects` SET `is_activated` = '1', `activated_stamp` = @ts WHERE `id` = @id");
         dbClient.AddParameter("ts", tsNow);
         dbClient.AddParameter("id", Id);
@@ -65,7 +65,7 @@ public sealed class AvatarEffect
         Quantity--;
         Activated = false;
         TimestampActivated = 0;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             if (Quantity < 1)
             {
@@ -88,7 +88,7 @@ public sealed class AvatarEffect
     public void AddToQuantity()
     {
         Quantity++;
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery("UPDATE `user_effects` SET `quantity` = @qt WHERE `id` = @id");
         dbClient.AddParameter("qt", Quantity);
         dbClient.AddParameter("id", Id);

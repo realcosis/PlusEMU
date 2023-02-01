@@ -26,8 +26,8 @@ public static class ConsoleCommands
                 case "alert":
                 {
                     var notice = inputData.Substring(6);
-                    PlusEnvironment.GetGame().GetClientManager()
-                        .SendPacket(new BroadcastMessageAlertComposer($"{PlusEnvironment.GetLanguageManager().TryGetValue("server.console.alert")}\n\n{notice}"));
+                    PlusEnvironment.Game.GetClientManager()
+                        .SendPacket(new BroadcastMessageAlertComposer($"{PlusEnvironment.LanguageManager.TryGetValue("server.console.alert")}\n\n{notice}"));
                     Log.Info("Alert successfully sent.");
                     break;
                 }

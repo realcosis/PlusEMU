@@ -29,7 +29,7 @@ internal static class RoomAppender
             roomType += 8;
         if (data.AllowPets)
             roomType += 16;
-        if (PlusEnvironment.GetGame().GetNavigator().TryGetFeaturedRoom(data.Id, out var item)) roomType += 1;
+        if (PlusEnvironment.Game.GetNavigator().TryGetFeaturedRoom(data.Id, out var item)) roomType += 1;
         packet.WriteInteger(roomType);
         if (item != null) packet.WriteString(item.Image);
         if (data.Group != null)

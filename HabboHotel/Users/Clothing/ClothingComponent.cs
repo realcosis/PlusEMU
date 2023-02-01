@@ -23,7 +23,7 @@ public sealed class ClothingComponent
         if (_allClothing.Count > 0)
             return false;
         DataTable getClothing = null;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `id`,`part_id`,`part` FROM `user_clothing` WHERE `user_id` = @id;");
             dbClient.AddParameter("id", habbo.Id);
@@ -50,7 +50,7 @@ public sealed class ClothingComponent
             if (!_allClothing.ContainsKey(partId))
             {
                 var newId = 0;
-                using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+                using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
                 {
                     dbClient.SetQuery("INSERT INTO `user_clothing` (`user_id`,`part_id`,`part`) VALUES (@UserId, @PartId, @Part)");
                     dbClient.AddParameter("UserId", _habbo.Id);

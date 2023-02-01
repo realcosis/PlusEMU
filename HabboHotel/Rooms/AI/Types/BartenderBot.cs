@@ -32,7 +32,7 @@ internal class BartenderBot : BotAi
             return;
         if (Gamemap.TileDistance(GetRoomUser().X, GetRoomUser().Y, user.X, user.Y) > 8)
             return;
-        var response = PlusEnvironment.GetGame().GetBotManager().GetResponse(GetBotData().AiType, message);
+        var response = PlusEnvironment.Game.GetBotManager().GetResponse(GetBotData().AiType, message);
         if (response == null)
             return;
         switch (response.ResponseType.ToLower())
@@ -56,7 +56,7 @@ internal class BartenderBot : BotAi
             return;
         if (Gamemap.TileDistance(GetRoomUser().X, GetRoomUser().Y, user.X, user.Y) > 8)
             return;
-        var response = PlusEnvironment.GetGame().GetBotManager().GetResponse(GetBotData().AiType, message);
+        var response = PlusEnvironment.Game.GetBotManager().GetResponse(GetBotData().AiType, message);
         if (response == null)
             return;
         switch (response.ResponseType.ToLower())
@@ -85,7 +85,7 @@ internal class BartenderBot : BotAi
                 if (GetBotData().AutomaticChat == false)
                     return;
                 var speech = GetBotData().GetRandomSpeech();
-                var @string = PlusEnvironment.GetGame().GetChatManager().GetFilter().CheckMessage(speech.Message);
+                var @string = PlusEnvironment.Game.GetChatManager().GetFilter().CheckMessage(speech.Message);
                 if (@string.Contains("<img src") || @string.Contains("<font ") || @string.Contains("</font>") || @string.Contains("</a>") || @string.Contains("<i>"))
                     @string = "I really shouldn't be using HTML within bot speeches.";
                 GetRoomUser().Chat(@string, GetBotData().ChatBubble);

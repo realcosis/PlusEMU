@@ -9,7 +9,7 @@ public class RoomPromotion
         Name = name;
         Description = description;
         TimestampStarted = UnixTimestamp.GetNow();
-        TimestampExpires = UnixTimestamp.GetNow() + Convert.ToInt32(PlusEnvironment.GetSettingsManager().TryGetValue("room.promotion.lifespan")) * 60;
+        TimestampExpires = UnixTimestamp.GetNow() + Convert.ToInt32(PlusEnvironment.SettingsManager.TryGetValue("room.promotion.lifespan")) * 60;
         CategoryId = categoryId;
     }
 

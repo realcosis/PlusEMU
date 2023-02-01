@@ -7,7 +7,7 @@ public class InteractorHopper : IFurniInteractor
     public void OnPlace(GameClient session, Item item)
     {
         item.GetRoom().GetRoomItemHandler().HopperCount++;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             dbClient.SetQuery("INSERT INTO items_hopper (hopper_id, room_id) VALUES (@hopperid, @roomid);");
             dbClient.AddParameter("hopperid", item.Id);
@@ -30,7 +30,7 @@ public class InteractorHopper : IFurniInteractor
     public void OnRemove(GameClient session, Item item)
     {
         item.GetRoom().GetRoomItemHandler().HopperCount--;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             dbClient.SetQuery($"DELETE FROM items_hopper WHERE item_id=@hid OR room_id={item.GetRoom().RoomId} LIMIT 1");
             dbClient.AddParameter("hid", item.Id);

@@ -51,7 +51,7 @@ public class CatalogOfferComposer : IServerPacket
             else if (_item.PageId == 9) //Bots
             {
                 CatalogBot cataBot = null;
-                if (!PlusEnvironment.GetGame().GetCatalog().TryGetBot(_item.ItemId, out cataBot))
+                if (!PlusEnvironment.Game.GetCatalog().TryGetBot(_item.ItemId, out cataBot))
                     packet.WriteString("hd-180-7.ea-1406-62.ch-210-1321.hr-831-49.ca-1813-62.sh-295-1321.lg-285-92");
                 else
                     packet.WriteString(cataBot.Figure);

@@ -39,7 +39,7 @@ internal class InteractorMannequin : IFurniInteractor
             var final = "";
             foreach (var str in newFig.Values) final += $"{str}.";
             session.GetHabbo().Look = final.TrimEnd('.');
-            using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+            using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
             {
                 dbClient.SetQuery($"UPDATE users SET look = @look, gender = @gender WHERE id = '{session.GetHabbo().Id}' LIMIT 1");
                 dbClient.AddParameter("look", session.GetHabbo().Look);

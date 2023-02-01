@@ -793,7 +793,7 @@ public class Gamemap
                 var I = items.FirstOrDefault(x => x.Definition.InteractionType == InteractionType.GuildGate);
                 if (I != null)
                 {
-                    if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(I.GroupId, out var group))
+                    if (!PlusEnvironment.Game.GetGroupManager().TryGetGroup(I.GroupId, out var group))
                         return false;
                     if (user.GetClient() == null || user.GetClient().GetHabbo() == null)
                         return false;

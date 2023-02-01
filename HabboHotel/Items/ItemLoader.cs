@@ -12,7 +12,7 @@ public static class ItemLoader
     public static List<Item> GetItemsForRoom(uint roomId, Room room)
     {
         var items = new List<Item>();
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery(
             "SELECT `items`.*, COALESCE(`items_groups`.`group_id`, 0) AS `group_id` FROM `items` LEFT OUTER JOIN `items_groups` ON `items`.`id` = `items_groups`.`id` WHERE `items`.`room_id` = @rid;");
         dbClient.AddParameter("rid", roomId);
@@ -21,7 +21,7 @@ public static class ItemLoader
         {
             foreach (DataRow row in table.Rows)
             {
-                if (PlusEnvironment.GetGame().GetItemManager().Items.TryGetValue(Convert.ToUInt32(row["base_item"]), out var data))
+                if (PlusEnvironment.Game.GetItemManager().Items.TryGetValue(Convert.ToUInt32(row["base_item"]), out var data))
                 {
                     items.Add(new()
                     {
@@ -48,7 +48,7 @@ public static class ItemLoader
     {
         DataTable items = null;
         var I = new List<InventoryItem>();
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery(
             "SELECT `items`.*, COALESCE(`items_groups`.`group_id`, 0) AS `group_id` FROM `items` LEFT OUTER JOIN `items_groups` ON `items`.`id` = `items_groups`.`id` WHERE `items`.`room_id` = 0 AND `items`.`user_id` = @uid;");
         dbClient.AddParameter("uid", userId);
@@ -57,7 +57,7 @@ public static class ItemLoader
         {
             foreach (DataRow row in items.Rows)
             {
-                if (PlusEnvironment.GetGame().GetItemManager().Items.TryGetValue(Convert.ToUInt32(row["base_item"]), out var data))
+                if (PlusEnvironment.Game.GetItemManager().Items.TryGetValue(Convert.ToUInt32(row["base_item"]), out var data))
                 {
                     I.Add(new()
                     {
@@ -76,7 +76,7 @@ public static class ItemLoader
 
     public static void DeleteAllInventoryItemsForUser(int userId)
     {
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.RunQuery($"DELETE FROM items WHERE room_id='0' AND user_id = {userId}"); //Do join
     }
 }

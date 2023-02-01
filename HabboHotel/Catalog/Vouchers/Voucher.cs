@@ -24,7 +24,7 @@ public class Voucher
     public void UpdateUses()
     {
         CurrentUses += 1;
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.RunQuery($"UPDATE `catalog_vouchers` SET `current_uses` = `current_uses` + '1' WHERE `voucher` = '{Code}' LIMIT 1");
     }
 }

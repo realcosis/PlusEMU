@@ -48,7 +48,7 @@ public class WiredComponent
     {
         var newBox = GenerateNewBox(item);
         DataRow row = null;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM wired_items WHERE id=@id LIMIT 1");
             dbClient.AddParameter("id", item.Id);
@@ -391,7 +391,7 @@ public class WiredComponent
         }
         if (item.Type == WiredBoxType.EffectMatchPosition || item.Type == WiredBoxType.ConditionMatchStateAndPosition || item.Type == WiredBoxType.ConditionDontMatchStateAndPosition)
             item.ItemsData = items;
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery("REPLACE INTO `wired_items` VALUES (@id, @items, @delay, @string, @bool)");
         dbClient.AddParameter("id", item.Item.Id);
         dbClient.AddParameter("items", items);

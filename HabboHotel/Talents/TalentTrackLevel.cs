@@ -34,7 +34,7 @@ public class TalentTrackLevel
     public void Init()
     {
         DataTable getTable = null;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT `sub_level`,`badge_code`,`required_progress` FROM `talents_sub_levels` WHERE `talent_level` = @TalentLevel");
             dbClient.AddParameter("TalentLevel", Level);

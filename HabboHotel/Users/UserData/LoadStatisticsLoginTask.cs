@@ -55,7 +55,7 @@ internal class LoadStatisticsLoginTask : IUserDataLoadingTask
                         $"UPDATE `user_statistics` SET `dailyRespectPoints` = '{dailyRespects}', `dailyPetRespectPoints` = '{dailyRespects}', `respectsTimestamp` = '{DateTime.Today:MM/dd}' WHERE `id` = '{habbo.Id}' LIMIT 1");
                 }
                 Group g = null;
-                if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(stats.FavouriteGroupId, out g))
+                if (!PlusEnvironment.Game.GetGroupManager().TryGetGroup(stats.FavouriteGroupId, out g))
                     stats.FavouriteGroupId = 0;
 
                 habbo.HabboStats  = stats;

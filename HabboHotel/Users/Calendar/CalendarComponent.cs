@@ -31,7 +31,7 @@ public sealed class CalendarComponent
         if (_openedBoxes.Count > 0)
             _openedBoxes.Clear();
         DataTable getData = null;
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery("SELECT * FROM `user_xmas15_calendar` WHERE `user_id` = @id;");
         dbClient.AddParameter("id", player.Id);
         getData = dbClient.GetTable();

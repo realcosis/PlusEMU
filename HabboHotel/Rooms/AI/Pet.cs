@@ -63,7 +63,7 @@ public class Pet
         GnomeClothing = gnomeClothing;
 
         /// TODO: pass by constructor
-        OwnerName = PlusEnvironment.GetGame().GetClientManager().GetNameById(OwnerId).Result;
+        OwnerName = PlusEnvironment.Game.GetClientManager().GetNameById(OwnerId).Result;
     }
 
     public Room Room
@@ -72,7 +72,7 @@ public class Pet
         {
             if (!IsInRoom)
                 return null;
-            if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(RoomId, out var room))
+            if (PlusEnvironment.Game.GetRoomManager().TryGetRoom(RoomId, out var room))
                 return room;
             return null;
         }

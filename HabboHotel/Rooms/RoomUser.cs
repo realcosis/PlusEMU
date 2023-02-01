@@ -355,9 +355,9 @@ public class RoomUser
         if (_mRoom.WordFilterList.Count > 0 && !GetClient().GetHabbo().Permissions.HasRight("word_filter_override")) message = _mRoom.GetFilter().CheckMessage(message);
         IServerPacket packet = null;
         if (shout)
-            packet = new ShoutComposer(VirtualId, message, PlusEnvironment.GetGame().GetChatManager().GetEmotions().GetEmotionsForText(message), colour);
+            packet = new ShoutComposer(VirtualId, message, PlusEnvironment.Game.GetChatManager().GetEmotions().GetEmotionsForText(message), colour);
         else
-            packet = new ChatComposer(VirtualId, message, PlusEnvironment.GetGame().GetChatManager().GetEmotions().GetEmotionsForText(message), colour);
+            packet = new ChatComposer(VirtualId, message, PlusEnvironment.Game.GetChatManager().GetEmotions().GetEmotionsForText(message), colour);
         if (GetClient().GetHabbo().TentId > 0)
         {
             _mRoom.SendToTent(GetClient().GetHabbo().Id, GetClient().GetHabbo().TentId, packet);
@@ -540,7 +540,7 @@ public class RoomUser
     {
         if (IsBot) return null;
         if (_mClient == null)
-            _mClient = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(HabboId);
+            _mClient = PlusEnvironment.Game.GetClientManager().GetClientByUserId(HabboId);
         return _mClient;
     }
 
@@ -548,7 +548,7 @@ public class RoomUser
     {
         if (_mRoom == null)
         {
-            if (PlusEnvironment.GetGame().GetRoomManager().TryGetRoom(RoomId, out _mRoom))
+            if (PlusEnvironment.Game.GetRoomManager().TryGetRoom(RoomId, out _mRoom))
                 return _mRoom;
         }
         return _mRoom;

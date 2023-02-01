@@ -20,7 +20,7 @@ public class HabboSearchResultComposer : IServerPacket
         packet.WriteInteger(_friends.Count);
         foreach (var friend in _friends.ToList())
         {
-            var online = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(friend.UserId) != null;
+            var online = PlusEnvironment.Game.GetClientManager().GetClientByUserId(friend.UserId) != null;
             packet.WriteInteger(friend.UserId);
             packet.WriteString(friend.Username);
             packet.WriteString(friend.Motto);
@@ -34,7 +34,7 @@ public class HabboSearchResultComposer : IServerPacket
         packet.WriteInteger(_otherUsers.Count);
         foreach (var otherUser in _otherUsers.ToList())
         {
-            var online = PlusEnvironment.GetGame().GetClientManager().GetClientByUserId(otherUser.UserId) != null;
+            var online = PlusEnvironment.Game.GetClientManager().GetClientByUserId(otherUser.UserId) != null;
             packet.WriteInteger(otherUser.UserId);
             packet.WriteString(otherUser.Username);
             packet.WriteString(otherUser.Motto);

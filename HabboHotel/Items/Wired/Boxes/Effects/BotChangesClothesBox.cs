@@ -49,7 +49,7 @@ internal class BotChangesClothesBox : IWiredItem
         Instance.SendPacket(userChangeComposer);
         user.BotData.Look = figure;
         user.BotData.Gender = "M";
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery($"UPDATE `bots` SET `look` = @look, `gender` = @gender WHERE `id` = '{user.BotData.Id}' LIMIT 1");
         dbClient.AddParameter("look", user.BotData.Look);
         dbClient.AddParameter("gender", user.BotData.Gender);

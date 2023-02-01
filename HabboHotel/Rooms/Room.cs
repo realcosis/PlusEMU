@@ -173,7 +173,7 @@ public class Room : RoomData
 
     public void InitBots()
     {
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery(
             $"SELECT `id`,`room_id`,`name`,`motto`,`look`,`x`,`y`,`z`,`rotation`,`gender`,`user_id`,`ai_type`,`walk_mode`,`automatic_chat`,`speaking_interval`,`mix_sentences`,`chat_bubble` FROM `bots` WHERE `room_id` = '{RoomId}' AND `ai_type` != 'pet'");
         var data = dbClient.GetTable();
@@ -195,7 +195,7 @@ public class Room : RoomData
 
     public void InitPets()
     {
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery($"SELECT `id`,`user_id`,`room_id`,`name`,`x`,`y`,`z` FROM `bots` WHERE `room_id` = '{RoomId}' AND `ai_type` = 'pet'");
         var data = dbClient.GetTable();
         if (data == null)
@@ -234,7 +234,7 @@ public class Room : RoomData
         if (Group != null)
             return;
         DataTable data = null;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT room_rights.user_id FROM room_rights WHERE room_id = @roomid");
             dbClient.AddParameter("roomid", Id);
@@ -249,7 +249,7 @@ public class Room : RoomData
     {
         WordFilterList = new();
         DataTable data = null;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `room_filter` WHERE `room_id` = @roomid;");
             dbClient.AddParameter("roomid", Id);
@@ -310,7 +310,7 @@ public class Room : RoomData
                 key = item.Definition.ItemName.Split(new[] { '_' })[2];
                 user.UnIdle();
                 user.DanceId = 0;
-                PlusEnvironment.GetGame().GetAchievementManager().ProgressAchievement(user.GetClient(), "ACH_FootballGoalScored", 1);
+                PlusEnvironment.Game.GetAchievementManager().ProgressAchievement(user.GetClient(), "ACH_FootballGoalScored", 1);
                 SendPacket(new ActionComposer(user.VirtualId, 1));
             }
         }
@@ -344,7 +344,7 @@ public class Room : RoomData
             if (HasActivePromotion && Promotion.HasExpired) EndPromotion();
             if (IdleTime >= 60 && !HasActivePromotion)
             {
-                PlusEnvironment.GetGame().GetRoomManager().UnloadRoom(Id);
+                PlusEnvironment.Game.GetRoomManager().UnloadRoom(Id);
                 return;
             }
             try
@@ -420,7 +420,7 @@ public class Room : RoomData
             ExceptionLogger.LogException(e3);
         }
         IsCrashed = true;
-        PlusEnvironment.GetGame().GetRoomManager().UnloadRoom(Id);
+        PlusEnvironment.Game.GetRoomManager().UnloadRoom(Id);
     }
 
 

@@ -14,7 +14,7 @@ public class PetLocale : IPetLocale
     public void Init()
     {
         _values = new();
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery("SELECT * FROM `bots_pet_responses`");
         var pets = dbClient.GetTable();
         if (pets != null)

@@ -68,7 +68,7 @@ public class Group
 
     public void InitMembers()
     {
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery("SELECT `user_id`, `rank` FROM `group_memberships` WHERE `group_id` = @id");
         dbClient.AddParameter("id", Id);
         var members = dbClient.GetTable();
@@ -115,7 +115,7 @@ public class Group
     {
         if (_members.Contains(id))
             _members.Remove(id);
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE group_memberships SET `rank` = '1' WHERE `user_id` = @uid AND `group_id` = @gid LIMIT 1");
             dbClient.AddParameter("gid", Id);
@@ -130,7 +130,7 @@ public class Group
     {
         if (!_administrators.Contains(userId))
             return;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             dbClient.SetQuery("UPDATE group_memberships SET `rank` = '0' WHERE user_id = @uid AND group_id = @gid");
             dbClient.AddParameter("gid", Id);
@@ -145,7 +145,7 @@ public class Group
     {
         if (IsMember(id) || Type == GroupType.Locked && _requests.Contains(id))
             return;
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         if (IsAdmin(id))
         {
             dbClient.SetQuery("UPDATE `group_memberships` SET `rank` = '0' WHERE user_id = @uid AND group_id = @gid");
@@ -181,7 +181,7 @@ public class Group
         }
         else
             return;
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         dbClient.SetQuery("DELETE FROM group_memberships WHERE user_id=@uid AND group_id=@gid LIMIT 1");
         dbClient.AddParameter("gid", Id);
         dbClient.AddParameter("uid", id);
@@ -190,7 +190,7 @@ public class Group
 
     public void HandleRequest(int id, bool accepted)
     {
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             if (accepted)
             {

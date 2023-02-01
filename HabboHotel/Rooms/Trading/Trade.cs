@@ -131,13 +131,13 @@ public sealed class Trade
                 return;
             }
         }
-        using var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor();
+        using var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor();
         foreach (var item in userOne)
         {
             logUserOne += $"{item.Id};";
             roomUserOne.GetClient().GetHabbo().Inventory.Furniture.RemoveItem(item.Id);
             roomUserOne.GetClient().Send(new FurniListRemoveComposer(item.Id));
-            if (item.Definition.InteractionType == InteractionType.Exchange && PlusEnvironment.GetSettingsManager().TryGetValue("trading.auto_exchange_redeemables") == "1")
+            if (item.Definition.InteractionType == InteractionType.Exchange && PlusEnvironment.SettingsManager.TryGetValue("trading.auto_exchange_redeemables") == "1")
             {
                 roomUserTwo.GetClient().GetHabbo().Credits += item.Definition.BehaviourData;
                 roomUserTwo.GetClient().Send(new CreditBalanceComposer(roomUserTwo.GetClient().GetHabbo().Credits));
@@ -163,7 +163,7 @@ public sealed class Trade
             logUserTwo += $"{item.Id};";
             roomUserTwo.GetClient().GetHabbo().Inventory.Furniture.RemoveItem(item.Id);
             roomUserTwo.GetClient().Send(new FurniListRemoveComposer(item.Id));
-            if (item.Definition.InteractionType == InteractionType.Exchange && PlusEnvironment.GetSettingsManager().TryGetValue("trading.auto_exchange_redeemables") == "1")
+            if (item.Definition.InteractionType == InteractionType.Exchange && PlusEnvironment.SettingsManager.TryGetValue("trading.auto_exchange_redeemables") == "1")
             {
                 roomUserOne.GetClient().GetHabbo().Credits += item.Definition.BehaviourData;
                 roomUserOne.GetClient().Send(new CreditBalanceComposer(roomUserOne.GetClient().GetHabbo().Credits));

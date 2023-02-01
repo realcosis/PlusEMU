@@ -10,9 +10,9 @@ public static class BotUtility
     public static Bot CreateBot(ItemDefinition itemDefinition, int ownerId)
     {
         DataRow bot = null;
-        if (!PlusEnvironment.GetGame().GetCatalog().TryGetBot(itemDefinition.Id, out var cataBot))
+        if (!PlusEnvironment.Game.GetCatalog().TryGetBot(itemDefinition.Id, out var cataBot))
             return null;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             dbClient.SetQuery(
                 $"INSERT INTO bots (`user_id`,`name`,`motto`,`look`,`gender`,`ai_type`) VALUES ('{ownerId}', '{cataBot.Name}', '{cataBot.Motto}', '{cataBot.Figure}', '{cataBot.Gender}', '{cataBot.AiType}')");

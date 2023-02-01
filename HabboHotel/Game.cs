@@ -140,8 +140,8 @@ public class Game : IGame
         while (_cycleActive)
         {
             _cycleEnded = false;
-            PlusEnvironment.GetGame().GetRoomManager().OnCycle();
-            PlusEnvironment.GetGame().GetClientManager().OnCycle();
+            _roomManager.OnCycle();
+            _clientManager.OnCycle();
             _cycleEnded = true;
             Thread.Sleep(_cycleSleepTime);
         }

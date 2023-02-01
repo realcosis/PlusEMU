@@ -80,7 +80,7 @@ internal static class ItemBehaviourUtility
             case InteractionType.GuildGate:
             case InteractionType.GuildForum:
                 Group group = null;
-                if (!PlusEnvironment.GetGame().GetGroupManager().TryGetGroup(item.GroupId, out group))
+                if (!PlusEnvironment.Game.GetGroupManager().TryGetGroup(item.GroupId, out group))
                 {
                     packet.WriteInteger(1);
                     packet.WriteInteger(0);
@@ -94,8 +94,8 @@ internal static class ItemBehaviourUtility
                     packet.WriteString(item.LegacyDataString);
                     packet.WriteString(group.Id.ToString());
                     packet.WriteString(group.Badge);
-                    packet.WriteString(PlusEnvironment.GetGame().GetGroupManager().GetColourCode(group.Colour1, true));
-                    packet.WriteString(PlusEnvironment.GetGame().GetGroupManager().GetColourCode(group.Colour2, false));
+                    packet.WriteString(PlusEnvironment.Game.GetGroupManager().GetColourCode(group.Colour1, true));
+                    packet.WriteString(PlusEnvironment.Game.GetGroupManager().GetColourCode(group.Colour2, false));
                 }
                 break;
             case InteractionType.Background:
@@ -121,7 +121,7 @@ internal static class ItemBehaviourUtility
                 else
                 {
                     var style = int.Parse(extraData[6]) * 1000 + int.Parse(extraData[6]);
-                    var purchaser = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(Convert.ToInt32(extraData[2]));
+                    var purchaser = PlusEnvironment.Game.GetCacheManager().GenerateUser(Convert.ToInt32(extraData[2]));
                     if (purchaser == null)
                     {
                         packet.WriteInteger(0);

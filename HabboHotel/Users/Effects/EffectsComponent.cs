@@ -24,7 +24,7 @@ public sealed class EffectsComponent
     {
         if (_effects.Count > 0)
             return false;
-        using (var dbClient = PlusEnvironment.GetDatabaseManager().GetQueryReactor())
+        using (var dbClient = PlusEnvironment.DatabaseManager.GetQueryReactor())
         {
             dbClient.SetQuery("SELECT * FROM `user_effects` WHERE `user_id` = @id;");
             dbClient.AddParameter("id", habbo.Id);

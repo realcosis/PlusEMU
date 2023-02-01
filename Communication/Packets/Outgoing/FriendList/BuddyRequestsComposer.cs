@@ -21,7 +21,7 @@ public class BuddyRequestsComposer : IServerPacket
         {
             packet.WriteInteger(request.FromId);
             packet.WriteString(request.Username);
-            var user = PlusEnvironment.GetGame().GetCacheManager().GenerateUser(request.FromId);
+            var user = PlusEnvironment.Game.GetCacheManager().GenerateUser(request.FromId);
             packet.WriteString(user != null ? user.Look : "");
         }
     }
