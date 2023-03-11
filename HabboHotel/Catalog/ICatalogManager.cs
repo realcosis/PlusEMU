@@ -9,7 +9,7 @@ namespace Plus.HabboHotel.Catalog;
 public interface ICatalogManager
 {
     Dictionary<int, int> ItemOffers { get; }
-    void Init(IItemDataManager itemDataManager);
+    Task Init(IItemDataManager itemDataManager);
     bool TryGetBot(uint itemId, out CatalogBot bot);
     bool TryGetPage(int pageId, out CatalogPage page);
     bool TryGetDeal(int dealId, out CatalogDeal deal);

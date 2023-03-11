@@ -101,14 +101,14 @@ public class Game : IGame
     {
         _moderationManager.Init();
         _itemDataManager.Init();
-        _catalogManager.Init(_itemDataManager);
+        //_catalogManager.Init(_itemDataManager);
         _televisionManager.Init();
         _navigatorManager.Init();
         _roomManager.LoadModels();
         _chatManager.Init();
         _groupManager.Init();
         _questManager.Init();
-        _achievementManager.Init();
+        //_achievementManager.Init();
         _talentTrackManager.Init();
         _gameDataManager.Init();
         _globalUpdater.Init();

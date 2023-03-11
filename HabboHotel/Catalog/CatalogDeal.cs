@@ -44,7 +44,7 @@ public class CatalogDeal
                 continue;
             if (!itemDataManager.Items.TryGetValue(itemId, out var data))
                 continue;
-            ItemDataList.Add(new(0, itemId, data, string.Empty, 0, 0, 0, 0, amount, 0, 0, false, "", "", 0));
+            //itemDataList.Add(new(0, itemId, data, string.Empty, 0, 0, 0, 0, amount, 0, 0, false, "", "", 0));
         }
     }
 

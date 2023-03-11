@@ -1,4 +1,6 @@
-﻿using System.Data;
+﻿using System.Buffers.Text;
+using System.Data;
+using Dapper;
 using Microsoft.Extensions.Logging;
 using Plus.Database;
 using Plus.HabboHotel.Catalog.Clothing;
@@ -44,7 +46,7 @@ public class CatalogManager : ICatalogManager
 
     public Dictionary<int, int> ItemOffers => _itemOffers;
 
-    public void Init(IItemDataManager itemDataManager)
+    public async Task Init(IItemDataManager itemDataManager)
     {
         _voucherManager.Init();
         _clothingManager.Init();
@@ -58,37 +60,50 @@ public class CatalogManager : ICatalogManager
             _deals.Clear();
         if (_promotions.Count > 0)
             _promotions.Clear();
+
+        using var connection = _database.Connection();
+        var table = await connection.QueryAsync<CatalogItem>("SELECT `id`,`item_id`,`catalog_name`,`cost_credits`,`cost_pixels`,`cost_diamonds`,`amount`,`page_id`,`limited_sells`,`limited_stack`,`offer_active`,`extradata`,`badge`,`offer_id` FROM `catalog_items`");
+
+        foreach(CatalogItem item in table.ToList())
+        {
+            if (item.Amount <= 0)
+                continue;
+
+            if (!itemDataManager.Items.TryGetValue(item.ItemId, out ItemDefinition? definition))
+            {
+                _logger.LogError("Couldn't load Catalog Item " + item.ItemId + ", no furniture record found.");
+                continue;
+            }
+
+            if (!_items.ContainsKey(item.PageId))
+                _items[item.PageId] = new();
+
+            if (item.OfferId != -1 && !_itemOffers.ContainsKey(item.OfferId))
+                _itemOffers.Add(item.OfferId, item.PageId);
+
+            _items[item.PageId].Add(item.Id, new CatalogItem()
+            {
+                Id = item.Id,
+                PageId = item.PageId,
+                ItemId = item.ItemId,
+                Amount = item.Amount,
+                Badge = item.Badge,
+                CostCredits = item.CostCredits,
+                CostDiamonds = item.CostDiamonds,
+                CostPixels = item.CostPixels,
+                Definition = definition,
+                ExtraData = item.ExtraData,
+                HaveOffer = item.HaveOffer,
+                IsLimited = item.IsLimited,
+                LimitedEditionSells = item.LimitedEditionSells,
+                LimitedEditionStack = item.LimitedEditionStack,
+                Name = item.Name,
+                OfferId = item.OfferId
+            });
+        }
+
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.SetQuery(
-                "SELECT `id`,`item_id`,`catalog_name`,`cost_credits`,`cost_pixels`,`cost_diamonds`,`amount`,`page_id`,`limited_sells`,`limited_stack`,`offer_active`,`extradata`,`badge`,`offer_id` FROM `catalog_items`");
-            var catalogueItems = dbClient.GetTable();
-            if (catalogueItems != null)
-            {
-                foreach (DataRow row in catalogueItems.Rows)
-                {
-                    if (Convert.ToInt32(row["amount"]) <= 0)
-                        continue;
-                    var itemId = Convert.ToInt32(row["id"]);
-                    var pageId = Convert.ToInt32(row["page_id"]);
-                    var baseId = Convert.ToUInt32(row["item_id"]);
-                    var offerId = Convert.ToInt32(row["offer_id"]);
-                    if (!itemDataManager.Items.TryGetValue(baseId, out var data))
-                    {
-                        _logger.LogError("Couldn't load Catalog Item " + itemId + ", no furniture record found.");
-                        continue;
-                    }
-                    if (!_items.ContainsKey(pageId))
-                        _items[pageId] = new();
-                    if (offerId != -1 && !_itemOffers.ContainsKey(offerId))
-                        _itemOffers.Add(offerId, pageId);
-                    _items[pageId].Add(Convert.ToInt32(row["id"]), new(Convert.ToInt32(row["id"]), Convert.ToUInt32(row["item_id"]),
-                        data, Convert.ToString(row["catalog_name"]), Convert.ToInt32(row["page_id"]), Convert.ToInt32(row["cost_credits"]), Convert.ToInt32(row["cost_pixels"]),
-                        Convert.ToInt32(row["cost_diamonds"]),
-                        Convert.ToInt32(row["amount"]), Convert.ToUInt32(row["limited_sells"]), Convert.ToUInt32(row["limited_stack"]), ConvertExtensions.EnumToBool(row["offer_active"].ToString()),
-                        Convert.ToString(row["extradata"]), Convert.ToString(row["badge"]), Convert.ToInt32(row["offer_id"])));
-                }
-            }
             dbClient.SetQuery("SELECT `id`, `items`, `name`, `room_id` FROM `catalog_deals`");
             var getDeals = dbClient.GetTable();
             if (getDeals != null)

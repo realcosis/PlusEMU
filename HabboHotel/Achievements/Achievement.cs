@@ -2,24 +2,24 @@
 
 public class Achievement
 {
-    public Dictionary<int, AchievementLevel> Levels;
 
-    public Achievement(int id, string groupName, string category, int gameId)
-    {
-        Id = id;
-        GroupName = groupName;
-        Category = category;
-        GameId = gameId;
-        Levels = new();
-    }
+    public int Id { get; set; }
 
-    public int Id { get; }
-    public string Category { get; }
-    public string GroupName { get; }
-    public int GameId { get; }
+    public string? Category { get; set; }
 
-    public void AddLevel(AchievementLevel level)
-    {
-        Levels.Add(level.Level, level);
-    }
+    public string? GroupName { get; set; }
+
+    public int RewardPixels { get; set; }
+
+    public int RewardPoints { get; set; }
+
+    public int ProgressNeeded { get; set; }
+
+    public int GameId { get; set; }
+
+    public int Level { get; set; }
+
+    public Dictionary<int, AchievementLevel> Levels { get; set; } = new();
+
+    public void AddLevel(AchievementLevel level) => Levels.Add(level.Level, level);
 }
