@@ -112,7 +112,7 @@ internal class UpdateCommand : IChatCommand
                     session.SendWhisper("Oops, you do not have the 'command_update_catalog' permission.");
                     break;
                 }
-                _catalogManager.Init(_itemDataManager);
+                _catalogManager.Init();
                 _clientManager.SendPacket(new CatalogUpdatedComposer());
                 session.SendWhisper("Catalogue successfully updated.");
                 break;

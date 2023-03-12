@@ -1,16 +1,16 @@
-﻿using System.Data;
+﻿using Dapper;
 using Microsoft.Extensions.Logging;
+using Plus.Core;
 using Plus.Database;
 using Plus.HabboHotel.Catalog.Clothing;
 using Plus.HabboHotel.Catalog.Marketplace;
 using Plus.HabboHotel.Catalog.Pets;
 using Plus.HabboHotel.Catalog.Vouchers;
 using Plus.HabboHotel.Items;
-using Plus.Utilities;
 
 namespace Plus.HabboHotel.Catalog;
 
-public class CatalogManager : ICatalogManager
+public class CatalogManager : ICatalogManager, IStartable
 {
     private readonly ILogger<CatalogManager> _logger;
     private readonly Dictionary<uint, CatalogBot> _botPresets;
@@ -18,20 +18,22 @@ public class CatalogManager : ICatalogManager
     private readonly Dictionary<int, Dictionary<int, CatalogItem>> _items;
     private readonly Dictionary<int, CatalogPage> _pages;
     private readonly Dictionary<int, CatalogPromotion> _promotions;
-    private Dictionary<int, int> _itemOffers;
+    private readonly Dictionary<int, int> _itemOffers;
 
     private readonly IClothingManager _clothingManager;
     private readonly IDatabase _database;
     private readonly IMarketplaceManager _marketplace;
     private readonly IPetRaceManager _petRaceManager;
     private readonly IVoucherManager _voucherManager;
+    private readonly IItemDataManager _itemDataManager;
 
-    public CatalogManager(IMarketplaceManager marketplace, IPetRaceManager petRaceManager, IVoucherManager voucherManager, IClothingManager clothingManager, IDatabase database, ILogger<CatalogManager> logger)
+    public CatalogManager(IMarketplaceManager marketplace, IPetRaceManager petRaceManager, IVoucherManager voucherManager, IClothingManager clothingManager, IDatabase database, ILogger<CatalogManager> logger, IItemDataManager itemDataManager)
     {
         _marketplace = marketplace;
         _petRaceManager = petRaceManager;
         _voucherManager = voucherManager;
         _clothingManager = clothingManager;
+        _itemDataManager = itemDataManager;
         _database = database;
         _logger = logger;
         _itemOffers = new();
@@ -44,7 +46,9 @@ public class CatalogManager : ICatalogManager
 
     public Dictionary<int, int> ItemOffers => _itemOffers;
 
-    public void Init(IItemDataManager itemDataManager)
+    public async Task Start() => await Init();
+
+    public async Task Init()
     {
         _voucherManager.Init();
         _clothingManager.Init();
@@ -58,93 +62,103 @@ public class CatalogManager : ICatalogManager
             _deals.Clear();
         if (_promotions.Count > 0)
             _promotions.Clear();
-        using (var dbClient = _database.GetQueryReactor())
+
+        using var connection = _database.Connection();
+
+        var items = await connection.QueryAsync<CatalogItem>("SELECT `id`,`item_id`,`catalog_name`,`cost_credits`,`cost_pixels`,`cost_diamonds`,`amount`,`page_id`,`limited_sells`,`limited_stack`,`offer_active`,`extradata`,`badge`,`offer_id` FROM `catalog_items`");
+        foreach(CatalogItem item in items)
         {
-            dbClient.SetQuery(
-                "SELECT `id`,`item_id`,`catalog_name`,`cost_credits`,`cost_pixels`,`cost_diamonds`,`amount`,`page_id`,`limited_sells`,`limited_stack`,`offer_active`,`extradata`,`badge`,`offer_id` FROM `catalog_items`");
-            var catalogueItems = dbClient.GetTable();
-            if (catalogueItems != null)
+            if (item.Amount <= 0)
+                continue;
+
+            if (!_itemDataManager.Items.TryGetValue(item.ItemId, out ItemDefinition? definition))
             {
-                foreach (DataRow row in catalogueItems.Rows)
-                {
-                    if (Convert.ToInt32(row["amount"]) <= 0)
-                        continue;
-                    var itemId = Convert.ToInt32(row["id"]);
-                    var pageId = Convert.ToInt32(row["page_id"]);
-                    var baseId = Convert.ToUInt32(row["item_id"]);
-                    var offerId = Convert.ToInt32(row["offer_id"]);
-                    if (!itemDataManager.Items.TryGetValue(baseId, out var data))
-                    {
-                        _logger.LogError("Couldn't load Catalog Item " + itemId + ", no furniture record found.");
-                        continue;
-                    }
-                    if (!_items.ContainsKey(pageId))
-                        _items[pageId] = new();
-                    if (offerId != -1 && !_itemOffers.ContainsKey(offerId))
-                        _itemOffers.Add(offerId, pageId);
-                    _items[pageId].Add(Convert.ToInt32(row["id"]), new(Convert.ToInt32(row["id"]), Convert.ToUInt32(row["item_id"]),
-                        data, Convert.ToString(row["catalog_name"]), Convert.ToInt32(row["page_id"]), Convert.ToInt32(row["cost_credits"]), Convert.ToInt32(row["cost_pixels"]),
-                        Convert.ToInt32(row["cost_diamonds"]),
-                        Convert.ToInt32(row["amount"]), Convert.ToUInt32(row["limited_sells"]), Convert.ToUInt32(row["limited_stack"]), ConvertExtensions.EnumToBool(row["offer_active"].ToString()),
-                        Convert.ToString(row["extradata"]), Convert.ToString(row["badge"]), Convert.ToInt32(row["offer_id"])));
-                }
+                _logger.LogError("Couldn't load Catalog Item " + item.ItemId + ", no furniture record found.");
+                continue;
             }
-            dbClient.SetQuery("SELECT `id`, `items`, `name`, `room_id` FROM `catalog_deals`");
-            var getDeals = dbClient.GetTable();
-            if (getDeals != null)
-            {
-                foreach (DataRow row in getDeals.Rows)
-                {
-                    var id = Convert.ToInt32(row["id"]);
-                    var items = Convert.ToString(row["items"]);
-                    var name = Convert.ToString(row["name"]);
-                    var roomId = Convert.ToInt32(row["room_id"]);
-                    var deal = new CatalogDeal(id, items, name, roomId, itemDataManager);
-                    if (!_deals.ContainsKey(id))
-                        _deals.Add(deal.Id, deal);
-                }
-            }
-            dbClient.SetQuery(
-                "SELECT `id`,`parent_id`,`caption`,`page_link`,`visible`,`enabled`,`min_rank`,`min_vip`,`icon_image`,`page_layout`,`page_strings_1`,`page_strings_2` FROM `catalog_pages` ORDER BY `order_num`");
-            var catalogPages = dbClient.GetTable();
-            if (catalogPages != null)
-            {
-                foreach (DataRow row in catalogPages.Rows)
-                {
-                    _pages.Add(Convert.ToInt32(row["id"]), new(Convert.ToInt32(row["id"]), Convert.ToInt32(row["parent_id"]), row["enabled"].ToString(), Convert.ToString(row["caption"]),
-                        Convert.ToString(row["page_link"]), Convert.ToInt32(row["icon_image"]), Convert.ToInt32(row["min_rank"]), Convert.ToInt32(row["min_vip"]), row["visible"].ToString(),
-                        Convert.ToString(row["page_layout"]),
-                        Convert.ToString(row["page_strings_1"]), Convert.ToString(row["page_strings_2"]),
-                        _items.ContainsKey(Convert.ToInt32(row["id"])) ? _items[Convert.ToInt32(row["id"])] : new(), ref _itemOffers));
-                }
-            }
-            dbClient.SetQuery("SELECT `id`,`name`,`figure`,`motto`,`gender`,`ai_type` FROM `catalog_bot_presets`");
-            var bots = dbClient.GetTable();
-            if (bots != null)
-            {
-                foreach (DataRow row in bots.Rows)
-                {
-                    _botPresets.Add(Convert.ToUInt32(row[0]),
-                        new(Convert.ToInt32(row[0]), Convert.ToString(row[1]), Convert.ToString(row[2]), Convert.ToString(row[3]), Convert.ToString(row[4]), Convert.ToString(row[5])));
-                }
-            }
-            dbClient.SetQuery("SELECT * FROM `catalog_promotions`");
-            var getPromotions = dbClient.GetTable();
-            if (getPromotions != null)
-            {
-                foreach (DataRow row in getPromotions.Rows)
-                {
-                    if (!_promotions.ContainsKey(Convert.ToInt32(row["id"])))
-                    {
-                        _promotions.Add(Convert.ToInt32(row["id"]),
-                            new(Convert.ToInt32(row["id"]), Convert.ToString(row["title"]), Convert.ToString(row["image"]), Convert.ToInt32(row["unknown"]),
-                                Convert.ToString(row["page_link"]), Convert.ToInt32(row["parent_id"])));
-                    }
-                }
-            }
-            _petRaceManager.Init();
-            _clothingManager.Init();
+
+            if (!_items.ContainsKey(item.PageId))
+                _items[item.PageId] = new();
+
+            if (item.OfferId != -1 && !_itemOffers.ContainsKey(item.OfferId))
+                _itemOffers.Add(item.OfferId, item.PageId);
+
+            item.Definition = definition;
+            _items[item.PageId].Add(item.Id, item);
         }
+
+        var deals = await connection.QueryAsync<CatalogDeal>("SELECT `id`, `items`, `name`, `room_id` FROM `catalog_deals`");
+        foreach (CatalogDeal deal in deals)
+        {
+            if (_deals.ContainsKey(deal.Id))
+                continue;
+
+            var itemDataList = new List<CatalogItem>();
+            if (!string.IsNullOrWhiteSpace(deal.Items))
+            {
+                var splitItems = deal.Items.Split(';');
+                foreach (var split in splitItems)
+                {
+                    var item = split.Split('*');
+                    if (!uint.TryParse(item[0], out var itemId) || !int.TryParse(item[1], out var amount))
+                        continue;
+
+                    if (!_itemDataManager.Items.TryGetValue(itemId, out var data))
+                        continue;
+
+                    itemDataList.Add(new()
+                    {
+                        Id = 0,
+                        ItemId = itemId,
+                        Definition = data,
+                        CatalogName = string.Empty,
+                        PageId = 0,
+                        CostCredits = 0,
+                        CostPixels = 0,
+                        CostDiamonds = 0,
+                        Amount = amount,
+                        LimitedEditionSells = 0,
+                        LimitedEditionStack = 0,
+                        HaveOffer = true,
+                        ExtraData = "",
+                        Badge = "",
+                        OfferId = 0
+                    });
+                }
+                deal.ItemDataList = itemDataList;
+            }
+
+            _deals.Add(deal.Id, deal);
+        }
+
+        var pages = await connection.QueryAsync<CatalogPage>("SELECT `id`,`parent_id`,`caption`,`page_link` as `link`,`visible`,`enabled`,`min_rank` as `minimumrank`,`min_vip` as `minimumvip`,`icon_image` as `icon`,`page_layout` as `layout`,`page_strings_1`,`page_strings_2` FROM `catalog_pages` ORDER BY `order_num`");
+        foreach (CatalogPage page in pages)
+        {
+            if (_items.ContainsKey(page.Id))
+                page.Items = _items[page.Id];
+
+            page.PageStringsList1 = !string.IsNullOrWhiteSpace(page.PageStrings1) ? page.PageStrings1!.Split("|").ToList() : new();
+            page.PageStringsList2 = !string.IsNullOrWhiteSpace(page.PageStrings2) ? page.PageStrings2!.Split("|").ToList() : new();
+            _pages.Add(page.Id, page);
+        }
+
+        var bots = await connection.QueryAsync<CatalogBot>("SELECT `id`,`name`,`figure`,`motto`,`gender`,`ai_type` FROM `catalog_bot_presets`");
+        foreach (CatalogBot bot in bots)
+        {
+            _botPresets.Add(bot.Id, bot);
+        }
+
+        var promotions = await connection.QueryAsync<CatalogPromotion>("SELECT `id`,`title`,`image`,`unknown`,`page_link`,`parent_id` FROM `catalog_promotions`");
+        foreach(CatalogPromotion promotion in promotions)
+        {
+            if (_promotions.ContainsKey(promotion.Id))
+                continue;
+
+            _promotions.Add(promotion.Id, promotion);
+        }
+
+        _petRaceManager.Init();
+        _clothingManager.Init();
         _logger.LogInformation("Catalog Manager -> LOADED");
     }
 

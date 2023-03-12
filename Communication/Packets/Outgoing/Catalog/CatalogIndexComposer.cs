@@ -60,7 +60,7 @@ public class CatalogIndexComposer : IServerPacket
         packet.WriteBoolean(page.Visible);
         packet.WriteInteger(page.Icon);
         packet.WriteInteger(-1);
-        packet.WriteString(page.PageLink);
+        packet.WriteString(page.Link);
         packet.WriteString(page.Caption);
         packet.WriteInteger(0);
         packet.WriteInteger(treeSize);
@@ -71,7 +71,7 @@ public class CatalogIndexComposer : IServerPacket
         packet.WriteBoolean(page.Visible);
         packet.WriteInteger(page.Icon);
         packet.WriteInteger(page.Id);
-        packet.WriteString(page.PageLink);
+        packet.WriteString(page.Link);
         packet.WriteString(page.Caption);
         packet.WriteInteger(page.ItemOffers.Count);
         foreach (var i in page.ItemOffers.Keys) packet.WriteInteger(i);

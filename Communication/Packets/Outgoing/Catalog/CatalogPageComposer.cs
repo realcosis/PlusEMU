@@ -22,18 +22,18 @@ public class CatalogPageComposer : IServerPacket
     {
         packet.WriteInteger(_page.Id);
         packet.WriteString(_mode);
-        packet.WriteString(_page.Template);
-        packet.WriteInteger(_page.PageStrings1.Count);
-        foreach (var s in _page.PageStrings1) packet.WriteString(s);
-        packet.WriteInteger(_page.PageStrings2.Count);
-        foreach (var s in _page.PageStrings2) packet.WriteString(s);
-        if (!_page.Template.Equals("frontpage") && !_page.Template.Equals("club_buy"))
+        packet.WriteString(_page.Layout);
+        packet.WriteInteger(_page.PageStringsList1.Count);
+        foreach (var s in _page.PageStringsList1) packet.WriteString(s);
+        packet.WriteInteger(_page.PageStringsList2.Count);
+        foreach (var s in _page.PageStringsList2) packet.WriteString(s);
+        if (!_page.Layout.Equals("frontpage") && !_page.Layout.Equals("club_buy"))
         {
             packet.WriteInteger(_page.Items.Count);
             foreach (var item in _page.Items.Values)
             {
                 packet.WriteInteger(item.Id);
-                packet.WriteString(item.Name);
+                packet.WriteString(item.CatalogName);
                 packet.WriteBoolean(false); //IsRentable
                 packet.WriteInteger(item.CostCredits);
                 if (item.CostDiamonds > 0)
@@ -83,7 +83,7 @@ public class CatalogPageComposer : IServerPacket
                     {
                         packet.WriteInteger(item.Definition.SpriteId);
                         if (item.Definition.InteractionType == InteractionType.Wallpaper || item.Definition.InteractionType == InteractionType.Floor || item.Definition.InteractionType == InteractionType.Landscape)
-                            packet.WriteString(item.Name.Split('_')[2]);
+                            packet.WriteString(item.CatalogName.Split('_')[2]);
                         else if (item.Definition.InteractionType == InteractionType.Bot) //Bots
                         {
                             CatalogBot catalogBot = null;

@@ -16,6 +16,9 @@ using Plus.Core.Language;
 using Plus.Core.Settings;
 using Plus.Database;
 using Plus.HabboHotel;
+using Plus.HabboHotel.Achievements;
+using Plus.HabboHotel.Catalog;
+using Plus.HabboHotel.Items;
 using Plus.HabboHotel.Users;
 using Plus.HabboHotel.Users.UserData;
 
@@ -38,6 +41,7 @@ public class PlusEnvironment : IPlusEnvironment
     private static IFlashServer _flashServer;
     private readonly INitroServer _nitroServer;
     private static IFigureDataManager _figureManager;
+    private static IItemDataManager _itemDataManager;
 
     public static DateTime ServerStarted;
 
@@ -61,6 +65,7 @@ public class PlusEnvironment : IPlusEnvironment
         IEnumerable<IStartable> startableTasks,
         IRconSocket rconSocket,
         IOptions<RconConfiguration> rconConfiguration,
+        IItemDataManager itemDataManager,
         IFlashServer flashServer,
         INitroServer nitroServer)
     {
@@ -74,6 +79,7 @@ public class PlusEnvironment : IPlusEnvironment
         _flashServer = flashServer;
         _nitroServer = nitroServer;
         _rconConfiguration = rconConfiguration.Value;
+        _itemDataManager = itemDataManager;
     }
 
     public async Task<bool> Start()
@@ -123,6 +129,7 @@ public class PlusEnvironment : IPlusEnvironment
             _flashServer.Start();
             _nitroServer.Start();
 
+            _itemDataManager.Init();
             // Allow services to self initialize
             foreach (var task in _startableTasks)
                 await task.Start();

@@ -45,7 +45,7 @@ public class CatalogOfferComposer : IServerPacket
         {
             packet.WriteInteger(_item.Definition.SpriteId);
             if (_item.Definition.InteractionType == InteractionType.Wallpaper || _item.Definition.InteractionType == InteractionType.Floor || _item.Definition.InteractionType == InteractionType.Landscape)
-                packet.WriteString(_item.Name.Split('_')[2]);
+                packet.WriteString(_item.CatalogName.Split('_')[2]);
 
             // TODO @80O: Dont make this static hardcoded page 9
             else if (_item.PageId == 9) //Bots

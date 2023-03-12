@@ -2,5 +2,5 @@
 
 public interface IAchievementLevelFactory
 {
-    Dictionary<string, Achievement> GetAchievementLevels();
+    Task<Dictionary<string, Achievement>> GetAchievementLevels();
 }

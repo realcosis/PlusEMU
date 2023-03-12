@@ -2,20 +2,10 @@
 
 public class CatalogPromotion
 {
-    public CatalogPromotion(int id, string title, string image, int unknown, string pageLink, int parentId)
-    {
-        Id = id;
-        Title = title;
-        Image = image;
-        Unknown = unknown;
-        PageLink = pageLink;
-        ParentId = parentId;
-    }
-
-    public int Id { get; }
-    public string Title { get; }
-    public string Image { get; }
-    public int Unknown { get; }
-    public string PageLink { get; }
-    public int ParentId { get; }
+    public int Id { get; set; }
+    public string? Title { get; set; }
+    public string? Image { get; set; }
+    public int Unknown { get; set; }
+    public string? PageLink { get; set; }
+    public int ParentId { get; set; }
 }
