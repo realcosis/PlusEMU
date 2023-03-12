@@ -6,10 +6,11 @@ using Plus.HabboHotel.Badges;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users.Messenger;
 using Plus.HabboHotel.Users;
+using Plus.Core;
 
 namespace Plus.HabboHotel.Achievements;
 
-public class AchievementManager : IAchievementManager
+public class AchievementManager : IAchievementManager, IStartable
 {
     public Dictionary<string, Achievement> Achievements { get; private set; }
     private readonly IAchievementLevelFactory _achievementLevelFactory;
@@ -23,6 +24,8 @@ public class AchievementManager : IAchievementManager
         _badgeManager = badgeManager;
         Achievements = new();
     }
+
+    public async Task Start() => await Init();
 
     public async Task Init() => Achievements = await _achievementLevelFactory.GetAchievementLevels();
 

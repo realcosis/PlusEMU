@@ -22,12 +22,12 @@ public class CatalogPageComposer : IServerPacket
     {
         packet.WriteInteger(_page.Id);
         packet.WriteString(_mode);
-        packet.WriteString(_page.PageLayout);
+        packet.WriteString(_page.Layout);
         packet.WriteInteger(_page.PageStringsList1.Count);
         foreach (var s in _page.PageStringsList1) packet.WriteString(s);
         packet.WriteInteger(_page.PageStringsList2.Count);
         foreach (var s in _page.PageStringsList2) packet.WriteString(s);
-        if (!_page.PageLayout.Equals("frontpage") && !_page.PageLayout.Equals("club_buy"))
+        if (!_page.Layout.Equals("frontpage") && !_page.Layout.Equals("club_buy"))
         {
             packet.WriteInteger(_page.Items.Count);
             foreach (var item in _page.Items.Values)

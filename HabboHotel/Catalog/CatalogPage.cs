@@ -10,17 +10,17 @@ public class CatalogPage
 
     public string? Caption { get; set; }
 
-    public string? PageLink { get; set; }
+    public string? Link { get; set; }
 
-    public int IconImage { get; set; }
+    public int Icon { get; set; }
 
-    public int MinRank { get; set; }
+    public int MinimumRank { get; set; }
 
-    public int MinVip { get; set; }
+    public int MinimumVip { get; set; }
 
     public bool Visible { get; set; }
 
-    public string? PageLayout { get; set; }
+    public string Layout { get; set; }
 
     public string? PageStrings1 { get; set; }
 

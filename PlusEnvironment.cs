@@ -41,8 +41,6 @@ public class PlusEnvironment : IPlusEnvironment
     private static IFlashServer _flashServer;
     private readonly INitroServer _nitroServer;
     private static IFigureDataManager _figureManager;
-    private static IAchievementManager _achievementManager;
-    private static ICatalogManager _catalogManager;
     private static IItemDataManager _itemDataManager;
 
     public static DateTime ServerStarted;
@@ -67,8 +65,6 @@ public class PlusEnvironment : IPlusEnvironment
         IEnumerable<IStartable> startableTasks,
         IRconSocket rconSocket,
         IOptions<RconConfiguration> rconConfiguration,
-        IAchievementManager achievementManager,
-        ICatalogManager catalogManager,
         IItemDataManager itemDataManager,
         IFlashServer flashServer,
         INitroServer nitroServer)
@@ -83,8 +79,6 @@ public class PlusEnvironment : IPlusEnvironment
         _flashServer = flashServer;
         _nitroServer = nitroServer;
         _rconConfiguration = rconConfiguration.Value;
-        _achievementManager = achievementManager;
-        _catalogManager = catalogManager;
         _itemDataManager = itemDataManager;
     }
 
@@ -135,13 +129,10 @@ public class PlusEnvironment : IPlusEnvironment
             _flashServer.Start();
             _nitroServer.Start();
 
+            _itemDataManager.Init();
             // Allow services to self initialize
             foreach (var task in _startableTasks)
                 await task.Start();
-
-            await _achievementManager.Init();
-            _itemDataManager.Init();
-            await _catalogManager.Init();
 
             await _game.Init();
             _game.StartGameLoop();

@@ -20,7 +20,7 @@ public class GetCatalogPageEvent : IPacketEvent
         var cataMode = packet.ReadString();
         if (!_catalogManager.TryGetPage(pageId, out var page))
             return Task.CompletedTask;
-        if (!page.Enabled || !page.Visible || page.MinRank > session.GetHabbo().Rank || page.MinVip > session.GetHabbo().VipRank && session.GetHabbo().Rank == 1)
+        if (!page.Enabled || !page.Visible || page.MinimumRank > session.GetHabbo().Rank || page.MinimumVip > session.GetHabbo().VipRank && session.GetHabbo().Rank == 1)
             return Task.CompletedTask;
         session.Send(new CatalogPageComposer(page, cataMode));
         return Task.CompletedTask;

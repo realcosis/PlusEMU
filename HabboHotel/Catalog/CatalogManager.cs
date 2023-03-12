@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Extensions.Logging;
+using Plus.Core;
 using Plus.Database;
 using Plus.HabboHotel.Catalog.Clothing;
 using Plus.HabboHotel.Catalog.Marketplace;
@@ -9,7 +10,7 @@ using Plus.HabboHotel.Items;
 
 namespace Plus.HabboHotel.Catalog;
 
-public class CatalogManager : ICatalogManager
+public class CatalogManager : ICatalogManager, IStartable
 {
     private readonly ILogger<CatalogManager> _logger;
     private readonly Dictionary<uint, CatalogBot> _botPresets;
@@ -44,6 +45,8 @@ public class CatalogManager : ICatalogManager
     }
 
     public Dictionary<int, int> ItemOffers => _itemOffers;
+
+    public async Task Start() => await Init();
 
     public async Task Init()
     {
@@ -128,7 +131,7 @@ public class CatalogManager : ICatalogManager
             _deals.Add(deal.Id, deal);
         }
 
-        var pages = await connection.QueryAsync<CatalogPage>("SELECT `id`,`parent_id`,`caption`,`page_link`,`visible`,`enabled`,`min_rank`,`min_vip`,`icon_image`,`page_layout`,`page_strings_1`,`page_strings_2` FROM `catalog_pages` ORDER BY `order_num`");
+        var pages = await connection.QueryAsync<CatalogPage>("SELECT `id`,`parent_id`,`caption`,`page_link` as `link`,`visible`,`enabled`,`min_rank` as `minimumrank`,`min_vip` as `minimumvip`,`icon_image` as `icon`,`page_layout` as `layout`,`page_strings_1`,`page_strings_2` FROM `catalog_pages` ORDER BY `order_num`");
         foreach (CatalogPage page in pages)
         {
             if (_items.ContainsKey(page.Id))
