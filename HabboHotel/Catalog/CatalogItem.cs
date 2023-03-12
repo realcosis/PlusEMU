@@ -12,7 +12,7 @@ public class CatalogItem
     public string ExtraData { get; set; }
     public bool HaveOffer { get; set; }
     public bool IsLimited { get; set; }
-    public string Name { get; set; }
+    public string CatalogName { get; set; }
     public int PageId { get; set; }
     public int CostPixels { get; set; }
     public uint LimitedEditionStack { get; set; }

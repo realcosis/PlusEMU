@@ -27,13 +27,15 @@ public class CatalogManager : ICatalogManager
     private readonly IMarketplaceManager _marketplace;
     private readonly IPetRaceManager _petRaceManager;
     private readonly IVoucherManager _voucherManager;
+    private readonly IItemDataManager _itemDataManager;
 
-    public CatalogManager(IMarketplaceManager marketplace, IPetRaceManager petRaceManager, IVoucherManager voucherManager, IClothingManager clothingManager, IDatabase database, ILogger<CatalogManager> logger)
+    public CatalogManager(IMarketplaceManager marketplace, IPetRaceManager petRaceManager, IVoucherManager voucherManager, IClothingManager clothingManager, IDatabase database, ILogger<CatalogManager> logger, IItemDataManager itemDataManager)
     {
         _marketplace = marketplace;
         _petRaceManager = petRaceManager;
         _voucherManager = voucherManager;
         _clothingManager = clothingManager;
+        _itemDataManager = itemDataManager;
         _database = database;
         _logger = logger;
         _itemOffers = new();
@@ -46,7 +48,7 @@ public class CatalogManager : ICatalogManager
 
     public Dictionary<int, int> ItemOffers => _itemOffers;
 
-    public async Task Init(IItemDataManager itemDataManager)
+    public async Task Init()
     {
         _voucherManager.Init();
         _clothingManager.Init();
@@ -62,14 +64,14 @@ public class CatalogManager : ICatalogManager
             _promotions.Clear();
 
         using var connection = _database.Connection();
-        var table = await connection.QueryAsync<CatalogItem>("SELECT `id`,`item_id`,`catalog_name`,`cost_credits`,`cost_pixels`,`cost_diamonds`,`amount`,`page_id`,`limited_sells`,`limited_stack`,`offer_active`,`extradata`,`badge`,`offer_id` FROM `catalog_items`");
 
-        foreach(CatalogItem item in table.ToList())
+        var items = await connection.QueryAsync<CatalogItem>("SELECT `id`,`item_id`,`catalog_name`,`cost_credits`,`cost_pixels`,`cost_diamonds`,`amount`,`page_id`,`limited_sells`,`limited_stack`,`offer_active`,`extradata`,`badge`,`offer_id` FROM `catalog_items`");
+        foreach(CatalogItem item in items)
         {
             if (item.Amount <= 0)
                 continue;
 
-            if (!itemDataManager.Items.TryGetValue(item.ItemId, out ItemDefinition? definition))
+            if (!_itemDataManager.Items.TryGetValue(item.ItemId, out ItemDefinition? definition))
             {
                 _logger.LogError("Couldn't load Catalog Item " + item.ItemId + ", no furniture record found.");
                 continue;
@@ -81,58 +83,67 @@ public class CatalogManager : ICatalogManager
             if (item.OfferId != -1 && !_itemOffers.ContainsKey(item.OfferId))
                 _itemOffers.Add(item.OfferId, item.PageId);
 
-            _items[item.PageId].Add(item.Id, new CatalogItem()
+            item.Definition = definition;
+            _items[item.PageId].Add(item.Id, item);
+        }
+
+        var deals = await connection.QueryAsync<CatalogDeal>("SELECT `id`, `items`, `name`, `room_id` FROM `catalog_deals`");
+        foreach (CatalogDeal deal in deals)
+        {
+            if (_deals.ContainsKey(deal.Id))
+                continue;
+
+            var itemDataList = new List<CatalogItem>();
+            if (!string.IsNullOrWhiteSpace(deal.Items))
             {
-                Id = item.Id,
-                PageId = item.PageId,
-                ItemId = item.ItemId,
-                Amount = item.Amount,
-                Badge = item.Badge,
-                CostCredits = item.CostCredits,
-                CostDiamonds = item.CostDiamonds,
-                CostPixels = item.CostPixels,
-                Definition = definition,
-                ExtraData = item.ExtraData,
-                HaveOffer = item.HaveOffer,
-                IsLimited = item.IsLimited,
-                LimitedEditionSells = item.LimitedEditionSells,
-                LimitedEditionStack = item.LimitedEditionStack,
-                Name = item.Name,
-                OfferId = item.OfferId
-            });
+                var splitItems = deal.Items.Split(';');
+                foreach (var split in splitItems)
+                {
+                    var item = split.Split('*');
+                    if (!uint.TryParse(item[0], out var itemId) || !int.TryParse(item[1], out var amount))
+                        continue;
+
+                    if (!_itemDataManager.Items.TryGetValue(itemId, out var data))
+                        continue;
+
+                    itemDataList.Add(new()
+                    {
+                        Id = 0,
+                        ItemId = itemId,
+                        Definition = data,
+                        CatalogName = string.Empty,
+                        PageId = 0,
+                        CostCredits = 0,
+                        CostPixels = 0,
+                        CostDiamonds = 0,
+                        Amount = amount,
+                        LimitedEditionSells = 0,
+                        LimitedEditionStack = 0,
+                        HaveOffer = true,
+                        ExtraData = "",
+                        Badge = "",
+                        OfferId = 0
+                    });
+                }
+                deal.ItemDataList = itemDataList;
+            }
+
+            _deals.Add(deal.Id, deal);
+        }
+
+        var pages = await connection.QueryAsync<CatalogPage>("SELECT `id`,`parent_id`,`caption`,`page_link`,`visible`,`enabled`,`min_rank`,`min_vip`,`icon_image`,`page_layout`,`page_strings_1`,`page_strings_2` FROM `catalog_pages` ORDER BY `order_num`");
+        foreach (CatalogPage page in pages)
+        {
+            if (_items.ContainsKey(page.Id))
+                page.Items = _items[page.Id];
+
+            page.PageStringsList1 = !string.IsNullOrWhiteSpace(page.PageStrings1) ? page.PageStrings1!.Split("|").ToList() : new();
+            page.PageStringsList2 = !string.IsNullOrWhiteSpace(page.PageStrings2) ? page.PageStrings2!.Split("|").ToList() : new();
+            _pages.Add(page.Id, page);
         }
 
         using (var dbClient = _database.GetQueryReactor())
         {
-            dbClient.SetQuery("SELECT `id`, `items`, `name`, `room_id` FROM `catalog_deals`");
-            var getDeals = dbClient.GetTable();
-            if (getDeals != null)
-            {
-                foreach (DataRow row in getDeals.Rows)
-                {
-                    var id = Convert.ToInt32(row["id"]);
-                    var items = Convert.ToString(row["items"]);
-                    var name = Convert.ToString(row["name"]);
-                    var roomId = Convert.ToInt32(row["room_id"]);
-                    var deal = new CatalogDeal(id, items, name, roomId, itemDataManager);
-                    if (!_deals.ContainsKey(id))
-                        _deals.Add(deal.Id, deal);
-                }
-            }
-            dbClient.SetQuery(
-                "SELECT `id`,`parent_id`,`caption`,`page_link`,`visible`,`enabled`,`min_rank`,`min_vip`,`icon_image`,`page_layout`,`page_strings_1`,`page_strings_2` FROM `catalog_pages` ORDER BY `order_num`");
-            var catalogPages = dbClient.GetTable();
-            if (catalogPages != null)
-            {
-                foreach (DataRow row in catalogPages.Rows)
-                {
-                    _pages.Add(Convert.ToInt32(row["id"]), new(Convert.ToInt32(row["id"]), Convert.ToInt32(row["parent_id"]), row["enabled"].ToString(), Convert.ToString(row["caption"]),
-                        Convert.ToString(row["page_link"]), Convert.ToInt32(row["icon_image"]), Convert.ToInt32(row["min_rank"]), Convert.ToInt32(row["min_vip"]), row["visible"].ToString(),
-                        Convert.ToString(row["page_layout"]),
-                        Convert.ToString(row["page_strings_1"]), Convert.ToString(row["page_strings_2"]),
-                        _items.ContainsKey(Convert.ToInt32(row["id"])) ? _items[Convert.ToInt32(row["id"])] : new(), ref _itemOffers));
-                }
-            }
             dbClient.SetQuery("SELECT `id`,`name`,`figure`,`motto`,`gender`,`ai_type` FROM `catalog_bot_presets`");
             var bots = dbClient.GetTable();
             if (bots != null)

@@ -141,7 +141,7 @@ public class PlusEnvironment : IPlusEnvironment
 
             await _achievementManager.Init();
             _itemDataManager.Init();
-            await _catalogManager.Init(_itemDataManager);
+            await _catalogManager.Init();
 
             await _game.Init();
             _game.StartGameLoop();

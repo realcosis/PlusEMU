@@ -12,26 +12,19 @@ public class AchievementLevelFactory : IAchievementLevelFactory
     public async Task<Dictionary<string, Achievement>> GetAchievementLevels()
     {
         var achievements = new Dictionary<string, Achievement>();
+
         using var connection = _database.Connection();
         var table = await connection.QueryAsync<Achievement>("SELECT `id`,`category`,`group_name`,`level`,`reward_pixels`,`reward_points`,`progress_needed`,`game_id` FROM `achievements`");
-
-        foreach (Achievement row in table.ToList())
+        foreach (Achievement row in table)
         {
             var level = new AchievementLevel(row.Level, row.RewardPixels, row.RewardPoints, row.ProgressNeeded);
 
-            if (achievements.TryGetValue(row.GroupName!, out Achievement? value))
-                value.AddLevel(level);
+            if (achievements.ContainsKey(row.GroupName!))
+                row.AddLevel(level);
             else
-            { 
-                var achievement = new Achievement()
-                {
-                    Id = row.Id,
-                    GroupName = row.GroupName,
-                    Category = row.Category,
-                    GameId = row.GameId
-                };
-                achievement.AddLevel(level);
-                achievements.Add(row.GroupName!, achievement);
+            {
+                row.AddLevel(level);
+                achievements.Add(row.GroupName!, row);
             }
         }
 

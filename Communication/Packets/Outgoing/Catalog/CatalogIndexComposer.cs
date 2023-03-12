@@ -21,12 +21,12 @@ public class CatalogIndexComposer : IServerPacket
         WriteRootIndex(packet);
         foreach (var parent in _pages)
         {
-            if (parent.ParentId != -1 || parent.MinimumRank > _session.GetHabbo().Rank || parent.MinimumVip > _session.GetHabbo().VipRank && _session.GetHabbo().Rank == 1)
+            if (parent.ParentId != -1 || parent.MinRank > _session.GetHabbo().Rank || parent.MinVip > _session.GetHabbo().VipRank && _session.GetHabbo().Rank == 1)
                 continue;
             WritePage(packet, parent, CalcTreeSize(_pages, parent.Id));
             foreach (var child in _pages)
             {
-                if (child.ParentId != parent.Id || child.MinimumRank > _session.GetHabbo().Rank || child.MinimumVip > _session.GetHabbo().VipRank && _session.GetHabbo().Rank == 1)
+                if (child.ParentId != parent.Id || child.MinRank > _session.GetHabbo().Rank || child.MinVip > _session.GetHabbo().VipRank && _session.GetHabbo().Rank == 1)
                     continue;
                 if (child.Enabled)
                     WritePage(packet, child, CalcTreeSize(_pages, child.Id));
@@ -34,7 +34,7 @@ public class CatalogIndexComposer : IServerPacket
                     WriteNodeIndex(packet, child, CalcTreeSize(_pages, child.Id));
                 foreach (var subChild in _pages)
                 {
-                    if (subChild.ParentId != child.Id || subChild.MinimumRank > _session.GetHabbo().Rank)
+                    if (subChild.ParentId != child.Id || subChild.MinRank > _session.GetHabbo().Rank)
                         continue;
                     WritePage(packet, subChild, 0);
                 }
@@ -58,7 +58,7 @@ public class CatalogIndexComposer : IServerPacket
     public void WriteNodeIndex(IOutgoingPacket packet, CatalogPage page, int treeSize)
     {
         packet.WriteBoolean(page.Visible);
-        packet.WriteInteger(page.Icon);
+        packet.WriteInteger(page.IconImage);
         packet.WriteInteger(-1);
         packet.WriteString(page.PageLink);
         packet.WriteString(page.Caption);
@@ -69,7 +69,7 @@ public class CatalogIndexComposer : IServerPacket
     public void WritePage(IOutgoingPacket packet, CatalogPage page, int treeSize)
     {
         packet.WriteBoolean(page.Visible);
-        packet.WriteInteger(page.Icon);
+        packet.WriteInteger(page.IconImage);
         packet.WriteInteger(page.Id);
         packet.WriteString(page.PageLink);
         packet.WriteString(page.Caption);
@@ -83,7 +83,7 @@ public class CatalogIndexComposer : IServerPacket
         var i = 0;
         foreach (var page in pages)
         {
-            if (page.MinimumRank > _session.GetHabbo().Rank || page.MinimumVip > _session.GetHabbo().VipRank && _session.GetHabbo().Rank == 1 || page.ParentId != parentId)
+            if (page.MinRank > _session.GetHabbo().Rank || page.MinVip > _session.GetHabbo().VipRank && _session.GetHabbo().Rank == 1 || page.ParentId != parentId)
                 continue;
             if (page.ParentId == parentId)
                 i++;
