@@ -1,6 +1,4 @@
-﻿using System.Buffers.Text;
-using System.Data;
-using Dapper;
+﻿using Dapper;
 using Microsoft.Extensions.Logging;
 using Plus.Database;
 using Plus.HabboHotel.Catalog.Clothing;
@@ -8,7 +6,6 @@ using Plus.HabboHotel.Catalog.Marketplace;
 using Plus.HabboHotel.Catalog.Pets;
 using Plus.HabboHotel.Catalog.Vouchers;
 using Plus.HabboHotel.Items;
-using Plus.Utilities;
 
 namespace Plus.HabboHotel.Catalog;
 
@@ -20,7 +17,7 @@ public class CatalogManager : ICatalogManager
     private readonly Dictionary<int, Dictionary<int, CatalogItem>> _items;
     private readonly Dictionary<int, CatalogPage> _pages;
     private readonly Dictionary<int, CatalogPromotion> _promotions;
-    private Dictionary<int, int> _itemOffers;
+    private readonly Dictionary<int, int> _itemOffers;
 
     private readonly IClothingManager _clothingManager;
     private readonly IDatabase _database;
@@ -142,35 +139,23 @@ public class CatalogManager : ICatalogManager
             _pages.Add(page.Id, page);
         }
 
-        using (var dbClient = _database.GetQueryReactor())
+        var bots = await connection.QueryAsync<CatalogBot>("SELECT `id`,`name`,`figure`,`motto`,`gender`,`ai_type` FROM `catalog_bot_presets`");
+        foreach (CatalogBot bot in bots)
         {
-            dbClient.SetQuery("SELECT `id`,`name`,`figure`,`motto`,`gender`,`ai_type` FROM `catalog_bot_presets`");
-            var bots = dbClient.GetTable();
-            if (bots != null)
-            {
-                foreach (DataRow row in bots.Rows)
-                {
-                    _botPresets.Add(Convert.ToUInt32(row[0]),
-                        new(Convert.ToInt32(row[0]), Convert.ToString(row[1]), Convert.ToString(row[2]), Convert.ToString(row[3]), Convert.ToString(row[4]), Convert.ToString(row[5])));
-                }
-            }
-            dbClient.SetQuery("SELECT * FROM `catalog_promotions`");
-            var getPromotions = dbClient.GetTable();
-            if (getPromotions != null)
-            {
-                foreach (DataRow row in getPromotions.Rows)
-                {
-                    if (!_promotions.ContainsKey(Convert.ToInt32(row["id"])))
-                    {
-                        _promotions.Add(Convert.ToInt32(row["id"]),
-                            new(Convert.ToInt32(row["id"]), Convert.ToString(row["title"]), Convert.ToString(row["image"]), Convert.ToInt32(row["unknown"]),
-                                Convert.ToString(row["page_link"]), Convert.ToInt32(row["parent_id"])));
-                    }
-                }
-            }
-            _petRaceManager.Init();
-            _clothingManager.Init();
+            _botPresets.Add(bot.Id, bot);
         }
+
+        var promotions = await connection.QueryAsync<CatalogPromotion>("SELECT `id`,`title`,`image`,`unknown`,`page_link`,`parent_id` FROM `catalog_promotions`");
+        foreach(CatalogPromotion promotion in promotions)
+        {
+            if (_promotions.ContainsKey(promotion.Id))
+                continue;
+
+            _promotions.Add(promotion.Id, promotion);
+        }
+
+        _petRaceManager.Init();
+        _clothingManager.Init();
         _logger.LogInformation("Catalog Manager -> LOADED");
     }
 

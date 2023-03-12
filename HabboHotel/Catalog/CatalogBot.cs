@@ -2,20 +2,15 @@
 
 public class CatalogBot
 {
-    public CatalogBot(int id, string name, string figure, string motto, string gender, string type)
-    {
-        Id = id;
-        Name = name;
-        Figure = figure;
-        Motto = motto;
-        Gender = gender;
-        AiType = type;
-    }
+    public uint Id { get; set; }
 
-    public int Id { get; }
-    public string Figure { get; }
-    public string Gender { get; }
-    public string Motto { get; }
-    public string Name { get; }
-    public string AiType { get; }
+    public string? Figure { get; set; }
+
+    public string? Gender { get; set; }
+
+    public string? Motto { get; set; }
+
+    public string? Name { get; set; }
+
+    public string? AiType { get; set; }
 }

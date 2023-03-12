@@ -2,7 +2,6 @@
 using Plus.HabboHotel.Catalog.Marketplace;
 using Plus.HabboHotel.Catalog.Pets;
 using Plus.HabboHotel.Catalog.Vouchers;
-using Plus.HabboHotel.Items;
 
 namespace Plus.HabboHotel.Catalog;
 
