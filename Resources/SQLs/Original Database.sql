@@ -25103,4 +25103,10 @@ CHANGE `advertising_report_blocked` `advertising_report_blocked` BOOLEAN NULL DE
 CHANGE `ignore_invites` `ignore_invites` BOOLEAN NULL DEFAULT FALSE,
 CHANGE `allow_gifts` `allow_gifts` BOOLEAN NULL DEFAULT TRUE,
 CHANGE `disable_forced_effects` `disable_forced_effects` BOOLEAN NOT NULL DEFAULT FALSE,
-CHANGE `allow_mimic` `allow_mimic` BOOLEAN NOT NULL DEFAULT TRUE; 
+CHANGE `allow_mimic` `allow_mimic` BOOLEAN NOT NULL DEFAULT TRUE;
+
+-- 11_ChangeCatalogPagesEnumToBit
+ALTER TABLE `catalog_pages` DROP `visible`;
+ALTER TABLE `catalog_pages` ADD `visible` bit(1) NOT NULL DEFAULT b'1';
+ALTER TABLE `catalog_pages` DROP `enabled`;
+ALTER TABLE `catalog_pages` ADD `enabled` bit(1) NOT NULL DEFAULT b'1';
