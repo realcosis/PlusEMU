@@ -1,8 +1,7 @@
-﻿using Plus.Core;
-using Plus.HabboHotel.Groups;
-using Plus.HabboHotel.Subscriptions;
-using System.Data;
+using Dapper;
+using Plus.Core;
 using Plus.Database;
+using Plus.HabboHotel.Groups;
 
 namespace Plus.HabboHotel.Users.UserData;
 
@@ -10,64 +9,81 @@ internal class LoadStatisticsLoginTask : IUserDataLoadingTask
 {
     private readonly IDatabase _database;
 
-    public LoadStatisticsLoginTask(IDatabase database)
-    {
-        _database = database;
-    }
+    public LoadStatisticsLoginTask(IDatabase database) => _database = database ?? throw new ArgumentNullException(nameof(database));
 
-    public Task Load(Habbo habbo)
+    public async Task Load(Habbo habbo)
     {
-        DataRow statRow = null;
-        using (var dbClient = _database.GetQueryReactor())
+        if (habbo == null) throw new ArgumentNullException(nameof(habbo));
+
+        using var connection = _database.Connection();
+
+        var statRow = await connection.QueryFirstOrDefaultAsync<dynamic>(
+            "SELECT RoomVisits, OnlineTime, Respect, RespectGiven, GiftsGiven, GiftsReceived, DailyRespectPoints, DailyPetRespectPoints, `AchievementScore` AS AchievementPoints, quest_id, quest_progress, groupid, respectsTimestamp, forum_posts FROM `user_statistics` WHERE `id` = @id LIMIT 1",
+            new { id = habbo.Id });
+
+        if (statRow == null)
         {
-            dbClient.SetQuery(
-                "SELECT `id`,`roomvisits`,`onlinetime`,`respect`,`respectgiven`,`giftsgiven`,`giftsreceived`,`dailyrespectpoints`,`dailypetrespectpoints`,`achievementscore`,`quest_id`,`quest_progress`,`groupid`,`tickets_answered`,`respectstimestamp`,`forum_posts` FROM `user_statistics` WHERE `id` = @user_id LIMIT 1");
-            dbClient.AddParameter("user_id", habbo.Id);
-            statRow = dbClient.GetRow();
-            if (statRow == null) //No row, add it yo
-            {
-                dbClient.RunQuery($"INSERT INTO `user_statistics` (`id`) VALUES ('{habbo.Id}')");
-                dbClient.SetQuery(
-                    "SELECT `id`,`roomvisits`,`onlinetime`,`respect`,`respectgiven`,`giftsgiven`,`giftsreceived`,`dailyrespectpoints`,`dailypetrespectpoints`,`achievementscore`,`quest_id`,`quest_progress`,`groupid`,`tickets_answered`,`respectstimestamp`,`forum_posts` FROM `user_statistics` WHERE `id` = @user_id LIMIT 1");
-                dbClient.AddParameter("user_id", habbo.Id);
-                statRow = dbClient.GetRow();
-            }
-            try
-            {
-                var stats = new HabboStats(Convert.ToInt32(statRow["roomvisits"]), Convert.ToDouble(statRow["onlineTime"]), Convert.ToInt32(statRow["respect"]),
-                    Convert.ToInt32(statRow["respectGiven"]), Convert.ToInt32(statRow["giftsGiven"]),
-                    Convert.ToInt32(statRow["giftsReceived"]), Convert.ToInt32(statRow["dailyRespectPoints"]), Convert.ToInt32(statRow["dailyPetRespectPoints"]),
-                    Convert.ToInt32(statRow["AchievementScore"]),
-                    Convert.ToInt32(statRow["quest_id"]), Convert.ToInt32(statRow["quest_progress"]), Convert.ToInt32(statRow["groupid"]), Convert.ToString(statRow["respectsTimestamp"]),
-                    Convert.ToInt32(statRow["forum_posts"]));
-                if (Convert.ToString(statRow["respectsTimestamp"]) != DateTime.Today.ToString("MM/dd"))
-                {
-                    stats.RespectsTimestamp = DateTime.Today.ToString("MM/dd");
-                    SubscriptionData subData = null;
-                    var dailyRespects = 10;
-                    //if (_permissions.HasRight("mod_tool"))
-                    //    dailyRespects = 20;
-                    //else if (PlusEnvironment.GetGame().GetSubscriptionManager().TryGetSubscriptionData(vipRank, out subData))
-                    //    dailyRespects = subData.Respects;
-                    stats.DailyRespectPoints = dailyRespects;
-                    stats.DailyPetRespectPoints = dailyRespects;
-                    dbClient.RunQuery(
-                        $"UPDATE `user_statistics` SET `dailyRespectPoints` = '{dailyRespects}', `dailyPetRespectPoints` = '{dailyRespects}', `respectsTimestamp` = '{DateTime.Today:MM/dd}' WHERE `id` = '{habbo.Id}' LIMIT 1");
-                }
-                Group g = null;
-                if (!PlusEnvironment.Game.GroupManager.TryGetGroup(stats.FavouriteGroupId, out g))
-                    stats.FavouriteGroupId = 0;
+            await connection.ExecuteAsync(
+                "INSERT INTO `user_statistics` (`id`) VALUES (@id) ON DUPLICATE KEY UPDATE `id` = VALUES(`id`)",
+                new { id = habbo.Id });
 
-                habbo.HabboStats  = stats;
-            }
-            catch (Exception e)
+            statRow = new
             {
-                ExceptionLogger.LogException(e);
-            }
-
-
+                RoomVisits = 0,
+                OnlineTime = 0.0,
+                Respect = 0,
+                RespectGiven = 0,
+                GiftsGiven = 0,
+                GiftsReceived = 0,
+                DailyRespectPoints = 0,
+                DailyPetRespectPoints = 0,
+                AchievementPoints = 0,
+                quest_id = 0,
+                quest_progress = 0,
+                groupid = 0,
+                respectsTimestamp = "",
+                forum_posts = 0
+            };
         }
 
-        return Task.CompletedTask;
+        try
+        {
+            var stats = new HabboStats(
+                (int)statRow.RoomVisits,
+                (double)statRow.OnlineTime,
+                (int)statRow.Respect,
+                (int)statRow.RespectGiven,
+                (int)statRow.GiftsGiven,
+                (int)statRow.GiftsReceived,
+                (int)statRow.DailyRespectPoints,
+                (int)statRow.DailyPetRespectPoints,
+                (int)statRow.AchievementPoints,
+                (int)statRow.quest_id,
+                (int)statRow.quest_progress,
+                (int)statRow.groupid,
+                (string)statRow.respectsTimestamp,
+                (int)statRow.forum_posts);
+
+            if (statRow.respectsTimestamp != DateTime.Today.ToString("MM/dd"))
+            {
+                stats.RespectsTimestamp = DateTime.Today.ToString("MM/dd");
+                var dailyRespects = 10;
+                stats.DailyRespectPoints = dailyRespects;
+                stats.DailyPetRespectPoints = dailyRespects;
+
+                await connection.ExecuteAsync(
+                    "UPDATE `user_statistics` SET `dailyRespectPoints` = @dailyRespects, `dailyPetRespectPoints` = @dailyRespects, `respectsTimestamp` = @respectsTimestamp WHERE `id` = @user_id",
+                    new { dailyRespects, respectsTimestamp = DateTime.Today.ToString("MM/dd"), user_id = habbo.Id });
+            }
+
+            if (!PlusEnvironment.Game.GroupManager.TryGetGroup(stats.FavouriteGroupId, out Group g))
+                stats.FavouriteGroupId = 0;
+
+            habbo.HabboStats = stats;
+        }
+        catch (Exception e)
+        {
+            ExceptionLogger.LogException(e);
+        }
     }
 }
