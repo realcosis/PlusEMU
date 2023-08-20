@@ -1,53 +1,65 @@
-﻿using Plus.Communication.Packets.Outgoing.Users;
+using Dapper;
+using Plus.Communication.Packets.Outgoing.Users;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Quests;
-using Plus.HabboHotel.Rooms;
-using Dapper;
 
 namespace Plus.Communication.Packets.Incoming.Inventory.Badges;
 
 internal class SetActivatedBadgesEvent : IPacketEvent
 {
     private readonly IQuestManager _questManager;
-    private readonly IRoomManager _roomManager;
     private readonly IDatabase _database;
 
-    public SetActivatedBadgesEvent(IQuestManager questManager, IRoomManager roomManager, IDatabase database)
+    public SetActivatedBadgesEvent(IQuestManager questManager, IDatabase database)
     {
         _questManager = questManager;
-        _roomManager = roomManager;
         _database = database;
     }
 
-    public Task Parse(GameClient session, IIncomingPacket packet)
+    public async Task Parse(GameClient session, IIncomingPacket packet)
     {
-        session.GetHabbo().Inventory.Badges.ClearWearingBadges();
-        using (var connection = _database.Connection())
-        {
-            connection.Execute("UPDATE `user_badges` SET `badge_slot` = '0' WHERE `user_id` = @userId",
-                    new { userId = session.GetHabbo().Id });
-        }
+        var habbo = session.GetHabbo();
+        habbo.Inventory.Badges.ClearWearingBadges();
+
+        var updates = new List<dynamic>();
+
         for (var i = 0; i < 5; i++)
         {
             var slot = packet.ReadInt();
             var badge = packet.ReadString();
-            if (badge.Length == 0)
-                continue;
-            if (!session.GetHabbo().Inventory.Badges.HasBadge(badge) || slot < 1 || slot > 5)
-                return Task.CompletedTask;
-            session.GetHabbo().Inventory.Badges.GetBadge(badge).Slot = slot;
-            using var connection = _database.Connection();
 
-            connection.Execute("UPDATE `user_badges` SET `badge_slot` = @slot WHERE `badge_id` = @badge AND `user_id` = @userId LIMIT 1",
-                        new { slot = slot, badge = badge, userId = session.GetHabbo().Id });
+            if (string.IsNullOrEmpty(badge) ||
+                !habbo.Inventory.Badges.HasBadge(badge) ||
+                slot < 1 || slot > 5)
+            {
+                continue;
+            }
+
+            habbo.Inventory.Badges.GetBadge(badge).Slot = slot;
+            updates.Add(new { slot, badge, userId = habbo.Id });
         }
+
+        using (var connection = _database.Connection())
+        {
+            // Reset all badge slots to 0 for the user
+            await connection.ExecuteAsync("UPDATE `user_badges` SET `badge_slot` = '0' WHERE `user_id` = @userId", new { userId = habbo.Id });
+
+            // Update the badge slots
+            await connection.ExecuteAsync("UPDATE `user_badges` SET `badge_slot` = @slot WHERE `badge_id` = @badge AND `user_id` = @userId LIMIT 1", updates);
+        }
+
         _questManager.ProgressUserQuest(session, QuestType.ProfileBadge);
 
-        if (session.GetHabbo().InRoom)
-            session.GetHabbo().CurrentRoom?.SendPacket(new HabboUserBadgesComposer(session.GetHabbo()));
+        var equippedBadges = habbo.Inventory.Badges.EquippedBadges;
+
+        if (habbo.InRoom)
+        {
+            habbo.CurrentRoom?.SendPacket(new HabboUserBadgesComposer(habbo.Id, equippedBadges));
+        }
         else
-            session.Send(new HabboUserBadgesComposer(session.GetHabbo()));
-        return Task.CompletedTask;
+        {
+            session.Send(new HabboUserBadgesComposer(habbo.Id, equippedBadges));
+        }
     }
 }
