@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 
 namespace Plus.HabboHotel.Users.Messenger;
 
@@ -138,4 +138,12 @@ public class HabboMessenger
     public bool FriendshipExists(int userId) => _friends.ContainsKey(userId);
 
     public void NotifyChangesToFriends() => StatusUpdated?.Invoke(this, EventArgs.Empty);
+
+    public Dictionary<int, (MessengerBuddy friend, int count)> GetRelationships()
+    {
+        return _friends.Values
+            .Where(f => f.Relationship > 0)
+            .GroupBy(f => f.Relationship)
+            .ToDictionary(g => g.Key, g => (g.First(), g.Count()));
+    }
 }
