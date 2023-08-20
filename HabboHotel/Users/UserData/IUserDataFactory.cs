@@ -7,4 +7,5 @@ public interface IUserDataFactory
     Task<bool> HabboExists(int userId);
     Task<bool> HabboExists(string username);
     Task<Habbo?> GetUserDataByIdAsync(int userId);
+    Task<List<Badge>> GetEquippedBadgesForUserAsync(int userId);
 }
