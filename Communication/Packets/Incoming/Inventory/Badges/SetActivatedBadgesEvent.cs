@@ -27,9 +27,9 @@ internal class SetActivatedBadgesEvent : IPacketEvent
             badgeUpdates.Add((slot, badge));
         }
 
-        await _badgeManager.UpdateUserBadges(session, badgeUpdates);
-
         var habbo = session.GetHabbo();
+        await _badgeManager.UpdateUserBadges(habbo, badgeUpdates);
+
         var equippedBadges = habbo.Inventory.Badges.EquippedBadges;
 
         if (habbo.InRoom)
