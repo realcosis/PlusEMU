@@ -1,31 +1,32 @@
-﻿using Plus.HabboHotel.GameClients;
-using Plus.HabboHotel.Users;
+using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.Users.Messenger;
 
 namespace Plus.Communication.Packets.Outgoing.Users;
 
 public class GetRelationshipsComposer : IServerPacket
 {
-    private readonly Habbo _habbo;
+    private readonly int _userId;
+    private readonly Dictionary<int, (MessengerBuddy buddy, int count)> _relationships;
     public uint MessageId => ServerPacketHeader.GetRelationshipsComposer;
 
-    public GetRelationshipsComposer(Habbo habbo)
+    public GetRelationshipsComposer(int userId, Dictionary<int, (MessengerBuddy buddy, int count)> relationships)
     {
-        _habbo = habbo;
+        _userId = userId;
+        _relationships = relationships;
     }
 
     public void Compose(IOutgoingPacket packet)
     {
-        packet.WriteInteger(_habbo.Id);
-        var relationships = _habbo.Messenger.Friends.Values.Where(f => f.Relationship > 0).GroupBy(f => f.Relationship).ToDictionary(f => f.Key, f => (f.First(), f.Count()));
-        packet.WriteInteger(relationships.Count); // Count
-        foreach (var (type, (friend, count)) in relationships)
+        packet.WriteInteger(_userId);
+        packet.WriteInteger(_relationships.Count); // Count
+
+        foreach (var (type, (buddy, count)) in _relationships)
         {
             packet.WriteInteger(type);
             packet.WriteInteger(count);
-            packet.WriteInteger(friend.Id); // Their ID
-            packet.WriteString(friend.Username);
-            packet.WriteString(friend.Look);
+            packet.WriteInteger(buddy.Id); // Their ID
+            packet.WriteString(buddy.Username);
+            packet.WriteString(buddy.Look);
         }
-
     }
 }
