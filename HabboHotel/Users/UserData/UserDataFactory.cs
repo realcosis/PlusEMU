@@ -1,15 +1,19 @@
-﻿using Dapper;
+using Dapper;
 using Plus.Database;
+using Plus.HabboHotel.Badges;
+using Plus.HabboHotel.Users.Badges;
 
 namespace Plus.HabboHotel.Users.UserData;
 
 public class UserDataFactory : IUserDataFactory
 {
+    private readonly BadgeManager _badgeManager;
     private readonly IDatabase _database;
     private readonly IEnumerable<IUserDataLoadingTask> _userDataLoadingTasks;
 
-    public UserDataFactory(IDatabase database, IEnumerable<IUserDataLoadingTask> userDataLoadingTasks)
+    public UserDataFactory(BadgeManager badgeManager, IDatabase database, IEnumerable<IUserDataLoadingTask> userDataLoadingTasks)
     {
+        _badgeManager = badgeManager;
         _database = database;
         _userDataLoadingTasks = userDataLoadingTasks;
     }
@@ -43,11 +47,10 @@ public class UserDataFactory : IUserDataFactory
     }
 
     public async Task<Habbo?> GetUserDataByIdAsync(int userId) => await LoadHabboInfo(userId);
-    
+
     private async Task<Habbo> LoadHabboInfo(int userId)
     {
         using var connection = _database.Connection();
-        // TODO @80O: Load `volume` via IUserDataLoadingTask
         var habbo = await connection.QuerySingleOrDefaultAsync<Habbo>(
             "SELECT u.`id`, u.`username`, u.`rank`, u.`motto`, u.`look`, u.`gender`, u.`last_online`, u.`credits`, u.`activity_points` as Duckets, u.`home_room`, u.`block_newfriends` = true as AllowFriendRequests, u.`hide_online` = true as AppearOffline, u.`hide_inroom` = true as AllowPublicRoomStatus, u.`vip`, u.`account_created`, u.`vip_points` as Diamonds, u.`chat_preference` = true as `chat_preference`, u.`focus_preference` = true as `focus_preference`, u.`pets_muted` = true as AllowPetSpeech, u.`bots_muted` = true as AllowBotSpeech, u.`advertising_report_blocked` = true as advertising_report_blocked, u.`last_change` as LastNameChange, u.`gotw_points`, u.`ignore_invites` = true as AllowMessengerInvites, u.`time_muted`, u.`allow_gifts` = true as `allow_gifts`, u.`friend_bar_state`, u.`disable_forced_effects` = true as `disable_forced_effects`, u.`allow_mimic` = true as `allow_mimic`, u.`rank_vip` as VipRank, u.`is_ambassador`, u.`bubble_id` as CustomBubbleId, s.`AchievementScore` as AchievementPoints, s.`groupid` as FavouriteGroupId " +
             "FROM `users` u " +
@@ -55,5 +58,11 @@ public class UserDataFactory : IUserDataFactory
             "WHERE u.`id` = @userId LIMIT 1",
             new { userId });
         return habbo;
+    }
+
+    public async Task<List<Badge>> GetEquippedBadgesForUserAsync(int userId)
+    {
+        List<Badge> allBadges = await _badgeManager.LoadBadgesForHabbo(userId);
+        return allBadges.Where(b => b.Slot > 0).ToList();
     }
 }
