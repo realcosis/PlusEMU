@@ -58,4 +58,12 @@ public class HabboStatsService : IHabboStatsService
             (string)statRow.respectsTimestamp,
             (int)statRow.forum_posts);
     }
+
+    public async Task UpdateDailyRespectsAndTimestamp(int userId, int dailyRespects, string respectsTimestamp)
+    {
+        using var connection = _database.Connection();
+        await connection.ExecuteAsync(
+            "UPDATE `user_statistics` SET `dailyRespectPoints` = @dailyRespects, `dailyPetRespectPoints` = @dailyRespects, `respectsTimestamp` = @respectsTimestamp WHERE `id` = @userId",
+            new { dailyRespects, respectsTimestamp, userId });
+    }
 }
