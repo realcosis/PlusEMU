@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using Microsoft.Extensions.Logging;
 using Plus.Communication.Packets.Outgoing.Inventory.Badges;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
@@ -66,5 +66,22 @@ public class BadgeManager : IBadgeManager
     {
         using var connection = _database.Connection();
         return (await connection.QueryAsync<Badge>("SELECT badge_id as code, badge_slot as slot FROM user_badges WHERE user_id = @userId", new { userId })).ToList();
+    }
+
+    public async Task UpdateUserBadges(Habbo habbo, List<(int slot, string badge)> badgeUpdates)
+    {
+        habbo.Inventory.Badges.ClearWearingBadges();
+
+        var updates = new List<dynamic>();
+
+        foreach (var (slot, badge) in badgeUpdates)
+        {
+            habbo.Inventory.Badges.GetBadge(badge).Slot = slot;
+            updates.Add(new { slot, badge, userId = habbo.Id });
+        }
+
+        using var connection = _database.Connection();
+        await connection.ExecuteAsync("UPDATE `user_badges` SET `badge_slot` = '0' WHERE `user_id` = @userId", new { userId = habbo.Id });
+        await connection.ExecuteAsync("UPDATE `user_badges` SET `badge_slot` = @slot WHERE `badge_id` = @badge AND `user_id` = @userId LIMIT 1", updates);
     }
 }
