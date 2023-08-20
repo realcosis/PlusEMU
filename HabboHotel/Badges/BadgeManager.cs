@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Plus.Communication.Packets.Outgoing.Inventory.Badges;
 using Plus.Communication.Packets.Outgoing.Inventory.Furni;
 using Plus.Database;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users;
 using Plus.HabboHotel.Users.Badges;
 
@@ -11,14 +12,16 @@ namespace Plus.HabboHotel.Badges;
 public class BadgeManager : IBadgeManager
 {
     private readonly IDatabase _database;
+    private readonly GameClientManager _gameClientManager;
     private readonly ILogger<BadgeManager> _logger;
 
     private Dictionary<string, BadgeDefinition> _badges;
     public IReadOnlyDictionary<string, BadgeDefinition> Badges => _badges;
 
-    public BadgeManager(IDatabase database, ILogger<BadgeManager> logger)
+    public BadgeManager(IDatabase database, GameClientManager gameClientManager, ILogger<BadgeManager> logger)
     {
         _database = database;
+        _gameClientManager = gameClientManager;
         _logger = logger;
         _badges = new();
     }
@@ -66,6 +69,20 @@ public class BadgeManager : IBadgeManager
     {
         using var connection = _database.Connection();
         return (await connection.QueryAsync<Badge>("SELECT badge_id as code, badge_slot as slot FROM user_badges WHERE user_id = @userId", new { userId })).ToList();
+    }
+
+    public async Task<List<Badge>> GetEquippedBadgesForUserAsync(int userId)
+    {
+        var gameClient = _gameClientManager.GetClientByUserId(userId);
+        var habbo = gameClient?.GetHabbo();
+
+        if (habbo != null && habbo.Inventory?.Badges != null)
+        {
+            return habbo.Inventory.Badges.EquippedBadges;
+        }
+
+        using var connection = _database.Connection();
+        return (await connection.QueryAsync<Badge>("SELECT badge_id as code, badge_slot as slot FROM user_badges WHERE user_id = @userId AND badge_slot > 0", new { userId })).ToList();
     }
 
     public async Task UpdateUserBadges(Habbo habbo, List<(int slot, string badge)> badgeUpdates)
