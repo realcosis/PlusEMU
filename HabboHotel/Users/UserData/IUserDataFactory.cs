@@ -1,4 +1,6 @@
-﻿namespace Plus.HabboHotel.Users.UserData;
+﻿using Plus.HabboHotel.Users.Badges;
+
+namespace Plus.HabboHotel.Users.UserData;
 
 public interface IUserDataFactory
 {

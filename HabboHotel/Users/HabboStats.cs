@@ -20,6 +20,7 @@ public class HabboStats
         RespectsTimestamp = respectsTimestamp;
         ForumPosts = forumPosts;
     }
+    public HabboStats() { }
 
     public int RoomVisits { get; set; }
     public double OnlineTime { get; set; }

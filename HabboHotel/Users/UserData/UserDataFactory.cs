@@ -62,7 +62,7 @@ public class UserDataFactory : IUserDataFactory
 
     public async Task<List<Badge>> GetEquippedBadgesForUserAsync(int userId)
     {
-        List<Badge> allBadges = await _badgeManager.LoadBadgesForHabbo(userId);
+        var allBadges = await _badgeManager.LoadBadgesForHabbo(userId);
         return allBadges.Where(b => b.Slot > 0).ToList();
     }
 }
