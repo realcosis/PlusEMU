@@ -21,16 +21,13 @@ public class HabboStatsService : IHabboStatsService
               FROM `user_statistics` WHERE `id` = @id LIMIT 1",
             new { id = userId });
 
-        if (statRow == null)
-        {
-            await connection.ExecuteAsync(
-                "INSERT INTO `user_statistics` (`id`) VALUES (@id) ON DUPLICATE KEY UPDATE `id` = VALUES(`id`)",
-                new { id = userId });
+        if (statRow != null) return statRow;
+        await connection.ExecuteAsync(
+            "INSERT INTO `user_statistics` (`id`) VALUES (@id) ON DUPLICATE KEY UPDATE `id` = VALUES(`id`)",
+            new { id = userId });
 
-            return new HabboStats(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0);
-        }
+        return new HabboStats(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0);
 
-        return statRow;
     }
 
     public async Task UpdateDailyRespectsAndTimestamp(int userId, int dailyRespects, string respectsTimestamp)
