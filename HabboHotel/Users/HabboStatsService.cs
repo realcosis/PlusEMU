@@ -7,14 +7,18 @@ public class HabboStatsService : IHabboStatsService
 {
     private readonly IDatabase _database;
 
-    public HabboStatsService(IDatabase database) => _database = database ?? throw new ArgumentNullException(nameof(database));
+    public HabboStatsService(IDatabase database) => _database = database;
 
     public async Task<HabboStats> LoadHabboStats(int userId)
     {
         using var connection = _database.Connection();
 
-        var statRow = await connection.QueryFirstOrDefaultAsync<dynamic>(
-            "SELECT RoomVisits, OnlineTime, Respect, RespectGiven, GiftsGiven, GiftsReceived, DailyRespectPoints, DailyPetRespectPoints, `AchievementScore` AS AchievementPoints, quest_id, quest_progress, groupid, respectsTimestamp, forum_posts FROM `user_statistics` WHERE `id` = @id LIMIT 1",
+        var statRow = await connection.QueryFirstOrDefaultAsync<HabboStats>(
+            @"SELECT RoomVisits, OnlineTime, Respect, RespectGiven, GiftsGiven, GiftsReceived, 
+              DailyRespectPoints, DailyPetRespectPoints, `AchievementScore` AS AchievementPoints, 
+              quest_id AS QuestId, quest_progress AS QuestProgress, groupid AS FavouriteGroupId, 
+              respectsTimestamp AS RespectsTimestamp, forum_posts AS ForumPosts 
+              FROM `user_statistics` WHERE `id` = @id LIMIT 1",
             new { id = userId });
 
         if (statRow == null)
@@ -23,47 +27,17 @@ public class HabboStatsService : IHabboStatsService
                 "INSERT INTO `user_statistics` (`id`) VALUES (@id) ON DUPLICATE KEY UPDATE `id` = VALUES(`id`)",
                 new { id = userId });
 
-            statRow = new
-            {
-                RoomVisits = 0,
-                OnlineTime = 0.0,
-                Respect = 0,
-                RespectGiven = 0,
-                GiftsGiven = 0,
-                GiftsReceived = 0,
-                DailyRespectPoints = 0,
-                DailyPetRespectPoints = 0,
-                AchievementPoints = 0,
-                quest_id = 0,
-                quest_progress = 0,
-                groupid = 0,
-                respectsTimestamp = "",
-                forum_posts = 0
-            };
+            return new HabboStats(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0);
         }
 
-        return new HabboStats(
-            (int)statRow.RoomVisits,
-            (double)statRow.OnlineTime,
-            (int)statRow.Respect,
-            (int)statRow.RespectGiven,
-            (int)statRow.GiftsGiven,
-            (int)statRow.GiftsReceived,
-            (int)statRow.DailyRespectPoints,
-            (int)statRow.DailyPetRespectPoints,
-            (int)statRow.AchievementPoints,
-            (int)statRow.quest_id,
-            (int)statRow.quest_progress,
-            (int)statRow.groupid,
-            (string)statRow.respectsTimestamp,
-            (int)statRow.forum_posts);
+        return statRow;
     }
 
     public async Task UpdateDailyRespectsAndTimestamp(int userId, int dailyRespects, string respectsTimestamp)
     {
         using var connection = _database.Connection();
         await connection.ExecuteAsync(
-            "UPDATE `user_statistics` SET `dailyRespectPoints` = @dailyRespects, `dailyPetRespectPoints` = @dailyRespects, `respectsTimestamp` = @respectsTimestamp WHERE `id` = @userId",
+            "UPDATE `user_statistics` SET `DailyRespectPoints` = @dailyRespects, `DailyPetRespectPoints` = @dailyRespects, `RespectsTimestamp` = @respectsTimestamp WHERE `id` = @userId",
             new { dailyRespects, respectsTimestamp, userId });
     }
 }
