@@ -20455,24 +20455,24 @@ INSERT INTO `furniture` VALUES ('494612', 'pirate_plank', 'Plank', 's', '2', '1'
 INSERT INTO `furniture` VALUES ('494712', 'pirate_mast3', 'Basic Upper Sail', 's', '1', '1', '1', '0', '0', '0', '5229', '1', '1', '1', '1', '1', 'default', '0', '2', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `furniture` VALUES ('494812', 'pirate_barrel2', 'Orange barrel', 's', '1', '1', '1', '1', '0', '0', '5233', '1', '1', '1', '1', '1', 'default', '0', '4', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `furniture` VALUES ('513504', 'ads_playboypos', '', 'i', '0', '0', '0', '1', '0', '0', '513504', '1', '1', '1', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '0', '0', '0');
-INSERT INTO `furniture` VALUES ('532556', 'summer_sunset_wall', 'summer_sunset_wall', 'i', '1', '1', '1', '0', '0', '0', '4412', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '', '0', '0');
-INSERT INTO `furniture` VALUES ('532591', 'CF_300_bricks', 'CF_300_bricks', 's', '1', '1', '0.5', '1', '0', '0', '8134', '0', '1', '0', '1', '1', 'exchange', '300', '1', '0', '0', '0', '0', '', '0', '0');
-INSERT INTO `furniture` VALUES ('532592', 'room_info15_shrub1', 'room_info15_shrub1', 's', '1', '1', '1', '1', '0', '0', '7981', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '', '0', '0');
-INSERT INTO `furniture` VALUES ('532593', 'memorial_size', 'memorial_size', 's', '2', '1', '1', '1', '0', '0', '6274', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '', '0', '0');
-INSERT INTO `furniture` VALUES ('532594', 'hween14_rare1', 'hween14_rare1', 's', '3', '3', '1', '1', '0', '0', '6223', '0', '1', '0', '1', '1', 'default', '0', '2', '0', '0', '0', '0', '', '0', '0');
-INSERT INTO `furniture` VALUES ('532595', 'runway_head', 'runway_head', 's', '1', '1', '1', '1', '0', '0', '3432', '0', '1', '0', '1', '1', 'default', '0', '7', '0', '0', '0', '0', '', '0', '0');
-INSERT INTO `furniture` VALUES ('532596', 'sb_tag1', 'sb_tag1', 'i', '2', '1', '1', '1', '0', '0', '4406', '0', '1', '0', '1', '1', 'default', '0', '2', '0', '0', '0', '0', '', '0', '0');
-INSERT INTO `furniture` VALUES ('532600', 'room_info15_div', 'room_info15_div', 's', '1', '1', '1', '1', '0', '0', '8088', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '', '0', '0');
-INSERT INTO `furniture` VALUES ('532601', 'room_info15_gate', 'room_info15_gate', 's', '1', '1', '0.001', '1', '0', '0', '8089', '0', '1', '0', '1', '1', 'gate', '0', '2', '0', '0', '0', '0', '', '0', '0');
-INSERT INTO `furniture` VALUES ('532602', 'room_info15_tree1', 'room_info15_tree1', 's', '1', '1', '1', '1', '0', '0', '7987', '0', '1', '0', '1', '1', 'default', '0', '4', '0', '0', '0', '0', '', '0', '0');
-INSERT INTO `furniture` VALUES ('532603', 'prize_alienplush', 'prize_alienplush', 's', '1', '1', '1', '1', '0', '0', '7980', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '', '0', '0');
+INSERT INTO `furniture` VALUES ('532556', 'summer_sunset_wall', 'summer_sunset_wall', 'i', '1', '1', '1', '0', '0', '0', '4412', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `furniture` VALUES ('532591', 'CF_300_bricks', 'CF_300_bricks', 's', '1', '1', '0.5', '1', '0', '0', '8134', '0', '1', '0', '1', '1', 'exchange', '300', '1', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `furniture` VALUES ('532592', 'room_info15_shrub1', 'room_info15_shrub1', 's', '1', '1', '1', '1', '0', '0', '7981', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `furniture` VALUES ('532593', 'memorial_size', 'memorial_size', 's', '2', '1', '1', '1', '0', '0', '6274', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `furniture` VALUES ('532594', 'hween14_rare1', 'hween14_rare1', 's', '3', '3', '1', '1', '0', '0', '6223', '0', '1', '0', '1', '1', 'default', '0', '2', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `furniture` VALUES ('532595', 'runway_head', 'runway_head', 's', '1', '1', '1', '1', '0', '0', '3432', '0', '1', '0', '1', '1', 'default', '0', '7', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `furniture` VALUES ('532596', 'sb_tag1', 'sb_tag1', 'i', '2', '1', '1', '1', '0', '0', '4406', '0', '1', '0', '1', '1', 'default', '0', '2', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `furniture` VALUES ('532600', 'room_info15_div', 'room_info15_div', 's', '1', '1', '1', '1', '0', '0', '8088', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `furniture` VALUES ('532601', 'room_info15_gate', 'room_info15_gate', 's', '1', '1', '0.001', '1', '0', '0', '8089', '0', '1', '0', '1', '1', 'gate', '0', '2', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `furniture` VALUES ('532602', 'room_info15_tree1', 'room_info15_tree1', 's', '1', '1', '1', '1', '0', '0', '7987', '0', '1', '0', '1', '1', 'default', '0', '4', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `furniture` VALUES ('532603', 'prize_alienplush', 'prize_alienplush', 's', '1', '1', '1', '1', '0', '0', '7980', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `furniture` VALUES ('532604', 'tablet_vendorg', 'tablet_vendorg', 's', '2', '1', '1', '1', '0', '0', '7979', '0', '1', '0', '1', '1', 'vendingmachine', '0', '1', '1071', '0', '0', '0', '1', '0', '0');
-INSERT INTO `furniture` VALUES ('532605', 'es_build1', 'es_build1', 'i', '1', '1', '1', '1', '0', '0', '4362', '0', '1', '0', '1', '1', 'default', '0', '2', '0', '0', '0', '0', '', '0', '0');
-INSERT INTO `furniture` VALUES ('540000', 'sb_tag2', 'sb_tag2', 'i', '1', '1', '1', '1', '0', '0', '4408', '0', '1', '0', '1', '1', 'default', '0', '2', '0', '0', '0', '0', '', '0', '0');
-INSERT INTO `furniture` VALUES ('540001', 'sb_tag3', 'sb_tag3', 'i', '2', '1', '1', '1', '0', '0', '4409', '0', '1', '0', '1', '1', 'default', '0', '2', '0', '0', '0', '0', '', '0', '0');
-INSERT INTO `furniture` VALUES ('540002', 'statue_dragon', 'statue_dragon', 's', '1', '2', '1', '1', '0', '0', '5070', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '', '0', '0');
-INSERT INTO `furniture` VALUES ('540003', 'statue_griffin', 'statue_griffin', 's', '1', '2', '1', '1', '0', '0', '5071', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '', '0', '0');
-INSERT INTO `furniture` VALUES ('540004', 'statue_elk', 'statue_elk', 's', '2', '2', '1', '1', '0', '0', '5073', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '', '0', '0');
+INSERT INTO `furniture` VALUES ('532605', 'es_build1', 'es_build1', 'i', '1', '1', '1', '1', '0', '0', '4362', '0', '1', '0', '1', '1', 'default', '0', '2', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `furniture` VALUES ('540000', 'sb_tag2', 'sb_tag2', 'i', '1', '1', '1', '1', '0', '0', '4408', '0', '1', '0', '1', '1', 'default', '0', '2', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `furniture` VALUES ('540001', 'sb_tag3', 'sb_tag3', 'i', '2', '1', '1', '1', '0', '0', '4409', '0', '1', '0', '1', '1', 'default', '0', '2', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `furniture` VALUES ('540002', 'statue_dragon', 'statue_dragon', 's', '1', '2', '1', '1', '0', '0', '5070', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `furniture` VALUES ('540003', 'statue_griffin', 'statue_griffin', 's', '1', '2', '1', '1', '0', '0', '5071', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `furniture` VALUES ('540004', 'statue_elk', 'statue_elk', 's', '2', '2', '1', '1', '0', '0', '5073', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `furniture` VALUES ('540005', 'rare_icecream*10', 'rare_icecream*10', 's', '1', '1', '2.5', '1', '0', '0', '4859', '0', '1', '0', '1', '1', 'vendingmachine', '0', '1', '4', '0', '0', '0', '1', '0', '0');
 INSERT INTO `furniture` VALUES ('540006', 'holo_nelly', 'holo_nelly', 's', '1', '1', '1', '1', '0', '0', '5106', '0', '1', '0', '1', '1', 'default', '0', '2', '0', '0', '0', '0', '1', '0', '0');
 INSERT INTO `furniture` VALUES ('540007', 'val13_easel_4', 'val13_easel_4', 's', '1', '1', '1', '1', '0', '0', '4939', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '1', '0', '0');
@@ -20489,8 +20489,8 @@ INSERT INTO `furniture` VALUES ('540017', 'rare_prize15*16', 'rare_prize15*16', 
 INSERT INTO `furniture` VALUES ('540018', 'rare_prize15*13', 'rare_prize15*13', 's', '1', '1', '1', '1', '0', '0', '7792', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '1', '0', '0');
 INSERT INTO `furniture` VALUES ('540019', 'CF_750_duck', 'CF_750_duck', 's', '1', '1', '1', '1', '0', '0', '5531', '0', '1', '0', '1', '1', 'exchange', '750', '1', '0', '0', '0', '0', '1', '0', '0');
 INSERT INTO `furniture` VALUES ('540020', 'CF_350_duck', 'CF_350_duck', 's', '1', '1', '1', '1', '0', '0', '5532', '0', '1', '0', '1', '1', 'exchange', '350', '1', '0', '0', '0', '0', '1', '0', '0');
-INSERT INTO `furniture` VALUES ('540021', 'tiki_gate', 'tiki_gate', 's', '1', '1', '0.001', '1', '0', '0', '3595', '0', '1', '0', '1', '1', 'gate', '0', '2', '0', '0', '0', '0', '', '0', '0');
-INSERT INTO `furniture` VALUES ('540022', 'bling11_wall4', 'bling11_wall4', 'i', '1', '1', '1', '1', '0', '0', '4375', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '', '0', '0');
+INSERT INTO `furniture` VALUES ('540021', 'tiki_gate', 'tiki_gate', 's', '1', '1', '0.001', '1', '0', '0', '3595', '0', '1', '0', '1', '1', 'gate', '0', '2', '0', '0', '0', '0', '0', '0', '0');
+INSERT INTO `furniture` VALUES ('540022', 'bling11_wall4', 'bling11_wall4', 'i', '1', '1', '1', '1', '0', '0', '4375', '0', '1', '0', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `furniture` VALUES ('650003', 'samover', 'Silver Samovar', 's', '1', '1', '1', '0', '0', '0', '6503', '1', '1', '1', '1', '1', 'vendingmachine', '0', '1', '0', '0', '0', '0', '1', '0', '0');
 INSERT INTO `furniture` VALUES ('700001', 'horse_hay', 'Small Mood Controller', 's', '1', '1', '0.8', '1', '0', '1', '4239', '1', '1', '1', '1', '1', 'default', '0', '1', '0', '0', '0', '0', '0', '0', '0');
 INSERT INTO `furniture` VALUES ('700002', 'horse_hayfloor', 'Hay Floor', 's', '2', '2', '0', '1', '0', '1', '4209', '1', '1', '1', '1', '1', 'default', '0', '2', '0', '0', '0', '0', '0', '0', '0');
@@ -23192,7 +23192,7 @@ CREATE TABLE `items` (
 -- ----------------------------
 -- Records of items
 -- ----------------------------
-INSERT INTO `items` VALUES ('1', '1', '0', '320', '', '0', '0', '0', '0', '', '0', '0');
+INSERT INTO `items` VALUES ('1', '1', '0', '320', '', '0', '0', '0', '0', '0', '0', '0');
 
 -- ----------------------------
 -- Table structure for `items_groups`
@@ -24146,7 +24146,7 @@ CREATE TABLE `ranks` (
 -- ----------------------------
 -- Records of ranks
 -- ----------------------------
-INSERT INTO `ranks` VALUES ('1', 'User', 'VIP', '', '');
+INSERT INTO `ranks` VALUES ('1', 'User', 'VIP', '', 'green');
 INSERT INTO `ranks` VALUES ('2', 'Trial Moderators', 'TMOD', 'Trial Moderation Staff', 'green');
 INSERT INTO `ranks` VALUES ('3', 'Moderators', 'ADM', 'Community Moderation Staff', 'settings');
 INSERT INTO `ranks` VALUES ('4', 'Senior Moderators', 'SMOD', 'Moderator Coordinators/Leaders', 'orange');
