@@ -1,4 +1,4 @@
-﻿using Plus.HabboHotel.GameClients;
+using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Groups;
 using Plus.HabboHotel.Users;
 using Plus.Utilities;
@@ -11,14 +11,17 @@ public class ProfileInformationComposer : IServerPacket
     private readonly GameClient _session;
     private readonly List<Group> _groups;
     private readonly int _friendCount;
+    private readonly HabboStats _habboStats;
+
     public uint MessageId => ServerPacketHeader.ProfileInformationComposer;
 
-    public ProfileInformationComposer(Habbo habbo, GameClient session, List<Group> groups, int friendCount)
+    public ProfileInformationComposer(Habbo habbo, GameClient session, List<Group> groups, int friendCount, HabboStats habboStats)
     {
         _habbo = habbo;
         _session = session;
         _groups = groups;
         _friendCount = friendCount;
+        _habboStats = habboStats;
     }
 
     public void Compose(IOutgoingPacket packet)
@@ -29,7 +32,7 @@ public class ProfileInformationComposer : IServerPacket
         packet.WriteString(_habbo.Look);
         packet.WriteString(_habbo.Motto);
         packet.WriteString(origin.ToString("dd/MM/yyyy"));
-        packet.WriteInteger(_habbo.HabboStats.AchievementPoints);
+        packet.WriteInteger(_habboStats?.AchievementPoints ?? 0);
         packet.WriteInteger(_friendCount); // Friend Count
         packet.WriteBoolean(_habbo.Id != _session.GetHabbo().Id && _session.GetHabbo().Messenger.FriendshipExists(_habbo.Id)); //  Is friend
         packet.WriteBoolean(_habbo.Id != _session.GetHabbo().Id && !_session.GetHabbo().Messenger.FriendshipExists(_habbo.Id) &&
@@ -43,7 +46,7 @@ public class ProfileInformationComposer : IServerPacket
             packet.WriteString(group.Badge);
             packet.WriteString(PlusEnvironment.Game.GroupManager.GetColourCode(group.Colour1, true));
             packet.WriteString(PlusEnvironment.Game.GroupManager.GetColourCode(group.Colour2, false));
-            packet.WriteBoolean(_habbo.HabboStats.FavouriteGroupId == group.Id); // todo favs
+            packet.WriteBoolean(_habboStats?.FavouriteGroupId == group.Id); // todo favs
             packet.WriteInteger(0); //what the fuck
             packet.WriteBoolean(group?.ForumEnabled ?? true); //HabboTalk
         }

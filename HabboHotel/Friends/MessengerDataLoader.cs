@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using Plus.Database;
 using Plus.HabboHotel.GameClients;
 using Plus.HabboHotel.Users;
@@ -134,5 +134,20 @@ internal class MessengerDataLoader : IMessengerDataLoader
         using var connection = _database.Connection();
         var (userId, blocked) = await connection.QuerySingleOrDefaultAsync<(int, bool)>("SELECT `id`,`block_newfriends` FROM `users` WHERE `username` = @name LIMIT 1", new { name });
         return (userId, blocked);
+    }
+
+    public async Task<Dictionary<int, (MessengerBuddy buddy, int count)>> GetRelationshipsForUserAsync(int userId)
+    {
+        using var connection = _database.Connection();
+        var query = "SELECT messenger_friendships.relationship, COUNT(*) as count, users.id, users.username, users.look FROM messenger_friendships JOIN users ON users.id = messenger_friendships.user_two_id WHERE messenger_friendships.user_one_id = @userId AND messenger_friendships.relationship > 0 GROUP BY messenger_friendships.relationship";
+        var relationships = (await connection.QueryAsync<(int relationship, int count, int id, string username, string look)>(query, new { userId }))
+            .GroupBy(r => r.relationship)
+            .ToDictionary(g => g.Key, g => (new MessengerBuddy
+            {
+                Id = g.First().id,
+                Username = g.First().username,
+                Look = g.First().look
+            }, g.First().count));
+        return relationships;
     }
 }
