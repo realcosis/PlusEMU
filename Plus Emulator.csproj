@@ -32,9 +32,12 @@
 		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />
 		<PackageReference Include="MySqlConnector" Version="2.2.5" />
 		<PackageReference Include="NetCoreServer" Version="7.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="NLog" Version="5.1.1" />
 		<PackageReference Include="NLog.Extensions.Logging" Version="5.2.1" />
 		<PackageReference Include="Scrutor" Version="4.2.0" />
+		<PackageReference Include="SkiaSharp" Version="2.88.8" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.8" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -63,6 +66,11 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<TargetPath>revisions\%(Filename)%(Extension)</TargetPath>
 		</ContentWithTargetPath>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ContentWithTargetPath Remove="Resources\Revisions\NITRO-1-6-6.json" />
+	  <ContentWithTargetPath Remove="Resources\Revisions\PRODUCTION-201701242205-837386173.json" />
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(OS)' == 'Windows_NT' ">

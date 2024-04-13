@@ -21,13 +21,21 @@ public class HabboStatsService : IHabboStatsService
               FROM `user_statistics` WHERE `id` = @id LIMIT 1",
             new { id = userId });
 
-        if (statRow != null) return statRow;
-        await connection.ExecuteAsync(
-            "INSERT INTO `user_statistics` (`id`) VALUES (@id) ON DUPLICATE KEY UPDATE `id` = VALUES(`id`)",
+        if (statRow == null)
+        {
+            await connection.ExecuteAsync(
+                "INSERT INTO `user_statistics` (`id`) VALUES (@id) ON DUPLICATE KEY UPDATE `id` = VALUES(`id`)",
+                new { id = userId });
+            statRow = await connection.QueryFirstOrDefaultAsync<HabboStats>(
+            @"SELECT RoomVisits, OnlineTime, Respect, RespectGiven, GiftsGiven, GiftsReceived, 
+              DailyRespectPoints, DailyPetRespectPoints, `AchievementScore` AS AchievementPoints, 
+              quest_id AS QuestId, quest_progress AS QuestProgress, groupid AS FavouriteGroupId, 
+              respectsTimestamp AS RespectsTimestamp, forum_posts AS ForumPosts 
+              FROM `user_statistics` WHERE `id` = @id LIMIT 1",
             new { id = userId });
+        }
 
-        return new HabboStats(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "", 0);
-
+        return statRow;
     }
 
     public async Task UpdateDailyRespectsAndTimestamp(int userId, int dailyRespects, string respectsTimestamp)

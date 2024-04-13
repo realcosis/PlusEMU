@@ -13,6 +13,12 @@ public static class ServerPacketHeader
     public const uint SetUniqueIdComposer = 3731; //2935
     public const uint AvailabilityStatusComposer = 3690; //2468
 
+    // Camera
+    public const uint CameraStorageUrlComposer = 311;
+    public const uint InitCameraComposer = 388;
+    public const uint CameraPurchaseOKComposer = 1103;
+    public const uint ThumbnailStatusComposer = 2664;
+
     // Avatar
     public const uint WardrobeComposer = 2959; //2760
 

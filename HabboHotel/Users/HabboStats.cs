@@ -2,25 +2,6 @@
 
 public class HabboStats
 {
-    public HabboStats(int roomVisits, double onlineTime, int respect, int respectGiven, int giftsGiven, int giftsReceived, int dailyRespectPoints, int dailyPetRespectPoints, int achievementPoints,
-        int questId, int questProgress, int groupId, string respectsTimestamp, int forumPosts)
-    {
-        RoomVisits = roomVisits;
-        OnlineTime = onlineTime;
-        Respect = respect;
-        RespectGiven = respectGiven;
-        GiftsGiven = giftsGiven;
-        GiftsReceived = giftsReceived;
-        DailyRespectPoints = dailyRespectPoints;
-        DailyPetRespectPoints = dailyPetRespectPoints;
-        AchievementPoints = achievementPoints;
-        QuestId = questId;
-        QuestProgress = questProgress;
-        FavouriteGroupId = groupId;
-        RespectsTimestamp = respectsTimestamp;
-        ForumPosts = forumPosts;
-    }
-
     public int RoomVisits { get; set; }
     public double OnlineTime { get; set; }
     public int Respect { get; set; }

@@ -9,6 +9,13 @@ public static class ClientPacketHeader
     public const uint SsoTicketEvent = 1989; //1778
     public const uint InfoRetrieveEvent = 2629; //186
 
+    // Camera
+    public const uint RequestCameraConfigurationEvent = 1132;
+    public const uint PublishPhotoEvent = 3665;
+    public const uint PurchasePhotoEvent = 71;
+    public const uint RenderRoomEvent = 2343;
+    public const uint RenderRoomThumbnailEvent = 1184;
+
     // Avatar
     public const uint CheckUserNameEvent = 2507; //8
     public const uint ChangeUserNameEvent = 2709; //1067

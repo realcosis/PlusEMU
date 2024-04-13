@@ -69,5 +69,13 @@ public class FlashIncomingPacket : IIncomingPacket
         return span.ToArray();
     }
 
+    public byte[] ReadBytes()
+    {
+        var length = ReadInt();
+        var span = Buffer.Slice(0, length);
+        Buffer = Buffer.Slice(length);
+        return span.ToArray();
+    }
+
     public void ReadBytes(Span<byte> destination) => throw new NotImplementedException();
 }

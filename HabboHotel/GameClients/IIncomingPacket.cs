@@ -13,4 +13,5 @@ public interface IIncomingPacket
     bool HasDataRemaining();
     byte[] ReadFixedValue();
     void ReadBytes(Span<byte> destination);
+    byte[] ReadBytes();
 }

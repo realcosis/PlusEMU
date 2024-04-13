@@ -22,6 +22,7 @@ using Plus.Utilities;
 
 using Dapper;
 using Plus.HabboHotel.Users.Navigator;
+using Plus.HabboHotel.Items.Camera;
 
 namespace Plus.HabboHotel.Users;
 
@@ -30,6 +31,8 @@ public class Habbo
     public HabboStats HabboStats { get; set; }
 
     private readonly DateTime _timeCached;
+
+    public string? Photo { get; set; }
 
     public GameClient Client { get; set; }
     public ClothingComponent Clothing { get; set; }
@@ -211,6 +214,25 @@ public class Habbo
     {
         var span = DateTime.Now - _timeCached;
         return span.TotalMinutes >= 30;
+    }
+
+    public void Give(int currencyValue, int currencyType)
+    {
+        if (currencyType == -1)
+        {
+            Credits += currencyValue;
+            Client.Send(new CreditBalanceComposer(Credits));
+        }
+        else if (currencyType == 0)
+        {
+            Duckets += currencyValue;
+            Client.Send(new HabboActivityPointNotificationComposer(Duckets, Duckets));
+        }
+        else if (currencyType == 5)
+        {
+            Diamonds += currencyValue;
+            Client.Send(new HabboActivityPointNotificationComposer(Diamonds, 0, 5));
+        }
     }
 
     public bool InitProcess()
